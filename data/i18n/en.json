@@ -1,7 +1,7 @@
 {
   "title": "Family Spots Map",
-  "tagline": "Find • Play • Arrive",
-  "search_placeholder": "Search by category or name …",
+  "tagline": "Find \u2022 Play \u2022 Arrive",
+  "search_placeholder": "Search by category or name \u2026",
   "filter_all": "All categories",
   "toggle_verified": "Verified only",
   "toggle_favorites": "Favorites",
@@ -19,6 +19,6 @@
   "geo_unavailable": "Geolocation unavailable.",
   "import_ok": "Favorites imported.",
   "import_fail": "Invalid file.",
-  "share_text": "Family-friendly places near me – Family Spots Map",
+  "share_text": "Family-friendly places near me \u2013 Family Spots Map",
   "share_title": "Share view"
 }
