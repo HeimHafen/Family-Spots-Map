@@ -1,4 +1,32 @@
+// js/filters.js
+
 import { $, debounce } from "./utils.js";
+import { getLanguage, t } from "./i18n.js";
+
+function buildCategoryOptions(categorySelect, categories) {
+  const lang = getLanguage();
+  const currentValue = categorySelect.value || "";
+
+  categorySelect.innerHTML = "";
+
+  const allOpt = document.createElement("option");
+  allOpt.value = "";
+  allOpt.textContent = t(
+    "filter_category_all",
+    lang === "de" ? "Alle Kategorien" : "All categories",
+  );
+  categorySelect.appendChild(allOpt);
+
+  categories.forEach((c) => {
+    const opt = document.createElement("option");
+    opt.value = c.slug;
+    opt.textContent = c.label?.[lang] || c.label?.de || c.slug;
+    categorySelect.appendChild(opt);
+  });
+
+  // vorher ausgewählte Kategorie beibehalten (falls vorhanden)
+  categorySelect.value = currentValue;
+}
 
 export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const state = {
@@ -6,7 +34,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     category: "",
     verifiedOnly: false,
     favoritesOnly: false,
-    favorites: favoritesProvider()
+    favorites: favoritesProvider(),
   };
 
   const searchInput = $("#filter-search");
@@ -14,20 +42,9 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const verifiedCheckbox = $("#filter-only-verified");
   const favsCheckbox = $("#filter-only-favs");
 
-  // Kategorien ins Select
+  // Kategorien ins Select (mit Mehrsprachigkeit)
   if (categorySelect) {
-    categorySelect.innerHTML = "";
-    const allOpt = document.createElement("option");
-    allOpt.value = "";
-    allOpt.textContent = "Alle Kategorien";
-    categorySelect.appendChild(allOpt);
-
-    categories.forEach((c) => {
-      const opt = document.createElement("option");
-      opt.value = c.slug;
-      opt.textContent = c.label?.de || c.slug;
-      categorySelect.appendChild(opt);
-    });
+    buildCategoryOptions(categorySelect, categories);
   }
 
   const notify = () => onFilterChange({ ...state });
@@ -38,7 +55,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
       debounce((e) => {
         state.query = e.target.value || "";
         notify();
-      }, 200)
+      }, 200),
     );
   }
 
@@ -64,6 +81,13 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   }
 
   return state;
+}
+
+// Wird aus app.js aufgerufen, wenn sich die Sprache ändert
+export function refreshCategorySelect(categories) {
+  const categorySelect = $("#filter-category");
+  if (!categorySelect) return;
+  buildCategoryOptions(categorySelect, categories);
 }
 
 export function applyFilters(spots, state) {
@@ -94,7 +118,7 @@ export function applyFilters(spots, state) {
         spot.poetry,
         ...(spot.tags || []),
         ...(spot.usps || []),
-        ...(spot.categories || [])
+        ...(spot.categories || []),
       ]
         .filter(Boolean)
         .map((x) => String(x).toLowerCase());
