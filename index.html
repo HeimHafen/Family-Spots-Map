@@ -22,13 +22,28 @@
 </head>
 <body>
   <header class="app-header">
+    <!-- Logo links -->
     <div class="app-header-left">
       <img src="assets/logo.svg" alt="Family Spots Map" class="app-logo" />
-      <div class="app-title">
-        <h1 data-i18n="app_title">Family Spots Map</h1>
-        <p data-i18n="app_tagline">Die schönste Karte für Familien-Abenteuer.</p>
-      </div>
     </div>
+
+    <!-- Titelblock exakt zentriert -->
+    <div class="app-header-center">
+      <div class="header-flags">
+        <span class="flag" aria-hidden="true">🇩🇪</span>
+        <h1 class="header-title">
+          Family <span class="header-title-spots">Spots</span> Map
+        </h1>
+        <span class="flag" aria-hidden="true">🇩🇰</span>
+      </div>
+
+      <p class="header-tagline">
+        <span>Die schönste Karte für</span>
+        <span class="header-tagline-line2">Familien-Abenteuer</span>
+      </p>
+    </div>
+
+    <!-- Buttons rechts -->
     <div class="app-header-right">
       <button id="btn-locate" class="btn btn-icon" type="button" aria-label="Mich finden">
         📍
