@@ -4,15 +4,68 @@
 html, body { margin: 0; padding: 0; height: 100%; }
 body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: radial-gradient(circle at top, #d2f4ff, var(--bg) 60%); color: var(--text); display: flex; flex-direction: column; }
 
-/* HEADER */
-.app-header { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(148, 163, 184, 0.35); }
+/* HEADER – Titel absolut im Zentrum des Headers */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  display: flex;
+  justify-content: flex-end; /* rechte Buttons */
+  align-items: center;
+}
 [data-theme="dark"] .app-header { background: rgba(15, 23, 42, 0.94); }
-.app-header-left { display: flex; align-items: center; gap: 0.7rem; }
-.app-logo { width: 40px; height: 40px; }
-.app-title { text-align: center; }
-.app-title h1 { margin: 0; font-size: 1.1rem; }
-.app-title p { margin: 0.1rem 0 0; font-size: 0.8rem; color: var(--text-soft); }
-.app-header-right { display: flex; align-items: center; gap: 0.4rem; }
+
+/* Das Ding in der Mitte */
+.app-header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* 🇩🇪 Family Spots Map 🇩🇰 */
+.header-flags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+/* „Spots“ Türkis */
+.header-title-spots {
+  color: #14b8c4;
+}
+
+/* Slogan in zwei Zeilen */
+.header-tagline {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  line-height: 1.2;
+}
+.header-tagline-line2 {
+  display: block;
+}
+
+/* Buttons rechts im Header */
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
 
 /* BUTTONS, INPUTS */
 .btn, .btn-ghost { border-radius: 999px; border: none; font-size: 0.85rem; padding: 0.45rem 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; transition: all var(--transition-fast); }
