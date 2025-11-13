@@ -1,162 +1,46 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1b8f3c">
   <title>Family Spots Map – ABF 2026</title>
-  <meta name="description" content="Finde kinderfreundliche Orte im Handumdrehen. Offline-fähig. ABF 2026 Edition.">
-  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+
+  <!-- Icons / PWA (optional, anpassen falls andere Dateinamen) -->
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#27ae60"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon-180.png">
+  <link rel="icon" href="favicon.ico">
 
-  <meta property="og:title" content="Family Spots Map – ABF 2026">
-  <meta property="og:description" content="Finde kinderfreundliche Orte. Offline-fähig. ABF 2026 Edition.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/icons/social-card.png">
-
-  <!-- Leaflet & MarkerCluster (CDN) -->
-  <link rel="preconnect" href="https://unpkg.com">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous">
-  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="anonymous">
-  <script defer src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin="anonymous"></script>
-
-  <link rel="stylesheet" href="css/styles.css?v=3">
-  <link rel="stylesheet" href="css/badges.css?v=2">
+  <!-- App Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- 🔒 Fix für Dialog/Overlay-Z-Index -->
+  <link rel="stylesheet" href="css/fix-dialog.css">
 </head>
 <body>
-  <a class="skip" href="#main">Zum Inhalt springen</a>
-
-  <header>
-    <div class="header-row">
-      <span class="flag">🇩🇪</span>
-      <div class="brand">
-        <h1 id="title">Family Spots Map</h1>
-        <p id="tagline">Finden • Spielen • Ankommen</p>
-      </div>
-      <span class="flag">🇩🇰</span>
-
-      <div class="header-actions">
-        <div class="lang-switch" role="group" aria-label="Sprache">
-          <button class="lang active" data-lang="de" aria-pressed="true">DE</button>
-          <button class="lang" data-lang="en" aria-pressed="false">EN</button>
-        </div>
-        <button id="btn-share" class="secondary" aria-label="Teilen">Teilen</button>
-        <button id="install" class="secondary">App installieren</button>
-      </div>
+  <header class="app-header">
+    <div class="brand">
+      <strong>🇩🇪 Family Spots Map 🇩🇰</strong>
+      <div class="tagline">Finden • Spielen • Ankommen</div>
     </div>
-
-    <div class="toolbar" role="search">
-      <label class="visually-hidden" for="search" id="label-search">Suche</label>
-      <input id="search" class="full" type="search" placeholder="Suche..." aria-labelledby="label-search"/>
-
-      <label class="visually-hidden" id="label-category">Kategorie</label>
-      <select id="category" aria-labelledby="label-category" title="Kategorie"></select>
-
-      <label><input type="checkbox" id="toggle-verified"> <span id="label-verified">Nur verifiziert</span></label>
-      <label><input type="checkbox" id="toggle-favs"> <span id="label-favs">Favoriten</span></label>
-      <button id="nearby" class="secondary">In der Nähe</button>
-      <button id="reset" class="secondary">Zurücksetzen</button>
-    </div>
-
-    <div class="tabs" role="tablist" aria-label="Ansicht wechseln">
-      <button id="tab-list" role="tab" aria-selected="true">Liste</button>
-      <button id="tab-map" role="tab" aria-selected="false">Karte</button>
-    </div>
+    <!-- Sprache (falls du Buttons hast, bleiben sie wie zuvor im DOM) -->
+    <!-- <div class="lang-switch"><button data-lang="de">DE</button><button data-lang="en">EN</button></div> -->
   </header>
 
-  <main id="main">
-    <section id="panel-list" class="panel" role="tabpanel" aria-labelledby="tab-list">
-      <ul id="spots"></ul>
-      <div class="panel-actions">
-        <button id="add-spot" class="secondary">Spot hinzufügen</button>
-        <button id="import-favs" class="secondary">Favoriten importieren</button>
-        <button id="export" class="secondary">Favoriten exportieren</button>
-      </div>
-    </section>
-
-    <section id="panel-map" class="panel" role="tabpanel" aria-labelledby="tab-map" hidden>
-      <div id="map" role="application" aria-label="Karte"></div>
-    </section>
+  <main id="app" role="main">
+    <!-- Deine App rendert hier (Liste, Karte, Filter usw.). -->
   </main>
 
-  <!-- Add-Spot Modal -->
-  <div id="modal-overlay" class="overlay" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <h2 id="modal-title">Neuen Spot vorschlagen</h2>
-      <form id="add-spot-form">
-        <div class="grid">
-          <label> Name
-            <input required name="name" placeholder="z. B. Spielplatz am See">
-          </label>
-          <label> ID
-            <input required name="id" placeholder="kebab-case-id">
-          </label>
-          <label> Kategorie
-            <select name="category" id="form-category"></select>
-          </label>
-          <label> Stadt
-            <input required name="city" placeholder="Hannover">
-          </label>
-          <label> Land (ISO-2)
-            <input required name="country" maxlength="2" value="DE">
-          </label>
-          <label> Adresse
-            <input name="address" placeholder="Straße, PLZ Ort">
-          </label>
-          <label> Breitengrad (lat)
-            <input required name="lat" type="number" step="any" placeholder="52.3759">
-          </label>
-          <label> Längengrad (lon)
-            <input required name="lon" type="number" step="any" placeholder="9.7320">
-          </label>
-          <label> USPs (Komma-getrennt)
-            <input name="usp" placeholder="Schatten, Wickelraum, Kiosk">
-          </label>
-          <label> Tags (Komma-getrennt)
-            <input name="tags" placeholder="Rutsche, Schaukel">
-          </label>
-          <label> Poesie
-            <input name="poetry" placeholder="Kurze, warme Zeile …">
-          </label>
-          <label> Verifiziert?
-            <select name="verified">
-              <option value="false">nein</option>
-              <option value="true">ja</option>
-            </select>
-          </label>
-          <label> Rating (0–5)
-            <input name="rating" type="number" step="0.1" min="0" max="5" placeholder="4.6">
-          </label>
-          <label> Quelle
-            <input name="source" placeholder="community / official / …">
-          </label>
-        </div>
-        <div class="modal-actions">
-          <button type="button" id="modal-cancel" class="secondary">Abbrechen</button>
-          <button type="submit" class="primary">JSON erzeugen</button>
-        </div>
-      </form>
-      <div id="json-output" class="json-output" hidden>
-        <div class="json-actions">
-          <button id="copy-json" class="secondary">In Zwischenablage</button>
-          <button id="download-json" class="secondary">Als Datei speichern</button>
-        </div>
-        <pre><code id="json-code"></code></pre>
-        <p class="muted small">Füge das JSON per PR zu <code>data/spots.json</code> hinzu (Schema wird validiert).</p>
-      </div>
-    </div>
+  <!-- Optional vordefinierter Dialog – dein App-Code kann eigene Dialoge erstellen -->
+  <!-- Der Portal-Skript verschiebt alle [role="dialog"] automatisch ans Body-Ende -->
+  <!--
+  <div role="dialog" hidden aria-modal="true" data-backdrop-close="true">
+    ... Dialog-Inhalt ...
   </div>
+  -->
 
-  <div id="offline" role="status" aria-live="polite">Offline: Kartenkacheln evtl. nicht verfügbar</div>
-
-  <footer>
-    <small>© <span id="year"></span> Family Spots Map. Community/OSM. Bitte beachte die
-      <a href="https://operations.osmfoundation.org/policies/tiles/" target="_blank" rel="noopener">Tile-Nutzungsregeln</a>.</small>
-  </footer>
-
-  <script type="module" src="js/app.js?v=3"></script>
-  <script nomodule>document.body.innerHTML='<p>Ein moderner Browser ist erforderlich.</p>';</script>
+  <!-- 🔒 Portal-Helper: bringt Dialoge nach ganz oben + Backdrop + Body-Lock -->
+  <script src="js/dialog-portal.js" defer></script>
+  <!-- Deine App (importiert u. a. sw-register.js als Module) -->
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
