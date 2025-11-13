@@ -1,143 +1,190 @@
 <!DOCTYPE html>
-<html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Family Spots Map</title>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
-    />
-    <meta
-      name="description"
-      content="Family Spots Map – die moderne Karte für Familien: Spielplätze, Zoos, Schwimmbäder, Wanderwege und mehr."
-    />
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Family Spots Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Die schönste Karte für Familien-Abenteuer." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
 
-    <!-- PWA / Manifest -->
-    <link rel="manifest" href="manifest.webmanifest" />
-    <meta name="theme-color" content="#136f63" />
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
 
-    <!-- iOS PWA -->
-    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
-
-    <!-- Favicon -->
-    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
-
-    <!-- Leaflet (Map) -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      crossorigin=""
-    />
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      crossorigin=""
-      defer
-    ></script>
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/badges.css" />
-  </head>
-  <body>
-    <header class="app-header">
-      <div class="app-header-left">
-        <img src="assets/logo.svg" alt="Family Spots Map Logo" class="app-logo" />
-        <div class="app-title">
-          <h1 data-i18n="app.title">Family Spots Map</h1>
-          <p data-i18n="app.subtitle">
-            Die schönste Karte für Familien-Abenteuer.
-          </p>
-        </div>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/badges.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header-left">
+      <img src="assets/logo.svg" alt="Family Spots Map" class="app-logo" />
+      <div class="app-title">
+        <h1 data-i18n="app_title">Family Spots Map</h1>
+        <p data-i18n="app_tagline">Die schönste Karte für Familien-Abenteuer.</p>
       </div>
+    </div>
+    <div class="app-header-right">
+      <button id="btn-locate" class="btn btn-icon" type="button" aria-label="Mich finden">
+        📍
+      </button>
 
-      <div class="app-header-right">
-        <button id="btn-locate" class="btn btn-ghost" data-i18n="actions.locateMe">
-          Mich finden
-        </button>
-
-        <select id="language-switcher" class="language-switcher" aria-label="Sprache">
-          <option value="de">DE</option>
-          <option value="en">EN</option>
-        </select>
-
-        <button id="theme-toggle" class="btn btn-icon" aria-label="Theme umschalten">
-          <span class="icon-moon" aria-hidden="true"></span>
-        </button>
-      </div>
-    </header>
-
-    <main class="app-main">
-      <!-- MAP VIEW -->
-      <section id="view-map" class="view view--active">
-        <aside class="sidebar" aria-label="Filter und Spot-Liste">
-          <div class="sidebar-section">
-            <h2 data-i18n="filters.title">Filter</h2>
-            <div id="filters"></div>
-          </div>
-
-          <div class="sidebar-section sidebar-section--grow">
-            <div class="sidebar-section-header">
-              <h2 data-i18n="spots.title">Spots</h2>
-              <button id="btn-toggle-view" class="btn btn-ghost btn-small" type="button">
-                <span>Nur Karte</span>
-              </button>
-            </div>
-            <div id="spot-list" class="spot-list" aria-live="polite"></div>
-          </div>
-        </aside>
-
-        <section class="map-section" aria-label="Karte">
-          <div id="map" class="map-container"></div>
-          <div id="spot-details" class="spot-details" aria-live="polite"></div>
-        </section>
-      </section>
-
-      <!-- ABOUT VIEW -->
-      <section id="view-about" class="view">
-        <div class="page page-about">
-          <h2 data-i18n="about.title">Über Family Spots Map</h2>
-          <p data-i18n="about.text1">
-            Family Spots Map ist aus echten Familienbedürfnissen entstanden. Eine
-            Karte von Eltern für Eltern – mit Fokus auf Qualität, Sicherheit und
-            echten Empfehlungen.
-          </p>
-          <p data-i18n="about.text2">
-            Entdecke Spielplätze, Zoos, Schwimmbäder, kinderfreundliche Cafés und
-            vieles mehr. Speichere deine Favoriten und plane eure nächsten
-            Abenteuer.
-          </p>
-        </div>
-      </section>
-    </main>
-
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="bottom-nav" aria-label="Hauptnavigation">
-      <button
-        class="bottom-nav-item bottom-nav-item--active"
-        data-route="map"
-        type="button"
+      <select
+        id="language-switcher"
+        class="language-switcher"
+        aria-label="Sprache"
       >
-        <span class="bottom-nav-icon">🗺️</span>
-        <span data-i18n="nav.map">Karte</span>
-      </button>
-      <button class="bottom-nav-item" data-route="about" type="button">
-        <span class="bottom-nav-icon">💚</span>
-        <span data-i18n="nav.about">Über</span>
-      </button>
-    </nav>
+        <option value="de">DE</option>
+        <option value="en">EN</option>
+      </select>
 
-    <!-- TOAST -->
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <button
+        id="theme-toggle"
+        class="btn btn-icon"
+        type="button"
+        aria-label="Hell/Dunkel umschalten"
+      >
+        🌓
+      </button>
+    </div>
+  </header>
 
-    <noscript>
-      <div class="noscript-warning">
-        Family Spots Map benötigt JavaScript, um korrekt zu funktionieren.
+  <noscript>
+    <div class="noscript-warning">
+      Family Spots Map benötigt JavaScript, um korrekt zu funktionieren.
+    </div>
+  </noscript>
+
+  <main class="app-main">
+    <!-- MAP VIEW -->
+    <section id="view-map" class="view view--active" aria-label="Karte">
+      <aside class="sidebar">
+        <section class="sidebar-section">
+          <header class="sidebar-section-header">
+            <h2 data-i18n="filters_title">Filter</h2>
+          </header>
+
+          <div class="filter-group">
+            <label class="filter-group-label" for="filter-search" data-i18n="filter_search_label">
+              Suche
+            </label>
+            <input
+              id="filter-search"
+              type="search"
+              class="input"
+              data-i18n-placeholder="filter_search_placeholder"
+              placeholder="Stadt, Spot, Tags ..."
+            />
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-group-label" for="filter-category" data-i18n="filter_category_label">
+              Kategorie
+            </label>
+            <select id="filter-category" class="input"></select>
+          </div>
+
+          <div class="filter-toggle-row">
+            <label for="filter-only-verified">
+              <input id="filter-only-verified" type="checkbox" />
+              <span data-i18n="filter_verified_only">Nur verifizierte Spots</span>
+            </label>
+          </div>
+
+          <div class="filter-toggle-row">
+            <label for="filter-only-favs">
+              <input id="filter-only-favs" type="checkbox" />
+              <span data-i18n="filter_favs_only">Nur Favoriten</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="sidebar-section sidebar-section--grow">
+          <header class="sidebar-section-header">
+            <h2 data-i18n="spots_title">Spots</h2>
+            <button id="btn-toggle-view" class="btn-ghost btn-small" type="button">
+              <span data-i18n="btn_only_map">Nur Karte</span>
+            </button>
+          </header>
+          <div id="spot-list" class="spot-list" aria-live="polite"></div>
+        </section>
+      </aside>
+
+      <section class="map-section">
+        <div
+          id="map"
+          class="map-container"
+          role="region"
+          aria-label="Karte mit Spots"
+        ></div>
+
+        <article
+          id="spot-details"
+          class="spot-details"
+          aria-live="polite"
+        ></article>
+      </section>
+    </section>
+
+    <!-- ABOUT VIEW -->
+    <section id="view-about" class="view" aria-label="Über Family Spots Map">
+      <div class="page page-about">
+        <h2 data-i18n="about_title">Über Family Spots Map</h2>
+        <p data-i18n="about_intro">
+          Family Spots Map ist aus echten Familienbedürfnissen entstanden – von Eltern
+          für Eltern.
+        </p>
+        <p data-i18n="about_body_1">
+          Die Karte bündelt ausgewählte Spielplätze, Zoos, Wildparks, Pumptracks,
+          kinderfreundliche Museen und vieles mehr. Im Fokus stehen Qualität, Sicherheit
+          und reale Erfahrungen.
+        </p>
+        <p data-i18n="about_body_2">
+          Speichere eure Favoriten, filtere nach verifizierten Spots und plane eure
+          nächsten Abenteuer – auch offline.
+        </p>
+        <p data-i18n="about_body_3">
+          Die App wächst mit der Community. Jeder neue Spot ist eine Einladung:
+          Rausgehen, entdecken, Erinnerungen bauen.
+        </p>
       </div>
-    </noscript>
+    </section>
+  </main>
 
-    <script type="module" src="js/app.js"></script>
-  </body>
+  <nav class="bottom-nav" aria-label="Hauptnavigation">
+    <button
+      class="bottom-nav-item bottom-nav-item--active"
+      data-route="map"
+      type="button"
+    >
+      <span class="bottom-nav-icon">🗺️</span>
+      <span data-i18n="nav_map">Karte</span>
+    </button>
+    <button
+      class="bottom-nav-item"
+      data-route="about"
+      type="button"
+    >
+      <span class="bottom-nav-icon">ℹ️</span>
+      <span data-i18n="nav_about">Über</span>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- App -->
+  <script type="module" src="js/app.js"></script>
+</body>
 </html>
