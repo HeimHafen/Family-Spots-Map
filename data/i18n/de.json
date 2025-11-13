@@ -20,6 +20,8 @@
   "spots_title": "Spots",
   "btn_only_map": "Nur Karte",
   "btn_show_list": "Liste anzeigen",
+  "btn_hide_filters": "Filter ausblenden",
+  "btn_show_filters": "Filter anzeigen",
 
   "search_placeholder": "Suche nach Ort, Stadt oder Stichwort …",
 
@@ -46,6 +48,8 @@
   "btn_close_details": "Details schließen",
 
   "no_results": "Keine passenden Spots gefunden. Bitte Filter anpassen oder einen anderen Bereich wählen.",
+
+  "error_data_load": "Fehler beim Laden der Daten",
 
   "toast_location_ok": "Standort gefunden – Karte zentriert.",
   "toast_location_error": "Standort konnte nicht ermittelt werden. Bitte Standortfreigabe und Empfang prüfen.",
