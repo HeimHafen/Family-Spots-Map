@@ -81,7 +81,7 @@ body {
   height: 40px;
 }
 
-/* Titelblock in der Mitte – immer exakt horizontal zentriert */
+/* Titelblock mittig */
 .app-header-center {
   position: absolute;
   left: 50%;
@@ -110,12 +110,12 @@ body {
   font-weight: 700;
 }
 
-/* „Spots“ in freundlichem Türkis */
+/* „Spots“ Türkis */
 .header-title-spots {
   color: #14b8c4;
 }
 
-/* Slogan in zwei Zeilen */
+/* Claim in zwei Zeilen */
 .header-tagline {
   margin: 0;
   font-size: 0.82rem;
@@ -135,7 +135,7 @@ body {
 }
 
 /* ======================= */
-/* Buttons, Inputs */
+/* Buttons & Inputs */
 /* ======================= */
 
 .btn,
@@ -154,7 +154,7 @@ body {
 
 .btn {
   background: var(--primary);
-  color: #fff;
+  color: #ffffff;
   box-shadow: var(--shadow-soft);
 }
 
@@ -230,7 +230,7 @@ body {
 
 .view {
   display: none;
-  height: calc(100vh - 120px); /* header + bottom nav */
+  height: calc(100vh - 120px); /* Header + Bottom-Nav */
 }
 
 .view--active {
@@ -507,8 +507,7 @@ body {
   font-size: 0.82rem;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--transition-fast),
-    transform var(--transition-fast);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
   z-index: 40;
 }
 
