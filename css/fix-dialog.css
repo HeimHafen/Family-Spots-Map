@@ -2,49 +2,59 @@
 
 /* Z-Index-Levels */
 :root {
-  --z-header: 20;
-  --z-overlay: 9990;
-  --z-dialog: 9991;
+  --z-header: 20;     /* Header unter Dialog */
+  --z-overlay: 9990;  /* Backdrop */
+  --z-dialog: 9991;   /* Dialog */
 }
 
 /* Header bleibt UNTER dem Dialog */
-header, .header, .topbar, .app-header { z-index: var(--z-header) !important; }
+header, .header, .topbar, .app-header {
+  z-index: var(--z-header) !important;
+}
 
 /* Stacking-Kontext-Fallen ausschalten (falls irgendwo gesetzt) */
 #app, .app, .app-shell, .shell, main, .container, .page {
   transform: none !important;
   filter: none !important;
   perspective: none !important;
+  /* kein backdrop-filter auf Wrappern -> erzeugt sonst Stacking-Kontext */
+  backdrop-filter: none !important;
 }
 
 /* Backdrop (vom JS erzeugt/verwaltet) */
 #dialog-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.35);
+  background: rgba(0, 0, 0, .35);
   -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
   z-index: var(--z-overlay);
   display: none;
 }
-#dialog-backdrop.is-visible { display: block !important; }
+#dialog-backdrop.is-visible {
+  display: block !important;
+}
 
 /* Dialog immer ganz oben & iOS-safe */
 [role="dialog"] {
   position: fixed !important;
-  left: 0; right: 0; bottom: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   margin: 0 auto;
   max-height: min(88vh, 720px);
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   background: #fff;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0 10px 40px rgba(0,0,0,.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .2);
   z-index: var(--z-dialog) !important;
   padding: 16px;
 }
 
 /* Safe-Area (iPhone Notch/Bottom-Bar) */
-@supports(padding: max(0px)) {
+@supports (padding: max(0px)) {
   [role="dialog"] {
     padding-top: max(16px, env(safe-area-inset-top));
     padding-left: max(16px, env(safe-area-inset-left));
