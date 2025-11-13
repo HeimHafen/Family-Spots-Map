@@ -1,88 +1,156 @@
-import { initMap, addSpotMarkers, focusLatLon, updateMarkersFor } from "./map.js";
-import { loadIndex, loadSpots, aliasToCategory } from "./data.js";
-import { initI18n } from "./i18n.js";
-import { initUI, renderList, openAddSpotModal, populateCategories } from "./ui.js";
-import { applyFilters, state } from "./filters.js";
-import { parseHash, pushHash } from "./router.js";
-import { debounce, downloadText, tryShare } from "./utils.js";
-import "./sw-register.js";
+// Family Spots Map – Minimal Bootstrap (Liste + Karte + Suche)
+// Keine optional chaining, läuft ohne Build-Step.
 
-(async function main(){
-  const preferred = localStorage.getItem("fsm.lang") || (navigator.language?.startsWith("de") ? "de":"en");
-  await initI18n(preferred);
+(function () {
+  // Service Worker (falls vorhanden)
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("service-worker.js").catch(function(){});
+    });
+  }
 
-  const [index, spots] = await Promise.all([loadIndex(), loadSpots()]);
-  window._FSM_INDEX = index; window._FSM_SPOTS = spots;
+  var root = document.getElementById("app");
+  if (!root) return;
 
-  initUI(index, spots);
-  populateCategories(index.categories, document.getElementById("category"));
-  populateCategories(index.categories, document.getElementById("form-category"));
-
-  const map = initMap(index);
-  addSpotMarkers(map, spots, (spotId) => {
-    const el = document.querySelector(`[data-spot-id="${spotId}"]`);
-    if (el) el.scrollIntoView({ behavior:"smooth", block:"center" });
-  });
-
-  const doRender = () => {
-    const filtered = applyFilters(spots);
-    renderList(filtered);
-    updateMarkersFor(filtered);
-    const rc = document.getElementById("results-count");
-    if (rc) rc.textContent = `${filtered.length} ${filtered.length===1?'Ergebnis':'Ergebnisse'}`;
-  };
-  const doRenderDebounced = debounce(doRender, 60);
-
-  // Filter Bindings
-  const search = document.getElementById("search");
-  search.addEventListener("input", () => { state.query = search.value; pushHash(state); doRenderDebounced(); });
-
-  const category = document.getElementById("category");
-  category.addEventListener("change", (e)=>{
-    const v = e.target.value.trim();
-    state.category = v === "" ? null : (aliasToCategory(v) || v);
-    pushHash(state); doRenderDebounced();
-  });
-
-  document.getElementById("toggle-verified").addEventListener("change", (e)=>{ state.verifiedOnly = e.target.checked; pushHash(state); doRenderDebounced(); });
-  document.getElementById("toggle-favs").addEventListener("change", (e)=>{ state.favoritesOnly = e.target.checked; pushHash(state); doRenderDebounced(); });
-
-  document.getElementById("reset").addEventListener("click", ()=>{ search.value=""; category.value=""; state.category=null; state.query=""; state.verifiedOnly=false; state.favoritesOnly=false; pushHash(state); doRender(); });
-
-  document.getElementById("nearby").addEventListener("click", async ()=>{
-    try {
-      const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, {enableHighAccuracy:true}));
-      focusLatLon(pos.coords.latitude, pos.coords.longitude, 14);
-    } catch { alert("Geolocation nicht verfügbar."); }
-  });
-
-  document.getElementById("export").addEventListener("click", ()=>{ const favs = JSON.parse(localStorage.getItem("fsm.favorites") || "[]"); downloadText(JSON.stringify(favs, null, 2), "favorites.json"); });
-  document.getElementById("import-favs").addEventListener("click", ()=>{ const inp=document.createElement("input"); inp.type="file"; inp.accept="application/json";
-    inp.onchange=async()=>{ const f=inp.files?.[0]; if(!f) return; const txt=await f.text(); try{const ids=JSON.parse(txt); if(!Array.isArray(ids)) throw 0; localStorage.setItem("fsm.favorites", JSON.stringify(ids)); alert("Favoriten importiert."); doRender(); }catch{ alert("Ungültige Datei."); } };
-    inp.click();
-  });
-
-  document.getElementById("btn-share").addEventListener("click", ()=>{ tryShare({ title:"Family Spots Map", text:"Familienfreundliche Orte – Family Spots Map", url: location.href }); });
-
-  document.getElementById("add-spot").addEventListener("click", openAddSpotModal);
-
-  const syncStateFromHash = () => {
-    const h = parseHash(location.hash);
-    if (h.query !== undefined) { search.value = h.query; state.query = h.query; }
-    if (h.category !== undefined) { category.value = h.category || ""; state.category = h.category || null; }
-    if (h.verifiedOnly !== undefined) { document.getElementById("toggle-verified").checked = h.verifiedOnly; state.verifiedOnly = h.verifiedOnly; }
-    if (h.favoritesOnly !== undefined) { document.getElementById("toggle-favs").checked = h.favoritesOnly; state.favoritesOnly = h.favoritesOnly; }
-    doRender();
-    if (h.spotId) {
-      const s = spots.find(x => x.id === h.spotId);
-      if (s) focusLatLon(s.lat, s.lon, 15);
+  function el(tag, attrs) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      for (var k in attrs) {
+        if (k === "class") node.className = attrs[k];
+        else if (k === "html") node.innerHTML = attrs[k];
+        else node.setAttribute(k, attrs[k]);
+      }
     }
-  };
-  window.addEventListener("hashchange", syncStateFromHash);
-  syncStateFromHash();
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      if (c == null) continue;
+      if (typeof c === "string") node.appendChild(document.createTextNode(c));
+      else node.appendChild(c);
+    }
+    return node;
+  }
 
-  const setOffline = (b)=> document.getElementById("offline").classList.toggle("show", b);
-  window.addEventListener("online", ()=>setOffline(false));
-  window.addEventListener("offline", ()=>setOffline(true));
-  if (!navigator.onLine) setOffline(true);
+  // UI Grundgerüst
+  var input = el("input", { id: "q", type: "search", placeholder: "Suche Kategorie oder Namen …" });
+  var btnNear = el("button", { id: "nearby", type: "button" }, "In der Nähe");
+  var btnReset = el("button", { id: "reset", type: "button" }, "Zurücksetzen");
+  var toolbar = el("div", { class: "toolbar" }, input, btnNear, btnReset);
+
+  var tabListBtn = el("button", { id: "tab-list", type: "button", class: "active", "data-tab": "list" }, "Liste");
+  var tabMapBtn = el("button", { id: "tab-map", type: "button", "data-tab": "map" }, "Karte");
+  var tabs = el("div", { class: "tabs" }, tabListBtn, tabMapBtn);
+
+  var list = el("div", { id: "list" });
+  var mapWrap = el("div", { id: "map", class: "hidden" });
+
+  root.appendChild(toolbar);
+  root.appendChild(tabs);
+  root.appendChild(list);
+  root.appendChild(mapWrap);
+
+  function setTab(which) {
+    if (which === "map") {
+      mapWrap.classList.remove("hidden");
+      list.classList.add("hidden");
+      setTimeout(function(){ map.invalidateSize(); }, 0);
+      tabMapBtn.classList.add("active"); tabListBtn.classList.remove("active");
+    } else {
+      list.classList.remove("hidden");
+      mapWrap.classList.add("hidden");
+      tabListBtn.classList.add("active"); tabMapBtn.classList.remove("active");
+    }
+  }
+  tabListBtn.onclick = function(){ setTab("list"); };
+  tabMapBtn.onclick = function(){ setTab("map"); };
+
+  // Leaflet Map
+  var map = L.map("map");
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap-Mitwirkende"
+  }).addTo(map);
+
+  var markers = [];
+  function clearMarkers() {
+    for (var i = 0; i < markers.length; i++) map.removeLayer(markers[i]);
+    markers = [];
+  }
+
+  function renderSpots(spots) {
+    list.innerHTML = "";
+    clearMarkers();
+
+    if (!spots || !spots.length) {
+      list.appendChild(el("p", null, "Noch keine Spots. Füge welche in data/spots.json hinzu."));
+      map.setView([51.2, 10.4], 6); // Deutschland
+      return;
+    }
+
+    var bounds = [];
+    for (var i = 0; i < spots.length; i++) {
+      var s = spots[i] || {};
+      var title = s.title || s.name || "Spot";
+      var city = s.city || "";
+      var card = el("div", { class: "card" },
+        el("h3", null, title),
+        el("div", { class: "meta" }, city)
+      );
+      list.appendChild(card);
+
+      if (typeof s.lat === "number" && typeof s.lon === "number") {
+        var m = L.marker([s.lat, s.lon]).addTo(map).bindPopup(title);
+        markers.push(m);
+        bounds.push([s.lat, s.lon]);
+      }
+    }
+    if (bounds.length) map.fitBounds(bounds, { padding: [20, 20] });
+    else map.setView([51.2, 10.4], 6);
+  }
+
+  function fetchJSON(url, fallback) {
+    return fetch(url, { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .catch(function () { return fallback; });
+  }
+
+  // Daten laden: index + spots (spots.json optional)
+  var ALL_SPOTS = [];
+  Promise.all([
+    fetchJSON("data/index.json", {}),
+    fetchJSON("data/spots.json", [])
+  ]).then(function (rs) {
+    var idx = rs[0] || {};
+    ALL_SPOTS = rs[1] || [];
+    renderSpots(ALL_SPOTS);
+
+    // Suche
+    input.addEventListener("input", function (e) {
+      var q = (e.target.value || "").toLowerCase().trim();
+      if (!q) { renderSpots(ALL_SPOTS); return; }
+      var filtered = ALL_SPOTS.filter(function (s) {
+        var hay = [
+          s.title || s.name || "",
+          s.city || "",
+          s.address || "",
+          (s.categories || []).join(" "),
+          (s.tags || []).join(" ")
+        ].join(" ").toLowerCase();
+        return hay.indexOf(q) !== -1;
+      });
+      renderSpots(filtered);
+    });
+
+    btnReset.onclick = function () { input.value = ""; renderSpots(ALL_SPOTS); };
+
+    btnNear.onclick = function () {
+      if (!navigator.geolocation) { alert("Geolocation nicht verfügbar."); return; }
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        map.setView([pos.coords.latitude, pos.coords.longitude], 12);
+        setTab("map");
+      }, function () { alert("Position konnte nicht ermittelt werden."); });
+    });
+  }).catch(function (err) {
+    list.innerHTML = "<p>Fehler beim Laden der Daten.</p>";
+    console.error(err);
+    map.setView([51.2, 10.4], 6);
+  });
 })();
