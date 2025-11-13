@@ -24,7 +24,6 @@ function buildCategoryOptions(categorySelect, categories) {
     categorySelect.appendChild(opt);
   });
 
-  // vorher ausgewählte Kategorie beibehalten (falls vorhanden)
   categorySelect.value = currentValue;
 }
 
@@ -42,7 +41,6 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const verifiedCheckbox = $("#filter-only-verified");
   const favsCheckbox = $("#filter-only-favs");
 
-  // Kategorien ins Select (mit Mehrsprachigkeit)
   if (categorySelect) {
     buildCategoryOptions(categorySelect, categories);
   }
