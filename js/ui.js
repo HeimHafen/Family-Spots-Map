@@ -1,3 +1,5 @@
+// js/ui.js
+
 import { $, formatVisitMinutes } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 import { getCategoryLabel } from "./data.js";
@@ -5,6 +7,9 @@ import { getCategoryLabel } from "./data.js";
 export function renderSpotList(spots, { favorites, onSelect }) {
   const listEl = $("#spot-list");
   const lang = getLanguage();
+
+  if (!listEl) return;
+
   listEl.innerHTML = "";
 
   if (!spots.length) {
@@ -82,13 +87,13 @@ export function renderSpotList(spots, { favorites, onSelect }) {
 
     card.addEventListener("click", (evt) => {
       if (evt.target.closest(".spot-card-fav")) return;
-      onSelect?.(spot.id);
+      if (onSelect) onSelect(spot.id);
     });
 
     card.addEventListener("keydown", (evt) => {
       if (evt.key === "Enter" || evt.key === " ") {
         evt.preventDefault();
-        onSelect?.(spot.id);
+        if (onSelect) onSelect(spot.id);
       }
     });
 
@@ -100,6 +105,7 @@ export function renderSpotList(spots, { favorites, onSelect }) {
 
 export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
   const container = $("#spot-details");
+  if (!container) return;
 
   if (!spot) {
     container.classList.remove("spot-details--visible");
@@ -182,7 +188,7 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
             .join("")}</div>`
         : ""
     }
-  `;
+ `;
 
   container.classList.add("spot-details--visible");
 
@@ -191,7 +197,7 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
 
   if (favBtn) {
     favBtn.addEventListener("click", () => {
-      onToggleFavorite?.(spot.id);
+      if (onToggleFavorite) onToggleFavorite(spot.id);
     });
   }
 
