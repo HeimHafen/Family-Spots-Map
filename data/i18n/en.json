@@ -19,6 +19,8 @@
   "spots_title": "Spots",
   "btn_only_map": "Map only",
   "btn_show_list": "Show list",
+  "btn_hide_filters": "Hide filters",
+  "btn_show_filters": "Show filters",
 
   "search_placeholder": "Search by place, city or keyword …",
 
@@ -45,6 +47,8 @@
   "btn_close_details": "Close details",
 
   "no_results": "No matching spots. Try adjusting your filters.",
+
+  "error_data_load": "Error loading data",
 
   "toast_location_ok": "Location found",
   "toast_location_error": "Could not get your location",
