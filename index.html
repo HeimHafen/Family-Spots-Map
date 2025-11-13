@@ -6,41 +6,44 @@
   <meta name="theme-color" content="#1b8f3c">
   <title>Family Spots Map – ABF 2026</title>
 
-  <!-- Icons / PWA (optional, anpassen falls andere Dateinamen) -->
+  <!-- PWA / Icons (Dateinamen bei Bedarf anpassen) -->
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="apple-touch-icon-180.png">
   <link rel="icon" href="favicon.ico">
 
   <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css">
-  <!-- 🔒 Fix für Dialog/Overlay-Z-Index -->
-  <link rel="stylesheet" href="css/fix-dialog.css">
+  <!-- Overlay-Fix: liegt im Projekt-Root -->
+  <link rel="stylesheet" href="fix-dialog.css">
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <strong>🇩🇪 Family Spots Map 🇩🇰</strong>
-      <div class="tagline">Finden • Spielen • Ankommen</div>
+      <h1 class="app-title"><span aria-hidden="true">🇩🇪</span> Family Spots Map <span aria-hidden="true">🇩🇰</span></h1>
+      <p class="app-tagline">Finden &bull; Spielen &bull; Ankommen</p>
     </div>
-    <!-- Sprache (falls du Buttons hast, bleiben sie wie zuvor im DOM) -->
-    <!-- <div class="lang-switch"><button data-lang="de">DE</button><button data-lang="en">EN</button></div> -->
+    <nav class="lang-switch" aria-label="Language">
+      <button type="button" data-lang="de" aria-pressed="true">DE</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </nav>
   </header>
 
   <main id="app" role="main">
     <!-- Deine App rendert hier (Liste, Karte, Filter usw.). -->
+    <noscript>Bitte JavaScript aktivieren, um die Family Spots Map zu verwenden.</noscript>
   </main>
 
-  <!-- Optional vordefinierter Dialog – dein App-Code kann eigene Dialoge erstellen -->
-  <!-- Der Portal-Skript verschiebt alle [role="dialog"] automatisch ans Body-Ende -->
-  <!--
+  <!-- Der Portal-Helper verschiebt alle Dialoge an das Body-Ende.
+       Wenn du vordefinierte Dialoge hast, setze role="dialog" und optional data-backdrop-close="true". -->
+  <!-- Beispiel:
   <div role="dialog" hidden aria-modal="true" data-backdrop-close="true">
     ... Dialog-Inhalt ...
   </div>
   -->
 
-  <!-- 🔒 Portal-Helper: bringt Dialoge nach ganz oben + Backdrop + Body-Lock -->
+  <!-- Overlay/Portal-Helper (setzt z-index korrekt, erzeugt Backdrop, sperrt Body-Scroll) -->
   <script src="js/dialog-portal.js" defer></script>
-  <!-- Deine App (importiert u. a. sw-register.js als Module) -->
+  <!-- Deine App (als ES Module); registriert Service Worker etc. -->
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
