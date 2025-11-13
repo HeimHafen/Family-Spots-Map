@@ -1,3 +1,5 @@
+// js/storage.js
+
 const SETTINGS_KEY = "fsm.settings.v1";
 const FAV_KEY = "fsm.favorites.v1";
 
@@ -47,11 +49,10 @@ export function setFavorites(ids) {
 
 export function toggleFavorite(id) {
   const set = new Set(getFavorites());
-  if (set.has(id)) set.delete(id);
-  else set.add(id);
+  if (set.has(id)) {
+    set.delete(id);
+  } else {
+    set.add(id);
+  }
   return setFavorites(Array.from(set));
-}
-
-export function isFavorite(id) {
-  return getFavorites().includes(id);
 }
