@@ -13,34 +13,14 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
   <!-- Leaflet (Karte) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin defer></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/fix-dialog.css">
-  <style>
-    /* Mini-Zusatz, damit sofort etwas sichtbar ist */
-    .sr-only{position:absolute;left:-9999px}
-    .toolbar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;padding:.75rem 1rem}
-    .toolbar input[type=search]{flex:1 1 260px;padding:.6rem .8rem;border:1px solid #d0d7de;border-radius:.6rem}
-    .toolbar button{padding:.55rem .8rem;border-radius:.6rem;border:1px solid #1b8f3c22;background:#e9f6ee}
-    .tabs{display:flex;gap:.5rem;padding:.25rem 1rem}
-    .tabs button{padding:.5rem .9rem;border-radius:.7rem;border:1px solid #d0d7de;background:#fff}
-    .tabs button.active{background:#1b8f3c;color:#fff;border-color:#1b8f3c}
-    #map{height:60vh;min-height:320px}
-    .card{padding:.8rem 1rem;border-bottom:1px solid #eef2f6}
-    .hidden{display:none!important}
-    .app-header{background:#e8f5ea;border-bottom:1px solid #dce6de;padding:.75rem 1rem}
-    .app-title{margin:0}
-    .app-tagline{margin:.2rem 0 0;color:#6b7280}
-    .lang-switch{display:flex;gap:.5rem;margin-top:.5rem}
-    .lang-switch button{border:1px solid #1b8f3c22;background:#fff;padding:.4rem .7rem;border-radius:.6rem}
-  </style>
 </head>
 <body>
-  <a href="#app" class="sr-only">Zum Inhalt springen</a>
-
   <header class="app-header">
     <div class="brand">
       <h1 class="app-title"><span aria-hidden="true">🇩🇪</span> Family Spots Map <span aria-hidden="true">🇩🇰</span></h1>
@@ -54,9 +34,9 @@
 
   <main id="app" role="main" tabindex="-1"></main>
 
-  <!-- Overlay/Portal-Fix (Backdrop, z-index, Body-Lock) -->
+  <!-- Overlay/Portal-Fix -->
   <script src="js/dialog-portal.js" defer></script>
-  <!-- App-Start (zeigt Liste+Karte sofort) -->
+  <!-- App-Start -->
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
