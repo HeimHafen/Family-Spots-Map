@@ -1,10 +1,11 @@
+// js/app.js
+
 import { $, $$, getGeolocation } from "./utils.js";
 import {
   getSettings,
   saveSettings,
   getFavorites,
-  toggleFavorite,
-  isFavorite
+  toggleFavorite
 } from "./storage.js";
 import {
   initI18n,
@@ -22,7 +23,8 @@ import { initFilters, applyFilters } from "./filters.js";
 import {
   initMap,
   setSpotsOnMap,
-  focusOnSpot
+  focusOnSpot,
+  getMap
 } from "./map.js";
 import {
   renderSpotList,
@@ -35,6 +37,7 @@ let currentFilterState = null;
 let allSpots = [];
 let filteredSpots = [];
 
+// Bootstrap
 document.addEventListener("DOMContentLoaded", () => {
   bootstrapApp().catch((err) => {
     console.error(err);
@@ -83,6 +86,7 @@ async function bootstrapApp() {
 /* UI + Routing */
 
 function initUIEvents() {
+  // Sprache
   const langSelect = $("#language-switcher");
   if (langSelect) {
     langSelect.value = getLanguage();
@@ -92,7 +96,7 @@ function initUIEvents() {
       await initI18n(nextLang);
       saveSettings({ ...settings, language: nextLang });
       applyTranslations();
-      // Liste neu zeichnen, damit Texte/Textelemente passen
+      // Liste neu ziehen, damit Texte passen
       handleFilterChange({
         ...currentFilterState,
         favorites: getFavorites()
@@ -100,6 +104,7 @@ function initUIEvents() {
     });
   }
 
+  // Theme
   const themeToggle = $("#theme-toggle");
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
@@ -110,15 +115,17 @@ function initUIEvents() {
     });
   }
 
+  // Locate / mich finden
   const locateBtn = $("#btn-locate");
   if (locateBtn) {
     locateBtn.addEventListener("click", async () => {
       try {
         const pos = await getGeolocation();
-        const map = focusMapOnLocation(pos);
+        const map = getMap();
         if (map) {
-          showToast(t("toast_location_ok", "Position gefunden"));
+          map.setView([pos.lat, pos.lng], 14);
         }
+        showToast(t("toast_location_ok", "Position gefunden"));
       } catch (err) {
         console.error(err);
         showToast(
@@ -128,7 +135,7 @@ function initUIEvents() {
     });
   }
 
-  // Bottom navigation
+  // Bottom-Navigation
   $$(".bottom-nav-item").forEach((btn) => {
     btn.addEventListener("click", () => {
       const route = btn.dataset.route;
@@ -213,7 +220,7 @@ function handleSpotSelect(id) {
         favorites: updatedFavorites
       });
 
-      // Details nochmals neu zeichnen
+      // Details neu zeichnen
       const freshSpot = findSpotById(spotId);
       renderSpotDetails(freshSpot, {
         isFavorite: updatedFavorites.includes(spotId),
@@ -223,24 +230,9 @@ function handleSpotSelect(id) {
   });
 }
 
-/* Theme + Karte */
+/* Theme */
 
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", value);
-}
-
-function focusMapOnLocation(pos) {
-  const map = focusOnUserLocation(pos);
-  return map;
-}
-
-function focusOnUserLocation(pos) {
-  const map = (window._fsm_map = map || null);
-  const leafletMap = window._fsm_map || null;
-  // In dieser Version nutzen wir nur Leaflet intern über map.js
-  const mapInstance = (window._fsm_leaftlet = null);
-  const realMap = mapInstance || null;
-  // Vereinfachen: wir holen die Map direkt aus map.js
-  return realMap;
 }
