@@ -106,8 +106,9 @@ body {
 
 .header-title {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 700;
+  white-space: nowrap; /* wichtig: nicht umbrechen */
 }
 
 /* „Spots“ Türkis */
@@ -584,4 +585,4 @@ body {
     bottom: 4.2rem;
     transform: translateX(-50%);
   }
-} 
+}
