@@ -1,3 +1,5 @@
+// js/map.js
+
 let mapInstance = null;
 let markersById = new Map();
 let onMarkerSelectCallback = null;
