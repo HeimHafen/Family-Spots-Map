@@ -116,11 +116,12 @@ body {
   color: #14b8c4;
 }
 
-/* Claim in zwei Zeilen */
+/* Claim: jetzt dunkler & etwas fetter */
 .header-tagline {
   margin: 0;
-  font-size: 0.82rem;
-  color: var(--text-soft);
+  font-size: 0.84rem;
+  color: var(--text);      /* schwarz/dunkel */
+  font-weight: 500;        /* etwas dicker */
   line-height: 1.2;
 }
 
@@ -133,6 +134,23 @@ body {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+/* Reihenfolge in der Button-Gruppe erzwingen:
+   - Sprache links
+   - Theme in der Mitte
+   - 📍 ganz rechts */
+#language-switcher {
+  order: 1;
+}
+
+#theme-toggle {
+  order: 2;
+}
+
+#btn-locate {
+  order: 3;
+  margin-left: 0.2rem;
 }
 
 /* ======================= */
@@ -585,4 +603,4 @@ body {
     bottom: 4.2rem;
     transform: translateX(-50%);
   }
-} 
+}
