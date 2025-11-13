@@ -1,0 +1,21 @@
+---
+
+## `PRIVACY.md` (kurz, anpassen!)
+
+```md
+# Datenschutzerklärung (Kurzfassung)
+
+Family Spots Map speichert lokal auf deinem Gerät:
+
+- App-Einstellungen (Sprache, Theme)
+- deine Favoriten
+
+Diese Daten verlassen dein Gerät nicht, solange du sie nicht selbst
+weitergibst. Es werden keine personenbezogenen Profile erstellt.
+
+Die Kartenkacheln werden von einem externen Kartenanbieter (z. B.
+OpenStreetMap) geladen. Dabei können technische Zugriffsdaten wie deine
+IP-Adresse beim Kartenanbieter anfallen.
+
+Passe diesen Text bitte mit deinem vollständigen Impressum / DSGVO-Text an oder
+verlinke auf deine externe Datenschutzerklärung.
