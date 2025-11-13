@@ -10,6 +10,7 @@
   "filter_search_label": "Suche",
   "filter_search_placeholder": "Ort, Spot, Stichwörter …",
   "filter_category_label": "Kategorie",
+  "filter_category_all": "Alle Kategorien",
   "filter_verified_only": "Nur verifizierte Spots",
   "filter_favs_only": "Nur Favoriten",
   "filter_verified_only_label": "Nur verifizierte Spots",
