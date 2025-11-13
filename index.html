@@ -12,13 +12,25 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-  <!-- Performance: Kartenkacheln -->
-  <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin>
-  <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
+  <!-- Leaflet (Karte) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/fix-dialog.css">
+  <style>
+    /* kleine Basis-Styles damit sofort was erscheint */
+    .toolbar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;padding:.75rem 1rem}
+    .toolbar input[type=search]{flex:1 1 260px;padding:.6rem .8rem;border:1px solid #d0d7de;border-radius:.6rem}
+    .toolbar button{padding:.55rem .8rem;border-radius:.6rem;border:1px solid #1b8f3c22;background:#e9f6ee}
+    .tabs{display:flex;gap:.5rem;padding:.25rem 1rem}
+    .tabs button{padding:.5rem .9rem;border-radius:.7rem;border:1px solid #d0d7de;background:#fff}
+    .tabs button.active{background:#1b8f3c;color:#fff;border-color:#1b8f3c}
+    #map{height:60vh;min-height:320px}
+    .card{padding:.8rem 1rem;border-bottom:1px solid #eef2f6}
+    .hidden{display:none!important}
+  </style>
 </head>
 <body>
   <a href="#app" class="sr-only">Zum Inhalt springen</a>
@@ -34,22 +46,11 @@
     </nav>
   </header>
 
-  <main id="app" role="main" tabindex="-1">
-    <!-- Die App rendert hier Liste/Karte/Filter -->
-    <noscript>Bitte JavaScript aktivieren, um die Family Spots Map zu verwenden.</noscript>
-  </main>
+  <main id="app" role="main" tabindex="-1"></main>
 
-  <!-- (Optional) Beispiel-Dialog – dein Code erzeugt/füllt eigene Dialoge.
-       Der Portal-Helper verschiebt alle [role="dialog"] automatisch ans Body-Ende. -->
-  <!--
-  <div role="dialog" hidden aria-modal="true" data-backdrop-close="true">
-    … Inhalt …
-  </div>
-  -->
-
-  <!-- Overlay/Portal-Fix (Backdrop, z-index, Body-Lock) -->
+  <!-- Overlay/Portal-Fix -->
   <script src="js/dialog-portal.js" defer></script>
-  <!-- App-Start (ES-Module; kann intern sw-register.js importieren) -->
+  <!-- App-Start -->
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
