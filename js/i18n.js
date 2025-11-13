@@ -1,31 +1,39 @@
-let M = {};
 let currentLang = "de";
+let messages = {};
 
-export async function initI18n(lang="de"){
-  currentLang = lang;
-  const res = await fetch(`data/i18n/${lang}.json`);
-  M = await res.json();
-  applyStrings();
-  localStorage.setItem("fsm.lang", lang);
+export function getLanguage() {
+  return currentLang;
 }
-export function t(k){ return M[k] || k; }
-export function getLang(){ return currentLang; }
 
-export function applyStrings(){
-  document.documentElement.lang = currentLang;
-  const y = document.getElementById("year"); if (y) y.textContent = new Date().getFullYear();
-  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  set("title", M.title);
-  set("tagline", M.tagline);
-  const search = document.getElementById("search"); if (search) search.placeholder = M.search_placeholder;
-  set("label-verified", M.toggle_verified);
-  set("label-favs", M.toggle_favorites);
-  set("nearby", M.nearby);
-  set("reset", M.reset);
-  set("tab-list", M.list);
-  set("tab-map", M.map);
-  set("add-spot", M.add_spot);
-  set("import-favs", M.import_favs);
-  set("export", M.export);
-  set("install", M.install);
+export async function initI18n(lang) {
+  const target = lang || currentLang || "de";
+  try {
+    const res = await fetch(`data/i18n/${target}.json`);
+    if (!res.ok) throw new Error("i18n load failed");
+    messages = await res.json();
+    currentLang = target;
+  } catch (err) {
+    console.error(err);
+    if (target !== "de") {
+      return initI18n("de");
+    }
+  }
+}
+
+export function t(key, fallback) {
+  return messages[key] ?? fallback ?? key;
+}
+
+export function applyTranslations(root = document) {
+  root.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const value = t(key);
+    if (value) el.textContent = value;
+  });
+
+  root.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    const value = t(key);
+    if (value) el.setAttribute("placeholder", value);
+  });
 }
