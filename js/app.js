@@ -14,7 +14,7 @@ import {
   getCategories,
   findSpotById,
 } from "./data.js";
-import { initFilters, applyFilters } from "./filters.js";
+import { initFilters, applyFilters, refreshCategorySelect } from "./filters.js";
 import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 import "./sw-register.js";
@@ -31,9 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bootstrapApp().catch((err) => {
     console.error(err);
     // Mehrsprachige Fehlermeldung
-    showToast(
-      t("error_data_load", "Fehler beim Laden der Daten"),
-    );
+    showToast(t("error_data_load", "Fehler beim Laden der Daten"));
   });
 });
 
@@ -94,6 +92,10 @@ function initUIEvents() {
       await initI18n(nextLang);
       saveSettings({ ...settings, language: nextLang });
       applyTranslations();
+
+      // Kategorien-Dropdown in aktiver Sprache neu beschriften
+      const categories = getCategories();
+      refreshCategorySelect(categories);
 
       // Liste neu zeichnen, damit Texte/Textelemente passen
       handleFilterChange({
