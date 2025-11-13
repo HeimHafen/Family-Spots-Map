@@ -116,13 +116,14 @@ body {
   color: #14b8c4;
 }
 
-/* Claim dunkler & etwas fetter */
+/* Claim – zentriert unter dem Titel, ohne Flaggen */
 .header-tagline {
-  margin: 0;
+  margin: 0.1rem auto 0;
   font-size: 0.84rem;
   color: var(--text);
   font-weight: 500;
   line-height: 1.2;
+  max-width: 260px; /* etwas schmaler, damit die Zeilen schön brechen */
 }
 
 .header-tagline-line2 {
