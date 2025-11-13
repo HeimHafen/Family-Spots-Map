@@ -201,6 +201,12 @@ body {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   box-shadow: none;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.btn-icon:active {
+  transform: scale(0.92) translateY(1px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.25);
 }
 
 .input {
@@ -234,19 +240,27 @@ body {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  /* Platz für die feste Bottom-Nav */
   padding-bottom: 3.5rem;
   padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
+  position: relative;
 }
 
 .view {
-  display: none;
-  flex: 1;
-  min-height: 0;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(10px);
+  transition:
+    opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .view--active {
-  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
 }
 
 #view-map {
@@ -484,7 +498,23 @@ body {
   background: rgba(15, 23, 42, 0.94);
 }
 
+.bottom-nav-indicator {
+  position: absolute;
+  top: 0.2rem;
+  bottom: calc(0.2rem + env(safe-area-inset-bottom));
+  left: 0.4rem;
+  width: calc(50% - 0.8rem); /* 2 Tabs */
+  border-radius: 999px;
+  background: rgba(20, 184, 196, 0.1);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18);
+  transform: translateX(0);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .bottom-nav-item {
+  position: relative;
   flex: 1;
   padding: 0.45rem 0.4rem;
   border: none;
@@ -496,6 +526,11 @@ body {
   font-size: 0.73rem;
   color: var(--text-soft);
   cursor: pointer;
+  z-index: 1;
+  transition:
+    color 0.18s ease-out,
+    transform 0.14s ease-out,
+    opacity 0.14s ease-out;
 }
 
 .bottom-nav-icon {
@@ -504,6 +539,12 @@ body {
 
 .bottom-nav-item--active {
   color: var(--primary);
+}
+
+/* „Haptik-Illusion“ beim Tap */
+.bottom-nav-item:active {
+  transform: scale(0.92) translateY(1px);
+  opacity: 0.75;
 }
 
 /* ======================= */
@@ -599,5 +640,20 @@ body {
     left: 50%;
     bottom: 4.2rem;
     transform: translateX(-50%);
+  }
+}
+
+/* ======================= */
+/* REDUCED MOTION */
+/* ======================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .view,
+  .bottom-nav-indicator,
+  .bottom-nav-item,
+  .btn,
+  .btn-icon {
+    transition: none !important;
+    transform: none !important;
   }
 }
