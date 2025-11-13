@@ -1,0 +1,67 @@
+/* Family Spots Map – Overlay/Modal Fix (z-index + stacking) */
+
+/* Z-Index-Levels */
+:root{
+  --z-header: 20;
+  --z-backdrop: 9900;
+  --z-dialog: 9910;
+}
+
+/* Header bleibt immer UNTER dem Dialog */
+header, .header, .topbar, .app-header { z-index: var(--z-header) !important; }
+
+/* Stacking-Kontext-Fallen ausschalten (falls gesetzt) */
+#app, .app, .app-shell, .shell, main, .container {
+  transform: none !important;
+  filter: none !important;
+  perspective: none !important;
+}
+
+/* Backdrop (falls vorhanden oder von JS erzeugt) */
+#dialog-backdrop, .dialog-backdrop, [data-backdrop]{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  z-index: var(--z-backdrop);
+  display: none;
+}
+
+/* Beliebige Dialog-Elemente sicher ganz nach oben legen */
+#dialog-sheet,
+.dialog-sheet,
+.modal,
+[role="dialog"]{
+  position: fixed !important;
+  left: 0; right: 0; bottom: 0;
+  margin: 0 auto;
+  max-height: min(88vh, 720px);
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 10px 40px rgba(0,0,0,.2);
+  z-index: var(--z-dialog) !important;
+  padding: 16px;
+}
+
+/* iOS Safe-Area */
+@supports(padding: max(0px)) {
+  #dialog-sheet,
+  .dialog-sheet,
+  .modal,
+  [role="dialog"]{
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Body-Scroll sperren, wenn irgendein Dialog offen ist */
+.body--dialog-open{
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Sichtbarkeit steuern (JS blendet ein/aus) */
+.is-backdrop-visible{ display: block !important; }
