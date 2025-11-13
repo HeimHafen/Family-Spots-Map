@@ -1,50 +1,61 @@
-import { findSpotById } from "./data.js";
-
-let map = null;
-const markersById = new Map();
-let onMarkerSelectCb = null;
+let mapInstance = null;
+let markersById = new Map();
+let onMarkerSelectCallback = null;
 
 export function initMap({ center, zoom, onMarkerSelect }) {
-  onMarkerSelectCb = onMarkerSelect;
+  onMarkerSelectCallback = onMarkerSelect;
 
-  map = L.map("map", {
+  mapInstance = L.map("map", {
     center: [center.lat, center.lng],
-    zoom,
+    zoom: zoom || center.zoom || 6,
     zoomControl: true
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
+    attribution: "© OpenStreetMap-Mitwirkende"
+  }).addTo(mapInstance);
 }
 
 export function getMap() {
-  return map;
+  return mapInstance;
 }
 
-export function setSpots(spots) {
-  markersById.forEach((m) => m.remove());
+export function setSpotsOnMap(spots) {
+  if (!mapInstance) return;
+
+  markersById.forEach((marker) => marker.remove());
   markersById.clear();
 
-  if (!map) return;
+  if (!spots || !spots.length) return;
+
+  const bounds = [];
 
   spots.forEach((spot) => {
-    const marker = L.marker([spot.location.lat, spot.location.lng]).addTo(map);
+    if (!spot.location) return;
+
+    const marker = L.marker([spot.location.lat, spot.location.lng]);
+    marker.addTo(mapInstance);
     marker.on("click", () => {
-      const fullSpot = findSpotById(spot.id);
-      if (onMarkerSelectCb && fullSpot) {
-        onMarkerSelectCb(fullSpot.id);
+      if (onMarkerSelectCallback) {
+        onMarkerSelectCallback(spot.id);
       }
     });
     markersById.set(spot.id, marker);
+    bounds.push([spot.location.lat, spot.location.lng]);
   });
+
+  if (bounds.length > 1) {
+    mapInstance.fitBounds(bounds, { padding: [40, 40] });
+  }
 }
 
 export function focusOnSpot(spot) {
-  if (!spot || !map) return;
-  map.setView([spot.location.lat, spot.location.lng], 15, {
-    animate: true
-  });
+  if (!mapInstance || !spot?.location) return;
+
+  const target = [spot.location.lat, spot.location.lng];
+  const currentZoom = mapInstance.getZoom();
+  const targetZoom = Math.max(currentZoom, 14);
+
+  mapInstance.setView(target, targetZoom, { animate: true });
 }
