@@ -1,58 +1,123 @@
-// js/storage.js
+const FAVORITES_KEY = "familySpots:favorites";
 
-const SETTINGS_KEY = "fsm.settings.v1";
-const FAV_KEY = "fsm.favorites.v1";
-
-const defaultSettings = {
-  language: "de",
-  theme: "light"
-};
-
-export function getSettings() {
+function supportsLocalStorage() {
   try {
-    const raw = localStorage.getItem(SETTINGS_KEY);
-    if (!raw) return { ...defaultSettings };
-    return { ...defaultSettings, ...JSON.parse(raw) };
-  } catch {
-    return { ...defaultSettings };
+    const testKey = "__fs_test__";
+    window.localStorage.setItem(testKey, "1");
+    window.localStorage.removeItem(testKey);
+    return true;
+  } catch (_err) {
+    return false;
   }
 }
 
-export function saveSettings(settings) {
-  try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  } catch {
-    // ignore
+function normaliseIds(ids) {
+  if (!Array.isArray(ids)) {
+    return [];
   }
+
+  const unique = new Set();
+
+  ids.forEach((id) => {
+    if (typeof id === "string" && id.trim() !== "") {
+      unique.add(id.trim());
+    }
+  });
+
+  return Array.from(unique);
 }
 
-export function getFavorites() {
+/**
+ * Lädt die Favoriten-Spot-IDs aus localStorage.
+ *
+ * @returns {string[]} Array mit Spot-IDs.
+ */
+export function loadFavorites() {
+  if (!supportsLocalStorage()) {
+    return [];
+  }
+
+  const raw = window.localStorage.getItem(FAVORITES_KEY);
+  if (!raw) {
+    return [];
+  }
+
   try {
-    const raw = localStorage.getItem(FAV_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch {
+    const parsed = JSON.parse(raw);
+
+    if (Array.isArray(parsed)) {
+      return normaliseIds(parsed);
+    }
+
+    if (parsed && Array.isArray(parsed.favorites)) {
+      return normaliseIds(parsed.favorites);
+    }
+
+    return [];
+  } catch (_err) {
     return [];
   }
 }
 
-export function setFavorites(ids) {
-  const unique = Array.from(new Set(ids));
-  try {
-    localStorage.setItem(FAV_KEY, JSON.stringify(unique));
-  } catch {
-    // ignore
+/**
+ * Speichert die Favoriten-Spot-IDs in localStorage.
+ *
+ * @param {string[]} favorites
+ */
+export function saveFavorites(favorites) {
+  if (!supportsLocalStorage()) {
+    return;
   }
-  return unique;
+
+  const ids = normaliseIds(favorites);
+  const payload = JSON.stringify(ids);
+
+  window.localStorage.setItem(FAVORITES_KEY, payload);
 }
 
-export function toggleFavorite(id) {
-  const set = new Set(getFavorites());
-  if (set.has(id)) {
-    set.delete(id);
-  } else {
-    set.add(id);
+/**
+ * Erstellt einen teilbaren JSON-String aus einer Favoritenliste.
+ *
+ * @param {string[]} favorites
+ * @returns {string}
+ */
+export function exportFavoritesToString(favorites) {
+  const ids = normaliseIds(favorites);
+
+  const payload = {
+    v: 1,
+    favorites: ids,
+    generatedAt: new Date().toISOString(),
+  };
+
+  return JSON.stringify(payload, null, 2);
+}
+
+/**
+ * Liest Favoriten aus einem importierten JSON-String.
+ * Akzeptiert entweder ["id1","id2"] oder { "favorites": ["id1","id2"] }.
+ *
+ * @param {string} input
+ * @returns {string[]} Importierte Spot-IDs oder [] bei Fehler.
+ */
+export function importFavoritesFromString(input) {
+  if (typeof input !== "string" || input.trim() === "") {
+    return [];
   }
-  return setFavorites(Array.from(set));
+
+  try {
+    const data = JSON.parse(input);
+
+    if (Array.isArray(data)) {
+      return normaliseIds(data);
+    }
+
+    if (data && Array.isArray(data.favorites)) {
+      return normaliseIds(data.favorites);
+    }
+
+    return [];
+  } catch (_err) {
+    return [];
+  }
 }
