@@ -1,6 +1,7 @@
 {
   "app_title": "Family Spots Map",
   "app_tagline": "The most beautiful map for family adventures.",
+
   "filters_title": "Filters",
   "filter_search_label": "Search",
   "filter_search_placeholder": "City, spot, tags ...",
@@ -10,22 +11,55 @@
   "spots_title": "Spots",
   "btn_only_map": "Map only",
   "btn_show_list": "Show list",
+
+  "header_actions_language": "Language",
+  "header_actions_add_spot": "Suggest a spot",
+
+  "search_placeholder": "Search by place, city or keyword …",
+  "filter_verified_only_label": "Verified spots only",
+  "filter_favorites_only_label": "Favorites only",
+  "filter_reset_button": "Reset filters",
+
+  "list_no_results_title": "No spots found",
+  "list_no_results_body": "Try adjusting filters or searching in another area.",
+  "list_results_count_single": "1 spot found",
+  "list_results_count_multi": "{count} spots found",
+
   "badge_verified": "Verified",
+  "badge_favorite": "Favorite",
+
+  "favorites_title": "Favorites",
+  "favorites_export_button": "Export favorites",
+  "favorites_import_button": "Import favorites",
+  "favorites_import_placeholder": "Paste JSON code here …",
+  "favorites_import_help": "The code only contains spot IDs – no personal data.",
+  "favorites_import_success": "Favorites imported.",
+  "favorites_import_error": "Favorites could not be read.\nPlease check the code.",
+
   "label_duration": "Recommended time",
   "fav_add": "Add to favorites",
   "fav_remove": "Remove from favorites",
   "btn_favorite": "Favorite",
   "btn_close_details": "Close details",
-  "no_results": "No matching spots. Try adjusting your filters.",
+
+  "no_results": "No matching spots.\nTry adjusting your filters or exploring another area.",
+
   "toast_location_ok": "Location found",
   "toast_location_error": "Could not get your location",
   "toast_fav_added": "Added to favorites",
   "toast_fav_removed": "Removed from favorites",
+  "toast_copy_success": "Copied to clipboard.",
+  "toast_copy_error": "Could not copy to clipboard.",
+
+  "map_cluster_spots": "Spots in this area",
+  "dialog_close": "Close",
+
   "nav_map": "Map",
   "nav_about": "About",
+
   "about_title": "About Family Spots Map",
   "about_intro": "Family Spots Map was created from real family needs – by parents for parents.",
   "about_body_1": "The map highlights handpicked playgrounds, zoos, wildlife parks, pump tracks, child-friendly museums and more.",
-  "about_body_2": "The focus is on quality, safety and real experiences. Save your favorites and plan your next adventures – even offline.",
+  "about_body_2": "The focus is on quality, safety and real experiences.\nSave your favorites and plan your next adventures – even offline.",
   "about_body_3": "The app grows with the community. Every new spot is an invitation: go out, explore, and build memories."
 }
