@@ -1,15 +1,26 @@
 {
-  "name": "Family Spots Map – ABF 2026",
+  "name": "Family Spots Map",
   "short_name": "Family Spots",
-  "description": "Finden • Spielen • Ankommen. Familienfreundliche Orte in DE & DK.",
-  "start_url": ".",
-  "scope": ".",
+  "start_url": "./index.html",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#FFFFFF",
-  "theme_color": "#1b8f3c",
+  "background_color": "#f7f8fb",
+  "theme_color": "#136f63",
+  "lang": "de",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
   ]
 }
