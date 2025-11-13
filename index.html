@@ -5,6 +5,7 @@
   <title>Family Spots Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Die schönste Karte für Familien-Abenteuer." />
+  <meta name="theme-color" content="#14b8c4" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
@@ -45,10 +46,6 @@
 
     <!-- Buttons rechts -->
     <div class="app-header-right">
-      <button id="btn-locate" class="btn btn-icon" type="button" aria-label="Mich finden">
-        📍
-      </button>
-
       <select
         id="language-switcher"
         class="language-switcher"
@@ -65,6 +62,10 @@
         aria-label="Hell/Dunkel umschalten"
       >
         🌓
+      </button>
+
+      <button id="btn-locate" class="btn btn-icon" type="button" aria-label="Mich finden">
+        📍
       </button>
     </div>
   </header>
