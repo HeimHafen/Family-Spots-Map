@@ -9,6 +9,7 @@
   "filter_search_label": "Search",
   "filter_search_placeholder": "City, spot, tags ...",
   "filter_category_label": "Category",
+  "filter_category_all": "All categories",
   "filter_verified_only": "Verified spots only",
   "filter_favs_only": "Favorites only",
   "filter_verified_only_label": "Verified spots only",
