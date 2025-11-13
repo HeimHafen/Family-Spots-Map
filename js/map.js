@@ -1,63 +1,114 @@
-// js/map.js
+/* global L */
 
-let mapInstance = null;
-let markersById = new Map();
+let map = null;
+let markerLayer = null;
 let onMarkerSelectCallback = null;
+const markersById = new Map();
 
-export function initMap({ center, zoom, onMarkerSelect }) {
-  onMarkerSelectCallback = onMarkerSelect;
+/**
+ * Initialisiert die Leaflet-Karte.
+ *
+ * @param {Object} options
+ * @param {{lat: number, lng: number}} options.center
+ * @param {number} options.zoom
+ * @param {(spotId: string) => void} [options.onMarkerSelect]
+ */
+export function initMap(options) {
+  const { center, zoom, onMarkerSelect } = options;
 
-  mapInstance = L.map("map", {
+  onMarkerSelectCallback = onMarkerSelect || null;
+
+  map = L.map("map", {
     center: [center.lat, center.lng],
-    zoom: zoom || center.zoom || 6,
-    zoomControl: true
+    zoom,
+    zoomControl: true,
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
-    attribution: "© OpenStreetMap-Mitwirkende"
-  }).addTo(mapInstance);
+    attribution: "© OpenStreetMap-Mitwirkende",
+  }).addTo(map);
 }
 
+/**
+ * Liefert die Leaflet-Map-Instanz zurück.
+ */
 export function getMap() {
-  return mapInstance;
+  return map;
 }
 
-export function setSpotsOnMap(spots) {
-  if (!mapInstance) return;
+function ensureMarkerLayer() {
+  if (!map) {
+    return null;
+  }
 
-  markersById.forEach((marker) => marker.remove());
+  if (!markerLayer) {
+    if (typeof L.markerClusterGroup === "function") {
+      // Falls das Clustering-Plugin geladen ist, nutzen wir es
+      markerLayer = L.markerClusterGroup();
+    } else {
+      // Fallback: normale LayerGroup
+      markerLayer = L.layerGroup();
+    }
+
+    markerLayer.addTo(map);
+  }
+
+  return markerLayer;
+}
+
+/**
+ * Zeichnet alle Spots auf die Karte.
+ * Alte Marker werden vorher entfernt.
+ *
+ * @param {Array<{id: string, location: {lat: number, lng: number}}>} spots
+ */
+export function setSpotsOnMap(spots) {
+  if (!map) {
+    return;
+  }
+
+  const layer = ensureMarkerLayer();
+  if (!layer) {
+    return;
+  }
+
+  layer.clearLayers();
   markersById.clear();
 
-  if (!spots || !spots.length) return;
-
-  const bounds = [];
-
   spots.forEach((spot) => {
-    if (!spot.location) return;
+    const { lat, lng } = spot.location;
+    const marker = L.marker([lat, lng]);
 
-    const marker = L.marker([spot.location.lat, spot.location.lng]);
-    marker.addTo(mapInstance);
     marker.on("click", () => {
       if (onMarkerSelectCallback) {
         onMarkerSelectCallback(spot.id);
       }
     });
-    markersById.set(spot.id, marker);
-    bounds.push([spot.location.lat, spot.location.lng]);
-  });
 
-  if (bounds.length > 1) {
-    mapInstance.fitBounds(bounds, { padding: [40, 40] });
-  }
+    layer.addLayer(marker);
+    markersById.set(spot.id, marker);
+  });
 }
 
+/**
+ * Zentriert die Karte auf einen Spot.
+ *
+ * @param {{id: string, location: {lat: number, lng: number}}} spot
+ */
 export function focusOnSpot(spot) {
-  if (!mapInstance || !spot?.location) return;
+  if (!map || !spot) {
+    return;
+  }
 
-  const target = [spot.location.lat, spot.location.lng];
-  const currentZoom = mapInstance.getZoom();
-  const targetZoom = Math.max(currentZoom, 14);
+  const { lat, lng } = spot.location;
 
-  mapInstance.setView(target, targetZoom, { animate: true });
+  map.setView([lat, lng], 15, {
+    animate: true,
+  });
+
+  const marker = markersById.get(spot.id);
+  if (marker && typeof marker.openPopup === "function") {
+    marker.openPopup();
+  }
 }
