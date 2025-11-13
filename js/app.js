@@ -14,7 +14,11 @@ import {
   getCategories,
   findSpotById,
 } from "./data.js";
-import { initFilters, applyFilters, refreshCategorySelect } from "./filters.js";
+import {
+  initFilters,
+  applyFilters,
+  refreshCategorySelect,
+} from "./filters.js";
 import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 import "./sw-register.js";
@@ -174,7 +178,6 @@ function initUIEvents() {
     const labelSpan = filterToggleBtn.querySelector("span");
 
     if (filterSection && labelSpan) {
-      // Alle eigentlichen Filtergruppen (Suche / Kategorie / Checkboxen)
       const filterControls = Array.from(
         filterSection.querySelectorAll(".filter-group"),
       );
@@ -206,8 +209,10 @@ function initUIEvents() {
 function updateRoute(route) {
   const viewMap = $("#view-map");
   const viewAbout = $("#view-about");
+  const navIndicator = $("#bottom-nav-indicator");
+  const buttons = Array.from(document.querySelectorAll(".bottom-nav-item"));
 
-  if (!viewMap || !viewAbout) return;
+  if (!viewMap || !viewAbout || buttons.length === 0) return;
 
   if (route === "about") {
     viewMap.classList.remove("view--active");
@@ -217,11 +222,13 @@ function updateRoute(route) {
     viewMap.classList.add("view--active");
   }
 
-  document.querySelectorAll(".bottom-nav-item").forEach((btn) => {
-    btn.classList.toggle(
-      "bottom-nav-item--active",
-      btn.dataset.route === route,
-    );
+  buttons.forEach((btn, index) => {
+    const isActive = btn.dataset.route === route;
+    btn.classList.toggle("bottom-nav-item--active", isActive);
+
+    if (isActive && navIndicator) {
+      navIndicator.style.transform = `translateX(${index * 100}%)`;
+    }
   });
 }
 
@@ -266,13 +273,11 @@ function handleSpotSelect(id) {
           : t("toast_fav_removed", "Aus Favoriten entfernt"),
       );
 
-      // Liste aktualisieren
       handleFilterChange({
         ...currentFilterState,
         favorites: updatedFavorites,
       });
 
-      // Details nochmals neu zeichnen
       const freshSpot = findSpotById(spotId);
       renderSpotDetails(freshSpot, {
         isFavorite: updatedFavorites.includes(spotId),
