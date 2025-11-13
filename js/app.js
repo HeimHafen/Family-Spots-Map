@@ -37,7 +37,10 @@ let currentFilterState = null;
 let allSpots = [];
 let filteredSpots = [];
 
+// -----------------------------------------------------
 // Bootstrap
+// -----------------------------------------------------
+
 document.addEventListener("DOMContentLoaded", () => {
   bootstrapApp().catch((err) => {
     console.error(err);
@@ -83,10 +86,12 @@ async function bootstrapApp() {
   updateRoute("map");
 }
 
-/* UI + Routing */
+// -----------------------------------------------------
+// UI + Routing
+// -----------------------------------------------------
 
 function initUIEvents() {
-  // Sprache
+  // Sprach-Umschalter
   const langSelect = $("#language-switcher");
   if (langSelect) {
     langSelect.value = getLanguage();
@@ -96,7 +101,8 @@ function initUIEvents() {
       await initI18n(nextLang);
       saveSettings({ ...settings, language: nextLang });
       applyTranslations();
-      // Liste neu ziehen, damit Texte passen
+
+      // Liste neu zeichnen, damit Texte/Textelemente passen
       handleFilterChange({
         ...currentFilterState,
         favorites: getFavorites()
@@ -104,7 +110,7 @@ function initUIEvents() {
     });
   }
 
-  // Theme
+  // Theme-Toggle
   const themeToggle = $("#theme-toggle");
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
@@ -115,7 +121,7 @@ function initUIEvents() {
     });
   }
 
-  // Locate / mich finden
+  // Standort finden
   const locateBtn = $("#btn-locate");
   if (locateBtn) {
     locateBtn.addEventListener("click", async () => {
@@ -143,13 +149,14 @@ function initUIEvents() {
     });
   });
 
-  // Listen-/Kartenansicht im Sidebar-Panel
+  // Listen-/Kartenansicht im Sidebar-Panel umschalten
   const toggleViewBtn = $("#btn-toggle-view");
   if (toggleViewBtn) {
     toggleViewBtn.addEventListener("click", () => {
       const list = $(".sidebar-section--grow");
       const labelSpan = $("#btn-toggle-view span");
       if (!list || !labelSpan) return;
+
       const nowHidden = list.classList.toggle("hidden");
       labelSpan.textContent = nowHidden
         ? t("btn_show_list", "Liste zeigen")
@@ -179,7 +186,9 @@ function updateRoute(route) {
   });
 }
 
-/* Filter-Logik */
+// -----------------------------------------------------
+// Filter-Logik
+// -----------------------------------------------------
 
 function handleFilterChange(filterState) {
   currentFilterState = filterState;
@@ -193,7 +202,9 @@ function handleFilterChange(filterState) {
   });
 }
 
-/* Spot-Auswahl */
+// -----------------------------------------------------
+// Spot-Auswahl
+// -----------------------------------------------------
 
 function handleSpotSelect(id) {
   const spot = findSpotById(id);
@@ -220,7 +231,7 @@ function handleSpotSelect(id) {
         favorites: updatedFavorites
       });
 
-      // Details neu zeichnen
+      // Details nochmals neu zeichnen
       const freshSpot = findSpotById(spotId);
       renderSpotDetails(freshSpot, {
         isFavorite: updatedFavorites.includes(spotId),
@@ -230,7 +241,9 @@ function handleSpotSelect(id) {
   });
 }
 
-/* Theme */
+// -----------------------------------------------------
+// Theme
+// -----------------------------------------------------
 
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
