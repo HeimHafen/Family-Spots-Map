@@ -248,4 +248,4 @@ function handleSpotSelect(id) {
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", value);
-}
+} 
