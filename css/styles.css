@@ -73,7 +73,7 @@ body {
   flex-direction: column;
 }
 
-/* Header – türkiser Balken, wie jetzt */
+/* Header – türkiser Balken, wie in deinem Stil */
 
 .app-header {
   position: sticky;
@@ -128,12 +128,12 @@ body {
   font-size: 1.1rem;
 }
 
-/* Tagline */
+/* Tagline – dezent grau wie in Bild 2 */
 
 .header-tagline {
   margin: 0.1rem 0 0;
   font-size: 0.8rem;
-  color: #0f172a;
+  color: var(--color-text-subtle); /* Grau statt dunklem Blau */
 }
 
 /* Main */
