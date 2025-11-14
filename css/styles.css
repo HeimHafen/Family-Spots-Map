@@ -73,7 +73,7 @@ body {
   flex-direction: column;
 }
 
-/* Header – zurück zu weißer Leiste wie in Bild 1 */
+/* Header – weiße Leiste wie in Bild 1, kompakt */
 
 .app-header {
   position: sticky;
@@ -137,7 +137,7 @@ body {
 .header-tagline {
   margin: 0.1rem 0 0;
   font-size: 0.8rem;
-  color: var(--color-text-subtle); /* dezent grau wie in Bild 1 */
+  color: var(--color-text-subtle); /* dezent grau */
 }
 
 /* Main */
@@ -322,7 +322,8 @@ body {
   align-items: stretch;
   justify-content: space-around;
   gap: 0.5rem;
-  padding: 0.35rem;
+  /* unten + Safe-Area, damit über der iOS-Leiste */
+  padding: 0.35rem 0.35rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--color-border-subtle);
   background-color: var(--color-bg-elevated);
 }
@@ -343,7 +344,7 @@ body {
   position: relative;
   background: transparent;
   border: none;
-  padding: 0.35rem 0.5rem;
+  padding: 0.45rem 0.5rem; /* etwas größerer Klickbereich */
   display: flex;
   flex-direction: column;
   gap: 0.05rem;
@@ -552,6 +553,35 @@ body {
 /* ===========================
    RESPONSIVE
    =========================== */
+
+/* Header noch kompakter auf kleineren Screens */
+
+@media (max-width: 420px) {
+  .app-header {
+    padding: 0.25rem 0.7rem;
+  }
+
+  .header-title {
+    font-size: 1.15rem;
+  }
+
+  .header-flag {
+    font-size: 0.95rem;
+  }
+
+  .app-logo {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Mini-Screens: Tagline ausblenden, damit nichts gequetscht wirkt */
+
+@media (max-width: 360px) {
+  .header-tagline {
+    display: none;
+  }
+}
 
 @media (max-width: 900px) {
   #view-map {
