@@ -13,6 +13,16 @@ const defaultSettings = {
   theme: "light",
 };
 
+const defaultPlusStatus = {
+  active: false,
+  code: null,
+  plan: null,
+  partner: null,
+  source: null,
+  activatedAt: null,
+  expiresAt: null,
+};
+
 // ------------------------
 // Settings (Sprache/Theme)
 // ------------------------
@@ -30,13 +40,44 @@ export function getSettings() {
 
 export function saveSettings(settings) {
   try {
-    localStorage.setItem(
-      SETTINGS_KEY,
-      JSON.stringify(settings),
-    );
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   } catch {
     // ignorieren – z. B. Privacy-Mode
   }
+}
+
+// ------------------------
+// Plus-Status
+// ------------------------
+
+export function getPlusStatus() {
+  try {
+    const raw = localStorage.getItem(PLUS_KEY);
+    if (!raw) return { ...defaultPlusStatus };
+    const parsed = JSON.parse(raw);
+    return { ...defaultPlusStatus, ...parsed };
+  } catch {
+    return { ...defaultPlusStatus };
+  }
+}
+
+export function savePlusStatus(status) {
+  const merged = { ...defaultPlusStatus, ...status, active: true };
+  try {
+    localStorage.setItem(PLUS_KEY, JSON.stringify(merged));
+  } catch {
+    // ignorieren
+  }
+  return merged;
+}
+
+export function clearPlusStatus() {
+  try {
+    localStorage.removeItem(PLUS_KEY);
+  } catch {
+    // ignorieren
+  }
+  return { ...defaultPlusStatus };
 }
 
 // ------------------------
@@ -74,68 +115,4 @@ export function toggleFavorite(id) {
     current.add(id);
   }
   return setFavorites(Array.from(current));
-}
-
-// ------------------------
-// Family Spots Plus
-// ------------------------
-
-/**
- * Gibt den gespeicherten Plus-Status zurück oder null,
- * wenn nichts gespeichert oder abgelaufen ist.
- */
-export function getPlusStatusFromStorage() {
-  try {
-    const raw = localStorage.getItem(PLUS_KEY);
-    if (!raw) return null;
-
-    const parsed = JSON.parse(raw);
-    if (!parsed || !parsed.validUntil) return null;
-
-    const now = Date.now();
-    const validUntilMs = new Date(
-      parsed.validUntil,
-    ).getTime();
-
-    if (
-      Number.isNaN(validUntilMs) ||
-      validUntilMs < now
-    ) {
-      // abgelaufen -> aufräumen
-      localStorage.removeItem(PLUS_KEY);
-      return null;
-    }
-
-    return {
-      plan: parsed.plan || "plus",
-      validUntil: new Date(validUntilMs).toISOString(),
-    };
-  } catch {
-    return null;
-  }
-}
-
-export function savePlusStatusToStorage(status) {
-  if (!status) {
-    try {
-      localStorage.removeItem(PLUS_KEY);
-    } catch {
-      // ignorieren
-    }
-    return;
-  }
-
-  const payload = {
-    plan: status.plan || "plus",
-    validUntil: status.validUntil,
-  };
-
-  try {
-    localStorage.setItem(
-      PLUS_KEY,
-      JSON.stringify(payload),
-    );
-  } catch {
-    // ignorieren
-  }
 }
