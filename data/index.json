@@ -13,32 +13,18 @@
     "homepage": "https://heimhafen.github.io/Family-Spots-Map/",
     "repository": "https://github.com/HeimHafen/Family-Spots-Map"
   },
-
   "defaultLocation": {
     "lat": 52.37,
     "lng": 9.73
   },
-  "defaultZoom": 10,
-
-  "leaflet": {
-    "tileUrl": "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    "tileAttribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>-Mitwirkende"
-  },
-
-  "spotData": {
-    "file": "data/spots.json",
-    "clusterOptions": {
-      "showCoverageOnHover": false
-    }
-  },
-
+  "defaultZoom": 7,
   "features": {
+    "curatedSpots": true,
     "offlineFirst": true,
     "favorites": true,
     "noTracking": true,
     "verifiedSpotsFlag": true
   },
-
   "plans": [
     {
       "id": "free",
@@ -48,19 +34,10 @@
       },
       "description": {
         "de": "Alle Basis-Kategorien, Favoriten und Offline-Karte.",
-        "en": "All basic categories, favorites and offline map."
+        "en": "All core categories, favorites and offline map."
       },
-      "features": {
-        "de": [
-          "Spielplätze, Tiere, Wasser & Natur",
-          "Favoriten speichern (lokal)",
-          "Offline-Karte für bereits geladene Spots"
-        ],
-        "en": [
-          "Playgrounds, animals, water & nature",
-          "Save favorites (locally)",
-          "Offline map for already loaded spots"
-        ]
+      "price": {
+        "eurPerYear": 0
       }
     },
     {
@@ -70,82 +47,409 @@
         "en": "Family Spots Plus"
       },
       "description": {
-        "de": "Zusätzliche Kategorien & kuratierte Routen – freigeschaltet über Partner- oder Promo-Codes.",
-        "en": "Additional categories & curated routes – unlocked via partner or promo codes."
+        "de": "Zusätzliche Spezial-Kategorien für Camping, WoMo & Abenteuer.",
+        "en": "Extra speciality categories for camping, RV and adventures."
       },
-      "features": {
-        "de": [
-          "Zusätzliche Kategorien wie Wohnmobil-Spots, Camping & besondere Abenteuer-Routen",
-          "Pilotprojekte & zeitlich begrenzte Aktionen",
-          "Ideal für Messen, Städte & Partner"
-        ],
-        "en": [
-          "Additional categories like RV spots, camping & special adventure routes",
-          "Pilot projects & time-limited promotions",
-          "Ideal for fairs, cities & partners"
-        ]
+      "price": {
+        "eurPerYear": 2.99
       }
     }
   ],
-
   "plus": {
-    "enabled": false,
-    "unlockTypes": [
-      "partnerCode",
-      "promoCode"
-    ],
-    "info": {
-      "de": {
-        "headline": "Family Spots Plus",
-        "status": "Family Spots Plus ist nicht aktiviert.",
-        "ctaLabel": "Code einlösen",
-        "inputLabel": "Partner- oder Promo-Code eingeben",
-        "description": "Auf der ABF, bei Partnern oder in Aktionen erhältst du zeitlich begrenzte Plus-Codes. Damit schaltest du zusätzliche Kategorien frei – z. B. Wohnmobil-Spots, Campingplätze oder besondere Abenteuer-Routen."
-      },
-      "en": {
-        "headline": "Family Spots Plus",
-        "status": "Family Spots Plus is not activated.",
-        "ctaLabel": "Redeem code",
-        "inputLabel": "Enter partner or promo code",
-        "description": "At events like ABF, from partners or in special campaigns you can get time-limited Plus codes. They unlock additional categories – e.g. RV spots, campsites or special adventure routes."
-      }
-    }
+    "categories": [
+      "rastplatz-spielplatz-dusche",
+      "stellplatz-spielplatz-naehe-kostenlos",
+      "wohnmobil-service-station",
+      "bikepacking-spot",
+      "campingplatz-familien",
+      "kletterwald-hochseilgarten"
+    ]
   },
-
-  "texts": {
-    "de": {
-      "about": {
-        "headline": "Über Family Spots Map",
-        "intro": "Family Spots Map ist aus echten Familienbedürfnissen entstanden – von Eltern für Eltern.",
-        "body": [
-          "Die Karte bündelt ausgewählte Spielplätze, Zoos, Wildparks, Pumptracks, kinderfreundliche Museen, Naturwege und vieles mehr. Im Fokus stehen Qualität, Sicherheit und reale Erfahrungen. Speichere eure Favoriten und plane eure nächsten Abenteuer – auch offline.",
-          "Die App wächst mit der Community. Jeder neue Spot ist eine Einladung: rausgehen, entdecken, Erinnerungen bauen."
-        ]
-      },
-      "usage": {
-        "headline": "Nutzung & Verantwortung",
-        "body": [
-          "Family Spots Map stellt Informationen nach bestem Wissen zur Verfügung, übernimmt aber keine Haftung für Vollständigkeit, Sicherheit oder die Einhaltung lokaler Regeln.",
-          "Bitte beachte vor Ort immer Beschilderungen, Naturschutz, Badeaufsicht, Witterung und eure eigene Einschätzung. Die Nutzung der App erfolgt auf eigene Verantwortung."
-        ]
+  "packs": [],
+  "categories": [
+    {
+      "slug": "spielplatz",
+      "icon": "",
+      "label": {
+        "de": "Spielplatz",
+        "en": "Playground"
       }
     },
-    "en": {
-      "about": {
-        "headline": "About Family Spots Map",
-        "intro": "Family Spots Map was born from real family needs – by parents for parents.",
-        "body": [
-          "The map brings together selected playgrounds, zoos, wildlife parks, pump tracks, child-friendly museums, nature trails and much more. The focus is on quality, safety and real experiences. Save your favorites and plan your next adventures – even offline.",
-          "The app grows with the community. Every new spot is an invitation: go out, explore, create memories."
-        ]
-      },
-      "usage": {
-        "headline": "Usage & responsibility",
-        "body": [
-          "Family Spots Map provides information to the best of its knowledge, but does not assume any liability for completeness, safety or compliance with local rules.",
-          "Always observe local signs, nature protection, lifeguards, weather conditions and your own assessment on site. Use of the app is at your own risk."
-        ]
+    {
+      "slug": "abenteuerspielplatz",
+      "icon": "",
+      "label": {
+        "de": "Abenteuerspielplatz",
+        "en": "Adventure playground"
+      }
+    },
+    {
+      "slug": "indoor-spielplatz",
+      "icon": "",
+      "label": {
+        "de": "Indoor-Spielplatz",
+        "en": "Indoor playground"
+      }
+    },
+    {
+      "slug": "waldspielplatz",
+      "icon": "",
+      "label": {
+        "de": "Waldspielplatz",
+        "en": "Forest playground"
+      }
+    },
+    {
+      "slug": "wasserspielplatz",
+      "icon": "",
+      "label": {
+        "de": "Wasserspielplatz",
+        "en": "Water playground"
+      }
+    },
+    {
+      "slug": "zoo",
+      "icon": "",
+      "label": {
+        "de": "Zoo",
+        "en": "Zoo"
+      }
+    },
+    {
+      "slug": "wildpark",
+      "icon": "",
+      "label": {
+        "de": "Wildpark & Safaris",
+        "en": "Wildlife park & safaris"
+      }
+    },
+    {
+      "slug": "tierpark",
+      "icon": "",
+      "label": {
+        "de": "Tierpark",
+        "en": "Animal park"
+      }
+    },
+    {
+      "slug": "bauernhof",
+      "icon": "",
+      "label": {
+        "de": "Bauernhof",
+        "en": "Farm"
+      }
+    },
+    {
+      "slug": "schwimmbad",
+      "icon": "",
+      "label": {
+        "de": "Schwimmbad",
+        "en": "Swimming pool"
+      }
+    },
+    {
+      "slug": "badesee",
+      "icon": "",
+      "label": {
+        "de": "Badesee",
+        "en": "Swimming lake"
+      }
+    },
+    {
+      "slug": "strand",
+      "icon": "",
+      "label": {
+        "de": "Familien-Strand",
+        "en": "Family beach"
+      }
+    },
+    {
+      "slug": "park-garten",
+      "icon": "",
+      "label": {
+        "de": "Park / Garten",
+        "en": "Park / garden"
+      }
+    },
+    {
+      "slug": "picknickwiese",
+      "icon": "",
+      "label": {
+        "de": "Picknickwiese",
+        "en": "Picnic meadow"
+      }
+    },
+    {
+      "slug": "wanderweg-kinderwagen",
+      "icon": "",
+      "label": {
+        "de": "Wanderweg (kinderwagenfreundlich)",
+        "en": "Stroller-friendly trail"
+      }
+    },
+    {
+      "slug": "radweg-family",
+      "icon": "",
+      "label": {
+        "de": "Familien-Radweg",
+        "en": "Family bike route"
+      }
+    },
+    {
+      "slug": "naturerlebnispfad",
+      "icon": "",
+      "label": {
+        "de": "Naturerlebnispfad",
+        "en": "Nature discovery trail"
+      }
+    },
+    {
+      "slug": "walderlebnisroute",
+      "icon": "",
+      "label": {
+        "de": "Walderlebnisroute",
+        "en": "Forest experience route"
+      }
+    },
+    {
+      "slug": "freizeitpark",
+      "icon": "",
+      "label": {
+        "de": "Freizeitpark",
+        "en": "Theme park"
+      }
+    },
+    {
+      "slug": "minigolf",
+      "icon": "",
+      "label": {
+        "de": "Minigolf",
+        "en": "Mini golf"
+      }
+    },
+    {
+      "slug": "kletterhalle",
+      "icon": "",
+      "label": {
+        "de": "Kletterhalle",
+        "en": "Climbing gym"
+      }
+    },
+    {
+      "slug": "kletteranlage-outdoor",
+      "icon": "",
+      "label": {
+        "de": "Kletteranlage (Outdoor)",
+        "en": "Outdoor climbing area"
+      }
+    },
+    {
+      "slug": "kletterwald-hochseilgarten",
+      "icon": "",
+      "label": {
+        "de": "Kletterwald / Hochseilgarten",
+        "en": "Rope course / climbing forest"
+      }
+    },
+    {
+      "slug": "boulderpark",
+      "icon": "",
+      "label": {
+        "de": "Boulderpark",
+        "en": "Bouldering park"
+      }
+    },
+    {
+      "slug": "trampolinpark",
+      "icon": "",
+      "label": {
+        "de": "Trampolinpark",
+        "en": "Trampoline park"
+      }
+    },
+    {
+      "slug": "skatepark",
+      "icon": "",
+      "label": {
+        "de": "Skatepark",
+        "en": "Skate park"
+      }
+    },
+    {
+      "slug": "pumptrack",
+      "icon": "",
+      "label": {
+        "de": "Pumptrack",
+        "en": "Pumptrack"
+      }
+    },
+    {
+      "slug": "multifunktionsfeld",
+      "icon": "",
+      "label": {
+        "de": "Multifunktionsfeld",
+        "en": "Multi-sport court"
+      }
+    },
+    {
+      "slug": "bolzplatz",
+      "icon": "",
+      "label": {
+        "de": "Bolzplatz",
+        "en": "Soccer court"
+      }
+    },
+    {
+      "slug": "bewegungspark",
+      "icon": "",
+      "label": {
+        "de": "Bewegungspark",
+        "en": "Movement park"
+      }
+    },
+    {
+      "slug": "familiencafe",
+      "icon": "",
+      "label": {
+        "de": "Familiencafé",
+        "en": "Family café"
+      }
+    },
+    {
+      "slug": "kinder-familiencafe",
+      "icon": "",
+      "label": {
+        "de": "Kinder- & Familiencafé",
+        "en": "Kids & family café"
+      }
+    },
+    {
+      "slug": "familien-restaurant",
+      "icon": "",
+      "label": {
+        "de": "Familien-Restaurant",
+        "en": "Family restaurant"
+      }
+    },
+    {
+      "slug": "eisbahn",
+      "icon": "",
+      "label": {
+        "de": "Eisbahn",
+        "en": "Ice rink"
+      }
+    },
+    {
+      "slug": "rodelhuegel",
+      "icon": "",
+      "label": {
+        "de": "Rodelhügel",
+        "en": "Sledding hill"
+      }
+    },
+    {
+      "slug": "oeffentliche-toilette",
+      "icon": "",
+      "label": {
+        "de": "Öffentliche Toilette",
+        "en": "Public toilet"
+      }
+    },
+    {
+      "slug": "wickelraum",
+      "icon": "",
+      "label": {
+        "de": "Wickelraum",
+        "en": "Baby changing room"
+      }
+    },
+    {
+      "slug": "familien-event",
+      "icon": "",
+      "label": {
+        "de": "Familien-Event",
+        "en": "Family event"
+      }
+    },
+    {
+      "slug": "rastplatz-spielplatz-dusche",
+      "icon": "",
+      "label": {
+        "de": "Rastplatz (Spielplatz + Dusche)",
+        "en": "Rest area (playground + shower)"
+      }
+    },
+    {
+      "slug": "stellplatz-spielplatz-naehe-kostenlos",
+      "icon": "",
+      "label": {
+        "de": "Kostenloser Stellplatz (Spielplatznähe)",
+        "en": "Free RV spot (near playground)"
+      }
+    },
+    {
+      "slug": "wohnmobil-service-station",
+      "icon": "",
+      "label": {
+        "de": "Wohnmobil Service-Station",
+        "en": "RV service station"
+      }
+    },
+    {
+      "slug": "campingplatz-familien",
+      "icon": "",
+      "label": {
+        "de": "Familien-Campingplatz",
+        "en": "Family campground"
+      }
+    },
+    {
+      "slug": "bikepacking-spot",
+      "icon": "",
+      "label": {
+        "de": "Bikepacking-Spot",
+        "en": "Bikepacking spot"
+      }
+    },
+    {
+      "slug": "toddler-barfuss-motorik",
+      "icon": "",
+      "label": {
+        "de": "Toddler / Barfuß / Motorik",
+        "en": "Toddler / barefoot / motor skills"
+      }
+    },
+    {
+      "slug": "verkehrsgarten",
+      "icon": "",
+      "label": {
+        "de": "Verkehrsgarten",
+        "en": "Traffic training park"
+      }
+    },
+    {
+      "slug": "freilichtmuseum",
+      "icon": "",
+      "label": {
+        "de": "Freilichtmuseum",
+        "en": "Open-air museum"
+      }
+    },
+    {
+      "slug": "kinder-museum",
+      "icon": "",
+      "label": {
+        "de": "Kinder-Museum",
+        "en": "Children's museum"
+      }
+    },
+    {
+      "slug": "barrierefreier-spielplatz",
+      "icon": "",
+      "label": {
+        "de": "Barrierefreier Spielplatz",
+        "en": "Accessible playground"
       }
     }
-  }
+  ]
 }
