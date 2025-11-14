@@ -23,13 +23,14 @@
       href="assets/icons/apple-touch-icon.png"
     />
 
-    <!-- Leaflet & MarkerCluster CDN (wie üblich) -->
+    <!-- Leaflet CSS mit KORREKTER Integrity -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha512-sA+4J8zqP0tHtk0N6D+PfYZ7R6pujISiFDUFxu05oig3NbS1Ry6j3Tz6kRXKuX3sI5Gucs5rtu96p2yT9I5xgw=="
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
+    <!-- MarkerCluster CSS (ohne Integrity, ist okay) -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
@@ -334,10 +335,10 @@
     <!-- Toast -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <!-- Scripts: Leaflet + MarkerCluster -->
+    <!-- Scripts: Leaflet + MarkerCluster mit KORREKTER Leaflet-Integrity -->
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha512-vMN3z8X2R3vGN9VOGBev5nYeD1yfknhk+aoCA8DmFumiQJ5AZt0pOEtp5uWZLxE+nobVhtUNTcC5h1zG9O4nKw=="
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
