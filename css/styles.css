@@ -1,3 +1,10 @@
+Hier ist die komplette, bereinigte css/styles.css:
+	•	Header: weiß, Claim grau (wie auf deinem Screenshot).
+	•	Buttons 🗺️ / ℹ️ funktionieren (View-Handling bleibt wie gehabt).
+	•	Pin 📍 rechts bekommt etwas Abstand nach innen.
+
+Bitte deine css/styles.css 1:1 ersetzen.
+
 /* ===========================
    RESET & BASICS
    =========================== */
@@ -73,7 +80,7 @@ body {
   flex-direction: column;
 }
 
-/* Header – WEISSER Balken, Claim grau */
+/* Header – weißer Balken, Claim grau */
 
 .app-header {
   position: sticky;
@@ -135,6 +142,11 @@ body {
   margin: 0.1rem 0 0;
   font-size: 0.8rem;
   color: var(--color-text-subtle);
+}
+
+/* Pin-Button im Header etwas von der rechten Kante abrücken */
+.app-header-right .btn-icon:last-child {
+  margin-right: 0.35rem;
 }
 
 /* Main */
@@ -399,7 +411,7 @@ body {
   justify-content: center;
   gap: 0.25rem;
   transition: background-color 0.12s ease-out, color 0.12s ease-out,
-    border-color 0.12s.ease-out, transform 0.05s ease-out;
+    border-color 0.12s ease-out, transform 0.05s ease-out;
 }
 
 .btn {
@@ -528,7 +540,7 @@ body {
   font-size: 0.85rem;
   text-align: center;
   opacity: 0;
-  transition: transform 0.2s ease-out, opacity 0.2s.ease-out;
+  transition: transform 0.2s ease-out, opacity 0.2s ease-out;
   z-index: 40;
 }
 
