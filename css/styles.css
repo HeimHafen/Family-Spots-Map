@@ -57,6 +57,12 @@ body {
   color: var(--color-text);
 }
 
+/* Hilfsklasse für JS-Show/Hide */
+
+.hidden {
+  display: none !important;
+}
+
 /* ===========================
    APP LAYOUT
    =========================== */
@@ -78,8 +84,8 @@ body {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.5rem 1rem;
-  background-color: var(--color-bg-elevated);
-  border-bottom: 1px solid var(--color-border-subtle);
+  background-color: #00c4cf; /* türkiser Balken */
+  color: #0f172a;
   box-shadow: 0 2px 6px var(--color-shadow-soft);
 }
 
@@ -99,7 +105,8 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  box-shadow: 0 0 0 1px var(--color-border-subtle);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.15);
+  background: #ffffff;
 }
 
 .header-flags {
@@ -117,13 +124,13 @@ body {
 }
 
 .header-title-spots {
-  color: var(--color-accent-strong);
+  color: #004f66;
 }
 
 .header-tagline {
   margin: 0.1rem 0 0;
   font-size: 0.8rem;
-  color: var(--color-text-subtle);
+  color: #0f172a;
 }
 
 .header-tagline-line2 {
@@ -166,7 +173,7 @@ body {
   min-width: 280px;
   max-width: 420px;
   border-right: 1px solid var(--color-border-subtle);
-  background-color: var(--color-bg-elevated);
+  background-color: var(--color-bg);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -467,12 +474,25 @@ body {
   color: var(--color-text-subtle);
 }
 
-.plus-code-form .input {
+.plus-code-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+  flex-wrap: nowrap;
+}
+
+.plus-code-row .input {
   flex: 1;
 }
 
-.plus-code-form .btn {
+.plus-code-row .btn {
   white-space: nowrap;
+}
+
+.plus-note {
+  font-size: 0.8rem;
+  color: #5b6475;
+  margin-top: 0.4rem;
 }
 
 #plus-status-text {
@@ -542,17 +562,13 @@ body {
     border-bottom: 1px solid var(--color-border-subtle);
   }
 
-  .spot-details {
-    position: fixed;
-    bottom: 3.5rem;
-    right: 0.75rem;
-    left: 0.75rem;
-    max-width: none;
-    max-height: 50vh;
+  .map-section {
+    height: calc(100vh - 10rem);
   }
 
-  .app-header-center {
-    display: none;
+  .spot-details {
+    position: static;
+    max-height: 18rem;
   }
 }
 
