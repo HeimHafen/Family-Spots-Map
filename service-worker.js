@@ -1,4 +1,4 @@
-const CACHE_NAME = "family-spots-map-v29";
+const CACHE_NAME = "family-spots-map-v26"; // <- Version hochgesetzt
 const OFFLINE_URL = "offline.html";
 
 const ASSETS = [
@@ -22,12 +22,12 @@ const ASSETS = [
   "data/i18n/en.json",
   "assets/logo.svg",
   "assets/icons/icon-192.png",
-  "assets/icons/icon-512.png"
+  "assets/icons/icon-512.png",
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)),
   );
   self.skipWaiting();
 });
@@ -40,9 +40,9 @@ self.addEventListener("activate", (event) => {
         Promise.all(
           keys
             .filter((key) => key !== CACHE_NAME)
-            .map((key) => caches.delete(key))
-        )
-      )
+            .map((key) => caches.delete(key)),
+        ),
+      ),
   );
   self.clients.claim();
 });
@@ -60,6 +60,6 @@ self.addEventListener("fetch", (event) => {
         }
         return undefined;
       });
-    })
+    }),
   );
 });
