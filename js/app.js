@@ -7,7 +7,12 @@ import {
   getFavorites,
   toggleFavorite,
 } from "./storage.js";
-import { initI18n, applyTranslations, getLanguage, t } from "./i18n.js";
+import {
+  initI18n,
+  applyTranslations,
+  getLanguage,
+  t,
+} from "./i18n.js";
 import {
   loadAppData,
   getSpots,
@@ -19,13 +24,40 @@ import {
   applyFilters,
   refreshCategorySelect,
 } from "./filters.js";
-import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
-import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
+import {
+  initMap,
+  setSpotsOnMap,
+  focusOnSpot,
+  getMap,
+} from "./map.js";
+import {
+  renderSpotList,
+  renderSpotDetails,
+  showToast,
+} from "./ui.js";
+import {
+  getPlusStatus,
+  redeemPartnerCode,
+  formatPlusStatus,
+} from "./plus.js";
+
 import "./sw-register.js";
 
 let currentFilterState = null;
 let allSpots = [];
 let filteredSpots = [];
+
+// -----------------------------------------------------
+// Family Spots Plus – Status UI
+// -----------------------------------------------------
+
+function updatePlusStatusUI() {
+  const statusEl = $("#plus-status-text");
+  if (!statusEl) return;
+
+  const status = getPlusStatus();
+  statusEl.textContent = formatPlusStatus(status);
+}
 
 // -----------------------------------------------------
 // Bootstrap
@@ -35,20 +67,20 @@ document.addEventListener("DOMContentLoaded", () => {
   bootstrapApp().catch((err) => {
     console.error(err);
     // Mehrsprachige Fehlermeldung
-    showToast(t("error_data_load", "Fehler beim Laden der Daten"));
+    showToast(
+      t("error_data_load", "Fehler beim Laden der Daten"),
+    );
   });
 });
 
 async function bootstrapApp() {
   const settings = getSettings();
-
   applyTheme(settings.theme);
 
   await initI18n(settings.language);
   applyTranslations();
 
   const { index } = await loadAppData();
-
   allSpots = getSpots();
   const categories = getCategories();
 
@@ -75,6 +107,9 @@ async function bootstrapApp() {
     favorites: getFavorites(),
     onSelect: handleSpotSelect,
   });
+
+  // Plus-Status direkt nach dem ersten Render anzeigen
+  updatePlusStatusUI();
 
   initUIEvents();
   updateRoute("map");
@@ -106,6 +141,9 @@ function initUIEvents() {
         ...currentFilterState,
         favorites: getFavorites(),
       });
+
+      // Plus-Status kann Sprachabhängig sein (Datum, Texte)
+      updatePlusStatusUI();
     });
   }
 
@@ -114,8 +152,8 @@ function initUIEvents() {
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
       const settings = getSettings();
-      const nextTheme = settings.theme === "dark" ? "light" : "dark";
-
+      const nextTheme =
+        settings.theme === "dark" ? "light" : "dark";
       applyTheme(nextTheme);
       saveSettings({ ...settings, theme: nextTheme });
     });
@@ -128,12 +166,12 @@ function initUIEvents() {
       try {
         const pos = await getGeolocation();
         const map = getMap();
-
         if (map) {
           map.setView([pos.lat, pos.lng], 14);
         }
-
-        showToast(t("toast_location_ok", "Position gefunden"));
+        showToast(
+          t("toast_location_ok", "Position gefunden"),
+        );
       } catch (err) {
         console.error(err);
         showToast(
@@ -160,11 +198,9 @@ function initUIEvents() {
     toggleViewBtn.addEventListener("click", () => {
       const list = $(".sidebar-section--grow");
       const labelSpan = $("#btn-toggle-view span");
-
       if (!list || !labelSpan) return;
 
       const nowHidden = list.classList.toggle("hidden");
-
       labelSpan.textContent = nowHidden
         ? t("btn_show_list", "Liste zeigen")
         : t("btn_only_map", "Nur Karte");
@@ -174,8 +210,10 @@ function initUIEvents() {
   // Filter-Panel ein-/ausblenden
   const filterToggleBtn = $("#btn-toggle-filters");
   if (filterToggleBtn) {
-    const filterSection = filterToggleBtn.closest(".sidebar-section");
-    const labelSpan = filterToggleBtn.querySelector("span");
+    const filterSection =
+      filterToggleBtn.closest(".sidebar-section");
+    const labelSpan =
+      filterToggleBtn.querySelector("span");
 
     if (filterSection && labelSpan) {
       const filterControls = Array.from(
@@ -185,9 +223,8 @@ function initUIEvents() {
       filterToggleBtn.addEventListener("click", () => {
         if (filterControls.length === 0) return;
 
-        const currentlyHidden = filterControls[0].classList.contains(
-          "hidden",
-        );
+        const currentlyHidden =
+          filterControls[0].classList.contains("hidden");
         const makeVisible = currentlyHidden;
 
         filterControls.forEach((el) => {
@@ -204,13 +241,64 @@ function initUIEvents() {
       });
     }
   }
+
+  // -----------------------------------
+  // Family Spots Plus – Partner-Code
+  // -----------------------------------
+  const plusInput = $("#plus-code-input");
+  const plusButton = $("#plus-code-submit");
+
+  if (plusInput && plusButton) {
+    plusButton.addEventListener("click", async () => {
+      const rawCode = plusInput.value;
+
+      if (!rawCode || !rawCode.trim()) {
+        showToast(
+          t("plus_code_empty", "Bitte gib einen Code ein."),
+        );
+        return;
+      }
+
+      try {
+        const result = await redeemPartnerCode(rawCode);
+        if (!result.ok) {
+          showToast(
+            t(
+              "plus_code_invalid",
+              "Dieser Code ist leider ungültig oder nicht mehr aktiv.",
+            ),
+          );
+          return;
+        }
+
+        plusInput.value = "";
+        updatePlusStatusUI();
+        showToast(
+          t(
+            "plus_code_ok",
+            "Family Spots Plus wurde freigeschaltet!",
+          ),
+        );
+      } catch (err) {
+        console.error(err);
+        showToast(
+          t(
+            "plus_code_error",
+            "Beim Einlösen des Codes ist ein Fehler aufgetreten.",
+          ),
+        );
+      }
+    });
+  }
 }
 
 function updateRoute(route) {
   const viewMap = $("#view-map");
   const viewAbout = $("#view-about");
   const navIndicator = $("#bottom-nav-indicator");
-  const buttons = Array.from(document.querySelectorAll(".bottom-nav-item"));
+  const buttons = Array.from(
+    document.querySelectorAll(".bottom-nav-item"),
+  );
 
   if (!viewMap || !viewAbout || buttons.length === 0) return;
 
@@ -224,10 +312,14 @@ function updateRoute(route) {
 
   buttons.forEach((btn, index) => {
     const isActive = btn.dataset.route === route;
-    btn.classList.toggle("bottom-nav-item--active", isActive);
-
+    btn.classList.toggle(
+      "bottom-nav-item--active",
+      isActive,
+    );
     if (isActive && navIndicator) {
-      navIndicator.style.transform = `translateX(${index * 100}%)`;
+      navIndicator.style.transform = `translateX(${
+        index * 100
+      }%)`;
     }
   });
 }
@@ -238,11 +330,9 @@ function updateRoute(route) {
 
 function handleFilterChange(filterState) {
   currentFilterState = filterState;
-
   filteredSpots = applyFilters(allSpots, filterState);
 
   setSpotsOnMap(filteredSpots);
-
   renderSpotList(filteredSpots, {
     favorites: filterState.favorites,
     onSelect: handleSpotSelect,
@@ -269,8 +359,14 @@ function handleSpotSelect(id) {
 
       showToast(
         updatedFavorites.includes(spotId)
-          ? t("toast_fav_added", "Zu Favoriten hinzugefügt")
-          : t("toast_fav_removed", "Aus Favoriten entfernt"),
+          ? t(
+              "toast_fav_added",
+              "Zu Favoriten hinzugefügt",
+            )
+          : t(
+              "toast_fav_removed",
+              "Aus Favoriten entfernt",
+            ),
       );
 
       handleFilterChange({
@@ -293,5 +389,8 @@ function handleSpotSelect(id) {
 
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
-  document.documentElement.setAttribute("data-theme", value);
+  document.documentElement.setAttribute(
+    "data-theme",
+    value,
+  );
 }
