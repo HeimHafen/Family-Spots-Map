@@ -1,11 +1,15 @@
 // js/plus.js
 
-import { getPlusStatusFromStorage, savePlusStatusToStorage } from "./storage.js";
+import {
+  getPlusStatusFromStorage,
+  savePlusStatusToStorage,
+} from "./storage.js";
 import { t } from "./i18n.js";
 
 const PARTNERS_URL = "data/partners.json";
 
-// Welche Kategorien später Plus sein sollen (kannst du jederzeit anpassen)
+// Welche Kategorien später Plus sein sollen
+// (kannst du jederzeit anpassen)
 const PLUS_CATEGORIES = new Set([
   "rastplatz-spielplatz-dusche",
   "stellplatz-spielplatz-naehe-kostenlos",
@@ -24,9 +28,17 @@ let cachedPartnerCodes = null;
 export function getPlusStatus() {
   const stored = getPlusStatusFromStorage();
   if (!stored) {
-    return { active: false, plan: null, validUntil: null };
+    return {
+      active: false,
+      plan: null,
+      validUntil: null,
+    };
   }
-  return { active: true, plan: stored.plan, validUntil: stored.validUntil };
+  return {
+    active: true,
+    plan: stored.plan,
+    validUntil: stored.validUntil,
+  };
 }
 
 export function isPlusActive() {
@@ -38,7 +50,9 @@ export function isPlusCategory(slug) {
   return PLUS_CATEGORIES.has(slug);
 }
 
-export function formatPlusStatus(status = getPlusStatus()) {
+export function formatPlusStatus(
+  status = getPlusStatus(),
+) {
   if (!status.active) {
     return t(
       "plus_status_inactive",
@@ -74,10 +88,15 @@ async function loadPartnerCodes() {
       return cachedPartnerCodes;
     }
     const json = await res.json();
-    cachedPartnerCodes = Array.isArray(json.codes) ? json.codes : [];
+    cachedPartnerCodes = Array.isArray(json.codes)
+      ? json.codes
+      : [];
     return cachedPartnerCodes;
   } catch (err) {
-    console.error("Error loading partner codes", err);
+    console.error(
+      "Error loading partner codes",
+      err,
+    );
     cachedPartnerCodes = [];
     return cachedPartnerCodes;
   }
@@ -88,14 +107,19 @@ async function loadPartnerCodes() {
  * Gibt ein Objekt { ok, reason?, status?, entry? } zurück.
  */
 export async function redeemPartnerCode(rawCode) {
-  const code = (rawCode || "").trim().toUpperCase();
+  const code = (rawCode || "")
+    .trim()
+    .toUpperCase();
   if (!code) {
     return { ok: false, reason: "empty" };
   }
 
   const codes = await loadPartnerCodes();
   const entry = codes.find(
-    (c) => c.code && c.code.toUpperCase() === code && c.enabled !== false,
+    (c) =>
+      c.code &&
+      c.code.toUpperCase() === code &&
+      c.enabled !== false,
   );
 
   if (!entry) {
@@ -104,11 +128,16 @@ export async function redeemPartnerCode(rawCode) {
 
   const days = Number(entry.days) || 0;
   if (!days || days <= 0) {
-    return { ok: false, reason: "invalid_days" };
+    return {
+      ok: false,
+      reason: "invalid_days",
+    };
   }
 
   const now = Date.now();
-  const validUntil = new Date(now + days * 24 * 60 * 60 * 1000);
+  const validUntil = new Date(
+    now + days * 24 * 60 * 60 * 1000,
+  );
 
   const status = {
     plan: entry.plan || "plus",
