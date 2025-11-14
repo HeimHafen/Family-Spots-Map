@@ -73,7 +73,7 @@ body {
   flex-direction: column;
 }
 
-/* Header – weiße Leiste wie in Bild 1, kompakt */
+/* Header – weiße Leiste, kompakt */
 
 .app-header {
   position: sticky;
@@ -149,25 +149,21 @@ body {
   min-height: 0;
 }
 
-/* Views: Sichtbarkeit NUR über view--active */
+/* Views – Sichtbarkeit NUR über view--active */
 
 .view {
   flex: 1;
   min-height: 0;
-}
-
-.view--active {
-  display: block;
-}
-
-.view:not(.view--active) {
   display: none;
+}
+
+.view.view--active {
+  display: flex;
 }
 
 /* Map View Layout */
 
 #view-map {
-  display: flex;
   flex-direction: row;
   min-height: calc(100vh - 120px);
 }
@@ -557,7 +553,7 @@ body {
    RESPONSIVE
    =========================== */
 
-/* Header noch kompakter auf kleineren Screens */
+/* Header kompakter auf kleineren Screens */
 
 @media (max-width: 420px) {
   .app-header {
