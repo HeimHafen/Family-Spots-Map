@@ -125,7 +125,8 @@ body {
 }
 
 .header-title-spots {
-  color: #14b8c4; /* Spots in Türkis */
+  color: #14b8c4 !important; /* Spots klar türkis */
+  font-weight: 700;
 }
 
 .header-flag {
