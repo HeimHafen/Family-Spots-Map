@@ -1,5 +1,5 @@
 // js/header-tagline.js
-// Slogan aus data/index.json holen und an Sprache anpassen
+// Holt den Slogan aus data/index.json und passt ihn an die Sprache an
 
 document.addEventListener("DOMContentLoaded", () => {
   const taglineEl = document.querySelector(".header-tagline");
