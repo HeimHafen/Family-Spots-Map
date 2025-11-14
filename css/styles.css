@@ -73,7 +73,7 @@ body {
   flex-direction: column;
 }
 
-/* Header – weiße Leiste, kompakt */
+/* Header – türkiser Balken, wie jetzt */
 
 .app-header {
   position: sticky;
@@ -83,11 +83,10 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.4rem 0.9rem;
-  background-color: var(--color-bg-elevated); /* weißer Header */
-  color: var(--color-text);
-  border-bottom: 1px solid var(--color-border-subtle);
-  box-shadow: 0 1px 2px var(--color-shadow-soft);
+  padding: 0.5rem 1rem;
+  background-color: #00c4cf; /* türkiser Balken */
+  color: #0f172a;
+  box-shadow: 0 2px 6px var(--color-shadow-soft);
 }
 
 .app-header-left,
@@ -95,14 +94,11 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex-shrink: 0;
 }
 
 .app-header-center {
-  flex: 1 1 auto;
   text-align: center;
   max-width: 420px;
-  min-width: 0;
 }
 
 /* Logo */
@@ -137,7 +133,7 @@ body {
 .header-tagline {
   margin: 0.1rem 0 0;
   font-size: 0.8rem;
-  color: var(--color-text-subtle); /* dezent grau */
+  color: #0f172a;
 }
 
 /* Main */
@@ -148,6 +144,10 @@ body {
   flex-direction: column;
   min-height: 0;
 }
+
+/* ===========================
+   VIEWS & LAYOUT
+   =========================== */
 
 /* Views – Sichtbarkeit NUR über view--active */
 
@@ -343,7 +343,7 @@ body {
   position: relative;
   background: transparent;
   border: none;
-  padding: 0.45rem 0.5rem; /* etwas größerer Klickbereich */
+  padding: 0.45rem 0.5rem; /* größerer Klickbereich */
   display: flex;
   flex-direction: column;
   gap: 0.05rem;
