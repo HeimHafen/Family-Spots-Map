@@ -1,4 +1,4 @@
-const CACHE_NAME = "family-spots-map-v23";
+const CACHE_NAME = "family-spots-map-v24";
 const OFFLINE_URL = "offline.html";
 
 const ASSETS = [
