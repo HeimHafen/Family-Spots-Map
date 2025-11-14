@@ -5,29 +5,450 @@
     "de": "Die schönste Karte für Familien-Abenteuer.",
     "en": "The most beautiful map for family adventures."
   },
+  "languages": [
+    "de",
+    "en"
+  ],
+  "meta": {
+    "homepage": "https://heimhafen.github.io/Family-Spots-Map/",
+    "repository": "https://github.com/HeimHafen/Family-Spots-Map"
+  },
   "defaultLocation": {
     "lat": 51.0,
     "lng": 10.0,
     "zoom": 6
   },
+  "features": {
+    "curatedSpots": true,
+    "offlineFirst": true,
+    "favorites": true,
+    "noTracking": true,
+    "verifiedSpotsFlag": true
+  },
+  "plans": [
+    {
+      "id": "free",
+      "label": {
+        "de": "Family Spots – Basis",
+        "en": "Family Spots – Free"
+      },
+      "description": {
+        "de": "Alle Basis-Kategorien, Favoriten und Offline-Karte.",
+        "en": "All core categories, favorites and offline map."
+      },
+      "price": {
+        "eurPerYear": 0
+      }
+    },
+    {
+      "id": "plus",
+      "label": {
+        "de": "Family Spots Plus",
+        "en": "Family Spots Plus"
+      },
+      "description": {
+        "de": "Zusätzliche Spezial-Kategorien für Camping, WoMo & Abenteuer.",
+        "en": "Extra speciality categories for camping, RV and adventures."
+      },
+      "price": {
+        "eurPerYear": 2.99
+      }
+    }
+  ],
+  "plus": {
+    "categories": [
+      "rastplatz-spielplatz-dusche",
+      "stellplatz-spielplatz-naehe-kostenlos",
+      "wohnmobil-service-station",
+      "bikepacking-spot",
+      "campingplatz-familien",
+      "kletterwald-hochseilgarten"
+    ]
+  },
   "categories": [
-    { "slug": "spielplatz", "icon": "🛝", "label": { "de": "Spielplätze", "en": "Playgrounds" } },
-    { "slug": "abenteuerspielplatz", "icon": "🏕️", "label": { "de": "Abenteuerspielplätze", "en": "Adventure playgrounds" } },
-    { "slug": "waldspielplatz", "icon": "🌲", "label": { "de": "Waldspielplätze", "en": "Forest playgrounds" } },
-    { "slug": "wasserspielplatz", "icon": "💦", "label": { "de": "Wasserspielplätze", "en": "Water playgrounds" } },
-    { "slug": "zoo", "icon": "🦁", "label": { "de": "Zoos", "en": "Zoos" } },
-    { "slug": "wildpark", "icon": "🦌", "label": { "de": "Wildparks & Safaris", "en": "Wildlife parks & safaris" } },
-    { "slug": "tierpark", "icon": "🐻", "label": { "de": "Tierparks", "en": "Animal parks" } },
-    { "slug": "freizeitpark", "icon": "🎢", "label": { "de": "Freizeitparks", "en": "Theme parks" } },
-    { "slug": "kinder_museum", "icon": "🏛️", "label": { "de": "Kinder-Museen", "en": "Children's museums" } },
-    { "slug": "pumptrack", "icon": "🚴", "label": { "de": "Pumptracks", "en": "Pump tracks" } },
-    { "slug": "skatepark", "icon": "🛹", "label": { "de": "Skateparks", "en": "Skate parks" } },
-    { "slug": "multifunktionsfeld", "icon": "🏀", "label": { "de": "Multifeld & Sport", "en": "Multi courts & sports" } },
-    { "slug": "park-garten", "icon": "🌿", "label": { "de": "Parks & Gärten", "en": "Parks & gardens" } },
-    { "slug": "badesee", "icon": "🏖️", "label": { "de": "Badeseen", "en": "Lakes & swimming spots" } },
-    { "slug": "schwimmbad", "icon": "🏊", "label": { "de": "Schwimmbäder", "en": "Pools" } },
-    { "slug": "familiencafe", "icon": "☕", "label": { "de": "Familiencafés", "en": "Family cafés" } },
-    { "slug": "radweg-family", "icon": "🚲", "label": { "de": "Familien-Radwege", "en": "Family bike routes" } },
-    { "slug": "wanderweg-kinderwagen", "icon": "👶", "label": { "de": "Kinderwagenfreundliche Wege", "en": "Stroller-friendly trails" } }
+    {
+      "slug": "spielplatz",
+      "icon": "",
+      "label": {
+        "de": "Spielplätze",
+        "en": "Playgrounds"
+      }
+    },
+    {
+      "slug": "abenteuerspielplatz",
+      "icon": "️",
+      "label": {
+        "de": "Abenteuerspielplätze",
+        "en": "Adventure playgrounds"
+      }
+    },
+    {
+      "slug": "waldspielplatz",
+      "icon": "",
+      "label": {
+        "de": "Waldspielplätze",
+        "en": "Forest playgrounds"
+      }
+    },
+    {
+      "slug": "wasserspielplatz",
+      "icon": "",
+      "label": {
+        "de": "Wasserspielplätze",
+        "en": "Water playgrounds"
+      }
+    },
+    {
+      "slug": "zoo",
+      "icon": "",
+      "label": {
+        "de": "Zoos",
+        "en": "Zoos"
+      }
+    },
+    {
+      "slug": "wildpark",
+      "icon": "",
+      "label": {
+        "de": "Wildparks & Safaris",
+        "en": "Wildlife parks & safaris"
+      }
+    },
+    {
+      "slug": "tierpark",
+      "icon": "",
+      "label": {
+        "de": "Tierparks",
+        "en": "Animal parks"
+      }
+    },
+    {
+      "slug": "freizeitpark",
+      "icon": "",
+      "label": {
+        "de": "Freizeitparks",
+        "en": "Theme parks"
+      }
+    },
+    {
+      "slug": "kinder_museum",
+      "icon": "️",
+      "label": {
+        "de": "Kinder-Museen",
+        "en": "Children's museums"
+      }
+    },
+    {
+      "slug": "pumptrack",
+      "icon": "",
+      "label": {
+        "de": "Pumptracks",
+        "en": "Pump tracks"
+      }
+    },
+    {
+      "slug": "skatepark",
+      "icon": "",
+      "label": {
+        "de": "Skateparks",
+        "en": "Skate parks"
+      }
+    },
+    {
+      "slug": "multifunktionsfeld",
+      "icon": "",
+      "label": {
+        "de": "Multifeld & Sport",
+        "en": "Multi courts & sports"
+      }
+    },
+    {
+      "slug": "park-garten",
+      "icon": "",
+      "label": {
+        "de": "Parks & Gärten",
+        "en": "Parks & gardens"
+      }
+    },
+    {
+      "slug": "badesee",
+      "icon": "️",
+      "label": {
+        "de": "Badeseen",
+        "en": "Lakes & swimming spots"
+      }
+    },
+    {
+      "slug": "schwimmbad",
+      "icon": "",
+      "label": {
+        "de": "Schwimmbäder",
+        "en": "Pools"
+      }
+    },
+    {
+      "slug": "familiencafe",
+      "icon": "☕",
+      "label": {
+        "de": "Familiencafés",
+        "en": "Family cafés"
+      }
+    },
+    {
+      "slug": "radweg-family",
+      "icon": "",
+      "label": {
+        "de": "Familien-Radwege",
+        "en": "Family bike routes"
+      }
+    },
+    {
+      "slug": "wanderweg-kinderwagen",
+      "icon": "",
+      "label": {
+        "de": "Kinderwagenfreundliche Wege",
+        "en": "Stroller-friendly trails"
+      }
+    },
+    {
+      "slug": "indoor-spielplatz",
+      "icon": "",
+      "label": {
+        "de": "Indoor-Spielplätze",
+        "en": "Indoor playgrounds"
+      }
+    },
+    {
+      "slug": "bauernhof",
+      "icon": "",
+      "label": {
+        "de": "Bauernhöfe & Hofcafés",
+        "en": "Farms & farm cafés"
+      }
+    },
+    {
+      "slug": "picknickwiese",
+      "icon": "",
+      "label": {
+        "de": "Picknickwiesen",
+        "en": "Picnic lawns"
+      }
+    },
+    {
+      "slug": "minigolf",
+      "icon": "",
+      "label": {
+        "de": "Minigolfanlagen",
+        "en": "Mini golf courses"
+      }
+    },
+    {
+      "slug": "kletterhalle",
+      "icon": "",
+      "label": {
+        "de": "Kletterhallen",
+        "en": "Indoor climbing gyms"
+      }
+    },
+    {
+      "slug": "kletteranlage-outdoor",
+      "icon": "",
+      "label": {
+        "de": "Kletteranlagen (Outdoor)",
+        "en": "Outdoor climbing areas"
+      }
+    },
+    {
+      "slug": "boulderpark",
+      "icon": "",
+      "label": {
+        "de": "Boulderparks",
+        "en": "Bouldering parks"
+      }
+    },
+    {
+      "slug": "trampolinpark",
+      "icon": "",
+      "label": {
+        "de": "Trampolinparks",
+        "en": "Trampoline parks"
+      }
+    },
+    {
+      "slug": "bolzplatz",
+      "icon": "",
+      "label": {
+        "de": "Bolzplätze",
+        "en": "Soccer courts"
+      }
+    },
+    {
+      "slug": "bewegungspark",
+      "icon": "",
+      "label": {
+        "de": "Bewegungsparks",
+        "en": "Movement parks"
+      }
+    },
+    {
+      "slug": "familien-restaurant",
+      "icon": "",
+      "label": {
+        "de": "Familien-Restaurants",
+        "en": "Family restaurants"
+      }
+    },
+    {
+      "slug": "kinder-familiencafe",
+      "icon": "",
+      "label": {
+        "de": "Kinder- & Familiencafés",
+        "en": "Kids & family cafés"
+      }
+    },
+    {
+      "slug": "eisbahn",
+      "icon": "",
+      "label": {
+        "de": "Eisbahnen",
+        "en": "Ice rinks"
+      }
+    },
+    {
+      "slug": "rodelhuegel",
+      "icon": "",
+      "label": {
+        "de": "Rodelhügel",
+        "en": "Sledding hills"
+      }
+    },
+    {
+      "slug": "oeffentliche-toilette",
+      "icon": "",
+      "label": {
+        "de": "Öffentliche Toiletten",
+        "en": "Public toilets"
+      }
+    },
+    {
+      "slug": "wickelraum",
+      "icon": "",
+      "label": {
+        "de": "Wickelräume",
+        "en": "Baby changing rooms"
+      }
+    },
+    {
+      "slug": "familien-event",
+      "icon": "",
+      "label": {
+        "de": "Familien-Events",
+        "en": "Family events"
+      }
+    },
+    {
+      "slug": "rastplatz-spielplatz-dusche",
+      "icon": "",
+      "label": {
+        "de": "Rastplätze (Spielplatz + Dusche)",
+        "en": "Rest areas (playground + shower)"
+      }
+    },
+    {
+      "slug": "stellplatz-spielplatz-naehe-kostenlos",
+      "icon": "",
+      "label": {
+        "de": "Kostenlose Stellplätze (Spielplatznähe)",
+        "en": "Free RV parking (near playground)"
+      }
+    },
+    {
+      "slug": "wohnmobil-service-station",
+      "icon": "",
+      "label": {
+        "de": "Wohnmobil-Service-Stationen",
+        "en": "RV service stations"
+      }
+    },
+    {
+      "slug": "bikepacking-spot",
+      "icon": "",
+      "label": {
+        "de": "Bikepacking-Spots",
+        "en": "Bikepacking spots"
+      }
+    },
+    {
+      "slug": "toddler-barfuss-motorik",
+      "icon": "",
+      "label": {
+        "de": "Toddler / Barfuß / Motorik",
+        "en": "Toddler / barefoot / motor skills"
+      }
+    },
+    {
+      "slug": "naturerlebnispfad",
+      "icon": "",
+      "label": {
+        "de": "Naturerlebnispfade",
+        "en": "Nature discovery trails"
+      }
+    },
+    {
+      "slug": "walderlebnisroute",
+      "icon": "",
+      "label": {
+        "de": "Walderlebnisrouten",
+        "en": "Forest experience trails"
+      }
+    },
+    {
+      "slug": "barrierefreier-spielplatz",
+      "icon": "",
+      "label": {
+        "de": "Barrierefreie Spielplätze",
+        "en": "Accessible playgrounds"
+      }
+    },
+    {
+      "slug": "strand",
+      "icon": "",
+      "label": {
+        "de": "Familien-Strände",
+        "en": "Family beaches"
+      }
+    },
+    {
+      "slug": "kletterwald-hochseilgarten",
+      "icon": "",
+      "label": {
+        "de": "Kletterwälder & Hochseilgärten",
+        "en": "Rope courses & climbing forests"
+      }
+    },
+    {
+      "slug": "verkehrsgarten",
+      "icon": "",
+      "label": {
+        "de": "Verkehrsgärten",
+        "en": "Traffic training parks"
+      }
+    },
+    {
+      "slug": "freilichtmuseum",
+      "icon": "",
+      "label": {
+        "de": "Freilichtmuseen",
+        "en": "Open-air museums"
+      }
+    },
+    {
+      "slug": "campingplatz-familien",
+      "icon": "",
+      "label": {
+        "de": "Familien-Campingplätze",
+        "en": "Family campgrounds"
+      }
+    }
   ]
 }
