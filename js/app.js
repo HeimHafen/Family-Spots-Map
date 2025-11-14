@@ -9,12 +9,7 @@ import {
   getPlusStatus,
   savePlusStatus,
 } from "./storage.js";
-import {
-  initI18n,
-  applyTranslations,
-  getLanguage,
-  t,
-} from "./i18n.js";
+import { initI18n, applyTranslations, getLanguage, t } from "./i18n.js";
 import {
   loadAppData,
   getSpots,
@@ -26,19 +21,13 @@ import {
   applyFilters,
   refreshCategorySelect,
 } from "./filters.js";
-import {
-  initMap,
-  setSpotsOnMap,
-  focusOnSpot,
-  getMap,
-} from "./map.js";
+import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 import "./sw-register.js";
 
 let currentFilterState = null;
 let allSpots = [];
 let filteredSpots = [];
-
 let plusStatus = null;
 let partnerCodesCache = null;
 
@@ -109,8 +98,10 @@ function initUIEvents() {
     langSelect.addEventListener("change", async () => {
       const settings = getSettings();
       const nextLang = langSelect.value || "de";
+
       await initI18n(nextLang);
       saveSettings({ ...settings, language: nextLang });
+
       applyTranslations();
 
       // Kategorien-Dropdown neu beschriften
@@ -159,10 +150,11 @@ function initUIEvents() {
     });
   }
 
-  // Bottom-Navigation
+  // Bottom-Navigation – robust, auch wenn data-route fehlt
   $$(".bottom-nav-item").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const route = btn.dataset.route;
+      const routeAttr = btn.dataset.route;
+      const route = routeAttr === "about" ? "about" : "map";
       updateRoute(route);
     });
   });
@@ -187,17 +179,14 @@ function initUIEvents() {
   if (filterToggleBtn) {
     const filterSection = filterToggleBtn.closest(".sidebar-section");
     const labelSpan = filterToggleBtn.querySelector("span");
-
     if (filterSection && labelSpan) {
       const filterControls = Array.from(
         filterSection.querySelectorAll(".filter-group"),
       );
-
       filterToggleBtn.addEventListener("click", () => {
         if (filterControls.length === 0) return;
-        const currentlyHidden = filterControls[0].classList.contains(
-          "hidden",
-        );
+
+        const currentlyHidden = filterControls[0].classList.contains("hidden");
         const makeVisible = currentlyHidden;
 
         filterControls.forEach((el) => {
@@ -218,7 +207,6 @@ function initUIEvents() {
   // Plus-Code-Formular
   const plusInput = $("#plus-code-input");
   const plusButton = $("#plus-code-submit");
-
   if (plusInput && plusButton) {
     plusButton.addEventListener("click", async () => {
       const rawCode = plusInput.value.trim();
@@ -272,13 +260,13 @@ function updateRoute(route) {
   const viewMap = $("#view-map");
   const viewAbout = $("#view-about");
   const navIndicator = $("#bottom-nav-indicator");
-  const buttons = Array.from(
-    document.querySelectorAll(".bottom-nav-item"),
-  );
+  const buttons = Array.from(document.querySelectorAll(".bottom-nav-item"));
 
   if (!viewMap || !viewAbout || buttons.length === 0) return;
 
-  if (route === "about") {
+  const targetRoute = route === "about" ? "about" : "map";
+
+  if (targetRoute === "about") {
     viewMap.classList.remove("view--active");
     viewAbout.classList.add("view--active");
   } else {
@@ -287,12 +275,16 @@ function updateRoute(route) {
   }
 
   buttons.forEach((btn, index) => {
-    const isActive = btn.dataset.route === route;
+    const isActive = btn.dataset.route === targetRoute;
     btn.classList.toggle("bottom-nav-item--active", isActive);
+
     if (isActive && navIndicator) {
       navIndicator.style.transform = `translateX(${index * 100}%)`;
     }
   });
+
+  // Beim Wechsel immer nach oben scrollen
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // -----------------------------------------------------
@@ -304,7 +296,6 @@ function handleFilterChange(filterState) {
   filteredSpots = applyFilters(allSpots, filterState);
 
   setSpotsOnMap(filteredSpots);
-
   renderSpotList(filteredSpots, {
     favorites: filterState.favorites,
     onSelect: handleSpotSelect,
@@ -382,10 +373,11 @@ function updatePlusStatusUI(status) {
 
   if (status.expiresAt) {
     const d = new Date(status.expiresAt);
-    const dateStr = d.toLocaleDateString(
-      isGerman ? "de-DE" : "en-US",
-      { year: "numeric", month: "2-digit", day: "2-digit" },
-    );
+    const dateStr = d.toLocaleDateString(isGerman ? "de-DE" : "en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
     baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
   }
 
@@ -404,11 +396,13 @@ async function loadPartnerCodes() {
   try {
     const res = await fetch("data/partners.json");
     if (!res.ok) throw new Error("Cannot load partners.json");
+
     const data = await res.json();
     partnerCodesCache = Array.isArray(data.codes) ? data.codes : [];
   } catch (err) {
     console.error("Partnercodes konnten nicht geladen werden:", err);
     partnerCodesCache = [];
   }
+
   return partnerCodesCache;
 }
