@@ -6,6 +6,8 @@ import {
   saveSettings,
   getFavorites,
   toggleFavorite,
+  getPlusStatus,
+  savePlusStatus,
 } from "./storage.js";
 import {
   initI18n,
@@ -30,34 +32,15 @@ import {
   focusOnSpot,
   getMap,
 } from "./map.js";
-import {
-  renderSpotList,
-  renderSpotDetails,
-  showToast,
-} from "./ui.js";
-import {
-  getPlusStatus,
-  redeemPartnerCode,
-  formatPlusStatus,
-} from "./plus.js";
-
+import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 import "./sw-register.js";
 
 let currentFilterState = null;
 let allSpots = [];
 let filteredSpots = [];
 
-// -----------------------------------------------------
-// Family Spots Plus – Status UI
-// -----------------------------------------------------
-
-function updatePlusStatusUI() {
-  const statusEl = $("#plus-status-text");
-  if (!statusEl) return;
-
-  const status = getPlusStatus();
-  statusEl.textContent = formatPlusStatus(status);
-}
+let plusStatus = null;
+let partnerCodesCache = null;
 
 // -----------------------------------------------------
 // Bootstrap
@@ -67,9 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bootstrapApp().catch((err) => {
     console.error(err);
     // Mehrsprachige Fehlermeldung
-    showToast(
-      t("error_data_load", "Fehler beim Laden der Daten"),
-    );
+    showToast(t("error_data_load", "Fehler beim Laden der Daten"));
   });
 });
 
@@ -83,6 +64,10 @@ async function bootstrapApp() {
   const { index } = await loadAppData();
   allSpots = getSpots();
   const categories = getCategories();
+
+  // Plus-Status aus Storage laden und UI aktualisieren
+  plusStatus = getPlusStatus();
+  updatePlusStatusUI(plusStatus);
 
   initMap({
     center: index.defaultLocation,
@@ -108,9 +93,6 @@ async function bootstrapApp() {
     onSelect: handleSpotSelect,
   });
 
-  // Plus-Status direkt nach dem ersten Render anzeigen
-  updatePlusStatusUI();
-
   initUIEvents();
   updateRoute("map");
 }
@@ -127,23 +109,19 @@ function initUIEvents() {
     langSelect.addEventListener("change", async () => {
       const settings = getSettings();
       const nextLang = langSelect.value || "de";
-
       await initI18n(nextLang);
       saveSettings({ ...settings, language: nextLang });
       applyTranslations();
 
-      // Kategorien-Dropdown in aktiver Sprache neu beschriften
+      // Kategorien-Dropdown neu beschriften
       const categories = getCategories();
       refreshCategorySelect(categories);
 
-      // Liste neu zeichnen, damit Texte/Textelemente passen
+      // Liste neu zeichnen
       handleFilterChange({
         ...currentFilterState,
         favorites: getFavorites(),
       });
-
-      // Plus-Status kann Sprachabhängig sein (Datum, Texte)
-      updatePlusStatusUI();
     });
   }
 
@@ -152,8 +130,7 @@ function initUIEvents() {
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
       const settings = getSettings();
-      const nextTheme =
-        settings.theme === "dark" ? "light" : "dark";
+      const nextTheme = settings.theme === "dark" ? "light" : "dark";
       applyTheme(nextTheme);
       saveSettings({ ...settings, theme: nextTheme });
     });
@@ -169,9 +146,7 @@ function initUIEvents() {
         if (map) {
           map.setView([pos.lat, pos.lng], 14);
         }
-        showToast(
-          t("toast_location_ok", "Position gefunden"),
-        );
+        showToast(t("toast_location_ok", "Position gefunden"));
       } catch (err) {
         console.error(err);
         showToast(
@@ -210,10 +185,8 @@ function initUIEvents() {
   // Filter-Panel ein-/ausblenden
   const filterToggleBtn = $("#btn-toggle-filters");
   if (filterToggleBtn) {
-    const filterSection =
-      filterToggleBtn.closest(".sidebar-section");
-    const labelSpan =
-      filterToggleBtn.querySelector("span");
+    const filterSection = filterToggleBtn.closest(".sidebar-section");
+    const labelSpan = filterToggleBtn.querySelector("span");
 
     if (filterSection && labelSpan) {
       const filterControls = Array.from(
@@ -222,9 +195,9 @@ function initUIEvents() {
 
       filterToggleBtn.addEventListener("click", () => {
         if (filterControls.length === 0) return;
-
-        const currentlyHidden =
-          filterControls[0].classList.contains("hidden");
+        const currentlyHidden = filterControls[0].classList.contains(
+          "hidden",
+        );
         const makeVisible = currentlyHidden;
 
         filterControls.forEach((el) => {
@@ -242,51 +215,54 @@ function initUIEvents() {
     }
   }
 
-  // -----------------------------------
-  // Family Spots Plus – Partner-Code
-  // -----------------------------------
+  // Plus-Code-Formular
   const plusInput = $("#plus-code-input");
   const plusButton = $("#plus-code-submit");
 
   if (plusInput && plusButton) {
     plusButton.addEventListener("click", async () => {
-      const rawCode = plusInput.value;
-
-      if (!rawCode || !rawCode.trim()) {
-        showToast(
-          t("plus_code_empty", "Bitte gib einen Code ein."),
-        );
+      const rawCode = plusInput.value.trim();
+      if (!rawCode) {
+        showToast("Bitte Code eingeben.");
         return;
       }
 
+      const normalized = rawCode.toUpperCase();
+
       try {
-        const result = await redeemPartnerCode(rawCode);
-        if (!result.ok) {
-          showToast(
-            t(
-              "plus_code_invalid",
-              "Dieser Code ist leider ungültig oder nicht mehr aktiv.",
-            ),
-          );
+        const codes = await loadPartnerCodes();
+        const match = codes.find(
+          (c) =>
+            String(c.code).toUpperCase() === normalized &&
+            (c.enabled ?? true),
+        );
+
+        if (!match) {
+          showToast("Code nicht bekannt oder nicht mehr gültig.");
           return;
         }
 
-        plusInput.value = "";
-        updatePlusStatusUI();
-        showToast(
-          t(
-            "plus_code_ok",
-            "Family Spots Plus wurde freigeschaltet!",
-          ),
-        );
+        const days = Number(match.days) || 0;
+        const now = new Date();
+        const expires =
+          days > 0
+            ? new Date(now.getTime() + days * 24 * 60 * 60 * 1000)
+            : null;
+
+        plusStatus = savePlusStatus({
+          code: normalized,
+          plan: match.plan || null,
+          partner: match.partner || null,
+          source: match.source || "partner",
+          activatedAt: now.toISOString(),
+          expiresAt: expires ? expires.toISOString() : null,
+        });
+
+        updatePlusStatusUI(plusStatus);
+        showToast("Family Spots Plus aktiviert.");
       } catch (err) {
         console.error(err);
-        showToast(
-          t(
-            "plus_code_error",
-            "Beim Einlösen des Codes ist ein Fehler aufgetreten.",
-          ),
-        );
+        showToast("Code konnte nicht geprüft werden.");
       }
     });
   }
@@ -312,14 +288,9 @@ function updateRoute(route) {
 
   buttons.forEach((btn, index) => {
     const isActive = btn.dataset.route === route;
-    btn.classList.toggle(
-      "bottom-nav-item--active",
-      isActive,
-    );
+    btn.classList.toggle("bottom-nav-item--active", isActive);
     if (isActive && navIndicator) {
-      navIndicator.style.transform = `translateX(${
-        index * 100
-      }%)`;
+      navIndicator.style.transform = `translateX(${index * 100}%)`;
     }
   });
 }
@@ -333,6 +304,7 @@ function handleFilterChange(filterState) {
   filteredSpots = applyFilters(allSpots, filterState);
 
   setSpotsOnMap(filteredSpots);
+
   renderSpotList(filteredSpots, {
     favorites: filterState.favorites,
     onSelect: handleSpotSelect,
@@ -359,14 +331,8 @@ function handleSpotSelect(id) {
 
       showToast(
         updatedFavorites.includes(spotId)
-          ? t(
-              "toast_fav_added",
-              "Zu Favoriten hinzugefügt",
-            )
-          : t(
-              "toast_fav_removed",
-              "Aus Favoriten entfernt",
-            ),
+          ? t("toast_fav_added", "Zu Favoriten hinzugefügt")
+          : t("toast_fav_removed", "Aus Favoriten entfernt"),
       );
 
       handleFilterChange({
@@ -389,8 +355,60 @@ function handleSpotSelect(id) {
 
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
-  document.documentElement.setAttribute(
-    "data-theme",
-    value,
-  );
+  document.documentElement.setAttribute("data-theme", value);
+}
+
+// -----------------------------------------------------
+// Plus-Helfer
+// -----------------------------------------------------
+
+function updatePlusStatusUI(status) {
+  const el = document.getElementById("plus-status-text");
+  if (!el) return;
+
+  const lang = getLanguage();
+  const isGerman = !lang || lang.startsWith("de");
+
+  if (!status || !status.active) {
+    el.textContent = isGerman
+      ? "Family Spots Plus ist nicht aktiviert."
+      : "Family Spots Plus is not activated.";
+    return;
+  }
+
+  let baseText = isGerman
+    ? "Family Spots Plus ist aktiv"
+    : "Family Spots Plus is active";
+
+  if (status.expiresAt) {
+    const d = new Date(status.expiresAt);
+    const dateStr = d.toLocaleDateString(
+      isGerman ? "de-DE" : "en-US",
+      { year: "numeric", month: "2-digit", day: "2-digit" },
+    );
+    baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
+  }
+
+  if (status.partner) {
+    baseText += isGerman
+      ? ` – Partner: ${status.partner}`
+      : ` – partner: ${status.partner}`;
+  }
+
+  el.textContent = baseText;
+}
+
+async function loadPartnerCodes() {
+  if (partnerCodesCache) return partnerCodesCache;
+
+  try {
+    const res = await fetch("data/partners.json");
+    if (!res.ok) throw new Error("Cannot load partners.json");
+    const data = await res.json();
+    partnerCodesCache = Array.isArray(data.codes) ? data.codes : [];
+  } catch (err) {
+    console.error("Partnercodes konnten nicht geladen werden:", err);
+    partnerCodesCache = [];
+  }
+  return partnerCodesCache;
 }
