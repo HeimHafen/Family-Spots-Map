@@ -149,16 +149,19 @@ body {
   min-height: 0;
 }
 
-/* Views */
+/* Views: Sichtbarkeit NUR über view--active */
 
 .view {
-  display: none;
   flex: 1;
   min-height: 0;
 }
 
 .view--active {
   display: block;
+}
+
+.view:not(.view--active) {
+  display: none;
 }
 
 /* Map View Layout */
