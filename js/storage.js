@@ -30,7 +30,10 @@ export function getSettings() {
 
 export function saveSettings(settings) {
   try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    localStorage.setItem(
+      SETTINGS_KEY,
+      JSON.stringify(settings),
+    );
   } catch {
     // ignorieren – z. B. Privacy-Mode
   }
@@ -85,12 +88,19 @@ export function getPlusStatusFromStorage() {
   try {
     const raw = localStorage.getItem(PLUS_KEY);
     if (!raw) return null;
+
     const parsed = JSON.parse(raw);
     if (!parsed || !parsed.validUntil) return null;
 
     const now = Date.now();
-    const validUntilMs = new Date(parsed.validUntil).getTime();
-    if (Number.isNaN(validUntilMs) || validUntilMs < now) {
+    const validUntilMs = new Date(
+      parsed.validUntil,
+    ).getTime();
+
+    if (
+      Number.isNaN(validUntilMs) ||
+      validUntilMs < now
+    ) {
       // abgelaufen -> aufräumen
       localStorage.removeItem(PLUS_KEY);
       return null;
@@ -121,7 +131,10 @@ export function savePlusStatusToStorage(status) {
   };
 
   try {
-    localStorage.setItem(PLUS_KEY, JSON.stringify(payload));
+    localStorage.setItem(
+      PLUS_KEY,
+      JSON.stringify(payload),
+    );
   } catch {
     // ignorieren
   }
