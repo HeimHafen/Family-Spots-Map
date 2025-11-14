@@ -1,0 +1,28 @@
+{
+  "codes": [
+    {
+      "code": "FS-TRIAL-DK",
+      "plan": "pass_30",
+      "days": 30,
+      "partner": "DK-Ferie",
+      "source": "partner",
+      "enabled": true
+    },
+    {
+      "code": "FS-CAMPER-90",
+      "plan": "pass_90",
+      "days": 90,
+      "partner": "CamperPlus",
+      "source": "partner",
+      "enabled": true
+    },
+    {
+      "code": "FS-PRO-2025",
+      "plan": "pro_year",
+      "days": 365,
+      "partner": "Launch",
+      "source": "campaign",
+      "enabled": true
+    }
+  ]
+}
