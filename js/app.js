@@ -1,6 +1,6 @@
 // js/app.js
 
-import { $, $$, getGeolocation } from "./utils.js";
+import { $, $$, getGeolocation, debounce } from "./utils.js";
 import {
   getSettings,
   saveSettings,
@@ -82,6 +82,38 @@ async function bootstrapApp() {
     onSelect: handleSpotSelect,
   });
 
+  // Mobile: auf sehr kleinen Screens die Liste initial einklappen,
+  // damit mehr Karte sichtbar ist.
+  if (window.innerWidth <= 600) {
+    const listSection = document.querySelector(".sidebar-section--grow");
+    const labelSpan = document.querySelector("#btn-toggle-view span");
+    if (listSection && labelSpan && !listSection.classList.contains("hidden")) {
+      listSection.classList.add("hidden");
+      labelSpan.textContent = t("btn_show_list", "Liste zeigen");
+    }
+  }
+
+  // Deep-Link: ?spot=ID öffnet beim Start direkt den Spot.
+  const urlParams = new URLSearchParams(window.location.search);
+  const spotIdFromUrl = urlParams.get("spot");
+  if (spotIdFromUrl) {
+    const existingSpot = allSpots.find((s) => s.id === spotIdFromUrl);
+    if (existingSpot) {
+      handleSpotSelect(spotIdFromUrl);
+    }
+  }
+
+  // Map-Größe bei Layout-Änderungen aktualisieren (z. B. iOS-Toolbar)
+  window.addEventListener(
+    "resize",
+    debounce(() => {
+      const mapInstance = getMap();
+      if (mapInstance && typeof mapInstance.invalidateSize === "function") {
+        mapInstance.invalidateSize();
+      }
+    }, 200),
+  );
+
   initUIEvents();
   updateRoute("map");
 }
@@ -133,9 +165,9 @@ function initUIEvents() {
     locateBtn.addEventListener("click", async () => {
       try {
         const pos = await getGeolocation();
-        const map = getMap();
-        if (map) {
-          map.setView([pos.lat, pos.lng], 14);
+        const mapInstance = getMap();
+        if (mapInstance) {
+          mapInstance.setView([pos.lat, pos.lng], 14);
         }
         showToast(t("toast_location_ok", "Position gefunden"));
       } catch (err) {
@@ -280,6 +312,12 @@ function updateRoute(route) {
   } else {
     viewAbout.classList.remove("view--active");
     viewMap.classList.add("view--active");
+
+    // Beim Zurück zur Karte sicherstellen, dass Leaflet die Größe kennt
+    const mapInstance = getMap();
+    if (mapInstance && typeof mapInstance.invalidateSize === "function") {
+      setTimeout(() => mapInstance.invalidateSize(), 50);
+    }
   }
 
   buttons.forEach((btn, index) => {
@@ -355,6 +393,15 @@ function handleSpotSelect(id) {
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", value);
+
+  // Browser-Theme-Farbe anpassen (z. B. Safari/Chrome Top-Bar)
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute(
+      "content",
+      value === "dark" ? "#020617" : "#14b8c4",
+    );
+  }
 }
 
 // -----------------------------------------------------
