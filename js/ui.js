@@ -253,7 +253,7 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
           type="button"
           aria-label="${t("btn_close_details", "Details schließen")}"
         >
-          ✕
+          ${t("btn_close_details", "Schließen")}
         </button>
       </div>
     </header>
