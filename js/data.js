@@ -68,9 +68,14 @@ export async function loadAppData() {
           : null,
       verified: Boolean(spot.verified),
       visitMinutes: spot.visit_minutes || spot.visitMinutes || null,
+
+      // Poesie-Zeile für Liste
       poetry: spot.poetry || "",
+
+      // NEU: Info-/Beschreibungstexte fürs Popup
       summary_de: spot.summary_de || null,
       summary_en: spot.summary_en || null,
+
       tags: Array.isArray(spot.tags) ? spot.tags : [],
       usps: Array.isArray(spot.usps)
         ? spot.usps
