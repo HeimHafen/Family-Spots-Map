@@ -8,11 +8,27 @@ let onMarkerSelectCallback = null;
 const markersById = new Map();
 
 /**
- * Bestimmt den Text für das Popup:
- * 1. passende summary_* (DE/EN), wenn sie "gut" ist
- * 2. sonst Besuchstipp (visitLabel_*)
- * 3. sonst Summary der anderen Sprache
- * 4. sonst Poesie
+ * Kleiner Helfer zum HTML-Escapen, damit Sonderzeichen in Titeln etc.
+ * keine Probleme machen.
+ */
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/**
+ * Bestimmt den Text für das Popup.
+ *
+ * Neue Idee:
+ * 1. Wenn vorhanden: Poesie-Zeile (poetry) – die ist individuell & schön.
+ * 2. Sonst: Summary in aktueller Sprache (summary_de / summary_en).
+ * 3. Sonst: Besuchstipp (visitLabel_*).
+ * 4. Sonst: Summary der anderen Sprache.
  */
 function getSpotPopupSummary(spot) {
   let lang = "de";
@@ -23,45 +39,23 @@ function getSpotPopupSummary(spot) {
 
   const isEn = lang.toLowerCase().indexOf("en") === 0;
 
-  const poetry = spot.poetry || "";
-
-  const summaryPrimary = isEn
-    ? spot.summary_en || ""
-    : spot.summary_de || "";
-
-  const summarySecondary = isEn
-    ? spot.summary_de || ""
-    : spot.summary_en || "";
-
-  const visitLabel = isEn
-    ? spot.visitLabel_en || ""
-    : spot.visitLabel_de || "";
-
-  function isUsefulSummary(str) {
-    if (!str) return false;
-
-    // Wenn Summary exakt die Poesie-Zeile ist → für Popup nicht so spannend
-    if (poetry && str === poetry) return false;
-
-    // Wenn sehr kurz und es einen deutlich längeren Besuchstipp gibt,
-    // nehmen wir lieber den Besuchstipp
-    if (str.length < 80 && visitLabel && visitLabel.length > str.length + 40) {
-      return false;
-    }
-
-    return true;
-  }
+  const poetry = (spot.poetry || "").trim();
+  const summaryPrimary = (isEn ? spot.summary_en : spot.summary_de) || "";
+  const summarySecondary = (isEn ? spot.summary_de : spot.summary_en) || "";
+  const visitLabel = (isEn ? spot.visitLabel_en : spot.visitLabel_de) || "";
 
   let text = "";
 
-  if (isUsefulSummary(summaryPrimary)) {
+  if (poetry) {
+    text = poetry;
+  } else if (summaryPrimary) {
     text = summaryPrimary;
   } else if (visitLabel) {
     text = visitLabel;
   } else if (summarySecondary) {
     text = summarySecondary;
-  } else if (poetry) {
-    text = poetry;
+  } else {
+    text = "";
   }
 
   const maxLen = 260;
@@ -144,6 +138,16 @@ export function setSpotsOnMap(spots) {
   layer.clearLayers();
   markersById.clear();
 
+  // Sprache für Link-Beschriftungen bestimmen
+  let lang = "de";
+  if (typeof document !== "undefined" && document.documentElement) {
+    lang = document.documentElement.lang || "de";
+  }
+  const isEn = lang.toLowerCase().indexOf("en") === 0;
+
+  const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
+  const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
+
   spots.forEach(function (spot) {
     if (!spot.location) return;
 
@@ -153,14 +157,39 @@ export function setSpotsOnMap(spots) {
 
     const summary = getSpotPopupSummary(spot);
 
-    // Popup-Inhalt: Name, Stadt, Info-Text
+    const encodedName = encodeURIComponent(
+      (spot.name || "") + (spot.city ? " " + spot.city : ""),
+    );
+
+    const googleMapsUrl =
+      "https://www.google.com/maps/dir/?api=1&destination=" +
+      encodeURIComponent(lat + "," + lng) +
+      (encodedName ? "&destination_place_id=&query=" + encodedName : "");
+
+    const appleMapsUrl =
+      "https://maps.apple.com/?daddr=" +
+      encodeURIComponent(lat + "," + lng);
+
+    // Popup-Inhalt: Name, Stadt, Info-Text + Routen-Links
     const popupHtml =
-      '<div>' +
+      '<div class="popup">' +
       "<strong>" +
-      spot.name +
+      escapeHtml(spot.name || "") +
       "</strong>" +
-      (spot.city ? "<br>" + spot.city : "") +
-      (summary ? "<br><small>" + summary + "</small>" : "") +
+      (spot.city ? "<br>" + escapeHtml(spot.city) : "") +
+      (summary ? "<br><small>" + escapeHtml(summary) + "</small>" : "") +
+      '<div class="popup-actions">' +
+      '<a class="popup-link" href="' +
+      googleMapsUrl +
+      '" target="_blank" rel="noopener noreferrer">' +
+      escapeHtml(googleLabel) +
+      "</a>" +
+      '<a class="popup-link" href="' +
+      appleMapsUrl +
+      '" target="_blank" rel="noopener noreferrer">' +
+      escapeHtml(appleLabel) +
+      "</a>" +
+      "</div>" +
       "</div>";
 
     marker.bindPopup(popupHtml);
