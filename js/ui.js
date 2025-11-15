@@ -5,8 +5,8 @@ import { getLanguage, t } from "./i18n.js";
 import { getCategoryLabel } from "./data.js";
 
 /**
- * Wählt die passende Kurzbeschreibung (summary) je nach Sprache.
- * Fallback: andere Sprache, danach poetry, danach leer.
+ * Kurzbeschreibung für Liste/Details:
+ * summary_de / summary_en, Fallback auf poetry.
  */
 function getSpotSummary(spot, lang) {
   if (lang === "de") {
@@ -18,9 +18,26 @@ function getSpotSummary(spot, lang) {
   return spot.summary_de || spot.summary_en || spot.poetry || "";
 }
 
+/**
+ * Hilfsfunktion: holt einen lokalisierten Text
+ * z. B. "visitLabel" → visitLabel_de / visitLabel_en
+ */
+function getLocalizedSpotText(spot, baseKey) {
+  const lang = getLanguage() || "de";
+  const isEn = lang.toLowerCase().startsWith("en");
+
+  const deKey = baseKey + "_de";
+  const enKey = baseKey + "_en";
+
+  if (isEn) {
+    return spot[enKey] || spot[deKey] || "";
+  }
+  return spot[deKey] || spot[enKey] || "";
+}
+
 export function renderSpotList(spots, { favorites, onSelect }) {
   const listEl = $("#spot-list");
-  const lang = getLanguage();
+  const lang = getLanguage() || "de";
 
   if (!listEl) return;
 
@@ -31,7 +48,7 @@ export function renderSpotList(spots, { favorites, onSelect }) {
     p.className = "spot-list-empty";
     p.textContent = t(
       "no_results",
-      "Keine passenden Spots gefunden. Passe die Filter an."
+      "Keine passenden Spots gefunden. Passe die Filter an.",
     );
     listEl.appendChild(p);
     return;
@@ -61,7 +78,7 @@ export function renderSpotList(spots, { favorites, onSelect }) {
               spot.verified
                 ? `<span class="badge badge--verified">${t(
                     "badge_verified",
-                    "Verifiziert"
+                    "Verifiziert",
                   )}</span>`
                 : ""
             }
@@ -128,10 +145,17 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
     return;
   }
 
-  const lang = getLanguage();
+  const lang = getLanguage() || "de";
   const categoryLabel = getCategoryLabel(spot.primaryCategory, lang);
   const durationLabel = formatVisitMinutes(spot.visitMinutes, lang);
   const summaryText = getSpotSummary(spot, lang);
+
+  // Zusätzliche Texte
+  const visitLabel = getLocalizedSpotText(spot, "visitLabel");
+  const suitability = getLocalizedSpotText(spot, "suitability");
+  const season = getLocalizedSpotText(spot, "season");
+  const infrastructure = getLocalizedSpotText(spot, "infrastructure");
+  const whyWeLike = getLocalizedSpotText(spot, "whyWeLike");
 
   container.innerHTML = `
     <header class="spot-details-header">
@@ -145,7 +169,7 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
             spot.verified
               ? `<span class="badge badge--verified">${t(
                   "badge_verified",
-                  "Verifiziert"
+                  "Verifiziert",
                 )}</span>`
               : ""
           }
@@ -153,7 +177,7 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
             durationLabel
               ? `<span class="badge badge--time">${t(
                   "label_duration",
-                  "Empfohlene Zeit"
+                  "Empfohlene Zeit",
                 )}: ${durationLabel}</span>`
               : ""
           }
@@ -196,17 +220,67 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
     }
     ${
       spot.address
-        ? `<p class="spot-details-meta">${spot.address}</p>`
+        ? `<p class="spot-details-meta spot-details-address">${spot.address}</p>`
         : ""
     }
     ${
       (spot.tags && spot.tags.length) || (spot.usps && spot.usps.length)
-        ? `<div class="spot-card-tags">${[
+        ? `<div class="spot-card-tags spot-details-tags">${[
             ...(spot.usps || []),
-            ...(spot.tags || [])
+            ...(spot.tags || []),
           ]
             .map((tag) => `<span class="badge badge--tag">${tag}</span>`)
             .join("")}</div>`
+        : ""
+    }
+    ${
+      visitLabel
+        ? `<section class="spot-details-section">
+             <h3 class="spot-details-section-title">
+               ${t("label_visit", "Unser Tipp für euren Besuch")}
+             </h3>
+             <p class="spot-details-section-text">${visitLabel}</p>
+           </section>`
+        : ""
+    }
+    ${
+      suitability
+        ? `<section class="spot-details-section">
+             <h3 class="spot-details-section-title">
+               ${t("label_suitability", "Geeignet für")}
+             </h3>
+             <p class="spot-details-section-text">${suitability}</p>
+           </section>`
+        : ""
+    }
+    ${
+      season
+        ? `<section class="spot-details-section">
+             <h3 class="spot-details-section-title">
+               ${t("label_season", "Beste Zeit / Saison")}
+             </h3>
+             <p class="spot-details-section-text">${season}</p>
+           </section>`
+        : ""
+    }
+    ${
+      infrastructure
+        ? `<section class="spot-details-section">
+             <h3 class="spot-details-section-title">
+               ${t("label_infrastructure", "Vor Ort / Infrastruktur")}
+             </h3>
+             <p class="spot-details-section-text">${infrastructure}</p>
+           </section>`
+        : ""
+    }
+    ${
+      whyWeLike
+        ? `<section class="spot-details-section">
+             <h3 class="spot-details-section-title">
+               ${t("label_why_we_like", "Warum wir diesen Spot mögen")}
+             </h3>
+             <p class="spot-details-section-text">${whyWeLike}</p>
+           </section>`
         : ""
     }
   `;
