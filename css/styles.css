@@ -250,78 +250,6 @@ body {
   gap: 0.45rem;
 }
 
-/* Karten in der Spot-Liste */
-
-.spot-list-item {
-  width: 100%;
-  text-align: left;
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 0.75rem;
-  padding: 0.6rem 0.7rem;
-  background-color: var(--color-bg-elevated);
-  box-shadow: 0 1px 2px var(--color-shadow-soft);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.spot-list-item:hover {
-  border-color: var(--color-accent);
-}
-
-.spot-list-item-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.spot-list-item-title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.35rem;
-}
-
-.spot-list-item-title {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.spot-list-item-fav-indicator {
-  font-size: 0.9rem;
-}
-
-.spot-list-item-location {
-  font-size: 0.8rem;
-  color: var(--color-text-subtle);
-}
-
-.spot-list-item-category {
-  font-size: 0.8rem;
-  color: var(--color-text-subtle);
-}
-
-.spot-list-item-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-
-.spot-list-item-poetry {
-  margin: 0.2rem 0 0;
-  font-size: 0.86rem;
-  font-style: italic;
-  color: var(--color-text-subtle);
-}
-
-.spot-list-item-summary {
-  margin: 0.1rem 0 0;
-  font-size: 0.86rem;
-  color: var(--color-text-subtle);
-}
-
 /* Leerer Zustand in der Liste */
 
 .spot-list-empty {
@@ -378,39 +306,14 @@ body {
 .spot-details-header {
   display: flex;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 0.5rem;
-  position: relative;
-}
-
-.spot-details-header-main {
-  flex: 1;
-  padding-right: 2.4rem; /* Platz für X-Button */
 }
 
 .spot-details-title {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-}
-
-.spot-details-location {
-  margin-top: 0.15rem;
-  font-size: 0.8rem;
-  color: var(--color-text-subtle);
-}
-
-.spot-details-category {
-  margin-top: 0.1rem;
-  font-size: 0.8rem;
-  color: var(--color-text-subtle);
-}
-
-.spot-details-badges {
-  margin-top: 0.25rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
 }
 
 .spot-details-meta {
@@ -422,25 +325,12 @@ body {
   color: var(--color-text-subtle);
 }
 
-/* Aktionen unterhalb des Headers (z.B. Favorit) */
-
 .spot-details-actions {
-  margin-top: 0.6rem;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0.4rem;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: flex-end;
 }
-
-/* X-Button oben rechts im Panel */
-
-.spot-details-close-btn {
-  position: absolute;
-  top: 0.1rem;
-  right: 0.1rem;
-}
-
-/* Tags im Detailpanel */
 
 .spot-details-tags {
   margin-top: 0.4rem;
@@ -519,6 +409,12 @@ body {
 .popup-link:hover {
   background-color: var(--color-accent-soft);
   border-color: var(--color-accent);
+}
+
+/* ❌ Leaflet-Popup-Schließen-Button ausblenden,
+   damit er nicht mehr störend oben rechts sitzt */
+.leaflet-popup-close-button {
+  display: none !important;
 }
 
 /* Sektionen im Detail-Panel */
@@ -870,6 +766,8 @@ body {
   }
 
   .spot-details-actions {
+    flex-direction: row;
+    align-items: center;
     justify-content: flex-end;
   }
 }
