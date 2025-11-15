@@ -8,9 +8,11 @@ let onMarkerSelectCallback = null;
 const markersById = new Map();
 
 /**
- * Kurzbeschreibung für das Popup bestimmen:
- * - DE: summary_de → summary_en → poetry
- * - EN: summary_en → summary_de → poetry
+ * Bestimmt den Text für das Popup:
+ * 1. passende summary_* (DE/EN), wenn sie "gut" ist
+ * 2. sonst Besuchstipp (visitLabel_*)
+ * 3. sonst Summary der anderen Sprache
+ * 4. sonst Poesie
  */
 function getSpotPopupSummary(spot) {
   let lang = "de";
@@ -19,15 +21,49 @@ function getSpotPopupSummary(spot) {
     lang = document.documentElement.lang || "de";
   }
 
-  let text = "";
+  const isEn = lang.toLowerCase().indexOf("en") === 0;
 
-  if (lang.toLowerCase().startsWith("en")) {
-    text = spot.summary_en || spot.summary_de || spot.poetry || "";
-  } else {
-    text = spot.summary_de || spot.summary_en || spot.poetry || "";
+  const poetry = spot.poetry || "";
+
+  const summaryPrimary = isEn
+    ? spot.summary_en || ""
+    : spot.summary_de || "";
+
+  const summarySecondary = isEn
+    ? spot.summary_de || ""
+    : spot.summary_en || "";
+
+  const visitLabel = isEn
+    ? spot.visitLabel_en || ""
+    : spot.visitLabel_de || "";
+
+  function isUsefulSummary(str) {
+    if (!str) return false;
+
+    // Wenn Summary exakt die Poesie-Zeile ist → für Popup nicht so spannend
+    if (poetry && str === poetry) return false;
+
+    // Wenn sehr kurz und es einen deutlich längeren Besuchstipp gibt,
+    // nehmen wir lieber den Besuchstipp
+    if (str.length < 80 && visitLabel && visitLabel.length > str.length + 40) {
+      return false;
+    }
+
+    return true;
   }
 
-  // Etwas kürzen, damit das Popup nicht zu groß wird
+  let text = "";
+
+  if (isUsefulSummary(summaryPrimary)) {
+    text = summaryPrimary;
+  } else if (visitLabel) {
+    text = visitLabel;
+  } else if (summarySecondary) {
+    text = summarySecondary;
+  } else if (poetry) {
+    text = poetry;
+  }
+
   const maxLen = 260;
   if (text.length > maxLen) {
     return text.slice(0, maxLen - 1) + "…";
@@ -44,13 +80,15 @@ function getSpotPopupSummary(spot) {
  * @param {(spotId: string) => void} [options.onMarkerSelect]
  */
 export function initMap(options) {
-  const { center, zoom, onMarkerSelect } = options;
+  const center = options.center;
+  const zoom = options.zoom;
+  const onMarkerSelect = options.onMarkerSelect;
 
   onMarkerSelectCallback = onMarkerSelect || null;
 
   map = L.map("map", {
     center: [center.lat, center.lng],
-    zoom,
+    zoom: zoom,
     zoomControl: true,
   });
 
