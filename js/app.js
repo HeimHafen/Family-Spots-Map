@@ -1,6 +1,6 @@
 // js/app.js
 
-import { $, $$, getGeolocation, debounce } from "./utils.js";
+import { $, $$, getGeolocation } from "./utils.js";
 import {
   getSettings,
   saveSettings,
@@ -30,6 +30,23 @@ let allSpots = [];
 let filteredSpots = [];
 let plusStatus = null;
 let partnerCodesCache = null;
+
+// -----------------------------------------------------
+// Kleine lokale Hilfsfunktion: debounce
+// (absichtlich hier definiert, damit kein Import-Fehler
+// aus utils.js entstehen kann)
+// -----------------------------------------------------
+function debounce(fn, delay) {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+}
 
 // -----------------------------------------------------
 // Bootstrap
@@ -244,7 +261,7 @@ function initUIEvents() {
     }
   }
 
-  // Plus-Code-Formular
+  // Plus-Code-Formular (falls im DOM vorhanden)
   const plusInput = $("#plus-code-input");
   const plusButton = $("#plus-code-submit");
   if (plusInput && plusButton) {
