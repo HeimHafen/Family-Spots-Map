@@ -35,6 +35,53 @@ function getLocalizedSpotText(spot, baseKey) {
   return spot[deKey] || spot[enKey] || "";
 }
 
+/**
+ * Routen-Buttons (Google / Apple) für das Detail-Panel.
+ */
+function buildRoutesHtml(spot, lang) {
+  if (!spot.location) return "";
+
+  const { lat, lng } = spot.location;
+  const encodedName = encodeURIComponent(
+    (spot.name || "") + (spot.city ? " " + spot.city : ""),
+  );
+
+  const googleUrl =
+    "https://www.google.com/maps/dir/?api=1&destination=" +
+    encodeURIComponent(lat + "," + lng) +
+    (encodedName ? "&destination_place_id=&query=" + encodedName : "");
+
+  const appleUrl =
+    "https://maps.apple.com/?daddr=" + encodeURIComponent(lat + "," + lng);
+
+  const lower = (lang || "de").toLowerCase();
+  const isEn = lower.startsWith("en");
+
+  const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
+  const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
+
+  return `
+    <div class="spot-details-routes">
+      <a
+        class="spot-details-route-link"
+        href="${googleUrl}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ${googleLabel}
+      </a>
+      <a
+        class="spot-details-route-link"
+        href="${appleUrl}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ${appleLabel}
+      </a>
+    </div>
+  `;
+}
+
 export function renderSpotList(spots, { favorites, onSelect }) {
   const listEl = $("#spot-list");
   const lang = getLanguage() || "de";
@@ -114,7 +161,7 @@ export function renderSpotList(spots, { favorites, onSelect }) {
               .join("")}</div>`
           : ""
       }
-    `;
+    */
 
     card.addEventListener("click", (evt) => {
       // Klick auf Stern soll nicht die Detailansicht öffnen
@@ -156,6 +203,8 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
   const season = getLocalizedSpotText(spot, "season");
   const infrastructure = getLocalizedSpotText(spot, "infrastructure");
   const whyWeLike = getLocalizedSpotText(spot, "whyWeLike");
+
+  const routesHtml = buildRoutesHtml(spot, lang);
 
   container.innerHTML = `
     <header class="spot-details-header">
@@ -223,6 +272,7 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
         ? `<p class="spot-details-meta spot-details-address">${spot.address}</p>`
         : ""
     }
+    ${routesHtml}
     ${
       (spot.tags && spot.tags.length) || (spot.usps && spot.usps.length)
         ? `<div class="spot-card-tags spot-details-tags">${[
