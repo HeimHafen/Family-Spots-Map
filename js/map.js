@@ -11,7 +11,6 @@ const markersById = new Map();
  * Kurzbeschreibung für das Popup bestimmen:
  * - DE: summary_de → summary_en → poetry
  * - EN: summary_en → summary_de → poetry
- * - alles andere: wie DE
  */
 function getSpotPopupSummary(spot) {
   let lang = "de";
@@ -29,7 +28,7 @@ function getSpotPopupSummary(spot) {
   }
 
   // Etwas kürzen, damit das Popup nicht zu groß wird
-  const maxLen = 140;
+  const maxLen = 260;
   if (text.length > maxLen) {
     return text.slice(0, maxLen - 1) + "…";
   }
@@ -107,27 +106,29 @@ export function setSpotsOnMap(spots) {
   layer.clearLayers();
   markersById.clear();
 
-  spots.forEach((spot) => {
+  spots.forEach(function (spot) {
     if (!spot.location) return;
 
-    const { lat, lng } = spot.location;
+    const lat = spot.location.lat;
+    const lng = spot.location.lng;
     const marker = L.marker([lat, lng]);
 
     const summary = getSpotPopupSummary(spot);
 
     // Popup-Inhalt: Name, Stadt, Info-Text
-    const popupHtml = `
-      <div>
-        <strong>${spot.name}</strong>
-        ${spot.city ? `<br>${spot.city}` : ""}
-        ${summary ? `<br><small>${summary}</small>` : ""}
-      </div>
-    `.trim();
+    const popupHtml =
+      '<div>' +
+      "<strong>" +
+      spot.name +
+      "</strong>" +
+      (spot.city ? "<br>" + spot.city : "") +
+      (summary ? "<br><small>" + summary + "</small>" : "") +
+      "</div>";
 
     marker.bindPopup(popupHtml);
 
     // Klick auf den Pin: Popup + Detail-Panel
-    marker.on("click", () => {
+    marker.on("click", function () {
       if (onMarkerSelectCallback) {
         onMarkerSelectCallback(spot.id);
       }
@@ -148,7 +149,8 @@ export function focusOnSpot(spot) {
     return;
   }
 
-  const { lat, lng } = spot.location;
+  const lat = spot.location.lat;
+  const lng = spot.location.lng;
 
   map.setView([lat, lng], 15, {
     animate: true,
