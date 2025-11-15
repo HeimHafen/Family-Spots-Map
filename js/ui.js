@@ -1,11 +1,23 @@
+// js/ui.js
+
 import { $, formatVisitMinutes } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 import { getCategoryLabel } from "./data.js";
 
 /**
- * Liste der Spots links
- * – in der LISTE soll weiterhin die POETRY stehen.
+ * Wählt die passende Kurzbeschreibung (summary) je nach Sprache.
+ * Fallback: andere Sprache, danach poetry, danach leer.
  */
+function getSpotSummary(spot, lang) {
+  if (lang === "de") {
+    return spot.summary_de || spot.summary_en || spot.poetry || "";
+  }
+  if (lang === "en") {
+    return spot.summary_en || spot.summary_de || spot.poetry || "";
+  }
+  return spot.summary_de || spot.summary_en || spot.poetry || "";
+}
+
 export function renderSpotList(spots, { favorites, onSelect }) {
   const listEl = $("#spot-list");
   const lang = getLanguage();
@@ -37,9 +49,6 @@ export function renderSpotList(spots, { favorites, onSelect }) {
     const categoryLabel = getCategoryLabel(spot.primaryCategory, lang);
     const durationLabel = formatVisitMinutes(spot.visitMinutes, lang);
     const isFav = favSet.has(spot.id);
-
-    // In der LISTE weiterhin die Poetry zeigen
-    const listDescription = spot.poetry || "";
 
     card.innerHTML = `
       <header class="spot-card-header">
@@ -77,8 +86,8 @@ export function renderSpotList(spots, { favorites, onSelect }) {
         </button>
       </header>
       ${
-        listDescription
-          ? `<p class="spot-card-poetry">${listDescription}</p>`
+        spot.poetry
+          ? `<p class="spot-card-poetry">${spot.poetry}</p>`
           : ""
       }
       ${
@@ -91,6 +100,7 @@ export function renderSpotList(spots, { favorites, onSelect }) {
     `;
 
     card.addEventListener("click", (evt) => {
+      // Klick auf Stern soll nicht die Detailansicht öffnen
       if (evt.target.closest(".spot-card-fav")) return;
       if (onSelect) onSelect(spot.id);
     });
@@ -108,11 +118,6 @@ export function renderSpotList(spots, { favorites, onSelect }) {
   listEl.appendChild(frag);
 }
 
-/**
- * Detail-Karte unten
- * – beim Klick auf PIN oder Karte soll **summary_de / summary_en**
- *   angezeigt werden (mit Fallback auf poetry, wenn noch kein summary vorhanden ist).
- */
 export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
   const container = $("#spot-details");
   if (!container) return;
@@ -126,32 +131,7 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
   const lang = getLanguage();
   const categoryLabel = getCategoryLabel(spot.primaryCategory, lang);
   const durationLabel = formatVisitMinutes(spot.visitMinutes, lang);
-
-  // Zusammenfassung je nach Sprache – Fallback auf jeweils andere Sprache
-  const summary =
-    lang === "de"
-      ? spot.summary_de || spot.summary_en || ""
-      : spot.summary_en || spot.summary_de || "";
-
-  const visitLabel =
-    lang === "de" ? spot.visit_label_de || "" : spot.visit_label_en || "";
-
-  const suitability =
-    lang === "de" ? spot.suitability_de || "" : spot.suitability_en || "";
-
-  const season =
-    lang === "de" ? spot.season_de || "" : spot.season_en || "";
-
-  const infrastructure =
-    lang === "de"
-      ? spot.infrastructure_de || ""
-      : spot.infrastructure_en || "";
-
-  const whyWeLike =
-    lang === "de" ? spot.why_we_like_de || "" : spot.why_we_like_en || "";
-
-  // In den DETAILS zuerst summary_* anzeigen – wenn noch nicht vorhanden, Poetry als Fallback
-  const descriptionText = summary || spot.poetry || "";
+  const summaryText = getSpotSummary(spot, lang);
 
   container.innerHTML = `
     <header class="spot-details-header">
@@ -205,66 +185,25 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
       </div>
     </header>
     ${
-      descriptionText
-        ? `<p class="spot-details-description">${descriptionText}</p>`
+      summaryText
+        ? `<p class="spot-details-description">${summaryText}</p>`
         : ""
     }
-    ${spot.address ? `<p class="spot-details-meta">${spot.address}</p>` : ""}
     ${
-      visitLabel ||
-      suitability ||
-      season ||
-      infrastructure ||
-      whyWeLike
-        ? `<div class="spot-details-extra">
-            ${
-              visitLabel
-                ? `<p><strong>${t(
-                    "details_visit_tip",
-                    "Besuchstipp"
-                  )}:</strong> ${visitLabel}</p>`
-                : ""
-            }
-            ${
-              suitability
-                ? `<p><strong>${t(
-                    "details_suitability",
-                    "Geeignet für"
-                  )}:</strong> ${suitability}</p>`
-                : ""
-            }
-            ${
-              season
-                ? `<p><strong>${t(
-                    "details_season",
-                    "Beste Zeit"
-                  )}:</strong> ${season}</p>`
-                : ""
-            }
-            ${
-              infrastructure
-                ? `<p><strong>${t(
-                    "details_infrastructure",
-                    "Vor Ort"
-                  )}:</strong> ${infrastructure}</p>`
-                : ""
-            }
-            ${
-              whyWeLike
-                ? `<p><strong>${t(
-                    "details_why_we_like",
-                    "Darum mögen wir den Spot"
-                  )}:</strong> ${whyWeLike}</p>`
-                : ""
-            }
-          </div>`
+      spot.poetry && spot.poetry !== summaryText
+        ? `<p class="spot-details-poetry">${spot.poetry}</p>`
+        : ""
+    }
+    ${
+      spot.address
+        ? `<p class="spot-details-meta">${spot.address}</p>`
         : ""
     }
     ${
       (spot.tags && spot.tags.length) || (spot.usps && spot.usps.length)
         ? `<div class="spot-card-tags">${[
             ...(spot.usps || []),
-            ...(spot.tags || []),
+            ...(spot.tags || [])
           ]
             .map((tag) => `<span class="badge badge--tag">${tag}</span>`)
             .join("")}</div>`
