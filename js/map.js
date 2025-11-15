@@ -2,30 +2,33 @@
 
 // js/map.js
 
-import { getLanguage } from "./i18n.js";
-
 let map = null;
 let markerLayer = null;
 let onMarkerSelectCallback = null;
 const markersById = new Map();
 
 /**
- * Hilfsfunktion: passenden Kurztext für das Popup wählen
- * de/en → summary_de / summary_en, Fallback auf poetry
+ * Kurzbeschreibung für das Popup bestimmen:
+ * - DE: summary_de → summary_en → poetry
+ * - EN: summary_en → summary_de → poetry
+ * - alles andere: wie DE
  */
 function getSpotPopupSummary(spot) {
-  const lang = getLanguage();
+  let lang = "de";
+
+  if (typeof document !== "undefined" && document.documentElement) {
+    lang = document.documentElement.lang || "de";
+  }
+
   let text = "";
 
-  if (lang === "de") {
-    text = spot.summary_de || spot.summary_en || spot.poetry || "";
-  } else if (lang === "en") {
+  if (lang.toLowerCase().startsWith("en")) {
     text = spot.summary_en || spot.summary_de || spot.poetry || "";
   } else {
     text = spot.summary_de || spot.summary_en || spot.poetry || "";
   }
 
-  // etwas kürzen, damit das Popup nicht riesig wird
+  // Etwas kürzen, damit das Popup nicht zu groß wird
   const maxLen = 140;
   if (text.length > maxLen) {
     return text.slice(0, maxLen - 1) + "…";
