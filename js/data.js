@@ -1,12 +1,17 @@
+// js/data.js
+
 import { getLanguage } from "./i18n.js";
 
 let indexData = null;
 let spotsData = [];
 
+/**
+ * Lädt Index- und Spot-Daten und normalisiert die Struktur.
+ */
 export async function loadAppData() {
   const [indexRes, spotsRes] = await Promise.all([
     fetch("data/index.json"),
-    fetch("data/spots.json")
+    fetch("data/spots.json"),
   ]);
 
   if (!indexRes.ok) throw new Error("Cannot load index.json");
@@ -15,20 +20,23 @@ export async function loadAppData() {
   const rawIndex = await indexRes.json();
   const rawSpotsRoot = await spotsRes.json();
 
+  // Kategorien normalisieren
   const categories = (rawIndex.categories || []).map((cat) => {
     const label =
       cat.label ||
       {
         de: cat.label_de || cat.name_de || cat.name || cat.slug,
-        en: cat.label_en || cat.name_en || cat.name || cat.slug
+        en: cat.label_en || cat.name_en || cat.name || cat.slug,
       };
+
     return {
       slug: cat.slug,
       icon: cat.icon || "",
-      label
+      label,
     };
   });
 
+  // Spots-Array zuverlässig ermitteln
   const rawSpots = Array.isArray(rawSpotsRoot.spots)
     ? rawSpotsRoot.spots
     : Array.isArray(rawSpotsRoot)
@@ -36,10 +44,8 @@ export async function loadAppData() {
     : [];
 
   const normalizedSpots = rawSpots.map((spot) => {
-    const lat =
-      spot.lat ?? spot.latitude ?? spot.location?.lat ?? null;
-    const lng =
-      spot.lon ?? spot.lng ?? spot.longitude ?? spot.location?.lng ?? null;
+    const lat = spot.lat ?? spot.latitude ?? spot.location?.lat ?? null;
+    const lng = spot.lon ?? spot.lng ?? spot.longitude ?? spot.location?.lng ?? null;
 
     const categories =
       Array.isArray(spot.categories) && spot.categories.length
@@ -63,12 +69,14 @@ export async function loadAppData() {
       verified: Boolean(spot.verified),
       visitMinutes: spot.visit_minutes || spot.visitMinutes || null,
       poetry: spot.poetry || "",
+      summary_de: spot.summary_de || null,
+      summary_en: spot.summary_en || null,
       tags: Array.isArray(spot.tags) ? spot.tags : [],
       usps: Array.isArray(spot.usps)
         ? spot.usps
         : Array.isArray(spot.usp)
         ? spot.usp
-        : []
+        : [],
     };
   });
 
@@ -76,17 +84,18 @@ export async function loadAppData() {
     rawIndex.defaultLocation || {
       lat: 51.0,
       lng: 10.0,
-      zoom: 6
+      zoom: 6,
     };
 
   indexData = {
     ...rawIndex,
     categories,
     defaultLocation,
-    defaultZoom: rawIndex.defaultZoom || defaultLocation.zoom || 6
+    defaultZoom: rawIndex.defaultZoom || defaultLocation.zoom || 6,
   };
 
-  spotsData = normalizedSpots;
+  // Nur Spots mit gültiger Location berücksichtigen
+  spotsData = normalizedSpots.filter((s) => s.location);
 
   return { index: indexData, spots: spotsData };
 }
