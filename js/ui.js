@@ -72,6 +72,7 @@ export function renderSpotList(spots, { favorites, onSelect }) {
         </button>
       </header>
       ${
+        // In der LISTE weiterhin die Poetry anzeigen
         spot.poetry
           ? `<p class="spot-card-poetry">${spot.poetry}</p>`
           : ""
@@ -83,7 +84,7 @@ export function renderSpotList(spots, { favorites, onSelect }) {
               .join("")}</div>`
           : ""
       }
-    `;
+    """
 
     card.addEventListener("click", (evt) => {
       if (evt.target.closest(".spot-card-fav")) return;
@@ -117,44 +118,14 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
   const categoryLabel = getCategoryLabel(spot.primaryCategory, lang);
   const durationLabel = formatVisitMinutes(spot.visitMinutes, lang);
 
-  // Summary passend zur Sprache auswählen
-  const summaryText =
-    lang === "de"
-      ? spot.summary_de || spot.summary_en
-      : spot.summary_en || spot.summary_de;
-
-  // Beschreibung (Summary + Poetry) aufbauen
-  let descriptionHtml = "";
-
-  if (summaryText) {
-    descriptionHtml += `
-      <p class="spot-details-description">${summaryText}</p>
-    `;
-  }
-
-  if (spot.poetry) {
-    descriptionHtml += `
-      <p class="spot-details-description">${spot.poetry}</p>
-    `;
-  }
-
-  // Adresse
-  const addressHtml = spot.address
-    ? `<p class="spot-details-meta">${spot.address}</p>`
-    : "";
-
-  // Tags + USPs
-  const allTags = [...(spot.usps || []), ...(spot.tags || [])];
-  let tagsHtml = "";
-
-  if (allTags.length) {
-    tagsHtml = `
-      <div class="spot-card-tags">
-        ${allTags
-          .map((tag) => `<span class="badge badge--tag">${tag}</span>`)
-          .join("")}
-      </div>
-    `;
+  // HIER: Beschreibung für das Detail-Panel wählen
+  // - DE: summary_de, sonst Poetry
+  // - EN (oder andere): summary_en, sonst Poetry
+  let description = "";
+  if (lang && lang.toLowerCase().startsWith("de")) {
+    description = spot.summary_de || spot.poetry || "";
+  } else {
+    description = spot.summary_en || spot.poetry || "";
   }
 
   container.innerHTML = `
@@ -208,9 +179,26 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
         </button>
       </div>
     </header>
-    ${descriptionHtml}
-    ${addressHtml}
-    ${tagsHtml}
+    ${
+      description
+        ? `<p class="spot-details-description">${description}</p>`
+        : ""
+    }
+    ${
+      spot.address
+        ? `<p class="spot-details-meta">${spot.address}</p>`
+        : ""
+    }
+    ${
+      (spot.tags && spot.tags.length) || (spot.usps && spot.usps.length)
+        ? `<div class="spot-card-tags">${[
+            ...(spot.usps || []),
+            ...(spot.tags || [])
+          ]
+            .map((tag) => `<span class="badge badge--tag">${tag}</span>`)
+            .join("")}</div>`
+        : ""
+    }
   `;
 
   container.classList.add("spot-details--visible");
