@@ -1,6 +1,6 @@
 // service-worker.js
 
-const CACHE_NAME = "family-spots-map-v59"; // Version hochgesetzt
+const CACHE_NAME = "family-spots-map-v60"; // Version hochgesetzt
 const OFFLINE_URL = "offline.html";
 
 const ASSETS = [
