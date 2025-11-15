@@ -2,10 +2,36 @@
 
 // js/map.js
 
+import { getLanguage } from "./i18n.js";
+
 let map = null;
 let markerLayer = null;
 let onMarkerSelectCallback = null;
 const markersById = new Map();
+
+/**
+ * Hilfsfunktion: passenden Kurztext für das Popup wählen
+ * de/en → summary_de / summary_en, Fallback auf poetry
+ */
+function getSpotPopupSummary(spot) {
+  const lang = getLanguage();
+  let text = "";
+
+  if (lang === "de") {
+    text = spot.summary_de || spot.summary_en || spot.poetry || "";
+  } else if (lang === "en") {
+    text = spot.summary_en || spot.summary_de || spot.poetry || "";
+  } else {
+    text = spot.summary_de || spot.summary_en || spot.poetry || "";
+  }
+
+  // etwas kürzen, damit das Popup nicht riesig wird
+  const maxLen = 140;
+  if (text.length > maxLen) {
+    return text.slice(0, maxLen - 1) + "…";
+  }
+  return text;
+}
 
 /**
  * Initialisiert die Leaflet-Karte.
@@ -82,18 +108,22 @@ export function setSpotsOnMap(spots) {
     if (!spot.location) return;
 
     const { lat, lng } = spot.location;
-
     const marker = L.marker([lat, lng]);
 
-    // Kleines Info-/Textfenster (Popup) direkt am Pin
-    const popupHtml = `
-      <strong>${spot.name}</strong>
-      ${spot.city ? `<br>${spot.city}` : ""}
-    `;
-    marker.bindPopup(popupHtml.trim());
+    const summary = getSpotPopupSummary(spot);
 
-    // Klick auf den Pin: Popup öffnet sich automatisch
-    // + zusätzlich dein Detail-Panel über Callback
+    // Popup-Inhalt: Name, Stadt, Info-Text
+    const popupHtml = `
+      <div>
+        <strong>${spot.name}</strong>
+        ${spot.city ? `<br>${spot.city}` : ""}
+        ${summary ? `<br><small>${summary}</small>` : ""}
+      </div>
+    `.trim();
+
+    marker.bindPopup(popupHtml);
+
+    // Klick auf den Pin: Popup + Detail-Panel
     marker.on("click", () => {
       if (onMarkerSelectCallback) {
         onMarkerSelectCallback(spot.id);
