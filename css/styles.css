@@ -223,7 +223,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  margin-bottom: 0.3rem; /* leicht verdichtet */
+  margin-bottom: 0.3rem;
 }
 
 .filter-group-label {
@@ -627,6 +627,48 @@ body {
   color: #854d0e;
   text-align: center;
   font-size: 0.9rem;
+}
+
+/* ===========================
+   LEAFLET POPUP STYLING
+   =========================== */
+
+.leaflet-popup-content {
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+.leaflet-popup-content strong {
+  font-size: 0.95rem;
+}
+
+.leaflet-popup-content small {
+  color: var(--color-text-subtle);
+}
+
+.popup-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.popup-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-decoration: none;
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+  border: 1px solid var(--color-accent);
+}
+
+.popup-link:hover {
+  background-color: var(--color-accent-strong);
+  color: #ffffff;
 }
 
 /* ===========================
