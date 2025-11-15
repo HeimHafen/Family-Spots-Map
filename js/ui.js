@@ -57,8 +57,15 @@ function buildRoutesHtml(spot, lang) {
   const lower = (lang || "de").toLowerCase();
   const isEn = lower.startsWith("en");
 
-  const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
-  const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
+  const googleFallback = isEn
+    ? "Route (Google Maps)"
+    : "Route (Google Maps)";
+  const appleFallback = isEn
+    ? "Route (Apple Maps)"
+    : "Route (Apple Karten)";
+
+  const googleLabel = t("btn_route_google", googleFallback);
+  const appleLabel = t("btn_route_apple", appleFallback);
 
   return `
     <div class="spot-details-routes">
