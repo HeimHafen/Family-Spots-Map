@@ -1,18 +1,20 @@
 // js/ui.js
 // UI-Helfer für Family Spots Map
 // - Spotliste rendern
-// - Detailpanel rendern (mit funktionierendem Schließen-Button)
+// - Detailpanel rendern (mit X-Button oben rechts)
 // - Toasts anzeigen
 
 import { $, $$ } from "./utils.js";
 import { getLanguage } from "./i18n.js";
 import { getCategoryLabel } from "./data.js";
 
-// --------- Kleine Helfer ----------
+// -------------------------
+// Helfer
+// -------------------------
 
 function getUiLanguage() {
   const lang = (getLanguage && getLanguage()) || "de";
-  return lang.startsWith("en") ? "en" : "de";
+  return lang && lang.toLowerCase().startsWith("en") ? "en" : "de";
 }
 
 function escapeHtml(str = "") {
@@ -33,14 +35,14 @@ function textByLang(spot, baseKey) {
 
 function formatVisitTime(spot) {
   const lang = getUiLanguage();
-  const labelFromData = textByLang(spot, "visitLabel");
-  if (labelFromData) return labelFromData;
+  const fromData = textByLang(spot, "visitLabel");
+  if (fromData) return fromData;
 
   const minutes = Number(spot.visitMinutes || 0);
   if (!minutes) return "";
 
   const hoursRaw = minutes / 60;
-  const hoursRounded = Math.round(hoursRaw * 2) / 2; // auf halbe Stunden runden
+  const hoursRounded = Math.round(hoursRaw * 2) / 2;
 
   const hoursText =
     Math.abs(hoursRounded - Math.round(hoursRounded)) < 0.001
@@ -53,7 +55,9 @@ function formatVisitTime(spot) {
   return `Empfohlene Zeit: ca. ${hoursText} Std`;
 }
 
-// --------- Auto-Texte für Spots (für Spots ohne eigene Langtexte) ----------
+// -------------------------
+// Auto-Texte für Spots
+// -------------------------
 
 function generateSuitability(spot) {
   const lang = getUiLanguage();
@@ -67,7 +71,6 @@ function generateSuitability(spot) {
   ].includes(cat);
 
   const isAnimalPark = ["zoo", "wildpark", "tierpark"].includes(cat);
-
   const isAdventurePark = ["freizeitpark"].includes(cat);
 
   if (isPlayground) {
@@ -128,7 +131,7 @@ function generateInfrastructure(spot) {
   const cat = spot.primaryCategory || "";
 
   const isAnimalParkOrPark = ["zoo", "wildpark", "tierpark", "freizeitpark"].includes(
-    cat
+    cat,
   );
 
   const isPlayground = [
@@ -189,7 +192,9 @@ function generateWhyWeLike(spot) {
     : "Weil man hier ohne viel Planung schöne gemeinsame Familienzeit verbringen kann.";
 }
 
-// --------- Toast ----------
+// -------------------------
+// Toast
+// -------------------------
 
 let toastTimeoutId = null;
 
@@ -209,13 +214,16 @@ export function showToast(message) {
   }, 2800);
 }
 
-// --------- Spotliste ----------
+// -------------------------
+// Spot-Liste
+// -------------------------
 
 export function renderSpotList(spots, options = {}) {
   const listEl = $("#spot-list");
   if (!listEl) return;
 
-  const { onSelect } = options;
+  const { favorites = [], onSelect } = options;
+  const favSet = new Set(favorites);
 
   listEl.innerHTML = "";
 
@@ -233,12 +241,11 @@ export function renderSpotList(spots, options = {}) {
   const lang = getUiLanguage();
 
   spots.forEach((spot) => {
+    const isFav = favSet.has(spot.id);
+
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "spot-list-item";
-    if (spot.isFavorite) {
-      btn.classList.add("spot-list-item--favorite");
-    }
     btn.dataset.spotId = spot.id;
 
     const categoryLabel = spot.primaryCategory
@@ -247,10 +254,8 @@ export function renderSpotList(spots, options = {}) {
 
     const visitLabel = formatVisitTime(spot);
     const summary = textByLang(spot, "summary");
-
     const locationLine = [spot.city, spot.country].filter(Boolean).join("  ");
-
-    const favMark = spot.isFavorite ? "★" : "☆";
+    const favMark = isFav ? "★" : "☆";
 
     btn.innerHTML = `
       <div class="spot-list-item-header">
@@ -260,13 +265,15 @@ export function renderSpotList(spots, options = {}) {
         </div>
         ${
           locationLine
-            ? `<div class="spot-list-item-location">${escapeHtml(locationLine)}</div>`
+            ? `<div class="spot-list-item-location">${escapeHtml(
+                locationLine,
+              )}</div>`
             : ""
         }
         ${
           categoryLabel
             ? `<div class="spot-list-item-category">${escapeHtml(
-                categoryLabel
+                categoryLabel,
               )}</div>`
             : ""
         }
@@ -281,23 +288,29 @@ export function renderSpotList(spots, options = {}) {
         }
         ${
           visitLabel
-            ? `<span class="badge badge--time">${escapeHtml(visitLabel)}</span>`
+            ? `<span class="badge badge--time">${escapeHtml(
+                visitLabel,
+              )}</span>`
             : ""
         }
       </div>
       ${
         spot.poetry
-          ? `<p class="spot-list-item-poetry">${escapeHtml(spot.poetry)}</p>`
+          ? `<p class="spot-list-item-poetry">${escapeHtml(
+              spot.poetry,
+            )}</p>`
           : ""
       }
       ${
         summary
-          ? `<p class="spot-list-item-summary">${escapeHtml(summary)}</p>`
+          ? `<p class="spot-list-item-summary">${escapeHtml(
+              summary,
+            )}</p>`
           : ""
       }
     `;
 
-    if (onSelect) {
+    if (typeof onSelect === "function") {
       btn.addEventListener("click", () => onSelect(spot.id));
     }
 
@@ -305,7 +318,9 @@ export function renderSpotList(spots, options = {}) {
   });
 }
 
-// --------- Detailpanel ----------
+// -------------------------
+// Detail-Panel
+// -------------------------
 
 export function renderSpotDetails(spot, options = {}) {
   const detailsEl = $("#spot-details");
@@ -332,7 +347,6 @@ export function renderSpotDetails(spot, options = {}) {
 
   const visitLabel = formatVisitTime(spot);
   const summary = textByLang(spot, "summary");
-
   const locationLine = [spot.city, spot.country].filter(Boolean).join("  ");
 
   const suitability =
@@ -343,13 +357,20 @@ export function renderSpotDetails(spot, options = {}) {
   const whyWeLike =
     textByLang(spot, "whyWeLike") || generateWhyWeLike(spot);
 
-  const routeCoords = `${spot.lat},${spot.lng}`;
-  const googleUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-    routeCoords
-  )}`;
-  const appleUrl = `https://maps.apple.com/?daddr=${encodeURIComponent(
-    routeCoords
-  )}`;
+  const coords =
+    spot.location && typeof spot.location.lat === "number"
+      ? `${spot.location.lat},${spot.location.lng}`
+      : "";
+
+  const googleUrl = coords
+    ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+        coords,
+      )}`
+    : "#";
+
+  const appleUrl = coords
+    ? `https://maps.apple.com/?daddr=${encodeURIComponent(coords)}`
+    : "#";
 
   const googleLabel =
     lang === "en" ? "Route (Google Maps)" : "Route (Google Maps)";
@@ -405,9 +426,8 @@ export function renderSpotDetails(spot, options = {}) {
       ? `<div class="spot-details-tags">
           ${spot.tags
             .map(
-              (tag) => `
-            <span class="badge badge--tag">${escapeHtml(tag)}</span>
-          `
+              (tag) =>
+                `<span class="badge badge--tag">${escapeHtml(tag)}</span>`,
             )
             .join("")}
         </div>`
@@ -422,27 +442,35 @@ export function renderSpotDetails(spot, options = {}) {
       (sec) => `
       <section class="spot-details-section">
         <h4 class="spot-details-section-title">${escapeHtml(sec.title)}</h4>
-        <p>${escapeHtml(sec.text)}</p>
+        <p class="spot-details-section-text">${escapeHtml(sec.text)}</p>
       </section>
-    `
+    `,
     )
     .join("");
 
   detailsEl.innerHTML = `
     <header class="spot-details-header">
+      <button
+        type="button"
+        id="spot-details-close-btn"
+        class="btn-icon spot-details-close-btn"
+        aria-label="${escapeHtml(closeLabel)}"
+      >
+        ✕
+      </button>
       <div class="spot-details-header-main">
         <h3 class="spot-details-title">${escapeHtml(spot.name)}</h3>
         ${
           locationLine
             ? `<div class="spot-details-location">${escapeHtml(
-                locationLine
+                locationLine,
               )}</div>`
             : ""
         }
         ${
           categoryLabel
             ? `<div class="spot-details-category">${escapeHtml(
-                categoryLabel
+                categoryLabel,
               )}</div>`
             : ""
         }
@@ -457,39 +485,33 @@ export function renderSpotDetails(spot, options = {}) {
           ${
             visitLabel
               ? `<span class="badge badge--time">${escapeHtml(
-                  visitLabel
+                  visitLabel,
                 )}</span>`
               : ""
           }
         </div>
-      </div>
-      <div class="spot-details-header-actions">
-        <button
-          type="button"
-          id="spot-details-fav-btn"
-          class="btn-secondary btn-small"
-        >
-          ${escapeHtml(favLabel)}
-        </button>
-        <button
-          type="button"
-          id="spot-details-close-btn"
-          class="btn-ghost btn-small"
-        >
-          ${escapeHtml(closeLabel)}
-        </button>
       </div>
     </header>
 
     ${poetryLine}
 
     <div class="spot-details-routes">
-      <a href="${googleUrl}" target="_blank" rel="noopener" class="btn-secondary btn-small">
+      <a href="${googleUrl}" target="_blank" rel="noopener" class="spot-details-route-link">
         ${escapeHtml(googleLabel)}
       </a>
-      <a href="${appleUrl}" target="_blank" rel="noopener" class="btn-secondary btn-small">
+      <a href="${appleUrl}" target="_blank" rel="noopener" class="spot-details-route-link">
         ${escapeHtml(appleLabel)}
       </a>
+    </div>
+
+    <div class="spot-details-actions">
+      <button
+        type="button"
+        id="spot-details-fav-btn"
+        class="btn-ghost btn-small"
+      >
+        ${escapeHtml(favLabel)}
+      </button>
     </div>
 
     <div class="spot-details-body">
@@ -498,7 +520,7 @@ export function renderSpotDetails(spot, options = {}) {
     </div>
   `;
 
-  // Events für Favorit + Schließen nach dem Einfügen setzen
+  // Events nach dem Einfügen setzen
   const favBtn = $("#spot-details-fav-btn");
   if (favBtn && typeof onToggleFavorite === "function") {
     favBtn.addEventListener("click", () => {
