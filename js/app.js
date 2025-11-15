@@ -183,6 +183,14 @@ function initUIEvents() {
       const filterControls = Array.from(
         filterSection.querySelectorAll(".filter-group"),
       );
+
+      // Auf kleineren Screens: Filter standardmäßig einklappen,
+      // damit beim ersten Aufruf mehr Karte sichtbar ist.
+      if (window.innerWidth <= 900 && filterControls.length > 0) {
+        filterControls.forEach((el) => el.classList.add("hidden"));
+        labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
+      }
+
       filterToggleBtn.addEventListener("click", () => {
         if (filterControls.length === 0) return;
 
