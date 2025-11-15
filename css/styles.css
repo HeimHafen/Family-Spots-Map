@@ -1,10 +1,3 @@
-Hier ist die komplette, bereinigte css/styles.css:
-	•	Header: weiß, Claim grau (wie auf deinem Screenshot).
-	•	Buttons 🗺️ / ℹ️ funktionieren (View-Handling bleibt wie gehabt).
-	•	Pin 📍 rechts bekommt etwas Abstand nach innen.
-
-Bitte deine css/styles.css 1:1 ersetzen.
-
 /* ===========================
    RESET & BASICS
    =========================== */
@@ -292,6 +285,81 @@ body {
   border: 1px solid var(--color-border-subtle);
   box-shadow: 0 10px 25px var(--color-shadow-soft);
   padding: 0.75rem;
+}
+
+/* Grundlayout im Detail-Panel */
+
+.spot-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.spot-details-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.spot-details-meta {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-text-subtle);
+}
+
+.spot-details-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: flex-end;
+}
+
+.spot-details-tags {
+  margin-top: 0.4rem;
+}
+
+/* Erweiterte Texte im Detail-Panel */
+
+.spot-details-description {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.spot-details-poetry {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--color-text-subtle);
+}
+
+.spot-details-address {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.spot-details-section {
+  margin-top: 0.7rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.spot-details-section-title {
+  margin: 0 0 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.spot-details-section-text {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--color-text-subtle);
 }
 
 /* About Page */
@@ -613,6 +681,12 @@ body {
   .spot-details {
     position: static;
     max-height: 18rem;
+  }
+
+  .spot-details-actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
   }
 }
 
