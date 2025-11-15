@@ -38,8 +38,8 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
 
   const searchInput = $("#filter-search");
   const categorySelect = $("#filter-category");
-  const verifiedCheckbox = $("#filter-only-verified");
-  const favsCheckbox = $("#filter-only-favs");
+  const verifiedCheckbox = $("#filter-verified");
+  const favsCheckbox = $("#filter-favorites");
 
   if (categorySelect) {
     buildCategoryOptions(categorySelect, categories);
