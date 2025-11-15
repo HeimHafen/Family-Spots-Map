@@ -1,25 +1,35 @@
 {
   "spots": [
     {
-      "id": "serengeti_hodenhagen",
-      "title": "Serengeti-Park Hodenhagen",
-      "lat": 52.7618,
-      "lon": 9.586,
-      "country": "DE",
-      "city": "Hodenhagen",
-      "categories": [
-        "wildpark"
-      ],
-      "visit_minutes": 240,
-      "verified": true,
-      "poetry": "Giraffen über der Windschutzscheibe – Safari im Norden.",
-      "tags": [
-        "Autosafari",
-        "Freigehege"
-      ],
-      "summary_de": "Giraffen über der Windschutzscheibe – Safari im Norden.",
-      "summary_en": "Serengeti-Park Hodenhagen is a family-friendly wildlife park in Hodenhagen with animals in natural enclosures and plenty of space for a day out."
-    },
+  "id": "serengeti_hodenhagen",
+  "title": "Serengeti-Park Hodenhagen",
+  "lat": 52.7618,
+  "lon": 9.586,
+  "country": "DE",
+  "city": "Hodenhagen",
+  "categories": [
+    "wildpark"
+  ],
+  "visit_minutes": 240,
+  "verified": true,
+  "poetry": "Giraffen über der Windschutzscheibe – Safari im Norden.",
+  "tags": [
+    "Autosafari",
+    "Freigehege"
+  ],
+  "summary_de": "Giraffen über der Windschutzscheibe – Safari im Norden.",
+  "summary_en": "Serengeti-Park Hodenhagen is a family-friendly wildlife park in Hodenhagen with drive-through safari and large outdoor enclosures for a full day out.",
+  "visit_label_de": "Plant einen ganzen Tag mit Auto ein: Autosafari, zu Fuß durch den Park und je nach Kindern ein Abstecher in den Freizeitbereich.",
+  "visit_label_en": "Plan a full day with a car: drive-through safari, walking areas and, if you like, some rides.",
+  "suitability_de": "Ideal für tierbegeisterte Kindergarten- und Schulkinder, Teens und Erwachsene. Mit Babys funktioniert es im eigenen Tempo – am besten mit genug Pausen.",
+  "suitability_en": "Great for animal-loving preschoolers, school kids, teens and adults. Works with babies if you take it slow and plan enough breaks.",
+  "season_de": "Saison von Frühling bis Herbst; Ferien und Wochenenden sind sehr voll, unter der Woche meist entspannter.",
+  "season_en": "Best from spring to autumn; school holidays and weekends are busy, weekdays are more relaxed.",
+  "infrastructure_de": "Große Parkplätze, sanitäre Anlagen, mehrere Spielplätze, Gastronomie und Picknickmöglichkeiten. Kinderwagen sind möglich, die Wege sind aber lang.",
+  "infrastructure_en": "Large parking areas, toilets, several playgrounds, food options and picnic spots. Strollers are possible but distances are long.",
+  "why_we_like_de": "Weil sich der Moment, wenn Giraffen am Auto vorbeiziehen, wie ein kleiner Afrika-Tag im Norden anfühlt – ohne Flug und mit viel Familienzeit.",
+  "why_we_like_en": "Because giraffes passing by the car feel like a tiny African day in northern Germany – no plane needed, just time together as a family."
+}
     {
       "id": "wildpark_poing",
       "title": "Wildpark Poing",
