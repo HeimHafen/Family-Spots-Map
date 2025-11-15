@@ -80,6 +80,7 @@ export function setSpotsOnMap(spots) {
     const { lat, lng } = spot.location;
     const marker = L.marker([lat, lng]);
 
+    // 👉 Klick auf den Pin wählt den Spot aus
     marker.on("click", () => {
       if (onMarkerSelectCallback) {
         onMarkerSelectCallback(spot.id);
