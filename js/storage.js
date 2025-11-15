@@ -54,8 +54,20 @@ export function getPlusStatus() {
   try {
     const raw = localStorage.getItem(PLUS_KEY);
     if (!raw) return { ...defaultPlusStatus };
+
     const parsed = JSON.parse(raw);
-    return { ...defaultPlusStatus, ...parsed };
+    const merged = { ...defaultPlusStatus, ...parsed };
+
+    if (merged.expiresAt) {
+      const exp = new Date(merged.expiresAt);
+      const now = new Date();
+      if (isNaN(exp.getTime()) || exp <= now) {
+        // Abgelaufen oder ungültig -> zurück auf Default
+        return { ...defaultPlusStatus };
+      }
+    }
+
+    return merged;
   } catch {
     return { ...defaultPlusStatus };
   }
