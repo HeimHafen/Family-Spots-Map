@@ -1,4 +1,6 @@
-const CACHE_NAME = "family-spots-map-v51"; // <- Version hochgesetzt
+// service-worker.js
+
+const CACHE_NAME = "family-spots-map-v52"; // Version hochgesetzt
 const OFFLINE_URL = "offline.html";
 
 const ASSETS = [
@@ -16,10 +18,13 @@ const ASSETS = [
   "js/map.js",
   "js/ui.js",
   "js/sw-register.js",
+  "js/header-tagline.js",
+  "js/nav.js",
   "data/index.json",
   "data/spots.json",
   "data/i18n/de.json",
   "data/i18n/en.json",
+  "data/partners.json",
   "assets/logo.svg",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
@@ -50,15 +55,29 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
+  const requestUrl = new URL(event.request.url);
+
+  // Nur Requests der gleichen Origin abfangen
+  if (requestUrl.origin !== self.location.origin) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
-      if (cached) return cached;
+      if (cached) {
+        return cached;
+      }
 
       return fetch(event.request).catch(() => {
         if (event.request.mode === "navigate") {
           return caches.match(OFFLINE_URL);
         }
-        return undefined;
+
+        // Für Nicht-Navigations-Requests im Offline-Fall
+        return new Response("", {
+          status: 503,
+          statusText: "Offline",
+        });
       });
     }),
   );
