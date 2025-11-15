@@ -117,6 +117,12 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
   const categoryLabel = getCategoryLabel(spot.primaryCategory, lang);
   const durationLabel = formatVisitMinutes(spot.visitMinutes, lang);
 
+  // Neu: Summary passend zur Sprache auswählen
+  const summary =
+    lang === "de"
+      ? spot.summary_de || spot.summary_en
+      : spot.summary_en || spot.summary_de;
+
   container.innerHTML = `
     <header class="spot-details-header">
       <div>
@@ -168,6 +174,11 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
         </button>
       </div>
     </header>
+    ${
+      summary
+        ? `<p class="spot-details-description">${summary}</p>`
+        : ""
+    }
     ${
       spot.poetry
         ? `<p class="spot-details-description">${spot.poetry}</p>`
