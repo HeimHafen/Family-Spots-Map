@@ -1,4 +1,4 @@
-const CACHE_NAME = "family-spots-map-v41"; // <- Version hochgesetzt
+const CACHE_NAME = "family-spots-map-v42"; // <- Version hochgesetzt
 const OFFLINE_URL = "offline.html";
 
 const ASSETS = [
