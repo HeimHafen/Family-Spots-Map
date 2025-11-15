@@ -161,7 +161,7 @@ export function renderSpotList(spots, { favorites, onSelect }) {
               .join("")}</div>`
           : ""
       }
-    */
+    `;
 
     card.addEventListener("click", (evt) => {
       // Klick auf Stern soll nicht die Detailansicht öffnen
