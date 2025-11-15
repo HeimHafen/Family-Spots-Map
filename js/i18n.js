@@ -1,3 +1,5 @@
+// js/i18n.js
+
 let currentLang = "de";
 let messages = {};
 
@@ -12,6 +14,11 @@ export async function initI18n(lang) {
     if (!res.ok) throw new Error("i18n load failed");
     messages = await res.json();
     currentLang = target;
+
+    // HTML lang-Attribut mitziehen
+    if (typeof document !== "undefined" && document.documentElement) {
+      document.documentElement.setAttribute("lang", target);
+    }
   } catch (err) {
     console.error(err);
     if (target !== "de") {
