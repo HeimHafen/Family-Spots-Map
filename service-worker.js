@@ -1,6 +1,7 @@
 // service-worker.js
 
-const CACHE_NAME = "family-spots-map-v64"; // Version hochgesetzt
+// Version des Caches – bei Änderungen an Assets INKREMENTIEREN
+const CACHE_NAME = "family-spots-map-65";
 const OFFLINE_URL = "offline.html";
 
 const ASSETS = [
@@ -30,47 +31,60 @@ const ASSETS = [
   "assets/icons/icon-512.png",
 ];
 
+// INSTALL: App-Shell & Daten cachen
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)),
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      await cache.addAll(ASSETS);
+    })(),
   );
   self.skipWaiting();
 });
 
+// ACTIVATE: Alte Caches aufräumen
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(
-          keys
-            .filter((key) => key !== CACHE_NAME)
-            .map((key) => caches.delete(key)),
-        ),
-      ),
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key)),
+      );
+    })(),
   );
   self.clients.claim();
 });
 
+// FETCH: Cache-first mit Offline-Fallback für Navigation
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
   const requestUrl = new URL(event.request.url);
 
-  // Nur Requests der gleichen Origin abfangen
+  // Nur gleiche Origin abfangen (GitHub Pages etc.)
   if (requestUrl.origin !== self.location.origin) {
     return;
   }
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
+    (async () => {
+      // 1. Versuche Cache
+      const cached = await caches.match(event.request);
       if (cached) {
         return cached;
       }
 
-      return fetch(event.request).catch(() => {
+      // 2. Versuch Netz
+      try {
+        const response = await fetch(event.request);
+        return response;
+      } catch (err) {
+        // 3. Offline-Fallback
         if (event.request.mode === "navigate") {
-          return caches.match(OFFLINE_URL);
+          const offlinePage = await caches.match(OFFLINE_URL);
+          if (offlinePage) return offlinePage;
         }
 
         // Für Nicht-Navigations-Requests im Offline-Fall
@@ -78,7 +92,7 @@ self.addEventListener("fetch", (event) => {
           status: 503,
           statusText: "Offline",
         });
-      });
-    }),
+      }
+    })(),
   );
 });
