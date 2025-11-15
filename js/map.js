@@ -24,11 +24,10 @@ function escapeHtml(str) {
 /**
  * Bestimmt den Text für das Popup.
  *
- * Neue Idee:
- * 1. Wenn vorhanden: Poesie-Zeile (poetry) – die ist individuell & schön.
- * 2. Sonst: Summary in aktueller Sprache (summary_de / summary_en).
- * 3. Sonst: Besuchstipp (visitLabel_*).
- * 4. Sonst: Summary der anderen Sprache.
+ * 1. Wenn vorhanden: Poesie-Zeile (poetry)
+ * 2. Sonst: Summary in aktueller Sprache (summary_de / summary_en)
+ * 3. Sonst: Besuchstipp (visitLabel_*)
+ * 4. Sonst: Summary der anderen Sprache
  */
 function getSpotPopupSummary(spot) {
   let lang = "de";
@@ -145,8 +144,8 @@ export function setSpotsOnMap(spots) {
   }
   const isEn = lang.toLowerCase().indexOf("en") === 0;
 
-  const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
-  const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
+  const googleLabel = isEn ? "Directions (Google Maps)" : "Route (Google Maps)";
+  const appleLabel = isEn ? "Directions (Apple Maps)" : "Route (Apple Karten)";
 
   spots.forEach(function (spot) {
     if (!spot.location) return;
