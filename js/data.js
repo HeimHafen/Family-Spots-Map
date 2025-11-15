@@ -105,12 +105,24 @@ export async function loadAppData() {
       verified: !!spot.verified,
       visitMinutes: spot.visit_minutes || spot.visitMinutes || null,
 
-      // Poesie-Zeile für die Liste
+      // Poesie-Zeile für Liste
       poetry: spot.poetry || "",
 
-      // Beschreibungstexte fürs Popup
+      // Beschreibungstexte
       summary_de: spot.summary_de || null,
       summary_en: spot.summary_en || null,
+
+      // Details für das Info-Fenster
+      visitLabel_de: spot.visit_label_de || null,
+      visitLabel_en: spot.visit_label_en || null,
+      suitability_de: spot.suitability_de || null,
+      suitability_en: spot.suitability_en || null,
+      season_de: spot.season_de || null,
+      season_en: spot.season_en || null,
+      infrastructure_de: spot.infrastructure_de || null,
+      infrastructure_en: spot.infrastructure_en || null,
+      whyWeLike_de: spot.why_we_like_de || null,
+      whyWeLike_en: spot.why_we_like_en || null,
 
       tags: tags,
       usps: usps,
