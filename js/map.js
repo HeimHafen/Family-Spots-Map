@@ -63,7 +63,7 @@ function ensureMarkerLayer() {
  * Zeichnet alle Spots auf die Karte.
  * Alte Marker werden vorher entfernt.
  *
- * @param {Array<{id: string, location: {lat: number, lng: number}}>} spots
+ * @param {Array<{id: string, name: string, city?: string, location: {lat: number, lng: number}}>} spots
  */
 export function setSpotsOnMap(spots) {
   if (!map) {
@@ -82,9 +82,18 @@ export function setSpotsOnMap(spots) {
     if (!spot.location) return;
 
     const { lat, lng } = spot.location;
+
     const marker = L.marker([lat, lng]);
 
-    // Klick auf den Pin wählt den Spot aus (Details unten)
+    // Kleines Info-/Textfenster (Popup) direkt am Pin
+    const popupHtml = `
+      <strong>${spot.name}</strong>
+      ${spot.city ? `<br>${spot.city}` : ""}
+    `;
+    marker.bindPopup(popupHtml.trim());
+
+    // Klick auf den Pin: Popup öffnet sich automatisch
+    // + zusätzlich dein Detail-Panel über Callback
     marker.on("click", () => {
       if (onMarkerSelectCallback) {
         onMarkerSelectCallback(spot.id);
