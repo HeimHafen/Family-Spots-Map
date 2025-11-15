@@ -1,376 +1,517 @@
 // js/ui.js
+// UI-Helfer für Family Spots Map
+// - Spotliste rendern
+// - Detailpanel rendern (mit funktionierendem Schließen-Button)
+// - Toasts anzeigen
 
-import { $, formatVisitMinutes } from "./utils.js";
-import { getLanguage, t } from "./i18n.js";
+import { $, $$ } from "./utils.js";
+import { getLanguage } from "./i18n.js";
 import { getCategoryLabel } from "./data.js";
 
-/**
- * Kurzbeschreibung für Liste/Details:
- * summary_de / summary_en, Fallback auf poetry.
- */
-function getSpotSummary(spot, lang) {
-  if (lang === "de") {
-    return spot.summary_de || spot.summary_en || spot.poetry || "";
-  }
+// --------- Kleine Helfer ----------
+
+function getUiLanguage() {
+  const lang = (getLanguage && getLanguage()) || "de";
+  return lang.startsWith("en") ? "en" : "de";
+}
+
+function escapeHtml(str = "") {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function textByLang(spot, baseKey) {
+  const lang = getUiLanguage();
+  const primaryKey = `${baseKey}_${lang}`;
+  const fallbackKey = lang === "en" ? `${baseKey}_de` : `${baseKey}_en`;
+  return spot[primaryKey] || spot[fallbackKey] || "";
+}
+
+function formatVisitTime(spot) {
+  const lang = getUiLanguage();
+  const labelFromData = textByLang(spot, "visitLabel");
+  if (labelFromData) return labelFromData;
+
+  const minutes = Number(spot.visitMinutes || 0);
+  if (!minutes) return "";
+
+  const hoursRaw = minutes / 60;
+  const hoursRounded = Math.round(hoursRaw * 2) / 2; // auf halbe Stunden runden
+
+  const hoursText =
+    Math.abs(hoursRounded - Math.round(hoursRounded)) < 0.001
+      ? String(Math.round(hoursRounded))
+      : String(hoursRounded).replace(".", ",");
+
   if (lang === "en") {
-    return spot.summary_en || spot.summary_de || spot.poetry || "";
+    return `Recommended time: approx. ${hoursText} h`;
   }
-  return spot.summary_de || spot.summary_en || spot.poetry || "";
+  return `Empfohlene Zeit: ca. ${hoursText} Std`;
 }
 
-/**
- * Hilfsfunktion: holt einen lokalisierten Text
- * z. B. "visitLabel" → visitLabel_de / visitLabel_en
- */
-function getLocalizedSpotText(spot, baseKey) {
-  const lang = getLanguage() || "de";
-  const isEn = lang.toLowerCase().startsWith("en");
+// --------- Auto-Texte für Spots (für Spots ohne eigene Langtexte) ----------
 
-  const deKey = baseKey + "_de";
-  const enKey = baseKey + "_en";
+function generateSuitability(spot) {
+  const lang = getUiLanguage();
+  const cat = spot.primaryCategory || "";
 
-  if (isEn) {
-    return spot[enKey] || spot[deKey] || "";
+  const isPlayground = [
+    "spielplatz",
+    "abenteuerspielplatz",
+    "waldspielplatz",
+    "wasserspielplatz",
+  ].includes(cat);
+
+  const isAnimalPark = ["zoo", "wildpark", "tierpark"].includes(cat);
+
+  const isAdventurePark = ["freizeitpark"].includes(cat);
+
+  if (isPlayground) {
+    return lang === "en"
+      ? "Great for preschool and primary school kids; older kids usually still find something to do. Toddlers depending on the equipment and surface."
+      : "Ideal für Kinder im Kindergarten- und Grundschulalter; größere Kids finden meistens auch noch etwas zu tun. Für Kleinkinder je nach Ausstattung und Boden geeignet.";
   }
-  return spot[deKey] || spot[enKey] || "";
+
+  if (isAnimalPark) {
+    return lang === "en"
+      ? "For the whole family – from toddlers to grandparents. Most paths are stroller-friendly, details depend on the terrain."
+      : "Für die ganze Familie – vom Kleinkind bis zu den Großeltern. Viele Wege sind kinderwagengeeignet, Details hängen vom Gelände ab.";
+  }
+
+  if (isAdventurePark) {
+    return lang === "en"
+      ? "Best for older children and teens; many parks also offer calmer areas and rides for younger kids."
+      : "Besonders spannend für größere Kinder und Teens; viele Parks haben aber auch ruhigere Bereiche und Fahrgeschäfte für jüngere Kinder.";
+  }
+
+  return lang === "en"
+    ? "Suitable for families with children of different ages; check details in the description."
+    : "Geeignet für Familien mit Kindern in verschiedenen Altersstufen; Details siehe Beschreibung.";
 }
 
-/**
- * Routen-Buttons (Google / Apple) für das Detail-Panel.
- */
-function buildRoutesHtml(spot, lang) {
-  if (!spot.location) return "";
+function generateSeason(spot) {
+  const lang = getUiLanguage();
+  const cat = spot.primaryCategory || "";
 
-  const { lat, lng } = spot.location;
-  const encodedName = encodeURIComponent(
-    (spot.name || "") + (spot.city ? " " + spot.city : ""),
+  const isPlayground = [
+    "spielplatz",
+    "abenteuerspielplatz",
+    "waldspielplatz",
+    "wasserspielplatz",
+  ].includes(cat);
+
+  const isAnimalPark = ["zoo", "wildpark", "tierpark"].includes(cat);
+
+  if (isPlayground) {
+    return lang === "en"
+      ? "Best in dry weather. In summer: sun protection and water/mud clothes are helpful."
+      : "Am schönsten bei trockenem Wetter. Im Sommer sind Sonnen- und ggf. Matschschutz hilfreich.";
+  }
+
+  if (isAnimalPark) {
+    return lang === "en"
+      ? "Worth a visit almost all year round; especially nice in spring and autumn."
+      : "Fast ganzjährig spannend; besonders schön im Frühling und Herbst.";
+  }
+
+  return lang === "en"
+    ? "Best on days with decent weather; check local opening times before visiting."
+    : "Am besten an Tagen mit passablem Wetter; Öffnungszeiten vorab prüfen.";
+}
+
+function generateInfrastructure(spot) {
+  const lang = getUiLanguage();
+  const cat = spot.primaryCategory || "";
+
+  const isAnimalParkOrPark = ["zoo", "wildpark", "tierpark", "freizeitpark"].includes(
+    cat
   );
 
-  const googleUrl =
-    "https://www.google.com/maps/dir/?api=1&destination=" +
-    encodeURIComponent(lat + "," + lng) +
-    (encodedName ? "&destination_place_id=&query=" + encodedName : "");
+  const isPlayground = [
+    "spielplatz",
+    "abenteuerspielplatz",
+    "waldspielplatz",
+    "wasserspielplatz",
+  ].includes(cat);
 
-  const appleUrl =
-    "https://maps.apple.com/?daddr=" + encodeURIComponent(lat + "," + lng);
+  if (isAnimalParkOrPark) {
+    return lang === "en"
+      ? "Usually there are larger parking areas, toilets and one or more places to eat. Some parks offer playgrounds and picnic areas – check the park website for details."
+      : "In der Regel gibt es größere Parkplätze, Toiletten und ein oder mehrere Gastronomieangebote. Viele Parks haben zusätzlich Spielplätze und Picknickmöglichkeiten – Details auf der Website des Parks.";
+  }
 
-  const lower = (lang || "de").toLowerCase();
-  const isEn = lower.startsWith("en");
+  if (isPlayground) {
+    return lang === "en"
+      ? "Often without fixed gastronomy; sometimes there is a bakery or kiosk nearby. Toilets depend strongly on the location."
+      : "Oft ohne feste Gastronomie; manchmal gibt es Bäcker, Kiosk oder Café in der Nähe. Toiletten sind je nach Standort vorhanden oder nicht.";
+  }
 
-  const googleFallback = isEn
-    ? "Route (Google Maps)"
-    : "Route (Google Maps)";
-  const appleFallback = isEn
-    ? "Route (Apple Maps)"
-    : "Route (Apple Karten)";
-
-  const googleLabel = t("btn_route_google", googleFallback);
-  const appleLabel = t("btn_route_apple", appleFallback);
-
-  return `
-    <div class="spot-details-routes">
-      <a
-        class="spot-details-route-link"
-        href="${googleUrl}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        ${googleLabel}
-      </a>
-      <a
-        class="spot-details-route-link"
-        href="${appleUrl}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        ${appleLabel}
-      </a>
-    </div>
-  `;
+  return lang === "en"
+    ? "Infrastructure varies by location – check maps or local information for parking and toilets."
+    : "Die Infrastruktur variiert je nach Ort – Parkmöglichkeiten und Toiletten am besten vorab kurz auf der Karte oder vor Ort prüfen.";
 }
 
-export function renderSpotList(spots, { favorites, onSelect }) {
-  const listEl = $("#spot-list");
-  const lang = getLanguage() || "de";
+function generateWhyWeLike(spot) {
+  const lang = getUiLanguage();
+  const cat = spot.primaryCategory || "";
 
+  const isAnimalPark = ["zoo", "wildpark", "tierpark"].includes(cat);
+
+  if (isAnimalPark) {
+    return lang === "en"
+      ? "Because animals can be experienced up close and you naturally spend many hours outside together."
+      : "Weil man Tiere aus nächster Nähe erleben kann und ganz automatisch viele Stunden gemeinsam draußen verbringt.";
+  }
+
+  const isPlaygroundOrNature = [
+    "spielplatz",
+    "abenteuerspielplatz",
+    "waldspielplatz",
+    "wasserspielplatz",
+    "naturerlebnispfad",
+    "walderlebnisroute",
+    "wanderweg-kinderwagen",
+    "radweg-family",
+  ].includes(cat);
+
+  if (isPlaygroundOrNature) {
+    return lang === "en"
+      ? "Because families can be outside together with little preparation and the children can simply run, climb and discover."
+      : "Weil Familien mit wenig Vorbereitung draußen zusammen sein können und die Kinder einfach laufen, klettern und entdecken dürfen.";
+  }
+
+  return lang === "en"
+    ? "Because it’s an easy way to spend quality time together as a family."
+    : "Weil man hier ohne viel Planung schöne gemeinsame Familienzeit verbringen kann.";
+}
+
+// --------- Toast ----------
+
+let toastTimeoutId = null;
+
+export function showToast(message) {
+  const toastEl = $("#toast");
+  if (!toastEl) return;
+
+  toastEl.textContent = message;
+  toastEl.classList.add("toast--visible");
+
+  if (toastTimeoutId) {
+    clearTimeout(toastTimeoutId);
+  }
+
+  toastTimeoutId = setTimeout(() => {
+    toastEl.classList.remove("toast--visible");
+  }, 2800);
+}
+
+// --------- Spotliste ----------
+
+export function renderSpotList(spots, options = {}) {
+  const listEl = $("#spot-list");
   if (!listEl) return;
+
+  const { onSelect } = options;
 
   listEl.innerHTML = "";
 
-  if (!spots.length) {
-    const p = document.createElement("p");
-    p.className = "spot-list-empty";
-    p.textContent = t(
-      "no_results",
-      "Keine passenden Spots gefunden. Passe die Filter an.",
-    );
-    listEl.appendChild(p);
+  if (!spots || spots.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "spot-list-empty";
+    empty.textContent =
+      getUiLanguage() === "en"
+        ? "No family spots found for the current filters."
+        : "Keine passenden Spots für die aktuellen Filter gefunden.";
+    listEl.appendChild(empty);
     return;
   }
 
-  const favSet = new Set(favorites || []);
-  const frag = document.createDocumentFragment();
+  const lang = getUiLanguage();
 
   spots.forEach((spot) => {
-    const card = document.createElement("article");
-    card.className = "spot-card";
-    card.tabIndex = 0;
-    card.dataset.spotId = spot.id;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "spot-list-item";
+    if (spot.isFavorite) {
+      btn.classList.add("spot-list-item--favorite");
+    }
+    btn.dataset.spotId = spot.id;
 
-    const categoryLabel = getCategoryLabel(spot.primaryCategory, lang);
-    const durationLabel = formatVisitMinutes(spot.visitMinutes, lang);
-    const isFav = favSet.has(spot.id);
+    const categoryLabel = spot.primaryCategory
+      ? getCategoryLabel(spot.primaryCategory, lang)
+      : "";
 
-    card.innerHTML = `
-      <header class="spot-card-header">
-        <div>
-          <h3 class="spot-card-title">${spot.name}</h3>
-          <div class="spot-card-meta">
-            ${spot.city ? `<span>${spot.city}</span>` : ""}
-            ${categoryLabel ? `<span>${categoryLabel}</span>` : ""}
-            ${
-              spot.verified
-                ? `<span class="badge badge--verified">${t(
-                    "badge_verified",
-                    "Verifiziert",
-                  )}</span>`
-                : ""
-            }
-            ${
-              durationLabel
-                ? `<span class="badge badge--time">${durationLabel}</span>`
-                : ""
-            }
-          </div>
+    const visitLabel = formatVisitTime(spot);
+    const summary = textByLang(spot, "summary");
+
+    const locationLine = [spot.city, spot.country].filter(Boolean).join("  ");
+
+    const favMark = spot.isFavorite ? "★" : "☆";
+
+    btn.innerHTML = `
+      <div class="spot-list-item-header">
+        <div class="spot-list-item-title-row">
+          <h3 class="spot-list-item-title">${escapeHtml(spot.name)}</h3>
+          <span class="spot-list-item-fav-indicator" aria-hidden="true">${favMark}</span>
         </div>
-        <button
-          class="btn-ghost btn-small spot-card-fav"
-          type="button"
-          aria-pressed="${isFav}"
-          aria-label="${
-            isFav
-              ? t("fav_remove", "Aus Favoriten entfernen")
-              : t("fav_add", "Zu Favoriten hinzufügen")
-          }"
-        >
-          ${isFav ? "★" : "☆"}
-        </button>
-      </header>
+        ${
+          locationLine
+            ? `<div class="spot-list-item-location">${escapeHtml(locationLine)}</div>`
+            : ""
+        }
+        ${
+          categoryLabel
+            ? `<div class="spot-list-item-category">${escapeHtml(
+                categoryLabel
+              )}</div>`
+            : ""
+        }
+      </div>
+      <div class="spot-list-item-badges">
+        ${
+          spot.verified
+            ? `<span class="badge badge--verified">${
+                lang === "en" ? "Verified" : "Verifiziert"
+              }</span>`
+            : ""
+        }
+        ${
+          visitLabel
+            ? `<span class="badge badge--time">${escapeHtml(visitLabel)}</span>`
+            : ""
+        }
+      </div>
       ${
         spot.poetry
-          ? `<p class="spot-card-poetry">${spot.poetry}</p>`
+          ? `<p class="spot-list-item-poetry">${escapeHtml(spot.poetry)}</p>`
           : ""
       }
       ${
-        spot.tags && spot.tags.length
-          ? `<div class="spot-card-tags">${spot.tags
-              .map((tag) => `<span class="badge badge--tag">${tag}</span>`)
-              .join("")}</div>`
+        summary
+          ? `<p class="spot-list-item-summary">${escapeHtml(summary)}</p>`
           : ""
       }
     `;
 
-    card.addEventListener("click", (evt) => {
-      // Klick auf Stern soll nicht die Detailansicht öffnen
-      if (evt.target.closest(".spot-card-fav")) return;
-      if (onSelect) onSelect(spot.id);
-    });
+    if (onSelect) {
+      btn.addEventListener("click", () => onSelect(spot.id));
+    }
 
-    card.addEventListener("keydown", (evt) => {
-      if (evt.key === "Enter" || evt.key === " ") {
-        evt.preventDefault();
-        if (onSelect) onSelect(spot.id);
-      }
-    });
-
-    frag.appendChild(card);
+    listEl.appendChild(btn);
   });
-
-  listEl.appendChild(frag);
 }
 
-export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
-  const container = $("#spot-details");
-  if (!container) return;
+// --------- Detailpanel ----------
 
+export function renderSpotDetails(spot, options = {}) {
+  const detailsEl = $("#spot-details");
+  if (!detailsEl) return;
+
+  const { isFavorite = false, onToggleFavorite } = options;
+
+  // Panel schließen, wenn kein Spot übergeben wird
   if (!spot) {
-    container.classList.remove("spot-details--visible");
-    container.innerHTML = "";
+    detailsEl.innerHTML = "";
+    detailsEl.classList.add("hidden");
+    detailsEl.classList.remove("spot-details--visible");
     return;
   }
 
-  const lang = getLanguage() || "de";
-  const categoryLabel = getCategoryLabel(spot.primaryCategory, lang);
-  const durationLabel = formatVisitMinutes(spot.visitMinutes, lang);
-  const summaryText = getSpotSummary(spot, lang);
+  detailsEl.classList.remove("hidden");
+  detailsEl.classList.add("spot-details--visible");
 
-  // Zusätzliche Texte
-  const visitLabel = getLocalizedSpotText(spot, "visitLabel");
-  const suitability = getLocalizedSpotText(spot, "suitability");
-  const season = getLocalizedSpotText(spot, "season");
-  const infrastructure = getLocalizedSpotText(spot, "infrastructure");
-  const whyWeLike = getLocalizedSpotText(spot, "whyWeLike");
+  const lang = getUiLanguage();
 
-  const routesHtml = buildRoutesHtml(spot, lang);
+  const categoryLabel = spot.primaryCategory
+    ? getCategoryLabel(spot.primaryCategory, lang)
+    : "";
 
-  container.innerHTML = `
+  const visitLabel = formatVisitTime(spot);
+  const summary = textByLang(spot, "summary");
+
+  const locationLine = [spot.city, spot.country].filter(Boolean).join("  ");
+
+  const suitability =
+    textByLang(spot, "suitability") || generateSuitability(spot);
+  const season = textByLang(spot, "season") || generateSeason(spot);
+  const infrastructure =
+    textByLang(spot, "infrastructure") || generateInfrastructure(spot);
+  const whyWeLike =
+    textByLang(spot, "whyWeLike") || generateWhyWeLike(spot);
+
+  const routeCoords = `${spot.lat},${spot.lng}`;
+  const googleUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+    routeCoords
+  )}`;
+  const appleUrl = `https://maps.apple.com/?daddr=${encodeURIComponent(
+    routeCoords
+  )}`;
+
+  const googleLabel =
+    lang === "en" ? "Route (Google Maps)" : "Route (Google Maps)";
+  const appleLabel =
+    lang === "en" ? "Route (Apple Maps)" : "Route (Apple Karten)";
+
+  const sections = [];
+
+  if (summary) {
+    sections.push({
+      title: lang === "en" ? "Short description" : "Kurzbeschreibung",
+      text: summary,
+    });
+  }
+  if (suitability) {
+    sections.push({
+      title: lang === "en" ? "Who it's for" : "Für wen geeignet",
+      text: suitability,
+    });
+  }
+  if (season) {
+    sections.push({
+      title: lang === "en" ? "Best time to visit" : "Beste Zeit / Saison",
+      text: season,
+    });
+  }
+  if (infrastructure) {
+    sections.push({
+      title: lang === "en" ? "On site / infrastructure" : "Vor Ort / Infrastruktur",
+      text: infrastructure,
+    });
+  }
+  if (whyWeLike) {
+    sections.push({
+      title: lang === "en" ? "Why we like this spot" : "Warum wir diesen Spot mögen",
+      text: whyWeLike,
+    });
+  }
+
+  const favLabel = isFavorite
+    ? lang === "en"
+      ? "Favorite"
+      : "Favorit"
+    : lang === "en"
+    ? "Add to favorites"
+    : "Zu Favoriten";
+
+  const closeLabel =
+    lang === "en" ? "Close details" : "Details schließen";
+
+  const tagChips =
+    Array.isArray(spot.tags) && spot.tags.length
+      ? `<div class="spot-details-tags">
+          ${spot.tags
+            .map(
+              (tag) => `
+            <span class="badge badge--tag">${escapeHtml(tag)}</span>
+          `
+            )
+            .join("")}
+        </div>`
+      : "";
+
+  const poetryLine = spot.poetry
+    ? `<p class="spot-details-poetry">${escapeHtml(spot.poetry)}</p>`
+    : "";
+
+  const sectionsHtml = sections
+    .map(
+      (sec) => `
+      <section class="spot-details-section">
+        <h4 class="spot-details-section-title">${escapeHtml(sec.title)}</h4>
+        <p>${escapeHtml(sec.text)}</p>
+      </section>
+    `
+    )
+    .join("");
+
+  detailsEl.innerHTML = `
     <header class="spot-details-header">
-      <div>
-        <h2 class="spot-details-title">${spot.name}</h2>
-        <div class="spot-details-meta">
-          ${spot.city ? `<span>${spot.city}</span>` : ""}
-          ${spot.country ? `<span>${spot.country}</span>` : ""}
-          ${categoryLabel ? `<span>${categoryLabel}</span>` : ""}
+      <div class="spot-details-header-main">
+        <h3 class="spot-details-title">${escapeHtml(spot.name)}</h3>
+        ${
+          locationLine
+            ? `<div class="spot-details-location">${escapeHtml(
+                locationLine
+              )}</div>`
+            : ""
+        }
+        ${
+          categoryLabel
+            ? `<div class="spot-details-category">${escapeHtml(
+                categoryLabel
+              )}</div>`
+            : ""
+        }
+        <div class="spot-details-badges">
           ${
             spot.verified
-              ? `<span class="badge badge--verified">${t(
-                  "badge_verified",
-                  "Verifiziert",
-                )}</span>`
+              ? `<span class="badge badge--verified">${
+                  lang === "en" ? "Verified" : "Verifiziert"
+                }</span>`
               : ""
           }
           ${
-            durationLabel
-              ? `<span class="badge badge--time">${t(
-                  "label_duration",
-                  "Empfohlene Zeit",
-                )}: ${durationLabel}</span>`
+            visitLabel
+              ? `<span class="badge badge--time">${escapeHtml(
+                  visitLabel
+                )}</span>`
               : ""
           }
         </div>
       </div>
-      <div class="spot-details-actions">
+      <div class="spot-details-header-actions">
         <button
-          id="spot-fav-btn"
-          class="btn btn-small"
           type="button"
-          aria-pressed="${isFavorite}"
-          aria-label="${
-            isFavorite
-              ? t("fav_remove", "Aus Favoriten entfernen")
-              : t("fav_add", "Zu Favoriten hinzufügen")
-          }"
+          id="spot-details-fav-btn"
+          class="btn-secondary btn-small"
         >
-          ${isFavorite ? "★" : "☆"}
-          <span>${t("btn_favorite", "Favorit")}</span>
+          ${escapeHtml(favLabel)}
         </button>
         <button
-          id="spot-close-btn"
-          class="btn-ghost btn-small"
           type="button"
-          aria-label="${t("btn_close_details", "Details schließen")}"
+          id="spot-details-close-btn"
+          class="btn-ghost btn-small"
         >
-          ${t("btn_close_details", "Schließen")}
+          ${escapeHtml(closeLabel)}
         </button>
       </div>
     </header>
-    ${
-      summaryText
-        ? `<p class="spot-details-description">${summaryText}</p>`
-        : ""
-    }
-    ${
-      spot.poetry && spot.poetry !== summaryText
-        ? `<p class="spot-details-poetry">${spot.poetry}</p>`
-        : ""
-    }
-    ${
-      spot.address
-        ? `<p class="spot-details-meta spot-details-address">${spot.address}</p>`
-        : ""
-    }
-    ${routesHtml}
-    ${
-      (spot.tags && spot.tags.length) || (spot.usps && spot.usps.length)
-        ? `<div class="spot-card-tags spot-details-tags">${[
-            ...(spot.usps || []),
-            ...(spot.tags || []),
-          ]
-            .map((tag) => `<span class="badge badge--tag">${tag}</span>`)
-            .join("")}</div>`
-        : ""
-    }
-    ${
-      visitLabel
-        ? `<section class="spot-details-section">
-             <h3 class="spot-details-section-title">
-               ${t("label_visit", "Unser Tipp für euren Besuch")}
-             </h3>
-             <p class="spot-details-section-text">${visitLabel}</p>
-           </section>`
-        : ""
-    }
-    ${
-      suitability
-        ? `<section class="spot-details-section">
-             <h3 class="spot-details-section-title">
-               ${t("label_suitability", "Geeignet für")}
-             </h3>
-             <p class="spot-details-section-text">${suitability}</p>
-           </section>`
-        : ""
-    }
-    ${
-      season
-        ? `<section class="spot-details-section">
-             <h3 class="spot-details-section-title">
-               ${t("label_season", "Beste Zeit / Saison")}
-             </h3>
-             <p class="spot-details-section-text">${season}</p>
-           </section>`
-        : ""
-    }
-    ${
-      infrastructure
-        ? `<section class="spot-details-section">
-             <h3 class="spot-details-section-title">
-               ${t("label_infrastructure", "Vor Ort / Infrastruktur")}
-             </h3>
-             <p class="spot-details-section-text">${infrastructure}</p>
-           </section>`
-        : ""
-    }
-    ${
-      whyWeLike
-        ? `<section class="spot-details-section">
-             <h3 class="spot-details-section-title">
-               ${t("label_why_we_like", "Warum wir diesen Spot mögen")}
-             </h3>
-             <p class="spot-details-section-text">${whyWeLike}</p>
-           </section>`
-        : ""
-    }
+
+    ${poetryLine}
+
+    <div class="spot-details-routes">
+      <a href="${googleUrl}" target="_blank" rel="noopener" class="btn-secondary btn-small">
+        ${escapeHtml(googleLabel)}
+      </a>
+      <a href="${appleUrl}" target="_blank" rel="noopener" class="btn-secondary btn-small">
+        ${escapeHtml(appleLabel)}
+      </a>
+    </div>
+
+    <div class="spot-details-body">
+      ${sectionsHtml}
+      ${tagChips}
+    </div>
   `;
 
-  container.classList.add("spot-details--visible");
-
-  const favBtn = $("#spot-fav-btn", container);
-  const closeBtn = $("#spot-close-btn", container);
-
-  if (favBtn) {
+  // Events für Favorit + Schließen nach dem Einfügen setzen
+  const favBtn = $("#spot-details-fav-btn");
+  if (favBtn && typeof onToggleFavorite === "function") {
     favBtn.addEventListener("click", () => {
-      if (onToggleFavorite) onToggleFavorite(spot.id);
+      onToggleFavorite(spot.id);
     });
   }
 
+  const closeBtn = $("#spot-details-close-btn");
   if (closeBtn) {
     closeBtn.addEventListener("click", () => {
-      container.classList.remove("spot-details--visible");
+      detailsEl.innerHTML = "";
+      detailsEl.classList.add("hidden");
+      detailsEl.classList.remove("spot-details--visible");
     });
   }
-}
-
-let toastTimeout;
-
-export function showToast(message) {
-  const toast = $("#toast");
-  if (!toast) return;
-
-  toast.textContent = message;
-  toast.classList.add("toast--visible");
-
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => {
-    toast.classList.remove("toast--visible");
-  }, 2500);
 }
