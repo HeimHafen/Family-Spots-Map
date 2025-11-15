@@ -117,11 +117,45 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
   const categoryLabel = getCategoryLabel(spot.primaryCategory, lang);
   const durationLabel = formatVisitMinutes(spot.visitMinutes, lang);
 
-  // Neu: Summary passend zur Sprache auswählen
-  const summary =
+  // Summary passend zur Sprache auswählen
+  const summaryText =
     lang === "de"
       ? spot.summary_de || spot.summary_en
       : spot.summary_en || spot.summary_de;
+
+  // Beschreibung (Summary + Poetry) aufbauen
+  let descriptionHtml = "";
+
+  if (summaryText) {
+    descriptionHtml += `
+      <p class="spot-details-description">${summaryText}</p>
+    `;
+  }
+
+  if (spot.poetry) {
+    descriptionHtml += `
+      <p class="spot-details-description">${spot.poetry}</p>
+    `;
+  }
+
+  // Adresse
+  const addressHtml = spot.address
+    ? `<p class="spot-details-meta">${spot.address}</p>`
+    : "";
+
+  // Tags + USPs
+  const allTags = [...(spot.usps || []), ...(spot.tags || [])];
+  let tagsHtml = "";
+
+  if (allTags.length) {
+    tagsHtml = `
+      <div class="spot-card-tags">
+        ${allTags
+          .map((tag) => `<span class="badge badge--tag">${tag}</span>`)
+          .join("")}
+      </div>
+    `;
+  }
 
   container.innerHTML = `
     <header class="spot-details-header">
@@ -174,32 +208,10 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
         </button>
       </div>
     </header>
-    ${
-      summary
-        ? `<p class="spot-details-description">${summary}</p>`
-        : ""
-    }
-    ${
-      spot.poetry
-        ? `<p class="spot-details-description">${spot.poetry}</p>`
-        : ""
-    }
-    ${
-      spot.address
-        ? `<p class="spot-details-meta">${spot.address}</p>`
-        : ""
-    }
-    ${
-      (spot.tags && spot.tags.length) || (spot.usps && spot.usps.length)
-        ? `<div class="spot-card-tags">${[
-            ...(spot.usps || []),
-            ...(spot.tags || [])
-          ]
-            .map((tag) => `<span class="badge badge--tag">${tag}</span>`)
-            .join("")}</div>`
-        : ""
-    }
- `;
+    ${descriptionHtml}
+    ${addressHtml}
+    ${tagsHtml}
+  `;
 
   container.classList.add("spot-details--visible");
 
