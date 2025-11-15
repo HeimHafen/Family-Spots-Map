@@ -1,5 +1,7 @@
 /* global L */
 
+// js/map.js
+
 let map = null;
 let markerLayer = null;
 let onMarkerSelectCallback = null;
@@ -77,6 +79,8 @@ export function setSpotsOnMap(spots) {
   markersById.clear();
 
   spots.forEach((spot) => {
+    if (!spot.location) return;
+
     const { lat, lng } = spot.location;
     const marker = L.marker([lat, lng]);
 
@@ -98,7 +102,7 @@ export function setSpotsOnMap(spots) {
  * @param {{id: string, location: {lat: number, lng: number}}} spot
  */
 export function focusOnSpot(spot) {
-  if (!map || !spot) {
+  if (!map || !spot || !spot.location) {
     return;
   }
 
