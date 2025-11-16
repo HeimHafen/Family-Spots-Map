@@ -10,19 +10,19 @@ import {
   savePlusStatus,
 } from "./storage.js";
 import { initI18n, applyTranslations, getLanguage, t } from "./i18n.js";
-import {
-  loadAppData,
-  getSpots,
-  getCategories,
-  findSpotById,
-} from "./data.js";
+import { loadAppData, getSpots, getCategories, findSpotById } from "./data.js";
 import {
   initFilters,
   applyFilters,
   refreshCategorySelect,
 } from "./filters.js";
 import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
-import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
+import {
+  renderSpotList,
+  renderSpotDetails,
+  showToast,
+  hideSpotDetails,
+} from "./ui.js";
 import "./sw-register.js";
 
 let currentFilterState = null;
@@ -97,6 +97,9 @@ async function bootstrapApp() {
     favorites: getFavorites(),
     onSelect: handleSpotSelect,
   });
+
+  // Detailpanel initial verstecken
+  hideSpotDetails();
 
   initUIEvents();
   updateRoute("map");
@@ -229,8 +232,7 @@ function initUIEvents() {
 
       filterToggleBtn.addEventListener("click", () => {
         if (filterControls.length === 0) return;
-        const currentlyHidden =
-          filterControls[0].classList.contains("hidden");
+        const currentlyHidden = filterControls[0].classList.contains("hidden");
         const makeVisible = currentlyHidden;
 
         filterControls.forEach((el) => {
@@ -362,6 +364,17 @@ function updateRoute(route, indexFromClick) {
 }
 
 // -----------------------------------------------------
+// Hilfsfunktionen
+// -----------------------------------------------------
+
+function scrollMapIntoViewIfNeeded() {
+  if (window.innerWidth > 900) return;
+  const mapSection = document.querySelector(".map-section");
+  if (!mapSection) return;
+  mapSection.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// -----------------------------------------------------
 // Filter-Logik
 // -----------------------------------------------------
 
@@ -421,6 +434,9 @@ function handleSpotSelect(id) {
       });
     },
   });
+
+  // Auf kleineren Screens automatisch zum Karten-/Detailbereich scrollen
+  scrollMapIntoViewIfNeeded();
 }
 
 function rerenderCurrentSpotDetails() {
