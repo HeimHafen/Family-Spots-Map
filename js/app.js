@@ -107,7 +107,7 @@ async function bootstrapApp() {
 // -----------------------------------------------------
 
 function initUIEvents() {
-  // Familien-Kompass anwenden
+  // Familien-Kompass
   const compassBtn = $("#compass-apply");
   if (compassBtn) {
     compassBtn.addEventListener("click", () => {
@@ -356,72 +356,35 @@ function initUIEvents() {
   }
 }
 
-/**
- * Familien-Kompass:
- * Passt einige Filter automatisch an (Radius, Stimmung, Reise-Modus)
- * und scrollt auf kleinen Screens zur Karte.
- */
-function applyCompass() {
-  const now = new Date();
-  const hour = now.getHours();
+// -----------------------------------------------------
+// Familien-Kompass-Logik
+// -----------------------------------------------------
 
-  const radiusSlider = $("#filter-radius");
-  const ageSelect = $("#filter-age");
+function applyCompass() {
   const moodButtons = Array.from(document.querySelectorAll(".mood-chip"));
   const travelButtons = Array.from(document.querySelectorAll(".travel-chip"));
+  const radiusSlider = $("#filter-radius");
 
-  // sinnvollen Radius vorschlagen (abhängig von Tageszeit)
-  // 0 => 5 km, 1 => 15 km, 2 => 30 km, 3 => 60 km, 4 => alle
-  let suggestedRadiusIndex = 2; // Standard: 30 km
-  if (hour >= 17) {
-    suggestedRadiusIndex = 0; // ab spätem Nachmittag eher nah dran
-  } else if (hour <= 10) {
-    suggestedRadiusIndex = 1; // Vormittag: 15 km
-  } else {
-    suggestedRadiusIndex = 2; // Mittags/Früher Nachmittag: 30 km
-  }
-
-  if (radiusSlider) {
-    radiusSlider.value = String(suggestedRadiusIndex);
-    // löst die vorhandene Radius-Logik in filters.js aus
-    radiusSlider.dispatchEvent(new Event("input", { bubbles: true }));
-  }
-
-  // Stimmung: wenn noch nichts aktiv, "Entspannt" als sanften Default wählen
-  const currentMood = document.querySelector(".mood-chip.mood-chip--active");
-  if (!currentMood && moodButtons.length > 0) {
-    // erster Button ist "Entspannt"
+  // Wenn noch keine Stimmung aktiv ist → "Entspannt" aktivieren
+  const hasActiveMood = moodButtons.some((b) =>
+    b.classList.contains("mood-chip--active"),
+  );
+  if (!hasActiveMood && moodButtons.length > 0) {
     moodButtons[0].click();
   }
 
-  // Reise-Modus: wenn nichts gewählt ist, je nach Radius Alltag/Unterwegs
-  const currentTravel = document.querySelector(
-    ".travel-chip.travel-chip--active",
+  // Wenn noch kein Reise-Modus aktiv ist → ersten Button aktivieren (Alltag)
+  const hasActiveTravel = travelButtons.some((b) =>
+    b.classList.contains("travel-chip--active"),
   );
-
-  if (!currentTravel && travelButtons.length > 0) {
-    const everydayBtn = document.querySelector(
-      '.travel-chip[data-travel-mode="everyday"]',
-    );
-    const tripBtn = document.querySelector(
-      '.travel-chip[data-travel-mode="trip"]',
-    );
-
-    if (suggestedRadiusIndex <= 1 && everydayBtn) {
-      // kleiner Radius -> Alltag
-      everydayBtn.click();
-    } else if (tripBtn) {
-      // größerer Radius -> Unterwegs
-      tripBtn.click();
-    }
+  if (!hasActiveTravel && travelButtons.length > 0) {
+    travelButtons[0].click();
   }
 
-  // Alters-Select nicht hart überschreiben – Eltern wählen das meist bewusst.
-  // Falls du später Logik willst (z.B. Tageszeit -> typische Altersrange),
-  // kann man das hier ergänzen:
-  if (ageSelect && !ageSelect.value) {
-    ageSelect.value = "all";
-    ageSelect.dispatchEvent(new Event("change", { bubbles: true }));
+  // Radius auf eine sinnvolle Mittelstufe setzen (Index 2 ≈ 30 km)
+  if (radiusSlider) {
+    radiusSlider.value = "2";
+    radiusSlider.dispatchEvent(new Event("input", { bubbles: true }));
   }
 
   showToast(
@@ -431,7 +394,7 @@ function applyCompass() {
     ),
   );
 
-  // auf kleinen Screens zur Karte scrollen
+  // Auf kleinen Screens zur Karte scrollen
   if (typeof window !== "undefined" && window.innerWidth <= 900) {
     const mapSection = document.querySelector(".map-section");
     if (mapSection) {
