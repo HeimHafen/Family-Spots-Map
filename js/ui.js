@@ -446,7 +446,7 @@ export function renderSpotDetails(spot, options) {
           maxlength="280"
           placeholder="${
             isDe
-              ? "Carlo ist heute das erste Mal allein gerutscht …"
+              ? "Max ist heute das erste Mal allein gerutscht …"
               : "Today the kids discovered the big slide …"
           }"
         ></textarea>
@@ -504,19 +504,10 @@ export function renderSpotDetails(spot, options) {
       const note = momentTextarea.value.trim();
       if (!note) return;
 
-      const updated = addMomentForSpot(spot.id, note);
+      addMomentForSpot(spot.id, note);
       momentTextarea.value = "";
 
-      // Liste mit aktualisierten Daten neu aufbauen
-      if (momentListEl) {
-        momentListEl.innerHTML = "";
-        const isGerman = isDe;
-        const copyContainer = document.createElement("div");
-        momentListEl.appendChild(copyContainer);
-        // Direkt mit den aktualisierten Momenten arbeiten
-        const tmp = document.createElement("div");
-        renderMomentList(spot.id, momentListEl, isGerman);
-      }
+      renderMomentList(spot.id, momentListEl, isDe);
 
       showToast(
         isDe
