@@ -1,7 +1,7 @@
 // service-worker.js
 
 // Version des Caches – bei Änderungen an Assets INKREMENTIEREN
-const CACHE_NAME = "family-spots-map-91";
+const CACHE_NAME = "family-spots-map-92";
 const OFFLINE_URL = "offline.html";
 
 const ASSETS = [
