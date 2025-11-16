@@ -224,6 +224,31 @@
                 </div>
               </div>
 
+              <!-- Reise-Modus -->
+              <div class="filter-group">
+                <label class="filter-group-label">Reise-Modus</label>
+                <p class="filter-group-helper">
+                  Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo,
+                  Auto oder Bahn?
+                </p>
+                <div class="travel-mode-row" aria-label="Reise-Modus wählen">
+                  <button
+                    type="button"
+                    class="travel-mode-chip travel-mode-chip--active"
+                    data-mode="everyday"
+                  >
+                    🏡 Alltag
+                  </button>
+                  <button
+                    type="button"
+                    class="travel-mode-chip"
+                    data-mode="trip"
+                  >
+                    🚐 Unterwegs
+                  </button>
+                </div>
+              </div>
+
               <!-- Alter der Kinder -->
               <div class="filter-group">
                 <label class="filter-group-label" for="filter-age">
@@ -243,8 +268,8 @@
                   Micro-Abenteuer-Radius
                 </label>
                 <p class="filter-group-helper">
-                  Umkreis ab Kartenmitte (verschiebe die Karte, um den
-                  Startpunkt zu ändern).
+                  Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht
+                  sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).
                 </p>
                 <div class="radius-row">
                   <input
@@ -508,7 +533,7 @@
 
     <!-- Scripts: Leaflet + MarkerCluster (ohne Integrity) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.js"></script>
 
     <!-- App (als ES-Modul) -->
     <script type="module" src="js/app.js"></script>
