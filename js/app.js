@@ -21,7 +21,13 @@ import {
   applyFilters,
   refreshCategorySelect,
 } from "./filters.js";
-import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
+import {
+  initMap,
+  setSpotsOnMap,
+  focusOnSpot,
+  getMap,
+  updateRadiusCircle,
+} from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 import "./sw-register.js";
 
@@ -30,23 +36,6 @@ let allSpots = [];
 let filteredSpots = [];
 let plusStatus = null;
 let partnerCodesCache = null;
-
-// -----------------------------------------------------
-// Kleine lokale Hilfsfunktion: debounce
-// (absichtlich hier definiert, damit kein Import-Fehler
-// aus utils.js entstehen kann)
-// -----------------------------------------------------
-function debounce(fn, delay) {
-  let timeoutId;
-  return (...args) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      fn(...args);
-    }, delay);
-  };
-}
 
 // -----------------------------------------------------
 // Bootstrap
@@ -87,49 +76,11 @@ async function bootstrapApp() {
     onFilterChange: handleFilterChange,
   });
 
-  filteredSpots = applyFilters(allSpots, {
+  // Initiale Filter-Anwendung (inkl. Mood & Radius)
+  handleFilterChange({
     ...currentFilterState,
     favorites: getFavorites(),
   });
-
-  setSpotsOnMap(filteredSpots);
-
-  renderSpotList(filteredSpots, {
-    favorites: getFavorites(),
-    onSelect: handleSpotSelect,
-  });
-
-  // Mobile: auf sehr kleinen Screens die Liste initial einklappen,
-  // damit mehr Karte sichtbar ist.
-  if (window.innerWidth <= 600) {
-    const listSection = document.querySelector(".sidebar-section--grow");
-    const labelSpan = document.querySelector("#btn-toggle-view span");
-    if (listSection && labelSpan && !listSection.classList.contains("hidden")) {
-      listSection.classList.add("hidden");
-      labelSpan.textContent = t("btn_show_list", "Liste zeigen");
-    }
-  }
-
-  // Deep-Link: ?spot=ID öffnet beim Start direkt den Spot.
-  const urlParams = new URLSearchParams(window.location.search);
-  const spotIdFromUrl = urlParams.get("spot");
-  if (spotIdFromUrl) {
-    const existingSpot = allSpots.find((s) => s.id === spotIdFromUrl);
-    if (existingSpot) {
-      handleSpotSelect(spotIdFromUrl);
-    }
-  }
-
-  // Map-Größe bei Layout-Änderungen aktualisieren (z. B. iOS-Toolbar)
-  window.addEventListener(
-    "resize",
-    debounce(() => {
-      const mapInstance = getMap();
-      if (mapInstance && typeof mapInstance.invalidateSize === "function") {
-        mapInstance.invalidateSize();
-      }
-    }, 200),
-  );
 
   initUIEvents();
   updateRoute("map");
@@ -157,7 +108,7 @@ function initUIEvents() {
       const categories = getCategories();
       refreshCategorySelect(categories);
 
-      // Liste neu zeichnen
+      // Liste neu zeichnen (Filter-State beibehalten)
       handleFilterChange({
         ...currentFilterState,
         favorites: getFavorites(),
@@ -182,11 +133,16 @@ function initUIEvents() {
     locateBtn.addEventListener("click", async () => {
       try {
         const pos = await getGeolocation();
-        const mapInstance = getMap();
-        if (mapInstance) {
-          mapInstance.setView([pos.lat, pos.lng], 14);
+        const map = getMap();
+        if (map) {
+          map.setView([pos.lat, pos.lng], 14);
         }
         showToast(t("toast_location_ok", "Position gefunden"));
+        // Nach Sprung zur Position optional Filter mit neuem Kartenmittelpunkt neu anwenden
+        handleFilterChange({
+          ...currentFilterState,
+          favorites: getFavorites(),
+        });
       } catch (err) {
         console.error(err);
         showToast(
@@ -261,7 +217,7 @@ function initUIEvents() {
     }
   }
 
-  // Plus-Code-Formular (falls im DOM vorhanden)
+  // Plus-Code-Formular
   const plusInput = $("#plus-code-input");
   const plusButton = $("#plus-code-submit");
   if (plusInput && plusButton) {
@@ -329,12 +285,6 @@ function updateRoute(route) {
   } else {
     viewAbout.classList.remove("view--active");
     viewMap.classList.add("view--active");
-
-    // Beim Zurück zur Karte sicherstellen, dass Leaflet die Größe kennt
-    const mapInstance = getMap();
-    if (mapInstance && typeof mapInstance.invalidateSize === "function") {
-      setTimeout(() => mapInstance.invalidateSize(), 50);
-    }
   }
 
   buttons.forEach((btn, index) => {
@@ -355,14 +305,39 @@ function updateRoute(route) {
 // -----------------------------------------------------
 
 function handleFilterChange(filterState) {
-  currentFilterState = filterState;
-  filteredSpots = applyFilters(allSpots, filterState);
+  const map = getMap();
+  let origin = null;
+
+  if (map) {
+    const center = map.getCenter();
+    origin = { lat: center.lat, lng: center.lng };
+  }
+
+  currentFilterState = {
+    ...filterState,
+    origin,
+  };
+
+  filteredSpots = applyFilters(allSpots, currentFilterState);
 
   setSpotsOnMap(filteredSpots);
   renderSpotList(filteredSpots, {
-    favorites: filterState.favorites,
+    favorites: currentFilterState.favorites,
     onSelect: handleSpotSelect,
   });
+
+  // Radius-Kreis aktualisieren
+  const radiusMinutes = currentFilterState.radiusMinutes || null;
+  const radiusKm =
+    typeof radiusMinutes === "number" && radiusMinutes > 0
+      ? radiusMinutes * 1.0 // aktuell 1 Min ≈ 1 km
+      : null;
+
+  if (origin && radiusKm) {
+    updateRadiusCircle(origin, radiusKm);
+  } else {
+    updateRadiusCircle(null, null);
+  }
 }
 
 // -----------------------------------------------------
@@ -410,15 +385,6 @@ function handleSpotSelect(id) {
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", value);
-
-  // Browser-Theme-Farbe anpassen (z. B. Safari/Chrome Top-Bar)
-  const metaTheme = document.querySelector('meta[name="theme-color"]');
-  if (metaTheme) {
-    metaTheme.setAttribute(
-      "content",
-      value === "dark" ? "#020617" : "#14b8c4",
-    );
-  }
 }
 
 // -----------------------------------------------------
