@@ -2,12 +2,12 @@
 
 import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
-import { getMomentsForSpot, addMomentForSpot } from "./storage.js";
 
 /**
  * Kleine Helferfunktion: Kurzbeschreibung für die Listenkarte bauen.
  * Priorität:
  *   summary_(de/en) > visitLabel_(de/en) > poetry > andere Sprache
+ * Fallback: generische Kurzbeschreibung, damit jede Karte Text hat.
  */
 function buildSpotListDescription(spot, isDe) {
   const primarySummary = isDe ? spot.summary_de : spot.summary_en;
@@ -22,7 +22,13 @@ function buildSpotListDescription(spot, isDe) {
     (secondarySummary && secondarySummary.trim()) ||
     "";
 
-  if (!text) return "";
+  // Fallback: immer eine Kurzbeschreibung anzeigen,
+  // auch wenn in den Daten noch nichts gepflegt ist.
+  if (!text) {
+    text = isDe
+      ? "Familienfreundlicher Spot in dieser Gegend – nähere Infos folgen."
+      : "Family-friendly spot in this area – more details coming soon.";
+  }
 
   const maxLen = 140;
   if (text.length > maxLen) {
@@ -89,7 +95,7 @@ export function renderSpotList(spots, options) {
       meta.appendChild(catEl);
     }
 
-    // Kurzbeschreibung
+    // Kurzbeschreibung – jetzt garantiert immer mit Text
     const descText = buildSpotListDescription(spot, isDe);
     let descEl = null;
     if (descText) {
@@ -163,84 +169,6 @@ export function renderSpotList(spots, options) {
     });
 
     container.appendChild(card);
-  });
-}
-
-/**
- * Hilfsfunktion: HTML escapen.
- */
-function escapeHtml(str) {
-  if (!str) return "";
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-/**
- * Rendert die Liste der Familien-Momente im Detailpanel.
- *
- * @param {string} spotId
- * @param {HTMLElement|null} container
- * @param {boolean} isDe
- */
-function renderMomentList(spotId, container, isDe) {
-  if (!container || !spotId) return;
-
-  const moments = getMomentsForSpot(spotId);
-  container.innerHTML = "";
-
-  if (!moments || moments.length === 0) {
-    const p = document.createElement("p");
-    p.className = "spot-details-section-text";
-    p.textContent = isDe
-      ? "Noch keine Momente gespeichert. Vielleicht heute?"
-      : "No moments saved yet. Maybe start with today?";
-    container.appendChild(p);
-    return;
-  }
-
-  const sorted = moments
-    .slice()
-    .sort((a, b) => {
-      const aT = a.createdAt || "";
-      const bT = b.createdAt || "";
-      if (aT < bT) return 1;
-      if (aT > bT) return -1;
-      return 0;
-    });
-
-  sorted.forEach((m) => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "spot-details-section-text";
-
-    let dateLabel = "";
-    if (m.createdAt) {
-      const d = new Date(m.createdAt);
-      if (!isNaN(d.getTime())) {
-        dateLabel = d.toLocaleDateString(isDe ? "de-DE" : "en-US", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        });
-      }
-    }
-
-    const note = m.note ? String(m.note) : "";
-
-    if (dateLabel) {
-      wrapper.innerHTML =
-        "<strong>" +
-        escapeHtml(dateLabel) +
-        ":</strong> " +
-        escapeHtml(note);
-    } else {
-      wrapper.textContent = note;
-    }
-
-    container.appendChild(wrapper);
   });
 }
 
@@ -422,57 +350,8 @@ export function renderSpotDetails(spot, options) {
            </div>`
         : ""
     }
-
-    <!-- Familien-Momente -->
-    <section class="spot-details-section" data-role="moments-section">
-      <h3 class="spot-details-section-title">
-        ${isDe ? "Meine Familien-Momente" : "My family moments"}
-      </h3>
-      <p class="spot-details-section-text">
-        ${
-          isDe
-            ? "Halte in ein paar Worten fest, was diesen Besuch besonders gemacht hat."
-            : "Capture in a few words what made this visit special."
-        }
-      </p>
-      <form data-role="moment-form">
-        <label class="spot-details-section-text" for="moment-note">
-          ${isDe ? "Notiz" : "Note"}
-        </label>
-        <textarea
-          id="moment-note"
-          class="input"
-          rows="2"
-          maxlength="280"
-          placeholder="${
-            isDe
-              ? "Max ist heute das erste Mal allein gerutscht …"
-              : "Today the kids discovered the big slide …"
-          }"
-        ></textarea>
-        <button
-          type="submit"
-          class="btn btn-small"
-          style="margin-top:0.4rem;"
-        >
-          ${isDe ? "Moment speichern" : "Save moment"}
-        </button>
-      </form>
-
-      <div
-        class="spot-details-section"
-        data-role="moment-list-wrapper"
-        style="border-top:none;padding-top:0.4rem;margin-top:0.4rem;"
-      >
-        <p class="spot-details-section-title" style="margin-bottom:0.3rem;">
-          ${isDe ? "Vergangene Momente" : "Past moments"}
-        </p>
-        <div data-role="moment-list"></div>
-      </div>
-    </section>
   `;
 
-  // Favoriten-Button
   const favButton = container.querySelector('[data-role="favorite-toggle"]');
   if (favButton && typeof onToggleFavorite === "function") {
     favButton.addEventListener("click", (ev) => {
@@ -481,39 +360,11 @@ export function renderSpotDetails(spot, options) {
     });
   }
 
-  // Close-Button
   const closeButton = container.querySelector('[data-role="close-details"]');
   if (closeButton) {
     closeButton.addEventListener("click", (ev) => {
       ev.stopPropagation();
       hideSpotDetails();
-    });
-  }
-
-  // Familien-Momente: Liste initial rendern
-  const momentListEl = container.querySelector('[data-role="moment-list"]');
-  renderMomentList(spot.id, momentListEl, isDe);
-
-  // Familien-Momente: Formular-Submit
-  const momentForm = container.querySelector('[data-role="moment-form"]');
-  const momentTextarea = container.querySelector("#moment-note");
-
-  if (momentForm && momentTextarea) {
-    momentForm.addEventListener("submit", (ev) => {
-      ev.preventDefault();
-      const note = momentTextarea.value.trim();
-      if (!note) return;
-
-      addMomentForSpot(spot.id, note);
-      momentTextarea.value = "";
-
-      renderMomentList(spot.id, momentListEl, isDe);
-
-      showToast(
-        isDe
-          ? "Moment gespeichert 💛"
-          : "Moment saved 💛",
-      );
     });
   }
 
@@ -553,4 +404,15 @@ export function showToast(message) {
   setTimeout(() => {
     el.classList.remove("toast--visible");
   }, 2600);
+}
+
+// Hilfsfunktion lokal, damit wir keine Utils-Funktion voraussetzen.
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
