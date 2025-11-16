@@ -214,11 +214,50 @@ function updateRadiusUI(index) {
       ? "Alle Spots – ohne Radiusbegrenzung."
       : "All spots – no radius limit.";
   } else {
-    const text = isGerman
+    descEl.textContent = isGerman
       ? "Im Umkreis von ca. " + radiusKm + " km ab Kartenmitte."
       : "Within ~" + radiusKm + " km from map center.";
-    descEl.textContent = text;
   }
+}
+
+function matchesAgeGroup(spot, ageGroup) {
+  if (!ageGroup || ageGroup === "all") return true;
+
+  let groupMin = 0;
+  let groupMax = 99;
+
+  if (ageGroup === "0-3") {
+    groupMin = 0;
+    groupMax = 3;
+  } else if (ageGroup === "4-9") {
+    groupMin = 4;
+    groupMax = 9;
+  } else if (ageGroup === "10-17") {
+    groupMin = 10;
+    groupMax = 17;
+  }
+
+  const spotMin =
+    typeof spot.ageMin === "number"
+      ? spot.ageMin
+      : typeof spot.age_min === "number"
+      ? spot.age_min
+      : 0;
+  const spotMax =
+    typeof spot.ageMax === "number"
+      ? spot.ageMax
+      : typeof spot.age_max === "number"
+      ? spot.age_max
+      : 99;
+
+  // Wenn keine sinnvollen Angaben vorhanden sind, lieber nicht hart filtern
+  if (spotMin === 0 && spotMax === 99) return true;
+
+  // Kein Überschnitt → passt nicht
+  if (spotMax < groupMin || spotMin > groupMax) {
+    return false;
+  }
+  return true;
 }
 
 export function initFilters({ categories, favoritesProvider, onFilterChange }) {
@@ -231,6 +270,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     favorites: favoritesProvider(),
     mood: null,
     radiusIndex: 4, // 4 => Alle Spots
+    ageGroup: "",
   };
 
   const searchInput = $("#filter-search");
@@ -242,6 +282,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const moodButtons = Array.from(
     document.querySelectorAll(".mood-chip"),
   );
+  const ageSelect = $("#filter-age");
 
   if (categorySelect) {
     buildCategoryOptions(categorySelect, categories);
@@ -325,6 +366,13 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     });
   }
 
+  if (ageSelect) {
+    ageSelect.addEventListener("change", (e) => {
+      state.ageGroup = e.target.value || "";
+      notify();
+    });
+  }
+
   return state;
 }
 
@@ -343,6 +391,7 @@ export function applyFilters(spots, state) {
   const favoritesOnly = !!state.favoritesOnly;
   const bigOnly = !!state.bigOnly;
   const mood = state.mood || null;
+  const ageGroup = state.ageGroup || "";
 
   let centerLat = null;
   let centerLng = null;
@@ -388,6 +437,10 @@ export function applyFilters(spots, state) {
     }
 
     if (bigOnly && !isBigAdventure(spot)) {
+      continue;
+    }
+
+    if (ageGroup && !matchesAgeGroup(spot, ageGroup)) {
       continue;
     }
 
