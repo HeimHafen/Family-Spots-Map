@@ -181,6 +181,16 @@ body {
   flex-direction: column;
   gap: 0.75rem;
   padding: 0.75rem;
+  background-image: radial-gradient(
+      circle at 0% 0%,
+      rgba(56, 189, 248, 0.08),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(56, 189, 248, 0.06),
+      transparent 55%
+    );
 }
 
 .sidebar-section {
@@ -355,6 +365,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+  padding-right: 0.15rem;
 }
 
 .spot-list-empty,
@@ -364,7 +375,112 @@ body {
   color: var(--color-text-subtle);
 }
 
-/* Map section + details */
+/* ===========================
+   SPOT-CARDS (NextGen)
+   =========================== */
+
+.spot-card {
+  position: relative;
+  border-radius: 0.9rem;
+  padding: 0.55rem 0.7rem 0.55rem 0.7rem;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  cursor: pointer;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
+    border-color 0.08s ease-out, background-color 0.08s ease-out;
+}
+
+.spot-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  border-color: rgba(56, 189, 248, 0.6);
+}
+
+.spot-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.spot-card-title {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.spot-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.45rem;
+  font-size: 0.78rem;
+  color: var(--color-text-subtle);
+}
+
+.spot-card-meta-item::before {
+  content: "•";
+  display: inline-block;
+  margin-right: 0.25rem;
+  font-size: 0.7em;
+  vertical-align: middle;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.spot-card-meta-item:first-child::before {
+  content: "";
+  margin-right: 0;
+}
+
+.spot-card-badges {
+  margin-top: 0.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.spot-card-actions {
+  margin-top: 0.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--color-text-subtle);
+}
+
+.spot-card-fav-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.spot-card-detail-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.spot-card-detail-label::after {
+  content: "›";
+  font-size: 0.85em;
+}
+
+/* Dark-Mode Feinheiten für Cards */
+
+html[data-theme="dark"] .spot-card {
+  background-color: #020617;
+  border-color: rgba(51, 65, 85, 0.9);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.8);
+}
+
+html[data-theme="dark"] .spot-card:hover {
+  border-color: rgba(56, 189, 248, 0.9);
+}
+
+/* ===========================
+   MAP + DETAILS
+   =========================== */
 
 .map-section {
   flex: 1;
@@ -387,6 +503,19 @@ body {
 
 .leaflet-container {
   background-color: var(--color-map-bg);
+}
+
+/* Radius-Kreis (Micro-Abenteuer) */
+
+.radius-circle {
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  fill: rgba(14, 165, 233, 0.14);
+}
+
+html[data-theme="dark"] .radius-circle {
+  stroke: rgba(56, 189, 248, 0.9);
+  fill: rgba(15, 23, 42, 0.7);
 }
 
 /* Spot-Details */
