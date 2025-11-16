@@ -4,6 +4,33 @@ import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 
 /**
+ * Kleine Helferfunktion: Kurzbeschreibung für die Listenkarte bauen.
+ * Priorität:
+ *   summary_(de/en) > visitLabel_(de/en) > poetry > andere Sprache
+ */
+function buildSpotListDescription(spot, isDe) {
+  const primarySummary = isDe ? spot.summary_de : spot.summary_en;
+  const secondarySummary = isDe ? spot.summary_en : spot.summary_de;
+  const visitLabel = isDe ? spot.visitLabel_de : spot.visitLabel_en;
+  const poetry = spot.poetry;
+
+  let text =
+    (primarySummary && primarySummary.trim()) ||
+    (visitLabel && visitLabel.trim()) ||
+    (poetry && poetry.trim()) ||
+    (secondarySummary && secondarySummary.trim()) ||
+    "";
+
+  if (!text) return "";
+
+  const maxLen = 140;
+  if (text.length > maxLen) {
+    return text.slice(0, maxLen - 1) + "…";
+  }
+  return text;
+}
+
+/**
  * Rendert die Spot-Liste in der Sidebar.
  *
  * @param {Array} spots
@@ -31,22 +58,6 @@ export function renderSpotList(spots, options) {
 
   spots.forEach((spot) => {
     const isFav = favorites.includes(spot.id);
-
-    // Beschreibung / Teaser für die Liste
-    const summaryPrimary = isDe ? spot.summary_de : spot.summary_en;
-    const summarySecondary = isDe ? spot.summary_en : spot.summary_de;
-    const visitLabel = isDe ? spot.visitLabel_de : spot.visitLabel_en;
-
-    let description =
-      spot.poetry ||
-      summaryPrimary ||
-      visitLabel ||
-      summarySecondary ||
-      "";
-
-    if (description && description.length > 150) {
-      description = description.slice(0, 147) + "…";
-    }
 
     const card = document.createElement("article");
     card.className = "spot-card";
@@ -77,6 +88,15 @@ export function renderSpotList(spots, options) {
       meta.appendChild(catEl);
     }
 
+    // Kurzbeschreibung
+    const descText = buildSpotListDescription(spot, isDe);
+    let descEl = null;
+    if (descText) {
+      descEl = document.createElement("p");
+      descEl.className = "spot-card-description";
+      descEl.textContent = descText;
+    }
+
     // Badges (z.B. verifiziert)
     const badgesRow = document.createElement("div");
     badgesRow.className = "spot-card-badges";
@@ -101,14 +121,6 @@ export function renderSpotList(spots, options) {
       bTag.className = "badge badge--tag";
       bTag.textContent = tag;
       badgesRow.appendChild(bTag);
-    }
-
-    // Kurze Beschreibung im Listen-Item (falls vorhanden)
-    let descEl = null;
-    if (description) {
-      descEl = document.createElement("p");
-      descEl.className = "spot-card-description";
-      descEl.textContent = description;
     }
 
     const actionsRow = document.createElement("div");
@@ -164,11 +176,10 @@ export function renderSpotDetails(spot, options) {
   const container = $("#spot-detail");
   if (!container || !spot) return;
 
-  // Falls vorher ausgeblendet wurde, wieder einblenden
-  container.classList.remove("spot-details--hidden");
-
   const lang = getLanguage() || "de";
   const isDe = lang.startsWith("de");
+
+  container.classList.remove("spot-details--hidden");
 
   const title = spot.name || spot.title || "Spot";
 
@@ -234,9 +245,7 @@ export function renderSpotDetails(spot, options) {
         <h2 class="spot-details-title">${escapeHtml(title)}</h2>
         <div class="spot-details-meta">
           ${
-            spot.city
-              ? `<span>${escapeHtml(spot.city)}</span>`
-              : ""
+            spot.city ? `<span>${escapeHtml(spot.city)}</span>` : ""
           }
           ${
             categoriesText
@@ -266,11 +275,11 @@ export function renderSpotDetails(spot, options) {
         </button>
         <button
           type="button"
-          class="btn-icon spot-details-close"
-          data-role="close-detail"
+          class="btn-icon"
+          data-role="close-details"
           aria-label="${closeLabel}"
         >
-          ✕
+          ×
         </button>
       </div>
     </header>
@@ -336,9 +345,7 @@ export function renderSpotDetails(spot, options) {
     }
   `;
 
-  const favButton = container.querySelector(
-    '[data-role="favorite-toggle"]',
-  );
+  const favButton = container.querySelector('[data-role="favorite-toggle"]');
   if (favButton && typeof onToggleFavorite === "function") {
     favButton.addEventListener("click", (ev) => {
       ev.stopPropagation();
@@ -346,16 +353,23 @@ export function renderSpotDetails(spot, options) {
     });
   }
 
-  // Close-Button: Detailpanel ausblenden
-  const closeButton = container.querySelector(
-    '[data-role="close-detail"]',
-  );
+  const closeButton = container.querySelector('[data-role="close-details"]');
   if (closeButton) {
     closeButton.addEventListener("click", (ev) => {
       ev.stopPropagation();
-      container.classList.add("spot-details--hidden");
+      hideSpotDetails();
     });
   }
+}
+
+/**
+ * Detailfenster verstecken und Inhalt zurücksetzen.
+ */
+export function hideSpotDetails() {
+  const container = $("#spot-detail");
+  if (!container) return;
+  container.classList.add("spot-details--hidden");
+  container.innerHTML = "";
 }
 
 /**
