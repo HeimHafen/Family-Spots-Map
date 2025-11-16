@@ -23,7 +23,7 @@
       href="assets/icons/apple-touch-icon.png"
     />
 
-    <!-- Leaflet CSS (ohne Integrity) -->
+    <!-- Leaflet CSS -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -51,15 +51,19 @@
 
     <div class="app">
       <!-- ======================= -->
-      <!-- HEADER (wie vorher)     -->
+      <!-- HEADER                  -->
       <!-- ======================= -->
       <header class="app-header">
         <div class="app-header-left">
-          <img
-            src="assets/icons/icon-192.png"
-            alt="Family Spots Map Logo"
-            class="app-logo"
-          />
+          <button
+            id="btn-help"
+            class="btn-icon"
+            type="button"
+            aria-label="Über Family Spots Map"
+          >
+            ❓
+          </button>
+
           <select
             id="language-switcher"
             class="language-switcher"
@@ -115,33 +119,24 @@
       <main class="app-main">
         <!-- MAP VIEW -->
         <section id="view-map" class="view view--active" aria-label="Karte">
-          <!-- Sidebar (Kompass, Plus, Filter + Liste) -->
+          <!-- Sidebar (Kompass + Plus + Filter + Liste) -->
           <aside class="sidebar">
-            <!-- Familien-Kompass – eigene einklappbare Section -->
-            <section class="sidebar-section">
-              <header class="sidebar-section-header">
+            <!-- Familien-Kompass (einklappbar) -->
+            <details
+              class="sidebar-section"
+              id="compass-section"
+              open
+            >
+              <summary class="sidebar-section-header">
                 <h2
                   class="sidebar-section-title"
                   id="compass-label"
                 >
                   Familien-Kompass
                 </h2>
-                <button
-                  id="btn-toggle-compass"
-                  class="btn-icon"
-                  type="button"
-                  aria-label="Familien-Kompass ein- oder ausklappen"
-                  aria-expanded="true"
-                  aria-controls="compass-section-body"
-                >
-                  ▾
-                </button>
-              </header>
+              </summary>
 
-              <div
-                id="compass-section-body"
-                class="sidebar-section-body"
-              >
+              <div class="compass-card">
                 <p
                   class="filter-group-helper"
                   id="compass-helper"
@@ -150,75 +145,62 @@
                   finden, die zu eurer Zeit, eurem Alter und eurer Energie
                   passen.
                 </p>
-                <div class="compass-card">
-                  <p class="filter-group-helper">
-                    Wählt im Filter z. B. Stimmung, Radius und Alter – der
-                    Kompass sortiert passende Spots nach oben.
-                  </p>
+                <button
+                  type="button"
+                  id="compass-apply"
+                  class="btn btn-small"
+                >
+                  <span id="compass-apply-label">
+                    Kompass anwenden
+                  </span>
+                </button>
+              </div>
+            </details>
+
+            <!-- Family Spots Plus (einklappbar) -->
+            <details
+              class="sidebar-section"
+              id="plus-section"
+              open
+            >
+              <summary class="sidebar-section-header">
+                <h2 class="sidebar-section-title">
+                  Family Spots Plus
+                </h2>
+              </summary>
+
+              <div class="filter-group">
+                <p id="plus-status-text">
+                  Family Spots Plus ist nicht aktiviert.
+                </p>
+              </div>
+
+              <div class="plus-code-form">
+                <label for="plus-code-input">
+                  Partner-Code eingeben (z. B. von Campingplatz,
+                  Kommune oder Sponsor):
+                </label>
+                <div class="plus-code-row">
+                  <input
+                    id="plus-code-input"
+                    class="input"
+                    type="text"
+                    autocomplete="off"
+                  />
                   <button
+                    id="plus-code-submit"
+                    class="btn"
                     type="button"
-                    id="compass-apply"
-                    class="btn btn-small"
                   >
-                    <span id="compass-apply-label">
-                      Kompass anwenden
-                    </span>
+                    Code aktivieren
                   </button>
                 </div>
+                <p class="plus-note">
+                  Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei
+                  – ganz ohne Abo-Falle.
+                </p>
               </div>
-            </section>
-
-            <!-- Family Spots Plus – eigene einklappbare Section -->
-            <section class="sidebar-section">
-              <header class="sidebar-section-header">
-                <h2 class="sidebar-section-title">Family Spots Plus</h2>
-                <button
-                  id="btn-toggle-plus"
-                  class="btn-icon"
-                  type="button"
-                  aria-label="Family Spots Plus ein- oder ausklappen"
-                  aria-expanded="true"
-                  aria-controls="plus-section-body"
-                >
-                  ▾
-                </button>
-              </header>
-
-              <div
-                id="plus-section-body"
-                class="sidebar-section-body"
-              >
-                <div id="plus-status-text">
-                  Family Spots Plus ist nicht aktiviert.
-                </div>
-
-                <div class="plus-code-form">
-                  <label for="plus-code-input">
-                    Partner-Code eingeben (z. B. von Campingplatz,
-                    Kommune oder Sponsor):
-                  </label>
-                  <div class="plus-code-row">
-                    <input
-                      id="plus-code-input"
-                      class="input"
-                      type="text"
-                      autocomplete="off"
-                    />
-                    <button
-                      type="button"
-                      id="plus-code-submit"
-                      class="btn"
-                    >
-                      Code aktivieren
-                    </button>
-                  </div>
-                  <p class="plus-note">
-                    Family Spots Plus schaltet zusätzliche Filter &amp; Spots
-                    frei – ganz ohne Abo-Falle.
-                  </p>
-                </div>
-              </div>
-            </section>
+            </details>
 
             <!-- Filter-Section -->
             <section class="sidebar-section">
@@ -831,7 +813,7 @@
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </div>
 
-    <!-- Scripts: Leaflet + MarkerCluster (ohne Integrity) -->
+    <!-- Scripts: Leaflet + MarkerCluster -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
