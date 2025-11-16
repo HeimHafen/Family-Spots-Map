@@ -21,13 +21,7 @@ import {
   applyFilters,
   refreshCategorySelect,
 } from "./filters.js";
-import {
-  initMap,
-  setSpotsOnMap,
-  focusOnSpot,
-  getMap,
-  updateRadiusCircle,
-} from "./map.js";
+import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 import "./sw-register.js";
 
@@ -76,10 +70,20 @@ async function bootstrapApp() {
     onFilterChange: handleFilterChange,
   });
 
-  // Initiale Filter-Anwendung (inkl. Mood & Radius)
-  handleFilterChange({
+  const map = getMap();
+  const center = map ? map.getCenter() : null;
+
+  filteredSpots = applyFilters(allSpots, {
     ...currentFilterState,
     favorites: getFavorites(),
+    mapCenter: center,
+  });
+
+  setSpotsOnMap(filteredSpots);
+
+  renderSpotList(filteredSpots, {
+    favorites: getFavorites(),
+    onSelect: handleSpotSelect,
   });
 
   initUIEvents();
@@ -108,7 +112,7 @@ function initUIEvents() {
       const categories = getCategories();
       refreshCategorySelect(categories);
 
-      // Liste neu zeichnen (Filter-State beibehalten)
+      // Liste neu zeichnen
       handleFilterChange({
         ...currentFilterState,
         favorites: getFavorites(),
@@ -138,11 +142,6 @@ function initUIEvents() {
           map.setView([pos.lat, pos.lng], 14);
         }
         showToast(t("toast_location_ok", "Position gefunden"));
-        // Nach Sprung zur Position optional Filter mit neuem Kartenmittelpunkt neu anwenden
-        handleFilterChange({
-          ...currentFilterState,
-          favorites: getFavorites(),
-        });
       } catch (err) {
         console.error(err);
         showToast(
@@ -199,7 +198,8 @@ function initUIEvents() {
       filterToggleBtn.addEventListener("click", () => {
         if (filterControls.length === 0) return;
 
-        const currentlyHidden = filterControls[0].classList.contains("hidden");
+        const currentlyHidden =
+          filterControls[0].classList.contains("hidden");
         const makeVisible = currentlyHidden;
 
         filterControls.forEach((el) => {
@@ -305,39 +305,21 @@ function updateRoute(route) {
 // -----------------------------------------------------
 
 function handleFilterChange(filterState) {
+  currentFilterState = filterState;
+
   const map = getMap();
-  let origin = null;
+  const center = map ? map.getCenter() : null;
 
-  if (map) {
-    const center = map.getCenter();
-    origin = { lat: center.lat, lng: center.lng };
-  }
-
-  currentFilterState = {
+  filteredSpots = applyFilters(allSpots, {
     ...filterState,
-    origin,
-  };
-
-  filteredSpots = applyFilters(allSpots, currentFilterState);
+    mapCenter: center,
+  });
 
   setSpotsOnMap(filteredSpots);
   renderSpotList(filteredSpots, {
-    favorites: currentFilterState.favorites,
+    favorites: filterState.favorites,
     onSelect: handleSpotSelect,
   });
-
-  // Radius-Kreis aktualisieren
-  const radiusMinutes = currentFilterState.radiusMinutes || null;
-  const radiusKm =
-    typeof radiusMinutes === "number" && radiusMinutes > 0
-      ? radiusMinutes * 1.0 // aktuell 1 Min ≈ 1 km
-      : null;
-
-  if (origin && radiusKm) {
-    updateRadiusCircle(origin, radiusKm);
-  } else {
-    updateRadiusCircle(null, null);
-  }
 }
 
 // -----------------------------------------------------
