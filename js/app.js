@@ -356,54 +356,52 @@ function initUIEvents() {
   }
 }
 
-// -----------------------------------------------------
-// Familien-Kompass-Logik
-// -----------------------------------------------------
-
+/**
+ * Familien-Kompass:
+ *  - setzt bei Bedarf eine Stimmung („Entspannt“), wenn noch keine gewählt ist
+ *  - reduziert einen zu großen Radius auf eine sinnvolle Distanz
+ *  - scrollt zur Spot-Liste und zeigt einen kurzen Hinweis
+ */
 function applyCompass() {
-  const moodButtons = Array.from(document.querySelectorAll(".mood-chip"));
-  const travelButtons = Array.from(document.querySelectorAll(".travel-chip"));
+  // Stimmung: falls noch nichts aktiv ist → „Entspannt“
+  const moodButtons = $$(".mood-chip");
+  const activeMood = Array.from(moodButtons).find((btn) =>
+    btn.classList.contains("mood-chip--active"),
+  );
+
+  if (!activeMood) {
+    const relaxedBtn = document.querySelector(
+      '.mood-chip[data-mood="relaxed"]',
+    );
+    if (relaxedBtn) {
+      // löst den normalen Klick aus → Filter-Logik in filters.js greift
+      relaxedBtn.click();
+    }
+  }
+
+  // Radius: wenn aktuell „Alle Spots“ (4), auf einen moderaten Radius setzen
   const radiusSlider = $("#filter-radius");
-
-  // Wenn noch keine Stimmung aktiv ist → "Entspannt" aktivieren
-  const hasActiveMood = moodButtons.some((b) =>
-    b.classList.contains("mood-chip--active"),
-  );
-  if (!hasActiveMood && moodButtons.length > 0) {
-    moodButtons[0].click();
+  if (radiusSlider && radiusSlider.value === "4") {
+    radiusSlider.value = "2"; // z. B. ~30 km, siehe RADIUS_LEVELS_KM in filters.js
+    const evt = new Event("input", { bubbles: true });
+    radiusSlider.dispatchEvent(evt);
   }
 
-  // Wenn noch kein Reise-Modus aktiv ist → ersten Button aktivieren (Alltag)
-  const hasActiveTravel = travelButtons.some((b) =>
-    b.classList.contains("travel-chip--active"),
-  );
-  if (!hasActiveTravel && travelButtons.length > 0) {
-    travelButtons[0].click();
-  }
-
-  // Radius auf eine sinnvolle Mittelstufe setzen (Index 2 ≈ 30 km)
-  if (radiusSlider) {
-    radiusSlider.value = "2";
-    radiusSlider.dispatchEvent(new Event("input", { bubbles: true }));
+  // Zur Spot-Liste scrollen, damit man die Ergebnisse sieht
+  const listSection = document.querySelector(".sidebar-section--grow");
+  if (listSection) {
+    listSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   }
 
   showToast(
     t(
       "compass_applied",
-      "Der Familien-Kompass hat eure Filter angepasst – schaut euch die Vorschläge auf der Karte an.",
+      "Der Familien-Kompass ist aktiv – passende Spots werden oben angezeigt. 💫",
     ),
   );
-
-  // Auf kleinen Screens zur Karte scrollen
-  if (typeof window !== "undefined" && window.innerWidth <= 900) {
-    const mapSection = document.querySelector(".map-section");
-    if (mapSection) {
-      mapSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }
 }
 
 function updateRoute(route, indexFromClick) {
