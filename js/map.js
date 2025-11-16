@@ -22,21 +22,6 @@ function escapeHtml(str) {
     .replace(/'/g, "&#39;");
 }
 
-function distanceInKm(lat1, lon1, lat2, lon2) {
-  const R = 6371; // km
-  const toRad = (v) => (v * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
 /**
  * Bestimmt den Text für das Popup.
  *
@@ -100,12 +85,25 @@ export function initMap(options) {
     center: [center.lat, center.lng],
     zoom: zoom,
     zoomControl: true,
+    preferCanvas: true, // performanter bei vielen Pins
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "© OpenStreetMap-Mitwirkende",
+    updateWhenIdle: true,
+    keepBuffer: 2,
   }).addTo(map);
+
+  // Direkt nach dem Init sicherstellen, dass Leaflet die Containergröße kennt
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 0);
+
+  // Bei Größenänderungen (Rotation, Tastatur, etc.) Map neu layouten
+  map.on("resize", () => {
+    map.invalidateSize();
+  });
 }
 
 /**
@@ -122,8 +120,16 @@ function ensureMarkerLayer() {
 
   if (!markerLayer) {
     if (typeof L.markerClusterGroup === "function") {
-      // Falls das Clustering-Plugin geladen ist, nutzen wir es
-      markerLayer = L.markerClusterGroup();
+      // MarkerCluster mit sanften „Pop“-Animationen
+      markerLayer = L.markerClusterGroup({
+        chunkedLoading: true,
+        showCoverageOnHover: false,
+        removeOutsideVisibleBounds: true,
+        spiderfyOnEveryZoom: true,
+        animate: true,
+        animateAddingMarkers: true,
+        maxClusterRadius: 60, // etwas kleinere Cluster, damit Pins früher aufgehen
+      });
     } else {
       // Fallback: normale LayerGroup
       markerLayer = L.layerGroup();
@@ -164,8 +170,6 @@ export function setSpotsOnMap(spots) {
   const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
   const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
 
-  const center = map.getCenter ? map.getCenter() : null;
-
   spots.forEach(function (spot) {
     if (!spot.location) return;
 
@@ -187,38 +191,14 @@ export function setSpotsOnMap(spots) {
     const appleMapsUrl =
       "https://maps.apple.com/?daddr=" + encodeURIComponent(lat + "," + lng);
 
-    let distanceKm = null;
-    if (typeof spot._distanceKm === "number") {
-      distanceKm = spot._distanceKm;
-    } else if (center) {
-      distanceKm = distanceInKm(center.lat, center.lng, lat, lng);
-    }
-
-    let distanceHtml = "";
-    if (distanceKm != null && !Number.isNaN(distanceKm)) {
-      const rounded = distanceKm < 1 ? "< 1" : Math.round(distanceKm);
-      const distText = isEn
-        ? "~" + rounded + " km from map centre"
-        : "~" + rounded + " km ab Kartenmitte";
-      distanceHtml =
-        '<br><small class="popup-distance">' +
-        escapeHtml(distText) +
-        "</small>";
-    }
-
-    const summaryHtml = summary
-      ? "<br><small>" + escapeHtml(summary) + "</small>"
-      : "";
-
-    // Popup-Inhalt: Name, Stadt, Info-Text + Distanz + Routen-Links
+    // Popup-Inhalt: Name, Stadt, Info-Text + Routen-Links
     const popupHtml =
       '<div class="popup">' +
       "<strong>" +
       escapeHtml(spot.name || "") +
       "</strong>" +
       (spot.city ? "<br>" + escapeHtml(spot.city) : "") +
-      summaryHtml +
-      distanceHtml +
+      (summary ? "<br><small>" + escapeHtml(summary) + "</small>" : "") +
       '<div class="popup-actions">' +
       '<a class="popup-link" href="' +
       googleMapsUrl +
