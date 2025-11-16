@@ -38,7 +38,12 @@ let partnerCodesCache = null;
 document.addEventListener("DOMContentLoaded", () => {
   bootstrapApp().catch((err) => {
     console.error(err);
-    showToast(t("error_data_load", "Fehler beim Laden der Daten"));
+    showToast(
+      t(
+        "error_data_load",
+        "Fehler beim Laden der Daten. Bitte versuch es gleich noch einmal.",
+      ),
+    );
   });
 });
 
@@ -140,71 +145,21 @@ function initUIEvents() {
         if (map) {
           map.setView([pos.lat, pos.lng], 14);
         }
-        showToast(t("toast_location_ok", "Position gefunden"));
+        showToast(
+          t(
+            "toast_location_ok",
+            "Dein Startpunkt ist gesetzt – viel Spaß beim nächsten Abenteuer!",
+          ),
+        );
       } catch (err) {
         console.error(err);
         showToast(
           t(
             "toast_location_error",
-            "Standort konnte nicht ermittelt werden",
+            "Standort konnte nicht ermittelt werden. Bitte prüfe die Freigabe oder zoom manuell in deine Region.",
           ),
         );
       }
-    });
-  }
-
-  // Familien-Kompass
-  const compassApply = $("#compass-apply");
-  if (compassApply) {
-    const timeSelect = $("#compass-time");
-    const ageSelect = $("#compass-age");
-
-    compassApply.addEventListener("click", () => {
-      // Zeit -> Radius + große Abenteuer
-      if (timeSelect) {
-        const value = timeSelect.value || "half";
-        const radiusSlider = $("#filter-radius");
-        const bigCheckbox = $("#filter-big-adventures");
-
-        if (radiusSlider) {
-          let idx = "2"; // Standard: Halber Tag
-          if (value === "short") idx = "0";
-          else if (value === "half") idx = "2";
-          else if (value === "full") idx = "3";
-
-          radiusSlider.value = idx;
-          radiusSlider.dispatchEvent(
-            new Event("input", { bubbles: true }),
-          );
-        }
-
-        if (bigCheckbox) {
-          const checked = value === "full";
-          bigCheckbox.checked = checked;
-          bigCheckbox.dispatchEvent(
-            new Event("change", { bubbles: true }),
-          );
-        }
-      }
-
-      // Alter -> Altersfilter
-      if (ageSelect) {
-        const age = ageSelect.value || "all";
-        const ageFilter = $("#filter-age");
-        if (ageFilter) {
-          ageFilter.value = age === "all" ? "" : age;
-          ageFilter.dispatchEvent(
-            new Event("change", { bubbles: true }),
-          );
-        }
-      }
-
-      showToast(
-        t(
-          "toast_compass_applied",
-          "Familien-Kompass angewendet – Vorschläge wurden angepasst.",
-        ),
-      );
     });
   }
 
@@ -273,7 +228,9 @@ function initUIEvents() {
     plusButton.addEventListener("click", async () => {
       const rawCode = plusInput.value.trim();
       if (!rawCode) {
-        showToast("Bitte Code eingeben.");
+        showToast(
+          t("plus_code_empty", "Bitte Code eingeben."),
+        );
         return;
       }
 
@@ -288,7 +245,12 @@ function initUIEvents() {
         );
 
         if (!match) {
-          showToast("Code nicht bekannt oder nicht mehr gültig.");
+          showToast(
+            t(
+              "plus_code_unknown",
+              "Code nicht bekannt oder nicht mehr gültig.",
+            ),
+          );
           return;
         }
 
@@ -309,10 +271,20 @@ function initUIEvents() {
         });
 
         updatePlusStatusUI(plusStatus);
-        showToast("Family Spots Plus aktiviert.");
+        showToast(
+          t(
+            "plus_code_activated",
+            "Family Spots Plus aktiviert.",
+          ),
+        );
       } catch (err) {
         console.error(err);
-        showToast("Code konnte nicht geprüft werden.");
+        showToast(
+          t(
+            "plus_code_failed",
+            "Code konnte nicht geprüft werden.",
+          ),
+        );
       }
     });
   }
@@ -446,7 +418,6 @@ function updatePlusStatusUI(status) {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-      yearNumeric: "numeric",
     });
     baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
   }
