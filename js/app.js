@@ -100,6 +100,15 @@ async function bootstrapApp() {
 
   initUIEvents();
   updateRoute("map");
+
+  // Neu: Auf kleinen Screens Kompass + Plus beim Start einklappen,
+  // damit die Karte mehr Platz bekommt
+  if (window.innerWidth <= 900) {
+    const compassDetails = document.getElementById("compass-section");
+    const plusDetails = document.getElementById("plus-section");
+    if (compassDetails) compassDetails.removeAttribute("open");
+    if (plusDetails) plusDetails.removeAttribute("open");
+  }
 }
 
 // -----------------------------------------------------
@@ -215,7 +224,7 @@ function initUIEvents() {
         setTimeout(() => map.invalidateSize(), 0);
       }
 
-      // Neu: auf kleinen Screens automatisch zu Karte/Liste scrollen
+      // Auf kleinen Screens automatisch zu Karte/Liste scrollen
       if (window.innerWidth <= 900) {
         const target = nowHidden
           ? document.querySelector(".map-section")
