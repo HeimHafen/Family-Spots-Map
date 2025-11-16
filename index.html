@@ -154,121 +154,103 @@
                 </select>
               </div>
 
-              <!-- Stimmung heute -->
-              <div class="filter-group filter-group--mood">
-                <div class="filter-group-header-row">
-                  <span class="filter-group-label">Stimmung heute</span>
-                  <span class="filter-group-label-secondary">
-                    Wonach fühlt es sich heute an?
-                  </span>
-                </div>
-                <div id="filter-mood-list" class="mood-pill-row">
+              <!-- Stimmung -->
+              <div class="filter-group">
+                <label class="filter-group-label">Stimmung</label>
+                <p class="filter-group-helper">
+                  Wonach fühlt es sich heute an?
+                </p>
+                <div class="mood-row" aria-label="Stimmung wählen">
                   <button
                     type="button"
-                    class="mood-pill"
+                    class="mood-chip"
                     data-mood="relaxed"
-                    aria-pressed="false"
                   >
-                    <span class="mood-emoji" aria-hidden="true">🌿</span>
-                    <span>Entspannt</span>
+                    <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
+                    <span class="mood-chip-label">Entspannt</span>
                   </button>
                   <button
                     type="button"
-                    class="mood-pill"
-                    data-mood="active"
-                    aria-pressed="false"
+                    class="mood-chip"
+                    data-mood="action"
                   >
-                    <span class="mood-emoji" aria-hidden="true">🏃</span>
-                    <span>Bewegung &amp; Action</span>
+                    <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
+                    <span class="mood-chip-label">Bewegung</span>
                   </button>
                   <button
                     type="button"
-                    class="mood-pill"
+                    class="mood-chip"
                     data-mood="water"
-                    aria-pressed="false"
                   >
-                    <span class="mood-emoji" aria-hidden="true">💧</span>
-                    <span>Wasser &amp; Sand</span>
+                    <span class="mood-chip-emoji" aria-hidden="true">💧</span>
+                    <span class="mood-chip-label">Wasser &amp; Sand</span>
                   </button>
                   <button
                     type="button"
-                    class="mood-pill"
+                    class="mood-chip"
                     data-mood="animals"
-                    aria-pressed="false"
                   >
-                    <span class="mood-emoji" aria-hidden="true">🐾</span>
-                    <span>Tier-Abenteuer</span>
+                    <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
+                    <span class="mood-chip-label">Tier-Tag</span>
                   </button>
                 </div>
               </div>
 
               <!-- Micro-Abenteuer-Radius -->
-              <div class="filter-group filter-group--radius">
+              <div class="filter-group">
                 <label class="filter-group-label" for="filter-radius">
                   Micro-Abenteuer-Radius
                 </label>
-                <div class="filter-group-label-secondary">
-                  Umkreis ab Kartenmitte
-                </div>
+                <p class="filter-group-helper">
+                  Umkreis ab Kartenmitte (verschiebe die Karte, um den
+                  Startpunkt zu ändern).
+                </p>
                 <div class="radius-row">
                   <input
                     id="filter-radius"
                     type="range"
-                    min="1"
-                    max="5"
+                    min="0"
+                    max="4"
                     step="1"
-                    value="5"
-                    aria-label="Micro-Abenteuer-Radius einstellen"
+                    value="4"
+                    aria-label="Micro-Abenteuer-Radius"
                   />
                   <span
-                    id="filter-radius-label"
-                    class="radius-label"
+                    id="filter-radius-max-label"
+                    class="radius-max-label"
                   >
                     Alle Spots
                   </span>
                 </div>
                 <p
                   id="filter-radius-description"
-                  class="filter-help-text"
+                  class="radius-description"
                 >
-                  Alle Spots – ohne Radiusbegrenzung
+                  Alle Spots – ohne Radiusbegrenzung.
                 </p>
               </div>
 
-              <!-- Nur große Abenteuer -->
+              <!-- Checkboxen -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label">
                   <input
                     id="filter-big-adventures"
                     type="checkbox"
                   />
-                  <span>
-                    <span>Nur große Abenteuer</span>
-                    <span class="checkbox-subtle">
-                      Zoos, Wildparks, Freizeitparks &amp; große Anlagen
-                    </span>
-                  </span>
+                  <span>Nur große Abenteuer</span>
                 </label>
               </div>
 
-              <!-- Nur verifizierte Spots -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label">
-                  <input
-                    id="filter-verified"
-                    type="checkbox"
-                  />
+                  <input id="filter-verified" type="checkbox" />
                   <span>Nur verifizierte Spots</span>
                 </label>
               </div>
 
-              <!-- Nur Favoriten -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label">
-                  <input
-                    id="filter-favorites"
-                    type="checkbox"
-                  />
+                  <input id="filter-favorites" type="checkbox" />
                   <span>Nur Favoriten</span>
                 </label>
               </div>
@@ -450,7 +432,10 @@
       <!-- BOTTOM NAV + TOAST      -->
       <!-- ======================= -->
       <nav class="bottom-nav" aria-label="Hauptnavigation">
-        <div class="bottom-nav-background" aria-hidden="true"></div>
+        <div
+          class="bottom-nav-background"
+          aria-hidden="true"
+        ></div>
         <div
           id="bottom-nav-indicator"
           class="bottom-nav-indicator"
@@ -466,7 +451,11 @@
           <span>Karte</span>
         </button>
 
-        <button class="bottom-nav-item" type="button" data-route="about">
+        <button
+          class="bottom-nav-item"
+          type="button"
+          data-route="about"
+        >
           <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
           <span>Über</span>
         </button>
