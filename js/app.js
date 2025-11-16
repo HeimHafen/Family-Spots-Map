@@ -38,12 +38,7 @@ let partnerCodesCache = null;
 document.addEventListener("DOMContentLoaded", () => {
   bootstrapApp().catch((err) => {
     console.error(err);
-    showToast(
-      t(
-        "error_data_load",
-        "Fehler beim Laden der Daten. Bitte versuch es gleich noch einmal.",
-      ),
-    );
+    showToast(t("error_data_load", "Fehler beim Laden der Daten"));
   });
 });
 
@@ -145,18 +140,13 @@ function initUIEvents() {
         if (map) {
           map.setView([pos.lat, pos.lng], 14);
         }
-        showToast(
-          t(
-            "toast_location_ok",
-            "Dein Startpunkt ist gesetzt – viel Spaß beim nächsten Abenteuer!",
-          ),
-        );
+        showToast(t("toast_location_ok", "Position gefunden"));
       } catch (err) {
         console.error(err);
         showToast(
           t(
             "toast_location_error",
-            "Standort konnte nicht ermittelt werden. Bitte prüfe die Freigabe oder zoom manuell in deine Region.",
+            "Standort konnte nicht ermittelt werden",
           ),
         );
       }
@@ -217,9 +207,23 @@ function initUIEvents() {
         labelSpan.textContent = makeVisible
           ? t("btn_hide_filters", "Filter ausblenden")
           : t("btn_show_filters", "Filter anzeigen");
+
+        // Nach Layout-Änderung Karte neu berechnen
+        const map = getMap();
+        if (map) {
+          setTimeout(() => map.invalidateSize(), 0);
+        }
       });
     }
   }
+
+  // Fenster-/Orientierungswechsel: Map-Größe aktualisieren
+  window.addEventListener("resize", () => {
+    const map = getMap();
+    if (map) {
+      map.invalidateSize();
+    }
+  });
 
   // Plus-Code-Formular
   const plusInput = $("#plus-code-input");
@@ -228,9 +232,7 @@ function initUIEvents() {
     plusButton.addEventListener("click", async () => {
       const rawCode = plusInput.value.trim();
       if (!rawCode) {
-        showToast(
-          t("plus_code_empty", "Bitte Code eingeben."),
-        );
+        showToast("Bitte Code eingeben.");
         return;
       }
 
@@ -245,12 +247,7 @@ function initUIEvents() {
         );
 
         if (!match) {
-          showToast(
-            t(
-              "plus_code_unknown",
-              "Code nicht bekannt oder nicht mehr gültig.",
-            ),
-          );
+          showToast("Code nicht bekannt oder nicht mehr gültig.");
           return;
         }
 
@@ -271,20 +268,10 @@ function initUIEvents() {
         });
 
         updatePlusStatusUI(plusStatus);
-        showToast(
-          t(
-            "plus_code_activated",
-            "Family Spots Plus aktiviert.",
-          ),
-        );
+        showToast("Family Spots Plus aktiviert.");
       } catch (err) {
         console.error(err);
-        showToast(
-          t(
-            "plus_code_failed",
-            "Code konnte nicht geprüft werden.",
-          ),
-        );
+        showToast("Code konnte nicht geprüft werden.");
       }
     });
   }
@@ -306,6 +293,13 @@ function updateRoute(route, indexFromClick) {
   } else {
     viewAbout.classList.remove("view--active");
     viewMap.classList.add("view--active");
+
+    // Wenn wir zurück auf die Karte wechseln: Größe neu berechnen,
+    // damit kein grauer Bereich entsteht.
+    const map = getMap();
+    if (map) {
+      setTimeout(() => map.invalidateSize(), 0);
+    }
   }
 
   buttons.forEach((btn, index) => {
@@ -418,6 +412,7 @@ function updatePlusStatusUI(status) {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
+      yearNumeric: "numeric",
     });
     baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
   }
