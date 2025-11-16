@@ -107,11 +107,55 @@ async function bootstrapApp() {
 // -----------------------------------------------------
 
 function initUIEvents() {
-  // Familien-Kompass
+  // Familien-Kompass – anwenden
   const compassBtn = $("#compass-apply");
   if (compassBtn) {
     compassBtn.addEventListener("click", () => {
       applyCompass();
+    });
+  }
+
+  // Familien-Kompass ein-/ausklappen
+  const compassSection = $("#compass-section");
+  const compassToggleBtn = $("#btn-toggle-compass");
+  if (compassSection && compassToggleBtn) {
+    compassToggleBtn.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const nowOpen = !compassSection.open;
+      compassSection.open = nowOpen;
+      const span = compassToggleBtn.querySelector("span");
+      if (span) {
+        span.textContent = nowOpen
+          ? (getLanguage() || "de").startsWith("de")
+            ? "Schließen"
+            : "Hide"
+          : (getLanguage() || "de").startsWith("de")
+            ? "Öffnen"
+            : "Show";
+      }
+    });
+  }
+
+  // Family Spots Plus ein-/ausklappen
+  const plusSection = $("#plus-section");
+  const plusToggleBtn = $("#btn-toggle-plus");
+  if (plusSection && plusToggleBtn) {
+    plusToggleBtn.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const nowOpen = !plusSection.open;
+      plusSection.open = nowOpen;
+      const span = plusToggleBtn.querySelector("span");
+      if (span) {
+        span.textContent = nowOpen
+          ? (getLanguage() || "de").startsWith("de")
+            ? "Schließen"
+            : "Hide"
+          : (getLanguage() || "de").startsWith("de")
+            ? "Öffnen"
+            : "Show";
+      }
     });
   }
 
@@ -703,6 +747,16 @@ function updateStaticLanguageTexts(lang) {
     "The family compass helps you find spots that match your time, your kids’ age and everyone’s energy today.",
   );
   setElText("compass-apply-label", "Kompass anwenden", "Start compass");
+
+  // Buttons zum Einklappen von Kompass & Plus
+  const compassToggleSpan = $("#btn-toggle-compass span");
+  if (compassToggleSpan) {
+    compassToggleSpan.textContent = isDe ? "Schließen" : "Hide";
+  }
+  const plusToggleSpan = $("#btn-toggle-plus span");
+  if (plusToggleSpan) {
+    plusToggleSpan.textContent = isDe ? "Schließen" : "Hide";
+  }
 
   // Spot-Liste Titel
   setElText("spots-title", "Spots", "Spots");
