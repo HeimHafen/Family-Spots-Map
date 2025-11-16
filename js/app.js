@@ -30,7 +30,6 @@ let allSpots = [];
 let filteredSpots = [];
 let plusStatus = null;
 let partnerCodesCache = null;
-let plusCategories = [];
 
 // -----------------------------------------------------
 // Bootstrap
@@ -54,13 +53,6 @@ async function bootstrapApp() {
   allSpots = getSpots();
   const categories = getCategories();
 
-  plusCategories =
-    index &&
-    index.plus &&
-    Array.isArray(index.plus.categories)
-      ? index.plus.categories
-      : [];
-
   // Plus-Status laden
   plusStatus = getPlusStatus();
   updatePlusStatusUI(plusStatus);
@@ -77,7 +69,6 @@ async function bootstrapApp() {
     categories,
     favoritesProvider: getFavorites,
     onFilterChange: handleFilterChange,
-    plusCategories,
   });
 
   const map = getMap();
@@ -87,7 +78,6 @@ async function bootstrapApp() {
     ...currentFilterState,
     favorites: getFavorites(),
     mapCenter: center,
-    plusCategorySlugs: plusCategories,
   });
 
   setSpotsOnMap(filteredSpots);
@@ -163,37 +153,21 @@ function initUIEvents() {
     });
   }
 
-  // Offline / Online Hinweise
-  window.addEventListener("offline", () => {
-    showToast(
-      t(
-        "toast_offline",
-        "Du bist gerade offline – gespeicherte Spots funktionieren trotzdem.",
-      ),
-    );
-  });
-
-  window.addEventListener("online", () => {
-    showToast(
-      t("toast_online", "Du bist wieder online."),
-    );
-  });
-
-  // Familien-Kompass: steuert Radius, große Abenteuer & Altersfilter
+  // Familien-Kompass
   const compassApply = $("#compass-apply");
   if (compassApply) {
     const timeSelect = $("#compass-time");
     const ageSelect = $("#compass-age");
 
     compassApply.addEventListener("click", () => {
-      // Zeit → Radius + große Abenteuer
+      // Zeit -> Radius + große Abenteuer
       if (timeSelect) {
         const value = timeSelect.value || "half";
         const radiusSlider = $("#filter-radius");
         const bigCheckbox = $("#filter-big-adventures");
 
         if (radiusSlider) {
-          let idx = "2"; // Standard: Halber Tag → mittlerer Radius
+          let idx = "2"; // Standard: Halber Tag
           if (value === "short") idx = "0";
           else if (value === "half") idx = "2";
           else if (value === "full") idx = "3";
@@ -213,7 +187,7 @@ function initUIEvents() {
         }
       }
 
-      // Alter → Altersfilter setzen
+      // Alter -> Altersfilter
       if (ageSelect) {
         const age = ageSelect.value || "all";
         const ageFilter = $("#filter-age");
@@ -388,7 +362,6 @@ function handleFilterChange(filterState) {
   filteredSpots = applyFilters(allSpots, {
     ...filterState,
     mapCenter: center,
-    plusCategorySlugs: plusCategories,
   });
 
   setSpotsOnMap(filteredSpots);
@@ -473,6 +446,7 @@ function updatePlusStatusUI(status) {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
+      yearNumeric: "numeric",
     });
     baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
   }
