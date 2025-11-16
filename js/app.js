@@ -100,15 +100,6 @@ async function bootstrapApp() {
 
   initUIEvents();
   updateRoute("map");
-
-  // Neu: Auf kleinen Screens Kompass + Plus beim Start einklappen,
-  // damit die Karte mehr Platz bekommt
-  if (window.innerWidth <= 900) {
-    const compassDetails = document.getElementById("compass-section");
-    const plusDetails = document.getElementById("plus-section");
-    if (compassDetails) compassDetails.removeAttribute("open");
-    if (plusDetails) plusDetails.removeAttribute("open");
-  }
 }
 
 // -----------------------------------------------------
@@ -116,6 +107,14 @@ async function bootstrapApp() {
 // -----------------------------------------------------
 
 function initUIEvents() {
+  // Familien-Kompass anwenden
+  const compassBtn = $("#compass-apply");
+  if (compassBtn) {
+    compassBtn.addEventListener("click", () => {
+      applyCompass();
+    });
+  }
+
   // Hilfe-Button (öffnet die Über-Ansicht)
   const helpBtn = $("#btn-help");
   if (helpBtn) {
@@ -224,7 +223,7 @@ function initUIEvents() {
         setTimeout(() => map.invalidateSize(), 0);
       }
 
-      // Auf kleinen Screens automatisch zu Karte/Liste scrollen
+      // Neu: auf kleinen Screens automatisch zu Karte/Liste scrollen
       if (window.innerWidth <= 900) {
         const target = nowHidden
           ? document.querySelector(".map-section")
@@ -354,6 +353,93 @@ function initUIEvents() {
         );
       }
     });
+  }
+}
+
+/**
+ * Familien-Kompass:
+ * Passt einige Filter automatisch an (Radius, Stimmung, Reise-Modus)
+ * und scrollt auf kleinen Screens zur Karte.
+ */
+function applyCompass() {
+  const now = new Date();
+  const hour = now.getHours();
+
+  const radiusSlider = $("#filter-radius");
+  const ageSelect = $("#filter-age");
+  const moodButtons = Array.from(document.querySelectorAll(".mood-chip"));
+  const travelButtons = Array.from(document.querySelectorAll(".travel-chip"));
+
+  // sinnvollen Radius vorschlagen (abhängig von Tageszeit)
+  // 0 => 5 km, 1 => 15 km, 2 => 30 km, 3 => 60 km, 4 => alle
+  let suggestedRadiusIndex = 2; // Standard: 30 km
+  if (hour >= 17) {
+    suggestedRadiusIndex = 0; // ab spätem Nachmittag eher nah dran
+  } else if (hour <= 10) {
+    suggestedRadiusIndex = 1; // Vormittag: 15 km
+  } else {
+    suggestedRadiusIndex = 2; // Mittags/Früher Nachmittag: 30 km
+  }
+
+  if (radiusSlider) {
+    radiusSlider.value = String(suggestedRadiusIndex);
+    // löst die vorhandene Radius-Logik in filters.js aus
+    radiusSlider.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  // Stimmung: wenn noch nichts aktiv, "Entspannt" als sanften Default wählen
+  const currentMood = document.querySelector(".mood-chip.mood-chip--active");
+  if (!currentMood && moodButtons.length > 0) {
+    // erster Button ist "Entspannt"
+    moodButtons[0].click();
+  }
+
+  // Reise-Modus: wenn nichts gewählt ist, je nach Radius Alltag/Unterwegs
+  const currentTravel = document.querySelector(
+    ".travel-chip.travel-chip--active",
+  );
+
+  if (!currentTravel && travelButtons.length > 0) {
+    const everydayBtn = document.querySelector(
+      '.travel-chip[data-travel-mode="everyday"]',
+    );
+    const tripBtn = document.querySelector(
+      '.travel-chip[data-travel-mode="trip"]',
+    );
+
+    if (suggestedRadiusIndex <= 1 && everydayBtn) {
+      // kleiner Radius -> Alltag
+      everydayBtn.click();
+    } else if (tripBtn) {
+      // größerer Radius -> Unterwegs
+      tripBtn.click();
+    }
+  }
+
+  // Alters-Select nicht hart überschreiben – Eltern wählen das meist bewusst.
+  // Falls du später Logik willst (z.B. Tageszeit -> typische Altersrange),
+  // kann man das hier ergänzen:
+  if (ageSelect && !ageSelect.value) {
+    ageSelect.value = "all";
+    ageSelect.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  showToast(
+    t(
+      "compass_applied",
+      "Der Familien-Kompass hat eure Filter angepasst – schaut euch die Vorschläge auf der Karte an.",
+    ),
+  );
+
+  // auf kleinen Screens zur Karte scrollen
+  if (typeof window !== "undefined" && window.innerWidth <= 900) {
+    const mapSection = document.querySelector(".map-section");
+    if (mapSection) {
+      mapSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
   }
 }
 
