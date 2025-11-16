@@ -3,7 +3,9 @@
 import { $, debounce } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 
-const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
+// Zwei Radius-Skalen: Alltag vs. Reise
+const RADIUS_LEVELS_KM_EVERYDAY = [5, 15, 30, 60, null];
+const RADIUS_LEVELS_KM_TRIP = [25, 50, 100, 200, null];
 
 const MOOD_CATEGORY_MAP = {
   relaxed: [
@@ -189,10 +191,22 @@ function isBigAdventure(spot) {
   return false;
 }
 
-function updateRadiusUI(index) {
+function getRadiusKm(index, travelMode) {
+  const arr =
+    travelMode === "trip"
+      ? RADIUS_LEVELS_KM_TRIP
+      : RADIUS_LEVELS_KM_EVERYDAY;
+  if (index < 0 || index >= arr.length) return null;
+  const v = arr[index];
+  return v == null ? null : v;
+}
+
+function updateRadiusUI(index, travelMode) {
   const slider = $("#filter-radius");
   const descEl = $("#filter-radius-description");
   const maxLabelEl = $("#filter-radius-max-label");
+
+  const mode = travelMode === "trip" ? "trip" : "everyday";
 
   if (slider && String(slider.value) !== String(index)) {
     slider.value = String(index);
@@ -201,10 +215,16 @@ function updateRadiusUI(index) {
   const lang = getLanguage();
   const isGerman = !lang || lang.indexOf("de") === 0;
 
-  const radiusKm = RADIUS_LEVELS_KM[index] ?? null;
+  const radiusKm = getRadiusKm(index, mode);
 
   if (maxLabelEl) {
-    maxLabelEl.textContent = isGerman ? "Alle Spots" : "All spots";
+    if (radiusKm == null) {
+      maxLabelEl.textContent = isGerman ? "Alle Spots" : "All spots";
+    } else {
+      maxLabelEl.textContent = isGerman
+        ? "Radius aktiv"
+        : "Radius active";
+    }
   }
 
   if (!descEl) return;
@@ -213,11 +233,120 @@ function updateRadiusUI(index) {
     descEl.textContent = isGerman
       ? "Alle Spots – ohne Radiusbegrenzung."
       : "All spots – no radius limit.";
-  } else {
-    descEl.textContent = isGerman
-      ? "Im Umkreis von ca. " + radiusKm + " km ab Kartenmitte."
-      : "Within ~" + radiusKm + " km from map center.";
+    return;
   }
+
+  // Emotionalere Texte je nach Reise-Modus und Stufe
+  let text = "";
+  if (isGerman) {
+    if (mode === "everyday") {
+      if (index === 0) {
+        text =
+          "Zu Fuß oder mit dem Rad – Mikro-Abenteuer fast vor der Haustür (ca. " +
+          radiusKm +
+          " km).";
+      } else if (index === 1) {
+        text =
+          "Kurzer Ausflug in die Nachbarschaft (ca. " +
+          radiusKm +
+          " km ab Kartenmitte).";
+      } else if (index === 2) {
+        text =
+          "Ausflug in eurer Region – eine kleine Fahrt wert (ca. " +
+          radiusKm +
+          " km).";
+      } else if (index === 3) {
+        text =
+          "Großer Tagesausflug in eurem Bundesland (ca. " +
+          radiusKm +
+          " km).";
+      } else {
+        text =
+          "Alle Spots – ohne Radiusbegrenzung. Perfekt für große Planungen.";
+      }
+    } else {
+      // Reise-Modus
+      if (index === 0) {
+        text =
+          "Kurzer Stopp auf der Strecke – ideal für eine Pause (ca. " +
+          radiusKm +
+          " km um die Kartenmitte).";
+      } else if (index === 1) {
+        text =
+          "Abstecher in die Umgebung eurer Route (ca. " +
+          radiusKm +
+          " km).";
+      } else if (index === 2) {
+        text =
+          "Abenteuer-Spot für euren Reisetag (ca. " +
+          radiusKm +
+          " km).";
+      } else if (index === 3) {
+        text =
+          "Weite Tour – die besten Spots entlang eurer Route (ca. " +
+          radiusKm +
+          " km).";
+      } else {
+        text =
+          "Alle Spots – perfekt, um neue Regionen für eure Reisen zu entdecken.";
+      }
+    }
+  } else {
+    // EN (etwas knapper, aber auch freundlich)
+    if (mode === "everyday") {
+      if (index === 0) {
+        text =
+          "Walk or short bike ride – micro adventure near home (~" +
+          radiusKm +
+          " km).";
+      } else if (index === 1) {
+        text =
+          "Short trip in your neighbourhood (~" +
+          radiusKm +
+          " km from map centre).";
+      } else if (index === 2) {
+        text =
+          "Regional day out – a short drive (~" +
+          radiusKm +
+          " km).";
+      } else if (index === 3) {
+        text =
+          "Big day trip in your region (~" +
+          radiusKm +
+          " km).";
+      } else {
+        text =
+          "All spots – no radius limit. Perfect for planning bigger adventures.";
+      }
+    } else {
+      if (index === 0) {
+        text =
+          "Quick stop along your route (~" +
+          radiusKm +
+          " km around map centre).";
+      } else if (index === 1) {
+        text =
+          "Small detour from your travel route (~" +
+          radiusKm +
+          " km).";
+      } else if (index === 2) {
+        text =
+          "Adventure spot for today’s travel day (~" +
+          radiusKm +
+          " km).";
+      } else if (index === 3) {
+        text =
+          "Wide tour – the best family spots along your route (~" +
+          radiusKm +
+          " km).";
+      } else {
+        text =
+          "All spots – great for discovering new areas for future trips.";
+      }
+    }
+  }
+
+  descEl.textContent = text;
 }
 
 function matchesAgeGroup(spot, ageGroup) {
@@ -271,6 +400,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     mood: null,
     radiusIndex: 4, // 4 => Alle Spots
     ageGroup: "",
+    travelMode: "everyday",
   };
 
   const searchInput = $("#filter-search");
@@ -283,12 +413,15 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     document.querySelectorAll(".mood-chip"),
   );
   const ageSelect = $("#filter-age");
+  const travelModeButtons = Array.from(
+    document.querySelectorAll(".travel-mode-chip"),
+  );
 
   if (categorySelect) {
     buildCategoryOptions(categorySelect, categories);
   }
 
-  updateRadiusUI(state.radiusIndex);
+  updateRadiusUI(state.radiusIndex, state.travelMode);
 
   const notify = () => onFilterChange({ ...state });
 
@@ -336,7 +469,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
       const idx = parseInt(e.target.value, 10);
       if (!Number.isNaN(idx)) {
         state.radiusIndex = idx;
-        updateRadiusUI(idx);
+        updateRadiusUI(idx, state.travelMode);
         notify();
       }
     });
@@ -373,6 +506,26 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     });
   }
 
+  if (travelModeButtons.length > 0) {
+    travelModeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const mode = btn.dataset.mode === "trip" ? "trip" : "everyday";
+        state.travelMode = mode;
+
+        travelModeButtons.forEach((b) => {
+          const m = b.dataset.mode === "trip" ? "trip" : "everyday";
+          b.classList.toggle(
+            "travel-mode-chip--active",
+            m === state.travelMode,
+          );
+        });
+
+        updateRadiusUI(state.radiusIndex, state.travelMode);
+        notify();
+      });
+    });
+  }
+
   return state;
 }
 
@@ -392,6 +545,7 @@ export function applyFilters(spots, state) {
   const bigOnly = !!state.bigOnly;
   const mood = state.mood || null;
   const ageGroup = state.ageGroup || "";
+  const travelMode = state.travelMode || "everyday";
 
   let centerLat = null;
   let centerLng = null;
@@ -411,10 +565,7 @@ export function applyFilters(spots, state) {
 
   const radiusIndex =
     typeof state.radiusIndex === "number" ? state.radiusIndex : 4;
-  const radiusKm =
-    radiusIndex >= 0 && radiusIndex < RADIUS_LEVELS_KM.length
-      ? RADIUS_LEVELS_KM[radiusIndex]
-      : null;
+  const radiusKm = getRadiusKm(radiusIndex, travelMode);
 
   const results = [];
 
