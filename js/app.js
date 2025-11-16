@@ -38,7 +38,6 @@ let partnerCodesCache = null;
 document.addEventListener("DOMContentLoaded", () => {
   bootstrapApp().catch((err) => {
     console.error(err);
-    // Mehrsprachige Fehlermeldung
     showToast(t("error_data_load", "Fehler beim Laden der Daten"));
   });
 });
@@ -54,16 +53,18 @@ async function bootstrapApp() {
   allSpots = getSpots();
   const categories = getCategories();
 
-  // Plus-Status aus Storage laden und UI aktualisieren
+  // Plus-Status laden
   plusStatus = getPlusStatus();
   updatePlusStatusUI(plusStatus);
 
+  // Karte
   initMap({
     center: index.defaultLocation,
     zoom: index.defaultZoom,
     onMarkerSelect: handleSpotSelect,
   });
 
+  // Filter
   currentFilterState = initFilters({
     categories,
     favoritesProvider: getFavorites,
@@ -95,7 +96,7 @@ async function bootstrapApp() {
 // -----------------------------------------------------
 
 function initUIEvents() {
-  // Sprach-Umschalter
+  // Sprache
   const langSelect = $("#language-switcher");
   if (langSelect) {
     langSelect.value = getLanguage();
@@ -108,11 +109,9 @@ function initUIEvents() {
 
       applyTranslations();
 
-      // Kategorien-Dropdown neu beschriften
       const categories = getCategories();
       refreshCategorySelect(categories);
 
-      // Liste neu zeichnen
       handleFilterChange({
         ...currentFilterState,
         favorites: getFavorites(),
@@ -120,7 +119,7 @@ function initUIEvents() {
     });
   }
 
-  // Theme-Toggle
+  // Theme
   const themeToggle = $("#theme-toggle");
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
@@ -131,7 +130,7 @@ function initUIEvents() {
     });
   }
 
-  // Standort finden
+  // Standort
   const locateBtn = $("#btn-locate");
   if (locateBtn) {
     locateBtn.addEventListener("click", async () => {
@@ -154,16 +153,16 @@ function initUIEvents() {
     });
   }
 
-  // Bottom-Navigation – robust, auch wenn data-route fehlt
-  $$(".bottom-nav-item").forEach((btn) => {
+  // Bottom-Navigation
+  $$(".bottom-nav-item").forEach((btn, index) => {
     btn.addEventListener("click", () => {
       const routeAttr = btn.dataset.route;
       const route = routeAttr === "about" ? "about" : "map";
-      updateRoute(route);
+      updateRoute(route, index);
     });
   });
 
-  // Listen-/Kartenansicht im Sidebar-Panel umschalten
+  // Listen-/Kartenansicht im Sidebar-Panel
   const toggleViewBtn = $("#btn-toggle-view");
   if (toggleViewBtn) {
     toggleViewBtn.addEventListener("click", () => {
@@ -188,8 +187,7 @@ function initUIEvents() {
         filterSection.querySelectorAll(".filter-group"),
       );
 
-      // Auf kleineren Screens: Filter standardmäßig einklappen,
-      // damit beim ersten Aufruf mehr Karte sichtbar ist.
+      // auf kleinen Screens: Filter anfangs einklappen
       if (window.innerWidth <= 900 && filterControls.length > 0) {
         filterControls.forEach((el) => el.classList.add("hidden"));
         labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
@@ -197,17 +195,13 @@ function initUIEvents() {
 
       filterToggleBtn.addEventListener("click", () => {
         if (filterControls.length === 0) return;
-
         const currentlyHidden =
           filterControls[0].classList.contains("hidden");
         const makeVisible = currentlyHidden;
 
         filterControls.forEach((el) => {
-          if (makeVisible) {
-            el.classList.remove("hidden");
-          } else {
-            el.classList.add("hidden");
-          }
+          if (makeVisible) el.classList.remove("hidden");
+          else el.classList.add("hidden");
         });
 
         labelSpan.textContent = makeVisible
@@ -269,7 +263,7 @@ function initUIEvents() {
   }
 }
 
-function updateRoute(route) {
+function updateRoute(route, indexFromClick) {
   const viewMap = $("#view-map");
   const viewAbout = $("#view-about");
   const navIndicator = $("#bottom-nav-indicator");
@@ -292,11 +286,11 @@ function updateRoute(route) {
     btn.classList.toggle("bottom-nav-item--active", isActive);
 
     if (isActive && navIndicator) {
-      navIndicator.style.transform = `translateX(${index * 100}%)`;
+      const idx = indexFromClick != null ? indexFromClick : index;
+      navIndicator.style.transform = `translateX(${idx * 100}%)`;
     }
   });
 
-  // Beim Wechsel immer nach oben scrollen
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -397,6 +391,7 @@ function updatePlusStatusUI(status) {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
+      yearNumeric: "numeric",
     });
     baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
   }
