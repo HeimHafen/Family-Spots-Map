@@ -3,84 +3,72 @@
 import { $, debounce } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 
-// -----------------------------------------------------
-// Mood-Konfiguration
-// -----------------------------------------------------
+const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
-const MOOD_CONFIG = {
-  chill: {
-    // 🌿 Entspannt im Grünen
-    categoryBoost: [
-      "waldspielplatz",
-      "park-garten",
-      "picknickwiese",
-      "naturerlebnispfad",
-      "walderlebnisroute",
-      "wanderweg-kinderwagen",
-      "badesee",
-    ],
-    tagBoost: [
-      "wald",
-      "natur",
-      "ruhig",
-      "spaziergang",
-      "picknick",
-      "land",
-      "see",
-      "park",
-    ],
-  },
-  active: {
-    // 🧗 Bewegung & Klettern
-    categoryBoost: [
-      "abenteuerspielplatz",
-      "multifunktionsfeld",
-      "bewegungspark",
-      "skatepark",
-      "pumptrack",
-      "kletterhalle",
-      "kletteranlage-outdoor",
-      "boulderpark",
-      "trampolinpark",
-    ],
-    tagBoost: [
-      "klettern",
-      "pump",
-      "skate",
-      "sport",
-      "bewegung",
-      "zipline",
-      "riesenrutschen",
-      "rutschen",
-      "hüttenbau",
-    ],
-  },
-  water: {
-    // 💧 Wasser & Sand
-    categoryBoost: ["wasserspielplatz", "badesee", "schwimmbad", "park-garten"],
-    tagBoost: [
-      "wasser",
-      "wasserspiel",
-      "strand",
-      "see",
-      "fluss",
-      "sommer",
-      "planschen",
-    ],
-  },
-  animals: {
-    // 🐾 Tier-Tag
-    categoryBoost: ["zoo", "wildpark", "tierpark", "bauernhof"],
-    tagBoost: ["tiere", "streichel", "safari", "pony", "tierpark"],
-  },
+const MOOD_CATEGORY_MAP = {
+  relaxed: [
+    "spielplatz",
+    "waldspielplatz",
+    "park-garten",
+    "badesee",
+    "wanderweg-kinderwagen",
+    "radweg-family",
+  ],
+  action: [
+    "abenteuerspielplatz",
+    "freizeitpark",
+    "pumptrack",
+    "skatepark",
+    "multifunktionsfeld",
+    "bewegungspark",
+    "kletterhalle",
+    "kletteranlage-outdoor",
+    "boulderpark",
+    "trampolinpark",
+  ],
+  water: [
+    "abenteuerspielplatz",
+    "wasserspielplatz",
+    "badesee",
+    "schwimmbad",
+  ],
+  animals: ["zoo", "wildpark", "tierpark", "bauernhof"],
 };
 
-// Radius-Stufen: Index → Minuten
-const RADIUS_MINUTES = [null, 15, 30, 45, 60, 90];
-
-// -----------------------------------------------------
-// Hilfsfunktionen
-// -----------------------------------------------------
+const MOOD_KEYWORDS = {
+  relaxed: ["ruhig", "entspannt", "schatten", "wiese", "park", "wald"],
+  action: [
+    "abenteuer",
+    "klettern",
+    "trampolin",
+    "seil",
+    "rutschen",
+    "bike",
+    "pumptrack",
+    "skate",
+    "sport",
+    "action",
+  ],
+  water: [
+    "wasser",
+    "see",
+    "strand",
+    "fluss",
+    "bach",
+    "nass",
+    "planschen",
+    "wasserspiel",
+  ],
+  animals: [
+    "zoo",
+    "tierpark",
+    "wildpark",
+    "tiere",
+    "safari",
+    "giraffe",
+    "bauernhof",
+  ],
+};
 
 function buildCategoryOptions(categorySelect, categories) {
   const lang = getLanguage();
@@ -99,112 +87,139 @@ function buildCategoryOptions(categorySelect, categories) {
   categories.forEach((c) => {
     const opt = document.createElement("option");
     opt.value = c.slug;
-    opt.textContent = c.label?.[lang] || c.label?.de || c.slug;
+    opt.textContent = (c.label && c.label[lang]) || c.label?.de || c.slug;
     categorySelect.appendChild(opt);
   });
 
   categorySelect.value = currentValue;
 }
 
-function computeMoodScore(spot, moodKey) {
-  if (!moodKey || !MOOD_CONFIG[moodKey]) return 0;
-  const cfg = MOOD_CONFIG[moodKey];
-
-  let score = 0;
-
-  const categories = Array.isArray(spot.categories) ? spot.categories : [];
-  categories.forEach((cat) => {
-    if (cfg.categoryBoost.includes(cat)) {
-      score += 2;
-    }
-  });
-
-  const tags = Array.isArray(spot.tags) ? spot.tags : [];
-  tags.forEach((tag) => {
-    const tLower = String(tag).toLowerCase();
-    if (cfg.tagBoost.some((needle) => tLower.includes(needle))) {
-      score += 1;
-    }
-  });
-
-  return score;
-}
-
-function computeDistanceKm(origin, location) {
-  if (!origin || !location) return null;
-
-  const toRad = (deg) => (deg * Math.PI) / 180;
+function distanceInKm(lat1, lon1, lat2, lon2) {
   const R = 6371; // km
-
-  const dLat = toRad(location.lat - origin.lat);
-  const dLng = toRad(location.lng - origin.lng);
-  const lat1 = toRad(origin.lat);
-  const lat2 = toRad(location.lat);
-
+  const toRad = (v) => (v * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
 
-function isBigAdventureSpot(spot) {
+function getMoodScore(spot, mood) {
+  if (!mood) return 0;
+
   const categories = Array.isArray(spot.categories) ? spot.categories : [];
   const tags = Array.isArray(spot.tags) ? spot.tags : [];
+
+  const moodCats = MOOD_CATEGORY_MAP[mood] || [];
+  const moodKeywords = MOOD_KEYWORDS[mood] || [];
+
+  let score = 0;
+
+  // Kategorien
+  for (let i = 0; i < categories.length; i++) {
+    if (moodCats.indexOf(categories[i]) !== -1) {
+      score += 2;
+    }
+  }
+
+  // Tags und Texte
+  const lowerTags = tags.map((t) => String(t).toLowerCase());
+  const textParts = [
+    spot.poetry,
+    spot.summary_de,
+    spot.summary_en,
+    spot.visitLabel_de,
+    spot.visitLabel_en,
+  ]
+    .filter(Boolean)
+    .map((s) => String(s).toLowerCase());
+
+  const allText = lowerTags.join(" ") + " " + textParts.join(" ");
+
+  for (let i = 0; i < moodKeywords.length; i++) {
+    const kw = moodKeywords[i];
+    if (allText.indexOf(kw) !== -1) {
+      score += 1;
+    }
+  }
+
+  return score;
+}
+
+function isBigAdventure(spot) {
+  const categories = Array.isArray(spot.categories) ? spot.categories : [];
+  const bigCats = {
+    freizeitpark: true,
+    zoo: true,
+    wildpark: true,
+    tierpark: true,
+  };
+
+  for (let i = 0; i < categories.length; i++) {
+    if (bigCats[categories[i]]) {
+      return true;
+    }
+  }
+
   const visitMinutes = Number(
     spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes,
   );
+  if (!Number.isNaN(visitMinutes) && visitMinutes >= 240) {
+    return true;
+  }
 
-  if (categories.includes("freizeitpark")) return true;
-  if (!Number.isNaN(visitMinutes) && visitMinutes >= 240) return true;
+  const tags = Array.isArray(spot.tags) ? spot.tags : [];
+  const lowerTags = tags.map((t) => String(t).toLowerCase());
+  for (let i = 0; i < lowerTags.length; i++) {
+    const t = lowerTags[i];
+    if (
+      t.indexOf("ganzer tag") !== -1 ||
+      t.indexOf("riesig") !== -1 ||
+      t.indexOf("groß") !== -1
+    ) {
+      return true;
+    }
+  }
 
-  const tagMatch = tags.some((tag) => {
-    const tLower = String(tag).toLowerCase();
-    return (
-      tLower.includes("safari") ||
-      tLower.includes("riesige") ||
-      tLower.includes("riesen") ||
-      tLower.includes("highlight")
-    );
-  });
-
-  return tagMatch;
+  return false;
 }
 
-function updateRadiusLabel(stepValue, labelEl) {
-  if (!labelEl) return;
+function updateRadiusUI(index) {
+  const slider = $("#filter-radius");
+  const descEl = $("#filter-radius-description");
+  const maxLabelEl = $("#filter-radius-max-label");
+
+  if (slider && String(slider.value) !== String(index)) {
+    slider.value = String(index);
+  }
+
   const lang = getLanguage();
-  const step = Number(stepValue);
-  const minutes =
-    step >= 0 && step < RADIUS_MINUTES.length ? RADIUS_MINUTES[step] : null;
+  const isGerman = !lang || lang.indexOf("de") === 0;
 
-  if (!minutes) {
-    const fallback = lang && lang.startsWith("en")
-      ? "All spots"
-      : "Alle Spots";
-    labelEl.textContent = t("filter_radius_all", fallback);
-    return;
+  const radiusKm = RADIUS_LEVELS_KM[index] ?? null;
+
+  if (maxLabelEl) {
+    maxLabelEl.textContent = isGerman ? "Alle Spots" : "All spots";
   }
 
-  let fallback;
-  if (lang && lang.startsWith("en")) {
-    fallback =
-      minutes <= 45
-        ? `Spots in approx. ${minutes} min travel time`
-        : `Spots in approx. ${minutes} min – family day trip`;
+  if (!descEl) return;
+
+  if (radiusKm == null) {
+    descEl.textContent = isGerman
+      ? "Alle Spots – ohne Radiusbegrenzung."
+      : "All spots – no radius limit.";
   } else {
-    fallback =
-      minutes <= 45
-        ? `Spots in ca. ${minutes} Minuten Fahrzeit`
-        : `Spots in ca. ${minutes} Minuten – der Familienausflug`;
+    const text = isGerman
+      ? "Im Umkreis von ca. " + radiusKm + " km ab Kartenmitte."
+      : "Within ~" + radiusKm + " km from map center.";
+    descEl.textContent = text;
   }
-
-  labelEl.textContent = t(`filter_radius_${minutes}`, fallback);
 }
-
-// -----------------------------------------------------
-// Init
-// -----------------------------------------------------
 
 export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const state = {
@@ -212,33 +227,30 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     category: "",
     verifiedOnly: false,
     favoritesOnly: false,
+    bigOnly: false,
     favorites: favoritesProvider(),
-    mood: "",
-    radiusStep: 0,
-    radiusMinutes: null,
-    bigAdventureOnly: false,
+    mood: null,
+    radiusIndex: 4, // 4 => Alle Spots
   };
 
   const searchInput = $("#filter-search");
   const categorySelect = $("#filter-category");
   const verifiedCheckbox = $("#filter-verified");
   const favsCheckbox = $("#filter-favorites");
-  const bigAdventureCheckbox = $("#filter-big-adventure");
-
-  const radiusInput = $("#radius-range");
-  const radiusLabel = $("#radius-label");
-
-  const moodChips = Array.from(
-    document.querySelectorAll(".mood-chip[data-mood]"),
+  const bigCheckbox = $("#filter-big-adventures");
+  const radiusSlider = $("#filter-radius");
+  const moodButtons = Array.from(
+    document.querySelectorAll(".mood-chip"),
   );
 
   if (categorySelect) {
     buildCategoryOptions(categorySelect, categories);
   }
 
+  updateRadiusUI(state.radiusIndex);
+
   const notify = () => onFilterChange({ ...state });
 
-  // Suche
   if (searchInput) {
     searchInput.addEventListener(
       "input",
@@ -249,7 +261,6 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     );
   }
 
-  // Kategorie
   if (categorySelect) {
     categorySelect.addEventListener("change", (e) => {
       state.category = e.target.value || "";
@@ -257,75 +268,61 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     });
   }
 
-  // Verifiziert
   if (verifiedCheckbox) {
     verifiedCheckbox.addEventListener("change", (e) => {
-      state.verifiedOnly = e.target.checked;
+      state.verifiedOnly = !!e.target.checked;
       notify();
     });
   }
 
-  // Favoriten
   if (favsCheckbox) {
     favsCheckbox.addEventListener("change", (e) => {
-      state.favoritesOnly = e.target.checked;
+      state.favoritesOnly = !!e.target.checked;
+      state.favorites = favoritesProvider();
       notify();
     });
   }
 
-  // Nur große Abenteuer
-  if (bigAdventureCheckbox) {
-    bigAdventureCheckbox.addEventListener("change", (e) => {
-      state.bigAdventureOnly = e.target.checked;
+  if (bigCheckbox) {
+    bigCheckbox.addEventListener("change", (e) => {
+      state.bigOnly = !!e.target.checked;
       notify();
     });
   }
 
-  // Mood-Chips
-  if (moodChips.length > 0) {
-    moodChips.forEach((chip) => {
-      chip.addEventListener("click", () => {
-        const moodKey = chip.dataset.mood || "";
-        if (state.mood === moodKey) {
-          // Mood wieder deaktivieren
-          state.mood = "";
+  if (radiusSlider) {
+    radiusSlider.addEventListener("input", (e) => {
+      const idx = parseInt(e.target.value, 10);
+      if (!Number.isNaN(idx)) {
+        state.radiusIndex = idx;
+        updateRadiusUI(idx);
+        notify();
+      }
+    });
+  }
+
+  if (moodButtons.length > 0) {
+    moodButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const mood = btn.dataset.mood || null;
+
+        if (state.mood === mood) {
+          state.mood = null;
         } else {
-          state.mood = moodKey;
+          state.mood = mood;
         }
 
-        moodChips.forEach((c) => {
-          const key = c.dataset.mood || "";
-          c.classList.toggle("mood-chip--active", key === state.mood);
+        moodButtons.forEach((b) => {
+          const m = b.dataset.mood || null;
+          b.classList.toggle(
+            "mood-chip--active",
+            state.mood === m,
+          );
         });
 
         notify();
       });
     });
-  }
-
-  // Radius
-  if (radiusInput) {
-    // Initial setzen
-    radiusInput.value = String(state.radiusStep);
-    updateRadiusLabel(state.radiusStep, radiusLabel);
-
-    radiusInput.addEventListener("input", (e) => {
-      const step = Number(e.target.value || 0);
-      state.radiusStep = step;
-      const minutes =
-        step >= 0 && step < RADIUS_MINUTES.length
-          ? RADIUS_MINUTES[step]
-          : null;
-      state.radiusMinutes =
-        typeof minutes === "number" && minutes > 0 ? minutes : null;
-
-      updateRadiusLabel(step, radiusLabel);
-      notify();
-    });
-  } else {
-    // Fallback: kein Radius-Slider vorhanden
-    state.radiusStep = 0;
-    state.radiusMinutes = null;
   }
 
   return state;
@@ -336,125 +333,133 @@ export function refreshCategorySelect(categories) {
   const categorySelect = $("#filter-category");
   if (!categorySelect) return;
   buildCategoryOptions(categorySelect, categories);
-
-  // Radius-Label bei Sprachwechsel aktualisieren
-  const radiusInput = $("#radius-range");
-  const radiusLabel = $("#radius-label");
-  if (radiusInput && radiusLabel) {
-    updateRadiusLabel(radiusInput.value, radiusLabel);
-  }
 }
-
-// -----------------------------------------------------
-// Filter-Anwendung inkl. Mood & Radius & Sortierung
-// -----------------------------------------------------
 
 export function applyFilters(spots, state) {
   const query = (state.query || "").trim().toLowerCase();
   const category = state.category || "";
   const favoritesSet = new Set(state.favorites || []);
-  const mood = state.mood || "";
   const verifiedOnly = !!state.verifiedOnly;
   const favoritesOnly = !!state.favoritesOnly;
-  const bigAdventureOnly = !!state.bigAdventureOnly;
+  const bigOnly = !!state.bigOnly;
+  const mood = state.mood || null;
 
-  const origin = state.origin || null;
-  const radiusMinutes =
-    typeof state.radiusMinutes === "number" && state.radiusMinutes > 0
-      ? state.radiusMinutes
+  let centerLat = null;
+  let centerLng = null;
+  if (state.mapCenter) {
+    const c = state.mapCenter;
+    if (typeof c.lat === "number" && typeof c.lng === "number") {
+      centerLat = c.lat;
+      centerLng = c.lng;
+    } else if (
+      typeof c.lat === "function" &&
+      typeof c.lng === "function"
+    ) {
+      centerLat = c.lat();
+      centerLng = c.lng();
+    }
+  }
+
+  const radiusIndex =
+    typeof state.radiusIndex === "number" ? state.radiusIndex : 4;
+  const radiusKm =
+    radiusIndex >= 0 && radiusIndex < RADIUS_LEVELS_KM.length
+      ? RADIUS_LEVELS_KM[radiusIndex]
       : null;
-  const radiusKm = radiusMinutes ? radiusMinutes * 1.0 : null; // aktuell: 1 Min ≈ 1 km
 
-  const itemsWithMeta = (spots || [])
-    .map((spot) => {
-      if (!spot) return null;
+  const results = [];
 
-      const moodScore = computeMoodScore(spot, mood);
-      const distanceKm =
-        origin && spot.location ? computeDistanceKm(origin, spot.location) : null;
+  for (let i = 0; i < spots.length; i++) {
+    const spot = spots[i];
+    if (!spot) continue;
 
-      return {
-        spot,
-        moodScore,
-        distanceKm,
-      };
-    })
-    .filter(Boolean)
-    .filter(({ spot, moodScore, distanceKm }) => {
-      if (!spot) return false;
+    const cats = Array.isArray(spot.categories) ? spot.categories : [];
 
-      // Kategorie-Filter
-      if (category && !(spot.categories || []).includes(category)) {
-        return false;
+    if (category && cats.indexOf(category) === -1) {
+      continue;
+    }
+
+    if (verifiedOnly && !spot.verified) {
+      continue;
+    }
+
+    if (favoritesOnly && !favoritesSet.has(spot.id)) {
+      continue;
+    }
+
+    if (bigOnly && !isBigAdventure(spot)) {
+      continue;
+    }
+
+    if (query) {
+      const parts = [
+        spot.name,
+        spot.city,
+        spot.address,
+        spot.poetry,
+        ...(spot.tags || []),
+        ...(spot.usps || []),
+        ...(spot.categories || []),
+      ]
+        .filter(Boolean)
+        .map((x) => String(x).toLowerCase());
+
+      if (parts.join(" ").indexOf(query) === -1) {
+        continue;
       }
+    }
 
-      // Verifiziert
-      if (verifiedOnly && !spot.verified) {
-        return false;
+    let distanceKm = null;
+    if (
+      radiusKm != null &&
+      centerLat != null &&
+      centerLng != null &&
+      spot.location
+    ) {
+      distanceKm = distanceInKm(
+        centerLat,
+        centerLng,
+        spot.location.lat,
+        spot.location.lng,
+      );
+      if (distanceKm > radiusKm) {
+        continue;
       }
+    }
 
-      // Favoriten
-      if (favoritesOnly && !favoritesSet.has(spot.id)) {
-        return false;
-      }
+    const moodScore = getMoodScore(spot, mood);
+    if (mood && moodScore <= 0) {
+      continue;
+    }
 
-      // "Nur große Abenteuer"
-      if (bigAdventureOnly && !isBigAdventureSpot(spot)) {
-        return false;
-      }
-
-      // Such-Query
-      if (query) {
-        const parts = [
-          spot.name,
-          spot.city,
-          spot.address,
-          spot.poetry,
-          ...(spot.tags || []),
-          ...(spot.usps || []),
-          ...(spot.categories || []),
-        ]
-          .filter(Boolean)
-          .map((x) => String(x).toLowerCase());
-
-        if (!parts.join(" ").includes(query)) {
-          return false;
-        }
-      }
-
-      // Mood: bei aktivem Mood nur Spots mit Score > 0
-      if (mood && moodScore <= 0) {
-        return false;
-      }
-
-      // Radius
-      if (radiusKm && distanceKm != null && distanceKm > radiusKm) {
-        return false;
-      }
-
-      return true;
+    results.push({
+      spot,
+      moodScore,
+      distanceKm,
     });
+  }
 
-  // Sortierung: erst Mood-Score, dann Entfernung, dann Name
-  itemsWithMeta.sort((a, b) => {
-    // Mood zuerst, wenn aktiv
-    if (mood) {
-      if (b.moodScore !== a.moodScore) {
-        return b.moodScore - a.moodScore;
-      }
+  results.sort((a, b) => {
+    const msA = a.moodScore || 0;
+    const msB = b.moodScore || 0;
+    if (msA !== msB) {
+      return msB - msA;
     }
 
-    // Dann Entfernung, wenn Radius aktiv und Distanz vorhanden
-    if (radiusKm && a.distanceKm != null && b.distanceKm != null) {
-      if (a.distanceKm !== b.distanceKm) {
-        return a.distanceKm - b.distanceKm;
-      }
+    const dA = a.distanceKm != null ? a.distanceKm : Infinity;
+    const dB = b.distanceKm != null ? b.distanceKm : Infinity;
+    if (dA !== dB) {
+      return dA - dB;
     }
 
-    const nameA = (a.spot.name || "").toString();
-    const nameB = (b.spot.name || "").toString();
-    return nameA.localeCompare(nameB, "de-DE");
+    const nameA = a.spot.name || "";
+    const nameB = b.spot.name || "";
+    return nameA.localeCompare(nameB, "de");
   });
 
-  return itemsWithMeta.map((item) => item.spot);
+  return results.map((r) => {
+    r.spot._moodScore = r.moodScore;
+    r.spot._distanceKm = r.distanceKm;
+    return r.spot;
+  });
 }
