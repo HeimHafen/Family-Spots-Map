@@ -24,12 +24,6 @@ function escapeHtml(str) {
 
 /**
  * Bestimmt den Text für das Popup.
- *
- * Neue Idee:
- * 1. Wenn vorhanden: Poesie-Zeile (poetry) – die ist individuell & schön.
- * 2. Sonst: Summary in aktueller Sprache (summary_de / summary_en).
- * 3. Sonst: Besuchstipp (visitLabel_*).
- * 4. Sonst: Summary der anderen Sprache.
  */
 function getSpotPopupSummary(spot) {
   let lang = "de";
@@ -68,11 +62,6 @@ function getSpotPopupSummary(spot) {
 
 /**
  * Initialisiert die Leaflet-Karte.
- *
- * @param {Object} options
- * @param {{lat: number, lng: number}} options.center
- * @param {number} options.zoom
- * @param {(spotId: string) => void} [options.onMarkerSelect]
  */
 export function initMap(options) {
   const center = options.center;
@@ -85,7 +74,7 @@ export function initMap(options) {
     center: [center.lat, center.lng],
     zoom: zoom,
     zoomControl: true,
-    preferCanvas: true, // performanter bei vielen Pins
+    preferCanvas: true,
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -100,7 +89,6 @@ export function initMap(options) {
     map.invalidateSize();
   }, 0);
 
-  // Bei Größenänderungen (Rotation, Tastatur, etc.) Map neu layouten
   map.on("resize", () => {
     map.invalidateSize();
   });
@@ -120,7 +108,6 @@ function ensureMarkerLayer() {
 
   if (!markerLayer) {
     if (typeof L.markerClusterGroup === "function") {
-      // MarkerCluster mit sanften „Pop“-Animationen
       markerLayer = L.markerClusterGroup({
         chunkedLoading: true,
         showCoverageOnHover: false,
@@ -128,10 +115,9 @@ function ensureMarkerLayer() {
         spiderfyOnEveryZoom: true,
         animate: true,
         animateAddingMarkers: true,
-        maxClusterRadius: 60, // etwas kleinere Cluster, damit Pins früher aufgehen
+        maxClusterRadius: 60,
       });
     } else {
-      // Fallback: normale LayerGroup
       markerLayer = L.layerGroup();
     }
 
@@ -143,9 +129,6 @@ function ensureMarkerLayer() {
 
 /**
  * Zeichnet alle Spots auf die Karte.
- * Alte Marker werden vorher entfernt.
- *
- * @param {Array<{id: string, name: string, city?: string, location: {lat: number, lng: number}}>} spots
  */
 export function setSpotsOnMap(spots) {
   if (!map) {
@@ -170,6 +153,8 @@ export function setSpotsOnMap(spots) {
   const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
   const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
 
+  const markerObjs = [];
+
   spots.forEach(function (spot) {
     if (!spot.location) return;
 
@@ -191,7 +176,6 @@ export function setSpotsOnMap(spots) {
     const appleMapsUrl =
       "https://maps.apple.com/?daddr=" + encodeURIComponent(lat + "," + lng);
 
-    // Popup-Inhalt: Name, Stadt, Info-Text + Routen-Links
     const popupHtml =
       '<div class="popup">' +
       "<strong>" +
@@ -215,22 +199,46 @@ export function setSpotsOnMap(spots) {
 
     marker.bindPopup(popupHtml);
 
-    // Klick auf den Pin: Popup + Detail-Panel
+    // Marker-Pop-Animation, wenn der Marker zur Karte hinzugefügt wird
+    marker.on("add", () => {
+      const el = marker.getElement();
+      if (!el) return;
+      el.classList.add("pin-pop");
+      setTimeout(() => {
+        if (el) el.classList.remove("pin-pop");
+      }, 260);
+    });
+
     marker.on("click", function () {
       if (onMarkerSelectCallback) {
         onMarkerSelectCallback(spot.id);
       }
     });
 
-    layer.addLayer(marker);
     markersById.set(spot.id, marker);
+    markerObjs.push(marker);
   });
+
+  // Marker in kleinen Batches hinzufügen, damit sie "nacheinander" auftauchen
+  const BATCH_SIZE = 20;
+  let index = 0;
+
+  function addNextBatch() {
+    const end = Math.min(index + BATCH_SIZE, markerObjs.length);
+    for (let i = index; i < end; i++) {
+      layer.addLayer(markerObjs[i]);
+    }
+    index = end;
+    if (index < markerObjs.length) {
+      setTimeout(addNextBatch, 30);
+    }
+  }
+
+  addNextBatch();
 }
 
 /**
  * Zentriert die Karte auf einen Spot.
- *
- * @param {{id: string, location: {lat: number, lng: number}}} spot
  */
 export function focusOnSpot(spot) {
   if (!map || !spot || !spot.location) {
@@ -252,9 +260,6 @@ export function focusOnSpot(spot) {
 
 /**
  * Aktualisiert/zeichnet den Radius-Kreis für den Micro-Abenteuer-Radius.
- *
- * @param {{lat: number, lng: number} | null} origin
- * @param {number | null} radiusKm
  */
 export function updateRadiusCircle(origin, radiusKm) {
   if (!map) return;
