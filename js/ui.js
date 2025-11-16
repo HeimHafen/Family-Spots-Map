@@ -360,6 +360,16 @@ export function renderSpotDetails(spot, options) {
       hideSpotDetails();
     });
   }
+
+  // Neu: auf kleinen Screens die Details automatisch ins Bild scrollen
+  if (typeof window !== "undefined" && window.innerWidth <= 900) {
+    setTimeout(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 0);
+  }
 }
 
 /**
