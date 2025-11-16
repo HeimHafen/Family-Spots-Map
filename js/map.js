@@ -7,10 +7,10 @@ let markerLayer = null;
 let onMarkerSelectCallback = null;
 const markersById = new Map();
 let radiusCircle = null;
+let currentMarkerRunId = 0;
 
 /**
- * Kleiner Helfer zum HTML-Escapen, damit Sonderzeichen in Titeln etc.
- * keine Probleme machen.
+ * Kleiner Helfer zum HTML-Escapen.
  */
 function escapeHtml(str) {
   if (!str) return "";
@@ -62,6 +62,11 @@ function getSpotPopupSummary(spot) {
 
 /**
  * Initialisiert die Leaflet-Karte.
+ *
+ * @param {Object} options
+ * @param {{lat: number, lng: number}} options.center
+ * @param {number} options.zoom
+ * @param {(spotId: string) => void} [options.onMarkerSelect]
  */
 export function initMap(options) {
   const center = options.center;
@@ -84,7 +89,6 @@ export function initMap(options) {
     keepBuffer: 2,
   }).addTo(map);
 
-  // Direkt nach dem Init sicherstellen, dass Leaflet die Containergröße kennt
   setTimeout(() => {
     map.invalidateSize();
   }, 0);
@@ -109,12 +113,9 @@ function ensureMarkerLayer() {
   if (!markerLayer) {
     if (typeof L.markerClusterGroup === "function") {
       markerLayer = L.markerClusterGroup({
-        chunkedLoading: true,
         showCoverageOnHover: false,
         removeOutsideVisibleBounds: true,
         spiderfyOnEveryZoom: true,
-        animate: true,
-        animateAddingMarkers: true,
         maxClusterRadius: 60,
       });
     } else {
@@ -129,6 +130,7 @@ function ensureMarkerLayer() {
 
 /**
  * Zeichnet alle Spots auf die Karte.
+ * Alte Marker werden vorher entfernt.
  */
 export function setSpotsOnMap(spots) {
   if (!map) {
@@ -139,6 +141,8 @@ export function setSpotsOnMap(spots) {
   if (!layer) {
     return;
   }
+
+  const runId = ++currentMarkerRunId;
 
   layer.clearLayers();
   markersById.clear();
@@ -153,7 +157,7 @@ export function setSpotsOnMap(spots) {
   const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
   const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
 
-  const markerObjs = [];
+  const markers = [];
 
   spots.forEach(function (spot) {
     if (!spot.location) return;
@@ -165,7 +169,8 @@ export function setSpotsOnMap(spots) {
     const summary = getSpotPopupSummary(spot);
 
     const encodedName = encodeURIComponent(
-      (spot.name || "") + (spot.city ? " " + spot.city : ""),
+      (spot.name || spot.title || "") +
+        (spot.city ? " " + spot.city : ""),
     );
 
     const googleMapsUrl =
@@ -179,7 +184,7 @@ export function setSpotsOnMap(spots) {
     const popupHtml =
       '<div class="popup">' +
       "<strong>" +
-      escapeHtml(spot.name || "") +
+      escapeHtml(spot.name || spot.title || "") +
       "</strong>" +
       (spot.city ? "<br>" + escapeHtml(spot.city) : "") +
       (summary ? "<br><small>" + escapeHtml(summary) + "</small>" : "") +
@@ -199,42 +204,36 @@ export function setSpotsOnMap(spots) {
 
     marker.bindPopup(popupHtml);
 
-    // Marker-Pop-Animation, wenn der Marker zur Karte hinzugefügt wird
-    marker.on("add", () => {
-      const el = marker.getElement();
-      if (!el) return;
-      el.classList.add("pin-pop");
-      setTimeout(() => {
-        if (el) el.classList.remove("pin-pop");
-      }, 260);
-    });
-
     marker.on("click", function () {
       if (onMarkerSelectCallback) {
         onMarkerSelectCallback(spot.id);
       }
     });
 
-    markersById.set(spot.id, marker);
-    markerObjs.push(marker);
+    marker.on("add", () => {
+      const el = marker.getElement();
+      if (!el) return;
+      if (el.classList.contains("marker-cluster")) return;
+      el.classList.add("pin-pop");
+      setTimeout(() => el.classList.remove("pin-pop"), 260);
+    });
+
+    markers.push({ spot, marker });
   });
 
-  // Marker in kleinen Batches hinzufügen, damit sie "nacheinander" auftauchen
-  const BATCH_SIZE = 20;
-  let index = 0;
+  let delay = 0;
+  const step = 18;
 
-  function addNextBatch() {
-    const end = Math.min(index + BATCH_SIZE, markerObjs.length);
-    for (let i = index; i < end; i++) {
-      layer.addLayer(markerObjs[i]);
-    }
-    index = end;
-    if (index < markerObjs.length) {
-      setTimeout(addNextBatch, 30);
-    }
-  }
-
-  addNextBatch();
+  markers.forEach(({ spot, marker }) => {
+    setTimeout(() => {
+      if (runId !== currentMarkerRunId) {
+        return;
+      }
+      layer.addLayer(marker);
+      markersById.set(spot.id, marker);
+    }, delay);
+    delay += step;
+  });
 }
 
 /**
@@ -260,6 +259,9 @@ export function focusOnSpot(spot) {
 
 /**
  * Aktualisiert/zeichnet den Radius-Kreis für den Micro-Abenteuer-Radius.
+ *
+ * @param {{lat: number, lng: number} | null} origin
+ * @param {number | null} radiusKm
  */
 export function updateRadiusCircle(origin, radiusKm) {
   if (!map) return;
