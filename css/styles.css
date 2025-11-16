@@ -36,6 +36,7 @@ body {
   --color-accent-strong: #0284c7;
   --color-danger: #ef4444;
   --color-shadow-soft: rgba(15, 23, 42, 0.08);
+  --color-map-bg: #e0f2fe; /* zarter „Himmel/Wasser“-Ton statt Grau */
 }
 
 html[data-theme="dark"] {
@@ -50,6 +51,7 @@ html[data-theme="dark"] {
   --color-accent-strong: #06b6d4;
   --color-danger: #f97373;
   --color-shadow-soft: rgba(15, 23, 42, 0.7);
+  --color-map-bg: #020617;
 }
 
 body {
@@ -155,8 +157,6 @@ body {
    VIEWS & LAYOUT
    =========================== */
 
-/* Views – Sichtbarkeit nur über view--active */
-
 .view {
   flex: 1;
   min-height: 0;
@@ -237,42 +237,30 @@ body {
   color: var(--color-text-subtle);
 }
 
-.filter-toggle-row {
+/* Familien-Kompass */
+
+.compass-group {
+  border: 1px dashed var(--color-accent);
+  border-radius: 0.75rem;
+  padding: 0.55rem 0.6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  font-size: 0.85rem;
-}
-
-/* Familien-Kompass */
-
-.compass-card {
-  border: 1px dashed var(--color-accent);
+  gap: 0.4rem;
   background: linear-gradient(
     135deg,
-    rgba(14, 165, 233, 0.06),
+    rgba(14, 165, 233, 0.05),
     rgba(56, 189, 248, 0.02)
   );
-  border-radius: 0.75rem;
-  padding: 0.55rem 0.6rem;
 }
 
-.compass-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.15rem;
-}
-
-.compass-row .input {
+.compass-text {
   flex: 1;
-  min-width: 120px;
+  min-width: 0;
 }
 
-.compass-apply-btn {
-  margin-top: 0.35rem;
-  align-self: flex-start;
+.compass-button {
+  white-space: nowrap;
 }
 
 /* Stimmung – Chips */
@@ -312,40 +300,6 @@ body {
 }
 
 .mood-chip--active {
-  background-color: var(--color-accent-soft);
-  border-color: var(--color-accent);
-  color: var(--color-accent-strong);
-}
-
-/* Reise-Modus – Chips */
-
-.travel-mode-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.15rem;
-}
-
-.travel-mode-chip {
-  font: inherit;
-  border-radius: 999px;
-  border: 1px solid var(--color-border-subtle);
-  background-color: var(--color-bg-elevated);
-  padding: 0.25rem 0.8rem;
-  font-size: 0.82rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  cursor: pointer;
-  transition: background-color 0.12s ease-out, border-color 0.12s ease-out,
-    color 0.12s ease-out, transform 0.05s ease-out;
-}
-
-.travel-mode-chip:hover {
-  background-color: var(--color-bg);
-}
-
-.travel-mode-chip--active {
   background-color: var(--color-accent-soft);
   border-color: var(--color-accent);
   color: var(--color-accent-strong);
@@ -408,8 +362,6 @@ body {
   gap: 0.45rem;
 }
 
-/* Leerer Zustand in der Liste */
-
 .spot-list-empty {
   margin: 0.5rem 0;
   font-size: 0.9rem;
@@ -434,6 +386,12 @@ body {
 #map {
   width: 100%;
   height: 100%;
+  background-color: var(--color-map-bg);
+}
+
+/* Leaflet-Hintergrund, falls keine Tiles geladen sind */
+.leaflet-container {
+  background-color: var(--color-map-bg);
 }
 
 /* Spot-Details (rechts über der Karte) */
@@ -453,10 +411,7 @@ body {
   padding: 0.75rem;
 }
 
-/* Sichtbarkeitsklasse (für spätere Animationen, falls gewünscht) */
 .spot-details--visible {
-  /* aktuell keine extra Animation – Panel ist sichtbar,
-     sobald Inhalt gerendert wird */
 }
 
 /* Grundlayout im Detail-Panel */
@@ -493,8 +448,6 @@ body {
 .spot-details-tags {
   margin-top: 0.4rem;
 }
-
-/* Erweiterte Texte im Detail-Panel */
 
 .spot-details-description {
   margin-top: 0.5rem;
@@ -567,10 +520,6 @@ body {
 .popup-link:hover {
   background-color: var(--color-accent-soft);
   border-color: var(--color-accent);
-}
-
-.popup-distance {
-  color: var(--color-text-subtle);
 }
 
 /* Sektionen im Detail-Panel */
@@ -864,15 +813,28 @@ body {
 }
 
 /* ===========================
-   BADGES (wird von badges.css erweitert)
+   PIN-POP-ANIMATION
    =========================== */
-/* (bewusst frei gelassen – konkrete Varianten in badges.css) */
+
+.leaflet-marker-icon.pin-pop {
+  animation: pin-pop 0.25s ease-out;
+  transform-origin: bottom center;
+}
+
+@keyframes pin-pop {
+  0% {
+    transform: scale(0.1) translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
 
 /* ===========================
    RESPONSIVE
    =========================== */
-
-/* Header kompakter auf kleineren Screens */
 
 @media (max-width: 420px) {
   .app-header {
@@ -892,8 +854,6 @@ body {
     height: 32px;
   }
 }
-
-/* Mini-Screens: Tagline ausblenden */
 
 @media (max-width: 360px) {
   .header-tagline {
