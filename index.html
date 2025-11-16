@@ -84,8 +84,8 @@
             <span class="header-flag" aria-hidden="true">🇩🇰</span>
           </h1>
           <p class="header-tagline">
-            Die schönste Karte für Familien-Abenteuer. Geprüfte Ausflugsziele in
-            deiner Nähe – von Eltern für Eltern.
+            Die schönste Karte für Familien-Abenteuer. Finde geprüfte
+            Ausflugsziele in deiner Nähe – von Eltern für Eltern.
           </p>
         </div>
 
@@ -154,77 +154,110 @@
                 </select>
               </div>
 
-              <!-- Stimmung (Mood-Filter) -->
-              <div class="filter-group">
-                <label class="filter-group-label">Stimmung</label>
-                <div id="mood-chips" class="mood-chips">
+              <!-- Stimmung heute -->
+              <div class="filter-group filter-group--mood">
+                <div class="filter-group-header-row">
+                  <span class="filter-group-label">Stimmung heute</span>
+                  <span class="filter-group-label-secondary">
+                    Wonach fühlt es sich heute an?
+                  </span>
+                </div>
+                <div id="filter-mood-list" class="mood-pill-row">
                   <button
                     type="button"
-                    class="mood-chip"
-                    data-mood="chill"
+                    class="mood-pill"
+                    data-mood="relaxed"
+                    aria-pressed="false"
                   >
-                    <span aria-hidden="true">🌿</span>
+                    <span class="mood-emoji" aria-hidden="true">🌿</span>
                     <span>Entspannt</span>
                   </button>
                   <button
                     type="button"
-                    class="mood-chip"
+                    class="mood-pill"
                     data-mood="active"
+                    aria-pressed="false"
                   >
-                    <span aria-hidden="true">🧗</span>
-                    <span>Bewegung</span>
+                    <span class="mood-emoji" aria-hidden="true">🏃</span>
+                    <span>Bewegung &amp; Action</span>
                   </button>
                   <button
                     type="button"
-                    class="mood-chip"
+                    class="mood-pill"
                     data-mood="water"
+                    aria-pressed="false"
                   >
-                    <span aria-hidden="true">💧</span>
+                    <span class="mood-emoji" aria-hidden="true">💧</span>
                     <span>Wasser &amp; Sand</span>
                   </button>
                   <button
                     type="button"
-                    class="mood-chip"
+                    class="mood-pill"
                     data-mood="animals"
+                    aria-pressed="false"
                   >
-                    <span aria-hidden="true">🐾</span>
-                    <span>Tier-Tag</span>
+                    <span class="mood-emoji" aria-hidden="true">🐾</span>
+                    <span>Tier-Abenteuer</span>
                   </button>
                 </div>
               </div>
 
               <!-- Micro-Abenteuer-Radius -->
-              <div class="filter-group">
-                <label class="filter-group-label" for="radius-range">
+              <div class="filter-group filter-group--radius">
+                <label class="filter-group-label" for="filter-radius">
                   Micro-Abenteuer-Radius
                 </label>
+                <div class="filter-group-label-secondary">
+                  Umkreis ab Kartenmitte
+                </div>
                 <div class="radius-row">
                   <input
-                    id="radius-range"
-                    class="radius-input"
+                    id="filter-radius"
                     type="range"
-                    min="0"
+                    min="1"
                     max="5"
                     step="1"
+                    value="5"
+                    aria-label="Micro-Abenteuer-Radius einstellen"
                   />
-                  <span id="radius-label" class="radius-value">
+                  <span
+                    id="filter-radius-label"
+                    class="radius-label"
+                  >
                     Alle Spots
                   </span>
                 </div>
+                <p
+                  id="filter-radius-description"
+                  class="filter-help-text"
+                >
+                  Alle Spots – ohne Radiusbegrenzung
+                </p>
               </div>
 
               <!-- Nur große Abenteuer -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label">
-                  <input id="filter-big-adventure" type="checkbox" />
-                  <span>Nur große Abenteuer</span>
+                  <input
+                    id="filter-big-adventures"
+                    type="checkbox"
+                  />
+                  <span>
+                    <span>Nur große Abenteuer</span>
+                    <span class="checkbox-subtle">
+                      Zoos, Wildparks, Freizeitparks &amp; große Anlagen
+                    </span>
+                  </span>
                 </label>
               </div>
 
               <!-- Nur verifizierte Spots -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label">
-                  <input id="filter-verified" type="checkbox" />
+                  <input
+                    id="filter-verified"
+                    type="checkbox"
+                  />
                   <span>Nur verifizierte Spots</span>
                 </label>
               </div>
@@ -232,7 +265,10 @@
               <!-- Nur Favoriten -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label">
-                  <input id="filter-favorites" type="checkbox" />
+                  <input
+                    id="filter-favorites"
+                    type="checkbox"
+                  />
                   <span>Nur Favoriten</span>
                 </label>
               </div>
@@ -321,8 +357,7 @@
               Label. Das bedeutet zum Beispiel:
             </p>
             <p>
-              – der Ort wurde persönlich besucht oder ausführlich
-              recherchiert,<br />
+              – der Ort wurde persönlich besucht oder ausführlich recherchiert,<br />
               – Lage, Kategorie und Eckdaten wurden geprüft,<br />
               – besondere Hinweise (z.&nbsp;B. Eintritt, Saison, Parken) sind
               soweit möglich ergänzt.
@@ -415,10 +450,7 @@
       <!-- BOTTOM NAV + TOAST      -->
       <!-- ======================= -->
       <nav class="bottom-nav" aria-label="Hauptnavigation">
-        <div
-          class="bottom-nav-background"
-          aria-hidden="true"
-        ></div>
+        <div class="bottom-nav-background" aria-hidden="true"></div>
         <div
           id="bottom-nav-indicator"
           class="bottom-nav-indicator"
