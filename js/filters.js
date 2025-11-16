@@ -58,80 +58,55 @@ const MOOD_KEYWORDS = {
   animals: ["zoo", "tierpark", "wildpark", "tiere", "safari", "giraffe", "bauernhof"],
 };
 
-// Reise-Modus: welche Kategorien passen typischerweise?
-const TRAVEL_CATEGORY_MAP = {
-  everyday: [
-    "spielplatz",
-    "abenteuerspielplatz",
-    "indoor-spielplatz",
-    "waldspielplatz",
-    "wasserspielplatz",
-    "park-garten",
-    "picknickwiese",
-    "toddler-barfuss-motorik",
-    "verkehrsgarten",
-    "schwimmbad",
-    "badesee",
-  ],
-  trip: [
-    "zoo",
-    "wildpark",
-    "tierpark",
-    "freizeitpark",
-    "campingplatz-familien",
-    "rastplatz-spielplatz-dusche",
-    "stellplatz-spielplatz-naehe-kostenlos",
-    "wohnmobil-service-station",
-    "bikepacking-spot",
-    "familien-restaurant",
-    "familiencafe",
-    "kinder-familiencafe",
-  ],
-};
+// Travel-Heuristiken: welche Kategorien sind eher „Alltag“, welche „Unterwegs“
+const TRAVEL_CATS_EVERYDAY = new Set([
+  "spielplatz",
+  "abenteuerspielplatz",
+  "waldspielplatz",
+  "indoor-spielplatz",
+  "wasserspielplatz",
+  "park-garten",
+  "picknickwiese",
+  "badesee",
+  "toddler-barfuss-motorik",
+  "bewegungspark",
+  "multifunktionsfeld",
+  "bolzplatz",
+  "verkehrsgarten",
+]);
 
-// Alters-„Profile“ über Kategorien
-const AGE_CATEGORY_MAP = {
-  "0-3": [
-    "spielplatz",
-    "waldspielplatz",
-    "indoor-spielplatz",
-    "toddler-barfuss-motorik",
-    "verkehrsgarten",
-    "picknickwiese",
-    "park-garten",
-    "badesee",
-    "schwimmbad",
-  ],
-  "4-9": [
-    "spielplatz",
-    "abenteuerspielplatz",
-    "waldspielplatz",
-    "wasserspielplatz",
-    "zoo",
-    "wildpark",
-    "tierpark",
-    "freizeitpark",
-    "verkehrsgarten",
-    "naturerlebnispfad",
-    "walderlebnisroute",
-    "minigolf",
-    "kletterhalle",
-    "kletteranlage-outdoor",
-    "boulderpark",
-    "trampolinpark",
-  ],
-  "10+": [
-    "freizeitpark",
-    "pumptrack",
-    "skatepark",
-    "multifunktionsfeld",
-    "bewegungspark",
-    "kletterhalle",
-    "kletteranlage-outdoor",
-    "boulderpark",
-    "radweg-family",
-  ],
-};
+const TRAVEL_CATS_TRIP = new Set([
+  "rastplatz-spielplatz-dusche",
+  "stellplatz-spielplatz-naehe-kostenlos",
+  "wohnmobil-service-station",
+  "campingplatz-familien",
+  "bikepacking-spot",
+  "freizeitpark",
+  "zoo",
+  "wildpark",
+  "tierpark",
+  "strand",
+  "badesee",
+]);
+
+// Alters-Heuristiken
+const AGE_CATS_TODDLER = new Set([
+  "toddler-barfuss-motorik",
+  "spielplatz",
+  "indoor-spielplatz",
+  "waldspielplatz",
+  "wasserspielplatz",
+  "verkehrsgarten",
+]);
+
+const AGE_CATS_ACTION = new Set([
+  "pumptrack",
+  "skatepark",
+  "boulderpark",
+  "kletteranlage-outdoor",
+  "kletterhalle",
+  "freizeitpark",
+]);
 
 function buildCategoryOptions(categorySelect, categories) {
   const lang = getLanguage();
@@ -149,8 +124,12 @@ function buildCategoryOptions(categorySelect, categories) {
 
   categories.forEach((c) => {
     const opt = document.createElement("option");
-    opt.value = c.slug;
-    opt.textContent = (c.label && c.label[lang]) || c.label?.de || c.slug;
+    const slug = typeof c === "string" ? c : c.slug;
+    const labelObj = typeof c === "string" ? null : c.label;
+
+    opt.value = slug;
+    opt.textContent =
+      (labelObj && (labelObj[lang] || labelObj.de)) || slug;
     categorySelect.appendChild(opt);
   });
 
@@ -214,77 +193,48 @@ function getMoodScore(spot, mood) {
   return score;
 }
 
+// Alters-Score (weich, nur fürs Ranking)
+function getAgeScore(spot, ageGroup) {
+  if (!ageGroup || ageGroup === "all") return 0;
+
+  const categories = Array.isArray(spot.categories) ? spot.categories : [];
+  let score = 0;
+
+  const hasToddler = categories.some((c) => AGE_CATS_TODDLER.has(c));
+  const hasAction = categories.some((c) => AGE_CATS_ACTION.has(c));
+
+  if (ageGroup === "0-3") {
+    if (hasToddler) score += 2;
+    if (hasAction) score -= 2;
+  } else if (ageGroup === "4-9") {
+    if (hasToddler) score += 1;
+    if (hasAction) score += 1;
+  } else if (ageGroup === "10+") {
+    if (hasAction) score += 2;
+    if (hasToddler) score -= 1;
+  }
+
+  return score;
+}
+
+// Travel-Score (Alltag vs. Unterwegs)
 function getTravelScore(spot, travelMode) {
   if (!travelMode) return 0;
 
   const categories = Array.isArray(spot.categories) ? spot.categories : [];
-  const travelCats = TRAVEL_CATEGORY_MAP[travelMode] || [];
-  if (travelCats.length === 0 || categories.length === 0) return 0;
-
-  let score = 0;
-  for (let i = 0; i < categories.length; i++) {
-    if (travelCats.indexOf(categories[i]) !== -1) {
-      score += 2;
-    }
-  }
-  return score;
-}
-
-function getAgeScore(spot, ageRange) {
-  if (!ageRange || ageRange === "all") return 0;
-
-  const categories = Array.isArray(spot.categories) ? spot.categories : [];
-  const tags = Array.isArray(spot.tags) ? spot.tags : [];
-  const ageCats = AGE_CATEGORY_MAP[ageRange] || [];
-
   let score = 0;
 
-  for (let i = 0; i < categories.length; i++) {
-    if (ageCats.indexOf(categories[i]) !== -1) {
-      score += 2;
-    }
-  }
+  const hasEveryday = categories.some((c) => TRAVEL_CATS_EVERYDAY.has(c));
+  const hasTrip = categories.some((c) => TRAVEL_CATS_TRIP.has(c));
 
-  // Grobe Stichwortsuche
-  const lowerText =
-    [
-      spot.summary_de,
-      spot.summary_en,
-      spot.visitLabel_de,
-      spot.visitLabel_en,
-      spot.poetry,
-    ]
-      .filter(Boolean)
-      .map((s) => String(s).toLowerCase())
-      .join(" ") +
-    " " +
-    tags.map((t) => String(t).toLowerCase()).join(" ");
-
-  if (ageRange === "0-3") {
-    if (
-      lowerText.includes("kleinkind") ||
-      lowerText.includes("toddler") ||
-      lowerText.includes("baby") ||
-      lowerText.includes("kinderwagen")
-    ) {
-      score += 1;
-    }
-  } else if (ageRange === "4-9") {
-    if (
-      lowerText.includes("grundschule") ||
-      lowerText.includes("4–9") ||
-      lowerText.includes("4-9")
-    ) {
-      score += 1;
-    }
-  } else if (ageRange === "10+") {
-    if (
-      lowerText.includes("jugendliche") ||
-      lowerText.includes("teen") ||
-      lowerText.includes("10+")
-    ) {
-      score += 1;
-    }
+  if (travelMode === "trip") {
+    if (spot.plus_only) score += 2;
+    if (hasTrip) score += 2;
+    if (hasEveryday) score += 0; // neutral
+  } else if (travelMode === "everyday") {
+    if (spot.plus_only) score -= 1;
+    if (hasEveryday) score += 1;
+    if (hasTrip) score += 0; // neutral
   }
 
   return score;
@@ -392,7 +342,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     mood: null,
     radiusIndex: 4, // 4 => Alle Spots
     travelMode: null, // "everyday" | "trip" | null
-    ageRange: "all", // "all" | "0-3" | "4-9" | "10+"
+    ageGroup: "all",  // "all" | "0-3" | "4-9" | "10+"
   };
 
   const searchInput = $("#filter-search");
@@ -484,6 +434,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     });
   }
 
+  // Travel-Mode (Alltag / Unterwegs)
   if (travelButtons.length > 0) {
     travelButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -505,11 +456,11 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     });
   }
 
+  // Alters-Select
   if (ageSelect) {
-    ageSelect.value = state.ageRange;
+    ageSelect.value = state.ageGroup;
     ageSelect.addEventListener("change", (e) => {
-      const val = e.target.value || "all";
-      state.ageRange = val;
+      state.ageGroup = e.target.value || "all";
       notify();
     });
   }
@@ -533,7 +484,7 @@ export function applyFilters(spots, state) {
   const bigOnly = !!state.bigOnly;
   const mood = state.mood || null;
   const travelMode = state.travelMode || null;
-  const ageRange = state.ageRange || "all";
+  const ageGroup = state.ageGroup || "all";
 
   let centerLat = null;
   let centerLng = null;
@@ -555,7 +506,7 @@ export function applyFilters(spots, state) {
       ? RADIUS_LEVELS_KM[radiusIndex]
       : null;
 
-  // Kreis auf der Karte aktualisieren (oder entfernen)
+  // Neu: Kreis auf der Karte aktualisieren (oder entfernen)
   if (radiusKm != null && centerLat != null && centerLng != null) {
     updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
   } else {
@@ -628,38 +579,40 @@ export function applyFilters(spots, state) {
     }
 
     const travelScore = getTravelScore(spot, travelMode);
-    const ageScore = getAgeScore(spot, ageRange);
+    const ageScore = getAgeScore(spot, ageGroup);
 
     results.push({
       spot,
       moodScore,
-      distanceKm,
       travelScore,
       ageScore,
+      distanceKm,
     });
   }
 
+  // NextGen-Ranking:
+  // 1. Mood (stark gewichtet)
+  // 2. Travel-Mode + Alters-Match
+  // 3. Distanz
+  // 4. Name
   results.sort((a, b) => {
-    const wA =
-      (a.moodScore || 0) * 2 + (a.travelScore || 0) + (a.ageScore || 0);
-    const wB =
-      (b.moodScore || 0) * 2 + (b.travelScore || 0) + (b.ageScore || 0);
+    const scoreA =
+      (a.moodScore || 0) * 10 +
+      (a.travelScore || 0) * 3 +
+      (a.ageScore || 0);
+    const scoreB =
+      (b.moodScore || 0) * 10 +
+      (b.travelScore || 0) * 3 +
+      (b.ageScore || 0);
 
-    if (wA !== wB) {
-      return wB - wA; // höhere Scores zuerst
+    if (scoreA !== scoreB) {
+      return scoreB - scoreA;
     }
 
     const dA = a.distanceKm != null ? a.distanceKm : Infinity;
     const dB = b.distanceKm != null ? b.distanceKm : Infinity;
     if (dA !== dB) {
       return dA - dB;
-    }
-
-    // Verifizierte Spots leicht bevorzugen
-    const vA = a.spot.verified ? 1 : 0;
-    const vB = b.spot.verified ? 1 : 0;
-    if (vA !== vB) {
-      return vB - vA;
     }
 
     const nameA = a.spot.name || "";
