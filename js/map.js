@@ -22,6 +22,21 @@ function escapeHtml(str) {
     .replace(/'/g, "&#39;");
 }
 
+function distanceInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // km
+  const toRad = (v) => (v * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 /**
  * Bestimmt den Text für das Popup.
  *
@@ -149,6 +164,8 @@ export function setSpotsOnMap(spots) {
   const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
   const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
 
+  const center = map.getCenter ? map.getCenter() : null;
+
   spots.forEach(function (spot) {
     if (!spot.location) return;
 
@@ -170,14 +187,38 @@ export function setSpotsOnMap(spots) {
     const appleMapsUrl =
       "https://maps.apple.com/?daddr=" + encodeURIComponent(lat + "," + lng);
 
-    // Popup-Inhalt: Name, Stadt, Info-Text + Routen-Links
+    let distanceKm = null;
+    if (typeof spot._distanceKm === "number") {
+      distanceKm = spot._distanceKm;
+    } else if (center) {
+      distanceKm = distanceInKm(center.lat, center.lng, lat, lng);
+    }
+
+    let distanceHtml = "";
+    if (distanceKm != null && !Number.isNaN(distanceKm)) {
+      const rounded = distanceKm < 1 ? "< 1" : Math.round(distanceKm);
+      const distText = isEn
+        ? "~" + rounded + " km from map centre"
+        : "~" + rounded + " km ab Kartenmitte";
+      distanceHtml =
+        '<br><small class="popup-distance">' +
+        escapeHtml(distText) +
+        "</small>";
+    }
+
+    const summaryHtml = summary
+      ? "<br><small>" + escapeHtml(summary) + "</small>"
+      : "";
+
+    // Popup-Inhalt: Name, Stadt, Info-Text + Distanz + Routen-Links
     const popupHtml =
       '<div class="popup">' +
       "<strong>" +
       escapeHtml(spot.name || "") +
       "</strong>" +
       (spot.city ? "<br>" + escapeHtml(spot.city) : "") +
-      (summary ? "<br><small>" + escapeHtml(summary) + "</small>" : "") +
+      summaryHtml +
+      distanceHtml +
       '<div class="popup-actions">' +
       '<a class="popup-link" href="' +
       googleMapsUrl +
