@@ -10,19 +10,19 @@ import {
   savePlusStatus,
 } from "./storage.js";
 import { initI18n, applyTranslations, getLanguage, t } from "./i18n.js";
-import { loadAppData, getSpots, getCategories, findSpotById } from "./data.js";
+import {
+  loadAppData,
+  getSpots,
+  getCategories,
+  findSpotById,
+} from "./data.js";
 import {
   initFilters,
   applyFilters,
   refreshCategorySelect,
 } from "./filters.js";
 import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
-import {
-  renderSpotList,
-  renderSpotDetails,
-  showToast,
-  hideSpotDetails,
-} from "./ui.js";
+import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 import "./sw-register.js";
 
 let currentFilterState = null;
@@ -98,9 +98,6 @@ async function bootstrapApp() {
     onSelect: handleSpotSelect,
   });
 
-  // Detailpanel initial verstecken
-  hideSpotDetails();
-
   initUIEvents();
   updateRoute("map");
 }
@@ -110,6 +107,15 @@ async function bootstrapApp() {
 // -----------------------------------------------------
 
 function initUIEvents() {
+  // Hilfe-Button (öffnet die Über-Ansicht)
+  const helpBtn = $("#btn-help");
+  if (helpBtn) {
+    helpBtn.addEventListener("click", () => {
+      // Index 1, weil in der Bottom-Navigation der zweite Button "Über" ist
+      updateRoute("about", 1);
+    });
+  }
+
   // Sprache
   const langSelect = $("#language-switcher");
   if (langSelect) {
@@ -232,7 +238,8 @@ function initUIEvents() {
 
       filterToggleBtn.addEventListener("click", () => {
         if (filterControls.length === 0) return;
-        const currentlyHidden = filterControls[0].classList.contains("hidden");
+        const currentlyHidden =
+          filterControls[0].classList.contains("hidden");
         const makeVisible = currentlyHidden;
 
         filterControls.forEach((el) => {
@@ -364,17 +371,6 @@ function updateRoute(route, indexFromClick) {
 }
 
 // -----------------------------------------------------
-// Hilfsfunktionen
-// -----------------------------------------------------
-
-function scrollMapIntoViewIfNeeded() {
-  if (window.innerWidth > 900) return;
-  const mapSection = document.querySelector(".map-section");
-  if (!mapSection) return;
-  mapSection.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-// -----------------------------------------------------
 // Filter-Logik
 // -----------------------------------------------------
 
@@ -434,9 +430,6 @@ function handleSpotSelect(id) {
       });
     },
   });
-
-  // Auf kleineren Screens automatisch zum Karten-/Detailbereich scrollen
-  scrollMapIntoViewIfNeeded();
 }
 
 function rerenderCurrentSpotDetails() {
@@ -492,7 +485,7 @@ function updatePlusStatusUI(status) {
   const lang = getLanguage() || "de";
   const isGerman = lang.startsWith("de");
 
-  if (!status) {
+  if (!status || !status.active) {
     el.textContent = isGerman
       ? "Family Spots Plus ist nicht aktiviert."
       : "Family Spots Plus is not activated.";
@@ -632,7 +625,7 @@ function updateStaticLanguageTexts(lang) {
       : "Only favourite spots";
   }
 
-  // Kompass
+  // Kompass (Titel/Helper – der eigentliche Inhalt ist im Kompass-Section)
   setElText("compass-label", "Familien-Kompass", "Family compass");
   setElText(
     "compass-helper",
