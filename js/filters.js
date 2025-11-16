@@ -2,6 +2,7 @@
 
 import { $, debounce } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
+import { updateRadiusCircle } from "./map.js";
 
 const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
@@ -26,12 +27,7 @@ const MOOD_CATEGORY_MAP = {
     "boulderpark",
     "trampolinpark",
   ],
-  water: [
-    "abenteuerspielplatz",
-    "wasserspielplatz",
-    "badesee",
-    "schwimmbad",
-  ],
+  water: ["abenteuerspielplatz", "wasserspielplatz", "badesee", "schwimmbad"],
   animals: ["zoo", "wildpark", "tierpark", "bauernhof"],
 };
 
@@ -59,15 +55,7 @@ const MOOD_KEYWORDS = {
     "planschen",
     "wasserspiel",
   ],
-  animals: [
-    "zoo",
-    "tierpark",
-    "wildpark",
-    "tiere",
-    "safari",
-    "giraffe",
-    "bauernhof",
-  ],
+  animals: ["zoo", "tierpark", "wildpark", "tiere", "safari", "giraffe", "bauernhof"],
 };
 
 function buildCategoryOptions(categorySelect, categories) {
@@ -260,9 +248,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const favsCheckbox = $("#filter-favorites");
   const bigCheckbox = $("#filter-big-adventures");
   const radiusSlider = $("#filter-radius");
-  const moodButtons = Array.from(
-    document.querySelectorAll(".mood-chip"),
-  );
+  const moodButtons = Array.from(document.querySelectorAll(".mood-chip"));
 
   if (categorySelect) {
     buildCategoryOptions(categorySelect, categories);
@@ -335,10 +321,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
 
         moodButtons.forEach((b) => {
           const m = b.dataset.mood || null;
-          b.classList.toggle(
-            "mood-chip--active",
-            state.mood === m,
-          );
+          b.classList.toggle("mood-chip--active", state.mood === m);
         });
 
         notify();
@@ -372,10 +355,7 @@ export function applyFilters(spots, state) {
     if (typeof c.lat === "number" && typeof c.lng === "number") {
       centerLat = c.lat;
       centerLng = c.lng;
-    } else if (
-      typeof c.lat === "function" &&
-      typeof c.lng === "function"
-    ) {
+    } else if (typeof c.lat === "function" && typeof c.lng === "function") {
       centerLat = c.lat();
       centerLng = c.lng();
     }
@@ -387,6 +367,13 @@ export function applyFilters(spots, state) {
     radiusIndex >= 0 && radiusIndex < RADIUS_LEVELS_KM.length
       ? RADIUS_LEVELS_KM[radiusIndex]
       : null;
+
+  // Neu: Kreis auf der Karte aktualisieren (oder entfernen)
+  if (radiusKm != null && centerLat != null && centerLng != null) {
+    updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
+  } else {
+    updateRadiusCircle(null, null);
+  }
 
   const results = [];
 
