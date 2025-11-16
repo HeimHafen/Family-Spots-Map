@@ -245,6 +245,36 @@ body {
   font-size: 0.85rem;
 }
 
+/* Familien-Kompass */
+
+.compass-card {
+  border: 1px dashed var(--color-accent);
+  background: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.06),
+    rgba(56, 189, 248, 0.02)
+  );
+  border-radius: 0.75rem;
+  padding: 0.55rem 0.6rem;
+}
+
+.compass-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.15rem;
+}
+
+.compass-row .input {
+  flex: 1;
+  min-width: 120px;
+}
+
+.compass-apply-btn {
+  margin-top: 0.35rem;
+  align-self: flex-start;
+}
+
 /* Stimmung – Chips */
 
 .mood-row {
