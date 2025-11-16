@@ -1,71 +1,24 @@
 {
-  "app_title": "Family Spots Map",
-  "app_tagline": "The most beautiful map for family adventures",
-
-  "header_actions_language": "Language",
-  "header_actions_add_spot": "Suggest a spot",
-
-  "filters_title": "Filters",
-  "filter_search_label": "Search",
-  "filter_search_placeholder": "City, spot, tags ...",
-  "filter_category_label": "Category",
-  "filter_category_all": "All categories",
-  "filter_verified_only": "Verified spots only",
-  "filter_favs_only": "Favorites only",
-  "filter_verified_only_label": "Verified spots only",
-  "filter_favorites_only_label": "Favorites only",
-  "filter_reset_button": "Reset filters",
-
-  "spots_title": "Spots",
-  "btn_only_map": "Map only",
+  "error_data_load": "Oops – we couldn’t load the data right now. Please try again in a moment.",
+  "toast_location_ok": "Your starting point is set – have fun on your next adventure!",
+  "toast_location_error": "We couldn’t access your location. Please check permissions or zoom into your region manually.",
   "btn_show_list": "Show list",
-  "btn_hide_filters": "Hide filters",
+  "btn_only_map": "Map only",
   "btn_show_filters": "Show filters",
+  "btn_hide_filters": "Hide filters",
+  "toast_fav_added": "Added to your favourite places.",
+  "toast_fav_removed": "Removed from your favourite places.",
+  "filter_category_all": "All categories",
 
-  "search_placeholder": "Search by place, city or keyword …",
+  "plus_code_empty": "Please enter an action code first.",
+  "plus_code_unknown": "This code is unknown or no longer valid.",
+  "plus_code_activated": "Family Spots Plus has been activated – enjoy your trips!",
+  "plus_code_failed": "The code could not be verified right now. Please try again later.",
 
-  "list_no_results_title": "No spots found",
-  "list_no_results_body": "Try adjusting filters or searching in another area.",
-  "list_results_count_single": "1 spot found",
-  "list_results_count_multi": "{count} spots found",
-
-  "badge_verified": "Verified",
-  "badge_favorite": "Favorite",
-
-  "favorites_title": "Favorites",
-  "favorites_export_button": "Export favorites",
-  "favorites_import_button": "Import favorites",
-  "favorites_import_placeholder": "Paste JSON code here …",
-  "favorites_import_help": "The code only contains spot IDs – no personal data.",
-  "favorites_import_success": "Favorites imported.",
-  "favorites_import_error": "Favorites could not be read. Please check the code.",
-
-  "label_duration": "Recommended time",
-  "fav_add": "Add to favorites",
-  "fav_remove": "Remove from favorites",
-  "btn_favorite": "Favorite",
-  "btn_close_details": "Close details",
-
-  "no_results": "No matching spots. Try adjusting your filters.",
-
-  "error_data_load": "Error loading data",
-
-  "toast_location_ok": "Location found",
-  "toast_location_error": "Could not get your location",
-  "toast_copy_success": "Copied to clipboard.",
-  "toast_copy_error": "Could not copy to clipboard.",
-  "toast_fav_added": "Added to favorites",
-  "toast_fav_removed": "Removed from favorites",
-
-  "map_cluster_spots": "Spots in this area",
-  "dialog_close": "Close",
-
-  "nav_map": "Map",
-  "nav_about": "About",
-
-  "about_title": "About Family Spots Map",
-  "about_intro": "Family Spots Map was created from real family needs – by parents for parents.",
-  "about_body_1": "The map highlights handpicked playgrounds, zoos, wildlife parks, pump tracks, child-friendly museums and more.",
-  "about_body_2": "The focus is on quality, safety and real experiences. Save your favorites and plan your next adventures – even offline.",
-  "about_body_3": "The app grows with the community. Every new spot is an invitation: go out, explore, and build memories."
+  "filter_radius_max_label": "All spots",
+  "filter_radius_description_step0": "Tiny micro adventures within walking distance – perfect for a quick break.",
+  "filter_radius_description_step1": "Short trips for spontaneous outings – hop in the car or on the bike and you’re there.",
+  "filter_radius_description_step2": "A small family tour – just right for a half day full of experiences.",
+  "filter_radius_description_step3": "Big adventure radius – destinations for full-day trips are waiting here.",
+  "filter_radius_description_all": "All spots – no radius limit. The map is all yours."
 }
