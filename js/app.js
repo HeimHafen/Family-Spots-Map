@@ -30,6 +30,7 @@ let allSpots = [];
 let filteredSpots = [];
 let plusStatus = null;
 let partnerCodesCache = null;
+let currentSelectedSpotId = null;
 
 // -----------------------------------------------------
 // Bootstrap
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast(
       t(
         "error_data_load",
-        "Ups – die Daten konnten gerade nicht geladen werden. Bitte versuch es gleich noch einmal.",
+        "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
       ),
     );
   });
@@ -49,11 +50,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function bootstrapApp() {
   const settings = getSettings();
+
+  // HTML lang + Theme setzen
+  const initialLang = settings.language || "de";
+  document.documentElement.lang = initialLang;
   applyTheme(settings.theme);
 
-  await initI18n(settings.language);
+  await initI18n(initialLang);
   applyTranslations();
-  updateStaticLanguageTexts(getLanguage());
+  updateStaticLanguageTexts(initialLang);
 
   const { index } = await loadAppData();
   allSpots = getSpots();
@@ -105,10 +110,12 @@ function initUIEvents() {
   // Sprache
   const langSelect = $("#language-switcher");
   if (langSelect) {
-    langSelect.value = getLanguage();
+    langSelect.value = getLanguage() || "de";
     langSelect.addEventListener("change", async () => {
       const settings = getSettings();
       const nextLang = langSelect.value || "de";
+
+      document.documentElement.lang = nextLang;
 
       await initI18n(nextLang);
       saveSettings({ ...settings, language: nextLang });
@@ -119,10 +126,17 @@ function initUIEvents() {
       const categories = getCategories();
       refreshCategorySelect(categories);
 
+      // Filter neu anwenden (Liste + Marker)
       handleFilterChange({
         ...currentFilterState,
         favorites: getFavorites(),
       });
+
+      // Plus-Status in neuer Sprache
+      updatePlusStatusUI(plusStatus);
+
+      // Offene Spot-Details in neuer Sprache neu rendern
+      rerenderCurrentSpotDetails();
     });
   }
 
@@ -150,7 +164,7 @@ function initUIEvents() {
         showToast(
           t(
             "toast_location_ok",
-            "Dein Startpunkt ist gesetzt – viel Spaß beim nächsten Abenteuer!",
+            "Euer Standort ist gesetzt – viel Spaß beim nächsten Abenteuer! 🌍",
           ),
         );
       } catch (err) {
@@ -158,7 +172,7 @@ function initUIEvents() {
         showToast(
           t(
             "toast_location_error",
-            "Standort konnte nicht ermittelt werden. Bitte prüfe die Freigabe oder zoom manuell in deine Region.",
+            "Euer Standort lässt sich gerade nicht bestimmen. Vielleicht ist die Freigabe gesperrt oder ihr seid offline.",
           ),
         );
       }
@@ -186,7 +200,6 @@ function initUIEvents() {
       labelSpan.textContent = nowHidden
         ? t("btn_show_list", "Liste zeigen")
         : t("btn_only_map", "Nur Karte");
-
       const map = getMap();
       if (map) {
         setTimeout(() => map.invalidateSize(), 0);
@@ -207,7 +220,11 @@ function initUIEvents() {
       // auf kleinen Screens: Filter anfangs einklappen
       if (window.innerWidth <= 900 && filterControls.length > 0) {
         filterControls.forEach((el) => el.classList.add("hidden"));
-        labelSpan.textContent = t("btn_show_filters", "Show filters");
+        labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
+        const map = getMap();
+        if (map) {
+          setTimeout(() => map.invalidateSize(), 0);
+        }
       }
 
       filterToggleBtn.addEventListener("click", () => {
@@ -223,7 +240,7 @@ function initUIEvents() {
 
         labelSpan.textContent = makeVisible
           ? t("btn_hide_filters", "Filter ausblenden")
-          : t("btn_show_filters", "Show filters");
+          : t("btn_show_filters", "Filter anzeigen");
 
         const map = getMap();
         if (map) {
@@ -241,7 +258,7 @@ function initUIEvents() {
     }
   });
 
-  // Plus-Code-Formular
+  // Plus-Code-Formular (UI-Elemente optional, brechen nichts wenn nicht vorhanden)
   const plusInput = $("#plus-code-input");
   const plusButton = $("#plus-code-submit");
   if (plusInput && plusButton) {
@@ -292,7 +309,7 @@ function initUIEvents() {
         showToast(
           t(
             "plus_code_activated",
-            "Family Spots Plus ist jetzt aktiv – viel Freude auf euren Touren!",
+            "Family Spots Plus ist jetzt aktiv – gute Fahrt & viel Freude auf euren Touren!",
           ),
         );
       } catch (err) {
@@ -374,7 +391,42 @@ function handleSpotSelect(id) {
   const spot = findSpotById(id);
   if (!spot) return;
 
+  currentSelectedSpotId = spot.id;
+
   focusOnSpot(spot);
+
+  const favorites = getFavorites();
+  const isFav = favorites.includes(spot.id);
+
+  renderSpotDetails(spot, {
+    isFavorite: isFav,
+    onToggleFavorite: (spotId) => {
+      const updatedFavorites = toggleFavorite(spotId);
+
+      showToast(
+        updatedFavorites.includes(spotId)
+          ? t("toast_fav_added", "Zu euren Lieblingsspots gelegt 💛")
+          : t("toast_fav_removed", "Aus den Lieblingsspots entfernt."),
+      );
+
+      handleFilterChange({
+        ...currentFilterState,
+        favorites: updatedFavorites,
+      });
+
+      const freshSpot = findSpotById(spotId);
+      renderSpotDetails(freshSpot, {
+        isFavorite: updatedFavorites.includes(spotId),
+        onToggleFavorite: () => handleSpotSelect(spotId),
+      });
+    },
+  });
+}
+
+function rerenderCurrentSpotDetails() {
+  if (!currentSelectedSpotId) return;
+  const spot = findSpotById(currentSelectedSpotId);
+  if (!spot) return;
 
   const favorites = getFavorites();
   const isFav = favorites.includes(spot.id);
@@ -414,276 +466,182 @@ function applyTheme(theme) {
 }
 
 // -----------------------------------------------------
-// Texte / Sprache
+// Plus-Helfer
+// -----------------------------------------------------
+
+function updatePlusStatusUI(status) {
+  const el = document.getElementById("plus-status-text");
+  if (!el) return;
+
+  const lang = getLanguage() || "de";
+  const isGerman = lang.startsWith("de");
+
+  if (!status) {
+    el.textContent = isGerman
+      ? "Family Spots Plus ist nicht aktiviert."
+      : "Family Spots Plus is not activated.";
+    return;
+  }
+
+  let baseText = isGerman
+    ? "Family Spots Plus ist aktiv"
+    : "Family Spots Plus is active";
+
+  if (status.expiresAt) {
+    const d = new Date(status.expiresAt);
+    const dateStr = d.toLocaleDateString(isGerman ? "de-DE" : "en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
+  }
+
+  if (status.partner) {
+    baseText += isGerman
+      ? ` – Partner: ${status.partner}`
+      : ` – partner: ${status.partner}`;
+  }
+
+  el.textContent = baseText;
+}
+
+async function loadPartnerCodes() {
+  if (partnerCodesCache) return partnerCodesCache;
+
+  try {
+    const res = await fetch("data/partners.json");
+    if (!res.ok) throw new Error("Cannot load partners.json");
+
+    const data = await res.json();
+    partnerCodesCache = Array.isArray(data.codes) ? data.codes : [];
+  } catch (err) {
+    console.error("Partnercodes konnten nicht geladen werden:", err);
+    partnerCodesCache = [];
+  }
+
+  return partnerCodesCache;
+}
+
+// -----------------------------------------------------
+// Sprache für statische Texte (DE / EN)
 // -----------------------------------------------------
 
 function updateStaticLanguageTexts(lang) {
-  const isGerman = !lang || lang.toLowerCase().startsWith("de");
-
-  const txt = (de, en) => (isGerman ? de : en);
-
-  const setText = (id, de, en) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = txt(de, en);
+  const isDe = !lang || lang.startsWith("de");
+  const setElText = (id, de, en) => {
+    const el = $("#" + id);
+    if (el) el.textContent = isDe ? de : en;
   };
 
-  // Filterüberschrift
-  setText("filter-title", "Filter", "Filters");
-
-  // Kompass
-  setText("compass-title", "Familien-Kompass", "Family compass");
-  setText(
-    "compass-helper",
-    "Mit einem Klick passende Spots nach Zeit, Alter und Energie finden.",
-    "With one tap, find spots that match your time, kids’ age and everyone’s energy.",
+  // Header-Tagline
+  setElText(
+    "header-tagline",
+    "Die schönste Karte für Familien-Abenteuer. Finde geprüfte Ausflugsziele in deiner Nähe – von Eltern für Eltern.",
+    "The most beautiful map for family adventures. Find curated spots near you – by parents for parents.",
   );
-  setText("btn-compass-label", "Kompass anwenden", "Apply compass");
 
-  // Suche, Kategorie
-  setText("label-search", "Suche", "Search");
+  // Filter + Labels
+  setElText("filter-title", "Filter", "Filters");
+  setElText("filter-search-label", "Suche", "Search");
+
   const searchInput = $("#filter-search");
   if (searchInput) {
-    searchInput.placeholder = txt(
-      "Ort, Spot, Stichwörter …",
-      "Place, spot, keywords …",
-    );
+    searchInput.placeholder = isDe
+      ? "Ort, Spot, Stichwörter …"
+      : "Place, spot, keywords …";
   }
-  setText("label-category", "Kategorie", "Category");
 
-  // Stimmung
-  setText("label-mood", "Stimmung", "Mood");
-  setText(
-    "helper-mood",
+  setElText("filter-category-label", "Kategorie", "Category");
+  setElText("filter-mood-label", "Stimmung", "Mood");
+  setElText(
+    "filter-mood-helper",
     "Wonach fühlt es sich heute an?",
     "What does today feel like?",
   );
-  setText("mood-label-relaxed", "Entspannt", "Relaxed");
-  setText("mood-label-action", "Bewegung", "Action & movement");
-  setText("mood-label-water", "Wasser & Sand", "Water & sand");
-  setText("mood-label-animals", "Tier-Tag", "Animal day");
+  setElText("mood-relaxed-label", "Entspannt", "Relaxed");
+  setElText("mood-action-label", "Bewegung", "Action & movement");
+  setElText("mood-water-label", "Wasser & Sand", "Water & sand");
+  setElText("mood-animals-label", "Tier-Tag", "Animal day");
 
   // Reise-Modus
-  setText("label-travel-mode", "Reise-Modus", "Travel mode");
-  setText(
-    "helper-travel-mode",
+  setElText("filter-travel-label", "Reise-Modus", "Travel mode");
+  setElText(
+    "filter-travel-helper",
     "Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo, Auto oder Bahn?",
     "Are you out and about at home today or travelling with RV, car or train?",
   );
-  setText("travel-label-everyday", "Alltag", "Everyday");
-  setText("travel-label-trip", "Unterwegs", "On the road");
+  setElText("travel-everyday-label", "Alltag", "Everyday");
+  setElText("travel-trip-label", "Unterwegs", "On the road");
 
   // Alter
-  setText("label-age", "Alter der Kinder", "Kids’ age");
-  const ageSelect = document.getElementById("filter-age");
-  if (ageSelect && ageSelect.options.length >= 4) {
-    ageSelect.options[0].textContent = txt(
-      "Alle Altersstufen",
-      "All age groups",
-    );
-    ageSelect.options[1].textContent = txt("0–3 Jahre", "0–3 years");
-    ageSelect.options[2].textContent = txt("4–9 Jahre", "4–9 years");
-    ageSelect.options[3].textContent = txt("10+ Jahre", "10+ years");
-  }
+  setElText("filter-age-label", "Alter der Kinder", "Kids’ age");
+  setElText("filter-age-all", "Alle Altersstufen", "All age groups");
+  setElText("filter-age-0-3", "0–3 Jahre", "0–3 years");
+  setElText("filter-age-4-9", "4–9 Jahre", "4–9 years");
+  setElText("filter-age-10-plus", "10+ Jahre", "10+ years");
 
-  // Radius
-  setText(
-    "label-radius",
+  // Micro-Abenteuer-Radius
+  setElText(
+    "filter-radius-label",
     "Micro-Abenteuer-Radius",
     "Micro-adventure radius",
   );
-  setText(
-    "helper-radius",
+  setElText(
+    "filter-radius-helper",
     "Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).",
-    "How far may your adventure go today? The radius is measured from the map centre (home, holiday flat, hotel …).",
+    "How far may today’s adventure go? The radius is measured from the map centre (home, holiday flat, hotel …).",
   );
-
-  const radiusDesc = document.getElementById("filter-radius-description");
-  const radiusMax = document.getElementById("filter-radius-max-label");
-  if (radiusMax) {
-    radiusMax.textContent = txt("Alle Spots", "All spots");
-  }
-  if (radiusDesc) {
-    radiusDesc.textContent = txt(
-      "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
-      "All spots – no radius limit. The map is yours.",
-    );
-  }
+  setElText("filter-radius-max-label", "Alle Spots", "All spots");
 
   // Checkboxen
-  setText(
-    "label-big-only",
-    "Nur große Abenteuer",
-    "Only big adventures",
+  const bigLabelSpan = $("#filter-big-label span:last-child");
+  if (bigLabelSpan) {
+    bigLabelSpan.textContent = isDe
+      ? "Nur große Abenteuer (z. B. Zoos, Wildparks, Freizeitparks)"
+      : "Only big adventures (e.g. zoos, wildlife parks, theme parks)";
+  }
+
+  const verifiedLabelSpan = $("#filter-verified-label span:last-child");
+  if (verifiedLabelSpan) {
+    verifiedLabelSpan.textContent = isDe
+      ? "Nur verifizierte Spots (von uns geprüft)"
+      : "Only verified spots (checked by us)";
+  }
+
+  const favsLabelSpan = $("#filter-favs-label span:last-child");
+  if (favsLabelSpan) {
+    favsLabelSpan.textContent = isDe
+      ? "Nur Favoriten"
+      : "Only favourite spots";
+  }
+
+  // Kompass
+  setElText("compass-label", "Familien-Kompass", "Family compass");
+  setElText(
+    "compass-helper",
+    "Der Familien-Kompass hilft euch mit einem Klick Spots zu finden, die zu eurer Zeit, eurem Alter und eurer Energie passen.",
+    "The family compass helps you find spots that match your time, your kids’ age and everyone’s energy today.",
   );
-  setText(
-    "label-verified-only",
-    "Nur verifizierte Spots",
-    "Only verified spots",
-  );
-  setText(
-    "label-favorites-only",
-    "Nur Favoriten",
-    "Only favourites",
-  );
+  setElText("compass-apply-label", "Kompass anwenden", "Start compass");
+
+  // Spot-Liste Titel
+  setElText("spots-title", "Spots", "Spots");
 
   // Bottom-Navigation
-  setText("bottom-label-map", "Karte", "Map");
-  setText("bottom-label-about", "Über", "About");
+  setElText("bottom-nav-map-label", "Karte", "Map");
+  setElText("bottom-nav-about-label", "Über", "About");
 
-  // About-Content
-  updateAboutContent(isGerman);
+  // About DE/EN sichtbar schalten
+  const aboutDe = $("#page-about-de");
+  const aboutEn = $("#page-about-en");
+  if (aboutDe && aboutEn) {
+    if (isDe) {
+      aboutDe.classList.remove("hidden");
+      aboutEn.classList.add("hidden");
+    } else {
+      aboutEn.classList.remove("hidden");
+      aboutDe.classList.add("hidden");
+    }
+  }
 }
-
-function updateAboutContent(isGerman) {
-  const article = document.getElementById("about-article");
-  if (!article) return;
-
-  if (isGerman) {
-    article.innerHTML = `
-      <h2>Über Family Spots Map</h2>
-
-      <p>
-        Family Spots Map ist eine kuratierte Karte für Familien-Abenteuer –
-        von Eltern für Eltern. Statt unübersichtlicher Listen oder anonymer
-        Bewertungen findest du hier ausgewählte Spielplätze, Zoos, Wildparks,
-        Wasser-Spots, Museen, Bewegungsparks und viele weitere Orte, die sich
-        in der Praxis bewährt haben.
-      </p>
-      <p>
-        Der Fokus: Qualität, Sicherheit und echte Erlebnisse mit Kindern –
-        nicht die größte, sondern die verlässlichste Karte.
-      </p>
-
-      <hr />
-
-      <h3>So funktioniert Family Spots Map</h3>
-      <p>
-        • <strong>Karte &amp; Filter:</strong> Zoome in deine Region und
-        filtere nach Kategorien (z.&nbsp;B. Spielplatz, Wildpark, Pumptrack) oder Stichworten.<br />
-        • <strong>Spot-Karten:</strong> Jeder Spot zeigt dir eine Kurzbeschreibung,
-        Besonderheiten (z.&nbsp;B. „Autosafari“, „barrierefrei“) und ob er von uns
-        verifiziert wurde.<br />
-        • <strong>Favoriten:</strong> Markiere eure Lieblingsorte mit dem Stern
-        und habt sie unterwegs schnell parat – auch offline.<br />
-        • <strong>Offline-Grundfunktion:</strong> Wichtige Daten werden lokal
-        gespeichert, damit ihr eure Spots auch mit schwachem Empfang wiederfindet.
-      </p>
-
-      <hr />
-
-      <h3>Kuratiert &amp; verifiziert – unser Qualitätsversprechen</h3>
-      <p>
-        Family Spots Map ist keine anonyme Sammelplattform. Jeder Spot wird
-        bewusst ausgewählt und laufend gepflegt.
-      </p>
-      <p>
-        <strong>Verifizierte Spots</strong> tragen ein entsprechendes Label.
-        Das bedeutet zum Beispiel:
-      </p>
-      <p>
-        – der Ort wurde persönlich besucht oder ausführlich recherchiert,<br />
-        – Lage, Kategorie und Eckdaten wurden geprüft,<br />
-        – besondere Hinweise (z.&nbsp;B. Eintritt, Saison, Parken) sind
-        soweit möglich ergänzt.
-      </p>
-      <p>
-        Trotzdem können sich Bedingungen vor Ort ändern – prüft deshalb immer
-        die Hinweise vor Ort und aktuelle Informationen der Betreiber.
-      </p>
-
-      <hr />
-
-      <h3>Family Spots Plus – mehr für Camping, WoMo &amp; Abenteuer</h3>
-      <p>
-        Neben den Basis-Kategorien gibt es mit <strong>Family Spots Plus</strong>
-        zusätzliche Spezial-Kategorien, zum Beispiel:
-      </p>
-      <p>
-        – Rastplätze mit Spielplatz &amp; Dusche<br />
-        – kostenlose Stellplätze in Spielplatznähe<br />
-        – Wohnmobil-Service-Stationen<br />
-        – familienfreundliche Campingplätze<br />
-        – Bikepacking-Spots und besondere Abenteuer-Routen
-      </p>
-      <p>
-        Plus wird über zeitlich begrenzte <strong>Aktions-Codes</strong> aktiviert –
-        zum Beispiel auf Messen wie der ABF, bei Partnern oder in speziellen Aktionen.
-      </p>
-      <p>
-        Dein aktueller Status wird in der App angezeigt, zum Beispiel:
-        „Family Spots Plus ist nicht aktiviert“ oder „Family Spots Plus ist aktiv bis …“.
-      </p>
-
-      <hr />
-
-      <h3>Mitmachen – hilf, die Karte besser zu machen</h3>
-      <p>
-        Du kennst einen Spot, der hier unbedingt auftauchen sollte – einen besonderen
-        Spielplatz, ein verstecktes Natur-Highlight oder einen perfekten
-        Familien-Campingplatz?
-      </p>
-      <p>
-        Dann melde dich gern mit den wichtigsten Infos (Ort, Kategorie, kurzer Grund,
-        warum er besonders familiengeeignet ist). Gemeinsam machen wir die Karte
-        Schritt für Schritt besser.
-      </p>
-
-      <hr />
-
-      <h3>Nutzung, Verantwortung &amp; Sicherheit</h3>
-      <p>
-        Family Spots Map stellt Informationen nach bestem Wissen zur Verfügung,
-        übernimmt aber keine Haftung für Vollständigkeit, Sicherheit oder die
-        Einhaltung lokaler Regeln.
-      </p>
-      <p>
-        Bitte achtet vor Ort immer auf:
-      </p>
-      <p>
-        – Beschilderung und lokale Hinweise,<br />
-        – Naturschutz-Bestimmungen, Badeaufsicht und Wetter,<br />
-        – Alter und Fähigkeiten eurer Kinder.
-      </p>
-      <p>
-        Die Nutzung der App erfolgt auf eigene Verantwortung – ihr kennt eure Kinder
-        und eure Situation am besten.
-      </p>
-
-      <hr />
-
-      <h3>Projektstatus &amp; Version</h3>
-      <p>
-        Family Spots Map ist ein wachsendes Herzensprojekt. Neue Spots, Regionen und
-        Kategorien kommen Schritt für Schritt dazu – zuerst dort, wo wir selbst mit
-        unseren Kindern unterwegs sind, dann gemeinsam mit Partnern und der Community.
-      </p>
-      <p>
-        Aktuelle Karten-Version:
-        <strong>2025-11-08</strong> (siehe Datenstand in der App).
-      </p>
-    `;
-  } else {
-    article.innerHTML = `
-      <h2>About Family Spots Map</h2>
-
-      <p>
-        Family Spots Map is a curated map for family adventures – by parents for parents.
-        Instead of endless lists and anonymous ratings, you’ll find selected playgrounds,
-        zoos, wildlife parks, water spots, museums, movement parks and many other places
-        that have proven themselves in real family life.
-      </p>
-      <p>
-        The focus: quality, safety and real experiences with children – not the biggest,
-        but the most trustworthy map.
-      </p>
-
-      <hr />
-
-      <h3>How Family Spots Map works</h3>
-      <p>
-        • <strong>Map &amp; filters:</strong> Zoom into your region and filter by category
-        (e.g. playground, wildlife park, pumptrack) or keywords.<br />
-        • <strong>Spot cards:</strong> Each spot shows a short description, special
-        features (e.g. “car safari”, “accessible”) and whether it has been verified by us.<br />
-        • <strong>Favourites:</strong> Mark your favourite places with the star so you can
-        find them quickly on the go – even offline.<br />
