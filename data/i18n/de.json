@@ -1,72 +1,24 @@
 {
-  "app_title": "Family Spots Map",
-  "app_subtitle": "Die schönste Karte für Familien-Abenteuer",
-  "app_tagline": "Die schönste Karte für Familien-Abenteuer",
-
-  "header_actions_language": "Sprache",
-  "header_actions_add_spot": "Spot vorschlagen",
-
-  "filters_title": "Filter",
-  "filter_search_label": "Suche",
-  "filter_search_placeholder": "Ort, Spot, Stichwörter …",
-  "filter_category_label": "Kategorie",
-  "filter_category_all": "Alle Kategorien",
-  "filter_verified_only": "Nur verifizierte Spots",
-  "filter_favs_only": "Nur Favoriten",
-  "filter_verified_only_label": "Nur verifizierte Spots",
-  "filter_favorites_only_label": "Nur Favoriten",
-  "filter_reset_button": "Filter zurücksetzen",
-
-  "spots_title": "Spots",
-  "btn_only_map": "Nur Karte",
-  "btn_show_list": "Liste anzeigen",
-  "btn_hide_filters": "Filter ausblenden",
+  "error_data_load": "Ups – die Daten konnten gerade nicht geladen werden. Bitte versuch es gleich noch einmal.",
+  "toast_location_ok": "Dein Startpunkt ist gesetzt – viel Spaß beim nächsten Abenteuer!",
+  "toast_location_error": "Standort konnte nicht ermittelt werden. Bitte prüfe die Freigabe oder zoom manuell in deine Region.",
+  "btn_show_list": "Liste einblenden",
+  "btn_only_map": "Nur Karte anzeigen",
   "btn_show_filters": "Filter anzeigen",
+  "btn_hide_filters": "Filter ausblenden",
+  "toast_fav_added": "Zu euren Lieblingsorten hinzugefügt.",
+  "toast_fav_removed": "Aus den Lieblingsorten entfernt.",
+  "filter_category_all": "Alle Kategorien",
 
-  "search_placeholder": "Suche nach Ort, Stadt oder Stichwort …",
+  "plus_code_empty": "Bitte gib zuerst einen Aktions-Code ein.",
+  "plus_code_unknown": "Dieser Code ist nicht bekannt oder nicht mehr gültig.",
+  "plus_code_activated": "Family Spots Plus wurde aktiviert – viel Freude auf euren Touren!",
+  "plus_code_failed": "Der Code konnte gerade nicht geprüft werden. Bitte versuch es später noch einmal.",
 
-  "list_no_results_title": "Keine Spots gefunden",
-  "list_no_results_body": "Passe die Filter an oder suche in einer anderen Gegend.",
-  "list_results_count_single": "1 Spot gefunden",
-  "list_results_count_multi": "{count} Spots gefunden",
-
-  "badge_verified": "Verifiziert",
-  "badge_favorite": "Favorit",
-
-  "favorites_title": "Favoriten",
-  "favorites_export_button": "Favoriten exportieren",
-  "favorites_import_button": "Favoriten importieren",
-  "favorites_import_placeholder": "JSON-Code hier einfügen …",
-  "favorites_import_help": "Der Code enthält nur Spot-IDs – keine persönlichen Daten.",
-  "favorites_import_success": "Favoriten wurden übernommen.",
-  "favorites_import_error": "Favoriten konnten nicht gelesen werden. Bitte Code prüfen.",
-
-  "label_duration": "Empfohlene Zeit",
-  "fav_add": "Zu Favoriten hinzufügen",
-  "fav_remove": "Aus Favoriten entfernen",
-  "btn_favorite": "Favorit",
-  "btn_close_details": "Details schließen",
-
-  "no_results": "Keine passenden Spots gefunden. Bitte Filter anpassen oder einen anderen Bereich wählen.",
-
-  "error_data_load": "Fehler beim Laden der Daten",
-
-  "toast_location_ok": "Standort gefunden – Karte zentriert.",
-  "toast_location_error": "Standort konnte nicht ermittelt werden. Bitte Standortfreigabe und Empfang prüfen.",
-  "toast_copy_success": "In die Zwischenablage kopiert.",
-  "toast_copy_error": "Konnte nicht in die Zwischenablage kopieren.",
-  "toast_fav_added": "Zu Favoriten hinzugefügt",
-  "toast_fav_removed": "Aus Favoriten entfernt",
-
-  "map_cluster_spots": "Spots in diesem Bereich",
-  "dialog_close": "Schließen",
-
-  "nav_map": "Karte",
-  "nav_about": "Über",
-
-  "about_title": "Über Family Spots Map",
-  "about_intro": "Family Spots Map ist aus echten Familienbedürfnissen entstanden – von Eltern für Eltern.",
-  "about_body_1": "Die Karte bündelt ausgewählte Spielplätze, Zoos, Wildparks, Pumptracks, kinderfreundliche Museen und vieles mehr.",
-  "about_body_2": "Im Fokus stehen Qualität, Sicherheit und reale Erfahrungen. Speichere eure Favoriten und plane eure nächsten Abenteuer – auch offline.",
-  "about_body_3": "Die App wächst mit der Community. Jeder neue Spot ist eine Einladung: Rausgehen, entdecken, Erinnerungen bauen."
+  "filter_radius_max_label": "Alle Spots",
+  "filter_radius_description_step0": "Fußläufige Mikro-Abenteuer – perfekt für eine kleine Runde zwischendurch.",
+  "filter_radius_description_step1": "Kurzstrecke für spontane Ausflüge – einmal losfahren und ihr seid mittendrin.",
+  "filter_radius_description_step2": "Eine kleine Familien-Tour – ideal für einen halben Tag voller Erlebnisse.",
+  "filter_radius_description_step3": "Großer Abenteuerradius – hier warten Ziele für ganze Ausflugstage.",
+  "filter_radius_description_all": "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
 }
