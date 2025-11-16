@@ -120,7 +120,12 @@
             <!-- Filter-Section -->
             <section class="sidebar-section">
               <header class="sidebar-section-header">
-                <h2 class="sidebar-section-title">Filter</h2>
+                <h2
+                  class="sidebar-section-title"
+                  id="filter-title"
+                >
+                  Filter
+                </h2>
                 <button
                   id="btn-toggle-filters"
                   class="btn-ghost btn-small"
@@ -131,36 +136,38 @@
               </header>
 
               <!-- Familien-Kompass -->
-              <div class="filter-group compass-card">
-                <label class="filter-group-label">Familien-Kompass</label>
-                <p class="filter-group-helper">
-                  Lass dir passende Abenteuer für heute vorschlagen.
-                </p>
-                <div class="compass-row">
-                  <select id="compass-time" class="input">
-                    <option value="short">1–2 Stunden</option>
-                    <option value="half">Halber Tag</option>
-                    <option value="full">Ganzer Tag</option>
-                  </select>
-                  <select id="compass-age" class="input">
-                    <option value="all">Alle Altersstufen</option>
-                    <option value="0-3">0–3 Jahre</option>
-                    <option value="4-9">4–9 Jahre</option>
-                    <option value="10-17">10+ Jahre</option>
-                  </select>
+              <div class="filter-group compass-group">
+                <div class="compass-text">
+                  <span
+                    id="compass-title"
+                    class="filter-group-label"
+                  >
+                    Familien-Kompass
+                  </span>
+                  <p
+                    id="compass-helper"
+                    class="filter-group-helper"
+                  >
+                    Mit einem Klick passende Spots nach Zeit, Alter und
+                    Energie finden.
+                  </p>
                 </div>
                 <button
+                  id="btn-compass"
+                  class="btn btn-small compass-button"
                   type="button"
-                  id="compass-apply"
-                  class="btn btn-small compass-apply-btn"
                 >
-                  Kompass anwenden
+                  <span id="btn-compass-label">Kompass anwenden</span>
                 </button>
               </div>
 
               <!-- Suche -->
               <div class="filter-group">
-                <label class="filter-group-label" for="filter-search">
+                <label
+                  class="filter-group-label"
+                  for="filter-search"
+                  id="label-search"
+                >
                   Suche
                 </label>
                 <input
@@ -174,7 +181,11 @@
 
               <!-- Kategorie -->
               <div class="filter-group">
-                <label class="filter-group-label" for="filter-category">
+                <label
+                  class="filter-group-label"
+                  for="filter-category"
+                  id="label-category"
+                >
                   Kategorie
                 </label>
                 <select id="filter-category" class="input">
@@ -184,8 +195,16 @@
 
               <!-- Stimmung -->
               <div class="filter-group">
-                <label class="filter-group-label">Stimmung</label>
-                <p class="filter-group-helper">
+                <label
+                  class="filter-group-label"
+                  id="label-mood"
+                >
+                  Stimmung
+                </label>
+                <p
+                  class="filter-group-helper"
+                  id="helper-mood"
+                >
                   Wonach fühlt es sich heute an?
                 </p>
                 <div class="mood-row" aria-label="Stimmung wählen">
@@ -195,7 +214,12 @@
                     data-mood="relaxed"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
-                    <span class="mood-chip-label">Entspannt</span>
+                    <span
+                      class="mood-chip-label"
+                      id="mood-label-relaxed"
+                    >
+                      Entspannt
+                    </span>
                   </button>
                   <button
                     type="button"
@@ -203,7 +227,12 @@
                     data-mood="action"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
-                    <span class="mood-chip-label">Bewegung</span>
+                    <span
+                      class="mood-chip-label"
+                      id="mood-label-action"
+                    >
+                      Bewegung
+                    </span>
                   </button>
                   <button
                     type="button"
@@ -211,7 +240,12 @@
                     data-mood="water"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">💧</span>
-                    <span class="mood-chip-label">Wasser &amp; Sand</span>
+                    <span
+                      class="mood-chip-label"
+                      id="mood-label-water"
+                    >
+                      Wasser &amp; Sand
+                    </span>
                   </button>
                   <button
                     type="button"
@@ -219,55 +253,94 @@
                     data-mood="animals"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
-                    <span class="mood-chip-label">Tier-Tag</span>
+                    <span
+                      class="mood-chip-label"
+                      id="mood-label-animals"
+                    >
+                      Tier-Tag
+                    </span>
                   </button>
                 </div>
               </div>
 
               <!-- Reise-Modus -->
               <div class="filter-group">
-                <label class="filter-group-label">Reise-Modus</label>
-                <p class="filter-group-helper">
+                <label
+                  class="filter-group-label"
+                  id="label-travel-mode"
+                >
+                  Reise-Modus
+                </label>
+                <p
+                  class="filter-group-helper"
+                  id="helper-travel-mode"
+                >
                   Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo,
                   Auto oder Bahn?
                 </p>
-                <div class="travel-mode-row" aria-label="Reise-Modus wählen">
+                <div
+                  class="mood-row travel-mode-row"
+                  aria-label="Reise-Modus wählen"
+                >
                   <button
                     type="button"
-                    class="travel-mode-chip travel-mode-chip--active"
-                    data-mode="everyday"
+                    class="mood-chip"
+                    data-travel-mode="everyday"
                   >
-                    🏡 Alltag
+                    <span class="mood-chip-emoji" aria-hidden="true">🏡</span>
+                    <span
+                      class="mood-chip-label"
+                      id="travel-label-everyday"
+                    >
+                      Alltag
+                    </span>
                   </button>
                   <button
                     type="button"
-                    class="travel-mode-chip"
-                    data-mode="trip"
+                    class="mood-chip"
+                    data-travel-mode="trip"
                   >
-                    🚐 Unterwegs
+                    <span class="mood-chip-emoji" aria-hidden="true">🚐</span>
+                    <span
+                      class="mood-chip-label"
+                      id="travel-label-trip"
+                    >
+                      Unterwegs
+                    </span>
                   </button>
                 </div>
               </div>
 
-              <!-- Alter der Kinder -->
+              <!-- Alter -->
               <div class="filter-group">
-                <label class="filter-group-label" for="filter-age">
+                <label
+                  class="filter-group-label"
+                  for="filter-age"
+                  id="label-age"
+                >
                   Alter der Kinder
                 </label>
                 <select id="filter-age" class="input">
-                  <option value="">Alle Altersstufen</option>
+                  <option value="all">Alle Altersstufen</option>
                   <option value="0-3">0–3 Jahre</option>
                   <option value="4-9">4–9 Jahre</option>
-                  <option value="10-17">10+ Jahre</option>
+                  <option value="10+">10+ Jahre</option>
                 </select>
               </div>
 
               <!-- Micro-Abenteuer-Radius -->
               <div class="filter-group">
-                <label class="filter-group-label" for="filter-radius">
+                <label
+                  class="filter-group-label"
+                  for="filter-radius"
+                  id="label-radius"
+                >
                   Micro-Abenteuer-Radius
                 </label>
-                <p class="filter-group-helper">
+                <p
+                  class="filter-group-helper"
+                  id="helper-radius"
+                >
                   Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht
                   sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).
                 </p>
@@ -292,7 +365,7 @@
                   id="filter-radius-description"
                   class="radius-description"
                 >
-                  Alle Spots – ohne Radiusbegrenzung.
+                  Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
                 </p>
               </div>
 
@@ -303,21 +376,27 @@
                     id="filter-big-adventures"
                     type="checkbox"
                   />
-                  <span>Nur große Abenteuer</span>
+                  <span id="label-big-only">
+                    Nur große Abenteuer
+                  </span>
                 </label>
               </div>
 
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label">
                   <input id="filter-verified" type="checkbox" />
-                  <span>Nur verifizierte Spots</span>
+                  <span id="label-verified-only">
+                    Nur verifizierte Spots
+                  </span>
                 </label>
               </div>
 
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label">
                   <input id="filter-favorites" type="checkbox" />
-                  <span>Nur Favoriten</span>
+                  <span id="label-favorites-only">
+                    Nur Favoriten
+                  </span>
                 </label>
               </div>
             </section>
@@ -514,7 +593,7 @@
           data-route="map"
         >
           <span class="bottom-nav-icon" aria-hidden="true">🗺️</span>
-          <span>Karte</span>
+          <span id="bottom-label-map">Karte</span>
         </button>
 
         <button
@@ -523,7 +602,7 @@
           data-route="about"
         >
           <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
-          <span>Über</span>
+          <span id="bottom-label-about">Über</span>
         </button>
       </nav>
 
@@ -533,7 +612,7 @@
 
     <!-- Scripts: Leaflet + MarkerCluster (ohne Integrity) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
     <!-- App (als ES-Modul) -->
     <script type="module" src="js/app.js"></script>
