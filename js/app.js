@@ -207,7 +207,7 @@ function initUIEvents() {
       // auf kleinen Screens: Filter anfangs einklappen
       if (window.innerWidth <= 900 && filterControls.length > 0) {
         filterControls.forEach((el) => el.classList.add("hidden"));
-        labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
+        labelSpan.textContent = t("btn_show_filters", "Show filters");
       }
 
       filterToggleBtn.addEventListener("click", () => {
@@ -223,7 +223,7 @@ function initUIEvents() {
 
         labelSpan.textContent = makeVisible
           ? t("btn_hide_filters", "Filter ausblenden")
-          : t("btn_show_filters", "Filter anzeigen");
+          : t("btn_show_filters", "Show filters");
 
         const map = getMap();
         if (map) {
@@ -497,6 +497,18 @@ function updateStaticLanguageTexts(lang) {
     "How far may your adventure go today? The radius is measured from the map centre (home, holiday flat, hotel …).",
   );
 
+  const radiusDesc = document.getElementById("filter-radius-description");
+  const radiusMax = document.getElementById("filter-radius-max-label");
+  if (radiusMax) {
+    radiusMax.textContent = txt("Alle Spots", "All spots");
+  }
+  if (radiusDesc) {
+    radiusDesc.textContent = txt(
+      "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
+      "All spots – no radius limit. The map is yours.",
+    );
+  }
+
   // Checkboxen
   setText(
     "label-big-only",
@@ -517,62 +529,161 @@ function updateStaticLanguageTexts(lang) {
   // Bottom-Navigation
   setText("bottom-label-map", "Karte", "Map");
   setText("bottom-label-about", "Über", "About");
+
+  // About-Content
+  updateAboutContent(isGerman);
 }
 
-// -----------------------------------------------------
-// Plus-Helfer
-// -----------------------------------------------------
+function updateAboutContent(isGerman) {
+  const article = document.getElementById("about-article");
+  if (!article) return;
 
-function updatePlusStatusUI(status) {
-  const el = document.getElementById("plus-status-text");
-  if (!el) return;
+  if (isGerman) {
+    article.innerHTML = `
+      <h2>Über Family Spots Map</h2>
 
-  const lang = getLanguage();
-  const isGerman = !lang || lang.startsWith("de");
+      <p>
+        Family Spots Map ist eine kuratierte Karte für Familien-Abenteuer –
+        von Eltern für Eltern. Statt unübersichtlicher Listen oder anonymer
+        Bewertungen findest du hier ausgewählte Spielplätze, Zoos, Wildparks,
+        Wasser-Spots, Museen, Bewegungsparks und viele weitere Orte, die sich
+        in der Praxis bewährt haben.
+      </p>
+      <p>
+        Der Fokus: Qualität, Sicherheit und echte Erlebnisse mit Kindern –
+        nicht die größte, sondern die verlässlichste Karte.
+      </p>
 
-  if (!status || !status.active) {
-    el.textContent = isGerman
-      ? "Family Spots Plus ist nicht aktiviert."
-      : "Family Spots Plus is not activated.";
-    return;
-  }
+      <hr />
 
-  let baseText = isGerman
-    ? "Family Spots Plus ist aktiv"
-    : "Family Spots Plus is active";
+      <h3>So funktioniert Family Spots Map</h3>
+      <p>
+        • <strong>Karte &amp; Filter:</strong> Zoome in deine Region und
+        filtere nach Kategorien (z.&nbsp;B. Spielplatz, Wildpark, Pumptrack) oder Stichworten.<br />
+        • <strong>Spot-Karten:</strong> Jeder Spot zeigt dir eine Kurzbeschreibung,
+        Besonderheiten (z.&nbsp;B. „Autosafari“, „barrierefrei“) und ob er von uns
+        verifiziert wurde.<br />
+        • <strong>Favoriten:</strong> Markiere eure Lieblingsorte mit dem Stern
+        und habt sie unterwegs schnell parat – auch offline.<br />
+        • <strong>Offline-Grundfunktion:</strong> Wichtige Daten werden lokal
+        gespeichert, damit ihr eure Spots auch mit schwachem Empfang wiederfindet.
+      </p>
 
-  if (status.expiresAt) {
-    const d = new Date(status.expiresAt);
-    const dateStr = d.toLocaleDateString(isGerman ? "de-DE" : "en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
-  }
+      <hr />
 
-  if (status.partner) {
-    baseText += isGerman
-      ? ` – Partner: ${status.partner}`
-      : ` – partner: ${status.partner}`;
-  }
+      <h3>Kuratiert &amp; verifiziert – unser Qualitätsversprechen</h3>
+      <p>
+        Family Spots Map ist keine anonyme Sammelplattform. Jeder Spot wird
+        bewusst ausgewählt und laufend gepflegt.
+      </p>
+      <p>
+        <strong>Verifizierte Spots</strong> tragen ein entsprechendes Label.
+        Das bedeutet zum Beispiel:
+      </p>
+      <p>
+        – der Ort wurde persönlich besucht oder ausführlich recherchiert,<br />
+        – Lage, Kategorie und Eckdaten wurden geprüft,<br />
+        – besondere Hinweise (z.&nbsp;B. Eintritt, Saison, Parken) sind
+        soweit möglich ergänzt.
+      </p>
+      <p>
+        Trotzdem können sich Bedingungen vor Ort ändern – prüft deshalb immer
+        die Hinweise vor Ort und aktuelle Informationen der Betreiber.
+      </p>
 
-  el.textContent = baseText;
-}
+      <hr />
 
-async function loadPartnerCodes() {
-  if (partnerCodesCache) return partnerCodesCache;
+      <h3>Family Spots Plus – mehr für Camping, WoMo &amp; Abenteuer</h3>
+      <p>
+        Neben den Basis-Kategorien gibt es mit <strong>Family Spots Plus</strong>
+        zusätzliche Spezial-Kategorien, zum Beispiel:
+      </p>
+      <p>
+        – Rastplätze mit Spielplatz &amp; Dusche<br />
+        – kostenlose Stellplätze in Spielplatznähe<br />
+        – Wohnmobil-Service-Stationen<br />
+        – familienfreundliche Campingplätze<br />
+        – Bikepacking-Spots und besondere Abenteuer-Routen
+      </p>
+      <p>
+        Plus wird über zeitlich begrenzte <strong>Aktions-Codes</strong> aktiviert –
+        zum Beispiel auf Messen wie der ABF, bei Partnern oder in speziellen Aktionen.
+      </p>
+      <p>
+        Dein aktueller Status wird in der App angezeigt, zum Beispiel:
+        „Family Spots Plus ist nicht aktiviert“ oder „Family Spots Plus ist aktiv bis …“.
+      </p>
 
-  try {
-    const res = await fetch("data/partners.json");
-    if (!res.ok) throw new Error("Cannot load partners.json");
+      <hr />
 
-    const data = await res.json();
-    partnerCodesCache = Array.isArray(data.codes) ? data.codes : [];
-  } catch (err) {
-    console.error("Partnercodes konnten nicht geladen werden:", err);
-    partnerCodesCache = [];
-  }
+      <h3>Mitmachen – hilf, die Karte besser zu machen</h3>
+      <p>
+        Du kennst einen Spot, der hier unbedingt auftauchen sollte – einen besonderen
+        Spielplatz, ein verstecktes Natur-Highlight oder einen perfekten
+        Familien-Campingplatz?
+      </p>
+      <p>
+        Dann melde dich gern mit den wichtigsten Infos (Ort, Kategorie, kurzer Grund,
+        warum er besonders familiengeeignet ist). Gemeinsam machen wir die Karte
+        Schritt für Schritt besser.
+      </p>
 
-  return partnerCodesCache;
-}
+      <hr />
+
+      <h3>Nutzung, Verantwortung &amp; Sicherheit</h3>
+      <p>
+        Family Spots Map stellt Informationen nach bestem Wissen zur Verfügung,
+        übernimmt aber keine Haftung für Vollständigkeit, Sicherheit oder die
+        Einhaltung lokaler Regeln.
+      </p>
+      <p>
+        Bitte achtet vor Ort immer auf:
+      </p>
+      <p>
+        – Beschilderung und lokale Hinweise,<br />
+        – Naturschutz-Bestimmungen, Badeaufsicht und Wetter,<br />
+        – Alter und Fähigkeiten eurer Kinder.
+      </p>
+      <p>
+        Die Nutzung der App erfolgt auf eigene Verantwortung – ihr kennt eure Kinder
+        und eure Situation am besten.
+      </p>
+
+      <hr />
+
+      <h3>Projektstatus &amp; Version</h3>
+      <p>
+        Family Spots Map ist ein wachsendes Herzensprojekt. Neue Spots, Regionen und
+        Kategorien kommen Schritt für Schritt dazu – zuerst dort, wo wir selbst mit
+        unseren Kindern unterwegs sind, dann gemeinsam mit Partnern und der Community.
+      </p>
+      <p>
+        Aktuelle Karten-Version:
+        <strong>2025-11-08</strong> (siehe Datenstand in der App).
+      </p>
+    `;
+  } else {
+    article.innerHTML = `
+      <h2>About Family Spots Map</h2>
+
+      <p>
+        Family Spots Map is a curated map for family adventures – by parents for parents.
+        Instead of endless lists and anonymous ratings, you’ll find selected playgrounds,
+        zoos, wildlife parks, water spots, museums, movement parks and many other places
+        that have proven themselves in real family life.
+      </p>
+      <p>
+        The focus: quality, safety and real experiences with children – not the biggest,
+        but the most trustworthy map.
+      </p>
+
+      <hr />
+
+      <h3>How Family Spots Map works</h3>
+      <p>
+        • <strong>Map &amp; filters:</strong> Zoom into your region and filter by category
+        (e.g. playground, wildlife park, pumptrack) or keywords.<br />
+        • <strong>Spot cards:</strong> Each spot shows a short description, special
+        features (e.g. “car safari”, “accessible”) and whether it has been verified by us.<br />
+        • <strong>Favourites:</strong> Mark your favourite places with the star so you can
+        find them quickly on the go – even offline.<br />
