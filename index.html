@@ -130,6 +130,60 @@
                 </button>
               </header>
 
+              <!-- Modus: Alltag / Unterwegs -->
+              <div class="filter-group filter-toggle-row">
+                <div>
+                  <label class="filter-group-label">Modus</label>
+                  <p class="filter-group-helper">
+                    Wählt, ob ihr eher im Alltag unterwegs seid oder auf Reise.
+                  </p>
+                </div>
+                <div class="segmented-control" id="travel-mode">
+                  <button
+                    type="button"
+                    class="segmented-control-btn segmented-control-btn--active"
+                    data-mode="everyday"
+                  >
+                    Alltag
+                  </button>
+                  <button
+                    type="button"
+                    class="segmented-control-btn"
+                    data-mode="travel"
+                  >
+                    Unterwegs
+                  </button>
+                </div>
+              </div>
+
+              <!-- Familien-Kompass -->
+              <div class="filter-group compass-card">
+                <label class="filter-group-label">Familien-Kompass</label>
+                <p class="filter-group-helper">
+                  Lass dir passende Abenteuer für heute vorschlagen.
+                </p>
+                <div class="compass-row">
+                  <select id="compass-time" class="input">
+                    <option value="short">1–2 Stunden</option>
+                    <option value="half">Halber Tag</option>
+                    <option value="full">Ganzer Tag</option>
+                  </select>
+                  <select id="compass-age" class="input">
+                    <option value="all">Alle Altersstufen</option>
+                    <option value="0-3">0–3 Jahre</option>
+                    <option value="4-9">4–9 Jahre</option>
+                    <option value="10-17">10+ Jahre</option>
+                  </select>
+                </div>
+                <button
+                  type="button"
+                  id="compass-apply"
+                  class="btn btn-small compass-apply-btn"
+                >
+                  Kompass anwenden
+                </button>
+              </div>
+
               <!-- Suche -->
               <div class="filter-group">
                 <label class="filter-group-label" for="filter-search">
@@ -194,6 +248,19 @@
                     <span class="mood-chip-label">Tier-Tag</span>
                   </button>
                 </div>
+              </div>
+
+              <!-- Alter der Kinder -->
+              <div class="filter-group">
+                <label class="filter-group-label" for="filter-age">
+                  Alter der Kinder
+                </label>
+                <select id="filter-age" class="input">
+                  <option value="">Alle Altersstufen</option>
+                  <option value="0-3">0–3 Jahre</option>
+                  <option value="4-9">4–9 Jahre</option>
+                  <option value="10-17">10+ Jahre</option>
+                </select>
               </div>
 
               <!-- Micro-Abenteuer-Radius -->
@@ -317,6 +384,8 @@
               • <strong>Karte &amp; Filter:</strong> Zoome in deine Region und
               filtere nach Kategorien (z.&nbsp;B. Spielplatz, Wildpark,
               Pumptrack) oder Stichworten.<br />
+              • <strong>Familien-Kompass:</strong> Wähle Zeit, Alter und
+              Stimmung – und lass dir passende Mikro-Abenteuer vorschlagen.<br />
               • <strong>Spot-Karten:</strong> Jeder Spot zeigt dir eine
               Kurzbeschreibung, Besonderheiten (z.&nbsp;B. „Autosafari“,
               „barrierefrei“) und ob er von uns verifiziert wurde.<br />
