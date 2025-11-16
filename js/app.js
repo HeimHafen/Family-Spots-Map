@@ -20,8 +20,9 @@ import {
   initFilters,
   applyFilters,
   refreshCategorySelect,
+  getRadiusKmForIndex,
 } from "./filters.js";
-import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
+import { initMap, setSpotsOnMap, focusOnSpot, getMap, updateRadiusCircle } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 import "./sw-register.js";
 
@@ -30,6 +31,7 @@ let allSpots = [];
 let filteredSpots = [];
 let plusStatus = null;
 let partnerCodesCache = null;
+let currentSelectedSpotId = null;
 
 // -----------------------------------------------------
 // Bootstrap
@@ -113,16 +115,24 @@ function initUIEvents() {
       await initI18n(nextLang);
       saveSettings({ ...settings, language: nextLang });
 
+      // i18n-Texte im DOM aktualisieren
       applyTranslations();
       updateStaticLanguageTexts(nextLang);
 
       const categories = getCategories();
       refreshCategorySelect(categories);
 
+      // Filter neu anwenden -> Liste + Marker in neuer Sprache
       handleFilterChange({
         ...currentFilterState,
         favorites: getFavorites(),
       });
+
+      // Plus-Status-Text in neuer Sprache aktualisieren
+      updatePlusStatusUI(plusStatus);
+
+      // Offene Spot-Details in neuer Sprache neu rendern
+      rerenderCurrentSpotDetails();
     });
   }
 
@@ -360,6 +370,17 @@ function handleFilterChange(filterState) {
   });
 
   setSpotsOnMap(filteredSpots);
+
+  // Radius-Kreis visualisieren (Micro-Abenteuer-Radius)
+  const radiusKm = getRadiusKmForIndex(
+    typeof filterState.radiusIndex === "number" ? filterState.radiusIndex : 4,
+  );
+  if (center && radiusKm) {
+    updateRadiusCircle({ lat: center.lat, lng: center.lng }, radiusKm);
+  } else {
+    updateRadiusCircle(null, null);
+  }
+
   renderSpotList(filteredSpots, {
     favorites: filterState.favorites,
     onSelect: handleSpotSelect,
@@ -374,7 +395,42 @@ function handleSpotSelect(id) {
   const spot = findSpotById(id);
   if (!spot) return;
 
+  currentSelectedSpotId = spot.id;
+
   focusOnSpot(spot);
+
+  const favorites = getFavorites();
+  const isFav = favorites.includes(spot.id);
+
+  renderSpotDetails(spot, {
+    isFavorite: isFav,
+    onToggleFavorite: (spotId) => {
+      const updatedFavorites = toggleFavorite(spotId);
+
+      showToast(
+        updatedFavorites.includes(spotId)
+          ? t("toast_fav_added", "Zu euren Lieblingsspots gelegt 💛")
+          : t("toast_fav_removed", "Aus den Lieblingsspots entfernt."),
+      );
+
+      handleFilterChange({
+        ...currentFilterState,
+        favorites: updatedFavorites,
+      });
+
+      const freshSpot = findSpotById(spotId);
+      renderSpotDetails(freshSpot, {
+        isFavorite: updatedFavorites.includes(spotId),
+        onToggleFavorite: () => handleSpotSelect(spotId),
+      });
+    },
+  });
+}
+
+function rerenderCurrentSpotDetails() {
+  if (!currentSelectedSpotId) return;
+  const spot = findSpotById(currentSelectedSpotId);
+  if (!spot) return;
 
   const favorites = getFavorites();
   const isFav = favorites.includes(spot.id);
@@ -530,8 +586,31 @@ function updateStaticLanguageTexts(lang) {
   setText("bottom-label-map", "Karte", "Map");
   setText("bottom-label-about", "Über", "About");
 
+  // Plus-Code / Status
+  setText(
+    "plus-code-label",
+    "Aktionscode für Family Spots Plus",
+    "Promo code for Family Spots Plus",
+  );
+  const plusInput = document.getElementById("plus-code-input");
+  if (plusInput) {
+    plusInput.placeholder = txt("Code eingeben …", "Enter code …");
+  }
+  const plusButton = document.getElementById("plus-code-submit");
+  if (plusButton) {
+    plusButton.textContent = txt("Code einlösen", "Redeem code");
+  }
+  setText(
+    "plus-note",
+    "Plus wird über zeitlich begrenzte Aktionscodes aktiviert (z. B. auf Messen oder bei Partnern).",
+    "Plus is activated via time-limited promo codes (e.g. at fairs or via partners).",
+  );
+
   // About-Content
   updateAboutContent(isGerman);
+
+  // Plus-Status-Text ebenfalls in aktueller Sprache
+  updatePlusStatusUI(plusStatus);
 }
 
 function updateAboutContent(isGerman) {
@@ -669,7 +748,7 @@ function updateAboutContent(isGerman) {
       <p>
         Family Spots Map is a curated map for family adventures – by parents for parents.
         Instead of endless lists and anonymous ratings, you’ll find selected playgrounds,
-        zoos, wildlife parks, water spots, museums, movement parks and many other places
+        zoos, wildlife parks, water spots, movement parks, museums and many other places
         that have proven themselves in real family life.
       </p>
       <p>
@@ -687,3 +766,166 @@ function updateAboutContent(isGerman) {
         features (e.g. “car safari”, “accessible”) and whether it has been verified by us.<br />
         • <strong>Favourites:</strong> Mark your favourite places with the star so you can
         find them quickly on the go – even offline.<br />
+        • <strong>Offline basics:</strong> Important data is stored locally so you can
+        find your spots again even with weak reception.
+      </p>
+
+      <hr />
+
+      <h3>Curated &amp; verified – our promise of quality</h3>
+      <p>
+        Family Spots Map is not an anonymous collection platform. Every spot is selected
+        deliberately and maintained continuously.
+      </p>
+      <p>
+        <strong>Verified spots</strong> carry a dedicated label. This usually means:
+      </p>
+      <p>
+        – the place has been visited personally or researched in depth,<br />
+        – location, category and key facts have been checked,<br />
+        – important hints (e.g. admission, season, parking) are added where possible.
+      </p>
+      <p>
+        Conditions on site can always change – so please always check local signs and the
+        latest information from the operators.
+      </p>
+
+      <hr />
+
+      <h3>Family Spots Plus – more for camping, RV trips &amp; adventures</h3>
+      <p>
+        In addition to the basic categories, <strong>Family Spots Plus</strong> adds
+        specialised categories, for example:
+      </p>
+      <p>
+        – rest areas with playground &amp; showers<br />
+        – free RV spots close to playgrounds<br />
+        – motorhome service stations<br />
+        – family-friendly campsites<br />
+        – bikepacking spots and special adventure routes
+      </p>
+      <p>
+        Plus is activated via time-limited <strong>promo codes</strong> – for example at
+        fairs, via partners or during special campaigns.
+      </p>
+      <p>
+        Your current status is shown in the app, for example:
+        “Family Spots Plus is not activated” or “Family Spots Plus is active until …”.
+      </p>
+
+      <hr />
+
+      <h3>Get involved – help improve the map</h3>
+      <p>
+        Do you know a spot that simply has to be on this map – a special playground,
+        a hidden nature gem or a perfect family campsite?
+      </p>
+      <p>
+        Then feel free to send us the key information (place, category, short reason why
+        it’s especially family-friendly). Step by step, we’ll make the map better
+        together.
+      </p>
+
+      <hr />
+
+      <h3>Use, responsibility &amp; safety</h3>
+      <p>
+        Family Spots Map provides information to the best of our knowledge but assumes no
+        liability for completeness, safety or compliance with local rules.
+      </p>
+      <p>
+        On site, please always pay attention to:
+      </p>
+      <p>
+        – signs and local information,<br />
+        – nature protection rules, lifeguards and weather conditions,<br />
+        – age and abilities of your children.
+      </p>
+      <p>
+        You use the app at your own responsibility – you know your children and your
+        situation best.
+      </p>
+
+      <hr />
+
+      <h3>Project status &amp; version</h3>
+      <p>
+        Family Spots Map is a growing passion project. New spots, regions and categories
+        are added step by step – first in the regions we travel with our own children,
+        then together with partners and the community.
+      </p>
+      <p>
+        Current map version:
+        <strong>2025-11-08</strong> (see data version in the app).
+      </p>
+    `;
+  }
+}
+
+// -----------------------------------------------------
+// Plus / Partner-Codes
+// -----------------------------------------------------
+
+async function loadPartnerCodes() {
+  if (Array.isArray(partnerCodesCache)) {
+    return partnerCodesCache;
+  }
+
+  try {
+    const res = await fetch("data/partners.json");
+    if (!res.ok) {
+      throw new Error("Failed to load partners.json");
+    }
+    const json = await res.json();
+    let codes = [];
+
+    if (Array.isArray(json)) {
+      codes = json;
+    } else if (Array.isArray(json.codes)) {
+      codes = json.codes;
+    } else {
+      console.warn("[Plus] Unerwartetes Format in partners.json", json);
+      codes = [];
+    }
+
+    partnerCodesCache = codes;
+    return codes;
+  } catch (err) {
+    console.error("[Plus] Partner-Codes konnten nicht geladen werden", err);
+    partnerCodesCache = [];
+    return [];
+  }
+}
+
+function updatePlusStatusUI(status) {
+  const el = document.getElementById("plus-status-text");
+  if (!el) return;
+
+  const lang = getLanguage() || "de";
+  const isGerman = lang.toLowerCase().startsWith("de");
+
+  if (!status) {
+    el.textContent = isGerman
+      ? "Family Spots Plus ist nicht aktiviert."
+      : "Family Spots Plus is not activated.";
+    return;
+  }
+
+  const expires = status.expiresAt ? new Date(status.expiresAt) : null;
+  const formatter = new Intl.DateTimeFormat(
+    isGerman ? "de-DE" : "en-US",
+    { year: "numeric", month: "2-digit", day: "2-digit" },
+  );
+
+  const datePart = expires ? formatter.format(expires) : null;
+
+  if (datePart) {
+    el.textContent = isGerman
+      ? `Family Spots Plus ist aktiv bis ${datePart}.`
+      : `Family Spots Plus is active until ${datePart}.`;
+  } else {
+    el.textContent = isGerman
+      ? "Family Spots Plus ist aktuell aktiv."
+      : "Family Spots Plus is currently active.";
+  }
+}
