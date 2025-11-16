@@ -1,6 +1,6 @@
 // js/ui.js
 
-import { $, } from "./utils.js";
+import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 
 /**
@@ -32,6 +32,22 @@ export function renderSpotList(spots, options) {
   spots.forEach((spot) => {
     const isFav = favorites.includes(spot.id);
 
+    // Beschreibung / Teaser für die Liste
+    const summaryPrimary = isDe ? spot.summary_de : spot.summary_en;
+    const summarySecondary = isDe ? spot.summary_en : spot.summary_de;
+    const visitLabel = isDe ? spot.visitLabel_de : spot.visitLabel_en;
+
+    let description =
+      spot.poetry ||
+      summaryPrimary ||
+      visitLabel ||
+      summarySecondary ||
+      "";
+
+    if (description && description.length > 150) {
+      description = description.slice(0, 147) + "…";
+    }
+
     const card = document.createElement("article");
     card.className = "spot-card";
     card.tabIndex = 0;
@@ -55,9 +71,7 @@ export function renderSpotList(spots, options) {
       catEl.className = "spot-card-meta-item";
 
       const mainCat = spot.categories[0];
-      const label =
-        t("category_" + mainCat, mainCat) ||
-        mainCat;
+      const label = t("category_" + mainCat, mainCat) || mainCat;
 
       catEl.textContent = label;
       meta.appendChild(catEl);
@@ -89,6 +103,14 @@ export function renderSpotList(spots, options) {
       badgesRow.appendChild(bTag);
     }
 
+    // Kurze Beschreibung im Listen-Item (falls vorhanden)
+    let descEl = null;
+    if (description) {
+      descEl = document.createElement("p");
+      descEl.className = "spot-card-description";
+      descEl.textContent = description;
+    }
+
     const actionsRow = document.createElement("div");
     actionsRow.className = "spot-card-actions";
 
@@ -107,6 +129,9 @@ export function renderSpotList(spots, options) {
     card.appendChild(meta);
     if (badgesRow.childNodes.length > 0) {
       card.appendChild(badgesRow);
+    }
+    if (descEl) {
+      card.appendChild(descEl);
     }
     card.appendChild(actionsRow);
 
@@ -138,6 +163,9 @@ export function renderSpotDetails(spot, options) {
   const { isFavorite = false, onToggleFavorite } = options || {};
   const container = $("#spot-detail");
   if (!container || !spot) return;
+
+  // Falls vorher ausgeblendet wurde, wieder einblenden
+  container.classList.remove("spot-details--hidden");
 
   const lang = getLanguage() || "de";
   const isDe = lang.startsWith("de");
@@ -181,8 +209,7 @@ export function renderSpotDetails(spot, options) {
     const lat = spot.location.lat;
     const lng = spot.location.lng;
     const encodedName = encodeURIComponent(
-      (spot.name || spot.title || "") +
-        (spot.city ? " " + spot.city : ""),
+      (spot.name || spot.title || "") + (spot.city ? " " + spot.city : ""),
     );
 
     googleMapsUrl =
@@ -195,12 +222,7 @@ export function renderSpotDetails(spot, options) {
   }
 
   const favLabel = isDe ? "Favorit" : "Favourite";
-  const favAddedLabel = isDe
-    ? "Zu euren Lieblingsspots gelegt 💛"
-    : "Added to your favourites 💛";
-  const favRemovedLabel = isDe
-    ? "Aus den Lieblingsspots entfernt."
-    : "Removed from favourites.";
+  const closeLabel = isDe ? "Details schließen" : "Close details";
 
   const categoriesText = Array.isArray(spot.categories)
     ? spot.categories.join(", ")
@@ -241,6 +263,14 @@ export function renderSpotDetails(spot, options) {
           aria-label="${favLabel}"
         >
           ${isFavorite ? "★" : "☆"}
+        </button>
+        <button
+          type="button"
+          class="btn-icon spot-details-close"
+          data-role="close-detail"
+          aria-label="${closeLabel}"
+        >
+          ✕
         </button>
       </div>
     </header>
@@ -313,6 +343,17 @@ export function renderSpotDetails(spot, options) {
     favButton.addEventListener("click", (ev) => {
       ev.stopPropagation();
       onToggleFavorite(spot.id);
+    });
+  }
+
+  // Close-Button: Detailpanel ausblenden
+  const closeButton = container.querySelector(
+    '[data-role="close-detail"]',
+  );
+  if (closeButton) {
+    closeButton.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      container.classList.add("spot-details--hidden");
     });
   }
 }
