@@ -209,9 +209,23 @@ function initUIEvents() {
       labelSpan.textContent = nowHidden
         ? t("btn_show_list", "Liste zeigen")
         : t("btn_only_map", "Nur Karte");
+
       const map = getMap();
       if (map) {
         setTimeout(() => map.invalidateSize(), 0);
+      }
+
+      // Neu: auf kleinen Screens automatisch zu Karte/Liste scrollen
+      if (window.innerWidth <= 900) {
+        const target = nowHidden
+          ? document.querySelector(".map-section")
+          : document.querySelector(".sidebar");
+        if (target) {
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
       }
     });
   }
@@ -257,40 +271,6 @@ function initUIEvents() {
         }
       });
     }
-  }
-
-  // Familien-Kompass: besten Spot aus aktuellem Filterzustand wählen
-  const compassButton = $("#compass-apply");
-  if (compassButton) {
-    compassButton.addEventListener("click", () => {
-      const lang = getLanguage() || "de";
-      const isDe = lang.startsWith("de");
-
-      if (!filteredSpots || filteredSpots.length === 0) {
-        showToast(
-          t(
-            "compass_no_results",
-            isDe
-              ? "Für eure aktuellen Einstellungen gibt es gerade keine passenden Spots. Probiert einen größeren Radius oder andere Filter."
-              : "No spots match your current compass settings. Try a wider radius or different filters.",
-          ),
-        );
-        return;
-      }
-
-      const bestSpot = filteredSpots[0];
-      if (bestSpot && bestSpot.id) {
-        handleSpotSelect(bestSpot.id);
-        showToast(
-          t(
-            "compass_result_toast",
-            isDe
-              ? "Ich habe euch mit dem Familien-Kompass einen Spot vorgeschlagen – gute Fahrt & viel Spaß! ✨"
-              : "The family compass has suggested a spot for you – have a great trip and lots of fun! ✨",
-          ),
-        );
-      }
-    });
   }
 
   // Fenster-/Orientierungswechsel: Map-Größe aktualisieren
