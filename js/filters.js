@@ -1,404 +1,102 @@
 // js/filters.js
 
-import { $, $$ } from "./utils.js";
+import { $, debounce } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 
-const DEFAULT_RADIUS_INDEX = 4;
+const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
-// Index -> Radius in km (null = kein Limit / alle Spots)
-const RADIUS_KM_VALUES = [2, 5, 10, 25, null];
+const MOOD_CATEGORY_MAP = {
+  relaxed: [
+    "spielplatz",
+    "waldspielplatz",
+    "park-garten",
+    "badesee",
+    "wanderweg-kinderwagen",
+    "radweg-family",
+  ],
+  action: [
+    "abenteuerspielplatz",
+    "freizeitpark",
+    "pumptrack",
+    "skatepark",
+    "multifunktionsfeld",
+    "bewegungspark",
+    "kletterhalle",
+    "kletteranlage-outdoor",
+    "boulderpark",
+    "trampolinpark",
+  ],
+  water: [
+    "abenteuerspielplatz",
+    "wasserspielplatz",
+    "badesee",
+    "schwimmbad",
+  ],
+  animals: ["zoo", "wildpark", "tierpark", "bauernhof"],
+};
 
-export function getRadiusKmForIndex(index) {
-  const safeIndex =
-    typeof index === "number" && index >= 0 && index < RADIUS_KM_VALUES.length
-      ? index
-      : DEFAULT_RADIUS_INDEX;
-  return RADIUS_KM_VALUES[safeIndex];
-}
+const MOOD_KEYWORDS = {
+  relaxed: ["ruhig", "entspannt", "schatten", "wiese", "park", "wald"],
+  action: [
+    "abenteuer",
+    "klettern",
+    "trampolin",
+    "seil",
+    "rutschen",
+    "bike",
+    "pumptrack",
+    "skate",
+    "sport",
+    "action",
+  ],
+  water: [
+    "wasser",
+    "see",
+    "strand",
+    "fluss",
+    "bach",
+    "nass",
+    "planschen",
+    "wasserspiel",
+  ],
+  animals: [
+    "zoo",
+    "tierpark",
+    "wildpark",
+    "tiere",
+    "safari",
+    "giraffe",
+    "bauernhof",
+  ],
+};
 
-/**
- * Initialisiert Filter-UI und verkabelt alle Events.
- * Gibt den aktuellen Filter-State zurück.
- */
-export function initFilters({
-  categories = [],
-  favoritesProvider = () => [],
-  onFilterChange,
-}) {
-  const favoritesInitial = safeFavorites(favoritesProvider);
+function buildCategoryOptions(categorySelect, categories) {
+  const lang = getLanguage();
+  const currentValue = categorySelect.value || "";
 
-  const state = {
-    searchQuery: "",
-    category: "",
-    age: "all",
-    mood: null,
-    travelMode: "everyday",
-    radiusIndex: DEFAULT_RADIUS_INDEX,
-    bigOnly: false,
-    verifiedOnly: false,
-    favoritesOnly: false,
-    favorites: favoritesInitial,
-  };
+  categorySelect.innerHTML = "";
 
-  // Kategorie-Select befüllen
-  refreshCategorySelect(categories);
-
-  const searchInput = $("#filter-search");
-  const categorySelect = $("#filter-category");
-  const ageSelect = $("#filter-age");
-  const radiusInput = $("#filter-radius");
-  const bigOnlyCheckbox = $("#filter-big-only");
-  const verifiedOnlyCheckbox = $("#filter-verified-only");
-  const favoritesOnlyCheckbox = $("#filter-favorites-only");
-
-  const moodButtons = $$("[data-mood]");
-  const travelButtons = $$("[data-travel-mode]");
-
-  // Initialwerte aus DOM lesen (falls vom HTML vorgegeben)
-  if (searchInput) state.searchQuery = (searchInput.value || "").trim();
-  if (categorySelect) state.category = categorySelect.value || "";
-  if (ageSelect) state.age = ageSelect.value || "all";
-  if (radiusInput) {
-    const idx = parseInt(radiusInput.value, 10);
-    state.radiusIndex = Number.isFinite(idx) ? idx : DEFAULT_RADIUS_INDEX;
-    updateRadiusValueLabel(state.radiusIndex);
-  }
-  if (bigOnlyCheckbox) state.bigOnly = !!bigOnlyCheckbox.checked;
-  if (verifiedOnlyCheckbox) state.verifiedOnly = !!verifiedOnlyCheckbox.checked;
-  if (favoritesOnlyCheckbox)
-    state.favoritesOnly = !!favoritesOnlyCheckbox.checked;
-
-  const emitChange = () => {
-    const latestFavs = safeFavorites(favoritesProvider);
-    state.favorites = latestFavs;
-    if (typeof onFilterChange === "function") {
-      onFilterChange({ ...state });
-    }
-  };
-
-  if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      state.searchQuery = (searchInput.value || "").trim();
-      emitChange();
-    });
-  }
-
-  if (categorySelect) {
-    categorySelect.addEventListener("change", () => {
-      state.category = categorySelect.value || "";
-      emitChange();
-    });
-  }
-
-  if (ageSelect) {
-    ageSelect.addEventListener("change", () => {
-      state.age = ageSelect.value || "all";
-      emitChange();
-    });
-  }
-
-  if (radiusInput) {
-    radiusInput.addEventListener("input", () => {
-      const idx = parseInt(radiusInput.value, 10);
-      state.radiusIndex = Number.isFinite(idx) ? idx : DEFAULT_RADIUS_INDEX;
-      updateRadiusValueLabel(state.radiusIndex);
-      emitChange();
-    });
-  }
-
-  if (bigOnlyCheckbox) {
-    bigOnlyCheckbox.addEventListener("change", () => {
-      state.bigOnly = !!bigOnlyCheckbox.checked;
-      emitChange();
-    });
-  }
-
-  if (verifiedOnlyCheckbox) {
-    verifiedOnlyCheckbox.addEventListener("change", () => {
-      state.verifiedOnly = !!verifiedOnlyCheckbox.checked;
-      emitChange();
-    });
-  }
-
-  if (favoritesOnlyCheckbox) {
-    favoritesOnlyCheckbox.addEventListener("change", () => {
-      state.favoritesOnly = !!favoritesOnlyCheckbox.checked;
-      emitChange();
-    });
-  }
-
-  // Mood-Toggles (z. B. entspannt / Action / Wasser / Tiere)
-  if (moodButtons.length > 0) {
-    moodButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const value = btn.dataset.mood || null;
-        state.mood = state.mood === value ? null : value;
-
-        moodButtons.forEach((b) =>
-          b.classList.toggle(
-            "chip--active",
-            state.mood && b.dataset.mood === state.mood,
-          ),
-        );
-
-        emitChange();
-      });
-    });
-  }
-
-  // Reise-Modus-Toggles (Alltag / Unterwegs)
-  if (travelButtons.length > 0) {
-    travelButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const value = btn.dataset.travelMode || null;
-        state.travelMode = value || "everyday";
-
-        travelButtons.forEach((b) =>
-          b.classList.toggle(
-            "chip--active",
-            b.dataset.travelMode === state.travelMode,
-          ),
-        );
-
-        emitChange();
-      });
-    });
-  }
-
-  // beim Start einmal initial feuern
-  emitChange();
-
-  return state;
-}
-
-/**
- * Füllt das Kategorie-Select mit Optionen.
- * Wird von app.js auch nach einem Sprachwechsel aufgerufen.
- */
-export function refreshCategorySelect(categories = []) {
-  const select = $("#filter-category");
-  if (!select) return;
-
-  const prevValue = select.value;
-  select.innerHTML = "";
-
-  const lang = getLanguage() || "de";
-  const isGerman = lang.toLowerCase().startsWith("de");
-
-  const allOption = document.createElement("option");
-  allOption.value = "";
-  allOption.textContent = t(
-    "filter.category_all",
-    isGerman ? "Alle Kategorien" : "All categories",
+  const allOpt = document.createElement("option");
+  allOpt.value = "";
+  allOpt.textContent = t(
+    "filter_category_all",
+    lang === "de" ? "Alle Kategorien" : "All categories",
   );
-  select.appendChild(allOption);
+  categorySelect.appendChild(allOpt);
 
-  categories.forEach((cat) => {
-    const option = document.createElement("option");
-    option.value = cat.slug || cat.id || cat.value || "";
-    const label =
-      (isGerman
-        ? cat.label_de || cat.name_de
-        : cat.label_en || cat.name_en) ||
-      cat.label ||
-      cat.name ||
-      option.value;
-    option.textContent = label;
-    select.appendChild(option);
+  categories.forEach((c) => {
+    const opt = document.createElement("option");
+    opt.value = c.slug;
+    opt.textContent = (c.label && c.label[lang]) || c.label?.de || c.slug;
+    categorySelect.appendChild(opt);
   });
 
-  // Vorherige Auswahl wiederherstellen, wenn möglich
-  if (
-    prevValue &&
-    Array.from(select.options).some((opt) => opt.value === prevValue)
-  ) {
-    select.value = prevValue;
-  }
+  categorySelect.value = currentValue;
 }
 
-/**
- * Filtert Spots anhand des States + MapCenter.
- */
-export function applyFilters(spots, options = {}) {
-  if (!Array.isArray(spots) || spots.length === 0) return [];
-
-  const {
-    searchQuery = "",
-    category = "",
-    age = "all",
-    mood = null,
-    travelMode = null,
-    radiusIndex = DEFAULT_RADIUS_INDEX,
-    bigOnly = false,
-    verifiedOnly = false,
-    favoritesOnly = false,
-    favorites = [],
-    mapCenter = null,
-  } = options;
-
-  const radiusKm = getRadiusKmForIndex(
-    typeof radiusIndex === "number" ? radiusIndex : DEFAULT_RADIUS_INDEX,
-  );
-  const favSet = new Set(favorites || []);
-  const q = (searchQuery || "").trim().toLowerCase();
-
-  const result = [];
-
-  for (const s of spots) {
-    let spot = s;
-    let distanceKm = null;
-
-    // Distanz berechnen (nur wenn MapCenter + Radius gesetzt)
-    if (mapCenter && radiusKm != null) {
-      const coords = extractCoords(s);
-      if (coords) {
-        distanceKm = haversineKm(
-          mapCenter.lat,
-          mapCenter.lng,
-          coords.lat,
-          coords.lng,
-        );
-
-        if (radiusKm != null && distanceKm > radiusKm) {
-          continue; // liegt außerhalb des Radius
-        }
-      }
-    }
-
-    // Such-Text
-    if (q) {
-      const haystack = [
-        s.title,
-        s.title_de,
-        s.title_en,
-        s.name,
-        s.name_de,
-        s.name_en,
-        s.description,
-        s.description_de,
-        s.description_en,
-        s.city,
-        s.region,
-        ...(s.keywords || []),
-        ...(s.tags || []),
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-      if (!haystack.includes(q)) continue;
-    }
-
-    // Kategorie
-    if (category && s.category && s.category !== category) {
-      continue;
-    }
-
-    // Nur Favoriten
-    if (favoritesOnly && !favSet.has(s.id)) {
-      continue;
-    }
-
-    // Nur verifizierte Spots
-    if (verifiedOnly && !isSpotVerified(s)) {
-      continue;
-    }
-
-    // Nur "große" Abenteuer
-    if (bigOnly && !isSpotBig(s)) {
-      continue;
-    }
-
-    // Alters-Filter nur anwenden, wenn Metadaten vorhanden
-    if (age && age !== "all" && !matchesAgeFilter(s, age)) {
-      continue;
-    }
-
-    // Mood / Stimmung nur filtern, wenn Mood-Daten vorhanden
-    if (mood && !matchesMoodFilter(s, mood)) {
-      continue;
-    }
-
-    // Reise-Modus nur filtern, wenn Metadaten vorhanden
-    if (travelMode && !matchesTravelModeFilter(s, travelMode)) {
-      continue;
-    }
-
-    if (distanceKm != null) {
-      spot = { ...s, distanceKm };
-    }
-
-    result.push(spot);
-  }
-
-  // Falls es Distanzen gibt, nach Distanz sortieren
-  if (mapCenter && radiusKm != null) {
-    result.sort((a, b) => {
-      const da =
-        typeof a.distanceKm === "number" ? a.distanceKm : Number.POSITIVE_INFINITY;
-      const db =
-        typeof b.distanceKm === "number" ? b.distanceKm : Number.POSITIVE_INFINITY;
-      return da - db;
-    });
-  }
-
-  return result;
-}
-
-// ------------------------------------------------------
-// Hilfsfunktionen
-// ------------------------------------------------------
-
-function safeFavorites(provider) {
-  if (typeof provider === "function") {
-    const value = provider();
-    return Array.isArray(value) ? value : [];
-  }
-  return [];
-}
-
-function updateRadiusValueLabel(radiusIndex) {
-  const labelEl = $("#filter-radius-value-label");
-  if (!labelEl) return;
-
-  const radiusKm = getRadiusKmForIndex(radiusIndex);
-  const lang = getLanguage() || "de";
-  const isGerman = lang.toLowerCase().startsWith("de");
-
-  if (radiusKm == null) {
-    labelEl.textContent = t(
-      "filter.radius_unlimited",
-      isGerman ? "Alle Spots" : "All spots",
-    );
-  } else {
-    const value = Math.round(radiusKm);
-    labelEl.textContent = isGerman
-      ? `bis ca. ${value} km`
-      : `up to approx. ${value} km`;
-  }
-}
-
-function extractCoords(spot) {
-  if (
-    typeof spot.lat === "number" &&
-    typeof spot.lng === "number"
-  ) {
-    return { lat: spot.lat, lng: spot.lng };
-  }
-  if (
-    spot.location &&
-    typeof spot.location.lat === "number" &&
-    typeof spot.location.lng === "number"
-  ) {
-    return { lat: spot.location.lat, lng: spot.location.lng };
-  }
-  return null;
-}
-
-function haversineKm(lat1, lon1, lat2, lon2) {
+function distanceInKm(lat1, lon1, lat2, lon2) {
   const R = 6371; // km
-  const toRad = (deg) => (deg * Math.PI) / 180;
-
+  const toRad = (v) => (v * Math.PI) / 180;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
   const a =
@@ -411,72 +109,378 @@ function haversineKm(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-function isSpotVerified(spot) {
-  if (spot.verified === true) return true;
-  if (spot.flags && spot.flags.verified === true) return true;
-  if (Array.isArray(spot.labels) && spot.labels.includes("verified")) return true;
-  return false;
+function getMoodScore(spot, mood) {
+  if (!mood) return 0;
+
+  const categories = Array.isArray(spot.categories) ? spot.categories : [];
+  const tags = Array.isArray(spot.tags) ? spot.tags : [];
+
+  const moodCats = MOOD_CATEGORY_MAP[mood] || [];
+  const moodKeywords = MOOD_KEYWORDS[mood] || [];
+
+  let score = 0;
+
+  // Kategorien
+  for (let i = 0; i < categories.length; i++) {
+    if (moodCats.indexOf(categories[i]) !== -1) {
+      score += 2;
+    }
+  }
+
+  // Tags und Texte
+  const lowerTags = tags.map((t) => String(t).toLowerCase());
+  const textParts = [
+    spot.poetry,
+    spot.summary_de,
+    spot.summary_en,
+    spot.visitLabel_de,
+    spot.visitLabel_en,
+  ]
+    .filter(Boolean)
+    .map((s) => String(s).toLowerCase());
+
+  const allText = lowerTags.join(" ") + " " + textParts.join(" ");
+
+  for (let i = 0; i < moodKeywords.length; i++) {
+    const kw = moodKeywords[i];
+    if (allText.indexOf(kw) !== -1) {
+      score += 1;
+    }
+  }
+
+  return score;
 }
 
-function isSpotBig(spot) {
-  if (spot.big === true) return true;
-  if (spot.size === "big") return true;
-  if (Array.isArray(spot.tags) && spot.tags.includes("big")) return true;
-  return false;
-}
+function isBigAdventure(spot) {
+  const categories = Array.isArray(spot.categories) ? spot.categories : [];
+  const bigCats = {
+    freizeitpark: true,
+    zoo: true,
+    wildpark: true,
+    tierpark: true,
+  };
 
-function matchesAgeFilter(spot, ageFilter) {
-  const groups = spot.ageGroups || spot.ages || [];
+  for (let i = 0; i < categories.length; i++) {
+    if (bigCats[categories[i]]) {
+      return true;
+    }
+  }
 
-  if (!groups.length && spot.minAge == null && spot.maxAge == null) {
-    // Keine Altersdaten -> nicht rausfiltern
+  const visitMinutes = Number(
+    spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes,
+  );
+  if (!Number.isNaN(visitMinutes) && visitMinutes >= 240) {
     return true;
   }
 
-  const normalize = (val) => String(val || "").toLowerCase();
-
-  if (ageFilter === "0-3") {
-    if (spot.minAge != null && spot.minAge <= 3) return true;
-    if (groups.some((g) => ["0-3", "toddler"].includes(normalize(g)))) {
-      return true;
-    }
-    return false;
-  }
-
-  if (ageFilter === "4-9") {
+  const tags = Array.isArray(spot.tags) ? spot.tags : [];
+  const lowerTags = tags.map((t) => String(t).toLowerCase());
+  for (let i = 0; i < lowerTags.length; i++) {
+    const t = lowerTags[i];
     if (
-      (spot.minAge != null && spot.minAge <= 4) ||
-      (spot.maxAge != null && spot.maxAge >= 9)
+      t.indexOf("ganzer tag") !== -1 ||
+      t.indexOf("riesig") !== -1 ||
+      t.indexOf("groß") !== -1
     ) {
       return true;
     }
-    if (groups.some((g) => ["4-9", "kids"].includes(normalize(g)))) {
-      return true;
-    }
-    return false;
   }
 
-  if (ageFilter === "10+") {
-    if (spot.minAge != null && spot.minAge >= 10) return true;
-    if (groups.some((g) => ["10+", "teens"].includes(normalize(g)))) {
-      return true;
-    }
-    return false;
+  return false;
+}
+
+function updateRadiusUI(index) {
+  const slider = $("#filter-radius");
+  const descEl = $("#filter-radius-description");
+  const maxLabelEl = $("#filter-radius-max-label");
+
+  if (slider && String(slider.value) !== String(index)) {
+    slider.value = String(index);
   }
 
-  return true;
+  const radiusKm = RADIUS_LEVELS_KM[index] ?? null;
+
+  if (maxLabelEl) {
+    maxLabelEl.textContent = t("filter_radius_max_label", "Alle Spots");
+  }
+
+  if (!descEl) return;
+
+  let key;
+  switch (index) {
+    case 0:
+      key = "filter_radius_description_step0";
+      break;
+    case 1:
+      key = "filter_radius_description_step1";
+      break;
+    case 2:
+      key = "filter_radius_description_step2";
+      break;
+    case 3:
+      key = "filter_radius_description_step3";
+      break;
+    default:
+      key = "filter_radius_description_all";
+      break;
+  }
+
+  const lang = getLanguage();
+  const isGerman = !lang || lang.indexOf("de") === 0;
+
+  let fallback;
+  if (radiusKm == null) {
+    fallback = isGerman
+      ? "Alle Spots – ohne Radiusbegrenzung."
+      : "All spots – no radius limit.";
+  } else {
+    fallback = isGerman
+      ? "Im Umkreis von ca. " + radiusKm + " km ab Kartenmitte."
+      : "Within ~" + radiusKm + " km from map center.";
+  }
+
+  descEl.textContent = t(key, fallback);
 }
 
-function matchesMoodFilter(spot, mood) {
-  const moods = spot.moods || [];
-  if (!moods.length) return true; // keine Daten -> nicht rausfiltern
-  const normalized = moods.map((m) => String(m).toLowerCase());
-  return normalized.includes(String(mood).toLowerCase());
+export function initFilters({ categories, favoritesProvider, onFilterChange }) {
+  const state = {
+    query: "",
+    category: "",
+    verifiedOnly: false,
+    favoritesOnly: false,
+    bigOnly: false,
+    favorites: favoritesProvider(),
+    mood: null,
+    radiusIndex: 4, // 4 => Alle Spots
+  };
+
+  const searchInput = $("#filter-search");
+  const categorySelect = $("#filter-category");
+  const verifiedCheckbox = $("#filter-verified");
+  const favsCheckbox = $("#filter-favorites");
+  const bigCheckbox = $("#filter-big-adventures");
+  const radiusSlider = $("#filter-radius");
+  const moodButtons = Array.from(
+    document.querySelectorAll(".mood-chip"),
+  );
+
+  if (categorySelect) {
+    buildCategoryOptions(categorySelect, categories);
+  }
+
+  updateRadiusUI(state.radiusIndex);
+
+  const notify = () => onFilterChange({ ...state });
+
+  if (searchInput) {
+    searchInput.addEventListener(
+      "input",
+      debounce((e) => {
+        state.query = e.target.value || "";
+        notify();
+      }, 200),
+    );
+  }
+
+  if (categorySelect) {
+    categorySelect.addEventListener("change", (e) => {
+      state.category = e.target.value || "";
+      notify();
+    });
+  }
+
+  if (verifiedCheckbox) {
+    verifiedCheckbox.addEventListener("change", (e) => {
+      state.verifiedOnly = !!e.target.checked;
+      notify();
+    });
+  }
+
+  if (favsCheckbox) {
+    favsCheckbox.addEventListener("change", (e) => {
+      state.favoritesOnly = !!e.target.checked;
+      state.favorites = favoritesProvider();
+      notify();
+    });
+  }
+
+  if (bigCheckbox) {
+    bigCheckbox.addEventListener("change", (e) => {
+      state.bigOnly = !!e.target.checked;
+      notify();
+    });
+  }
+
+  if (radiusSlider) {
+    radiusSlider.addEventListener("input", (e) => {
+      const idx = parseInt(e.target.value, 10);
+      if (!Number.isNaN(idx)) {
+        state.radiusIndex = idx;
+        updateRadiusUI(idx);
+        notify();
+      }
+    });
+  }
+
+  if (moodButtons.length > 0) {
+    moodButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const mood = btn.dataset.mood || null;
+
+        if (state.mood === mood) {
+          state.mood = null;
+        } else {
+          state.mood = mood;
+        }
+
+        moodButtons.forEach((b) => {
+          const m = b.dataset.mood || null;
+          b.classList.toggle(
+            "mood-chip--active",
+            state.mood === m,
+          );
+        });
+
+        notify();
+      });
+    });
+  }
+
+  return state;
 }
 
-function matchesTravelModeFilter(spot, travelMode) {
-  const modes = spot.travelModes || spot.modes || [];
-  if (!modes.length) return true;
-  const normalized = modes.map((m) => String(m).toLowerCase());
-  return normalized.includes(String(travelMode).toLowerCase());
+// Wird aus app.js aufgerufen, wenn sich die Sprache ändert
+export function refreshCategorySelect(categories) {
+  const categorySelect = $("#filter-category");
+  if (!categorySelect) return;
+  buildCategoryOptions(categorySelect, categories);
+}
+
+export function applyFilters(spots, state) {
+  const query = (state.query || "").trim().toLowerCase();
+  const category = state.category || "";
+  const favoritesSet = new Set(state.favorites || []);
+  const verifiedOnly = !!state.verifiedOnly;
+  const favoritesOnly = !!state.favoritesOnly;
+  const bigOnly = !!state.bigOnly;
+  const mood = state.mood || null;
+
+  let centerLat = null;
+  let centerLng = null;
+  if (state.mapCenter) {
+    const c = state.mapCenter;
+    if (typeof c.lat === "number" && typeof c.lng === "number") {
+      centerLat = c.lat;
+      centerLng = c.lng;
+    } else if (
+      typeof c.lat === "function" &&
+      typeof c.lng === "function"
+    ) {
+      centerLat = c.lat();
+      centerLng = c.lng();
+    }
+  }
+
+  const radiusIndex =
+    typeof state.radiusIndex === "number" ? state.radiusIndex : 4;
+  const radiusKm =
+    radiusIndex >= 0 && radiusIndex < RADIUS_LEVELS_KM.length
+      ? RADIUS_LEVELS_KM[radiusIndex]
+      : null;
+
+  const results = [];
+
+  for (let i = 0; i < spots.length; i++) {
+    const spot = spots[i];
+    if (!spot) continue;
+
+    const cats = Array.isArray(spot.categories) ? spot.categories : [];
+
+    if (category && cats.indexOf(category) === -1) {
+      continue;
+    }
+
+    if (verifiedOnly && !spot.verified) {
+      continue;
+    }
+
+    if (favoritesOnly && !favoritesSet.has(spot.id)) {
+      continue;
+    }
+
+    if (bigOnly && !isBigAdventure(spot)) {
+      continue;
+    }
+
+    if (query) {
+      const parts = [
+        spot.name,
+        spot.city,
+        spot.address,
+        spot.poetry,
+        ...(spot.tags || []),
+        ...(spot.usps || []),
+        ...(spot.categories || []),
+      ]
+        .filter(Boolean)
+        .map((x) => String(x).toLowerCase());
+
+      if (parts.join(" ").indexOf(query) === -1) {
+        continue;
+      }
+    }
+
+    let distanceKm = null;
+    if (
+      radiusKm != null &&
+      centerLat != null &&
+      centerLng != null &&
+      spot.location
+    ) {
+      distanceKm = distanceInKm(
+        centerLat,
+        centerLng,
+        spot.location.lat,
+        spot.location.lng,
+      );
+      if (distanceKm > radiusKm) {
+        continue;
+      }
+    }
+
+    const moodScore = getMoodScore(spot, mood);
+    if (mood && moodScore <= 0) {
+      continue;
+    }
+
+    results.push({
+      spot,
+      moodScore,
+      distanceKm,
+    });
+  }
+
+  results.sort((a, b) => {
+    const msA = a.moodScore || 0;
+    const msB = b.moodScore || 0;
+    if (msA !== msB) {
+      return msB - msA;
+    }
+
+    const dA = a.distanceKm != null ? a.distanceKm : Infinity;
+    const dB = b.distanceKm != null ? b.distanceKm : Infinity;
+    if (dA !== dB) {
+      return dA - dB;
+    }
+
+    const nameA = a.spot.name || "";
+    const nameB = b.spot.name || "";
+    return nameA.localeCompare(nameB, "de");
+  });
+
+  return results.map((r) => {
+    r.spot._moodScore = r.moodScore;
+    r.spot._distanceKm = r.distanceKm;
+    return r.spot;
+  });
 }
