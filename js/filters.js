@@ -58,6 +58,81 @@ const MOOD_KEYWORDS = {
   animals: ["zoo", "tierpark", "wildpark", "tiere", "safari", "giraffe", "bauernhof"],
 };
 
+// Reise-Modus: welche Kategorien passen typischerweise?
+const TRAVEL_CATEGORY_MAP = {
+  everyday: [
+    "spielplatz",
+    "abenteuerspielplatz",
+    "indoor-spielplatz",
+    "waldspielplatz",
+    "wasserspielplatz",
+    "park-garten",
+    "picknickwiese",
+    "toddler-barfuss-motorik",
+    "verkehrsgarten",
+    "schwimmbad",
+    "badesee",
+  ],
+  trip: [
+    "zoo",
+    "wildpark",
+    "tierpark",
+    "freizeitpark",
+    "campingplatz-familien",
+    "rastplatz-spielplatz-dusche",
+    "stellplatz-spielplatz-naehe-kostenlos",
+    "wohnmobil-service-station",
+    "bikepacking-spot",
+    "familien-restaurant",
+    "familiencafe",
+    "kinder-familiencafe",
+  ],
+};
+
+// Alters-„Profile“ über Kategorien
+const AGE_CATEGORY_MAP = {
+  "0-3": [
+    "spielplatz",
+    "waldspielplatz",
+    "indoor-spielplatz",
+    "toddler-barfuss-motorik",
+    "verkehrsgarten",
+    "picknickwiese",
+    "park-garten",
+    "badesee",
+    "schwimmbad",
+  ],
+  "4-9": [
+    "spielplatz",
+    "abenteuerspielplatz",
+    "waldspielplatz",
+    "wasserspielplatz",
+    "zoo",
+    "wildpark",
+    "tierpark",
+    "freizeitpark",
+    "verkehrsgarten",
+    "naturerlebnispfad",
+    "walderlebnisroute",
+    "minigolf",
+    "kletterhalle",
+    "kletteranlage-outdoor",
+    "boulderpark",
+    "trampolinpark",
+  ],
+  "10+": [
+    "freizeitpark",
+    "pumptrack",
+    "skatepark",
+    "multifunktionsfeld",
+    "bewegungspark",
+    "kletterhalle",
+    "kletteranlage-outdoor",
+    "boulderpark",
+    "radweg-family",
+  ],
+};
+
 function buildCategoryOptions(categorySelect, categories) {
   const lang = getLanguage();
   const currentValue = categorySelect.value || "";
@@ -132,6 +207,82 @@ function getMoodScore(spot, mood) {
   for (let i = 0; i < moodKeywords.length; i++) {
     const kw = moodKeywords[i];
     if (allText.indexOf(kw) !== -1) {
+      score += 1;
+    }
+  }
+
+  return score;
+}
+
+function getTravelScore(spot, travelMode) {
+  if (!travelMode) return 0;
+
+  const categories = Array.isArray(spot.categories) ? spot.categories : [];
+  const travelCats = TRAVEL_CATEGORY_MAP[travelMode] || [];
+  if (travelCats.length === 0 || categories.length === 0) return 0;
+
+  let score = 0;
+  for (let i = 0; i < categories.length; i++) {
+    if (travelCats.indexOf(categories[i]) !== -1) {
+      score += 2;
+    }
+  }
+  return score;
+}
+
+function getAgeScore(spot, ageRange) {
+  if (!ageRange || ageRange === "all") return 0;
+
+  const categories = Array.isArray(spot.categories) ? spot.categories : [];
+  const tags = Array.isArray(spot.tags) ? spot.tags : [];
+  const ageCats = AGE_CATEGORY_MAP[ageRange] || [];
+
+  let score = 0;
+
+  for (let i = 0; i < categories.length; i++) {
+    if (ageCats.indexOf(categories[i]) !== -1) {
+      score += 2;
+    }
+  }
+
+  // Grobe Stichwortsuche
+  const lowerText =
+    [
+      spot.summary_de,
+      spot.summary_en,
+      spot.visitLabel_de,
+      spot.visitLabel_en,
+      spot.poetry,
+    ]
+      .filter(Boolean)
+      .map((s) => String(s).toLowerCase())
+      .join(" ") +
+    " " +
+    tags.map((t) => String(t).toLowerCase()).join(" ");
+
+  if (ageRange === "0-3") {
+    if (
+      lowerText.includes("kleinkind") ||
+      lowerText.includes("toddler") ||
+      lowerText.includes("baby") ||
+      lowerText.includes("kinderwagen")
+    ) {
+      score += 1;
+    }
+  } else if (ageRange === "4-9") {
+    if (
+      lowerText.includes("grundschule") ||
+      lowerText.includes("4–9") ||
+      lowerText.includes("4-9")
+    ) {
+      score += 1;
+    }
+  } else if (ageRange === "10+") {
+    if (
+      lowerText.includes("jugendliche") ||
+      lowerText.includes("teen") ||
+      lowerText.includes("10+")
+    ) {
       score += 1;
     }
   }
@@ -240,6 +391,8 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     favorites: favoritesProvider(),
     mood: null,
     radiusIndex: 4, // 4 => Alle Spots
+    travelMode: null, // "everyday" | "trip" | null
+    ageRange: "all", // "all" | "0-3" | "4-9" | "10+"
   };
 
   const searchInput = $("#filter-search");
@@ -249,6 +402,8 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const bigCheckbox = $("#filter-big-adventures");
   const radiusSlider = $("#filter-radius");
   const moodButtons = Array.from(document.querySelectorAll(".mood-chip"));
+  const travelButtons = Array.from(document.querySelectorAll(".travel-chip"));
+  const ageSelect = $("#filter-age");
 
   if (categorySelect) {
     buildCategoryOptions(categorySelect, categories);
@@ -329,6 +484,36 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     });
   }
 
+  if (travelButtons.length > 0) {
+    travelButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const mode = btn.dataset.travelMode || null;
+
+        if (state.travelMode === mode) {
+          state.travelMode = null;
+        } else {
+          state.travelMode = mode;
+        }
+
+        travelButtons.forEach((b) => {
+          const m = b.dataset.travelMode || null;
+          b.classList.toggle("travel-chip--active", state.travelMode === m);
+        });
+
+        notify();
+      });
+    });
+  }
+
+  if (ageSelect) {
+    ageSelect.value = state.ageRange;
+    ageSelect.addEventListener("change", (e) => {
+      const val = e.target.value || "all";
+      state.ageRange = val;
+      notify();
+    });
+  }
+
   return state;
 }
 
@@ -347,6 +532,8 @@ export function applyFilters(spots, state) {
   const favoritesOnly = !!state.favoritesOnly;
   const bigOnly = !!state.bigOnly;
   const mood = state.mood || null;
+  const travelMode = state.travelMode || null;
+  const ageRange = state.ageRange || "all";
 
   let centerLat = null;
   let centerLng = null;
@@ -368,7 +555,7 @@ export function applyFilters(spots, state) {
       ? RADIUS_LEVELS_KM[radiusIndex]
       : null;
 
-  // Neu: Kreis auf der Karte aktualisieren (oder entfernen)
+  // Kreis auf der Karte aktualisieren (oder entfernen)
   if (radiusKm != null && centerLat != null && centerLng != null) {
     updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
   } else {
@@ -440,24 +627,39 @@ export function applyFilters(spots, state) {
       continue;
     }
 
+    const travelScore = getTravelScore(spot, travelMode);
+    const ageScore = getAgeScore(spot, ageRange);
+
     results.push({
       spot,
       moodScore,
       distanceKm,
+      travelScore,
+      ageScore,
     });
   }
 
   results.sort((a, b) => {
-    const msA = a.moodScore || 0;
-    const msB = b.moodScore || 0;
-    if (msA !== msB) {
-      return msB - msA;
+    const wA =
+      (a.moodScore || 0) * 2 + (a.travelScore || 0) + (a.ageScore || 0);
+    const wB =
+      (b.moodScore || 0) * 2 + (b.travelScore || 0) + (b.ageScore || 0);
+
+    if (wA !== wB) {
+      return wB - wA; // höhere Scores zuerst
     }
 
     const dA = a.distanceKm != null ? a.distanceKm : Infinity;
     const dB = b.distanceKm != null ? b.distanceKm : Infinity;
     if (dA !== dB) {
       return dA - dB;
+    }
+
+    // Verifizierte Spots leicht bevorzugen
+    const vA = a.spot.verified ? 1 : 0;
+    const vB = b.spot.verified ? 1 : 0;
+    if (vA !== vB) {
+      return vB - vA;
     }
 
     const nameA = a.spot.name || "";
@@ -468,6 +670,8 @@ export function applyFilters(spots, state) {
   return results.map((r) => {
     r.spot._moodScore = r.moodScore;
     r.spot._distanceKm = r.distanceKm;
+    r.spot._travelScore = r.travelScore;
+    r.spot._ageScore = r.ageScore;
     return r.spot;
   });
 }
