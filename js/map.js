@@ -2,6 +2,8 @@
 
 // js/map.js
 
+import { getLanguage } from "./i18n.js";
+
 let map = null;
 let markerLayer = null;
 let onMarkerSelectCallback = null;
@@ -10,7 +12,31 @@ let radiusCircle = null;
 let currentMarkerRunId = 0;
 
 /**
- * Kleiner Helfer zum HTML-Escapen.
+ * Hilfsfunktion: sichert uns eine brauchbare Sprache ("de" / "en").
+ */
+function getCurrentLanguage() {
+  try {
+    const langFromI18n = getLanguage && getLanguage();
+    if (langFromI18n) return langFromI18n;
+  } catch {
+    // falls irgendwas schief geht, gehen wir unten auf Fallbacks
+  }
+
+  if (typeof document !== "undefined" && document.documentElement) {
+    const htmlLang = document.documentElement.lang;
+    if (htmlLang) return htmlLang;
+  }
+
+  if (typeof navigator !== "undefined" && navigator.language) {
+    return navigator.language;
+  }
+
+  return "de";
+}
+
+/**
+ * Kleiner Helfer zum HTML-Escapen, damit Sonderzeichen in Titeln etc.
+ * keine Probleme machen.
  */
 function escapeHtml(str) {
   if (!str) return "";
@@ -23,15 +49,10 @@ function escapeHtml(str) {
 }
 
 /**
- * Bestimmt den Text für das Popup.
+ * Bestimmt den Text für das Popup (kurze Zusammenfassung / Poetry).
  */
 function getSpotPopupSummary(spot) {
-  let lang = "de";
-
-  if (typeof document !== "undefined" && document.documentElement) {
-    lang = document.documentElement.lang || "de";
-  }
-
+  const lang = getCurrentLanguage();
   const isEn = lang.toLowerCase().indexOf("en") === 0;
 
   const poetry = (spot.poetry || "").trim();
@@ -89,6 +110,8 @@ export function initMap(options) {
     keepBuffer: 2,
   }).addTo(map);
 
+  // Workaround: direkt nach Init einmal invalidateSize,
+  // damit die Karte auch in flex-Layouts korrekt berechnet.
   setTimeout(() => {
     map.invalidateSize();
   }, 0);
@@ -106,11 +129,10 @@ export function getMap() {
 }
 
 function ensureMarkerLayer() {
-  if (!map) {
-    return null;
-  }
+  if (!map) return null;
 
   if (!markerLayer) {
+    // Cluster-Gruppe, falls Plugin geladen ist
     if (typeof L.markerClusterGroup === "function") {
       markerLayer = L.markerClusterGroup({
         showCoverageOnHover: false,
@@ -119,6 +141,7 @@ function ensureMarkerLayer() {
         maxClusterRadius: 60,
       });
     } else {
+      // Fallback: normale LayerGroup
       markerLayer = L.layerGroup();
     }
 
@@ -131,27 +154,26 @@ function ensureMarkerLayer() {
 /**
  * Zeichnet alle Spots auf die Karte.
  * Alte Marker werden vorher entfernt.
+ *
+ * Erwartet Spots mit:
+ *  - id: string
+ *  - name/title: string
+ *  - city?: string
+ *  - location: { lat: number, lng: number }
  */
 export function setSpotsOnMap(spots) {
-  if (!map) {
-    return;
-  }
+  if (!map) return;
 
   const layer = ensureMarkerLayer();
-  if (!layer) {
-    return;
-  }
+  if (!layer) return;
 
+  // neuen Lauf markieren, damit alte Timeouts ignoriert werden
   const runId = ++currentMarkerRunId;
 
   layer.clearLayers();
   markersById.clear();
 
-  // Sprache für Link-Beschriftungen bestimmen
-  let lang = "de";
-  if (typeof document !== "undefined" && document.documentElement) {
-    lang = document.documentElement.lang || "de";
-  }
+  const lang = getCurrentLanguage();
   const isEn = lang.toLowerCase().indexOf("en") === 0;
 
   const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
@@ -159,11 +181,12 @@ export function setSpotsOnMap(spots) {
 
   const markers = [];
 
-  spots.forEach(function (spot) {
-    if (!spot.location) return;
+  (spots || []).forEach((spot) => {
+    if (!spot || !spot.location) return;
 
-    const lat = spot.location.lat;
-    const lng = spot.location.lng;
+    const { lat, lng } = spot.location;
+    if (lat == null || lng == null) return;
+
     const marker = L.marker([lat, lng]);
 
     const summary = getSpotPopupSummary(spot);
@@ -204,15 +227,18 @@ export function setSpotsOnMap(spots) {
 
     marker.bindPopup(popupHtml);
 
+    // Klick auf den Pin: Popup + Detail-Panel in der Sidebar
     marker.on("click", function () {
       if (onMarkerSelectCallback) {
         onMarkerSelectCallback(spot.id);
       }
     });
 
+    // Pin-Pop-Animation, sobald der Marker im DOM ist
     marker.on("add", () => {
       const el = marker.getElement();
       if (!el) return;
+      // Cluster-Icons nicht animieren
       if (el.classList.contains("marker-cluster")) return;
       el.classList.add("pin-pop");
       setTimeout(() => el.classList.remove("pin-pop"), 260);
@@ -221,14 +247,13 @@ export function setSpotsOnMap(spots) {
     markers.push({ spot, marker });
   });
 
+  // Marker schubweise hinzufügen (sanftes „Aufpoppen“)
   let delay = 0;
-  const step = 18;
+  const step = 18; // ms zwischen den Pins
 
   markers.forEach(({ spot, marker }) => {
     setTimeout(() => {
-      if (runId !== currentMarkerRunId) {
-        return;
-      }
+      if (runId !== currentMarkerRunId) return; // veralteter Lauf
       layer.addLayer(marker);
       markersById.set(spot.id, marker);
     }, delay);
@@ -237,15 +262,15 @@ export function setSpotsOnMap(spots) {
 }
 
 /**
- * Zentriert die Karte auf einen Spot.
+ * Zentriert die Karte auf einen Spot und öffnet ggf. das Popup.
+ *
+ * @param {{id: string, location?: {lat: number, lng: number}}} spot
  */
 export function focusOnSpot(spot) {
-  if (!map || !spot || !spot.location) {
-    return;
-  }
+  if (!map || !spot || !spot.location) return;
 
-  const lat = spot.location.lat;
-  const lng = spot.location.lng;
+  const { lat, lng } = spot.location;
+  if (lat == null || lng == null) return;
 
   map.setView([lat, lng], 15, {
     animate: true,
