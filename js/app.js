@@ -116,6 +116,46 @@ function initUIEvents() {
     });
   }
 
+  // Familien-Kompass
+  const compassBtn = $("#compass-apply");
+  if (compassBtn) {
+    compassBtn.addEventListener("click", () => {
+      // 1) Wenn keine Stimmung gewählt ist -> "relaxed"
+      if (!currentFilterState || !currentFilterState.mood) {
+        const relaxedBtn = document.querySelector(
+          '.mood-chip[data-mood="relaxed"]',
+        );
+        if (relaxedBtn) {
+          relaxedBtn.click();
+        }
+      }
+
+      // 2) Radius: wenn "Alle Spots" (Index 4), auf 15 km (Index 1) setzen
+      const radiusSlider = $("#filter-radius");
+      if (
+        radiusSlider &&
+        String(radiusSlider.value) === "4" // "Alle Spots"
+      ) {
+        radiusSlider.value = "1";
+        radiusSlider.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+
+      // 3) Nur verifizierte Spots aktivieren
+      const verifiedCheckbox = $("#filter-verified");
+      if (verifiedCheckbox && !verifiedCheckbox.checked) {
+        verifiedCheckbox.checked = true;
+        verifiedCheckbox.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
+      showToast(
+        t(
+          "compass_applied",
+          "Kompass angewendet: verifizierte Spots in eurem Umkreis für einen entspannten Familien-Ausflug.",
+        ),
+      );
+    });
+  }
+
   // Sprache
   const langSelect = $("#language-switcher");
   if (langSelect) {
