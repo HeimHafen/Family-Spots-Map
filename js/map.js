@@ -6,6 +6,7 @@ let map = null;
 let markerLayer = null;
 let onMarkerSelectCallback = null;
 const markersById = new Map();
+let radiusCircle = null;
 
 /**
  * Kleiner Helfer zum HTML-Escapen, damit Sonderzeichen in Titeln etc.
@@ -24,10 +25,11 @@ function escapeHtml(str) {
 /**
  * Bestimmt den Text für das Popup.
  *
- * 1. Wenn vorhanden: Poesie-Zeile (poetry)
- * 2. Sonst: Summary in aktueller Sprache (summary_de / summary_en)
- * 3. Sonst: Besuchstipp (visitLabel_*)
- * 4. Sonst: Summary der anderen Sprache
+ * Neue Idee:
+ * 1. Wenn vorhanden: Poesie-Zeile (poetry) – die ist individuell & schön.
+ * 2. Sonst: Summary in aktueller Sprache (summary_de / summary_en).
+ * 3. Sonst: Besuchstipp (visitLabel_*).
+ * 4. Sonst: Summary der anderen Sprache.
  */
 function getSpotPopupSummary(spot) {
   let lang = "de";
@@ -144,8 +146,8 @@ export function setSpotsOnMap(spots) {
   }
   const isEn = lang.toLowerCase().indexOf("en") === 0;
 
-  const googleLabel = isEn ? "Directions (Google Maps)" : "Route (Google Maps)";
-  const appleLabel = isEn ? "Directions (Apple Maps)" : "Route (Apple Karten)";
+  const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
+  const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
 
   spots.forEach(function (spot) {
     if (!spot.location) return;
@@ -166,8 +168,7 @@ export function setSpotsOnMap(spots) {
       (encodedName ? "&destination_place_id=&query=" + encodedName : "");
 
     const appleMapsUrl =
-      "https://maps.apple.com/?daddr=" +
-      encodeURIComponent(lat + "," + lng);
+      "https://maps.apple.com/?daddr=" + encodeURIComponent(lat + "," + lng);
 
     // Popup-Inhalt: Name, Stadt, Info-Text + Routen-Links
     const popupHtml =
@@ -226,4 +227,30 @@ export function focusOnSpot(spot) {
   if (marker && typeof marker.openPopup === "function") {
     marker.openPopup();
   }
+}
+
+/**
+ * Aktualisiert/zeichnet den Radius-Kreis für den Micro-Abenteuer-Radius.
+ *
+ * @param {{lat: number, lng: number} | null} origin
+ * @param {number | null} radiusKm
+ */
+export function updateRadiusCircle(origin, radiusKm) {
+  if (!map) return;
+
+  if (radiusCircle) {
+    map.removeLayer(radiusCircle);
+    radiusCircle = null;
+  }
+
+  if (!origin || !radiusKm || radiusKm <= 0) {
+    return;
+  }
+
+  radiusCircle = L.circle([origin.lat, origin.lng], {
+    radius: radiusKm * 1000,
+    className: "radius-circle",
+  });
+
+  radiusCircle.addTo(map);
 }
