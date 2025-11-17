@@ -1,10 +1,13 @@
+// js/filters.js
+
 import { $, debounce } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 
-// Wichtig: kein kaputter Import mehr aus map.js
-// Stattdessen eine lokale Stub‑Funktion, damit die Aufrufe nicht crashen.
+// Wenn du irgendwann einen Radius-Kreis auf der Karte zeichnen willst,
+// kannst du diese Funktion in map.js implementieren und hier importieren.
+// Solange ist es ein Stub, damit kein Fehler entsteht.
 function updateRadiusCircle() {
-  // no‑op: Kreis auf der Karte optional, verhindert aber Fehler
+  // no-op
 }
 
 const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
@@ -58,7 +61,15 @@ const MOOD_KEYWORDS = {
     "planschen",
     "wasserspiel",
   ],
-  animals: ["zoo", "tierpark", "wildpark", "tiere", "safari", "giraffe", "bauernhof"],
+  animals: [
+    "zoo",
+    "tierpark",
+    "wildpark",
+    "tiere",
+    "safari",
+    "giraffe",
+    "bauernhof",
+  ],
 };
 
 const TRAVEL_CATS_EVERYDAY = new Set([
@@ -239,7 +250,7 @@ function isBigAdventure(spot) {
     freizeitpark: true,
     zoo: true,
     wildpark: true,
-    tierpark: true
+    tierpark: true,
   };
   for (let i = 0; i < categories.length; i++) {
     if (bigCats[categories[i]]) {
@@ -247,7 +258,9 @@ function isBigAdventure(spot) {
     }
   }
 
-  const visitMinutes = Number(spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes);
+  const visitMinutes = Number(
+    spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes
+  );
   if (!Number.isNaN(visitMinutes) && visitMinutes >= 240) {
     return true;
   }
@@ -256,7 +269,11 @@ function isBigAdventure(spot) {
   const lowerTags = tags.map((t) => String(t).toLowerCase());
   for (let i = 0; i < lowerTags.length; i++) {
     const t = lowerTags[i];
-    if (t.indexOf("ganzer tag") !== -1 || t.indexOf("riesig") !== -1 || t.indexOf("groß") !== -1) {
+    if (
+      t.indexOf("ganzer tag") !== -1 ||
+      t.indexOf("riesig") !== -1 ||
+      t.indexOf("groß") !== -1
+    ) {
       return true;
     }
   }
@@ -265,9 +282,9 @@ function isBigAdventure(spot) {
 }
 
 function updateRadiusUI(index) {
-  const slider = $("#filter‑radius");
-  const descEl = $("#filter‑radius‑description");
-  const maxLabelEl = $("#filter‑radius‑max‑label");
+  const slider = $("#filter-radius");
+  const descEl = $("#filter-radius-description");
+  const maxLabelEl = $("#filter-radius-max-label");
   if (slider && String(slider.value) !== String(index)) {
     slider.value = String(index);
   }
@@ -303,16 +320,20 @@ function updateRadiusUI(index) {
 
   let fallback;
   if (radiusKm == null) {
-    fallback = isGerman ? "Alle Spots – ohne Radiusbegrenzung." : "All spots – no radius limit.";
+    fallback = isGerman
+      ? "Alle Spots – ohne Radiusbegrenzung."
+      : "All spots – no radius limit.";
   } else {
-    fallback = isGerman ? "Im Umkreis von ca. " + radiusKm + " km ab Kartenmitte." : "Within ~" + radiusKm + " km from map center.";
+    fallback = isGerman
+      ? `Im Umkreis von ca. ${radiusKm} km ab Kartenmitte.`
+      : `Within ~${radiusKm} km from map center.`;
   }
 
   descEl.textContent = t(key, fallback);
 }
 
 /**
- * Initialisiert alle Filter‑Controls und gibt den initialen State zurück.
+ * Initialisiert alle Filter-Controls und gibt den initialen State zurück.
  */
 export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const state = {
@@ -328,15 +349,15 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     ageGroup: "all", // "all" | "0-3" | "4-9" | "10+"
   };
 
-  const searchInput = $("#filter‑search");
-  const categorySelect = $("#filter‑category");
-  const verifiedCheckbox = $("#filter‑verified");
-  const favsCheckbox = $("#filter‑favorites");
-  const bigCheckbox = $("#filter‑big‑adventures");
-  const radiusSlider = $("#filter‑radius");
-  const moodButtons = Array.from(document.querySelectorAll(".mood‑chip"));
-  const travelButtons = Array.from(document.querySelectorAll(".travel‑chip"));
-  const ageSelect = $("#filter‑age");
+  const searchInput = $("#filter-search");
+  const categorySelect = $("#filter-category");
+  const verifiedCheckbox = $("#filter-verified");
+  const favsCheckbox = $("#filter-favorites");
+  const bigCheckbox = $("#filter-big-adventures");
+  const radiusSlider = $("#filter-radius");
+  const moodButtons = Array.from(document.querySelectorAll(".mood-chip"));
+  const travelButtons = Array.from(document.querySelectorAll(".travel-chip"));
+  const ageSelect = $("#filter-age");
 
   if (categorySelect) {
     buildCategoryOptions(categorySelect, categories);
@@ -351,10 +372,13 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   };
 
   if (searchInput) {
-    searchInput.addEventListener("input", debounce((e) => {
-      state.query = e.target.value || "";
-      notify();
-    }, 200));
+    searchInput.addEventListener(
+      "input",
+      debounce((e) => {
+        state.query = e.target.value || "";
+        notify();
+      }, 200)
+    );
   }
 
   if (categorySelect) {
@@ -408,7 +432,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
         }
         moodButtons.forEach((b) => {
           const m = b.dataset.mood || null;
-          b.classList.toggle("mood‑chip‑‑active", state.mood === m);
+          b.classList.toggle("mood-chip--active", state.mood === m);
         });
         notify();
       });
@@ -426,7 +450,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
         }
         travelButtons.forEach((b) => {
           const m = b.dataset.travelMode || null;
-          b.classList.toggle("travel‑chip‑‑active", state.travelMode === m);
+          b.classList.toggle("travel-chip--active", state.travelMode === m);
         });
         notify();
       });
@@ -445,10 +469,10 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
 }
 
 /**
- * Wird aus app.js aufgerufen, wenn sich die Sprache ändert
+ * Wird aus app.js aufgerufen, wenn sich die Sprache ändert.
  */
 export function refreshCategorySelect(categories) {
-  const categorySelect = $("#filter‑category");
+  const categorySelect = $("#filter-category");
   if (!categorySelect) return;
   buildCategoryOptions(categorySelect, categories);
 }
@@ -568,8 +592,10 @@ export function applyFilters(spots, state) {
   }
 
   results.sort((a, b) => {
-    const scoreA = (a.moodScore || 0) * 10 + (a.travelScore || 0) * 3 + (a.ageScore || 0);
-    const scoreB = (b.moodScore || 0) * 10 + (b.travelScore || 0) * 3 + (b.ageScore || 0);
+    const scoreA =
+      (a.moodScore || 0) * 10 + (a.travelScore || 0) * 3 + (a.ageScore || 0);
+    const scoreB =
+      (b.moodScore || 0) * 10 + (b.travelScore || 0) * 3 + (b.ageScore || 0);
 
     if (scoreA !== scoreB) {
       return scoreB - scoreA;
