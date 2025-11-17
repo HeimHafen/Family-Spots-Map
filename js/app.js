@@ -14,8 +14,7 @@ import {
   loadAppData,
   getSpots,
   getCategories,
-  findSpotById,
-  loadPartnerCodes
+  findSpotById
 } from "./data.js";
 import {
   initFilters,
@@ -36,6 +35,27 @@ let filteredSpots = [];
 let plusStatus = null;
 let partnerCodesCache = null;
 let currentSelectedSpotId = null;
+
+// -----------------------------------------------------
+// Partner-Codes laden (lokale Helper-Funktion)
+// -----------------------------------------------------
+
+async function loadPartnerCodes() {
+  if (partnerCodesCache) return partnerCodesCache;
+
+  const res = await fetch("data/partner-codes.json", {
+    cache: "no-store"
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to load partner codes");
+  }
+
+  const json = await res.json();
+  const codes = Array.isArray(json) ? json : json.codes || [];
+  partnerCodesCache = codes;
+  return codes;
+}
 
 // -----------------------------------------------------
 // Mein Tag – Daylog
@@ -322,8 +342,7 @@ function initUIEvents() {
       }
       const normalized = rawCode.toUpperCase();
       try {
-        const codes =
-          partnerCodesCache || (partnerCodesCache = await loadPartnerCodes());
+        const codes = await loadPartnerCodes();
         const match = codes.find(
           (c) =>
             String(c.code).toUpperCase() === normalized &&
