@@ -1,5 +1,3 @@
-// js/data.js
-
 // Zentrale Struktur für App-Daten
 let appData = {
   index: null,
@@ -35,10 +33,8 @@ export async function loadAppData() {
   const rawSpots = Array.isArray(spotsJson.spots) ? spotsJson.spots : [];
 
   const normalizedSpots = rawSpots
-    .filter(function (raw) {
-      return raw && raw.id;
-    })
-    .map(function (raw) {
+    .filter((raw) => raw && raw.id)
+    .map((raw) => {
       // Lat/Lon aus deinen Daten (lat / lon)
       let lat = null;
       let lng = null;
@@ -82,20 +78,22 @@ export async function loadAppData() {
         name: raw.name
           ? String(raw.name)
           : raw.title
-            ? String(raw.title)
-            : "",
+          ? String(raw.title)
+          : "",
         title: raw.title
           ? String(raw.title)
           : raw.name
-            ? String(raw.name)
-            : "",
+          ? String(raw.name)
+          : "",
 
         // Ort / Land
         city: raw.city ? String(raw.city) : "",
         country: raw.country ? String(raw.country) : "",
 
         // Kategorien
-        categories: Array.isArray(raw.categories) ? raw.categories.slice() : [],
+        categories: Array.isArray(raw.categories)
+          ? raw.categories.slice()
+          : [],
 
         // Tags
         tags: Array.isArray(raw.tags) ? raw.tags.slice() : [],
@@ -104,7 +102,7 @@ export async function loadAppData() {
         verified: !!raw.verified,
 
         // Besuchsdauer
-        visit_minutes: (function () {
+        visit_minutes: (() => {
           if (
             raw.visit_minutes !== undefined &&
             raw.visit_minutes !== null &&
