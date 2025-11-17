@@ -1,5 +1,3 @@
-// js/app.js
-
 import { $, $$, getGeolocation } from "./utils.js";
 import {
   getSettings,
@@ -272,6 +270,20 @@ function initUIEvents() {
       });
     }
   }
+
+  // NEU: X-Buttons in den Sidebar-Sections (Familien-Kompass / Plus) schließen das Details-Element
+  $$(".sidebar-section-close").forEach((btn) => {
+    btn.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation(); // verhindert das Standard-Toggle von <summary>
+      const targetId = btn.dataset.target;
+      if (!targetId) return;
+      const details = document.getElementById(targetId);
+      if (details && details.tagName.toLowerCase() === "details") {
+        details.open = false;
+      }
+    });
+  });
 
   // Fenster-/Orientierungswechsel: Map-Größe aktualisieren
   window.addEventListener("resize", () => {
