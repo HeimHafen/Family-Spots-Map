@@ -247,34 +247,27 @@ function initUIEvents() {
     });
   }
 
+  // ---------------------------------------------------
+  // Filter ein-/ausblenden
+  // ---------------------------------------------------
   const filterToggleBtn = $("#btn-toggle-filters");
   if (filterToggleBtn) {
     const filterSection = filterToggleBtn.closest(".sidebar-section");
     const labelSpan = filterToggleBtn.querySelector("span");
+
     if (filterSection && labelSpan) {
       const filterControls = Array.from(
         filterSection.querySelectorAll(".filter-group")
       );
 
-      // Auf Mobile initial einklappen
-      if (window.innerWidth <= 900 && filterControls.length > 0) {
-        filterControls.forEach((el) => el.classList.add("hidden"));
-        labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
-        const map = getMap();
-        if (map) {
-          setTimeout(() => map.invalidateSize(), 0);
-        }
-      }
+      let filtersVisible = true;
 
-      filterToggleBtn.addEventListener("click", () => {
-        if (!filterControls.length) return;
-        const currentlyHidden = filterControls[0].classList.contains("hidden");
-        const makeVisible = currentlyHidden;
-
+      const setFiltersVisible = (visible) => {
+        filtersVisible = visible;
         filterControls.forEach((el) =>
-          el.classList.toggle("hidden", !makeVisible)
+          el.classList.toggle("hidden", !visible)
         );
-        labelSpan.textContent = makeVisible
+        labelSpan.textContent = visible
           ? t("btn_hide_filters", "Filter ausblenden")
           : t("btn_show_filters", "Filter anzeigen");
 
@@ -282,10 +275,22 @@ function initUIEvents() {
         if (map) {
           setTimeout(() => map.invalidateSize(), 0);
         }
+      };
+
+      // Mobile: initial einklappen
+      if (window.innerWidth <= 900 && filterControls.length > 0) {
+        setFiltersVisible(false);
+      } else {
+        setFiltersVisible(true);
+      }
+
+      filterToggleBtn.addEventListener("click", () => {
+        setFiltersVisible(!filtersVisible);
       });
     }
   }
 
+  // Close-Buttons in den Sidebar-Sections
   $$(".sidebar-section-close").forEach((btn) => {
     btn.addEventListener("click", (ev) => {
       ev.preventDefault();
