@@ -122,15 +122,34 @@
           <!-- Sidebar (Kompass + Plus + Filter + Liste) -->
           <aside class="sidebar">
             <!-- Familien-Kompass (einklappbar) -->
-            <details class="sidebar-section" id="compass-section" open>
+            <details
+              class="sidebar-section"
+              id="compass-section"
+              open
+            >
               <summary class="sidebar-section-header">
-                <h2 class="sidebar-section-title" id="compass-label">
+                <h2
+                  class="sidebar-section-title"
+                  id="compass-label"
+                >
                   Familien-Kompass
                 </h2>
+                <!-- NEU: Close-Button -->
+                <button
+                  type="button"
+                  class="btn-icon sidebar-section-close"
+                  data-target="compass-section"
+                  aria-label="Kompass-Bereich schließen"
+                >
+                  ×
+                </button>
               </summary>
 
               <div class="compass-card">
-                <p class="filter-group-helper" id="compass-helper">
+                <p
+                  class="filter-group-helper"
+                  id="compass-helper"
+                >
                   Der Familien-Kompass hilft euch mit einem Klick Spots zu
                   finden, die zu eurer Zeit, eurem Alter und eurer Energie
                   passen.
@@ -148,11 +167,24 @@
             </details>
 
             <!-- Family Spots Plus (einklappbar) -->
-            <details class="sidebar-section" id="plus-section" open>
+            <details
+              class="sidebar-section"
+              id="plus-section"
+              open
+            >
               <summary class="sidebar-section-header">
                 <h2 class="sidebar-section-title">
                   Family Spots Plus
                 </h2>
+                <!-- NEU: Close-Button -->
+                <button
+                  type="button"
+                  class="btn-icon sidebar-section-close"
+                  data-target="plus-section"
+                  aria-label="Family Spots Plus schließen"
+                >
+                  ×
+                </button>
               </summary>
 
               <div class="filter-group">
@@ -191,7 +223,10 @@
             <!-- Filter-Section -->
             <section class="sidebar-section">
               <header class="sidebar-section-header">
-                <h2 class="sidebar-section-title" id="filter-title">
+                <h2
+                  class="sidebar-section-title"
+                  id="filter-title"
+                >
                   Filter
                 </h2>
                 <button
@@ -237,10 +272,16 @@
 
               <!-- Stimmung -->
               <div class="filter-group">
-                <label class="filter-group-label" id="filter-mood-label">
+                <label
+                  class="filter-group-label"
+                  id="filter-mood-label"
+                >
                   Stimmung
                 </label>
-                <p class="filter-group-helper" id="filter-mood-helper">
+                <p
+                  class="filter-group-helper"
+                  id="filter-mood-helper"
+                >
                   Wonach fühlt es sich heute an?
                 </p>
                 <div class="mood-row" aria-label="Stimmung wählen">
@@ -289,10 +330,16 @@
 
               <!-- Reise-Modus -->
               <div class="filter-group">
-                <label class="filter-group-label" id="filter-travel-label">
+                <label
+                  class="filter-group-label"
+                  id="filter-travel-label"
+                >
                   Reise-Modus
                 </label>
-                <p class="filter-group-helper" id="filter-travel-helper">
+                <p
+                  class="filter-group-helper"
+                  id="filter-travel-helper"
+                >
                   Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo,
                   Auto oder Bahn?
                 </p>
@@ -354,7 +401,10 @@
                 >
                   Micro-Abenteuer-Radius
                 </label>
-                <p class="filter-group-helper" id="filter-radius-helper">
+                <p
+                  class="filter-group-helper"
+                  id="filter-radius-helper"
+                >
                   Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht
                   sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).
                 </p>
@@ -368,7 +418,10 @@
                     value="4"
                     aria-label="Micro-Abenteuer-Radius"
                   />
-                  <span id="filter-radius-max-label" class="radius-max-label">
+                  <span
+                    id="filter-radius-max-label"
+                    class="radius-max-label"
+                  >
                     Alle Spots
                   </span>
                 </div>
@@ -383,7 +436,10 @@
               <!-- Checkboxen -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-big-label">
-                  <input id="filter-big-adventures" type="checkbox" />
+                  <input
+                    id="filter-big-adventures"
+                    type="checkbox"
+                  />
                   <span>Nur große Abenteuer</span>
                 </label>
               </div>
@@ -409,7 +465,10 @@
               aria-label="Spots"
             >
               <header class="sidebar-section-header">
-                <h2 class="sidebar-section-title" id="spots-title">
+                <h2
+                  class="sidebar-section-title"
+                  id="spots-title"
+                >
                   Spots
                 </h2>
                 <button
@@ -605,7 +664,7 @@
               parents for parents. Instead of endless lists or anonymous
               ratings, you’ll find selected playgrounds, zoos, wildlife parks,
               water spots, museums, movement parks and many more places that
-              have proven themselves in real life with kids.
+              have provthemselves in real life with kids.
             </p>
             <p>
               The focus: quality, safety and real experiences with children –
@@ -739,7 +798,10 @@
       <!-- BOTTOM NAV + TOAST      -->
       <!-- ======================= -->
       <nav class="bottom-nav" aria-label="Hauptnavigation">
-        <div class="bottom-nav-background" aria-hidden="true"></div>
+        <div
+          class="bottom-nav-background"
+          aria-hidden="true"
+        ></div>
         <div
           id="bottom-nav-indicator"
           class="bottom-nav-indicator"
