@@ -66,7 +66,7 @@ const MOOD_KEYWORDS = {
   ],
 };
 
-// Travel-Heuristiken
+// Travel-Heuristiken: welche Kategorien sind eher „Alltag“, welche „Unterwegs“
 const TRAVEL_CATS_EVERYDAY = new Set([
   "spielplatz",
   "abenteuerspielplatz",
@@ -514,7 +514,7 @@ export function applyFilters(spots, state) {
       ? RADIUS_LEVELS_KM[radiusIndex]
       : null;
 
-  // Kreis auf der Karte aktualisieren (oder entfernen)
+  // Neu: Kreis auf der Karte aktualisieren (oder entfernen)
   if (radiusKm != null && centerLat != null && centerLng != null) {
     updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
   } else {
@@ -598,7 +598,11 @@ export function applyFilters(spots, state) {
     });
   }
 
-  // NextGen-Ranking
+  // NextGen-Ranking:
+  // 1. Mood (stark gewichtet)
+  // 2. Travel-Mode + Alters-Match
+  // 3. Distanz
+  // 4. Name
   results.sort((a, b) => {
     const scoreA =
       (a.moodScore || 0) * 10 +
