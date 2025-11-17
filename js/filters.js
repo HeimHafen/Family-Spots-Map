@@ -3,13 +3,6 @@
 import { $, debounce } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 
-// Wenn du irgendwann einen Radius-Kreis auf der Karte zeichnen willst,
-// kannst du diese Funktion in map.js implementieren und hier importieren.
-// Solange ist es ein Stub, damit kein Fehler entsteht.
-function updateRadiusCircle() {
-  // no-op
-}
-
 const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
 const MOOD_CATEGORY_MAP = {
@@ -33,7 +26,12 @@ const MOOD_CATEGORY_MAP = {
     "boulderpark",
     "trampolinpark",
   ],
-  water: ["abenteuerspielplatz", "wasserspielplatz", "badesee", "schwimmbad"],
+  water: [
+    "abenteuerspielplatz",
+    "wasserspielplatz",
+    "badesee",
+    "schwimmbad",
+  ],
   animals: ["zoo", "wildpark", "tierpark", "bauernhof"],
 };
 
@@ -72,53 +70,6 @@ const MOOD_KEYWORDS = {
   ],
 };
 
-const TRAVEL_CATS_EVERYDAY = new Set([
-  "spielplatz",
-  "abenteuerspielplatz",
-  "waldspielplatz",
-  "indoor-spielplatz",
-  "wasserspielplatz",
-  "park-garten",
-  "picknickwiese",
-  "badesee",
-  "toddler-barfuss-motorik",
-  "bewegungspark",
-  "multifunktionsfeld",
-  "bolzplatz",
-  "verkehrsgarten",
-]);
-
-const TRAVEL_CATS_TRIP = new Set([
-  "rastplatz-spielplatz-dusche",
-  "stellplatz-spielplatz-naehe-kostenlos",
-  "wohnmobil-service-station",
-  "campingplatz-familien",
-  "bikepacking-spot",
-  "freizeitpark",
-  "zoo",
-  "wildpark",
-  "tierpark",
-  "strand",
-  "badesee",
-]);
-
-const AGE_CATS_TODDLER = new Set([
-  "toddler-barfuss-motorik",
-  "spielplatz",
-  "indoor-spielplatz",
-  "waldspielplatz",
-  "wasserspielplatz",
-  "verkehrsgarten",
-]);
-const AGE_CATS_ACTION = new Set([
-  "pumptrack",
-  "skatepark",
-  "boulderpark",
-  "kletteranlage-outdoor",
-  "kletterhalle",
-  "freizeitpark",
-]);
-
 function buildCategoryOptions(categorySelect, categories) {
   const lang = getLanguage();
   const currentValue = categorySelect.value || "";
@@ -129,17 +80,14 @@ function buildCategoryOptions(categorySelect, categories) {
   allOpt.value = "";
   allOpt.textContent = t(
     "filter_category_all",
-    lang === "de" ? "Alle Kategorien" : "All categories"
+    lang === "de" ? "Alle Kategorien" : "All categories",
   );
   categorySelect.appendChild(allOpt);
 
   categories.forEach((c) => {
     const opt = document.createElement("option");
-    const slug = typeof c === "string" ? c : c.slug;
-    const labelObj = typeof c === "string" ? null : c.label;
-
-    opt.value = slug;
-    opt.textContent = (labelObj && (labelObj[lang] || labelObj.de)) || slug;
+    opt.value = c.slug;
+    opt.textContent = (c.label && c.label[lang]) || c.label?.de || c.slug;
     categorySelect.appendChild(opt);
   });
 
@@ -172,12 +120,14 @@ function getMoodScore(spot, mood) {
 
   let score = 0;
 
+  // Kategorien
   for (let i = 0; i < categories.length; i++) {
     if (moodCats.indexOf(categories[i]) !== -1) {
       score += 2;
     }
   }
 
+  // Tags und Texte
   const lowerTags = tags.map((t) => String(t).toLowerCase());
   const textParts = [
     spot.poetry,
@@ -201,49 +151,6 @@ function getMoodScore(spot, mood) {
   return score;
 }
 
-function getAgeScore(spot, ageGroup) {
-  if (!ageGroup || ageGroup === "all") return 0;
-
-  const categories = Array.isArray(spot.categories) ? spot.categories : [];
-  let score = 0;
-
-  const hasToddler = categories.some((c) => AGE_CATS_TODDLER.has(c));
-  const hasAction = categories.some((c) => AGE_CATS_ACTION.has(c));
-
-  if (ageGroup === "0-3") {
-    if (hasToddler) score += 2;
-    if (hasAction) score -= 2;
-  } else if (ageGroup === "4-9") {
-    if (hasToddler) score += 1;
-    if (hasAction) score += 1;
-  } else if (ageGroup === "10+") {
-    if (hasAction) score += 2;
-    if (hasToddler) score -= 1;
-  }
-
-  return score;
-}
-
-function getTravelScore(spot, travelMode) {
-  if (!travelMode) return 0;
-
-  const categories = Array.isArray(spot.categories) ? spot.categories : [];
-  let score = 0;
-
-  const hasEveryday = categories.some((c) => TRAVEL_CATS_EVERYDAY.has(c));
-  const hasTrip = categories.some((c) => TRAVEL_CATS_TRIP.has(c));
-
-  if (travelMode === "trip") {
-    if (spot.plus_only) score += 2;
-    if (hasTrip) score += 2;
-  } else if (travelMode === "everyday") {
-    if (spot.plus_only) score -= 1;
-    if (hasEveryday) score += 1;
-  }
-
-  return score;
-}
-
 function isBigAdventure(spot) {
   const categories = Array.isArray(spot.categories) ? spot.categories : [];
   const bigCats = {
@@ -252,6 +159,7 @@ function isBigAdventure(spot) {
     wildpark: true,
     tierpark: true,
   };
+
   for (let i = 0; i < categories.length; i++) {
     if (bigCats[categories[i]]) {
       return true;
@@ -259,7 +167,7 @@ function isBigAdventure(spot) {
   }
 
   const visitMinutes = Number(
-    spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes
+    spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes,
   );
   if (!Number.isNaN(visitMinutes) && visitMinutes >= 240) {
     return true;
@@ -285,6 +193,7 @@ function updateRadiusUI(index) {
   const slider = $("#filter-radius");
   const descEl = $("#filter-radius-description");
   const maxLabelEl = $("#filter-radius-max-label");
+
   if (slider && String(slider.value) !== String(index)) {
     slider.value = String(index);
   }
@@ -294,6 +203,7 @@ function updateRadiusUI(index) {
   if (maxLabelEl) {
     maxLabelEl.textContent = t("filter_radius_max_label", "Alle Spots");
   }
+
   if (!descEl) return;
 
   let key;
@@ -325,16 +235,13 @@ function updateRadiusUI(index) {
       : "All spots – no radius limit.";
   } else {
     fallback = isGerman
-      ? `Im Umkreis von ca. ${radiusKm} km ab Kartenmitte.`
-      : `Within ~${radiusKm} km from map center.`;
+      ? "Im Umkreis von ca. " + radiusKm + " km ab Kartenmitte."
+      : "Within ~" + radiusKm + " km from map center.";
   }
 
   descEl.textContent = t(key, fallback);
 }
 
-/**
- * Initialisiert alle Filter-Controls und gibt den initialen State zurück.
- */
 export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const state = {
     query: "",
@@ -342,11 +249,9 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     verifiedOnly: false,
     favoritesOnly: false,
     bigOnly: false,
-    favorites: favoritesProvider ? favoritesProvider() : [],
+    favorites: favoritesProvider(),
     mood: null,
     radiusIndex: 4, // 4 => Alle Spots
-    travelMode: null, // "everyday" | "trip" | null
-    ageGroup: "all", // "all" | "0-3" | "4-9" | "10+"
   };
 
   const searchInput = $("#filter-search");
@@ -355,9 +260,9 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const favsCheckbox = $("#filter-favorites");
   const bigCheckbox = $("#filter-big-adventures");
   const radiusSlider = $("#filter-radius");
-  const moodButtons = Array.from(document.querySelectorAll(".mood-chip"));
-  const travelButtons = Array.from(document.querySelectorAll(".travel-chip"));
-  const ageSelect = $("#filter-age");
+  const moodButtons = Array.from(
+    document.querySelectorAll(".mood-chip"),
+  );
 
   if (categorySelect) {
     buildCategoryOptions(categorySelect, categories);
@@ -365,11 +270,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
 
   updateRadiusUI(state.radiusIndex);
 
-  const notify = () => {
-    if (typeof onFilterChange === "function") {
-      onFilterChange({ ...state });
-    }
-  };
+  const notify = () => onFilterChange({ ...state });
 
   if (searchInput) {
     searchInput.addEventListener(
@@ -377,7 +278,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
       debounce((e) => {
         state.query = e.target.value || "";
         notify();
-      }, 200)
+      }, 200),
     );
   }
 
@@ -398,7 +299,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   if (favsCheckbox) {
     favsCheckbox.addEventListener("change", (e) => {
       state.favoritesOnly = !!e.target.checked;
-      state.favorites = favoritesProvider ? favoritesProvider() : [];
+      state.favorites = favoritesProvider();
       notify();
     });
   }
@@ -425,52 +326,30 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     moodButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         const mood = btn.dataset.mood || null;
+
         if (state.mood === mood) {
           state.mood = null;
         } else {
           state.mood = mood;
         }
+
         moodButtons.forEach((b) => {
           const m = b.dataset.mood || null;
-          b.classList.toggle("mood-chip--active", state.mood === m);
+          b.classList.toggle(
+            "mood-chip--active",
+            state.mood === m,
+          );
         });
+
         notify();
       });
-    });
-  }
-
-  if (travelButtons.length > 0) {
-    travelButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const mode = btn.dataset.travelMode || null;
-        if (state.travelMode === mode) {
-          state.travelMode = null;
-        } else {
-          state.travelMode = mode;
-        }
-        travelButtons.forEach((b) => {
-          const m = b.dataset.travelMode || null;
-          b.classList.toggle("travel-chip--active", state.travelMode === m);
-        });
-        notify();
-      });
-    });
-  }
-
-  if (ageSelect) {
-    ageSelect.value = state.ageGroup;
-    ageSelect.addEventListener("change", (e) => {
-      state.ageGroup = e.target.value || "all";
-      notify();
     });
   }
 
   return state;
 }
 
-/**
- * Wird aus app.js aufgerufen, wenn sich die Sprache ändert.
- */
+// Wird aus app.js aufgerufen, wenn sich die Sprache ändert
 export function refreshCategorySelect(categories) {
   const categorySelect = $("#filter-category");
   if (!categorySelect) return;
@@ -485,8 +364,6 @@ export function applyFilters(spots, state) {
   const favoritesOnly = !!state.favoritesOnly;
   const bigOnly = !!state.bigOnly;
   const mood = state.mood || null;
-  const travelMode = state.travelMode || null;
-  const ageGroup = state.ageGroup || "all";
 
   let centerLat = null;
   let centerLng = null;
@@ -495,7 +372,10 @@ export function applyFilters(spots, state) {
     if (typeof c.lat === "number" && typeof c.lng === "number") {
       centerLat = c.lat;
       centerLng = c.lng;
-    } else if (typeof c.lat === "function" && typeof c.lng === "function") {
+    } else if (
+      typeof c.lat === "function" &&
+      typeof c.lng === "function"
+    ) {
       centerLat = c.lat();
       centerLng = c.lng();
     }
@@ -507,12 +387,6 @@ export function applyFilters(spots, state) {
     radiusIndex >= 0 && radiusIndex < RADIUS_LEVELS_KM.length
       ? RADIUS_LEVELS_KM[radiusIndex]
       : null;
-
-  if (radiusKm != null && centerLat != null && centerLng != null) {
-    updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
-  } else {
-    updateRadiusCircle(null, null);
-  }
 
   const results = [];
 
@@ -567,7 +441,7 @@ export function applyFilters(spots, state) {
         centerLat,
         centerLng,
         spot.location.lat,
-        spot.location.lng
+        spot.location.lng,
       );
       if (distanceKm > radiusKm) {
         continue;
@@ -579,26 +453,18 @@ export function applyFilters(spots, state) {
       continue;
     }
 
-    const travelScore = getTravelScore(spot, travelMode);
-    const ageScore = getAgeScore(spot, ageGroup);
-
     results.push({
       spot,
       moodScore,
-      travelScore,
-      ageScore,
       distanceKm,
     });
   }
 
   results.sort((a, b) => {
-    const scoreA =
-      (a.moodScore || 0) * 10 + (a.travelScore || 0) * 3 + (a.ageScore || 0);
-    const scoreB =
-      (b.moodScore || 0) * 10 + (b.travelScore || 0) * 3 + (b.ageScore || 0);
-
-    if (scoreA !== scoreB) {
-      return scoreB - scoreA;
+    const msA = a.moodScore || 0;
+    const msB = b.moodScore || 0;
+    if (msA !== msB) {
+      return msB - msA;
     }
 
     const dA = a.distanceKm != null ? a.distanceKm : Infinity;
@@ -615,8 +481,6 @@ export function applyFilters(spots, state) {
   return results.map((r) => {
     r.spot._moodScore = r.moodScore;
     r.spot._distanceKm = r.distanceKm;
-    r.spot._travelScore = r.travelScore;
-    r.spot._ageScore = r.ageScore;
     return r.spot;
   });
 }
