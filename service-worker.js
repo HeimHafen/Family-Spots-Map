@@ -1,4 +1,4 @@
- // service-worker.js
+// service-worker.js
 
 // Version des Caches – bei Änderungen an Assets INKREMENTIEREN
 const CACHE_NAME = "family-spots-map-106";
