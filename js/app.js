@@ -281,7 +281,7 @@ function initUIEvents() {
     }
   });
 
-  // Plus-Code-Formular
+  // Plus-Code-Formular (UI-Elemente optional, brechen nichts wenn nicht vorhanden)
   const plusInput = $("#plus-code-input");
   const plusButton = $("#plus-code-submit");
   if (plusInput && plusButton) {
@@ -639,7 +639,7 @@ function updateStaticLanguageTexts(lang) {
       : "Only favourite spots";
   }
 
-  // Kompass
+  // Kompass (Titel/Helper – der eigentliche Inhalt ist im Kompass-Section)
   setElText("compass-label", "Familien-Kompass", "Family compass");
   setElText(
     "compass-helper",
