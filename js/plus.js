@@ -1,14 +1,13 @@
-// js/plus.js
-
-import { t } from "./i18n.js";
 import {
   getPlusStatus as getPlusStatusFromStorage,
   savePlusStatus as savePlusStatusToStorage,
 } from "./storage.js";
+import { t } from "./i18n.js";
 
 const PARTNERS_URL = "data/partners.json";
 
-// Kategorien, die typischerweise Plus sind
+// Welche Kategorien später Plus sein sollen
+// (kannst du jederzeit anpassen)
 const PLUS_CATEGORIES = new Set([
   "rastplatz-spielplatz-dusche",
   "stellplatz-spielplatz-naehe-kostenlos",
@@ -21,9 +20,13 @@ const PLUS_CATEGORIES = new Set([
 let cachedPartnerCodes = null;
 
 // ---------------------------------------
-// Status (Wrapper um storage.js)
+// Status
 // ---------------------------------------
 
+/**
+ * Normalisierte Sicht auf den Plus-Status.
+ * Nutzt intern den Storage, mappt aber auf { active, plan, validUntil }.
+ */
 export function getPlusStatus() {
   const stored = getPlusStatusFromStorage();
   if (!stored || !stored.active) {
@@ -33,7 +36,6 @@ export function getPlusStatus() {
       validUntil: null,
     };
   }
-
   return {
     active: true,
     plan: stored.plan || null,
@@ -58,19 +60,23 @@ export function formatPlusStatus(status = getPlusStatus()) {
     );
   }
 
-  if (!status.validUntil) {
+  const untilIso = status.validUntil;
+  const until = untilIso ? new Date(untilIso) : null;
+
+  const dateStr = until
+    ? until.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+    : "";
+
+  if (!dateStr) {
     return t(
       "plus_status_active",
       "Family Spots Plus ist aktiv.",
     );
   }
-
-  const until = new Date(status.validUntil);
-  const dateStr = until.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
 
   return t(
     "plus_status_active_until",
@@ -105,6 +111,11 @@ async function loadPartnerCodes() {
 /**
  * Versucht, einen Partnercode einzulösen.
  * Gibt ein Objekt { ok, reason?, status?, entry? } zurück.
+ *
+ * reason kann sein:
+ *  - "empty"
+ *  - "not_found"
+ *  - "invalid_days"
  */
 export async function redeemPartnerCode(rawCode) {
   const code = (rawCode || "").trim().toUpperCase();
@@ -114,7 +125,10 @@ export async function redeemPartnerCode(rawCode) {
 
   const codes = await loadPartnerCodes();
   const entry = codes.find(
-    (c) => c.code && c.code.toUpperCase() === code && c.enabled !== false,
+    (c) =>
+      c.code &&
+      String(c.code).toUpperCase() === code &&
+      c.enabled !== false,
   );
 
   if (!entry) {
@@ -123,33 +137,34 @@ export async function redeemPartnerCode(rawCode) {
 
   const days = Number(entry.days) || 0;
   if (!days || days <= 0) {
-    return {
-      ok: false,
-      reason: "invalid_days",
-    };
+    return { ok: false, reason: "invalid_days" };
   }
 
   const now = Date.now();
   const validUntil = new Date(now + days * 24 * 60 * 60 * 1000);
 
-  const statusForPlus = {
-    plan: entry.plan || "plus",
-    validUntil: validUntil.toISOString(),
-  };
-
-  // In storage.js-Struktur speichern
-  savePlusStatusToStorage({
+  // Status so speichern, dass er zum Storage-Schema passt
+  const statusForStorage = {
     code,
     plan: entry.plan || "plus",
     partner: entry.partner || null,
     source: entry.source || "partner",
-    activatedAt: new Date(now).toISOString(),
-    expiresAt: statusForPlus.validUntil,
-  });
+    activatedAt: new Date().toISOString(),
+    expiresAt: validUntil.toISOString(),
+  };
+
+  savePlusStatusToStorage(statusForStorage);
+
+  // Normalisierte Sicht nach außen
+  const statusForReturn = {
+    active: true,
+    plan: statusForStorage.plan,
+    validUntil: statusForStorage.expiresAt,
+  };
 
   return {
     ok: true,
-    status: statusForPlus,
+    status: statusForReturn,
     entry,
   };
 }
