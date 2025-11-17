@@ -23,14 +23,8 @@ import {
 } from "./filters.js";
 import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
+import { getState, setState } from "./state.js";
 import "./sw-register.js";
-
-let currentFilterState = null;
-let allSpots = [];
-let filteredSpots = [];
-let plusStatus = null;
-let partnerCodesCache = null;
-let currentSelectedSpotId = null;
 
 // -----------------------------------------------------
 // Bootstrap
@@ -61,11 +55,21 @@ async function bootstrapApp() {
   updateStaticLanguageTexts(initialLang);
 
   const { index } = await loadAppData();
-  allSpots = getSpots();
+  const allSpots = getSpots();
   const categories = getCategories();
 
+  // Spots im Store halten
+  setState({
+    spots: {
+      all: allSpots,
+      filtered: allSpots,
+      currentSelectedId: null,
+    },
+  });
+
   // Plus-Status laden
-  plusStatus = getPlusStatus();
+  const plusStatus = getPlusStatus();
+  setState({ plus: { status: plusStatus } });
   updatePlusStatusUI(plusStatus);
 
   // Karte
@@ -76,23 +80,32 @@ async function bootstrapApp() {
   });
 
   // Filter
-  currentFilterState = initFilters({
+  const initialFilterState = initFilters({
     categories,
     favoritesProvider: getFavorites,
     onFilterChange: handleFilterChange,
   });
 
+  setState({ filters: initialFilterState });
+
   const map = getMap();
   const center = map ? map.getCenter() : null;
 
-  filteredSpots = applyFilters(allSpots, {
-    ...currentFilterState,
+  const filteredSpots = applyFilters(allSpots, {
+    ...initialFilterState,
     favorites: getFavorites(),
     mapCenter: center,
   });
 
-  setSpotsOnMap(filteredSpots);
+  setState({
+    spots: {
+      all: allSpots,
+      filtered: filteredSpots,
+      currentSelectedId: null,
+    },
+  });
 
+  setSpotsOnMap(filteredSpots);
   renderSpotList(filteredSpots, {
     favorites: getFavorites(),
     onSelect: handleSpotSelect,
@@ -107,7 +120,18 @@ async function bootstrapApp() {
 // -----------------------------------------------------
 
 function initUIEvents() {
-  // Familien-Kompass – anwenden
+  initCompassUI();
+  initPlusUI();
+  initHelpAndNavUI();
+  initLanguageAndThemeUI();
+  initLocationUI();
+  initSidebarViewToggle();
+  initFilterPanelToggle();
+  initResizeHandler();
+}
+
+/** Familien-Kompass – Button & auf/zu */
+function initCompassUI() {
   const compassBtn = $("#compass-apply");
   if (compassBtn) {
     compassBtn.addEventListener("click", () => {
@@ -115,60 +139,56 @@ function initUIEvents() {
     });
   }
 
-  // Familien-Kompass ein-/ausklappen
   const compassSection = $("#compass-section");
   const compassToggleBtn = $("#btn-toggle-compass");
   if (compassSection && compassToggleBtn) {
     compassToggleBtn.addEventListener("click", (ev) => {
       ev.preventDefault();
       ev.stopPropagation();
-      const nowOpen = !compassSection.open;
-      compassSection.open = nowOpen;
-      const span = compassToggleBtn.querySelector("span");
-      if (span) {
-        span.textContent = nowOpen
-          ? (getLanguage() || "de").startsWith("de")
-            ? "Schließen"
-            : "Hide"
-          : (getLanguage() || "de").startsWith("de")
-            ? "Öffnen"
-            : "Show";
-      }
+      toggleDetailsSection(compassSection, compassToggleBtn);
     });
   }
+}
 
-  // Family Spots Plus ein-/ausklappen
+/** Family Spots Plus – Button & auf/zu + Code-Eingabe */
+function initPlusUI() {
   const plusSection = $("#plus-section");
   const plusToggleBtn = $("#btn-toggle-plus");
   if (plusSection && plusToggleBtn) {
     plusToggleBtn.addEventListener("click", (ev) => {
       ev.preventDefault();
       ev.stopPropagation();
-      const nowOpen = !plusSection.open;
-      plusSection.open = nowOpen;
-      const span = plusToggleBtn.querySelector("span");
-      if (span) {
-        span.textContent = nowOpen
-          ? (getLanguage() || "de").startsWith("de")
-            ? "Schließen"
-            : "Hide"
-          : (getLanguage() || "de").startsWith("de")
-            ? "Öffnen"
-            : "Show";
-      }
+      toggleDetailsSection(plusSection, plusToggleBtn);
     });
   }
 
-  // Hilfe-Button (öffnet die Über-Ansicht)
+  const plusInput = $("#plus-code-input");
+  const plusButton = $("#plus-code-submit");
+  if (plusInput && plusButton) {
+    plusButton.addEventListener("click", handlePlusCodeSubmit);
+  }
+}
+
+/** Hilfe-Button / Bottom-Navigation */
+function initHelpAndNavUI() {
   const helpBtn = $("#btn-help");
   if (helpBtn) {
     helpBtn.addEventListener("click", () => {
-      // Index 1, weil in der Bottom-Navigation der zweite Button "Über" ist
       updateRoute("about", 1);
     });
   }
 
-  // Sprache
+  $$(".bottom-nav-item").forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      const routeAttr = btn.dataset.route;
+      const route = routeAttr === "about" ? "about" : "map";
+      updateRoute(route, index);
+    });
+  });
+}
+
+/** Sprache + Theme */
+function initLanguageAndThemeUI() {
   const langSelect = $("#language-switcher");
   if (langSelect) {
     langSelect.value = getLanguage() || "de";
@@ -187,21 +207,22 @@ function initUIEvents() {
       const categories = getCategories();
       refreshCategorySelect(categories);
 
+      const { filters, plus } = getState();
+
       // Filter neu anwenden (Liste + Marker)
       handleFilterChange({
-        ...currentFilterState,
+        ...filters,
         favorites: getFavorites(),
       });
 
       // Plus-Status in neuer Sprache
-      updatePlusStatusUI(plusStatus);
+      updatePlusStatusUI(plus.status);
 
       // Offene Spot-Details in neuer Sprache neu rendern
       rerenderCurrentSpotDetails();
     });
   }
 
-  // Theme
   const themeToggle = $("#theme-toggle");
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
@@ -211,8 +232,10 @@ function initUIEvents() {
       saveSettings({ ...settings, theme: nextTheme });
     });
   }
+}
 
-  // Standort
+/** Standort-Button */
+function initLocationUI() {
   const locateBtn = $("#btn-locate");
   if (locateBtn) {
     locateBtn.addEventListener("click", async () => {
@@ -239,175 +262,186 @@ function initUIEvents() {
       }
     });
   }
+}
 
-  // Bottom-Navigation
-  $$(".bottom-nav-item").forEach((btn, index) => {
-    btn.addEventListener("click", () => {
-      const routeAttr = btn.dataset.route;
-      const route = routeAttr === "about" ? "about" : "map";
-      updateRoute(route, index);
-    });
-  });
-
-  // Listen-/Kartenansicht im Sidebar-Panel
+/** Listen-/Kartenansicht im Sidebar-Panel */
+function initSidebarViewToggle() {
   const toggleViewBtn = $("#btn-toggle-view");
-  if (toggleViewBtn) {
-    toggleViewBtn.addEventListener("click", () => {
-      const list = $(".sidebar-section--grow");
-      const labelSpan = $("#btn-toggle-view span");
-      if (!list || !labelSpan) return;
+  if (!toggleViewBtn) return;
 
-      const nowHidden = list.classList.toggle("hidden");
-      labelSpan.textContent = nowHidden
-        ? t("btn_show_list", "Liste zeigen")
-        : t("btn_only_map", "Nur Karte");
+  toggleViewBtn.addEventListener("click", () => {
+    const list = $(".sidebar-section--grow");
+    const labelSpan = $("#btn-toggle-view span");
+    if (!list || !labelSpan) return;
 
-      const map = getMap();
-      if (map) {
-        setTimeout(() => map.invalidateSize(), 0);
-      }
+    const nowHidden = list.classList.toggle("hidden");
+    labelSpan.textContent = nowHidden
+      ? t("btn_show_list", "Liste zeigen")
+      : t("btn_only_map", "Nur Karte");
 
-      // Neu: auf kleinen Screens automatisch zu Karte/Liste scrollen
-      if (window.innerWidth <= 900) {
-        const target = nowHidden
-          ? document.querySelector(".map-section")
-          : document.querySelector(".sidebar");
-        if (target) {
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }
-      }
-    });
-  }
+    const map = getMap();
+    if (map) {
+      setTimeout(() => map.invalidateSize(), 0);
+    }
 
-  // Filter-Panel ein-/ausblenden
-  const filterToggleBtn = $("#btn-toggle-filters");
-  if (filterToggleBtn) {
-    const filterSection = filterToggleBtn.closest(".sidebar-section");
-    const labelSpan = filterToggleBtn.querySelector("span");
-    if (filterSection && labelSpan) {
-      const filterControls = Array.from(
-        filterSection.querySelectorAll(".filter-group"),
-      );
-
-      // auf kleinen Screens: Filter anfangs einklappen
-      if (window.innerWidth <= 900 && filterControls.length > 0) {
-        filterControls.forEach((el) => el.classList.add("hidden"));
-        labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
-        const map = getMap();
-        if (map) {
-          setTimeout(() => map.invalidateSize(), 0);
-        }
-      }
-
-      filterToggleBtn.addEventListener("click", () => {
-        if (filterControls.length === 0) return;
-        const currentlyHidden =
-          filterControls[0].classList.contains("hidden");
-        const makeVisible = currentlyHidden;
-
-        filterControls.forEach((el) => {
-          if (makeVisible) el.classList.remove("hidden");
-          else el.classList.add("hidden");
+    if (window.innerWidth <= 900) {
+      const target = nowHidden
+        ? document.querySelector(".map-section")
+        : document.querySelector(".sidebar");
+      if (target) {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
         });
+      }
+    }
+  });
+}
 
-        labelSpan.textContent = makeVisible
-          ? t("btn_hide_filters", "Filter ausblenden")
-          : t("btn_show_filters", "Filter anzeigen");
+/** Filter-Panel ein-/ausblenden */
+function initFilterPanelToggle() {
+  const filterToggleBtn = $("#btn-toggle-filters");
+  if (!filterToggleBtn) return;
 
-        const map = getMap();
-        if (map) {
-          setTimeout(() => map.invalidateSize(), 0);
-        }
-      });
+  const filterSection = filterToggleBtn.closest(".sidebar-section");
+  const labelSpan = filterToggleBtn.querySelector("span");
+  if (!filterSection || !labelSpan) return;
+
+  const filterControls = Array.from(
+    filterSection.querySelectorAll(".filter-group"),
+  );
+
+  if (window.innerWidth <= 900 && filterControls.length > 0) {
+    filterControls.forEach((el) => el.classList.add("hidden"));
+    labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
+    const map = getMap();
+    if (map) {
+      setTimeout(() => map.invalidateSize(), 0);
     }
   }
 
-  // Fenster-/Orientierungswechsel: Map-Größe aktualisieren
+  filterToggleBtn.addEventListener("click", () => {
+    if (filterControls.length === 0) return;
+    const currentlyHidden = filterControls[0].classList.contains("hidden");
+    const makeVisible = currentlyHidden;
+
+    filterControls.forEach((el) => {
+      el.classList.toggle("hidden", !makeVisible);
+    });
+
+    labelSpan.textContent = makeVisible
+      ? t("btn_hide_filters", "Filter ausblenden")
+      : t("btn_show_filters", "Filter anzeigen");
+
+    const map = getMap();
+    if (map) {
+      setTimeout(() => map.invalidateSize(), 0);
+    }
+  });
+}
+
+/** Map-Resize */
+function initResizeHandler() {
   window.addEventListener("resize", () => {
     const map = getMap();
     if (map) {
       map.invalidateSize();
     }
   });
+}
 
-  // Plus-Code-Formular (UI-Elemente optional, brechen nichts wenn nicht vorhanden)
+/** Accordion-Sections (Kompass/Plus) ein-/ausklappen */
+function toggleDetailsSection(detailsEl, toggleBtn) {
+  const nowOpen = !detailsEl.open;
+  detailsEl.open = nowOpen;
+  const span = toggleBtn.querySelector("span");
+  if (!span) return;
+
+  const isDe = (getLanguage() || "de").startsWith("de");
+  span.textContent = nowOpen
+    ? isDe
+      ? "Schließen"
+      : "Hide"
+    : isDe
+      ? "Öffnen"
+      : "Show";
+}
+
+// -----------------------------------------------------
+// Plus-Handling
+// -----------------------------------------------------
+
+async function handlePlusCodeSubmit() {
   const plusInput = $("#plus-code-input");
-  const plusButton = $("#plus-code-submit");
-  if (plusInput && plusButton) {
-    plusButton.addEventListener("click", async () => {
-      const rawCode = plusInput.value.trim();
-      if (!rawCode) {
-        showToast(t("plus_code_empty", "Bitte Code eingeben."));
-        return;
-      }
+  if (!plusInput) return;
 
-      const normalized = rawCode.toUpperCase();
+  const rawCode = plusInput.value.trim();
+  if (!rawCode) {
+    showToast(t("plus_code_empty", "Bitte Code eingeben."));
+    return;
+  }
 
-      try {
-        const codes = await loadPartnerCodes();
-        const match = codes.find(
-          (c) =>
-            String(c.code).toUpperCase() === normalized &&
-            (c.enabled ?? true),
-        );
+  const normalized = rawCode.toUpperCase();
 
-        if (!match) {
-          showToast(
-            t(
-              "plus_code_unknown",
-              "Code nicht bekannt oder nicht mehr gültig.",
-            ),
-          );
-          return;
-        }
+  try {
+    const codes = await loadPartnerCodes();
+    const match = codes.find(
+      (c) =>
+        String(c.code).toUpperCase() === normalized &&
+        (c.enabled ?? true),
+    );
 
-        const days = Number(match.days) || 0;
-        const now = new Date();
-        const expires =
-          days > 0
-            ? new Date(now.getTime() + days * 24 * 60 * 60 * 1000)
-            : null;
+    if (!match) {
+      showToast(
+        t(
+          "plus_code_unknown",
+          "Code nicht bekannt oder nicht mehr gültig.",
+        ),
+      );
+      return;
+    }
 
-        plusStatus = savePlusStatus({
-          code: normalized,
-          plan: match.plan || null,
-          partner: match.partner || null,
-          source: match.source || "partner",
-          activatedAt: now.toISOString(),
-          expiresAt: expires ? expires.toISOString() : null,
-        });
+    const days = Number(match.days) || 0;
+    const now = new Date();
+    const expires =
+      days > 0
+        ? new Date(now.getTime() + days * 24 * 60 * 60 * 1000)
+        : null;
 
-        updatePlusStatusUI(plusStatus);
-        showToast(
-          t(
-            "plus_code_activated",
-            "Family Spots Plus ist jetzt aktiv – gute Fahrt & viel Freude auf euren Touren!",
-          ),
-        );
-      } catch (err) {
-        console.error(err);
-        showToast(
-          t(
-            "plus_code_failed",
-            "Code konnte nicht geprüft werden. Versuch es später noch einmal.",
-          ),
-        );
-      }
+    const plusStatus = savePlusStatus({
+      code: normalized,
+      plan: match.plan || null,
+      partner: match.partner || null,
+      source: match.source || "partner",
+      activatedAt: now.toISOString(),
+      expiresAt: expires ? expires.toISOString() : null,
     });
+
+    setState({ plus: { status: plusStatus } });
+
+    updatePlusStatusUI(plusStatus);
+    showToast(
+      t(
+        "plus_code_activated",
+        "Family Spots Plus ist jetzt aktiv – gute Fahrt & viel Freude auf euren Touren!",
+      ),
+    );
+  } catch (err) {
+    console.error(err);
+    showToast(
+      t(
+        "plus_code_failed",
+        "Code konnte nicht geprüft werden. Versuch es später noch einmal.",
+      ),
+    );
   }
 }
 
-/**
- * Familien-Kompass:
- *  - setzt bei Bedarf eine Stimmung („Entspannt“), wenn noch keine gewählt ist
- *  - reduziert einen zu großen Radius auf eine sinnvolle Distanz
- *  - scrollt zur Spot-Liste und zeigt einen kurzen Hinweis
- */
+// -----------------------------------------------------
+// Familien-Kompass
+// -----------------------------------------------------
+
 function applyCompass() {
-  // Stimmung: falls noch nichts aktiv ist → „Entspannt“
   const moodButtons = $$(".mood-chip");
   const activeMood = Array.from(moodButtons).find((btn) =>
     btn.classList.contains("mood-chip--active"),
@@ -418,20 +452,17 @@ function applyCompass() {
       '.mood-chip[data-mood="relaxed"]',
     );
     if (relaxedBtn) {
-      // löst den normalen Klick aus → Filter-Logik in filters.js greift
       relaxedBtn.click();
     }
   }
 
-  // Radius: wenn aktuell „Alle Spots“ (4), auf einen moderaten Radius setzen
   const radiusSlider = $("#filter-radius");
   if (radiusSlider && radiusSlider.value === "4") {
-    radiusSlider.value = "2"; // z. B. ~30 km, siehe RADIUS_LEVELS_KM in filters.js
+    radiusSlider.value = "2";
     const evt = new Event("input", { bubbles: true });
     radiusSlider.dispatchEvent(evt);
   }
 
-  // Zur Spot-Liste scrollen, damit man die Ergebnisse sieht
   const listSection = document.querySelector(".sidebar-section--grow");
   if (listSection) {
     listSection.scrollIntoView({
@@ -447,6 +478,10 @@ function applyCompass() {
     ),
   );
 }
+
+// -----------------------------------------------------
+// Routing
+// -----------------------------------------------------
 
 function updateRoute(route, indexFromClick) {
   const viewMap = $("#view-map");
@@ -489,14 +524,22 @@ function updateRoute(route, indexFromClick) {
 // -----------------------------------------------------
 
 function handleFilterChange(filterState) {
-  currentFilterState = filterState;
+  setState({ filters: filterState });
 
+  const { spots } = getState();
   const map = getMap();
   const center = map ? map.getCenter() : null;
 
-  filteredSpots = applyFilters(allSpots, {
+  const filteredSpots = applyFilters(spots.all, {
     ...filterState,
     mapCenter: center,
+  });
+
+  setState({
+    spots: {
+      ...spots,
+      filtered: filteredSpots,
+    },
   });
 
   setSpotsOnMap(filteredSpots);
@@ -514,7 +557,14 @@ function handleSpotSelect(id) {
   const spot = findSpotById(id);
   if (!spot) return;
 
-  currentSelectedSpotId = spot.id;
+  const prev = getState().spots;
+
+  setState({
+    spots: {
+      ...prev,
+      currentSelectedId: spot.id,
+    },
+  });
 
   focusOnSpot(spot);
 
@@ -532,8 +582,9 @@ function handleSpotSelect(id) {
           : t("toast_fav_removed", "Aus den Lieblingsspots entfernt."),
       );
 
+      const { filters } = getState();
       handleFilterChange({
-        ...currentFilterState,
+        ...filters,
         favorites: updatedFavorites,
       });
 
@@ -547,6 +598,8 @@ function handleSpotSelect(id) {
 }
 
 function rerenderCurrentSpotDetails() {
+  const { spots } = getState();
+  const currentSelectedSpotId = spots.currentSelectedId;
   if (!currentSelectedSpotId) return;
   const spot = findSpotById(currentSelectedSpotId);
   if (!spot) return;
@@ -565,8 +618,9 @@ function rerenderCurrentSpotDetails() {
           : t("toast_fav_removed", "Aus den Lieblingsspots entfernt."),
       );
 
+      const { filters } = getState();
       handleFilterChange({
-        ...currentFilterState,
+        ...filters,
         favorites: updatedFavorites,
       });
 
@@ -589,7 +643,7 @@ function applyTheme(theme) {
 }
 
 // -----------------------------------------------------
-// Plus-Helfer
+// Plus-Helfer (UI)
 // -----------------------------------------------------
 
 function updatePlusStatusUI(status) {
@@ -616,7 +670,8 @@ function updatePlusStatusUI(status) {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-    });
+      },
+    );
     baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
   }
 
@@ -628,6 +683,8 @@ function updatePlusStatusUI(status) {
 
   el.textContent = baseText;
 }
+
+let partnerCodesCache = null;
 
 async function loadPartnerCodes() {
   if (partnerCodesCache) return partnerCodesCache;
@@ -715,7 +772,11 @@ function updateStaticLanguageTexts(lang) {
     "Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).",
     "How far may today’s adventure go? The radius is measured from the map centre (home, holiday flat, hotel …).",
   );
-  setElText("filter-radius-max-label", "Alle Spots", "All spots");
+  setElText(
+    "filter-radius-max-label",
+    "Alle Spots",
+    "All spots",
+  );
 
   // Checkboxen
   const bigLabelSpan = $("#filter-big-label span:last-child");
