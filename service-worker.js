@@ -5,7 +5,7 @@
 // -------------------------------------------------------------
 // Cache-Version – bei Änderungen an Assets INKREMENTIEREN
 // -------------------------------------------------------------
-const CACHE_VERSION = "v1.1.9";
+const CACHE_VERSION = "v1.2.0";
 const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
