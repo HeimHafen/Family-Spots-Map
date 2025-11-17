@@ -1,7 +1,5 @@
 /* global L */
 
-// js/map.js
-
 import { getLanguage } from "./i18n.js";
 
 let map = null;
@@ -192,8 +190,7 @@ export function setSpotsOnMap(spots) {
     const summary = getSpotPopupSummary(spot);
 
     const encodedName = encodeURIComponent(
-      (spot.name || spot.title || "") +
-        (spot.city ? " " + spot.city : ""),
+      (spot.name || spot.title || "") + (spot.city ? " " + spot.city : ""),
     );
 
     const googleMapsUrl =
