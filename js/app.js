@@ -701,7 +701,9 @@ function updateStaticLanguageTexts(lang) {
   }
   const verifiedLabel = $("#filter-verified-label span");
   if (verifiedLabel) {
-    verifiedLabel.textContent = isDe ? "Nur verifizierte Spots" : "Verified spots only";
+    verifiedLabel.textContent = isDe
+      ? "Nur verifizierte Spots"
+      : "Verified spots only";
   }
   const favsLabel = $("#filter-favs-label span");
   if (favsLabel) {
@@ -748,5 +750,15 @@ function updateStaticLanguageTexts(lang) {
     plusNote.textContent = isDe
       ? "Family Spots Plus schaltet zusätzliche Filter & Spots frei – ganz ohne Abo-Falle."
       : "Family Spots Plus unlocks extra filters & spots – with no subscription trap.";
+  }
+
+  // ---------------------------------------------------
+  // About-Seite: DE/EN umschalten
+  // ---------------------------------------------------
+  const aboutDe = document.getElementById("page-about-de");
+  const aboutEn = document.getElementById("page-about-en");
+  if (aboutDe && aboutEn) {
+    aboutDe.classList.toggle("hidden", !isDe);
+    aboutEn.classList.toggle("hidden", isDe);
   }
 }
