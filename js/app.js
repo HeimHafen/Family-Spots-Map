@@ -27,6 +27,8 @@ import { getState, setState } from "./state.js";
 import { updateCompassMessage } from "./coach.js";
 import "./sw-register.js";
 
+let partnerCodesCache = null;
+
 // -----------------------------------------------------
 // Bootstrap
 // -----------------------------------------------------
@@ -59,7 +61,7 @@ async function bootstrapApp() {
   const allSpots = getSpots();
   const categories = getCategories();
 
-  // Spots im Store halten
+  // Spots im zentralen State
   setState({
     spots: {
       all: allSpots,
@@ -80,7 +82,7 @@ async function bootstrapApp() {
     onMarkerSelect: handleSpotSelect,
   });
 
-  // Filter
+  // Filter initialisieren
   const initialFilterState = initFilters({
     categories,
     favoritesProvider: getFavorites,
@@ -112,7 +114,7 @@ async function bootstrapApp() {
     onSelect: handleSpotSelect,
   });
 
-  // 🔮 Familien-Kompass initial befüllen
+  // Familien-Kompass initial befüllen
   updateCompassMessage(initialFilterState, {
     filteredCount: filteredSpots.length,
     favoritesCount: getFavorites().length,
@@ -135,9 +137,49 @@ function initUIEvents() {
   initSidebarViewToggle();
   initFilterPanelToggle();
   initResizeHandler();
+
+  // collapsible Sections (Kompass + Plus)
+  initCollapsibleSection("compass-section", "btn-toggle-compass");
+  initCollapsibleSection("plus-section", "btn-toggle-plus");
 }
 
-/** Familien-Kompass – Button & auf/zu */
+// collapsible Sidebar-Sections (Kompass / Plus)
+function initCollapsibleSection(sectionId, buttonId) {
+  const section = document.getElementById(sectionId);
+  const btn = document.getElementById(buttonId);
+  if (!section || !btn) return;
+
+  section.classList.add("sidebar-section--collapsible");
+  if (!section.dataset.collapsed) {
+    section.dataset.collapsed = "false";
+  }
+
+  const updateLabel = () => {
+    const span = btn.querySelector("span");
+    if (!span) return;
+    const isDe = (getLanguage() || "de").startsWith("de");
+    const collapsed = section.dataset.collapsed === "true";
+    span.textContent = collapsed
+      ? isDe
+        ? "Öffnen"
+        : "Show"
+      : isDe
+        ? "Schließen"
+        : "Hide";
+  };
+
+  updateLabel();
+
+  btn.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const collapsed = section.dataset.collapsed === "true";
+    section.dataset.collapsed = collapsed ? "false" : "true";
+    updateLabel();
+  });
+}
+
+// Familien-Kompass – Button
 function initCompassUI() {
   const compassBtn = $("#compass-apply");
   if (compassBtn) {
@@ -145,30 +187,10 @@ function initCompassUI() {
       applyCompass();
     });
   }
-
-  const compassSection = $("#compass-section");
-  const compassToggleBtn = $("#btn-toggle-compass");
-  if (compassSection && compassToggleBtn) {
-    compassToggleBtn.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      toggleDetailsSection(compassSection, compassToggleBtn);
-    });
-  }
 }
 
-/** Family Spots Plus – Button & auf/zu + Code-Eingabe */
+// Plus-Code / Plus-Section
 function initPlusUI() {
-  const plusSection = $("#plus-section");
-  const plusToggleBtn = $("#btn-toggle-plus");
-  if (plusSection && plusToggleBtn) {
-    plusToggleBtn.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      toggleDetailsSection(plusSection, plusToggleBtn);
-    });
-  }
-
   const plusInput = $("#plus-code-input");
   const plusButton = $("#plus-code-submit");
   if (plusInput && plusButton) {
@@ -176,7 +198,7 @@ function initPlusUI() {
   }
 }
 
-/** Hilfe-Button / Bottom-Navigation */
+// Hilfe + Bottom-Navigation
 function initHelpAndNavUI() {
   const helpBtn = $("#btn-help");
   if (helpBtn) {
@@ -194,7 +216,7 @@ function initHelpAndNavUI() {
   });
 }
 
-/** Sprache + Theme */
+// Sprache + Theme
 function initLanguageAndThemeUI() {
   const langSelect = $("#language-switcher");
   if (langSelect) {
@@ -238,7 +260,7 @@ function initLanguageAndThemeUI() {
         onSelect: handleSpotSelect,
       });
 
-      // Kompass-Text in neuer Sprache neu berechnen
+      // Kompass-Text in neuer Sprache
       updateCompassMessage(filters, {
         filteredCount: filteredSpots.length,
         favoritesCount: getFavorites().length,
@@ -263,7 +285,7 @@ function initLanguageAndThemeUI() {
   }
 }
 
-/** Standort-Button */
+// Standort-Button
 function initLocationUI() {
   const locateBtn = $("#btn-locate");
   if (locateBtn) {
@@ -293,7 +315,7 @@ function initLocationUI() {
   }
 }
 
-/** Listen-/Kartenansicht im Sidebar-Panel */
+// Listen-/Kartenansicht im Sidebar-Panel
 function initSidebarViewToggle() {
   const toggleViewBtn = $("#btn-toggle-view");
   if (!toggleViewBtn) return;
@@ -327,7 +349,7 @@ function initSidebarViewToggle() {
   });
 }
 
-/** Filter-Panel ein-/ausblenden */
+// Filter-Panel ein-/ausblenden
 function initFilterPanelToggle() {
   const filterToggleBtn = $("#btn-toggle-filters");
   if (!filterToggleBtn) return;
@@ -369,7 +391,7 @@ function initFilterPanelToggle() {
   });
 }
 
-/** Map-Resize */
+// Map-Resize
 function initResizeHandler() {
   window.addEventListener("resize", () => {
     const map = getMap();
@@ -377,23 +399,6 @@ function initResizeHandler() {
       map.invalidateSize();
     }
   });
-}
-
-/** Accordion-Sections (Kompass/Plus) ein-/ausklappen */
-function toggleDetailsSection(detailsEl, toggleBtn) {
-  const nowOpen = !detailsEl.open;
-  detailsEl.open = nowOpen;
-  const span = toggleBtn.querySelector("span");
-  if (!span) return;
-
-  const isDe = (getLanguage() || "de").startsWith("de");
-  span.textContent = nowOpen
-    ? isDe
-      ? "Schließen"
-      : "Hide"
-    : isDe
-      ? "Öffnen"
-      : "Show";
 }
 
 // -----------------------------------------------------
@@ -467,7 +472,7 @@ async function handlePlusCodeSubmit() {
 }
 
 // -----------------------------------------------------
-// Familien-Kompass
+// Familien-Kompass-Button
 // -----------------------------------------------------
 
 function applyCompass() {
@@ -583,7 +588,6 @@ function handleFilterChange(filterState) {
     onSelect: handleSpotSelect,
   });
 
-  // 💛 Kompass-Text aktualisieren
   updateCompassMessage(filterState, {
     filteredCount: filteredSpots.length,
     favoritesCount: getFavorites().length,
@@ -724,8 +728,6 @@ function updatePlusStatusUI(status) {
   el.textContent = baseText;
 }
 
-let partnerCodesCache = null;
-
 async function loadPartnerCodes() {
   if (partnerCodesCache) return partnerCodesCache;
 
@@ -801,7 +803,7 @@ function updateStaticLanguageTexts(lang) {
   setElText("filter-age-4-9", "4–9 Jahre", "4–9 years");
   setElText("filter-age-10-plus", "10+ Jahre", "10+ years");
 
-  // Micro-Abenteuer-Radius
+  // Radius
   setElText(
     "filter-radius-label",
     "Micro-Abenteuer-Radius",
@@ -836,7 +838,7 @@ function updateStaticLanguageTexts(lang) {
       : "Only favourite spots";
   }
 
-  // Kompass (Titel/Helper – der eigentliche Inhalt ist im Kompass-Section)
+  // Kompass
   setElText("compass-label", "Familien-Kompass", "Family compass");
   setElText(
     "compass-helper",
@@ -845,14 +847,31 @@ function updateStaticLanguageTexts(lang) {
   );
   setElText("compass-apply-label", "Kompass anwenden", "Start compass");
 
-  // Buttons zum Einklappen von Kompass & Plus
+  // Kompass/Plus Toggle je nach Collapsed-Status
   const compassToggleSpan = $("#btn-toggle-compass span");
-  if (compassToggleSpan) {
-    compassToggleSpan.textContent = isDe ? "Schließen" : "Hide";
+  const compassSection = $("#compass-section");
+  if (compassToggleSpan && compassSection) {
+    const collapsed = compassSection.dataset.collapsed === "true";
+    compassToggleSpan.textContent = collapsed
+      ? isDe
+        ? "Öffnen"
+        : "Show"
+      : isDe
+        ? "Schließen"
+        : "Hide";
   }
+
   const plusToggleSpan = $("#btn-toggle-plus span");
-  if (plusToggleSpan) {
-    plusToggleSpan.textContent = isDe ? "Schließen" : "Hide";
+  const plusSection = $("#plus-section");
+  if (plusToggleSpan && plusSection) {
+    const collapsed = plusSection.dataset.collapsed === "true";
+    plusToggleSpan.textContent = collapsed
+      ? isDe
+        ? "Öffnen"
+        : "Show"
+      : isDe
+        ? "Schließen"
+        : "Hide";
   }
 
   // Spot-Liste Titel
