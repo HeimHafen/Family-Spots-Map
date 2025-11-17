@@ -1,82 +1,109 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Family Spots Map</title>
+
+  <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-xodZBNTC5n17Xt2vOT+3g0x4w3wCkZvBb3o1xQ+4U8g="
     crossorigin=""
   />
+
+  <!-- Own Styles -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  <header>
-    <h1>🌈 Family Spots</h1>
-    <select id="language-switcher">
-      <option value="de">Deutsch</option>
-      <option value="en">English</option>
-    </select>
-    <button id="theme-toggle">🌙 / ☀️</button>
+<body class="app">
+  <header class="app-header">
+    <div class="app-header-left">
+      <img src="logo‑placeholder.png" alt="Logo" class="app-logo" />
+    </div>
+    <div class="app-header-center">
+      <h1 class="header-title">
+        <span class="header-flag">🇩🇪</span>
+        Family <span style="color: var(--color-accent)">Spots</span> Map
+        <span class="header-flag">🇩🇰</span>
+      </h1>
+      <p class="header-tagline">
+        Die schönste Karte für Familien‑Abenteuer. Finde geprüfte Ausflugsziele in deiner Nähe – von Eltern für Eltern.
+      </p>
+    </div>
+    <div class="app-header-right">
+      <select id="language-switcher" class="language-switcher">
+        <option value="de">DE</option>
+        <option value="en">EN</option>
+      </select>
+      <button id="theme-toggle" class="btn-icon">🌓</button>
+    </div>
   </header>
 
-  <div class="views">
-    <section id="view-map" class="view--active">
+  <main class="app-main">
+    <section id="view-map" class="view view--active">
       <aside class="sidebar">
         <section class="sidebar-section" id="compass-section">
-          <button id="btn-toggle-compass"><span>Öffnen</span></button>
-          <!-- Mood / Radius Controls -->
+          <div class="sidebar-section-header">
+            <h2 class="sidebar-section-title">Familien‑Kompass</h2>
+            <button id="btn-toggle-compass" class="btn-small">Öffnen</button>
+          </div>
+          <button id="compass-apply" class="btn">Kompass anwenden</button>
         </section>
 
         <section class="sidebar-section" id="plus-section">
-          <button id="btn-toggle-plus"><span>Öffnen</span></button>
-          <div>
-            <input id="plus-code-input" placeholder="Plus-Code" />
-            <button id="plus-code-submit">Einlösen</button>
+          <div class="sidebar-section-header">
+            <h2 class="sidebar-section-title">Family Spots Plus</h2>
+            <button id="btn-toggle-plus" class="btn-small">Öffnen</button>
+          </div>
+          <div class="plus-code-form">
+            <input id="plus-code-input" class="input" type="text" placeholder="Partner‑Code eingeben" />
+            <button id="plus-code-submit" class="btn">Code aktivieren</button>
           </div>
           <div id="plus-status-text">Family Spots Plus ist nicht aktiviert.</div>
         </section>
 
         <section class="sidebar-section sidebar-section--grow">
-          <div id="spot-list">
-            <!-- Spotliste kommt hier rein -->
+          <div id="spot-list" class="spot-list">
+            <!-- Spotliste wird hier gerendert -->
           </div>
         </section>
 
         <div class="sidebar-footer">
-          <button id="btn-toggle-view"><span>Nur Karte</span></button>
-          <button id="btn-toggle-filters"><span>Filter anzeigen</span></button>
-          <button id="btn-help">❓ Hilfe</button>
+          <button id="btn-toggle-view" class="btn-small"><span>Nur Karte</span></button>
+          <button id="btn-toggle-filters" class="btn-small"><span>Filter anzeigen</span></button>
+          <button id="btn-help" class="btn-small">❓ Hilfe</button>
         </div>
       </aside>
 
       <section class="map-section">
-        <div id="map"></div>
-        <button id="btn-locate">📍 Standort setzen</button>
+        <div id="map" class="map-container"></div>
+        <button id="btn-locate" class="btn-icon" title="Standort setzen">📍</button>
       </section>
     </section>
 
-    <section id="view-about" class="view">
+    <section id="view-about" class="view page-about">
       <h2>Über diese App</h2>
       <p>Family Spots ist dein Begleiter für Abenteuer mit der Familie 🌍</p>
     </section>
-  </div>
+  </main>
 
   <nav class="bottom-nav">
-    <button class="bottom-nav-item" data-route="map">Karte</button>
-    <button class="bottom-nav-item" data-route="about">Info</button>
-    <div id="bottom-nav-indicator"></div>
+    <button class="bottom-nav-item" data-route="map"><span class="bottom-nav-icon">🗺️</span><br>Karte</button>
+    <button class="bottom-nav-item" data-route="about"><span class="bottom-nav-icon">ℹ️</span><br>Über</button>
+    <div id="bottom-nav-indicator" class="bottom-nav-indicator"></div>
   </nav>
 
   <div id="toast" class="toast hidden"></div>
 
+  <!-- Leaflet JS -->
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-o9N1j7kB8o2vFj0U0scz5evkZtj7Y9Y+1P6XYBdl5xM="
     crossorigin=""
   ></script>
+
+  <!-- App JS -->
   <script type="module" src="app.js"></script>
 </body>
 </html>
