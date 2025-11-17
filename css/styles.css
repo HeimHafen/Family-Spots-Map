@@ -74,10 +74,6 @@ a:hover {
   gap: 8px;
 }
 
-.app-header-left {
-  flex-grow: 1;
-}
-
 .app-logo {
   font-size: 1.25rem;
   font-weight: bold;
@@ -89,7 +85,6 @@ a:hover {
   opacity: 0.9;
   max-width: 90%;
 }
-
 .language-switcher-wrapper {
   display: flex;
   gap: 6px;
@@ -118,6 +113,8 @@ a:hover {
   padding: 16px;
   box-shadow: var(--shadow-soft);
   overflow-y: auto;
+  z-index: 1;
+  position: relative;
 }
 
 .sidebar-section {
@@ -137,6 +134,8 @@ a:hover {
   border-radius: var(--radius-pill);
   padding: 8px 16px;
   cursor: pointer;
+  z-index: 1;
+  position: relative;
 }
 
 .btn:hover {
@@ -150,8 +149,17 @@ a:hover {
   box-shadow: var(--shadow-soft);
   overflow: hidden;
   position: relative;
+  z-index: 0;
 }
 
+.toggle-chip,
+button,
+input,
+select {
+  z-index: 1;
+  position: relative;
+  pointer-events: auto !important;
+}
 @media (max-width: 900px) {
   .app-layout {
     grid-template-columns: 1fr;
@@ -205,7 +213,7 @@ a:hover {
     backdrop-filter: blur(12px);
     display: flex;
     justify-content: space-around;
-    z-index: 100;
+    z-index: 10;
   }
 
   .bottom-nav-item {
@@ -217,6 +225,26 @@ a:hover {
   }
 }
 
+/* Utility */
 .hidden {
   display: none !important;
+}
+
+button,
+.btn,
+input,
+select,
+.sidebar-section,
+#compass-section,
+.app-layout {
+  z-index: 1;
+  position: relative;
+}
+
+.map-section {
+  z-index: 0;
+}
+
+.toggle-chip {
+  pointer-events: auto !important;
 }
