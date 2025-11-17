@@ -93,7 +93,7 @@ body {
 @media (min‑width: 768px) {
   .app-header-inner {
     flex‑direction: row;
-    justify‑content: space-between;
+    justify‑content: space‑between;
     align‑items: center;
   }
 }
@@ -224,7 +224,7 @@ body {
   letter‑spacing: 0.03em;
   text‑transform: uppercase;
 }
-.sidebar-subtitle {
+.sidebar‑subtitle {
   font‑size: 0.78rem;
   color: var(--color‑text‑soft);
   margin: 0 0 6px;
@@ -280,8 +280,8 @@ body {
   gap: 6px;
   background: rgba(148, 163, 184, 0.06);
 }
-.mood-chip,
-.travel-chip {
+.mood‑chip,
+.travel‑chip {
   display: inline‑flex;
   align‑items: center;
   gap: 6px;
@@ -457,7 +457,7 @@ body {
 .map‑section {
   background: var(--color-bg‑elevated);
   border‑radius: 20px;
-  box‑shadow: var(--shadow‑soft);
+  box‑shadow: var(--shadow‐soft);
   border: 1px solid var(--color‑border‑soft);
   padding: 6px;
   display: flex;
