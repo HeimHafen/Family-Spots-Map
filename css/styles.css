@@ -469,7 +469,7 @@ body {
   position: relative;
 }
 
-/* Erklärender Kompass-Text */
+/* Erklärender Kompass-Text (falls du ihn wieder nutzt) */
 
 .compass-message {
   margin-top: 7px;
