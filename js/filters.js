@@ -55,7 +55,15 @@ const MOOD_KEYWORDS = {
     "planschen",
     "wasserspiel",
   ],
-  animals: ["zoo", "tierpark", "wildpark", "tiere", "safari", "giraffe", "bauernhof"],
+  animals: [
+    "zoo",
+    "tierpark",
+    "wildpark",
+    "tiere",
+    "safari",
+    "giraffe",
+    "bauernhof",
+  ],
 };
 
 // Travel-Heuristiken: welche Kategorien sind eher „Alltag“, welche „Unterwegs“
@@ -283,13 +291,8 @@ function updateRadiusUI(index) {
   const descEl = $("#filter-radius-description");
   const maxLabelEl = $("#filter-radius-max-label");
 
-  if (slider) {
-    // sicherstellen, dass Min/Max mit RADIUS_LEVELS_KM harmonieren
-    slider.min = "0";
-    slider.max = String(RADIUS_LEVELS_KM.length - 1);
-    if (String(slider.value) !== String(index)) {
-      slider.value = String(index);
-    }
+  if (slider && String(slider.value) !== String(index)) {
+    slider.value = String(index);
   }
 
   const radiusKm = RADIUS_LEVELS_KM[index] ?? null;
@@ -336,6 +339,9 @@ function updateRadiusUI(index) {
   descEl.textContent = t(key, fallback);
 }
 
+/**
+ * Initialisiert alle Filter-Controls und gibt den initialen State zurück.
+ */
 export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   const state = {
     query: "",
@@ -343,7 +349,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     verifiedOnly: false,
     favoritesOnly: false,
     bigOnly: false,
-    favorites: typeof favoritesProvider === "function" ? favoritesProvider() : [],
+    favorites: favoritesProvider ? favoritesProvider() : [],
     mood: null,
     radiusIndex: 4, // 4 => Alle Spots
     travelMode: null, // "everyday" | "trip" | null
@@ -399,8 +405,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   if (favsCheckbox) {
     favsCheckbox.addEventListener("change", (e) => {
       state.favoritesOnly = !!e.target.checked;
-      state.favorites =
-        typeof favoritesProvider === "function" ? favoritesProvider() : [];
+      state.favorites = favoritesProvider ? favoritesProvider() : [];
       notify();
     });
   }
@@ -427,11 +432,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   if (moodButtons.length > 0) {
     moodButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        const mood =
-          btn.dataset.mood ||
-          btn.dataset.value ||
-          btn.getAttribute("data-mood") ||
-          null;
+        const mood = btn.dataset.mood || null;
 
         if (state.mood === mood) {
           state.mood = null;
@@ -440,11 +441,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
         }
 
         moodButtons.forEach((b) => {
-          const m =
-            b.dataset.mood ||
-            b.dataset.value ||
-            b.getAttribute("data-mood") ||
-            null;
+          const m = b.dataset.mood || null;
           b.classList.toggle("mood-chip--active", state.mood === m);
         });
 
@@ -457,11 +454,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   if (travelButtons.length > 0) {
     travelButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        const mode =
-          btn.dataset.travelMode ||
-          btn.dataset.travel ||
-          btn.getAttribute("data-travel-mode") ||
-          null;
+        const mode = btn.dataset.travelMode || null;
 
         if (state.travelMode === mode) {
           state.travelMode = null;
@@ -470,11 +463,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
         }
 
         travelButtons.forEach((b) => {
-          const m =
-            b.dataset.travelMode ||
-            b.dataset.travel ||
-            b.getAttribute("data-travel-mode") ||
-            null;
+          const m = b.dataset.travelMode || null;
           b.classList.toggle("travel-chip--active", state.travelMode === m);
         });
 
@@ -533,15 +522,11 @@ export function applyFilters(spots, state) {
       ? RADIUS_LEVELS_KM[radiusIndex]
       : null;
 
-  // Radius-Kreis auf der Karte aktualisieren (Fehler hier sollen nie den Rest killen)
-  try {
-    if (radiusKm != null && centerLat != null && centerLng != null) {
-      updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
-    } else {
-      updateRadiusCircle(null, null);
-    }
-  } catch (err) {
-    console.error("Fehler beim Aktualisieren des Radius-Kreises:", err);
+  // Radius-Kreis auf der Karte aktualisieren
+  if (radiusKm != null && centerLat != null && centerLng != null) {
+    updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
+  } else {
+    updateRadiusCircle(null, null);
   }
 
   const results = [];
