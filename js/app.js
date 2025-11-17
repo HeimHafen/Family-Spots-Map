@@ -38,7 +38,7 @@ let partnerCodesCache = null;
 let currentSelectedSpotId = null;
 
 // -----------------------------------------------------
-// Mein Tag – Initialisierung
+// Mein Tag – Daylog
 // -----------------------------------------------------
 
 function initDayLog() {
@@ -317,7 +317,8 @@ function initUIEvents() {
       }
       const normalized = rawCode.toUpperCase();
       try {
-        const codes = partnerCodesCache || (partnerCodesCache = await loadPartnerCodes());
+        const codes =
+          partnerCodesCache || (partnerCodesCache = await loadPartnerCodes());
         const match = codes.find(
           (c) =>
             String(c.code).toUpperCase() === normalized &&
@@ -503,7 +504,7 @@ function updatePlusStatusUI(status) {
 }
 
 // -----------------------------------------------------
-// Statische Texte (falls du eine eigene Funktion hast)
+// Statische Texte (optional)
 // -----------------------------------------------------
 
 function updateStaticLanguageTexts(_lang) {
