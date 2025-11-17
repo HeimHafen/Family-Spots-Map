@@ -220,6 +220,34 @@
               </div>
             </details>
 
+            <!-- Mein Tag / Tagesprotokoll (einklappbar) -->
+            <details class="sidebar-section" id="daylog-section" open>
+              <summary class="sidebar-section-header">
+                <h2 class="sidebar-section-title">Mein Tag 💛</h2>
+                <button
+                  type="button"
+                  class="btn-icon sidebar-section-close"
+                  data-target="daylog-section"
+                  aria-label="Tagesprotokoll schließen"
+                >
+                  ×
+                </button>
+              </summary>
+
+              <div class="filter-group">
+                <label for="daylog-text">Wie war euer Tag?</label>
+                <textarea
+                  id="daylog-text"
+                  class="input"
+                  rows="3"
+                  placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
+                ></textarea>
+                <button id="daylog-save" class="btn btn-small" type="button">
+                  Speichern 💾
+                </button>
+              </div>
+            </details>
+
             <!-- Filter-Section -->
             <section class="sidebar-section">
               <header class="sidebar-section-header">
@@ -839,4 +867,3 @@
     <script type="module" src="js/app.js"></script>
   </body>
 </html>
-
