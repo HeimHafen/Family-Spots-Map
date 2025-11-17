@@ -98,6 +98,17 @@ export function clearPlusStatus() {
   return { ...defaultPlusStatus };
 }
 
+// **Kompatibilitäts-Aliase für dein bestehendes plus.js**
+// (plus.js kann weiter { getPlusStatusFromStorage, savePlusStatusToStorage } importieren)
+
+export function getPlusStatusFromStorage() {
+  return getPlusStatus();
+}
+
+export function savePlusStatusToStorage(status) {
+  return savePlusStatus(status);
+}
+
 // ------------------------
 // Favoriten
 // ------------------------
