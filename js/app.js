@@ -528,9 +528,225 @@ function updatePlusStatusUI(status) {
 }
 
 // -----------------------------------------------------
-// Statische Texte (optional)
+// Statische Texte für DE / EN
 // -----------------------------------------------------
 
-function updateStaticLanguageTexts(_lang) {
-  // Platzhalter – falls du zusätzliche statische Texte außerhalb von i18n anpassen willst
+function updateStaticLanguageTexts(lang) {
+  const isDe = (lang || "de").startsWith("de");
+
+  // Header-Tagline
+  const headerTagline = $("#header-tagline");
+  if (headerTagline) {
+    headerTagline.textContent = isDe
+      ? "Die schönste Karte für Familien-Abenteuer. Finde geprüfte Ausflugsziele in deiner Nähe – von Eltern für Eltern."
+      : "The most beautiful map for family adventures. Find curated family spots near you – by parents for parents.";
+  }
+
+  // Familien-Kompass
+  const compassLabel = $("#compass-label");
+  if (compassLabel) {
+    compassLabel.textContent = isDe ? "Familien-Kompass" : "Family Compass";
+  }
+  const compassHelper = $("#compass-helper");
+  if (compassHelper) {
+    compassHelper.textContent = isDe
+      ? "Der Familien-Kompass hilft euch mit einem Klick Spots zu finden, die zu eurer Zeit, eurem Alter und eurer Energie passen."
+      : "The family compass helps you find spots that match your time, your kids' age and your energy today – with just one tap.";
+  }
+  const compassApplyLabel = $("#compass-apply-label");
+  if (compassApplyLabel) {
+    compassApplyLabel.textContent = isDe ? "Kompass anwenden" : "Apply compass";
+  }
+
+  // Mein Tag
+  const daylogTitle = document.querySelector(
+    "#daylog-section .sidebar-section-title"
+  );
+  if (daylogTitle) {
+    daylogTitle.textContent = isDe ? "Mein Tag 💛" : "My day 💛";
+  }
+  const daylogLabel = document.querySelector('label[for="daylog-text"]');
+  if (daylogLabel) {
+    daylogLabel.textContent = isDe ? "Wie war euer Tag?" : "How was your day?";
+  }
+
+  // Filter-Titel
+  const filterTitle = $("#filter-title");
+  if (filterTitle) {
+    filterTitle.textContent = isDe ? "Filter" : "Filters";
+  }
+
+  // Suchfeld
+  const searchLabel = $("#filter-search-label");
+  if (searchLabel) {
+    searchLabel.textContent = isDe ? "Suche" : "Search";
+  }
+  const searchInput = $("#filter-search");
+  if (searchInput) {
+    searchInput.placeholder = isDe
+      ? "Ort, Spot, Stichwörter …"
+      : "Place, spot, keywords …";
+  }
+
+  // Kategorie
+  const catLabel = $("#filter-category-label");
+  if (catLabel) {
+    catLabel.textContent = isDe ? "Kategorie" : "Category";
+  }
+  const catAllOption = document.querySelector(
+    "#filter-category option[value='']"
+  );
+  if (catAllOption) {
+    catAllOption.textContent = isDe ? "Alle Kategorien" : "All categories";
+  }
+
+  // Stimmung
+  const moodLabel = $("#filter-mood-label");
+  if (moodLabel) {
+    moodLabel.textContent = isDe ? "Stimmung" : "Mood";
+  }
+  const moodHelper = $("#filter-mood-helper");
+  if (moodHelper) {
+    moodHelper.textContent = isDe
+      ? "Wonach fühlt es sich heute an?"
+      : "What does today feel like?";
+  }
+  const moodRelaxed = $("#mood-relaxed-label");
+  if (moodRelaxed) {
+    moodRelaxed.textContent = isDe ? "Entspannt" : "Relaxed";
+  }
+  const moodAction = $("#mood-action-label");
+  if (moodAction) {
+    moodAction.textContent = isDe ? "Bewegung" : "Active";
+  }
+  const moodWater = $("#mood-water-label");
+  if (moodWater) {
+    moodWater.textContent = isDe ? "Wasser & Sand" : "Water & sand";
+  }
+  const moodAnimals = $("#mood-animals-label");
+  if (moodAnimals) {
+    moodAnimals.textContent = isDe ? "Tier-Tag" : "Animal day";
+  }
+
+  // Reise-Modus
+  const travelLabel = $("#filter-travel-label");
+  if (travelLabel) {
+    travelLabel.textContent = isDe ? "Reise-Modus" : "Travel mode";
+  }
+  const travelHelper = $("#filter-travel-helper");
+  if (travelHelper) {
+    travelHelper.textContent = isDe
+      ? "Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo, Auto oder Bahn?"
+      : "Are you out and about in everyday life or on a trip with RV, car or train today?";
+  }
+  const travelEveryday = $("#travel-everyday-label");
+  if (travelEveryday) {
+    travelEveryday.textContent = isDe ? "Alltag" : "Everyday";
+  }
+  const travelTrip = $("#travel-trip-label");
+  if (travelTrip) {
+    travelTrip.textContent = isDe ? "Unterwegs" : "On the road";
+  }
+
+  // Alter der Kinder
+  const ageLabel = $("#filter-age-label");
+  if (ageLabel) {
+    ageLabel.textContent = isDe ? "Alter der Kinder" : "Children's age";
+  }
+  const ageAll = $("#filter-age-all");
+  if (ageAll) {
+    ageAll.textContent = isDe ? "Alle Altersstufen" : "All age groups";
+  }
+  const age03 = $("#filter-age-0-3");
+  if (age03) {
+    age03.textContent = isDe ? "0–3 Jahre" : "0–3 years";
+  }
+  const age49 = $("#filter-age-4-9");
+  if (age49) {
+    age49.textContent = isDe ? "4–9 Jahre" : "4–9 years";
+  }
+  const age10 = $("#filter-age-10-plus");
+  if (age10) {
+    age10.textContent = isDe ? "10+ Jahre" : "10+ years";
+  }
+
+  // Radius
+  const radiusLabel = $("#filter-radius-label");
+  if (radiusLabel) {
+    radiusLabel.textContent = isDe
+      ? "Micro-Abenteuer-Radius"
+      : "Micro-adventure radius";
+  }
+  const radiusHelper = $("#filter-radius-helper");
+  if (radiusHelper) {
+    radiusHelper.textContent = isDe
+      ? "Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …)."
+      : "How far may your adventure go today? The radius is based on the map centre (home, holiday flat, hotel …).";
+  }
+  const radiusMaxLabel = $("#filter-radius-max-label");
+  if (radiusMaxLabel) {
+    radiusMaxLabel.textContent = isDe ? "Alle Spots" : "All spots";
+  }
+  const radiusDesc = $("#filter-radius-description");
+  if (radiusDesc) {
+    radiusDesc.textContent = isDe
+      ? "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
+      : "All spots – no radius limit. The map is yours.";
+  }
+
+  // Checkboxen
+  const bigLabel = $("#filter-big-label span");
+  if (bigLabel) {
+    bigLabel.textContent = isDe ? "Nur große Abenteuer" : "Big adventures only";
+  }
+  const verifiedLabel = $("#filter-verified-label span");
+  if (verifiedLabel) {
+    verifiedLabel.textContent = isDe ? "Nur verifizierte Spots" : "Verified spots only";
+  }
+  const favsLabel = $("#filter-favs-label span");
+  if (favsLabel) {
+    favsLabel.textContent = isDe ? "Nur Favoriten" : "Favourites only";
+  }
+
+  // Spots-Sektion
+  const spotsTitle = $("#spots-title");
+  if (spotsTitle) {
+    spotsTitle.textContent = isDe ? "Spots" : "Spots";
+  }
+
+  // Bottom-Navigation
+  const bottomMap = $("#bottom-nav-map-label");
+  if (bottomMap) {
+    bottomMap.textContent = isDe ? "Karte" : "Map";
+  }
+  const bottomAbout = $("#bottom-nav-about-label");
+  if (bottomAbout) {
+    bottomAbout.textContent = isDe ? "Über" : "About";
+  }
+
+  // Filter-Toggle-Button (Starttext)
+  const filterToggleLabel = $("#btn-toggle-filters span");
+  if (filterToggleLabel) {
+    filterToggleLabel.textContent = isDe
+      ? "Filter ausblenden"
+      : "Hide filters";
+  }
+
+  // Plus-Formular (Label + Button + Hinweis)
+  const plusLabel = document.querySelector('label[for="plus-code-input"]');
+  if (plusLabel) {
+    plusLabel.textContent = isDe
+      ? "Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
+      : "Enter partner code (e.g. from campsite, municipality or sponsor):";
+  }
+  const plusBtn = $("#plus-code-submit");
+  if (plusBtn) {
+    plusBtn.textContent = isDe ? "Code aktivieren" : "Activate code";
+  }
+  const plusNote = $(".plus-note");
+  if (plusNote) {
+    plusNote.textContent = isDe
+      ? "Family Spots Plus schaltet zusätzliche Filter & Spots frei – ganz ohne Abo-Falle."
+      : "Family Spots Plus unlocks extra filters & spots – with no subscription trap.";
+  }
 }
