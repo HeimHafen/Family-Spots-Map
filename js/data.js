@@ -131,6 +131,9 @@ export async function loadAppData() {
         // Plus-Flag optional
         plus_only: !!raw.plus_only,
 
+        // Optional: USPs, falls du sie schon im JSON hast
+        usps: Array.isArray(raw.usps) ? raw.usps.slice() : [],
+
         // Normalisierte Location für Map & Routing
         location: location,
 
@@ -160,6 +163,20 @@ export async function loadAppData() {
  */
 export function getSpots() {
   return appData.spots ? appData.spots : [];
+}
+
+/**
+ * Zugriff auf den Index (falls du ihn an anderer Stelle brauchst).
+ */
+export function getIndex() {
+  return appData.index || null;
+}
+
+/**
+ * Falls du mal das ganze Objekt brauchst.
+ */
+export function getAppData() {
+  return appData;
 }
 
 /**
