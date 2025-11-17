@@ -72,7 +72,6 @@ body {
       var(--color-bg) 70px
     );
   color: var(--color-text);
-  min-height: 100vh;
 }
 
 /* ==========================================================================
@@ -169,7 +168,8 @@ body {
   padding: 4px 8px;
 }
 
-.language-switcher:focus-visible {
+.language-switcher:focus-visible,
+#language-switcher:focus-visible {
   outline: 2px solid #fef08a;
   outline-offset: 2px;
 }
@@ -246,11 +246,6 @@ body {
   display: flex;
   flex-direction: column;
   max-height: min(520px, 60vh);
-}
-
-/* rein informativ, damit klar ist: diese Sektionen sind einklappbar */
-.sidebar-section--collapsible {
-  position: relative;
 }
 
 .sidebar-header {
@@ -450,7 +445,7 @@ body {
   height: 14px;
 }
 
-/* Plus-Code input row (HTML hat inline-style, das hier ist optional fallback) */
+/* Plus-Code input row (Fallback, HTML hat inline-style) */
 .plus-input-row {
   display: flex;
   gap: 6px;
@@ -659,7 +654,6 @@ body {
 
 .leaflet-container {
   font-family: var(--font-base);
-  background: var(--color-bg);
 }
 
 .radius-circle {
