@@ -33,13 +33,20 @@ import "./sw-register.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   bootstrapApp().catch((err) => {
-    console.error(err);
-    showToast(
-      t(
-        "error_data_load",
+    console.error("Bootstrap-Fehler:", err);
+    try {
+      showToast(
+        t(
+          "error_data_load",
+          "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
+        ),
+      );
+    } catch {
+      // Fallback, falls i18n selbst noch nicht bereit ist
+      alert(
         "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
-      ),
-    );
+      );
+    }
   });
 });
 
@@ -336,10 +343,12 @@ function initFilterPanelToggle() {
   const labelSpan = filterToggleBtn.querySelector("span");
   if (!filterSection || !labelSpan) return;
 
+  // Wichtig: sowohl ältere ".filter-group" als auch neue ".filter-field-group" unterstützen
   const filterControls = Array.from(
-    filterSection.querySelectorAll(".filter-group"),
+    filterSection.querySelectorAll(".filter-group, .filter-field-group"),
   );
 
+  // Initial auf Mobile einklappen
   if (window.innerWidth <= 900 && filterControls.length > 0) {
     filterControls.forEach((el) => el.classList.add("hidden"));
     labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
