@@ -1,4 +1,6 @@
-// js/storage.js
+// ------------------------
+// Keys & Default-Settings
+// ------------------------
 
 const SETTINGS_KEY = "fsm.settings.v1";
 const FAV_KEY = "fsm.favorites.v1";
@@ -20,7 +22,7 @@ const defaultPlusStatus = {
 };
 
 // ------------------------
-// Settings
+// Settings (Sprache/Theme)
 // ------------------------
 
 export function getSettings() {
@@ -38,7 +40,7 @@ export function saveSettings(settings) {
   try {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   } catch {
-    // ignore
+    // ignorieren – z. B. Privacy-Mode
   }
 }
 
@@ -46,6 +48,10 @@ export function saveSettings(settings) {
 // Plus-Status
 // ------------------------
 
+/**
+ * Liefert den vollständigen Plus-Status aus dem Storage.
+ * Achtung: Wenn abgelaufen, wird direkt auf Default zurückgesetzt.
+ */
 export function getPlusStatus() {
   try {
     const raw = localStorage.getItem(PLUS_KEY);
@@ -58,6 +64,7 @@ export function getPlusStatus() {
       const exp = new Date(merged.expiresAt);
       const now = new Date();
       if (isNaN(exp.getTime()) || exp <= now) {
+        // Abgelaufen oder ungültig -> zurück auf Default
         return { ...defaultPlusStatus };
       }
     }
@@ -68,12 +75,16 @@ export function getPlusStatus() {
   }
 }
 
+/**
+ * Speichert einen (Teil-)Status für Plus.
+ * Ergänzt default-Werte und setzt active:true.
+ */
 export function savePlusStatus(status) {
   const merged = { ...defaultPlusStatus, ...status, active: true };
   try {
     localStorage.setItem(PLUS_KEY, JSON.stringify(merged));
   } catch {
-    // ignore
+    // ignorieren
   }
   return merged;
 }
@@ -82,7 +93,7 @@ export function clearPlusStatus() {
   try {
     localStorage.removeItem(PLUS_KEY);
   } catch {
-    // ignore
+    // ignorieren
   }
   return { ...defaultPlusStatus };
 }
@@ -109,7 +120,7 @@ function setFavorites(ids) {
   try {
     localStorage.setItem(FAV_KEY, JSON.stringify(unique));
   } catch {
-    // ignore
+    // ignorieren
   }
   return unique;
 }
