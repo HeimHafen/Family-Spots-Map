@@ -24,6 +24,7 @@ import {
 import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 import { getState, setState } from "./state.js";
+import { updateCompassMessage } from "./coach.js";
 import "./sw-register.js";
 
 // -----------------------------------------------------
@@ -109,6 +110,12 @@ async function bootstrapApp() {
   renderSpotList(filteredSpots, {
     favorites: getFavorites(),
     onSelect: handleSpotSelect,
+  });
+
+  // 🔮 Familien-Kompass initial befüllen
+  updateCompassMessage(initialFilterState, {
+    filteredCount: filteredSpots.length,
+    favoritesCount: getFavorites().length,
   });
 
   initUIEvents();
@@ -207,12 +214,34 @@ function initLanguageAndThemeUI() {
       const categories = getCategories();
       refreshCategorySelect(categories);
 
-      const { filters, plus } = getState();
+      const { filters, plus, spots } = getState();
 
       // Filter neu anwenden (Liste + Marker)
-      handleFilterChange({
+      const map = getMap();
+      const center = map ? map.getCenter() : null;
+      const filteredSpots = applyFilters(spots.all, {
         ...filters,
         favorites: getFavorites(),
+        mapCenter: center,
+      });
+
+      setState({
+        spots: {
+          ...spots,
+          filtered: filteredSpots,
+        },
+      });
+
+      setSpotsOnMap(filteredSpots);
+      renderSpotList(filteredSpots, {
+        favorites: getFavorites(),
+        onSelect: handleSpotSelect,
+      });
+
+      // Kompass-Text in neuer Sprache neu berechnen
+      updateCompassMessage(filters, {
+        filteredCount: filteredSpots.length,
+        favoritesCount: getFavorites().length,
       });
 
       // Plus-Status in neuer Sprache
@@ -471,6 +500,12 @@ function applyCompass() {
     });
   }
 
+  const { filters, spots } = getState();
+  updateCompassMessage(filters, {
+    filteredCount: spots.filtered.length,
+    favoritesCount: getFavorites().length,
+  });
+
   showToast(
     t(
       "compass_applied",
@@ -546,6 +581,12 @@ function handleFilterChange(filterState) {
   renderSpotList(filteredSpots, {
     favorites: filterState.favorites,
     onSelect: handleSpotSelect,
+  });
+
+  // 💛 Kompass-Text aktualisieren
+  updateCompassMessage(filterState, {
+    filteredCount: filteredSpots.length,
+    favoritesCount: getFavorites().length,
   });
 }
 
@@ -670,8 +711,7 @@ function updatePlusStatusUI(status) {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-      },
-    );
+    });
     baseText += isGerman ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
   }
 
@@ -772,11 +812,7 @@ function updateStaticLanguageTexts(lang) {
     "Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).",
     "How far may today’s adventure go? The radius is measured from the map centre (home, holiday flat, hotel …).",
   );
-  setElText(
-    "filter-radius-max-label",
-    "Alle Spots",
-    "All spots",
-  );
+  setElText("filter-radius-max-label", "Alle Spots", "All spots");
 
   // Checkboxen
   const bigLabelSpan = $("#filter-big-label span:last-child");
