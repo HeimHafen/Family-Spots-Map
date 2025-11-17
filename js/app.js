@@ -569,6 +569,16 @@ function updateStaticLanguageTexts(lang) {
   if (daylogLabel) {
     daylogLabel.textContent = isDe ? "Wie war euer Tag?" : "How was your day?";
   }
+  const daylogTextarea = $("#daylog-text");
+  if (daylogTextarea) {
+    daylogTextarea.placeholder = isDe
+      ? "Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
+      : "Today we went to the wildlife park – the goats were sooo cute!";
+  }
+  const daylogSaveBtn = $("#daylog-save");
+  if (daylogSaveBtn) {
+    daylogSaveBtn.textContent = isDe ? "Speichern 💾" : "Save 💾";
+  }
 
   // Filter-Titel
   const filterTitle = $("#filter-title");
@@ -732,6 +742,12 @@ function updateStaticLanguageTexts(lang) {
     filterToggleLabel.textContent = isDe
       ? "Filter ausblenden"
       : "Hide filters";
+  }
+
+  // "Nur Karte" / "Map only"
+  const toggleViewLabel = $("#btn-toggle-view span");
+  if (toggleViewLabel) {
+    toggleViewLabel.textContent = isDe ? "Nur Karte" : "Map only";
   }
 
   // Plus-Formular (Label + Button + Hinweis)
