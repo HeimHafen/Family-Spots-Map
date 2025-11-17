@@ -127,19 +127,11 @@ body {
   gap: 6px;
 }
 
-.app-logo span {
-  display: inline-block;
-}
-
 .app-logo-primary {
   padding: 4px 12px;
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.26);
   backdrop-filter: blur(16px);
-}
-
-.app-logo-secondary {
-  color: #fef9c3;
 }
 
 .header-tagline {
@@ -322,7 +314,7 @@ body {
   font-size: 0.78rem;
 }
 
-/* Toggle Buttons (z. B. Kompass / Plus einklappen) */
+/* Toggle Buttons (Kompass / Plus einklappen) */
 
 .toggle-chip {
   border-radius: var(--radius-pill);
@@ -335,7 +327,7 @@ body {
   background: rgba(148, 163, 184, 0.06);
 }
 
-/* Mood / Travel Chips (Kompass + Filter) */
+/* Mood / Travel Chips */
 
 .mood-chip,
 .travel-chip {
@@ -372,7 +364,11 @@ body {
   transform: translateY(-1px);
 }
 
-/* Text Inputs / Select / Range */
+/* Inputs / Select */
+
+.filter-group {
+  margin-top: 6px;
+}
 
 .filter-field-group {
   margin-top: 6px;
@@ -473,7 +469,7 @@ body {
   position: relative;
 }
 
-/* Der erklärende Kompass-Text */
+/* Erklärender Kompass-Text */
 
 .compass-message {
   margin-top: 7px;
@@ -599,39 +595,10 @@ body {
   padding: 4px 4px 6px;
 }
 
-.map-topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .map-topbar-right {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.view-tabs {
-  display: inline-flex;
-  border-radius: var(--radius-pill);
-  background: rgba(148, 163, 184, 0.16);
-  padding: 2px;
-}
-
-.view-tab {
-  border-radius: var(--radius-pill);
-  border: none;
-  padding: 4px 12px;
-  font-size: 0.78rem;
-  cursor: pointer;
-  background: transparent;
-  color: var(--color-text-soft);
-}
-
-.view-tab--active {
-  background: #ffffff;
-  color: var(--color-text);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.22);
 }
 
 /* Map Views */
@@ -813,7 +780,7 @@ body {
   border: 1px solid rgba(148, 163, 184, 0.6);
 }
 
-/* Scrollbar (für Spot-Liste etc.) */
+/* Scrollbar (Spot-Liste) */
 
 .spot-list::-webkit-scrollbar {
   width: 6px;
@@ -826,4 +793,16 @@ body {
 
 .spot-list::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* ==========================================================================
+   Collapsible Sections (Kompass / Plus)
+   ========================================================================== */
+
+.sidebar-section--collapsible[data-collapsed="true"] > :not(.sidebar-header) {
+  display: none;
+}
+
+.sidebar-section--collapsible[data-collapsed="true"] {
+  padding-bottom: 10px;
 }
