@@ -150,8 +150,7 @@ body {
 
 /* Language + Theme */
 
-.language-switcher-wrapper,
-.theme-toggle-wrapper {
+.language-switcher-wrapper {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -169,6 +168,11 @@ body {
   padding: 4px 8px;
 }
 
+.language-switcher:focus-visible {
+  outline: 2px solid #fef08a;
+  outline-offset: 2px;
+}
+
 .theme-toggle-btn,
 #theme-toggle {
   border-radius: var(--radius-pill);
@@ -180,6 +184,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  cursor: pointer;
 }
 
 /* ==========================================================================
@@ -325,6 +330,7 @@ body {
   align-items: center;
   gap: 6px;
   background: rgba(148, 163, 184, 0.06);
+  cursor: pointer;
 }
 
 /* Mood / Travel Chips */
@@ -438,6 +444,13 @@ body {
   height: 14px;
 }
 
+/* Plus-Code input row (HTML hat inline-style, das hier ist optional fallback) */
+.plus-input-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 3px;
+}
+
 /* ==========================================================================
    Familien-Kompass – Coach / Message
    ========================================================================== */
@@ -469,34 +482,45 @@ body {
   position: relative;
 }
 
-/* Erklärender Kompass-Text (falls du ihn wieder nutzt) */
+/* Highlight-Karte für den Kompass-Text (wenn du <p class="compass-message"> nutzt) */
 
 .compass-message {
-  margin-top: 7px;
-  font-size: 0.82rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.65rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 246, 214, 0.97),
+    rgba(255, 238, 197, 0.97)
+  );
+  border-left: 4px solid #f7b500;
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  color: #5c4a2a;
+  font-size: 0.9rem;
   line-height: 1.55;
-  color: var(--color-text-soft);
-  border-left: 3px solid rgba(250, 204, 21, 0.8);
-  padding-left: 0.75rem;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  background: radial-gradient(
-      circle at 0 0,
-      rgba(250, 204, 21, 0.14),
-      transparent 60%
-    ),
-    rgba(255, 255, 255, 0.6);
-  border-radius: 0 10px 10px 0;
+}
+
+.compass-message strong {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
 }
 
 [data-theme="dark"] .compass-message {
-  background: radial-gradient(
-      circle at 0 0,
-      rgba(250, 204, 21, 0.24),
-      transparent 60%
-    ),
-    rgba(15, 23, 42, 0.85);
-  color: var(--color-text-soft);
+  background: linear-gradient(
+    135deg,
+    rgba(46, 39, 20, 0.98),
+    rgba(58, 47, 24, 0.98)
+  );
+  border-left-color: #ffc94d;
+  color: #f7f0e0;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(255, 255, 255, 0.05) inset;
 }
 
 /* ==========================================================================
@@ -797,12 +821,13 @@ body {
 
 /* ==========================================================================
    Collapsible Sections (Kompass / Plus)
+   (passt zur Logik in app.js: section.classList.toggle("sidebar-section--collapsed", !nowOpen))
    ========================================================================== */
 
-.sidebar-section--collapsible[data-collapsed="true"] > :not(.sidebar-header) {
+.sidebar-section--collapsed > :not(.sidebar-header) {
   display: none;
 }
 
-.sidebar-section--collapsible[data-collapsed="true"] {
+.sidebar-section--collapsed {
   padding-bottom: 10px;
 }
