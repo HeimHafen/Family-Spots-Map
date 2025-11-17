@@ -14,7 +14,8 @@ import {
   loadAppData,
   getSpots,
   getCategories,
-  findSpotById
+  findSpotById,
+  loadPartnerCodes
 } from "./data.js";
 import {
   initFilters,
@@ -28,7 +29,6 @@ import {
   getMap
 } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
-import { initDayLog } from "./components/DayLog.js"; // Neuer Teil
 
 let currentFilterState = null;
 let allSpots = [];
@@ -36,6 +36,34 @@ let filteredSpots = [];
 let plusStatus = null;
 let partnerCodesCache = null;
 let currentSelectedSpotId = null;
+
+// -----------------------------------------------------
+// Mein Tag – Initialisierung
+// -----------------------------------------------------
+
+function initDayLog() {
+  const textArea = document.getElementById("daylog-text");
+  const saveBtn = document.getElementById("daylog-save");
+
+  if (!textArea || !saveBtn) return;
+
+  // Laden beim Start
+  const saved = localStorage.getItem("fsm.daylog");
+  if (saved) {
+    textArea.value = saved;
+  }
+
+  // Speichern bei Klick
+  saveBtn.addEventListener("click", () => {
+    localStorage.setItem("fsm.daylog", textArea.value || "");
+    showToast(
+      t(
+        "daylog_saved",
+        "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern."
+      )
+    );
+  });
+}
 
 // -----------------------------------------------------
 // Bootstrap
@@ -52,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  // Mein Tag Modul initialisieren
+  // Mein Tag Modul initialisieren
   initDayLog();
 });
 
@@ -72,7 +100,7 @@ async function bootstrapApp() {
   allSpots = getSpots();
   const categories = getCategories();
 
-  // Plus‑Status laden
+  // Plus-Status laden
   plusStatus = getPlusStatus();
   updatePlusStatusUI(plusStatus);
 
@@ -219,7 +247,7 @@ function initUIEvents() {
     });
   }
 
-  const filterToggleBtn = $("#btn‑toggle‑filters");
+  const filterToggleBtn = $("#btn-toggle-filters");
   if (filterToggleBtn) {
     const filterSection = filterToggleBtn.closest(".sidebar-section");
     const labelSpan = filterToggleBtn.querySelector("span");
@@ -227,6 +255,8 @@ function initUIEvents() {
       const filterControls = Array.from(
         filterSection.querySelectorAll(".filter-group")
       );
+
+      // Auf Mobile initial einklappen
       if (window.innerWidth <= 900 && filterControls.length > 0) {
         filterControls.forEach((el) => el.classList.add("hidden"));
         labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
@@ -287,9 +317,11 @@ function initUIEvents() {
       }
       const normalized = rawCode.toUpperCase();
       try {
-        const codes = await loadPartnerCodes();
+        const codes = partnerCodesCache || (partnerCodesCache = await loadPartnerCodes());
         const match = codes.find(
-          (c) => String(c.code).toUpperCase() === normalized && (c.enabled ?? true)
+          (c) =>
+            String(c.code).toUpperCase() === normalized &&
+            (c.enabled ?? true)
         );
         if (!match) {
           showToast(
@@ -331,7 +363,9 @@ function initUIEvents() {
 }
 
 // -----------------------------------------------------
-// Routen / Filter / Auswahl (weiter wie bisher) …
+// Routing / Filter / Auswahl
+// -----------------------------------------------------
+
 function updateRoute(route, indexFromClick) {
   const viewMap = document.getElementById("view-map");
   const viewAbout = document.getElementById("view-about");
@@ -428,6 +462,10 @@ function rerenderCurrentSpotDetails() {
   });
 }
 
+// -----------------------------------------------------
+// Theme / Plus-Status
+// -----------------------------------------------------
+
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", value);
@@ -449,10 +487,11 @@ function updatePlusStatusUI(status) {
     : "Family Spots Plus is active";
   if (status.expiresAt) {
     const d = new Date(status.expiresAt);
-    const dateStr = d.toLocaleDateString(
-      isDe ? "de‑DE" : "en‑US",
-      { year: "numeric", month: "2‑digit", day: "2‑digit" }
-    );
+    const dateStr = d.toLocaleDateString(isDe ? "de-DE" : "en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
     baseText += isDe ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
   }
   if (status.partner) {
@@ -461,4 +500,12 @@ function updatePlusStatusUI(status) {
       : ` – partner: ${status.partner}`;
   }
   el.textContent = baseText;
+}
+
+// -----------------------------------------------------
+// Statische Texte (falls du eine eigene Funktion hast)
+// -----------------------------------------------------
+
+function updateStaticLanguageTexts(_lang) {
+  // Platzhalter – falls du zusätzliche statische Texte außerhalb von i18n anpassen willst
 }
