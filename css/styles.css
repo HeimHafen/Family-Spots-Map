@@ -72,6 +72,7 @@ body {
       var(--color-bg) 70px
     );
   color: var(--color-text);
+  min-height: 100vh;
 }
 
 /* ==========================================================================
@@ -245,6 +246,11 @@ body {
   display: flex;
   flex-direction: column;
   max-height: min(520px, 60vh);
+}
+
+/* rein informativ, damit klar ist: diese Sektionen sind einklappbar */
+.sidebar-section--collapsible {
+  position: relative;
 }
 
 .sidebar-header {
@@ -653,6 +659,7 @@ body {
 
 .leaflet-container {
   font-family: var(--font-base);
+  background: var(--color-bg);
 }
 
 .radius-circle {
