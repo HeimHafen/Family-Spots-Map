@@ -107,58 +107,6 @@ async function bootstrapApp() {
 // -----------------------------------------------------
 
 function initUIEvents() {
-  // Familien-Kompass – anwenden
-  const compassBtn = $("#compass-apply");
-  if (compassBtn) {
-    compassBtn.addEventListener("click", () => {
-      applyCompass();
-    });
-  }
-
-  // Familien-Kompass ein-/ausklappen
-  const compassSection = $("#compass-section");
-  const compassToggleBtn = $("#btn-toggle-compass");
-  if (compassSection && compassToggleBtn) {
-    compassToggleBtn.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      const nowOpen = !compassSection.open;
-      compassSection.open = nowOpen;
-      const span = compassToggleBtn.querySelector("span");
-      if (span) {
-        span.textContent = nowOpen
-          ? (getLanguage() || "de").startsWith("de")
-            ? "Schließen"
-            : "Hide"
-          : (getLanguage() || "de").startsWith("de")
-            ? "Öffnen"
-            : "Show";
-      }
-    });
-  }
-
-  // Family Spots Plus ein-/ausklappen
-  const plusSection = $("#plus-section");
-  const plusToggleBtn = $("#btn-toggle-plus");
-  if (plusSection && plusToggleBtn) {
-    plusToggleBtn.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      const nowOpen = !plusSection.open;
-      plusSection.open = nowOpen;
-      const span = plusToggleBtn.querySelector("span");
-      if (span) {
-        span.textContent = nowOpen
-          ? (getLanguage() || "de").startsWith("de")
-            ? "Schließen"
-            : "Hide"
-          : (getLanguage() || "de").startsWith("de")
-            ? "Öffnen"
-            : "Show";
-      }
-    });
-  }
-
   // Hilfe-Button (öffnet die Über-Ansicht)
   const helpBtn = $("#btn-help");
   if (helpBtn) {
@@ -333,7 +281,7 @@ function initUIEvents() {
     }
   });
 
-  // Plus-Code-Formular (UI-Elemente optional, brechen nichts wenn nicht vorhanden)
+  // Plus-Code-Formular
   const plusInput = $("#plus-code-input");
   const plusButton = $("#plus-code-submit");
   if (plusInput && plusButton) {
@@ -398,54 +346,6 @@ function initUIEvents() {
       }
     });
   }
-}
-
-/**
- * Familien-Kompass:
- *  - setzt bei Bedarf eine Stimmung („Entspannt“), wenn noch keine gewählt ist
- *  - reduziert einen zu großen Radius auf eine sinnvolle Distanz
- *  - scrollt zur Spot-Liste und zeigt einen kurzen Hinweis
- */
-function applyCompass() {
-  // Stimmung: falls noch nichts aktiv ist → „Entspannt“
-  const moodButtons = $$(".mood-chip");
-  const activeMood = Array.from(moodButtons).find((btn) =>
-    btn.classList.contains("mood-chip--active"),
-  );
-
-  if (!activeMood) {
-    const relaxedBtn = document.querySelector(
-      '.mood-chip[data-mood="relaxed"]',
-    );
-    if (relaxedBtn) {
-      // löst den normalen Klick aus → Filter-Logik in filters.js greift
-      relaxedBtn.click();
-    }
-  }
-
-  // Radius: wenn aktuell „Alle Spots“ (4), auf einen moderaten Radius setzen
-  const radiusSlider = $("#filter-radius");
-  if (radiusSlider && radiusSlider.value === "4") {
-    radiusSlider.value = "2"; // z. B. ~30 km, siehe RADIUS_LEVELS_KM in filters.js
-    const evt = new Event("input", { bubbles: true });
-    radiusSlider.dispatchEvent(evt);
-  }
-
-  // Zur Spot-Liste scrollen, damit man die Ergebnisse sieht
-  const listSection = document.querySelector(".sidebar-section--grow");
-  if (listSection) {
-    listSection.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  }
-
-  showToast(
-    t(
-      "compass_applied",
-      "Der Familien-Kompass ist aktiv – passende Spots werden oben angezeigt. 💫",
-    ),
-  );
 }
 
 function updateRoute(route, indexFromClick) {
@@ -739,7 +639,7 @@ function updateStaticLanguageTexts(lang) {
       : "Only favourite spots";
   }
 
-  // Kompass (Titel/Helper – der eigentliche Inhalt ist im Kompass-Section)
+  // Kompass
   setElText("compass-label", "Familien-Kompass", "Family compass");
   setElText(
     "compass-helper",
@@ -747,16 +647,6 @@ function updateStaticLanguageTexts(lang) {
     "The family compass helps you find spots that match your time, your kids’ age and everyone’s energy today.",
   );
   setElText("compass-apply-label", "Kompass anwenden", "Start compass");
-
-  // Buttons zum Einklappen von Kompass & Plus
-  const compassToggleSpan = $("#btn-toggle-compass span");
-  if (compassToggleSpan) {
-    compassToggleSpan.textContent = isDe ? "Schließen" : "Hide";
-  }
-  const plusToggleSpan = $("#btn-toggle-plus span");
-  if (plusToggleSpan) {
-    plusToggleSpan.textContent = isDe ? "Schließen" : "Hide";
-  }
 
   // Spot-Liste Titel
   setElText("spots-title", "Spots", "Spots");
