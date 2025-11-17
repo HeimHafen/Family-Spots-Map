@@ -24,14 +24,14 @@
   --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.16);
   --shadow-lighter: 0 6px 18px rgba(15, 23, 42, 0.12);
 
-  --font-base: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  --font-base: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans‑serif;
 
   --transition-fast: 150ms ease-out;
   --transition-med: 200ms ease-out;
 }
 
 /* Dark‑Theme Overrides */
-[data-theme="dark"] {
+[data‑theme="dark"] {
   --color-bg: #020617;
   --color-bg-elevated: #020617;
   --color-primary: #0bbcd6;
@@ -54,14 +54,21 @@
 *::after {
   box‑sizing: border‑box;
 }
+
 html,
 body {
   margin: 0;
   padding: 0;
 }
+
 body {
   font‑family: var(--font-base);
-  background: linear‑gradient(180deg, var(--color-primary) 0, var(--color-primary) 70px, var(--color-bg) 70px);
+  background: linear‑gradient(
+    180deg,
+    var(--color-primary) 0,
+    var(--color-primary) 70px,
+    var(--color-bg) 70px
+  );
   color: var(--color-text);
 }
 
@@ -73,6 +80,7 @@ body {
   margin: 0 auto;
   padding: 10px 10px 80px;
 }
+
 @media (min‑width: 1024px) {
   .app-shell {
     padding: 16px 16px 32px;
@@ -85,11 +93,13 @@ body {
   padding: 12px 8px 14px;
   background: var(--color-primary);
 }
+
 .app-header-inner {
   display: flex;
   flex‑direction: column;
   gap: 8px;
 }
+
 @media (min‑width: 768px) {
   .app-header-inner {
     flex‑direction: row;
@@ -97,11 +107,13 @@ body {
     align‑items: center;
   }
 }
+
 .app-header-left {
   display: flex;
   flex‑direction: column;
   gap: 4px;
 }
+
 .app-logo {
   font‑weight: 800;
   font‑size: 1.05rem;
@@ -111,9 +123,11 @@ body {
   align‑items: center;
   gap: 6px;
 }
+
 .app-logo span {
   display: inline‑block;
 }
+
 .app-logo-primary {
   padding: 8px 14px;
   border‑radius: 999px;
@@ -121,10 +135,12 @@ body {
   backdrop‑filter: blur(16px);
   font‑size: 1.2rem;
 }
+
 .app-logo-secondary {
   color: #fef9c3;
   font‑size: 0.9rem;
 }
+
 .header-tagline {
   margin: 2px 0 0;
   font‑size: 0.9rem;
@@ -132,6 +148,7 @@ body {
   max‑width: 580px;
   opacity: 0.96;
 }
+
 .app-header-right {
   display: flex;
   align‑items: center;
@@ -147,8 +164,9 @@ body {
   font‑size: 0.75rem;
   opacity: 0.9;
 }
+
 .language-switcher,
-#language-switcher {
+#language‑switcher {
   border‑radius: var(--radius‑pill);
   border: 1px solid rgba(255, 255, 255, 0.4);
   background: rgba(15, 23, 42, 0.25);
@@ -156,6 +174,7 @@ body {
   font‑size: 0.72rem;
   padding: 4px 8px;
 }
+
 .theme-toggle-btn,
 #theme‑toggle {
   border‑radius: var(--radius‑pill);
@@ -175,12 +194,14 @@ body {
 .app-main {
   margin‑top: 4px;
 }
+
 .app-layout {
   display: grid;
   grid‑template‑columns: minmax(0, 380px) minmax(0, 1fr);
   gap: 12px;
   align‑items: flex‑start;
 }
+
 @media (max‑width: 900px) {
   .app-layout {
     grid‑template‑columns: minmax(0, 1fr);
@@ -193,24 +214,30 @@ body {
   flex‑direction: column;
   gap: 8px;
 }
+
 .sidebar-section {
   background: var(--color-bg‑elevated);
   border‑radius: var(--radius‑lg);
   box‑shadow: var(--shadow‑lighter);
-  border: 1px solid var(--color-border‑soft);
+  border: 1px solid var(--color‑border‑soft);
   padding: 12px 12px 10px;
 }
+
 .sidebar-section--accent {
   border‑style: dashed;
   border‑color: rgba(11, 188, 214, 0.65);
-  background: radial‑gradient(circle at 0 0, rgba(11, 188, 214, 0.12), transparent 56%), radial‑gradient(circle at 100% 100%, rgba(250, 204, 21, 0.18), transparent 58%), var(--color-bg‑elevated);
+  background: radial‑gradient(circle at 0 0, rgba(11, 188, 214, 0.12), transparent 56%),
+              radial‑gradient(circle at 100% 100%, rgba(250, 204, 21, 0.18), transparent 58%),
+              var(--color-bg‑elevated);
 }
+
 .sidebar-section--grow {
   flex: 1 1 auto;
   display: flex;
   flex‑direction: column;
   max‑height: min(520px, 60vh);
 }
+
 .sidebar-header {
   display: flex;
   justify‑content: space‑between;
@@ -218,16 +245,12 @@ body {
   gap: 8px;
   margin‑bottom: 4px;
 }
+
 .sidebar-title {
   font‑size: 0.9rem;
   font‑weight: 700;
   letter‑spacing: 0.03em;
   text‑transform: uppercase;
-}
-.sidebar‑subtitle {
-  font‑size: 0.78rem;
-  color: var(--color‑text‑soft);
-  margin: 0 0 6px;
 }
 
 /* ==========================================================================
@@ -244,33 +267,39 @@ body {
   align‑items: center;
   justify‑content: center;
   gap: 6px;
-  background: var(--color‑primary);
+  background: var(--color-primary);
   color: #ffffff;
   box‑shadow: 0 6px 16px rgba(11, 188, 214, 0.48);
   transition: transform var(--transition‑fast), box‑shadow var(--transition‑fast), background var(--transition‑fast), border‑color var(--transition‑fast);
 }
+
 .btn:hover {
-  background: var(--color‑primary‑strong);
+  background: var(--color-primary‑strong);
   transform: translateY(-1px);
 }
+
 .btn:active {
   transform: translateY(0);
   box‑shadow: 0 3px 10px rgba(15, 23, 42, 0.35);
 }
+
 .btn--ghost {
   background: transparent;
-  color: var(--color‑primary);
+  color: var(--color-primary);
   border‑color: var(--color‑border‑soft);
   box‑shadow: none;
 }
+
 .btn--ghost:hover {
-  background: var(--color‑primary‑soft);
+  background: var(--color-primary‑soft);
 }
+
 .btn--sm {
   padding: 4px 9px;
   font‑size: 0.78rem;
 }
-.toggle-chip {
+
+.toggle‑chip {
   border‑radius: var(--radius‑pill);
   border: 1px solid var(--color‑border‑soft);
   padding: 3px 8px;
@@ -280,6 +309,8 @@ body {
   gap: 6px;
   background: rgba(148, 163, 184, 0.06);
 }
+
+/* Mood / Travel Chips */
 .mood‑chip,
 .travel‑chip {
   display: inline‑flex;
@@ -293,34 +324,44 @@ body {
   color: var(--color‑text‑soft);
   cursor: pointer;
   margin: 0 4px 4px 0;
-  transition: background var(--transition‑fast), color var(--transition‑fast), border‑color var(--transition‑fast), box‑shadow var(--transition‑fast), transform var(--transition‑fast);
+  transition: background var(--transition‑fast),
+              color var(--transition‑fast),
+              border‑color var(--transition‑fast),
+              box‑shadow var(--transition‑fast),
+              transform var(--transition‑fast);
 }
+
 [data‑theme="dark"] .mood‑chip,
 [data‑theme="dark"] .travel‑chip {
   background: rgba(15, 23, 42, 0.9);
 }
+
 .mood‑chip‑‑active,
 .travel‑chip‑‑active {
-  background: var(--color‑primary‑soft);
-  border‑color: var(--color‑primary);
+  background: var(--color-primary‑soft);
+  border‑color: var(--color-primary);
   color: var(--color‑primary‑strong);
   box‑shadow: 0 0 0 1px rgba(11, 188, 214, 0.4);
   transform: translateY(-1px);
 }
+
 .filter‑field‑group {
   margin‑top: 6px;
 }
+
 .filter‑label {
   font‑size: 0.78rem;
   font‑weight: 600;
   margin‑bottom: 4px;
   display: block;
 }
+
 .filter‑helper {
   font‑size: 0.75rem;
   color: var(--color‑text‑soft);
   margin‑bottom: 6px;
 }
+
 .filter‑input,
 .filter‑select {
   width: 100%;
@@ -331,25 +372,30 @@ body {
   background: #ffffff;
   color: var(--color‑text);
 }
+
 [data‑theme="dark"] .filter‑input,
 [data‑theme="dark"] .filter‑select {
   background: rgba(15, 23, 42, 0.9);
   color: var(--color‑text);
 }
+
 .filter‑radius‑row {
   display: flex;
   align‑items: center;
   gap: 8px;
   margin‑top: 4px;
 }
+
 #filter‑radius {
   flex: 1;
 }
+
 .filter‑radius‑description {
   margin‑top: 4px;
   font‑size: 0.75rem;
   color: var(--color‑text‑soft);
 }
+
 .checkbox‑row {
   display: flex;
   align‑items: center;
@@ -357,6 +403,7 @@ body {
   margin‑top: 3px;
   font‑size: 0.78rem;
 }
+
 .checkbox‑row input[type="checkbox"] {
   width: 14px;
   height: 14px;
@@ -369,17 +416,21 @@ body {
   position: relative;
   overflow: hidden;
 }
+
 #compass‑section::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial‑gradient(circle at 0 0, rgba(250, 204, 21, 0.32), transparent 55%), radial‑gradient(circle at 110% 0, rgba(56, 189, 248, 0.28), transparent 55%);
+  background: radial‑gradient(circle at 0 0, rgba(250, 204, 21, 0.32), transparent 55%),
+              radial‑gradient(circle at 110% 0, rgba(56, 189, 248, 0.28), transparent 55%);
   opacity: 0.18;
   pointer‑events: none;
 }
+
 #compass‑section > * {
   position: relative;
 }
+
 .compass‑message {
   margin‑top: 7px;
   font‑size: 0.82rem;
@@ -389,11 +440,14 @@ body {
   padding‑left: 0.75rem;
   padding‑top: 2px;
   padding‑bottom: 2px;
-  background: radial‑gradient(circle at 0 0, rgba(250, 204, 21, 0.14), transparent 60%), rgba(255, 255, 255, 0.6);
+  background: radial‑gradient(circle at 0 0, rgba(250, 204, 21, 0.14), transparent 60%),
+              rgba(255, 255, 255, 0.6);
   border‑radius: 0 10px 10px 0;
 }
+
 [data‑theme="dark"] .compass‑message {
-  background: radial‑gradient(circle at 0 0, rgba(250, 204, 21, 0.24), transparent 60%), rgba(15, 23, 42, 0.85);
+  background: radial‑gradient(circle at 0 0, rgba(250, 204, 21, 0.24), transparent 60%),
+              rgba(15, 23, 42, 0.85);
   color: var(--color‑text‑soft);
 }
 
@@ -407,11 +461,13 @@ body {
   overflow: auto;
   padding‑right: 4px;
 }
+
 .spot‑list‑empty {
   font‑size: 0.82rem;
   color: var(--color‑text‑soft);
   padding: 8px 2px;
 }
+
 .spot‑card {
   border‑radius: var(--radius‑md);
   border: 1px solid rgba(148, 163, 184, 0.35);
@@ -419,31 +475,40 @@ body {
   margin‑bottom: 6px;
   background: #ffffff;
   cursor: pointer;
-  transition: border‑color var(--transition‑fast), box‑shadow var(--transition‑fast), transform var(--transition‑fast), background var(--transition‑fast);
+  transition: border‑color var(--transition‑fast),
+              box‑shadow var(--transition‑fast),
+              transform var(--transition‑fast),
+              background var(--transition‑fast);
 }
+
 [data‑theme="dark"] .spot‑card {
   background: rgba(15, 23, 42, 0.9);
 }
+
 .spot‑card:hover {
   border‑color: var(--color‑primary);
   box‑shadow: 0 6px 14px rgba(15, 23, 42, 0.18);
   transform: translateY(-1px);
 }
+
 .spot‑card__header {
   display: flex;
   justify‑content: space‑between;
   gap: 8px;
   align‑items: center;
 }
+
 .spot‑card__title {
   font‑size: 0.9rem;
   font‑weight: 600;
 }
+
 .spot‑card__meta {
   font‑size: 0.75rem;
   color: var(--color‑text‑soft);
   margin‑top: 2px;
 }
+
 .spot‑card__badges {
   display: flex;
   flex‑wrap: wrap;
@@ -457,18 +522,20 @@ body {
 .map‑section {
   background: var(--color-bg‑elevated);
   border‑radius: 20px;
-  box‑shadow: var(--shadow‐soft);
+  box‑shadow: var(--shadow‑soft);
   border: 1px solid var(--color‑border‑soft);
   padding: 6px;
   display: flex;
   flex‑direction: column;
   min‑height: 320px;
 }
+
 @media (min‑width: 1024px) {
   .map‑section {
     min‑height: 480px;
   }
 }
+
 .map‑topbar {
   display: flex;
   align‑items: center;
@@ -476,22 +543,26 @@ body {
   gap: 6px;
   padding: 4px 4px 6px;
 }
+
 .map‑topbar‑left {
   display: flex;
   align‑items: center;
   gap: 6px;
 }
+
 .map‑topbar‑right {
   display: flex;
   align‑items: center;
   gap: 6px;
 }
+
 .view‑tabs {
   display: inline‑flex;
   border‑radius: var(--radius‑pill);
   background: rgba(148, 163, 184, 0.16);
   padding: 2px;
 }
+
 .view‑tab {
   border‑radius: var(--radius‑pill);
   border: none;
@@ -501,41 +572,50 @@ body {
   background: transparent;
   color: var(--color‑text‑soft);
 }
+
 .view‑tab‑‑active {
   background: #ffffff;
   color: var(--color‑text);
   box‑shadow: 0 2px 8px rgba(15, 23, 42, 0.22);
 }
+
 .view {
   display: none;
   position: relative;
 }
+
 .view‑‑active {
   display: block;
 }
+
 #view‑map,
 #view‑about {
   border‑radius: 16px;
   overflow: hidden;
   min‑height: 260px;
 }
+
 #map {
   width: 100%;
   height: 100%;
   min‑height: 260px;
 }
+
 .leaflet‑container {
   font‑family: var(--font‑base);
 }
+
 .radius‑circle {
   stroke: rgba(56, 189, 248, 0.9);
   stroke‑width: 2px;
   fill: rgba(56, 189, 248, 0.12);
 }
+
 .pin‑pop {
   animation: pin‑pop 260ms ease‑out;
   transform‑origin: bottom center;
 }
+
 @keyframes pin‑pop {
   0% {
     transform: translateY(2px) scale(0.1);
@@ -549,27 +629,33 @@ body {
     transform: translateY(0) scale(1);
   }
 }
+
 .popup {
   font‑size: 0.82rem;
   max‑width: 220px;
 }
+
 .popup strong {
   font‑size: 0.86rem;
 }
+
 .popup small {
   color: var(--color‑text‑soft);
 }
+
 .popup‑actions {
   margin‑top: 6px;
   display: flex;
   flex‑direction: column;
   gap: 4px;
 }
+
 .popup‑link {
   font‑size: 0.78rem;
   color: var(--color‑primary‑strong);
   text‑decoration: none;
 }
+
 .popup‑link:hover {
   text‑decoration: underline;
 }
@@ -586,12 +672,14 @@ body {
   backdrop‑filter: blur(18px);
   border‑top: 1px solid rgba(31, 41, 55, 0.9);
 }
+
 .bottom‑nav‑inner {
   max‑width: 1200px;
   margin: 0 auto;
   display: flex;
   position: relative;
 }
+
 .bottom‑nav‑item {
   flex: 1;
   padding: 7px 0 6px;
@@ -602,10 +690,12 @@ body {
   position: relative;
   z‑index: 2;
 }
+
 .bottom‑nav‑item‑‑active {
   color: #f9fafb;
   font‑weight: 600;
 }
+
 #bottom‑nav‑indicator {
   position: absolute;
   bottom: 2px;
@@ -618,6 +708,7 @@ body {
   transition: transform 180ms ease‑out;
   z‑index: 1;
 }
+
 @media (min‑width: 901px) {
   .bottom‑nav {
     display: none;
@@ -633,6 +724,7 @@ body {
 .text‑muted {
   color: var(--color‑text‑soft);
 }
+
 .badge {
   border‑radius: var(--radius‑pill);
   padding: 2px 7px;
@@ -640,20 +732,94 @@ body {
   background: rgba(15, 23, 42, 0.04);
   color: var(--color‑text‑soft);
 }
+
 .badge‑‑primary {
   background: var(--color‑primary‑soft);
   color: var(--color‑primary‑strong);
 }
+
 .badge‑‑outline {
   border: 1px solid rgba(148, 163, 184, 0.6);
 }
+
 .spot‑list::-webkit‑scrollbar {
   width: 6px;
 }
+
 .spot‑list::-webkit‑scrollbar‑thumb {
   background: rgba(148, 163, 184, 0.7);
   border‑radius: 999px;
 }
+
 .spot‑list::-webkit‑scrollbar‑track {
   background: transparent;
+}
+
+/* ---------------------------------------------------------
+   Mobile‑Specific Fixes (Responsive Enhancements)
+   --------------------------------------------------------- */
+/* Header: Logo & Tagline zentrieren auf kleinen Geräten */
+@media (max‑width: 768px) {
+  .app-header-inner {
+    flex‑direction: column;
+    align‑items: center;
+    gap: 12px;
+  }
+  .app-header-right {
+    justify‑content: center;
+    width: 100%;
+  }
+  .app-logo {
+    text‑align: center;
+  }
+  .header-tagline {
+    text‑align: center;
+    margin: 0 auto;
+    max‑width: 90%;
+  }
+}
+
+/* Sidebar + Map: Struktur auf Mobile anpassen */
+@media (max‑width: 900px) {
+  .app-layout {
+    grid‑template‑columns: 1fr;
+    gap: 8px;
+  }
+  .sidebar {
+    width: 100%;
+    order: 2;
+  }
+  .map‑section {
+    width: 100%;
+    order: 3;
+    min‑height: 400px;
+  }
+  body {
+    padding‑bottom: calc(56px + 10px);
+  }
+}
+
+/* Filter‑Panel Toggle: Buttons & Sichtbarkeit auf Mobile */
+@media (max‑width: 900px) {
+  #btn‑toggle‑filters {
+    display: block;
+    width: 100%;
+    text‑align: center;
+    margin: 8px auto;
+  }
+  .filter‑group.hidden,
+  .filter‑field‑group.hidden {
+    display: none !important;
+  }
+}
+
+/* Bottom Navigation: bessere Klickfläche & Sichtbarkeit */
+@media (max‑width: 900px) {
+  .bottom‑nav‑item {
+    padding: 10px 0;
+    font‑size: 0.83rem;
+  }
+  #bottom‑nav‑indicator {
+    height: 3px;
+  }
 }
