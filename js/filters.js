@@ -283,8 +283,13 @@ function updateRadiusUI(index) {
   const descEl = $("#filter-radius-description");
   const maxLabelEl = $("#filter-radius-max-label");
 
-  if (slider && String(slider.value) !== String(index)) {
-    slider.value = String(index);
+  if (slider) {
+    // sicherstellen, dass Min/Max mit RADIUS_LEVELS_KM harmonieren
+    slider.min = "0";
+    slider.max = String(RADIUS_LEVELS_KM.length - 1);
+    if (String(slider.value) !== String(index)) {
+      slider.value = String(index);
+    }
   }
 
   const radiusKm = RADIUS_LEVELS_KM[index] ?? null;
@@ -338,11 +343,11 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     verifiedOnly: false,
     favoritesOnly: false,
     bigOnly: false,
-    favorites: favoritesProvider(),
+    favorites: typeof favoritesProvider === "function" ? favoritesProvider() : [],
     mood: null,
     radiusIndex: 4, // 4 => Alle Spots
     travelMode: null, // "everyday" | "trip" | null
-    ageGroup: "all",  // "all" | "0-3" | "4-9" | "10+"
+    ageGroup: "all", // "all" | "0-3" | "4-9" | "10+"
   };
 
   const searchInput = $("#filter-search");
@@ -361,7 +366,11 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
 
   updateRadiusUI(state.radiusIndex);
 
-  const notify = () => onFilterChange({ ...state });
+  const notify = () => {
+    if (typeof onFilterChange === "function") {
+      onFilterChange({ ...state });
+    }
+  };
 
   if (searchInput) {
     searchInput.addEventListener(
@@ -390,7 +399,8 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
   if (favsCheckbox) {
     favsCheckbox.addEventListener("change", (e) => {
       state.favoritesOnly = !!e.target.checked;
-      state.favorites = favoritesProvider();
+      state.favorites =
+        typeof favoritesProvider === "function" ? favoritesProvider() : [];
       notify();
     });
   }
@@ -413,10 +423,15 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     });
   }
 
+  // Stimmung (Mood-Chips)
   if (moodButtons.length > 0) {
     moodButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        const mood = btn.dataset.mood || null;
+        const mood =
+          btn.dataset.mood ||
+          btn.dataset.value ||
+          btn.getAttribute("data-mood") ||
+          null;
 
         if (state.mood === mood) {
           state.mood = null;
@@ -425,7 +440,11 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
         }
 
         moodButtons.forEach((b) => {
-          const m = b.dataset.mood || null;
+          const m =
+            b.dataset.mood ||
+            b.dataset.value ||
+            b.getAttribute("data-mood") ||
+            null;
           b.classList.toggle("mood-chip--active", state.mood === m);
         });
 
@@ -434,11 +453,15 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     });
   }
 
-  // Travel-Mode (Alltag / Unterwegs)
+  // Reise-Modus (Travel-Chips)
   if (travelButtons.length > 0) {
     travelButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        const mode = btn.dataset.travelMode || null;
+        const mode =
+          btn.dataset.travelMode ||
+          btn.dataset.travel ||
+          btn.getAttribute("data-travel-mode") ||
+          null;
 
         if (state.travelMode === mode) {
           state.travelMode = null;
@@ -447,7 +470,11 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
         }
 
         travelButtons.forEach((b) => {
-          const m = b.dataset.travelMode || null;
+          const m =
+            b.dataset.travelMode ||
+            b.dataset.travel ||
+            b.getAttribute("data-travel-mode") ||
+            null;
           b.classList.toggle("travel-chip--active", state.travelMode === m);
         });
 
@@ -506,11 +533,15 @@ export function applyFilters(spots, state) {
       ? RADIUS_LEVELS_KM[radiusIndex]
       : null;
 
-  // Neu: Kreis auf der Karte aktualisieren (oder entfernen)
-  if (radiusKm != null && centerLat != null && centerLng != null) {
-    updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
-  } else {
-    updateRadiusCircle(null, null);
+  // Radius-Kreis auf der Karte aktualisieren (Fehler hier sollen nie den Rest killen)
+  try {
+    if (radiusKm != null && centerLat != null && centerLng != null) {
+      updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
+    } else {
+      updateRadiusCircle(null, null);
+    }
+  } catch (err) {
+    console.error("Fehler beim Aktualisieren des Radius-Kreises:", err);
   }
 
   const results = [];
@@ -590,7 +621,7 @@ export function applyFilters(spots, state) {
     });
   }
 
-  // NextGen-Ranking:
+  // Ranking:
   // 1. Mood (stark gewichtet)
   // 2. Travel-Mode + Alters-Match
   // 3. Distanz
