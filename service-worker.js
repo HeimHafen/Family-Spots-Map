@@ -1,17 +1,9 @@
 // service-worker.js
 
-"use strict";
-
-// -------------------------------------------------------------
-// Cache-Version – bei Änderungen an Assets INKREMENTIEREN
-// -------------------------------------------------------------
-const CACHE_VERSION = "v1.2.1";
-const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
+// Version des Caches – bei Änderungen an Assets INKREMENTIEREN
+const CACHE_NAME = "family-spots-map-110";
 const OFFLINE_URL = "offline.html";
 
-// -------------------------------------------------------------
-// Assets der App-Shell, die wir für Offline verfügbar halten
-// -------------------------------------------------------------
 const ASSETS = [
   "./",
   "index.html",
@@ -27,9 +19,8 @@ const ASSETS = [
   "js/map.js",
   "js/ui.js",
   "js/sw-register.js",
-  // Falls vorhanden, gerne ergänzen:
-  "js/state.js",
-  "js/coach.js",
+  "js/header-tagline.js",
+  "js/nav.js",
   "data/index.json",
   "data/spots.json",
   "data/i18n/de.json",
@@ -40,10 +31,7 @@ const ASSETS = [
   "assets/icons/icon-512.png",
 ];
 
-// -------------------------------------------------------------
-// INSTALL: App-Shell & Daten cachen (robust, auch wenn einzelne
-// Assets fehlen)
-// -------------------------------------------------------------
+// INSTALL: App-Shell & Daten cachen (robust, auch wenn einzelne Assets fehlen)
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
@@ -54,22 +42,17 @@ self.addEventListener("install", (event) => {
           try {
             await cache.add(asset);
           } catch (err) {
-            // Falls ein Asset fehlt oder nicht ladbar ist (404 / offline),
-            // verhindern wir trotzdem nicht die Installation.
+            // Falls ein Asset fehlt, verhindern wir trotzdem nicht die Installation.
             console.warn("[SW] Asset konnte nicht gecacht werden:", asset, err);
           }
-        })
+        }),
       );
-    })()
+    })(),
   );
-
-  // Neue SW-Version sofort aktivieren
   self.skipWaiting();
 });
 
-// -------------------------------------------------------------
 // ACTIVATE: Alte Caches aufräumen
-// -------------------------------------------------------------
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
@@ -77,25 +60,20 @@ self.addEventListener("activate", (event) => {
       await Promise.all(
         keys
           .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
+          .map((key) => caches.delete(key)),
       );
-    })()
+    })(),
   );
-
   self.clients.claim();
 });
 
-// -------------------------------------------------------------
-// FETCH:
-//  - JSON (Daten): network-first mit Cache-Fallback
-//  - Rest: cache-first mit Offline-Fallback für Navigation
-// -------------------------------------------------------------
+// FETCH: JSON (Daten) network-first, Rest cache-first mit Offline-Fallback
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
   const requestUrl = new URL(event.request.url);
 
-  // Nur eigene Origin behandeln (GitHub Pages etc.)
+  // Nur gleiche Origin abfangen (GitHub Pages etc.)
   if (requestUrl.origin !== self.location.origin) {
     return;
   }
@@ -104,9 +82,7 @@ self.addEventListener("fetch", (event) => {
     (async () => {
       const isJsonRequest = requestUrl.pathname.endsWith(".json");
 
-      // -------------------------------
-      // JSON (Daten) → network-first
-      // -------------------------------
+      // Daten (index.json, spots.json, i18n etc.): network-first
       if (isJsonRequest) {
         try {
           const networkResponse = await fetch(event.request);
@@ -114,10 +90,7 @@ self.addEventListener("fetch", (event) => {
           cache.put(event.request, networkResponse.clone());
           return networkResponse;
         } catch (err) {
-          console.warn(
-            "[SW] JSON-Fetch fehlgeschlagen, versuche Cache:",
-            err
-          );
+          console.warn("[SW] JSON-Fetch fehlgeschlagen, versuche Cache:", err);
           const cachedJson = await caches.match(event.request);
           if (cachedJson) {
             return cachedJson;
@@ -130,31 +103,28 @@ self.addEventListener("fetch", (event) => {
         }
       }
 
-      // -------------------------------
-      // Alle anderen Requests → cache-first
-      // -------------------------------
+      // Alle anderen Requests: cache-first
       const cached = await caches.match(event.request);
       if (cached) {
         return cached;
       }
 
       try {
-        // Online & nicht im Cache: normal aus dem Netz laden
         const response = await fetch(event.request);
         return response;
       } catch (err) {
-        // Offline-Fallback für Navigation (HTML-Seiten)
+        // Offline-Fallback für Navigation
         if (event.request.mode === "navigate") {
           const offlinePage = await caches.match(OFFLINE_URL);
           if (offlinePage) return offlinePage;
         }
 
-        // Fallback für andere Requests im Offline-Fall
+        // Für Nicht-Navigations-Requests im Offline-Fall
         return new Response("", {
           status: 503,
           statusText: "Offline",
         });
       }
-    })()
+    })(),
   );
 });
