@@ -2,7 +2,12 @@
 
 import { $, debounce } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
-import { updateRadiusCircle } from "./map.js";
+
+// Wichtig: kein kaputter Import mehr aus map.js
+// Stattdessen eine lokale Stub-Funktion, damit die Aufrufe nicht crashen.
+function updateRadiusCircle() {
+  // no-op: Kreis auf der Karte optional, verhindert aber Fehler
+}
 
 const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
@@ -55,15 +60,7 @@ const MOOD_KEYWORDS = {
     "planschen",
     "wasserspiel",
   ],
-  animals: [
-    "zoo",
-    "tierpark",
-    "wildpark",
-    "tiere",
-    "safari",
-    "giraffe",
-    "bauernhof",
-  ],
+  animals: ["zoo", "tierpark", "wildpark", "tiere", "safari", "giraffe", "bauernhof"],
 };
 
 // Travel-Heuristiken: welche Kategorien sind eher „Alltag“, welche „Unterwegs“
