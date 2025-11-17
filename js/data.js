@@ -82,13 +82,13 @@ export async function loadAppData() {
         name: raw.name
           ? String(raw.name)
           : raw.title
-          ? String(raw.title)
-          : "",
+            ? String(raw.title)
+            : "",
         title: raw.title
           ? String(raw.title)
           : raw.name
-          ? String(raw.name)
-          : "",
+            ? String(raw.name)
+            : "",
 
         // Ort / Land
         city: raw.city ? String(raw.city) : "",
