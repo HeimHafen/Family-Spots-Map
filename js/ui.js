@@ -1,8 +1,12 @@
 // js/ui.js
 // Präsentationslogik: Spot-Liste, Spot-Details, Toasts
 
-import { getLanguage, t } from "./i18n.js";
+import { getLanguage } from "./i18n.js";
 import { getState } from "./state.js";
+
+// ---------------------------------------------------------
+// Sprache & Helpers
+// ---------------------------------------------------------
 
 function getLangInfo() {
   const lang = (getLanguage && getLanguage()) || "de";
@@ -10,13 +14,24 @@ function getLangInfo() {
   return { lang, isDe };
 }
 
+function escapeHtml(str) {
+  if (str == null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 // ---------------------------------------------------------
-// Utils für Formatierung
+// Formatierung (Distanz, Dauer, Big Adventure)
 // ---------------------------------------------------------
 
 function formatDistanceKm(distanceKm) {
   if (distanceKm == null || !Number.isFinite(distanceKm)) return null;
-  const rounded = distanceKm < 10 ? distanceKm.toFixed(1) : Math.round(distanceKm);
+  const rounded =
+    distanceKm < 10 ? distanceKm.toFixed(1) : Math.round(distanceKm);
   // deutsches Komma
   return String(rounded).replace(".", ",") + " km";
 }
@@ -61,16 +76,6 @@ function isBigAdventure(spot) {
       t.includes("groß") ||
       t.includes("gross"),
   );
-}
-
-function escapeHtml(str) {
-  if (str == null) return "";
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
 
 // ---------------------------------------------------------
@@ -125,7 +130,7 @@ function buildBadgesHtml(spot, isFavorite) {
 
   // Plus-Only
   if (spot.plus_only) {
-    const label = isDe ? "Family Spots Plus" : "Family Spots Plus";
+    const label = "Family Spots Plus";
     badges.push(
       `<span class="badge badge--plus"><span class="badge__icon">⭐</span><span>${escapeHtml(
         label,
@@ -177,7 +182,9 @@ export function renderSpotList(spots, { favorites, onSelect }) {
     const emptyText = isDe
       ? "Gerade keine passenden Spots für eure Einstellungen. Radius, Stimmung oder Reise-Modus etwas lockern?"
       : "No matching spots for your current settings. Try relaxing radius, mood or travel mode a little.";
-    listEl.innerHTML = `<li class="spot-list-empty">${escapeHtml(emptyText)}</li>`;
+    listEl.innerHTML = `<li class="spot-list-empty">${escapeHtml(
+      emptyText,
+    )}</li>`;
     return;
   }
 
@@ -187,22 +194,16 @@ export function renderSpotList(spots, { favorites, onSelect }) {
       const isFav = favSet.has(spot.id);
       const name = spot.name || spot.title || "";
       const city = spot.city || "";
+
       const subtitleParts = [];
-
-      if (city) {
-        subtitleParts.push(city);
-      }
-
-      // kleine Info zur Distanz in der Subline, falls vorhanden
+      if (city) subtitleParts.push(city);
       if (spot._distanceKm != null) {
         const d = formatDistanceKm(spot._distanceKm);
         if (d) subtitleParts.push(d);
       }
 
       const subtitle = subtitleParts.join(" · ");
-
       const badgesHtml = buildBadgesHtml(spot, isFav);
-
       const favIcon = isFav ? "💛" : "🤍";
 
       return `
@@ -212,7 +213,9 @@ export function renderSpotList(spots, { favorites, onSelect }) {
               <div class="spot-card__title">${escapeHtml(name)}</div>
               ${
                 subtitle
-                  ? `<div class="spot-card__meta">${escapeHtml(subtitle)}</div>`
+                  ? `<div class="spot-card__meta">${escapeHtml(
+                      subtitle,
+                    )}</div>`
                   : ""
               }
             </div>
@@ -228,7 +231,7 @@ export function renderSpotList(spots, { favorites, onSelect }) {
 
   listEl.innerHTML = itemsHtml;
 
-  // Klick-Handler
+  // Klick-Handler für alle Karten
   listEl.querySelectorAll(".spot-card").forEach((itemEl) => {
     const id = itemEl.getAttribute("data-spot-id");
     if (!id) return;
@@ -245,17 +248,27 @@ export function renderSpotList(spots, { favorites, onSelect }) {
 // ---------------------------------------------------------
 
 function ensureDetailContainer() {
+  // Falls schon vorhanden → direkt nutzen
   let panel = document.getElementById("spot-detail-panel");
   if (panel) return panel;
 
-  // Falls nicht im HTML vorhanden, erzeugen wir ein Panel
   const sidebar = document.querySelector(".sidebar");
   if (!sidebar) return null;
 
   panel = document.createElement("section");
   panel.id = "spot-detail-panel";
   panel.className = "sidebar-section";
-  sidebar.appendChild(panel);
+
+  // Ideal: nach der Spots-Liste einhängen (vor Plus)
+  const spotsSection = document.querySelector(
+    ".sidebar-section.sidebar-section--grow",
+  );
+  if (spotsSection && spotsSection.parentElement === sidebar) {
+    spotsSection.insertAdjacentElement("afterend", panel);
+  } else {
+    sidebar.appendChild(panel);
+  }
+
   return panel;
 }
 
@@ -277,8 +290,7 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
   const backupSummary = (isDe ? spot.summary_en : spot.summary_de) || "";
   const visitLabel = (isDe ? spot.visitLabel_de : spot.visitLabel_en) || "";
 
-  const mainText =
-    poetry || summary || visitLabel || backupSummary || "";
+  const mainText = poetry || summary || visitLabel || backupSummary || "";
 
   const distanceLabel =
     spot._distanceKm != null ? formatDistanceKm(spot._distanceKm) : null;
@@ -293,7 +305,6 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
       : "Add to favourites";
 
   const favIcon = isFavorite ? "💛" : "🤍";
-
   const bigAdv = isBigAdventure(spot);
   const plusOnly = !!spot.plus_only;
 
@@ -393,7 +404,7 @@ export function renderSpotDetails(spot, { isFavorite, onToggleFavorite }) {
         <span>${escapeHtml(favBtnLabel)}</span>
       </button>
     </div>
-  `;
+  ";
 
   const favBtn = panel.querySelector("#spot-fav-toggle");
   if (favBtn && typeof onToggleFavorite === "function") {
@@ -445,8 +456,7 @@ export function showToast(message, durationMs = 3400) {
     maxWidth: "320px",
     padding: "8px 12px",
     borderRadius: "999px",
-    background:
-      "rgba(15, 23, 42, 0.92)",
+    background: "rgba(15, 23, 42, 0.92)",
     color: "#f9fafb",
     fontSize: "0.8rem",
     boxShadow: "0 10px 25px rgba(15, 23, 42, 0.6)",
@@ -462,7 +472,7 @@ export function showToast(message, durationMs = 3400) {
 
   container.appendChild(toast);
 
-  // kleine Fade-In-Animation
+  // Fade-In
   requestAnimationFrame(() => {
     toast.style.opacity = "1";
     toast.style.transform = "translateY(0)";
@@ -481,10 +491,9 @@ export function showToast(message, durationMs = 3400) {
 }
 
 // ---------------------------------------------------------
-// (optional) kleiner State-Debug – aktuell nicht benutzt
+// Optional: State-Debug (aktuell nicht genutzt, aber hilfreich)
 // ---------------------------------------------------------
 
-// Beispiel, falls du später mal einen Subscriber brauchst:
 export function _debugLogStateOnce() {
   const state = getState();
   // eslint-disable-next-line no-console
