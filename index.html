@@ -13,7 +13,6 @@
     />
     <meta name="theme-color" content="#0bbcd6" />
 
-    <!-- PWA / Manifest -->
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/icons/icon-192.png" />
 
@@ -23,6 +22,16 @@
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
+    />
+
+    <!-- MarkerCluster CSS (Pins gruppieren & poppen beim Zoomen) -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
     />
 
     <!-- App Styles -->
@@ -39,8 +48,8 @@
         <div class="app-header-inner">
           <div class="app-header-left">
             <div class="app-logo">
+              <!-- ABF 2026 ENTFERNT -->
               <span class="app-logo-primary">Family Spots Map</span>
-              <span class="app-logo-secondary">ABF 2026</span>
             </div>
             <p id="header-tagline" class="header-tagline">
               Die schönste Karte für Familien-Abenteuer. Finde geprüfte
@@ -279,7 +288,8 @@
                     type="checkbox"
                   />
                   <span>
-                    Nur große Abenteuer (z. B. Zoos, Wildparks, Freizeitparks)
+                    Nur große Abenteuer (z. B. Zoos, Wildparks,
+                    Freizeitparks)
                   </span>
                 </label>
 
@@ -310,7 +320,7 @@
             <!-- === Familien-Kompass === -->
             <section
               id="compass-section"
-              class="sidebar-section sidebar-section--accent"
+              class="sidebar-section sidebar-section--accent sidebar-section--collapsible"
             >
               <div class="sidebar-header">
                 <h2
@@ -331,8 +341,9 @@
                 id="compass-helper"
                 class="sidebar-subtitle"
               >
-                Der Familien-Kompass hilft euch mit einem Klick Spots zu finden,
-                die zu eurer Zeit, eurem Alter und eurer Energie passen.
+                Der Familien-Kompass hilft euch mit einem Klick Spots zu
+                finden, die zu eurer Zeit, eurem Alter und eurer Energie
+                passen.
               </p>
               <button
                 id="compass-apply"
@@ -341,7 +352,7 @@
               >
                 <span id="compass-apply-label">Kompass anwenden</span>
               </button>
-              <!-- Der Coach-Text aus coach.js hängt sich hier automatisch an -->
+              <!-- Coach-Text kommt dynamisch -->
             </section>
 
             <!-- === Spots-Liste === -->
@@ -366,7 +377,10 @@
             </section>
 
             <!-- === Family Spots Plus === -->
-            <section id="plus-section" class="sidebar-section">
+            <section
+              id="plus-section"
+              class="sidebar-section sidebar-section--collapsible"
+            >
               <div class="sidebar-header">
                 <h2 class="sidebar-title">Family Spots Plus</h2>
                 <button
@@ -411,9 +425,7 @@
           <!-- ================= Map / About ================= -->
           <section class="map-section">
             <div class="map-topbar">
-              <div class="map-topbar-left">
-                <!-- Optional: Tabs etc. könnten hier hin -->
-              </div>
+              <div class="map-topbar-left"></div>
               <div class="map-topbar-right">
                 <button
                   id="btn-locate"
@@ -440,8 +452,7 @@
                 <p>
                   Family Spots Map ist aus einem sehr persönlichen Wunsch
                   entstanden: Zeit mit Kindern nicht nur zu organisieren,
-                  sondern bewusst zu feiern. Das Leben ist fragil – jeder Tag
-                  zusammen ist ein Geschenk.
+                  sondern bewusst zu feiern.
                 </p>
                 <p>
                   Die Karte soll euch helfen, passende Orte für genau eure
@@ -450,8 +461,8 @@
                 </p>
                 <p>
                   Hinter jedem Spot steckt viel Handarbeit: sorgfältig
-                  recherchiert, kuratiert und mit viel Liebe für Details. Keine
-                  Tracker, keine dunklen Patterns – nur eine schöne, ruhige
+                  recherchiert, kuratiert und mit viel Liebe für Details.
+                  Keine Tracker, keine dunklen Patterns – nur eine ruhige
                   Oberfläche, die euch unterstützt, statt zu stressen.
                 </p>
                 <p>
@@ -464,18 +475,17 @@
                 <h2>About Family Spots Map</h2>
                 <p>
                   Family Spots Map was born from a very personal wish: not just
-                  to organize time with kids, but to celebrate it. Life can be
-                  fragile – every day together is a gift.
+                  to organize time with kids, but to celebrate it.
                 </p>
                 <p>
                   This map wants to help you find places that fit your reality:
-                  kids’ age, energy level, travel mode, radius – and that soft
-                  gut feeling of “this could be our place today”.
+                  kids’ age, energy level, travel mode, radius – and that gut
+                  feeling of “this could be our place today”.
                 </p>
                 <p>
-                  Every spot is carefully curated, with a lot of manual work and
+                  Every spot is carefully curated with a lot of manual work and
                   love for detail. No trackers, no dark patterns – just a calm
-                  interface that aims to support you instead of adding stress.
+                  interface that supports you.
                 </p>
                 <p>
                   If this map helps you create even a single extra good
@@ -512,6 +522,9 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
+
+    <!-- MarkerCluster JS (damit Pins beim Zoomen „aufpoppen“) -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
     <!-- App Entry -->
     <script type="module" src="js/app.js"></script>
