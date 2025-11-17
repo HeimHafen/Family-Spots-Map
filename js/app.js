@@ -23,35 +23,32 @@ import {
 } from "./filters.js";
 import { initMap, setSpotsOnMap, focusOnSpot, getMap } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
-import { getState, setState } from "./state.js";
-import { updateCompassMessage } from "./coach.js";
 import "./sw-register.js";
+
+let currentFilterState = null;
+let allSpots = [];
+let filteredSpots = [];
+let plusStatus = null;
+let partnerCodesCache = null;
+let currentSelectedSpotId = null;
 
 // -----------------------------------------------------
 // Bootstrap
 // -----------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOMContentLoaded → bootstrapApp");
   bootstrapApp().catch((err) => {
-    console.error("Bootstrap-Fehler:", err);
-    try {
-      showToast(
-        t(
-          "error_data_load",
-          "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal."
-        )
-      );
-    } catch {
-      alert(
-        "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal."
-      );
-    }
+    console.error(err);
+    showToast(
+      t(
+        "error_data_load",
+        "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
+      ),
+    );
   });
 });
 
 async function bootstrapApp() {
-  console.log("bootstrapApp(): start");
   const settings = getSettings();
 
   // HTML lang + Theme setzen
@@ -64,69 +61,45 @@ async function bootstrapApp() {
   updateStaticLanguageTexts(initialLang);
 
   const { index } = await loadAppData();
-  console.log("App data loaded: defaultLocation", index.defaultLocation);
-
-  const allSpots = getSpots();
+  allSpots = getSpots();
   const categories = getCategories();
 
-  setState({
-    spots: {
-      all: allSpots,
-      filtered: allSpots,
-      currentSelectedId: null,
-    },
-  });
-
-  const plusStatus = getPlusStatus();
-  setState({ plus: { status: plusStatus } });
+  // Plus-Status laden
+  plusStatus = getPlusStatus();
   updatePlusStatusUI(plusStatus);
 
+  // Karte
   initMap({
     center: index.defaultLocation,
     zoom: index.defaultZoom,
     onMarkerSelect: handleSpotSelect,
   });
 
-  const initialFilterState = initFilters({
+  // Filter
+  currentFilterState = initFilters({
     categories,
     favoritesProvider: getFavorites,
     onFilterChange: handleFilterChange,
   });
 
-  setState({ filters: initialFilterState });
-
   const map = getMap();
   const center = map ? map.getCenter() : null;
 
-  const filteredSpots = applyFilters(allSpots, {
-    ...initialFilterState,
+  filteredSpots = applyFilters(allSpots, {
+    ...currentFilterState,
     favorites: getFavorites(),
     mapCenter: center,
   });
 
-  setState({
-    spots: {
-      all: allSpots,
-      filtered: filteredSpots,
-      currentSelectedId: null,
-    },
-  });
-
   setSpotsOnMap(filteredSpots);
+
   renderSpotList(filteredSpots, {
     favorites: getFavorites(),
     onSelect: handleSpotSelect,
   });
 
-  updateCompassMessage(initialFilterState, {
-    filteredCount: filteredSpots.length,
-    favoritesCount: getFavorites().length,
-  });
-
   initUIEvents();
   updateRoute("map");
-
-  console.log("bootstrapApp(): done");
 }
 
 // -----------------------------------------------------
@@ -134,89 +107,68 @@ async function bootstrapApp() {
 // -----------------------------------------------------
 
 function initUIEvents() {
-  console.log("initUIEvents()");
-  initCompassUI();
-  initPlusUI();
-  initHelpAndNavUI();
-  initLanguageAndThemeUI();
-  initLocationUI();
-  initSidebarViewToggle();
-  initFilterPanelToggle();
-  initResizeHandler();
-}
-
-function initCompassUI() {
-  console.log("initCompassUI()");
+  // Familien-Kompass – anwenden
   const compassBtn = $("#compass-apply");
   if (compassBtn) {
     compassBtn.addEventListener("click", () => {
-      console.log("Compass apply clicked");
       applyCompass();
     });
   }
 
+  // Familien-Kompass ein-/ausklappen
   const compassSection = $("#compass-section");
   const compassToggleBtn = $("#btn-toggle-compass");
   if (compassSection && compassToggleBtn) {
     compassToggleBtn.addEventListener("click", (ev) => {
       ev.preventDefault();
       ev.stopPropagation();
-      console.log("Compass toggle clicked");
-      toggleDetailsSection(compassSection, compassToggleBtn);
+      const nowOpen = !compassSection.open;
+      compassSection.open = nowOpen;
+      const span = compassToggleBtn.querySelector("span");
+      if (span) {
+        span.textContent = nowOpen
+          ? (getLanguage() || "de").startsWith("de")
+            ? "Schließen"
+            : "Hide"
+          : (getLanguage() || "de").startsWith("de")
+            ? "Öffnen"
+            : "Show";
+      }
     });
   }
-}
 
-function initPlusUI() {
-  console.log("initPlusUI()");
+  // Family Spots Plus ein-/ausklappen
   const plusSection = $("#plus-section");
   const plusToggleBtn = $("#btn-toggle-plus");
   if (plusSection && plusToggleBtn) {
     plusToggleBtn.addEventListener("click", (ev) => {
       ev.preventDefault();
       ev.stopPropagation();
-      console.log("Plus toggle clicked");
-      toggleDetailsSection(plusSection, plusToggleBtn);
+      const nowOpen = !plusSection.open;
+      plusSection.open = nowOpen;
+      const span = plusToggleBtn.querySelector("span");
+      if (span) {
+        span.textContent = nowOpen
+          ? (getLanguage() || "de").startsWith("de")
+            ? "Schließen"
+            : "Hide"
+          : (getLanguage() || "de").startsWith("de")
+            ? "Öffnen"
+            : "Show";
+      }
     });
   }
 
-  const plusInput = $("#plus-code-input");
-  const plusButton = $("#plus-code-submit");
-  if (plusInput && plusButton) {
-    plusButton.addEventListener("click", () => {
-      console.log("Plus code submit clicked: ", plusInput.value);
-      handlePlusCodeSubmit();
-    });
-  }
-}
-
-function initHelpAndNavUI() {
-  console.log("initHelpAndNavUI()");
+  // Hilfe-Button (öffnet die Über-Ansicht)
   const helpBtn = $("#btn-help");
   if (helpBtn) {
     helpBtn.addEventListener("click", () => {
-      console.log("Help button clicked");
+      // Index 1, weil in der Bottom-Navigation der zweite Button "Über" ist
       updateRoute("about", 1);
     });
   }
 
-  $$(".bottom-nav-item").forEach((btn, index) => {
-    btn.addEventListener("click", () => {
-      console.log(
-        "Bottom nav clicked: route=",
-        btn.dataset.route,
-        "index=",
-        index
-      );
-      const routeAttr = btn.dataset.route;
-      const route = routeAttr === "about" ? "about" : "map";
-      updateRoute(route, index);
-    });
-  });
-}
-
-function initLanguageAndThemeUI() {
-  console.log("initLanguageAndThemeUI()");
+  // Sprache
   const langSelect = $("#language-switcher");
   if (langSelect) {
     langSelect.value = getLanguage() || "de";
@@ -224,7 +176,6 @@ function initLanguageAndThemeUI() {
       const settings = getSettings();
       const nextLang = langSelect.value || "de";
 
-      console.log("Language changed to", nextLang);
       document.documentElement.lang = nextLang;
 
       await initI18n(nextLang);
@@ -236,58 +187,35 @@ function initLanguageAndThemeUI() {
       const categories = getCategories();
       refreshCategorySelect(categories);
 
-      const { filters, plus, spots } = getState();
-
-      const map = getMap();
-      const center = map ? map.getCenter() : null;
-      const filteredSpots = applyFilters(spots.all, {
-        ...filters,
+      // Filter neu anwenden (Liste + Marker)
+      handleFilterChange({
+        ...currentFilterState,
         favorites: getFavorites(),
-        mapCenter: center,
       });
 
-      setState({
-        spots: {
-          ...spots,
-          filtered: filteredSpots,
-        },
-      });
+      // Plus-Status in neuer Sprache
+      updatePlusStatusUI(plusStatus);
 
-      setSpotsOnMap(filteredSpots);
-      renderSpotList(filteredSpots, {
-        favorites: getFavorites(),
-        onSelect: handleSpotSelect,
-      });
-
-      console.log("Re-render after language change done");
-      updateCompassMessage(filters, {
-        filteredCount: filteredSpots.length,
-        favoritesCount: getFavorites().length,
-      });
-
-      updatePlusStatusUI(plus.status);
+      // Offene Spot-Details in neuer Sprache neu rendern
       rerenderCurrentSpotDetails();
     });
   }
 
+  // Theme
   const themeToggle = $("#theme-toggle");
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
       const settings = getSettings();
       const nextTheme = settings.theme === "dark" ? "light" : "dark";
-      console.log("Theme toggled to", nextTheme);
       applyTheme(nextTheme);
       saveSettings({ ...settings, theme: nextTheme });
     });
   }
-}
 
-function initLocationUI() {
-  console.log("initLocationUI()");
+  // Standort
   const locateBtn = $("#btn-locate");
   if (locateBtn) {
     locateBtn.addEventListener("click", async () => {
-      console.log("Locate button clicked");
       try {
         const pos = await getGeolocation();
         const map = getMap();
@@ -297,235 +225,234 @@ function initLocationUI() {
         showToast(
           t(
             "toast_location_ok",
-            "Euer Standort ist gesetzt – viel Spaß beim nächsten Abenteuer! 🌍"
-          )
+            "Euer Standort ist gesetzt – viel Spaß beim nächsten Abenteuer! 🌍",
+          ),
         );
       } catch (err) {
-        console.error("Geolocation error:", err);
+        console.error(err);
         showToast(
           t(
             "toast_location_error",
-            "Euer Standort lässt sich gerade nicht bestimmen. Vielleicht ist die Freigabe gesperrt oder ihr seid offline."
-          )
+            "Euer Standort lässt sich gerade nicht bestimmen. Vielleicht ist die Freigabe gesperrt oder ihr seid offline.",
+          ),
         );
       }
     });
   }
-}
 
-function initSidebarViewToggle() {
-  console.log("initSidebarViewToggle()");
-  const toggleViewBtn = $("#btn-toggle-view");
-  if (!toggleViewBtn) return;
-
-  toggleViewBtn.addEventListener("click", () => {
-    console.log("Sidebar view toggle clicked");
-    const list = document.querySelector(".sidebar-section--grow");
-    const labelSpan = document.querySelector("#btn-toggle-view span");
-    if (!list || !labelSpan) return;
-
-    const nowHidden = list.classList.toggle("hidden");
-    labelSpan.textContent = nowHidden
-      ? t("btn_show_list", "Liste zeigen")
-      : t("btn_only_map", "Nur Karte");
-
-    const map = getMap();
-    if (map) {
-      setTimeout(() => map.invalidateSize(), 0);
-    }
-
-    if (window.innerWidth <= 900) {
-      const target = nowHidden
-        ? document.querySelector(".map-section")
-        : document.querySelector(".sidebar");
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
+  // Bottom-Navigation
+  $$(".bottom-nav-item").forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      const routeAttr = btn.dataset.route;
+      const route = routeAttr === "about" ? "about" : "map";
+      updateRoute(route, index);
+    });
   });
-}
 
-function initFilterPanelToggle() {
-  console.log("initFilterPanelToggle()");
+  // Listen-/Kartenansicht im Sidebar-Panel
+  const toggleViewBtn = $("#btn-toggle-view");
+  if (toggleViewBtn) {
+    toggleViewBtn.addEventListener("click", () => {
+      const list = $(".sidebar-section--grow");
+      const labelSpan = $("#btn-toggle-view span");
+      if (!list || !labelSpan) return;
+
+      const nowHidden = list.classList.toggle("hidden");
+      labelSpan.textContent = nowHidden
+        ? t("btn_show_list", "Liste zeigen")
+        : t("btn_only_map", "Nur Karte");
+
+      const map = getMap();
+      if (map) {
+        setTimeout(() => map.invalidateSize(), 0);
+      }
+
+      // Neu: auf kleinen Screens automatisch zu Karte/Liste scrollen
+      if (window.innerWidth <= 900) {
+        const target = nowHidden
+          ? document.querySelector(".map-section")
+          : document.querySelector(".sidebar");
+        if (target) {
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }
+    });
+  }
+
+  // Filter-Panel ein-/ausblenden
   const filterToggleBtn = $("#btn-toggle-filters");
-  if (!filterToggleBtn) return;
+  if (filterToggleBtn) {
+    const filterSection = filterToggleBtn.closest(".sidebar-section");
+    const labelSpan = filterToggleBtn.querySelector("span");
+    if (filterSection && labelSpan) {
+      const filterControls = Array.from(
+        filterSection.querySelectorAll(".filter-group"),
+      );
 
-  const filterSection = filterToggleBtn.closest(".sidebar-section");
-  const labelSpan = filterToggleBtn.querySelector("span");
-  if (!filterSection || !labelSpan) return;
+      // auf kleinen Screens: Filter anfangs einklappen
+      if (window.innerWidth <= 900 && filterControls.length > 0) {
+        filterControls.forEach((el) => el.classList.add("hidden"));
+        labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
+        const map = getMap();
+        if (map) {
+          setTimeout(() => map.invalidateSize(), 0);
+        }
+      }
 
-  const filterControls = Array.from(
-    filterSection.querySelectorAll(".filter-group, .filter-field-group")
-  );
+      filterToggleBtn.addEventListener("click", () => {
+        if (filterControls.length === 0) return;
+        const currentlyHidden =
+          filterControls[0].classList.contains("hidden");
+        const makeVisible = currentlyHidden;
 
-  if (window.innerWidth <= 900 && filterControls.length > 0) {
-    filterControls.forEach((el) => el.classList.add("hidden"));
-    labelSpan.textContent = t("btn_show_filters", "Filter anzeigen");
-    const map = getMap();
-    if (map) {
-      setTimeout(() => map.invalidateSize(), 0);
+        filterControls.forEach((el) => {
+          if (makeVisible) el.classList.remove("hidden");
+          else el.classList.add("hidden");
+        });
+
+        labelSpan.textContent = makeVisible
+          ? t("btn_hide_filters", "Filter ausblenden")
+          : t("btn_show_filters", "Filter anzeigen");
+
+        const map = getMap();
+        if (map) {
+          setTimeout(() => map.invalidateSize(), 0);
+        }
+      });
     }
   }
 
-  filterToggleBtn.addEventListener("click", (ev) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    console.log("Filter toggle clicked. Controls:", filterControls.length);
-    if (filterControls.length === 0) return;
-    const currentlyHidden = filterControls[0].classList.contains("hidden");
-    const makeVisible = currentlyHidden;
-
-    filterControls.forEach((el) =>
-      el.classList.toggle("hidden", !makeVisible)
-    );
-
-    labelSpan.textContent = makeVisible
-      ? t("btn_hide_filters", "Filter ausblenden")
-      : t("btn_show_filters", "Filter anzeigen");
-
-    const map = getMap();
-    if (map) {
-      setTimeout(() => map.invalidateSize(), 0);
-    }
-  });
-}
-
-function initResizeHandler() {
-  console.log("initResizeHandler()");
+  // Fenster-/Orientierungswechsel: Map-Größe aktualisieren
   window.addEventListener("resize", () => {
     const map = getMap();
     if (map) {
       map.invalidateSize();
     }
   });
-}
 
-// -----------------------------------------------------
-// Plus-Handling
-// -----------------------------------------------------
-
-async function handlePlusCodeSubmit() {
-  console.log("handlePlusCodeSubmit()");
+  // Plus-Code-Formular (UI-Elemente optional, brechen nichts wenn nicht vorhanden)
   const plusInput = $("#plus-code-input");
-  if (!plusInput) return;
+  const plusButton = $("#plus-code-submit");
+  if (plusInput && plusButton) {
+    plusButton.addEventListener("click", async () => {
+      const rawCode = plusInput.value.trim();
+      if (!rawCode) {
+        showToast(t("plus_code_empty", "Bitte Code eingeben."));
+        return;
+      }
 
-  const rawCode = plusInput.value.trim();
-  if (!rawCode) {
-    showToast(t("plus_code_empty", "Bitte Code eingeben."));
-    return;
-  }
+      const normalized = rawCode.toUpperCase();
 
-  const normalized = rawCode.toUpperCase();
+      try {
+        const codes = await loadPartnerCodes();
+        const match = codes.find(
+          (c) =>
+            String(c.code).toUpperCase() === normalized &&
+            (c.enabled ?? true),
+        );
 
-  try {
-    const codes = await loadPartnerCodes();
-    const match = codes.find(
-      (c) =>
-        String(c.code).toUpperCase() === normalized && (c.enabled ?? true)
-    );
+        if (!match) {
+          showToast(
+            t(
+              "plus_code_unknown",
+              "Code nicht bekannt oder nicht mehr gültig.",
+            ),
+          );
+          return;
+        }
 
-    if (!match) {
-      showToast(
-        t(
-          "plus_code_unknown",
-          "Code nicht bekannt oder nicht mehr gültig."
-        )
-      );
-      return;
-    }
+        const days = Number(match.days) || 0;
+        const now = new Date();
+        const expires =
+          days > 0
+            ? new Date(now.getTime() + days * 24 * 60 * 60 * 1000)
+            : null;
 
-    const days = Number(match.days) || 0;
-    const now = new Date();
-    const expires =
-      days > 0 ? new Date(now.getTime() + days * 24 * 60 * 60 * 1000) : null;
+        plusStatus = savePlusStatus({
+          code: normalized,
+          plan: match.plan || null,
+          partner: match.partner || null,
+          source: match.source || "partner",
+          activatedAt: now.toISOString(),
+          expiresAt: expires ? expires.toISOString() : null,
+        });
 
-    const plusStatus = savePlusStatus({
-      code: normalized,
-      plan: match.plan || null,
-      partner: match.partner || null,
-      source: match.source || "partner",
-      activatedAt: now.toISOString(),
-      expiresAt: expires ? expires.toISOString() : null,
+        updatePlusStatusUI(plusStatus);
+        showToast(
+          t(
+            "plus_code_activated",
+            "Family Spots Plus ist jetzt aktiv – gute Fahrt & viel Freude auf euren Touren!",
+          ),
+        );
+      } catch (err) {
+        console.error(err);
+        showToast(
+          t(
+            "plus_code_failed",
+            "Code konnte nicht geprüft werden. Versuch es später noch einmal.",
+          ),
+        );
+      }
     });
-
-    setState({ plus: { status: plusStatus } });
-
-    updatePlusStatusUI(plusStatus);
-    showToast(
-      t(
-        "plus_code_activated",
-        "Family Spots Plus ist jetzt aktiv – gute Fahrt & viel Freude auf euren Touren!"
-      )
-    );
-  } catch (err) {
-    console.error("Plus code submit error:", err);
-    showToast(
-      t(
-        "plus_code_failed",
-        "Code konnte nicht geprüft werden. Versuch es später noch einmal."
-      )
-    );
   }
 }
 
-// -----------------------------------------------------
-// Familien-Kompass
-// -----------------------------------------------------
-
+/**
+ * Familien-Kompass:
+ *  - setzt bei Bedarf eine Stimmung („Entspannt“), wenn noch keine gewählt ist
+ *  - reduziert einen zu großen Radius auf eine sinnvolle Distanz
+ *  - scrollt zur Spot-Liste und zeigt einen kurzen Hinweis
+ */
 function applyCompass() {
-  console.log("applyCompass()");
-  const moodButtons = Array.from(document.querySelectorAll(".mood-chip"));
-  const activeMood = moodButtons.find((btn) =>
-    btn.classList.contains("mood-chip--active")
+  // Stimmung: falls noch nichts aktiv ist → „Entspannt“
+  const moodButtons = $$(".mood-chip");
+  const activeMood = Array.from(moodButtons).find((btn) =>
+    btn.classList.contains("mood-chip--active"),
   );
 
   if (!activeMood) {
     const relaxedBtn = document.querySelector(
-      '.mood-chip[data-mood="relaxed"]'
+      '.mood-chip[data-mood="relaxed"]',
     );
     if (relaxedBtn) {
+      // löst den normalen Klick aus → Filter-Logik in filters.js greift
       relaxedBtn.click();
     }
   }
 
-  const radiusSlider = document.querySelector("#filter-radius");
+  // Radius: wenn aktuell „Alle Spots“ (4), auf einen moderaten Radius setzen
+  const radiusSlider = $("#filter-radius");
   if (radiusSlider && radiusSlider.value === "4") {
-    radiusSlider.value = "2";
+    radiusSlider.value = "2"; // z. B. ~30 km, siehe RADIUS_LEVELS_KM in filters.js
     const evt = new Event("input", { bubbles: true });
     radiusSlider.dispatchEvent(evt);
   }
 
+  // Zur Spot-Liste scrollen, damit man die Ergebnisse sieht
   const listSection = document.querySelector(".sidebar-section--grow");
   if (listSection) {
-    listSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    listSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   }
-
-  const { filters, spots } = getState();
-  updateCompassMessage(filters, {
-    filteredCount: spots.filtered.length,
-    favoritesCount: getFavorites().length,
-  });
 
   showToast(
     t(
       "compass_applied",
-      "Der Familien-Kompass ist aktiv – passende Spots werden oben angezeigt. 💫"
-    )
+      "Der Familien-Kompass ist aktiv – passende Spots werden oben angezeigt. 💫",
+    ),
   );
 }
 
-// -----------------------------------------------------
-// Routing
-// -----------------------------------------------------
-
 function updateRoute(route, indexFromClick) {
-  console.log("updateRoute(): route=", route, "indexFromClick=", indexFromClick);
-  const viewMap = document.querySelector("#view-map");
-  const viewAbout = document.querySelector("#view-about");
-  const navIndicator = document.querySelector("#bottom-nav-indicator");
-  const buttons = Array.from(
-    document.querySelectorAll(".bottom-nav-item")
-  );
+  const viewMap = $("#view-map");
+  const viewAbout = $("#view-about");
+  const navIndicator = $("#bottom-nav-indicator");
+  const buttons = Array.from(document.querySelectorAll(".bottom-nav-item"));
 
   if (!viewMap || !viewAbout || buttons.length === 0) return;
 
@@ -562,24 +489,14 @@ function updateRoute(route, indexFromClick) {
 // -----------------------------------------------------
 
 function handleFilterChange(filterState) {
-  console.log("handleFilterChange():", filterState);
-  setState({ filters: filterState });
+  currentFilterState = filterState;
 
-  const { spots } = getState();
   const map = getMap();
   const center = map ? map.getCenter() : null;
 
-  const filteredSpots = applyFilters(spots.all, {
+  filteredSpots = applyFilters(allSpots, {
     ...filterState,
-    favorites: getFavorites(),
     mapCenter: center,
-  });
-
-  setState({
-    spots: {
-      ...spots,
-      filtered: filteredSpots,
-    },
   });
 
   setSpotsOnMap(filteredSpots);
@@ -587,29 +504,17 @@ function handleFilterChange(filterState) {
     favorites: filterState.favorites,
     onSelect: handleSpotSelect,
   });
-
-  updateCompassMessage(filterState, {
-    filteredCount: filteredSpots.length,
-    favoritesCount: getFavorites().length,
-  });
 }
 
+// -----------------------------------------------------
+// Spot-Auswahl
+// -----------------------------------------------------
+
 function handleSpotSelect(id) {
-  console.log("handleSpotSelect(): id=", id);
   const spot = findSpotById(id);
-  if (!spot) {
-    console.warn("No spot found for id", id);
-    return;
-  }
+  if (!spot) return;
 
-  const prev = getState().spots;
-
-  setState({
-    spots: {
-      ...prev,
-      currentSelectedId: spot.id,
-    },
-  });
+  currentSelectedSpotId = spot.id;
 
   focusOnSpot(spot);
 
@@ -624,12 +529,11 @@ function handleSpotSelect(id) {
       showToast(
         updatedFavorites.includes(spotId)
           ? t("toast_fav_added", "Zu euren Lieblingsspots gelegt 💛")
-          : t("toast_fav_removed", "Aus den Lieblingsspots entfernt.")
+          : t("toast_fav_removed", "Aus den Lieblingsspots entfernt."),
       );
 
-      const { filters } = getState();
       handleFilterChange({
-        ...filters,
+        ...currentFilterState,
         favorites: updatedFavorites,
       });
 
@@ -643,9 +547,6 @@ function handleSpotSelect(id) {
 }
 
 function rerenderCurrentSpotDetails() {
-  console.log("rerenderCurrentSpotDetails()");
-  const { spots } = getState();
-  const currentSelectedSpotId = spots.currentSelectedId;
   if (!currentSelectedSpotId) return;
   const spot = findSpotById(currentSelectedSpotId);
   if (!spot) return;
@@ -661,12 +562,11 @@ function rerenderCurrentSpotDetails() {
       showToast(
         updatedFavorites.includes(spotId)
           ? t("toast_fav_added", "Zu euren Lieblingsspots gelegt 💛")
-          : t("toast_fav_removed", "Aus den Lieblingsspots entfernt.")
+          : t("toast_fav_removed", "Aus den Lieblingsspots entfernt."),
       );
 
-      const { filters } = getState();
       handleFilterChange({
-        ...filters,
+        ...currentFilterState,
         favorites: updatedFavorites,
       });
 
@@ -685,16 +585,14 @@ function rerenderCurrentSpotDetails() {
 
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
-  console.log("applyTheme():", value);
   document.documentElement.setAttribute("data-theme", value);
 }
 
 // -----------------------------------------------------
-// Plus-Helfer (UI)
+// Plus-Helfer
 // -----------------------------------------------------
 
 function updatePlusStatusUI(status) {
-  console.log("updatePlusStatusUI():", status);
   const el = document.getElementById("plus-status-text");
   if (!el) return;
 
@@ -731,10 +629,7 @@ function updatePlusStatusUI(status) {
   el.textContent = baseText;
 }
 
-let partnerCodesCache = null;
-
 async function loadPartnerCodes() {
-  console.log("loadPartnerCodes()");
   if (partnerCodesCache) return partnerCodesCache;
 
   try {
@@ -756,32 +651,123 @@ async function loadPartnerCodes() {
 // -----------------------------------------------------
 
 function updateStaticLanguageTexts(lang) {
-  console.log("updateStaticLanguageTexts():", lang);
   const isDe = !lang || lang.startsWith("de");
   const setElText = (id, de, en) => {
-    const el = document.getElementById(id);
+    const el = $("#" + id);
     if (el) el.textContent = isDe ? de : en;
   };
 
+  // Header-Tagline
   setElText(
     "header-tagline",
     "Die schönste Karte für Familien-Abenteuer. Finde geprüfte Ausflugsziele in deiner Nähe – von Eltern für Eltern.",
-    "The most beautiful map for family adventures. Find curated spots near you – by parents for parents."
+    "The most beautiful map for family adventures. Find curated spots near you – by parents for parents.",
   );
 
+  // Filter + Labels
   setElText("filter-title", "Filter", "Filters");
   setElText("filter-search-label", "Suche", "Search");
 
-  const searchInput = document.getElementById("filter-search");
+  const searchInput = $("#filter-search");
   if (searchInput) {
     searchInput.placeholder = isDe
       ? "Ort, Spot, Stichwörter …"
       : "Place, spot, keywords …";
   }
 
-  // About-Page Umschalten
-  const aboutDe = document.getElementById("page-about-de");
-  const aboutEn = document.getElementById("page-about-en");
+  setElText("filter-category-label", "Kategorie", "Category");
+  setElText("filter-mood-label", "Stimmung", "Mood");
+  setElText(
+    "filter-mood-helper",
+    "Wonach fühlt es sich heute an?",
+    "What does today feel like?",
+  );
+  setElText("mood-relaxed-label", "Entspannt", "Relaxed");
+  setElText("mood-action-label", "Bewegung", "Action & movement");
+  setElText("mood-water-label", "Wasser & Sand", "Water & sand");
+  setElText("mood-animals-label", "Tier-Tag", "Animal day");
+
+  // Reise-Modus
+  setElText("filter-travel-label", "Reise-Modus", "Travel mode");
+  setElText(
+    "filter-travel-helper",
+    "Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo, Auto oder Bahn?",
+    "Are you out and about at home today or travelling with RV, car or train?",
+  );
+  setElText("travel-everyday-label", "Alltag", "Everyday");
+  setElText("travel-trip-label", "Unterwegs", "On the road");
+
+  // Alter
+  setElText("filter-age-label", "Alter der Kinder", "Kids’ age");
+  setElText("filter-age-all", "Alle Altersstufen", "All age groups");
+  setElText("filter-age-0-3", "0–3 Jahre", "0–3 years");
+  setElText("filter-age-4-9", "4–9 Jahre", "4–9 years");
+  setElText("filter-age-10-plus", "10+ Jahre", "10+ years");
+
+  // Micro-Abenteuer-Radius
+  setElText(
+    "filter-radius-label",
+    "Micro-Abenteuer-Radius",
+    "Micro-adventure radius",
+  );
+  setElText(
+    "filter-radius-helper",
+    "Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).",
+    "How far may today’s adventure go? The radius is measured from the map centre (home, holiday flat, hotel …).",
+  );
+  setElText("filter-radius-max-label", "Alle Spots", "All spots");
+
+  // Checkboxen
+  const bigLabelSpan = $("#filter-big-label span:last-child");
+  if (bigLabelSpan) {
+    bigLabelSpan.textContent = isDe
+      ? "Nur große Abenteuer (z. B. Zoos, Wildparks, Freizeitparks)"
+      : "Only big adventures (e.g. zoos, wildlife parks, theme parks)";
+  }
+
+  const verifiedLabelSpan = $("#filter-verified-label span:last-child");
+  if (verifiedLabelSpan) {
+    verifiedLabelSpan.textContent = isDe
+      ? "Nur verifizierte Spots (von uns geprüft)"
+      : "Only verified spots (checked by us)";
+  }
+
+  const favsLabelSpan = $("#filter-favs-label span:last-child");
+  if (favsLabelSpan) {
+    favsLabelSpan.textContent = isDe
+      ? "Nur Favoriten"
+      : "Only favourite spots";
+  }
+
+  // Kompass (Titel/Helper – der eigentliche Inhalt ist im Kompass-Section)
+  setElText("compass-label", "Familien-Kompass", "Family compass");
+  setElText(
+    "compass-helper",
+    "Der Familien-Kompass hilft euch mit einem Klick Spots zu finden, die zu eurer Zeit, eurem Alter und eurer Energie passen.",
+    "The family compass helps you find spots that match your time, your kids’ age and everyone’s energy today.",
+  );
+  setElText("compass-apply-label", "Kompass anwenden", "Start compass");
+
+  // Buttons zum Einklappen von Kompass & Plus
+  const compassToggleSpan = $("#btn-toggle-compass span");
+  if (compassToggleSpan) {
+    compassToggleSpan.textContent = isDe ? "Schließen" : "Hide";
+  }
+  const plusToggleSpan = $("#btn-toggle-plus span");
+  if (plusToggleSpan) {
+    plusToggleSpan.textContent = isDe ? "Schließen" : "Hide";
+  }
+
+  // Spot-Liste Titel
+  setElText("spots-title", "Spots", "Spots");
+
+  // Bottom-Navigation
+  setElText("bottom-nav-map-label", "Karte", "Map");
+  setElText("bottom-nav-about-label", "Über", "About");
+
+  // About DE/EN sichtbar schalten
+  const aboutDe = $("#page-about-de");
+  const aboutEn = $("#page-about-en");
   if (aboutDe && aboutEn) {
     if (isDe) {
       aboutDe.classList.remove("hidden");
