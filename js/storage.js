@@ -1,15 +1,8 @@
 // js/storage.js
 
-// ------------------------
-// Keys & Default-Settings
-// ------------------------
-
 const SETTINGS_KEY = "fsm.settings.v1";
 const FAV_KEY = "fsm.favorites.v1";
 const PLUS_KEY = "fsm.plus.v1";
-
-// Neu: Moments-Key
-const MOMENTS_KEY = "fsm.moments.v1";
 
 const defaultSettings = {
   language: "de",
@@ -27,7 +20,7 @@ const defaultPlusStatus = {
 };
 
 // ------------------------
-// Settings (Sprache/Theme)
+// Settings
 // ------------------------
 
 export function getSettings() {
@@ -45,7 +38,7 @@ export function saveSettings(settings) {
   try {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   } catch {
-    // ignorieren – z. B. Privacy-Mode
+    // ignore
   }
 }
 
@@ -65,7 +58,6 @@ export function getPlusStatus() {
       const exp = new Date(merged.expiresAt);
       const now = new Date();
       if (isNaN(exp.getTime()) || exp <= now) {
-        // Abgelaufen oder ungültig -> zurück auf Default
         return { ...defaultPlusStatus };
       }
     }
@@ -81,7 +73,7 @@ export function savePlusStatus(status) {
   try {
     localStorage.setItem(PLUS_KEY, JSON.stringify(merged));
   } catch {
-    // ignorieren
+    // ignore
   }
   return merged;
 }
@@ -90,7 +82,7 @@ export function clearPlusStatus() {
   try {
     localStorage.removeItem(PLUS_KEY);
   } catch {
-    // ignorieren
+    // ignore
   }
   return { ...defaultPlusStatus };
 }
@@ -117,7 +109,7 @@ function setFavorites(ids) {
   try {
     localStorage.setItem(FAV_KEY, JSON.stringify(unique));
   } catch {
-    // ignorieren
+    // ignore
   }
   return unique;
 }
@@ -130,67 +122,4 @@ export function toggleFavorite(id) {
     current.add(id);
   }
   return setFavorites(Array.from(current));
-}
-
-// ------------------------
-// Familien-Momente
-// ------------------------
-
-function getAllMoments() {
-  try {
-    const raw = localStorage.getItem(MOMENTS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveAllMoments(list) {
-  const safe = Array.isArray(list) ? list : [];
-  try {
-    localStorage.setItem(MOMENTS_KEY, JSON.stringify(safe));
-  } catch {
-    // ignorieren – Privacy-Mode / Speicher voll
-  }
-}
-
-/**
- * Liefert alle gespeicherten Momente für einen Spot.
- *
- * @param {string} spotId
- * @returns {Array<{id:string,spotId:string,note:string,createdAt:string}>}
- */
-export function getMomentsForSpot(spotId) {
-  if (!spotId) return [];
-  const all = getAllMoments();
-  return all.filter((m) => m && m.spotId === String(spotId));
-}
-
-/**
- * Fügt einen neuen Moment für einen Spot hinzu.
- * Gibt die aktualisierte Liste der Momente für diesen Spot zurück.
- *
- * @param {string} spotId
- * @param {string} note
- * @returns {Array}
- */
-export function addMomentForSpot(spotId, note) {
-  if (!spotId || !note || !note.trim()) {
-    return getMomentsForSpot(spotId);
-  }
-
-  const all = getAllMoments();
-  const entry = {
-    id: String(Date.now()) + "-" + Math.random().toString(36).slice(2),
-    spotId: String(spotId),
-    note: String(note).trim(),
-    createdAt: new Date().toISOString(),
-  };
-
-  all.push(entry);
-  saveAllMoments(all);
-
-  return all.filter((m) => m && m.spotId === String(spotId));
 }
