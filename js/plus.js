@@ -1,15 +1,14 @@
 // js/plus.js
 
-import {
-  getPlusStatusFromStorage,
-  savePlusStatusToStorage,
-} from "./storage.js";
 import { t } from "./i18n.js";
+import {
+  getPlusStatus as getPlusStatusFromStorage,
+  savePlusStatus as savePlusStatusToStorage,
+} from "./storage.js";
 
 const PARTNERS_URL = "data/partners.json";
 
-// Welche Kategorien später Plus sein sollen
-// (kannst du jederzeit anpassen)
+// Kategorien, die typischerweise Plus sind
 const PLUS_CATEGORIES = new Set([
   "rastplatz-spielplatz-dusche",
   "stellplatz-spielplatz-naehe-kostenlos",
@@ -22,22 +21,23 @@ const PLUS_CATEGORIES = new Set([
 let cachedPartnerCodes = null;
 
 // ---------------------------------------
-// Status
+// Status (Wrapper um storage.js)
 // ---------------------------------------
 
 export function getPlusStatus() {
   const stored = getPlusStatusFromStorage();
-  if (!stored) {
+  if (!stored || !stored.active) {
     return {
       active: false,
       plan: null,
       validUntil: null,
     };
   }
+
   return {
     active: true,
-    plan: stored.plan,
-    validUntil: stored.validUntil,
+    plan: stored.plan || null,
+    validUntil: stored.expiresAt || stored.validUntil || null,
   };
 }
 
@@ -50,13 +50,18 @@ export function isPlusCategory(slug) {
   return PLUS_CATEGORIES.has(slug);
 }
 
-export function formatPlusStatus(
-  status = getPlusStatus(),
-) {
+export function formatPlusStatus(status = getPlusStatus()) {
   if (!status.active) {
     return t(
       "plus_status_inactive",
       "Family Spots Plus ist nicht aktiviert.",
+    );
+  }
+
+  if (!status.validUntil) {
+    return t(
+      "plus_status_active",
+      "Family Spots Plus ist aktiv.",
     );
   }
 
@@ -88,15 +93,10 @@ async function loadPartnerCodes() {
       return cachedPartnerCodes;
     }
     const json = await res.json();
-    cachedPartnerCodes = Array.isArray(json.codes)
-      ? json.codes
-      : [];
+    cachedPartnerCodes = Array.isArray(json.codes) ? json.codes : [];
     return cachedPartnerCodes;
   } catch (err) {
-    console.error(
-      "Error loading partner codes",
-      err,
-    );
+    console.error("Error loading partner codes", err);
     cachedPartnerCodes = [];
     return cachedPartnerCodes;
   }
@@ -107,19 +107,14 @@ async function loadPartnerCodes() {
  * Gibt ein Objekt { ok, reason?, status?, entry? } zurück.
  */
 export async function redeemPartnerCode(rawCode) {
-  const code = (rawCode || "")
-    .trim()
-    .toUpperCase();
+  const code = (rawCode || "").trim().toUpperCase();
   if (!code) {
     return { ok: false, reason: "empty" };
   }
 
   const codes = await loadPartnerCodes();
   const entry = codes.find(
-    (c) =>
-      c.code &&
-      c.code.toUpperCase() === code &&
-      c.enabled !== false,
+    (c) => c.code && c.code.toUpperCase() === code && c.enabled !== false,
   );
 
   if (!entry) {
@@ -135,20 +130,26 @@ export async function redeemPartnerCode(rawCode) {
   }
 
   const now = Date.now();
-  const validUntil = new Date(
-    now + days * 24 * 60 * 60 * 1000,
-  );
+  const validUntil = new Date(now + days * 24 * 60 * 60 * 1000);
 
-  const status = {
+  const statusForPlus = {
     plan: entry.plan || "plus",
     validUntil: validUntil.toISOString(),
   };
 
-  savePlusStatusToStorage(status);
+  // In storage.js-Struktur speichern
+  savePlusStatusToStorage({
+    code,
+    plan: entry.plan || "plus",
+    partner: entry.partner || null,
+    source: entry.source || "partner",
+    activatedAt: new Date(now).toISOString(),
+    expiresAt: statusForPlus.validUntil,
+  });
 
   return {
     ok: true,
-    status,
+    status: statusForPlus,
     entry,
   };
 }
