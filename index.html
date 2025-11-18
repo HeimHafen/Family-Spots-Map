@@ -79,15 +79,13 @@
           <h1 class="header-title">
             <span class="header-flag" aria-hidden="true">🇩🇪</span>
             Family
-            <span class="header-title-spots">
-              Spots
-            </span>
+            <span class="header-title-spots">Spots</span>
             Map
             <span class="header-flag" aria-hidden="true">🇩🇰</span>
           </h1>
+          <!-- kurzer, einzeiliger Slogan -->
           <p class="header-tagline" id="header-tagline">
-            Die schönste Karte für Familien-Abenteuer. Finde geprüfte
-            Ausflugsziele in deiner Nähe – von Eltern für Eltern.
+            Die schönste Familienkarte – von Eltern für Eltern.
           </p>
         </div>
 
@@ -120,16 +118,9 @@
           <!-- Sidebar (Kompass + Plus + Filter + Liste) -->
           <aside class="sidebar">
             <!-- Familien-Kompass (einklappbar) -->
-            <details
-              class="sidebar-section"
-              id="compass-section"
-              open
-            >
+            <details class="sidebar-section" id="compass-section" open>
               <summary class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  id="compass-label"
-                >
+                <h2 class="sidebar-section-title" id="compass-label">
                   Familien-Kompass
                 </h2>
                 <button
@@ -143,10 +134,7 @@
               </summary>
 
               <div class="compass-card">
-                <p
-                  class="filter-group-helper"
-                  id="compass-helper"
-                >
+                <p class="filter-group-helper" id="compass-helper">
                   Der Familien-Kompass hilft euch mit einem Klick Spots zu
                   finden, die zu eurer Zeit, eurem Alter und eurer Energie
                   passen.
@@ -156,23 +144,15 @@
                   id="compass-apply"
                   class="btn btn-small"
                 >
-                  <span id="compass-apply-label">
-                    Kompass anwenden
-                  </span>
+                  <span id="compass-apply-label">Kompass anwenden</span>
                 </button>
               </div>
             </details>
 
             <!-- Family Spots Plus (einklappbar) -->
-            <details
-              class="sidebar-section"
-              id="plus-section"
-              open
-            >
+            <details class="sidebar-section" id="plus-section" open>
               <summary class="sidebar-section-header">
-                <h2 class="sidebar-section-title">
-                  Family Spots Plus
-                </h2>
+                <h2 class="sidebar-section-title">Family Spots Plus</h2>
                 <button
                   type="button"
                   class="btn-icon sidebar-section-close"
@@ -191,8 +171,8 @@
 
               <div class="plus-code-form">
                 <label for="plus-code-input">
-                  Partner-Code eingeben (z. B. von Campingplatz,
-                  Kommune oder Sponsor):
+                  Partner-Code eingeben (z. B. von Campingplatz, Kommune oder
+                  Sponsor):
                 </label>
                 <div class="plus-code-row">
                   <input
@@ -247,12 +227,7 @@
             <!-- Filter-Section -->
             <section class="sidebar-section">
               <header class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  id="filter-title"
-                >
-                  Filter
-                </h2>
+                <h2 class="sidebar-section-title" id="filter-title">Filter</h2>
                 <button
                   id="btn-toggle-filters"
                   class="btn-ghost btn-small"
@@ -290,22 +265,16 @@
                   Kategorie
                 </label>
                 <select id="filter-category" class="input">
-                  <option value="" id="filter-category-all">Alle Kategorien</option>
+                  <option value="">Alle Kategorien</option>
                 </select>
               </div>
 
               <!-- Stimmung -->
               <div class="filter-group">
-                <label
-                  class="filter-group-label"
-                  id="filter-mood-label"
-                >
+                <label class="filter-group-label" id="filter-mood-label">
                   Stimmung
                 </label>
-                <p
-                  class="filter-group-helper"
-                  id="filter-mood-helper"
-                >
+                <p class="filter-group-helper" id="filter-mood-helper">
                   Wonach fühlt es sich heute an?
                 </p>
                 <div class="mood-row" aria-label="Stimmung wählen">
@@ -354,16 +323,10 @@
 
               <!-- Reise-Modus -->
               <div class="filter-group">
-                <label
-                  class="filter-group-label"
-                  id="filter-travel-label"
-                >
+                <label class="filter-group-label" id="filter-travel-label">
                   Reise-Modus
                 </label>
-                <p
-                  class="filter-group-helper"
-                  id="filter-travel-helper"
-                >
+                <p class="filter-group-helper" id="filter-travel-helper">
                   Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo,
                   Auto oder Bahn?
                 </p>
@@ -425,10 +388,7 @@
                 >
                   Micro-Abenteuer-Radius
                 </label>
-                <p
-                  class="filter-group-helper"
-                  id="filter-radius-helper"
-                >
+                <p class="filter-group-helper" id="filter-radius-helper">
                   Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht
                   sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).
                 </p>
@@ -449,10 +409,7 @@
                     Alle Spots
                   </span>
                 </div>
-                <p
-                  id="filter-radius-description"
-                  class="radius-description"
-                >
+                <p id="filter-radius-description" class="radius-description">
                   Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
                 </p>
               </div>
@@ -460,10 +417,7 @@
               <!-- Checkboxen -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-big-label">
-                  <input
-                    id="filter-big-adventures"
-                    type="checkbox"
-                  />
+                  <input id="filter-big-adventures" type="checkbox" />
                   <span>Nur große Abenteuer</span>
                 </label>
               </div>
@@ -489,12 +443,7 @@
               aria-label="Spots"
             >
               <header class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  id="spots-title"
-                >
-                  Spots
-                </h2>
+                <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
                 <button
                   id="btn-toggle-view"
                   class="btn-ghost btn-small"
@@ -528,11 +477,7 @@
           aria-label="Über Family Spots Map"
         >
           <!-- Deutsch -->
-          <article
-            id="page-about-de"
-            class="page page-about"
-            lang="de"
-          >
+          <article id="page-about-de" class="page page-about" lang="de">
             <h2>Über Family Spots Map</h2>
 
             <p>
@@ -677,11 +622,7 @@
           </article>
 
           <!-- Englisch -->
-          <article
-            id="page-about-en"
-            class="page page-about hidden"
-            lang="en"
-          >
+          <article id="page-about-en" class="page page-about hidden" lang="en">
             <h2>About Family Spots Map</h2>
 
             <p>
@@ -730,7 +671,8 @@
               <strong>Verified spots</strong> carry a label. That usually means:
             </p>
             <p>
-              – the place has been visited in person or researched in detail,<br />
+              – the place has been visited in person or researched in
+              detail,<br />
               – location, category and key facts have been checked,<br />
               – special notes (e.g. entry fee, season, parking) are added where
               possible.
@@ -790,7 +732,8 @@
             </p>
             <p>
               – signs and local information,<br />
-              – nature protection rules, lifeguards and weather conditions,<br />
+              – nature protection rules, lifeguards and weather
+              conditions,<br />
               – your children’s age and abilities.
             </p>
             <p>
@@ -823,10 +766,7 @@
       <!-- BOTTOM NAV + TOAST      -->
       <!-- ======================= -->
       <nav class="bottom-nav" aria-label="Hauptnavigation">
-        <div
-          class="bottom-nav-background"
-          aria-hidden="true"
-        ></div>
+        <div class="bottom-nav-background" aria-hidden="true"></div>
         <div
           id="bottom-nav-indicator"
           class="bottom-nav-indicator"
@@ -842,11 +782,7 @@
           <span id="bottom-nav-map-label">Karte</span>
         </button>
 
-        <button
-          class="bottom-nav-item"
-          type="button"
-          data-route="about"
-        >
+        <button class="bottom-nav-item" type="button" data-route="about">
           <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
           <span id="bottom-nav-about-label">Über</span>
         </button>
