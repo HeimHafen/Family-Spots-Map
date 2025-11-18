@@ -1,10 +1,99 @@
-// Basic Leaflet map + spots + warm UI helpers
+// Simple i18n dictionary
+const translations = {
+  en: {
+    appTitle: 'Family Spots Map',
+    heroTitle: 'The most beautiful map for family adventures.',
+    heroSub: 'Find curated family spots near you – by parents for parents.',
+
+    myDayTitle: 'My day',
+    myDayQuestion: 'How was your day?',
+    myDayPlaceholder:
+      'Today we went to the wildlife park – the goats were sooo cute!',
+    myDaySave: 'Save',
+    myDaySaved: 'Saved just now. This note stays on this device.',
+    myDayCleared: 'Cleared.',
+    myDayError: 'Could not save this time.',
+
+    filtersTitle: 'Filters',
+    mapOnlyLabel: 'Map only',
+    showListLabel: 'Show list',
+    searchLabel: 'Search',
+    searchPlaceholder: 'Playground, zoo, lake…',
+    categoryLabel: 'Category',
+    categoryAll: 'All categories',
+    verifiedLabel: 'Only verified spots',
+
+    spotsEmpty: 'No spots match your filters yet.',
+
+    tabMap: 'Map',
+    tabSpots: 'Spots',
+
+    turtleTooltip:
+      'The turtle is your quiet companion – one tap brings the map back to you.',
+
+    aboutTitle: 'About Family Spots Map',
+    aboutBody:
+      'Family Spots Map is a warm, simple companion for your everyday family adventures. No tracking, no stress – just hand-picked spots and small moments that matter.',
+
+    reopenMyDay: 'Show “My day”',
+    reopenFilters: 'Show filters'
+  },
+  de: {
+    appTitle: 'Family Spots Map',
+    heroTitle: 'Die schönste Karte für Familienabenteuer.',
+    heroSub:
+      'Finde kuratierte Familien-Spots in deiner Nähe – von Eltern für Eltern.',
+
+    myDayTitle: 'Mein Tag',
+    myDayQuestion: 'Wie war euer Tag?',
+    myDayPlaceholder:
+      'Heute waren wir im Wildpark – die Ziegen waren sooo süß!',
+    myDaySave: 'Speichern',
+    myDaySaved:
+      'Gerade gespeichert. Diese Notiz bleibt nur auf diesem Gerät.',
+    myDayCleared: 'Gelöscht.',
+    myDayError: 'Konnte dieses Mal nicht gespeichert werden.',
+
+    filtersTitle: 'Filter',
+    mapOnlyLabel: 'Nur Karte',
+    showListLabel: 'Karte & Liste',
+    searchLabel: 'Suche',
+    searchPlaceholder: 'Spielplatz, Zoo, See…',
+    categoryLabel: 'Kategorie',
+    categoryAll: 'Alle Kategorien',
+    verifiedLabel: 'Nur verifizierte Spots',
+
+    spotsEmpty: 'Zu deinen Filtern gibt es noch keine Spots.',
+
+    tabMap: 'Karte',
+    tabSpots: 'Spots',
+
+    turtleTooltip:
+      'Die Schildkröte ist euer leiser Begleiter – ein Tipp und die Karte springt zurück zu euch.',
+
+    aboutTitle: 'Über Family Spots Map',
+    aboutBody:
+      'Family Spots Map ist ein warmer, einfacher Begleiter für eure Familienabenteuer im Alltag. Kein Tracking, kein Stress – nur handverlesene Orte und kleine Momente, die zählen.',
+
+    reopenMyDay: '„Mein Tag“ anzeigen',
+    reopenFilters: 'Filter anzeigen'
+  }
+};
+
+const LANG_KEY = 'fsm_lang_v1';
+const THEME_KEY = 'fsm_theme_v1';
+const MY_DAY_KEY = 'fsm_my_day_note_v1';
+const TURTLE_TOOLTIP_SEEN_KEY = 'fsm_turtle_tooltip_seen_v1';
+
+let currentLang = 'en';
+let currentTheme = 'light';
 
 let map;
 let markersLayer;
 let spotsData = [];
 let spotMarkers = [];
 
+// DOM refs
 const appShell = document.querySelector('.app-shell');
 const searchInput = document.getElementById('search-input');
 const categorySelect = document.getElementById('category-select');
@@ -20,17 +109,108 @@ const myDayStatus = document.getElementById('my-day-status');
 const turtleButton = document.getElementById('turtle-companion');
 const turtleTooltip = document.getElementById('turtle-tooltip');
 const headerLocateBtn = document.getElementById('header-locate-btn');
+const languageToggleBtn = document.getElementById('language-toggle');
+const themeToggleBtn = document.getElementById('theme-toggle');
+
+const aboutBtn = document.getElementById('about-btn');
+const aboutOverlay = document.getElementById('about-overlay');
+const aboutCloseBtn = document.getElementById('about-close-btn');
 
 // --- Init ---
 
 document.addEventListener('DOMContentLoaded', () => {
+  initLanguage();
+  initTheme();
   initMap();
   loadSpots();
   initFilters();
   initMyDay();
   initTabs();
   initTurtle();
+  initAbout();
+  initCloseableSections();
 });
+
+// --- i18n ---
+
+function initLanguage() {
+  try {
+    const stored = localStorage.getItem(LANG_KEY);
+    if (stored === 'de' || stored === 'en') {
+      currentLang = stored;
+    }
+  } catch (e) {
+    // ignore
+  }
+  applyTranslations();
+  if (languageToggleBtn) {
+    languageToggleBtn.textContent = currentLang.toUpperCase();
+    languageToggleBtn.addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'de' : 'en';
+      try {
+        localStorage.setItem(LANG_KEY, currentLang);
+      } catch (e) {
+        // ignore
+      }
+      languageToggleBtn.textContent = currentLang.toUpperCase();
+      applyTranslations();
+      updateMapOnlyLabel();
+    });
+  }
+}
+
+function applyTranslations() {
+  const dict = translations[currentLang];
+
+  document.querySelectorAll('[data-i18n-key]').forEach((el) => {
+    const key = el.dataset.i18nKey;
+    const txt = dict[key];
+    if (!txt) return;
+    el.textContent = txt;
+  });
+
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+    const key = el.dataset.i18nPlaceholder;
+    const txt = dict[key];
+    if (!txt) return;
+    el.placeholder = txt;
+  });
+}
+
+// --- Theme ---
+
+function initTheme() {
+  try {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored === 'dark' || stored === 'light') {
+      currentTheme = stored;
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  applyTheme();
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      try {
+        localStorage.setItem(THEME_KEY, currentTheme);
+      } catch (e) {
+        // ignore
+      }
+      applyTheme();
+    });
+  }
+}
+
+function applyTheme() {
+  const isDark = currentTheme === 'dark';
+  document.documentElement.classList.toggle('theme-dark', isDark);
+  if (themeToggleBtn) {
+    themeToggleBtn.textContent = isDark ? '☀️' : '🌙';
+  }
+}
 
 // --- Map ---
 
@@ -38,7 +218,7 @@ function initMap() {
   map = L.map('map', {
     zoomControl: false,
     worldCopyJump: true
-  }).setView([54.9, 9.8], 6); // Denmark / Northern Europe feeling
+  }).setView([54.9, 9.8], 6); // Northern Europe
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
@@ -57,7 +237,6 @@ function initMap() {
 }
 
 // --- Spots loading ---
-// Tries to be defensive, so it should work with several possible spot schemas.
 
 async function loadSpots() {
   try {
@@ -72,11 +251,10 @@ async function loadSpots() {
   } catch (err) {
     console.error('Failed to load spots.json', err);
     spotsEmpty.hidden = false;
-    spotsEmpty.textContent = 'Spots could not be loaded.';
+    spotsEmpty.textContent = translations[currentLang].spotsEmpty;
   }
 }
 
-// Try to unify different potential property names into a common shape
 function normalizeSpot(spot, index) {
   const lat =
     spot.lat ??
@@ -86,7 +264,6 @@ function normalizeSpot(spot, index) {
   const lng =
     spot.lng ??
     spot.lon ??
-    spot.lng ??
     (spot.location && spot.location.lng) ??
     spot.coords?.lng;
 
@@ -115,6 +292,7 @@ function populateCategorySelect(spots) {
 }
 
 function renderSpotsAndMarkers() {
+  if (!markersLayer) return;
   markersLayer.clearLayers();
   spotMarkers = [];
   spotsList.innerHTML = '';
@@ -138,9 +316,24 @@ function renderSpotsAndMarkers() {
   });
 
   filtered.forEach((spot) => {
-    // Marker
-    const marker = L.marker([spot.lat, spot.lng]);
+    // Orange circle marker
+    const marker = L.circleMarker([spot.lat, spot.lng], {
+      radius: 8,
+      color: '#ff8c00',
+      weight: 2,
+      fillColor: '#ffb347',
+      fillOpacity: 0.95
+    });
+
     marker.bindPopup(`<strong>${spot.name}</strong><br/>${spot.city || ''}`);
+
+    marker.on('mouseover', () => {
+      marker.setStyle({ radius: 11 });
+    });
+    marker.on('mouseout', () => {
+      marker.setStyle({ radius: 8 });
+    });
+
     markersLayer.addLayer(marker);
     spotMarkers.push({ spot, marker });
 
@@ -205,18 +398,26 @@ function initFilters() {
       const mapOnly = !appShell.classList.contains('app-shell--map-only');
       appShell.classList.toggle('app-shell--map-only', mapOnly);
       mapOnlyToggle.setAttribute('aria-pressed', String(mapOnly));
-      mapOnlyToggle.textContent = mapOnly ? 'Show list' : 'Map only';
+      updateMapOnlyLabel();
 
       setTimeout(() => {
         map.invalidateSize();
       }, 250);
     });
   }
+  updateMapOnlyLabel();
+}
+
+function updateMapOnlyLabel() {
+  if (!mapOnlyToggle) return;
+  const dict = translations[currentLang];
+  const mapOnly = appShell.classList.contains('app-shell--map-only');
+  mapOnlyToggle.textContent = mapOnly
+    ? dict.showListLabel
+    : dict.mapOnlyLabel;
 }
 
 // --- My day (localStorage only) ---
-
-const MY_DAY_KEY = 'fsm_my_day_note_v1';
 
 function initMyDay() {
   try {
@@ -231,13 +432,12 @@ function initMyDay() {
   if (myDaySave && myDayInput) {
     myDaySave.addEventListener('click', () => {
       const value = myDayInput.value.trim();
+      const dict = translations[currentLang];
       try {
         localStorage.setItem(MY_DAY_KEY, value);
-        myDayStatus.textContent = value
-          ? 'Saved just now. This note stays on this device.'
-          : 'Cleared.';
+        myDayStatus.textContent = value ? dict.myDaySaved : dict.myDayCleared;
       } catch (e) {
-        myDayStatus.textContent = 'Could not save this time.';
+        myDayStatus.textContent = dict.myDayError;
       }
     });
   }
@@ -254,10 +454,7 @@ function initTabs() {
   navItems.forEach((btn) => {
     btn.addEventListener('click', () => {
       navItems.forEach((b) =>
-        b.classList.toggle(
-          'bottom-nav-item--active',
-          b === btn
-        )
+        b.classList.toggle('bottom-nav-item--active', b === btn)
       );
 
       const tab = btn.dataset.tab;
@@ -278,9 +475,7 @@ function initTabs() {
 
 // --- Turtle companion 🐢 ---
 // One tap: locate & center the map on the family.
-// Tooltip appears on first use to explain gently.
-
-const TURTLE_TOOLTIP_SEEN_KEY = 'fsm_turtle_tooltip_seen_v1';
+// Tooltip appears once and can be closed.
 
 function initTurtle() {
   if (headerLocateBtn) {
@@ -293,6 +488,15 @@ function initTurtle() {
     locateAndCenter();
     maybeShowTurtleTooltipOnce();
   });
+
+  if (turtleTooltip) {
+    const closeBtn = turtleTooltip.querySelector('.turtle-tooltip-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        turtleTooltip.hidden = true;
+      });
+    }
+  }
 }
 
 function locateAndCenter() {
@@ -331,6 +535,64 @@ function maybeShowTurtleTooltipOnce() {
   } catch (e) {
     // ignore
   }
+}
+
+// --- About modal ---
+
+function initAbout() {
+  if (!aboutBtn || !aboutOverlay) return;
+
+  const open = () => {
+    aboutOverlay.hidden = false;
+  };
+  const close = () => {
+    aboutOverlay.hidden = true;
+  };
+
+  aboutBtn.addEventListener('click', open);
+  if (aboutCloseBtn) {
+    aboutCloseBtn.addEventListener('click', close);
+  }
+
+  aboutOverlay.addEventListener('click', (e) => {
+    if (e.target === aboutOverlay) {
+      close();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !aboutOverlay.hidden) {
+      close();
+    }
+  });
+}
+
+// --- Closeable sections (My day / Filters) ---
+
+function initCloseableSections() {
+  document.querySelectorAll('.card-close-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.closeTarget;
+      if (!id) return;
+      const section = document.getElementById(id);
+      if (!section) return;
+      section.hidden = true;
+      const reopen = document.querySelector(
+        `.reopen-btn[data-reopen-target="${id}"]`
+      );
+      if (reopen) reopen.hidden = false;
+    });
+  });
+
+  document.querySelectorAll('.reopen-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.reopenTarget;
+      if (!id) return;
+      const section = document.getElementById(id);
+      if (section) section.hidden = false;
+      btn.hidden = true;
+    });
+  });
 }
 
 // --- Utils ---
