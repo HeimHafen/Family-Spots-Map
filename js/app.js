@@ -616,9 +616,7 @@ function updateStaticLanguageTexts(lang) {
   if (catLabel) {
     catLabel.textContent = isDe ? "Kategorie" : "Category";
   }
-  const catAllOption = document.querySelector(
-    "#filter-category option[value='']"
-  );
+  const catAllOption = document.getElementById("filter-category-all");
   if (catAllOption) {
     catAllOption.textContent = isDe ? "Alle Kategorien" : "All categories";
   }
@@ -779,6 +777,14 @@ function updateStaticLanguageTexts(lang) {
     plusNote.textContent = isDe
       ? "Family Spots Plus schaltet zusätzliche Filter & Spots frei – ganz ohne Abo-Falle."
       : "Family Spots Plus unlocks extra filters & spots – with no subscription trap.";
+  }
+
+  // Tilla – Text je nach Sprache
+  const tillaBubble = document.querySelector(".tilla-bubble");
+  if (tillaBubble) {
+    tillaBubble.textContent = isDe
+      ? "Hallo, ich bin Tilla, eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+      : "Hi, I'm Tilla, your turtle guide for relaxed family adventures!";
   }
 
   // ---------------------------------------------------
