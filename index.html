@@ -37,38 +37,40 @@
           <button
             class="header-icon-button"
             type="button"
+            aria-label="About"
             id="about-btn"
-            aria-label="About Family Spots Map"
           >
             ?
           </button>
 
           <div class="app-title-wrapper">
-            <h1 class="app-title" data-i18n="appTitle">Family Spots Map</h1>
+            <h1 class="app-title" data-i18n-key="appTitle">
+              Family Spots Map
+            </h1>
           </div>
 
-          <div class="header-actions">
+          <div class="header-right-buttons">
             <button
               class="header-icon-button"
               type="button"
-              id="lang-toggle-btn"
-              aria-label="Change language"
-            >
-              EN
-            </button>
-            <button
-              class="header-icon-button"
-              type="button"
-              id="theme-toggle-btn"
-              aria-label="Switch theme"
+              aria-label="Toggle dark mode"
+              id="theme-toggle"
             >
               🌙
             </button>
             <button
               class="header-icon-button"
               type="button"
-              id="header-locate-btn"
+              aria-label="Toggle language"
+              id="language-toggle"
+            >
+              DE
+            </button>
+            <button
+              class="header-icon-button"
+              type="button"
               aria-label="Use my location"
+              id="header-locate-btn"
             >
               📍
             </button>
@@ -76,10 +78,10 @@
         </div>
 
         <div class="hero-copy">
-          <p class="hero-title" data-i18n="heroTitle">
+          <p class="hero-title" data-i18n-key="heroTitle">
             The most beautiful map for family adventures.
           </p>
-          <p class="hero-sub" data-i18n="heroSub">
+          <p class="hero-sub" data-i18n-key="heroSub">
             Find curated family spots near you – by parents for parents.
           </p>
         </div>
@@ -93,58 +95,89 @@
         </section>
 
         <!-- My day -->
-        <section class="my-day-card" aria-label="My day">
+        <section class="my-day-card" aria-label="My day" id="my-day-card">
           <header class="my-day-header">
             <h2>
-              <span data-i18n="myDayTitle">My day</span>
+              <span data-i18n-key="myDayTitle">My day</span>
               <span aria-hidden="true">💛</span>
             </h2>
+            <button
+              class="card-close-btn"
+              type="button"
+              data-close-target="my-day-card"
+              aria-label="Close section"
+            >
+              ×
+            </button>
           </header>
-          <p class="my-day-question" data-i18n="myDayQuestion">
+          <p class="my-day-question" data-i18n-key="myDayQuestion">
             How was your day?
           </p>
           <textarea
             id="my-day-input"
             class="my-day-input"
             rows="3"
+            data-i18n-placeholder="myDayPlaceholder"
             placeholder="Today we went to the wildlife park – the goats were sooo cute!"
           ></textarea>
-          <button id="my-day-save" class="btn-primary" type="button" data-i18n="myDaySaveBtn">
+          <button id="my-day-save" class="btn-primary" type="button" data-i18n-key="myDaySave">
             Save
           </button>
           <p id="my-day-status" class="my-day-status" aria-live="polite"></p>
         </section>
+        <button
+          class="reopen-btn"
+          type="button"
+          data-reopen-target="my-day-card"
+          hidden
+          data-i18n-key="reopenMyDay"
+        >
+          Show “My day”
+        </button>
 
         <!-- Filters + spots list -->
-        <section class="filters-card" aria-label="Filters">
+        <section class="filters-card" aria-label="Filters" id="filters-card">
           <div class="filters-header">
-            <h2 data-i18n="filtersTitle">Filters</h2>
-            <button
-              id="map-only-toggle"
-              class="pill-button"
-              type="button"
-              aria-pressed="false"
-              data-i18n="mapOnly"
-            >
-              Map only
-            </button>
+            <h2 data-i18n-key="filtersTitle">Filters</h2>
+            <div class="filters-header-right">
+              <button
+                id="map-only-toggle"
+                class="pill-button"
+                type="button"
+                aria-pressed="false"
+                data-i18n-key="mapOnlyLabel"
+              >
+                Map only
+              </button>
+              <button
+                class="card-close-btn"
+                type="button"
+                data-close-target="filters-card"
+                aria-label="Close section"
+              >
+                ×
+              </button>
+            </div>
           </div>
 
           <div class="filters-grid">
             <label class="field">
-              <span class="field-label" data-i18n="searchLabel">Search</span>
+              <span class="field-label" data-i18n-key="searchLabel">Search</span>
               <input
                 id="search-input"
                 type="search"
                 class="field-input"
+                data-i18n-placeholder="searchPlaceholder"
                 placeholder="Playground, zoo, lake…"
               />
             </label>
 
             <label class="field">
-              <span class="field-label" data-i18n="categoryLabel">Category</span>
+              <span class="field-label" data-i18n-key="categoryLabel">Category</span>
               <select id="category-select" class="field-input">
-                <option value="" data-i18n="allCategories">All categories</option>
+                <option value="" data-i18n-key="categoryAll">
+                  All categories
+                </option>
               </select>
             </label>
 
@@ -154,12 +187,21 @@
                 type="checkbox"
                 class="field-checkbox-input"
               />
-              <span class="field-label" data-i18n="verifiedOnly">
+              <span class="field-label" data-i18n-key="verifiedLabel">
                 Only verified spots
               </span>
             </label>
           </div>
         </section>
+        <button
+          class="reopen-btn"
+          type="button"
+          data-reopen-target="filters-card"
+          hidden
+          data-i18n-key="reopenFilters"
+        >
+          Show filters
+        </button>
 
         <section
           class="spots-section"
@@ -170,8 +212,8 @@
           <p
             id="spots-empty"
             class="spots-empty"
-            data-i18n="noSpots"
             hidden
+            data-i18n-key="spotsEmpty"
           >
             No spots match your filters yet.
           </p>
@@ -186,11 +228,11 @@
           type="button"
         >
           <span class="bottom-nav-icon">🗺️</span>
-          <span class="bottom-nav-label" data-i18n="navMap">Map</span>
+          <span class="bottom-nav-label" data-i18n-key="tabMap">Map</span>
         </button>
         <button class="bottom-nav-item" data-tab="spots" type="button">
           <span class="bottom-nav-icon">📍</span>
-          <span class="bottom-nav-label" data-i18n="navSpots">Spots</span>
+          <span class="bottom-nav-label" data-i18n-key="tabSpots">Spots</span>
         </button>
       </nav>
 
@@ -213,36 +255,31 @@
         >
           ×
         </button>
-        <p data-i18n="turtleTooltip">
+        <p data-i18n-key="turtleTooltip">
           The turtle is your quiet companion – one tap brings the map back to
           you.
         </p>
       </div>
 
-      <!-- About / Über sheet -->
-      <div id="about-overlay" class="sheet-overlay" hidden>
-        <div class="sheet" role="dialog" aria-modal="true">
-          <header class="sheet-header">
-            <h2 class="sheet-title" data-i18n="aboutTitle">
-              About Family Spots Map
-            </h2>
+      <!-- About / Über modal -->
+      <div id="about-overlay" class="modal-overlay" hidden>
+        <div class="modal">
+          <header class="modal-header">
+            <h2 data-i18n-key="aboutTitle">About Family Spots Map</h2>
             <button
-              class="sheet-close-btn"
+              class="modal-close-btn"
               type="button"
-              data-sheet-close
               aria-label="Close"
+              id="about-close-btn"
             >
               ×
             </button>
           </header>
-          <div class="sheet-body">
-            <p data-i18n="aboutText1">
-              Family Spots Map is a warm, hand-picked map for families who want
-              to make the most of their time together.
-            </p>
-            <p data-i18n="aboutText2">
-              Created by parents, without tracking or dark patterns – just
-              helpful spots, small adventures and a gentle companion on the way.
+          <div class="modal-body">
+            <p data-i18n-key="aboutBody">
+              Family Spots Map is a warm, simple companion for your everyday
+              family adventures. No tracking, no stress – just hand-picked spots
+              and small moments that matter.
             </p>
           </div>
         </div>
