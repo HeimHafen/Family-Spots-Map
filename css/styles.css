@@ -26,18 +26,17 @@ body {
 /* Theme via data-theme */
 
 :root {
-  --color-bg: #fff3e0; /* warmes Beige */
-  --color-bg-elevated: #fffaf3; /* helles Creme */
-  --color-border-subtle: #f3e5ab; /* weiches Gelb-Beige */
-  --color-border-strong: #e0c097; /* wärmeres Beige */
-  --color-text: #4e342e; /* braun statt anthrazit */
-  --color-text-subtle: #8d6e63; /* rötlich-braun statt Grau */
-  --color-accent: #fb8c00; /* warmes Orange */
-  --color-accent-soft: #ffe0b2; /* helles Orange */
-  --color-accent-strong: #ef6c00; /* kräftiges Orange */
-  --color-danger: #d84315; /* dunkleres Rot-Orange */
-  --color-shadow-soft: rgba(155, 93, 42, 0.08); /* braune Schatten */
-  --color-map-bg: #fff8e1; /* zartes Gelb */
+  --color-bg: #fff3e0;
+  --color-bg-elevated: #fffaf3;
+  --color-border-subtle: #f3e5ab;
+  --color-border-strong: #e0c097;
+  --color-text: #4e342e;
+  --color-text-subtle: #8d6e63;
+  --color-accent: #fb8c00;
+  --color-accent-soft: #ffe0b2;
+  --color-accent-strong: #ef6c00;
+  --color-shadow-soft: rgba(155, 93, 42, 0.08);
+  --color-map-bg: #fff8e1;
 }
 
 html[data-theme="dark"] {
