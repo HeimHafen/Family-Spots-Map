@@ -175,6 +175,30 @@ body {
   transition: transform 0.15s ease-out;
 }
 
+/* MarkerCluster orange bubbles */
+
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background-color: rgba(255, 179, 71, 0.85);
+}
+
+.marker-cluster div {
+  background-color: rgba(255, 140, 0, 0.95);
+  border-radius: 50%;
+  border: 2px solid #ff8c00;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.65);
+}
+
+.marker-cluster span {
+  font-weight: 600;
+}
+
+.marker-cluster:hover {
+  transform: scale(1.08);
+}
+
 /* My day */
 
 .my-day-card {
@@ -487,6 +511,8 @@ body {
   cursor: pointer;
 }
 
+/* Turtle tooltip */
+
 .turtle-tooltip {
   position: fixed;
   right: 1.2rem;
@@ -502,6 +528,7 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 0.4rem;
+  z-index: 1500;
 }
 
 .turtle-tooltip-close {
@@ -517,8 +544,10 @@ body {
 .app-shell--map-only .my-day-card,
 .app-shell--map-only .filters-card,
 .app-shell--map-only .spots-section,
-.app-shell--map-only .reopen-btn[data-reopen-target='my-day-card'],
-.app-shell--map-only .reopen-btn[data-reopen-target='filters-card'] {
+.app-shell--map-only
+  .reopen-btn[data-reopen-target='my-day-card'],
+.app-shell--map-only
+  .reopen-btn[data-reopen-target='filters-card'] {
   display: none;
 }
 
@@ -549,7 +578,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 2000; /* über Map & Leaflet-Controls */
 }
 
 .modal {
