@@ -28,6 +28,7 @@ import {
   getMap
 } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
+import { initTilla } from "./tilla.js";
 
 let currentFilterState = null;
 let allSpots = [];
@@ -102,6 +103,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Mein Tag Modul initialisieren
   initDayLog();
+
+  // Tilla initialisieren
+  initTilla();
 });
 
 async function bootstrapApp() {
