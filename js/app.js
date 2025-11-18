@@ -118,7 +118,6 @@ async function bootstrapApp() {
 
   await initI18n(initialLang);
   applyTranslations();
-  updateStaticLanguageTexts(initialLang);
 
   const { index } = await loadAppData();
   allSpots = getSpots();
@@ -158,6 +157,10 @@ async function bootstrapApp() {
     onSelect: handleSpotSelect
   });
 
+  // WICHTIG: statische Texte NACH den Filtern setzen,
+  // damit „All categories“ nicht von initFilters überschrieben wird.
+  updateStaticLanguageTexts(initialLang);
+
   initUIEvents();
   updateRoute("map");
 }
@@ -185,7 +188,6 @@ function initUIEvents() {
       await initI18n(nextLang);
       saveSettings({ ...settings, language: nextLang });
       applyTranslations();
-      updateStaticLanguageTexts(nextLang);
 
       const categories = getCategories();
       refreshCategorySelect(categories);
@@ -196,6 +198,10 @@ function initUIEvents() {
       });
       updatePlusStatusUI(plusStatus);
       rerenderCurrentSpotDetails();
+
+      // WICHTIG: Platzhalter / statische Texte NACH dem Refresh setzen,
+      // damit die „All categories“-Option sicher in der richtigen Sprache ist.
+      updateStaticLanguageTexts(nextLang);
     });
   }
 
@@ -502,10 +508,7 @@ function applyTheme(theme) {
   // Browser-UI (Adressleiste etc.) anpassen
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) {
-    metaTheme.setAttribute(
-      "content",
-      value === "dark" ? "#020617" : "#fb8c00"
-    );
+    metaTheme.setAttribute("content", value === "dark" ? "#020617" : "#fb8c00");
   }
 }
 
@@ -547,12 +550,20 @@ function updatePlusStatusUI(status) {
 function updateStaticLanguageTexts(lang) {
   const isDe = (lang || "de").startsWith("de");
 
-  // Header-Tagline
+  // Header-Tagline – KURZER, EINZEILIGER SLOGAN
   const headerTagline = $("#header-tagline");
   if (headerTagline) {
     headerTagline.textContent = isDe
-      ? "Die schönste Karte für Familien-Abenteuer. Finde geprüfte Ausflugsziele in deiner Nähe – von Eltern für Eltern."
-      : "The most beautiful map for family adventures. Find curated family spots near you – by parents for parents.";
+      ? "Die Karte für eure Familien-Abenteuer."
+      : "Your map for family adventures.";
+  }
+
+  // Tilla – Schildkröte
+  const tillaBubble = $("#tilla-bubble-text");
+  if (tillaBubble) {
+    tillaBubble.textContent = isDe
+      ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+      : "Hi, I’m Tilla – your turtle guide for relaxed family adventures!";
   }
 
   // Familien-Kompass
@@ -616,7 +627,9 @@ function updateStaticLanguageTexts(lang) {
   if (catLabel) {
     catLabel.textContent = isDe ? "Kategorie" : "Category";
   }
-  const catAllOption = document.getElementById("filter-category-all");
+  const catAllOption = document.querySelector(
+    "#filter-category option[value='']"
+  );
   if (catAllOption) {
     catAllOption.textContent = isDe ? "Alle Kategorien" : "All categories";
   }
@@ -779,17 +792,7 @@ function updateStaticLanguageTexts(lang) {
       : "Family Spots Plus unlocks extra filters & spots – with no subscription trap.";
   }
 
-  // Tilla – Text je nach Sprache
-  const tillaBubble = document.querySelector(".tilla-bubble");
-  if (tillaBubble) {
-    tillaBubble.textContent = isDe
-      ? "Hallo, ich bin Tilla, eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
-      : "Hi, I'm Tilla, your turtle guide for relaxed family adventures!";
-  }
-
-  // ---------------------------------------------------
   // About-Seite: DE/EN umschalten
-  // ---------------------------------------------------
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
   if (aboutDe && aboutEn) {
