@@ -3,20 +3,22 @@
 import { t } from "./i18n.js";
 
 let container = null;
-let seenKey = "fsm.tilla.seen.v1";
+const SEEN_KEY = "fsm.tilla.seen.v1";
 
 function hasSeen() {
   try {
-    return localStorage.getItem(seenKey) === "true";
-  } catch {
+    return window.localStorage.getItem(SEEN_KEY) === "true";
+  } catch (e) {
     return false;
   }
 }
 
 function markSeen() {
   try {
-    localStorage.setItem(seenKey, "true");
-  } catch {}
+    window.localStorage.setItem(SEEN_KEY, "true");
+  } catch (e) {
+    // absichtlich ignoriert (z.B. Safari Private Mode)
+  }
 }
 
 export function initTilla() {
@@ -26,8 +28,14 @@ export function initTilla() {
   container = document.createElement("div");
   container.className = "tilla-hint";
   sidebar.prepend(container);
+
   if (!hasSeen()) {
-    showTillaMessage(t("turtle_intro_1", "Hallo, ich bin Tilla, eure Schildkröten‑Begleiterin für entspannte Familien‑Abenteuer!"));
+    showTillaMessage(
+      t(
+        "turtle_intro_1",
+        "Hallo, ich bin Tilla, eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+      )
+    );
     markSeen();
   }
 }
