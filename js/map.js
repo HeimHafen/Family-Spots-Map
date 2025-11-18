@@ -9,6 +9,14 @@ const markersById = new Map();
 let radiusCircle = null;
 let currentMarkerRunId = 0;
 
+// Einheitliches Marker-Icon (orange Punkt wie im Mockup)
+const spotMarkerIcon = L.divIcon({
+  className: "spot-marker",
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
+  popupAnchor: [0, -12]
+});
+
 /**
  * Hilfsfunktion: sichert uns eine brauchbare Sprache ("de" / "en").
  */
@@ -17,7 +25,7 @@ function getCurrentLanguage() {
     const langFromI18n = getLanguage && getLanguage();
     if (langFromI18n) return langFromI18n;
   } catch {
-    // falls irgendwas schief geht, gehen wir unten auf Fallbacks
+    // Ignorieren, wir gehen unten auf Fallbacks
   }
 
   if (typeof document !== "undefined" && document.documentElement) {
@@ -98,14 +106,14 @@ export function initMap(options) {
     center: [center.lat, center.lng],
     zoom: zoom,
     zoomControl: true,
-    preferCanvas: true,
+    preferCanvas: true
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "© OpenStreetMap-Mitwirkende",
     updateWhenIdle: true,
-    keepBuffer: 2,
+    keepBuffer: 2
   }).addTo(map);
 
   // Workaround: direkt nach Init einmal invalidateSize,
@@ -136,7 +144,7 @@ function ensureMarkerLayer() {
         showCoverageOnHover: false,
         removeOutsideVisibleBounds: true,
         spiderfyOnEveryZoom: true,
-        maxClusterRadius: 60,
+        maxClusterRadius: 60
       });
     } else {
       // Fallback: normale LayerGroup
@@ -185,12 +193,14 @@ export function setSpotsOnMap(spots) {
     const { lat, lng } = spot.location;
     if (lat == null || lng == null) return;
 
-    const marker = L.marker([lat, lng]);
+    const marker = L.marker([lat, lng], {
+      icon: spotMarkerIcon
+    });
 
     const summary = getSpotPopupSummary(spot);
 
     const encodedName = encodeURIComponent(
-      (spot.name || spot.title || "") + (spot.city ? " " + spot.city : ""),
+      (spot.name || spot.title || "") + (spot.city ? " " + spot.city : "")
     );
 
     const googleMapsUrl =
@@ -270,7 +280,7 @@ export function focusOnSpot(spot) {
   if (lat == null || lng == null) return;
 
   map.setView([lat, lng], 15, {
-    animate: true,
+    animate: true
   });
 
   const marker = markersById.get(spot.id);
@@ -299,7 +309,7 @@ export function updateRadiusCircle(origin, radiusKm) {
 
   radiusCircle = L.circle([origin.lat, origin.lng], {
     radius: radiusKm * 1000,
-    className: "radius-circle",
+    className: "radius-circle"
   });
 
   radiusCircle.addTo(map);
