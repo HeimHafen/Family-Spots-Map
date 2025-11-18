@@ -17,29 +17,23 @@ body {
     sans-serif;
 }
 
-/* Grundfarbe – Textfarbe aus Variablen */
+/* Warmes, weiches Grund-Gradient wie im Mockup (Light) */
 body {
-  color: var(--color-text);
-}
-
-/* Warmes, weiches Grund-Gradient wie im Mockup – nur Light-Theme */
-html[data-theme="light"] body {
   background: linear-gradient(
     to bottom,
     #ffb347 0%,
     #ffe3c2 32%,
     #fff7e9 100%
   );
+  color: var(--color-text);
 }
 
-/* Dunkler, weicher Hintergrund für Dark Mode */
+/* Dark Mode Hintergrund: warm-dunkler Nachthimmel mit leichtem Glow */
 html[data-theme="dark"] body {
-  background: radial-gradient(
-    circle at top,
-    #020617 0%,
-    #00040d 55%,
-    #020617 100%
-  );
+  background:
+    radial-gradient(circle at top left, rgba(248, 250, 252, 0.06), transparent 55%),
+    radial-gradient(circle at bottom, rgba(248, 181, 88, 0.16), #020617);
+  color: var(--color-text);
 }
 
 /* ===========================
@@ -61,18 +55,19 @@ html[data-theme="dark"] body {
   --color-map-bg: #fff8e1;
 }
 
+/* Warm-dark Theme (kein kaltes Blau, sondern warmes Orange als Akzent) */
 html[data-theme="dark"] {
   --color-bg: #020617;
   --color-bg-elevated: #020617;
-  --color-border-subtle: #1f2933;
-  --color-border-strong: #374151;
-  --color-text: #f9fafb;
+  --color-border-subtle: #1e293b;
+  --color-border-strong: #334155;
+  --color-text: #e5e7eb;
   --color-text-subtle: #9ca3af;
-  --color-accent: #22d3ee;
-  --color-accent-soft: #022c34;
-  --color-accent-strong: #06b6d4;
+  --color-accent: #f59e0b; /* warm amber */
+  --color-accent-soft: rgba(245, 158, 11, 0.18);
+  --color-accent-strong: #f97316;
   --color-danger: #f97373;
-  --color-shadow-soft: rgba(15, 23, 42, 0.7);
+  --color-shadow-soft: rgba(15, 23, 42, 0.8);
   --color-map-bg: #020617;
 }
 
@@ -214,7 +209,7 @@ html[data-theme="dark"] .header-tagline {
 }
 
 html[data-theme="dark"] .sidebar {
-  background-color: var(--color-bg);
+  background-color: rgba(2, 6, 23, 0.96);
 }
 
 .sidebar-section {
@@ -288,8 +283,8 @@ html[data-theme="dark"] .compass-group,
 html[data-theme="dark"] .compass-card {
   background: linear-gradient(
     135deg,
-    rgba(14, 165, 233, 0.05),
-    rgba(56, 189, 248, 0.02)
+    rgba(245, 158, 11, 0.1),
+    rgba(15, 23, 42, 0.9)
   );
 }
 
@@ -327,6 +322,11 @@ html[data-theme="dark"] .compass-card {
 .mood-chip:hover,
 .travel-chip:hover {
   background-color: #ffe9cf;
+}
+
+html[data-theme="dark"] .mood-chip:hover,
+html[data-theme="dark"] .travel-chip:hover {
+  background-color: rgba(15, 23, 42, 0.9);
 }
 
 .mood-chip-emoji {
@@ -436,6 +436,10 @@ html[data-theme="dark"] .compass-card {
   transform: translateY(-1px);
 }
 
+html[data-theme="dark"] .spot-card:hover {
+  background-color: rgba(15, 23, 42, 0.96);
+}
+
 .spot-card-title {
   margin: 0;
   font-size: 0.98rem;
@@ -505,6 +509,14 @@ html[data-theme="dark"] .compass-card {
     circle at top,
     rgba(255, 249, 235, 0.9),
     rgba(255, 231, 199, 0.6)
+  );
+}
+
+html[data-theme="dark"] .map-section {
+  background: radial-gradient(
+    circle at top,
+    rgba(15, 23, 42, 0.9),
+    rgba(2, 6, 23, 1)
   );
 }
 
@@ -725,7 +737,7 @@ html[data-theme="dark"] .compass-card {
 }
 
 html[data-theme="dark"] .bottom-nav {
-  background-color: var(--color-bg-elevated);
+  background-color: rgba(2, 6, 23, 0.96);
   border-top: 1px solid var(--color-border-subtle);
   box-shadow: 0 -2px 10px var(--color-shadow-soft);
 }
@@ -788,6 +800,16 @@ html[data-theme="dark"] .bottom-nav {
   outline: 2px solid var(--color-accent-soft);
   outline-offset: 1px;
   border-color: var(--color-accent);
+}
+
+/* Dark Inputs */
+html[data-theme="dark"] .input {
+  background-color: #020617;
+  color: var(--color-text);
+}
+
+html[data-theme="dark"] .input::placeholder {
+  color: var(--color-text-subtle);
 }
 
 .btn,
@@ -863,6 +885,10 @@ html[data-theme="dark"] .btn-icon {
   background-color: rgba(255, 241, 221, 0.9);
 }
 
+html[data-theme="dark"] .btn-icon:hover {
+  background-color: rgba(15, 23, 42, 0.9);
+}
+
 /* Language Switcher */
 
 .language-switcher {
@@ -899,8 +925,8 @@ html[data-theme="dark"] .language-switcher {
 html[data-theme="dark"] .plus-code-form {
   background: linear-gradient(
     135deg,
-    rgba(14, 165, 233, 0.05),
-    rgba(56, 189, 248, 0.02)
+    rgba(245, 158, 11, 0.18),
+    rgba(15, 23, 42, 0.95)
   );
 }
 
@@ -980,6 +1006,11 @@ html[data-theme="dark"] .plus-code-form {
   color: #854d0e;
   text-align: center;
   font-size: 0.9rem;
+}
+
+html[data-theme="dark"] .noscript-warning {
+  background-color: #1e293b;
+  color: #facc15;
 }
 
 /* ===========================
@@ -1063,233 +1094,4 @@ html[data-theme="dark"] .plus-code-form {
   .sidebar-section {
     padding: 0.6rem 0.65rem;
   }
-}
-
-/* ===========================
-   BADGES – Grundstil
-   =========================== */
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.1rem 0.45rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  line-height: 1.2;
-  border: 1px solid transparent;
-  background-color: var(--color-bg-elevated, #ffffff);
-  color: var(--color-text-subtle, #6b7280);
-  white-space: nowrap;
-}
-
-/* Icon im Badge (optional) */
-.badge__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8em;
-}
-
-/* Textteil (optional, falls du mal trennen willst) */
-.badge__label {
-  display: inline-block;
-}
-
-/* Zeilen mit mehreren Badges */
-.badge-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-
-/* ===========================
-   Spezifische Varianten
-   =========================== */
-
-/* Verifiziert / Quality Badge */
-.badge--verified {
-  background: rgba(34, 197, 94, 0.08); /* grünlich */
-  border-color: rgba(34, 197, 94, 0.6);
-  color: #15803d;
-}
-
-/* Dauer / Zeitaufwand */
-.badge--time {
-  background: rgba(59, 130, 246, 0.08); /* blau */
-  border-color: rgba(59, 130, 246, 0.6);
-  color: #1d4ed8;
-}
-
-/* Neutrale Tags (z. B. "Autosafari", "großer Spielplatz") */
-.badge--tag {
-  background: rgba(148, 163, 184, 0.12); /* Slate */
-  border-color: rgba(148, 163, 184, 0.6);
-  color: #4b5563;
-}
-
-/* Kategorie-Badge (falls du darüber mal was anzeigen willst) */
-.badge--category {
-  background: rgba(56, 189, 248, 0.08); /* cyan / accent */
-  border-color: rgba(56, 189, 248, 0.7);
-  color: #0e7490;
-}
-
-/* Plus / Premium (Family Spots Plus) */
-.badge--plus {
-  background: rgba(249, 115, 22, 0.09); /* warm orange */
-  border-color: rgba(249, 115, 22, 0.7);
-  color: #c2410c;
-}
-
-/* Warnung / Hinweis (falls du mal brauchst) */
-.badge--warning {
-  background: rgba(250, 204, 21, 0.12); /* gelb */
-  border-color: rgba(234, 179, 8, 0.8);
-  color: #854d0e;
-}
-
-/* Dezent umrandet, ohne starke Farbe (Allzweck) */
-.badge--outline {
-  background: transparent;
-  border-color: var(--color-border-subtle, #e5e7eb);
-  color: var(--color-text-subtle, #6b7280);
-}
-
-/* ===========================
-   Dark-Mode-Feintuning (Badges)
-   =========================== */
-
-html[data-theme="dark"] .badge--verified {
-  background: rgba(22, 163, 74, 0.18);
-  border-color: rgba(34, 197, 94, 0.9);
-  color: #bbf7d0;
-}
-
-html[data-theme="dark"] .badge--time {
-  background: rgba(37, 99, 235, 0.18);
-  border-color: rgba(59, 130, 246, 0.9);
-  color: #bfdbfe;
-}
-
-html[data-theme="dark"] .badge--tag {
-  background: rgba(148, 163, 184, 0.25);
-  border-color: rgba(148, 163, 184, 0.85);
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] .badge--category {
-  background: rgba(56, 189, 248, 0.22);
-  border-color: rgba(56, 189, 248, 1);
-  color: #e0f2fe;
-}
-
-html[data-theme="dark"] .badge--plus {
-  background: rgba(249, 115, 22, 0.22);
-  border-color: rgba(249, 115, 22, 1);
-  color: #ffedd5;
-}
-
-html[data-theme="dark"] .badge--warning {
-  background: rgba(234, 179, 8, 0.28);
-  border-color: rgba(234, 179, 8, 1);
-  color: #fef9c3;
-}
-
-/* =========================================
-   THEME-FEINTUNING: Warm Light + Dark Mode
-   ========================================= */
-
-/* Dark-Header etwas plastischer */
-html[data-theme="dark"] .app-header {
-  background-color: #020617;
-  color: var(--color-text);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
-  border-bottom: 1px solid var(--color-border-subtle);
-}
-
-/* Map-Section im Dark Mode wie Nachtkarte */
-html[data-theme="dark"] .map-section {
-  background: radial-gradient(
-    circle at top,
-    #020617 0%,
-    #020617 60%,
-    #000000 100%
-  );
-}
-
-/* Inputs im Dark Mode dunkel statt beige */
-html[data-theme="dark"] .input {
-  background-color: #020617;
-  border-color: var(--color-border-subtle);
-  color: var(--color-text);
-}
-
-html[data-theme="dark"] .input::placeholder {
-  color: var(--color-text-subtle);
-}
-
-/* Chips im Dark Mode ohne helle Hover-Farbe */
-html[data-theme="dark"] .mood-chip,
-html[data-theme="dark"] .travel-chip {
-  background-color: var(--color-bg-elevated);
-  border-color: var(--color-border-subtle);
-  color: var(--color-text-subtle);
-}
-
-html[data-theme="dark"] .mood-chip:hover,
-html[data-theme="dark"] .travel-chip:hover {
-  background-color: rgba(15, 23, 42, 0.9);
-}
-
-html[data-theme="dark"] .mood-chip--active,
-html[data-theme="dark"] .travel-chip--active {
-  background-color: var(--color-accent-soft);
-  border-color: var(--color-accent);
-  color: var(--color-accent-strong);
-}
-
-/* Spot-Karten im Dark Mode */
-html[data-theme="dark"] .spot-card {
-  background-color: var(--color-bg-elevated);
-  border-color: var(--color-border-subtle);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.65);
-}
-
-html[data-theme="dark"] .spot-card:hover {
-  background-color: #020617;
-  border-color: var(--color-border-strong);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
-}
-
-/* Textfarben in Cards/Sidebar im Dark Mode */
-html[data-theme="dark"] .spot-details,
-html[data-theme="dark"] .plus-code-form,
-html[data-theme="dark"] .sidebar-section {
-  color: var(--color-text);
-}
-
-/* Bottom-Nav dunkler, ohne Milchglas-Effekt */
-html[data-theme="dark"] .bottom-nav {
-  background-color: #020617;
-  border-top: 1px solid var(--color-border-subtle);
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.8);
-}
-
-/* Icon-Buttons im Dark Mode */
-html[data-theme="dark"] .btn-icon {
-  border-color: var(--color-border-subtle);
-  background-color: var(--color-bg-elevated);
-  color: var(--color-text);
-}
-
-html[data-theme="dark"] .btn-icon:hover {
-  background-color: #020617;
-}
-
-/* Toast im Dark Mode lesbar */
-html[data-theme="dark"] .toast {
-  background-color: var(--color-bg-elevated);
-  border-color: var(--color-border-subtle);
-  color: var(--color-text);
 }
