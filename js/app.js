@@ -744,7 +744,7 @@ function updateStaticLanguageTexts(lang) {
       : "Hide filters";
   }
 
-  // "Nur Karte" / "Map only"
+  // Nur Karte / Map only
   const toggleViewLabel = $("#btn-toggle-view span");
   if (toggleViewLabel) {
     toggleViewLabel.textContent = isDe ? "Nur Karte" : "Map only";
