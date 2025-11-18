@@ -498,6 +498,15 @@ function rerenderCurrentSpotDetails() {
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", value);
+
+  // Browser-UI (Adressleiste etc.) anpassen
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute(
+      "content",
+      value === "dark" ? "#020617" : "#fb8c00"
+    );
+  }
 }
 
 function updatePlusStatusUI(status) {
