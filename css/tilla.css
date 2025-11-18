@@ -1,0 +1,46 @@
+/* css/tilla.css */
+/* Stil für Tilla die Schildkröte 🐢 */
+
+.tilla-hint {
+  display: none;
+  animation: fadeIn 0.3s ease-out;
+  margin-bottom: 0.5rem;
+}
+
+.tilla-hint--visible {
+  display: block;
+}
+
+.tilla-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  border-radius: 0.75rem;
+  background-color: var(--color-accent-soft);
+  border: 1px solid var(--color-border-subtle);
+  padding: 0.65rem 0.7rem;
+  box-shadow: 0 1px 3px var(--color-shadow-soft);
+}
+
+.tilla-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-top: 0.1rem;
+}
+
+.tilla-bubble {
+  font-size: 0.88rem;
+  color: var(--color-text);
+  line-height: 1.45;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
