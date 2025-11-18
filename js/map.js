@@ -25,7 +25,7 @@ function getCurrentLanguage() {
     const langFromI18n = getLanguage && getLanguage();
     if (langFromI18n) return langFromI18n;
   } catch {
-    // Ignorieren, wir gehen unten auf Fallbacks
+    // falls irgendwas schief geht, gehen wir unten auf Fallbacks
   }
 
   if (typeof document !== "undefined" && document.documentElement) {
