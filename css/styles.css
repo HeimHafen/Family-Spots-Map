@@ -17,15 +17,29 @@ body {
     sans-serif;
 }
 
-/* Warmes, weiches Grund-Gradient wie im Mockup */
+/* Grundfarbe – Textfarbe aus Variablen */
 body {
+  color: var(--color-text);
+}
+
+/* Warmes, weiches Grund-Gradient wie im Mockup – nur Light-Theme */
+html[data-theme="light"] body {
   background: linear-gradient(
     to bottom,
     #ffb347 0%,
     #ffe3c2 32%,
     #fff7e9 100%
   );
-  color: var(--color-text);
+}
+
+/* Dunkler, weicher Hintergrund für Dark Mode */
+html[data-theme="dark"] body {
+  background: radial-gradient(
+    circle at top,
+    #020617 0%,
+    #00040d 55%,
+    #020617 100%
+  );
 }
 
 /* ===========================
@@ -1143,7 +1157,7 @@ html[data-theme="dark"] .plus-code-form {
 }
 
 /* ===========================
-   Dark-Mode-Feintuning
+   Dark-Mode-Feintuning (Badges)
    =========================== */
 
 html[data-theme="dark"] .badge--verified {
@@ -1180,4 +1194,102 @@ html[data-theme="dark"] .badge--warning {
   background: rgba(234, 179, 8, 0.28);
   border-color: rgba(234, 179, 8, 1);
   color: #fef9c3;
+}
+
+/* =========================================
+   THEME-FEINTUNING: Warm Light + Dark Mode
+   ========================================= */
+
+/* Dark-Header etwas plastischer */
+html[data-theme="dark"] .app-header {
+  background-color: #020617;
+  color: var(--color-text);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+/* Map-Section im Dark Mode wie Nachtkarte */
+html[data-theme="dark"] .map-section {
+  background: radial-gradient(
+    circle at top,
+    #020617 0%,
+    #020617 60%,
+    #000000 100%
+  );
+}
+
+/* Inputs im Dark Mode dunkel statt beige */
+html[data-theme="dark"] .input {
+  background-color: #020617;
+  border-color: var(--color-border-subtle);
+  color: var(--color-text);
+}
+
+html[data-theme="dark"] .input::placeholder {
+  color: var(--color-text-subtle);
+}
+
+/* Chips im Dark Mode ohne helle Hover-Farbe */
+html[data-theme="dark"] .mood-chip,
+html[data-theme="dark"] .travel-chip {
+  background-color: var(--color-bg-elevated);
+  border-color: var(--color-border-subtle);
+  color: var(--color-text-subtle);
+}
+
+html[data-theme="dark"] .mood-chip:hover,
+html[data-theme="dark"] .travel-chip:hover {
+  background-color: rgba(15, 23, 42, 0.9);
+}
+
+html[data-theme="dark"] .mood-chip--active,
+html[data-theme="dark"] .travel-chip--active {
+  background-color: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  color: var(--color-accent-strong);
+}
+
+/* Spot-Karten im Dark Mode */
+html[data-theme="dark"] .spot-card {
+  background-color: var(--color-bg-elevated);
+  border-color: var(--color-border-subtle);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.65);
+}
+
+html[data-theme="dark"] .spot-card:hover {
+  background-color: #020617;
+  border-color: var(--color-border-strong);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+}
+
+/* Textfarben in Cards/Sidebar im Dark Mode */
+html[data-theme="dark"] .spot-details,
+html[data-theme="dark"] .plus-code-form,
+html[data-theme="dark"] .sidebar-section {
+  color: var(--color-text);
+}
+
+/* Bottom-Nav dunkler, ohne Milchglas-Effekt */
+html[data-theme="dark"] .bottom-nav {
+  background-color: #020617;
+  border-top: 1px solid var(--color-border-subtle);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Icon-Buttons im Dark Mode */
+html[data-theme="dark"] .btn-icon {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text);
+}
+
+html[data-theme="dark"] .btn-icon:hover {
+  background-color: #020617;
+}
+
+/* Toast im Dark Mode lesbar */
+html[data-theme="dark"] .toast {
+  background-color: var(--color-bg-elevated);
+  border-color: var(--color-border-subtle);
+  color: var(--color-text);
 }
