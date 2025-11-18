@@ -565,19 +565,18 @@ button {
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
-  background: radial-gradient(circle at 30% 30%, #ffe8c4 0, #fb8c00 45%, #c36200 100%);
+  background: radial-gradient(circle at 30% 30%, #ffd9a0 0, #fb8c00 45%, #c36200 100%);
   border-radius: 999px;
-  box-shadow:
-    0 0 0 3px rgba(255, 244, 229, 0.9),
-    0 12px 26px rgba(140, 71, 0, 0.55);
+  box-shadow: 0 10px 22px rgba(140, 71, 0, 0.55);
 }
 
+/* Innerer Kreis mit Zahl – ohne weißen Ring */
 .marker-cluster-small div,
 .marker-cluster-medium div,
 .marker-cluster-large div {
-  background: #fb8c00;
+  background: linear-gradient(180deg, #ff9f1c 0%, #fb8c00 60%, #e97600 100%);
   border-radius: 999px;
-  border: 3px solid #fff7ec;
+  border: none;              /* -> weißer Ring entfernt */
   color: #fff;
   font-weight: 600;
   font-size: 13px;
@@ -587,9 +586,7 @@ button {
 .marker-cluster:hover {
   transform: translateY(-1px) scale(1.06);
   transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
-  box-shadow:
-    0 0 0 3px rgba(255, 244, 229, 0.9),
-    0 18px 36px rgba(140, 71, 0, 0.6);
+  box-shadow: 0 16px 32px rgba(140, 71, 0, 0.65);
 }
 
 /* ---------- Bottom Navigation ---------- */
