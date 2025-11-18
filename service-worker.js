@@ -1,7 +1,7 @@
 // service-worker.js
 
 // Version des Caches – bei Änderungen an Assets INKREMENTIEREN
-const CACHE_NAME = "family-spots-map-25";
+const CACHE_NAME = "family-spots-map-26";
 const OFFLINE_URL = "offline.html";
 
 const ASSETS = [
@@ -10,6 +10,7 @@ const ASSETS = [
   OFFLINE_URL,
   "css/styles.css",
   "css/badges.css",
+  "css/tilla.css",
   "js/app.js",
   "js/utils.js",
   "js/storage.js",
@@ -26,9 +27,10 @@ const ASSETS = [
   "data/i18n/de.json",
   "data/i18n/en.json",
   "data/partners.json",
+  "data/partner-codes.json",
   "assets/logo.svg",
   "assets/icons/icon-192.png",
-  "assets/icons/icon-512.png",
+  "assets/icons/icon-512.png"
 ];
 
 // INSTALL: App-Shell & Daten cachen (robust, auch wenn einzelne Assets fehlen)
@@ -45,9 +47,9 @@ self.addEventListener("install", (event) => {
             // Falls ein Asset fehlt, verhindern wir trotzdem nicht die Installation.
             console.warn("[SW] Asset konnte nicht gecacht werden:", asset, err);
           }
-        }),
+        })
       );
-    })(),
+    })()
   );
   self.skipWaiting();
 });
@@ -60,9 +62,9 @@ self.addEventListener("activate", (event) => {
       await Promise.all(
         keys
           .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key)),
+          .map((key) => caches.delete(key))
       );
-    })(),
+    })()
   );
   self.clients.claim();
 });
@@ -98,7 +100,7 @@ self.addEventListener("fetch", (event) => {
 
           return new Response("", {
             status: 503,
-            statusText: "Offline",
+            statusText: "Offline"
           });
         }
       }
@@ -122,9 +124,9 @@ self.addEventListener("fetch", (event) => {
         // Für Nicht-Navigations-Requests im Offline-Fall
         return new Response("", {
           status: 503,
-          statusText: "Offline",
+          statusText: "Offline"
         });
       }
-    })(),
+    })()
   );
 });
