@@ -1,606 +1,780 @@
-// Simple i18n dictionary
-const translations = {
-  en: {
-    appTitle: 'Family Spots Map',
-    heroTitle: 'The most beautiful map for family adventures.',
-    heroSub: 'Find curated family spots near you – by parents for parents.',
+// js/app.js
 
-    myDayTitle: 'My day',
-    myDayQuestion: 'How was your day?',
-    myDayPlaceholder:
-      'Today we went to the wildlife park – the goats were sooo cute!',
-    myDaySave: 'Save',
-    myDaySaved: 'Saved just now. This note stays on this device.',
-    myDayCleared: 'Cleared.',
-    myDayError: 'Could not save this time.',
+import { $, $$, getGeolocation } from "./utils.js";
+import {
+  getSettings,
+  saveSettings,
+  getFavorites,
+  toggleFavorite,
+  getPlusStatus,
+  savePlusStatus
+} from "./storage.js";
+import { initI18n, applyTranslations, getLanguage, t } from "./i18n.js";
+import {
+  loadAppData,
+  getSpots,
+  getCategories,
+  findSpotById
+} from "./data.js";
+import {
+  initFilters,
+  applyFilters,
+  refreshCategorySelect
+} from "./filters.js";
+import {
+  initMap,
+  setSpotsOnMap,
+  focusOnSpot,
+  getMap
+} from "./map.js";
+import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 
-    filtersTitle: 'Filters',
-    mapOnlyLabel: 'Map only',
-    showListLabel: 'Show list',
-    searchLabel: 'Search',
-    searchPlaceholder: 'Playground, zoo, lake…',
-    categoryLabel: 'Category',
-    categoryAll: 'All categories',
-    verifiedLabel: 'Only verified spots',
+let currentFilterState = null;
+let allSpots = [];
+let filteredSpots = [];
+let plusStatus = null;
+let partnerCodesCache = null;
+let currentSelectedSpotId = null;
 
-    spotsEmpty: 'No spots match your filters yet.',
+// -----------------------------------------------------
+// Partner-Codes laden (lokale Helper-Funktion)
+// -----------------------------------------------------
 
-    tabMap: 'Map',
-    tabSpots: 'Spots',
+async function loadPartnerCodes() {
+  if (partnerCodesCache) return partnerCodesCache;
 
-    turtleTooltip:
-      'The turtle is your quiet companion – one tap brings the map back to you.',
+  const res = await fetch("data/partner-codes.json", {
+    cache: "no-store"
+  });
 
-    aboutTitle: 'About Family Spots Map',
-    aboutBody:
-      'Family Spots Map is a warm, simple companion for your everyday family adventures. No tracking, no stress – just hand-picked spots and small moments that matter.',
-
-    reopenMyDay: 'Show “My day”',
-    reopenFilters: 'Show filters'
-  },
-  de: {
-    appTitle: 'Family Spots Map',
-    heroTitle: 'Die schönste Karte für Familienabenteuer.',
-    heroSub:
-      'Finde kuratierte Familien-Spots in deiner Nähe – von Eltern für Eltern.',
-
-    myDayTitle: 'Mein Tag',
-    myDayQuestion: 'Wie war euer Tag?',
-    myDayPlaceholder:
-      'Heute waren wir im Wildpark – die Ziegen waren sooo süß!',
-    myDaySave: 'Speichern',
-    myDaySaved:
-      'Gerade gespeichert. Diese Notiz bleibt nur auf diesem Gerät.',
-    myDayCleared: 'Gelöscht.',
-    myDayError: 'Konnte dieses Mal nicht gespeichert werden.',
-
-    filtersTitle: 'Filter',
-    mapOnlyLabel: 'Nur Karte',
-    showListLabel: 'Karte & Liste',
-    searchLabel: 'Suche',
-    searchPlaceholder: 'Spielplatz, Zoo, See…',
-    categoryLabel: 'Kategorie',
-    categoryAll: 'Alle Kategorien',
-    verifiedLabel: 'Nur verifizierte Spots',
-
-    spotsEmpty: 'Zu deinen Filtern gibt es noch keine Spots.',
-
-    tabMap: 'Karte',
-    tabSpots: 'Spots',
-
-    turtleTooltip:
-      'Die Schildkröte ist euer leiser Begleiter – ein Tipp und die Karte springt zurück zu euch.',
-
-    aboutTitle: 'Über Family Spots Map',
-    aboutBody:
-      'Family Spots Map ist ein warmer, einfacher Begleiter für eure Familienabenteuer im Alltag. Kein Tracking, kein Stress – nur handverlesene Orte und kleine Momente, die zählen.',
-
-    reopenMyDay: '„Mein Tag“ anzeigen',
-    reopenFilters: 'Filter anzeigen'
+  if (!res.ok) {
+    throw new Error("Failed to load partner codes");
   }
-};
 
-const LANG_KEY = 'fsm_lang_v1';
-const THEME_KEY = 'fsm_theme_v1';
-const MY_DAY_KEY = 'fsm_my_day_note_v1';
-const TURTLE_TOOLTIP_SEEN_KEY = 'fsm_turtle_tooltip_seen_v1';
+  const json = await res.json();
+  const codes = Array.isArray(json) ? json : json.codes || [];
+  partnerCodesCache = codes;
+  return codes;
+}
 
-let currentLang = 'en';
-let currentTheme = 'light';
+// -----------------------------------------------------
+// Mein Tag – Daylog
+// -----------------------------------------------------
 
-let map;
-let markersLayer;
-let spotsData = [];
-let spotMarkers = [];
+function initDayLog() {
+  const textArea = document.getElementById("daylog-text");
+  const saveBtn = document.getElementById("daylog-save");
 
-// DOM refs
-const appShell = document.querySelector('.app-shell');
-const searchInput = document.getElementById('search-input');
-const categorySelect = document.getElementById('category-select');
-const verifiedOnlyCheckbox = document.getElementById('verified-only');
-const spotsList = document.getElementById('spots-list');
-const spotsEmpty = document.getElementById('spots-empty');
-const mapOnlyToggle = document.getElementById('map-only-toggle');
+  if (!textArea || !saveBtn) return;
 
-const myDayInput = document.getElementById('my-day-input');
-const myDaySave = document.getElementById('my-day-save');
-const myDayStatus = document.getElementById('my-day-status');
+  // Laden beim Start
+  const saved = localStorage.getItem("fsm.daylog");
+  if (saved) {
+    textArea.value = saved;
+  }
 
-const turtleButton = document.getElementById('turtle-companion');
-const turtleTooltip = document.getElementById('turtle-tooltip');
-const headerLocateBtn = document.getElementById('header-locate-btn');
-const languageToggleBtn = document.getElementById('language-toggle');
-const themeToggleBtn = document.getElementById('theme-toggle');
+  // Speichern bei Klick
+  saveBtn.addEventListener("click", () => {
+    localStorage.setItem("fsm.daylog", textArea.value || "");
+    showToast(
+      t(
+        "daylog_saved",
+        "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern."
+      )
+    );
+  });
+}
 
-const aboutBtn = document.getElementById('about-btn');
-const aboutOverlay = document.getElementById('about-overlay');
-const aboutCloseBtn = document.getElementById('about-close-btn');
+// -----------------------------------------------------
+// Bootstrap
+// -----------------------------------------------------
 
-// --- Init ---
+document.addEventListener("DOMContentLoaded", () => {
+  bootstrapApp().catch((err) => {
+    console.error(err);
+    showToast(
+      t(
+        "error_data_load",
+        "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal."
+      )
+    );
+  });
 
-document.addEventListener('DOMContentLoaded', () => {
-  initLanguage();
-  initTheme();
-  initMap();
-  loadSpots();
-  initFilters();
-  initMyDay();
-  initTabs();
-  initTurtle();
-  initAbout();
-  initCloseableSections();
+  // Mein Tag Modul initialisieren
+  initDayLog();
 });
 
-// --- i18n ---
+async function bootstrapApp() {
+  const settings = getSettings();
 
-function initLanguage() {
-  try {
-    const stored = localStorage.getItem(LANG_KEY);
-    if (stored === 'de' || stored === 'en') {
-      currentLang = stored;
-    }
-  } catch (e) {
-    // ignore
-  }
+  // HTML lang + Theme setzen
+  const initialLang = settings.language || "de";
+  document.documentElement.lang = initialLang;
+  applyTheme(settings.theme);
+
+  await initI18n(initialLang);
   applyTranslations();
-  if (languageToggleBtn) {
-    languageToggleBtn.textContent = currentLang.toUpperCase();
-    languageToggleBtn.addEventListener('click', () => {
-      currentLang = currentLang === 'en' ? 'de' : 'en';
-      try {
-        localStorage.setItem(LANG_KEY, currentLang);
-      } catch (e) {
-        // ignore
-      }
-      languageToggleBtn.textContent = currentLang.toUpperCase();
+  updateStaticLanguageTexts(initialLang);
+
+  const { index } = await loadAppData();
+  allSpots = getSpots();
+  const categories = getCategories();
+
+  // Plus-Status laden
+  plusStatus = getPlusStatus();
+  updatePlusStatusUI(plusStatus);
+
+  // Karte
+  initMap({
+    center: index.defaultLocation,
+    zoom: index.defaultZoom,
+    onMarkerSelect: handleSpotSelect
+  });
+
+  // Filter
+  currentFilterState = initFilters({
+    categories,
+    favoritesProvider: getFavorites,
+    onFilterChange: handleFilterChange
+  });
+
+  const map = getMap();
+  const center = map ? map.getCenter() : null;
+
+  filteredSpots = applyFilters(allSpots, {
+    ...currentFilterState,
+    favorites: getFavorites(),
+    mapCenter: center
+  });
+
+  setSpotsOnMap(filteredSpots);
+
+  renderSpotList(filteredSpots, {
+    favorites: getFavorites(),
+    onSelect: handleSpotSelect
+  });
+
+  initUIEvents();
+  updateRoute("map");
+}
+
+// -----------------------------------------------------
+// UI + Routing
+// -----------------------------------------------------
+
+function initUIEvents() {
+  const helpBtn = $("#btn-help");
+  if (helpBtn) {
+    helpBtn.addEventListener("click", () => {
+      updateRoute("about", 1);
+    });
+  }
+
+  const langSelect = $("#language-switcher");
+  if (langSelect) {
+    langSelect.value = getLanguage() || "de";
+    langSelect.addEventListener("change", async () => {
+      const settings = getSettings();
+      const nextLang = langSelect.value || "de";
+
+      document.documentElement.lang = nextLang;
+      await initI18n(nextLang);
+      saveSettings({ ...settings, language: nextLang });
       applyTranslations();
-      updateMapOnlyLabel();
+      updateStaticLanguageTexts(nextLang);
+
+      const categories = getCategories();
+      refreshCategorySelect(categories);
+
+      handleFilterChange({
+        ...currentFilterState,
+        favorites: getFavorites()
+      });
+      updatePlusStatusUI(plusStatus);
+      rerenderCurrentSpotDetails();
     });
   }
-}
 
-function applyTranslations() {
-  const dict = translations[currentLang];
-
-  document.querySelectorAll('[data-i18n-key]').forEach((el) => {
-    const key = el.dataset.i18nKey;
-    const txt = dict[key];
-    if (!txt) return;
-    el.textContent = txt;
-  });
-
-  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
-    const key = el.dataset.i18nPlaceholder;
-    const txt = dict[key];
-    if (!txt) return;
-    el.placeholder = txt;
-  });
-}
-
-// --- Theme ---
-
-function initTheme() {
-  try {
-    const stored = localStorage.getItem(THEME_KEY);
-    if (stored === 'dark' || stored === 'light') {
-      currentTheme = stored;
-    }
-  } catch (e) {
-    // ignore
+  const themeToggle = $("#theme-toggle");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const settings = getSettings();
+      const nextTheme = settings.theme === "dark" ? "light" : "dark";
+      applyTheme(nextTheme);
+      saveSettings({ ...settings, theme: nextTheme });
+    });
   }
 
-  applyTheme();
-
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', () => {
-      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  const locateBtn = $("#btn-locate");
+  if (locateBtn) {
+    locateBtn.addEventListener("click", async () => {
       try {
-        localStorage.setItem(THEME_KEY, currentTheme);
-      } catch (e) {
-        // ignore
-      }
-      applyTheme();
-    });
-  }
-}
-
-function applyTheme() {
-  const isDark = currentTheme === 'dark';
-  document.documentElement.classList.toggle('theme-dark', isDark);
-  if (themeToggleBtn) {
-    themeToggleBtn.textContent = isDark ? '☀️' : '🌙';
-  }
-}
-
-// --- Map ---
-
-function initMap() {
-  map = L.map('map', {
-    zoomControl: false,
-    worldCopyJump: true
-  }).setView([54.9, 9.8], 6); // Northern Europe
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-  }).addTo(map);
-
-  L.control
-    .zoom({
-      position: 'bottomleft'
-    })
-    .addTo(map);
-
-  markersLayer = L.markerClusterGroup();
-  map.addLayer(markersLayer);
-}
-
-// --- Spots loading ---
-
-async function loadSpots() {
-  try {
-    const res = await fetch('data/spots.json', { cache: 'no-cache' });
-    const raw = await res.json();
-
-    const list = Array.isArray(raw) ? raw : raw.spots || raw.data || [];
-    spotsData = list.map((spot, index) => normalizeSpot(spot, index));
-
-    populateCategorySelect(spotsData);
-    renderSpotsAndMarkers();
-  } catch (err) {
-    console.error('Failed to load spots.json', err);
-    spotsEmpty.hidden = false;
-    spotsEmpty.textContent = translations[currentLang].spotsEmpty;
-  }
-}
-
-function normalizeSpot(spot, index) {
-  const lat =
-    spot.lat ??
-    spot.latitude ??
-    (spot.location && spot.location.lat) ??
-    spot.coords?.lat;
-  const lng =
-    spot.lng ??
-    spot.lon ??
-    (spot.location && spot.location.lng) ??
-    spot.coords?.lng;
-
-  return {
-    id: spot.id || `spot-${index}`,
-    name: spot.name || spot.title || 'Family spot',
-    category: spot.category || spot.type || '',
-    city: spot.city || spot.town || spot.place || '',
-    verified: Boolean(spot.verified || spot.isVerified),
-    lat,
-    lng
-  };
-}
-
-function populateCategorySelect(spots) {
-  const categories = Array.from(
-    new Set(spots.map((s) => s.category).filter(Boolean))
-  ).sort((a, b) => a.localeCompare(b));
-
-  categories.forEach((cat) => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.textContent = cat;
-    categorySelect.appendChild(opt);
-  });
-}
-
-function renderSpotsAndMarkers() {
-  if (!markersLayer) return;
-  markersLayer.clearLayers();
-  spotMarkers = [];
-  spotsList.innerHTML = '';
-
-  const query = (searchInput.value || '').trim().toLowerCase();
-  const cat = categorySelect.value;
-  const verifiedOnly = verifiedOnlyCheckbox.checked;
-
-  const filtered = spotsData.filter((spot) => {
-    if (!spot.lat || !spot.lng) return false;
-
-    if (cat && spot.category !== cat) return false;
-    if (verifiedOnly && !spot.verified) return false;
-
-    if (query) {
-      const haystack =
-        `${spot.name} ${spot.city} ${spot.category}`.toLowerCase();
-      if (!haystack.includes(query)) return false;
-    }
-    return true;
-  });
-
-  filtered.forEach((spot) => {
-    // Orange circle marker
-    const marker = L.circleMarker([spot.lat, spot.lng], {
-      radius: 8,
-      color: '#ff8c00',
-      weight: 2,
-      fillColor: '#ffb347',
-      fillOpacity: 0.95
-    });
-
-    marker.bindPopup(`<strong>${spot.name}</strong><br/>${spot.city || ''}`);
-
-    marker.on('mouseover', () => {
-      marker.setStyle({ radius: 11 });
-    });
-    marker.on('mouseout', () => {
-      marker.setStyle({ radius: 8 });
-    });
-
-    markersLayer.addLayer(marker);
-    spotMarkers.push({ spot, marker });
-
-    // List card
-    const li = document.createElement('li');
-    li.className = 'spot-card';
-    li.dataset.spotId = spot.id;
-
-    const title = document.createElement('h3');
-    title.className = 'spot-title';
-    title.textContent = spot.name;
-    li.appendChild(title);
-
-    const meta = document.createElement('p');
-    meta.className = 'spot-meta';
-
-    const bits = [];
-    if (spot.city) bits.push(spot.city);
-    if (spot.category) bits.push(spot.category);
-    if (spot.verified) bits.push('✓ verified');
-
-    meta.textContent = bits.join(' • ');
-    li.appendChild(meta);
-
-    const actions = document.createElement('div');
-    actions.className = 'spot-actions';
-
-    const focusBtn = document.createElement('button');
-    focusBtn.className = 'spot-focus-btn';
-    focusBtn.type = 'button';
-    focusBtn.textContent = 'Show on map';
-    focusBtn.addEventListener('click', () => focusSpotOnMap(spot));
-    actions.appendChild(focusBtn);
-
-    li.appendChild(actions);
-    spotsList.appendChild(li);
-  });
-
-  spotsEmpty.hidden = filtered.length > 0;
-}
-
-function focusSpotOnMap(spot) {
-  if (!spot.lat || !spot.lng || !map) return;
-  map.setView([spot.lat, spot.lng], 14, { animate: true });
-}
-
-// --- Filters ---
-
-function initFilters() {
-  if (searchInput) {
-    searchInput.addEventListener('input', debounce(renderSpotsAndMarkers, 150));
-  }
-  if (categorySelect) {
-    categorySelect.addEventListener('change', renderSpotsAndMarkers);
-  }
-  if (verifiedOnlyCheckbox) {
-    verifiedOnlyCheckbox.addEventListener('change', renderSpotsAndMarkers);
-  }
-
-  if (mapOnlyToggle) {
-    mapOnlyToggle.addEventListener('click', () => {
-      const mapOnly = !appShell.classList.contains('app-shell--map-only');
-      appShell.classList.toggle('app-shell--map-only', mapOnly);
-      mapOnlyToggle.setAttribute('aria-pressed', String(mapOnly));
-      updateMapOnlyLabel();
-
-      setTimeout(() => {
-        map.invalidateSize();
-      }, 250);
-    });
-  }
-  updateMapOnlyLabel();
-}
-
-function updateMapOnlyLabel() {
-  if (!mapOnlyToggle) return;
-  const dict = translations[currentLang];
-  const mapOnly = appShell.classList.contains('app-shell--map-only');
-  mapOnlyToggle.textContent = mapOnly
-    ? dict.showListLabel
-    : dict.mapOnlyLabel;
-}
-
-// --- My day (localStorage only) ---
-
-function initMyDay() {
-  try {
-    const stored = localStorage.getItem(MY_DAY_KEY);
-    if (stored && myDayInput) {
-      myDayInput.value = stored;
-    }
-  } catch (e) {
-    console.warn('localStorage not available', e);
-  }
-
-  if (myDaySave && myDayInput) {
-    myDaySave.addEventListener('click', () => {
-      const value = myDayInput.value.trim();
-      const dict = translations[currentLang];
-      try {
-        localStorage.setItem(MY_DAY_KEY, value);
-        myDayStatus.textContent = value ? dict.myDaySaved : dict.myDayCleared;
-      } catch (e) {
-        myDayStatus.textContent = dict.myDayError;
+        const pos = await getGeolocation();
+        const map = getMap();
+        if (map) {
+          map.setView([pos.lat, pos.lng], 14);
+        }
+        showToast(
+          t(
+            "toast_location_ok",
+            "Euer Standort ist gesetzt – viel Spaß beim nächsten Abenteuer! 🌍"
+          )
+        );
+      } catch (err) {
+        console.error(err);
+        showToast(
+          t(
+            "toast_location_error",
+            "Euer Standort lässt sich gerade nicht bestimmen. Vielleicht ist die Freigabe gesperrt oder ihr seid offline."
+          )
+        );
       }
     });
   }
-}
 
-// --- Tabs: Map / Spots (bottom nav) ---
+  $$(".bottom-nav-item").forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      const routeAttr = btn.dataset.route;
+      const route = routeAttr === "about" ? "about" : "map";
+      updateRoute(route, index);
+    });
+  });
 
-function initTabs() {
-  const navItems = document.querySelectorAll('.bottom-nav-item');
-  if (!navItems.length) return;
+  const toggleViewBtn = $("#btn-toggle-view");
+  if (toggleViewBtn) {
+    toggleViewBtn.addEventListener("click", () => {
+      const list = document.querySelector(".sidebar-section--grow");
+      const labelSpan = toggleViewBtn.querySelector("span");
+      if (!list || !labelSpan) return;
 
-  appShell.classList.add('app-shell--tab-map');
+      const nowHidden = list.classList.toggle("hidden");
+      labelSpan.textContent = nowHidden
+        ? t("btn_show_list", "Liste zeigen")
+        : t("btn_only_map", "Nur Karte");
 
-  navItems.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      navItems.forEach((b) =>
-        b.classList.toggle('bottom-nav-item--active', b === btn)
+      const map = getMap();
+      if (map) {
+        setTimeout(() => map.invalidateSize(), 0);
+      }
+      if (window.innerWidth <= 900) {
+        const target = nowHidden
+          ? document.querySelector(".map-section")
+          : document.querySelector(".sidebar");
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    });
+  }
+
+  // ---------------------------------------------------
+  // Filter ein-/ausblenden
+  // ---------------------------------------------------
+  const filterToggleBtn = $("#btn-toggle-filters");
+  if (filterToggleBtn) {
+    const filterSection = filterToggleBtn.closest(".sidebar-section");
+    const labelSpan = filterToggleBtn.querySelector("span");
+
+    if (filterSection && labelSpan) {
+      const filterControls = Array.from(
+        filterSection.querySelectorAll(".filter-group")
       );
 
-      const tab = btn.dataset.tab;
-      if (tab === 'spots') {
-        appShell.classList.remove('app-shell--tab-map');
-        appShell.classList.add('app-shell--tab-spots');
+      let filtersVisible = true;
+
+      const setFiltersVisible = (visible) => {
+        filtersVisible = visible;
+        filterControls.forEach((el) =>
+          el.classList.toggle("hidden", !visible)
+        );
+        labelSpan.textContent = visible
+          ? t("btn_hide_filters", "Filter ausblenden")
+          : t("btn_show_filters", "Filter anzeigen");
+
+        const map = getMap();
+        if (map) {
+          setTimeout(() => map.invalidateSize(), 0);
+        }
+      };
+
+      // Mobile: initial einklappen
+      if (window.innerWidth <= 900 && filterControls.length > 0) {
+        setFiltersVisible(false);
       } else {
-        appShell.classList.add('app-shell--tab-map');
-        appShell.classList.remove('app-shell--tab-spots');
+        setFiltersVisible(true);
       }
 
-      setTimeout(() => {
-        map.invalidateSize();
-      }, 250);
-    });
-  });
-}
-
-// --- Turtle companion 🐢 ---
-// One tap: locate & center the map on the family.
-// Tooltip appears once and can be closed.
-
-function initTurtle() {
-  if (headerLocateBtn) {
-    headerLocateBtn.addEventListener('click', () => locateAndCenter());
-  }
-
-  if (!turtleButton) return;
-
-  turtleButton.addEventListener('click', () => {
-    locateAndCenter();
-    maybeShowTurtleTooltipOnce();
-  });
-
-  if (turtleTooltip) {
-    const closeBtn = turtleTooltip.querySelector('.turtle-tooltip-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        turtleTooltip.hidden = true;
+      filterToggleBtn.addEventListener("click", () => {
+        setFiltersVisible(!filtersVisible);
       });
     }
   }
+
+  // Close-Buttons in den Sidebar-Sections
+  $$(".sidebar-section-close").forEach((btn) => {
+    btn.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const targetId = btn.dataset.target;
+      if (!targetId) return;
+      const details = document.getElementById(targetId);
+      if (details && details.tagName.toLowerCase() === "details") {
+        details.open = false;
+      }
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    const map = getMap();
+    if (map) {
+      map.invalidateSize();
+    }
+  });
+
+  const plusInput = $("#plus-code-input");
+  const plusButton = $("#plus-code-submit");
+  if (plusInput && plusButton) {
+    plusButton.addEventListener("click", async () => {
+      const rawCode = plusInput.value.trim();
+      if (!rawCode) {
+        showToast(t("plus_code_empty", "Bitte Code eingeben."));
+        return;
+      }
+      const normalized = rawCode.toUpperCase();
+      try {
+        const codes = await loadPartnerCodes();
+        const match = codes.find(
+          (c) =>
+            String(c.code).toUpperCase() === normalized &&
+            (c.enabled ?? true)
+        );
+        if (!match) {
+          showToast(
+            t("plus_code_unknown", "Code nicht bekannt oder nicht mehr gültig.")
+          );
+          return;
+        }
+        const days = Number(match.days) || 0;
+        const now = new Date();
+        const expires =
+          days > 0 ? new Date(now.getTime() + days * 24 * 60 * 60 * 1000) : null;
+
+        plusStatus = savePlusStatus({
+          code: normalized,
+          plan: match.plan || null,
+          partner: match.partner || null,
+          source: match.source || "partner",
+          activatedAt: now.toISOString(),
+          expiresAt: expires ? expires.toISOString() : null
+        });
+        updatePlusStatusUI(plusStatus);
+        showToast(
+          t(
+            "plus_code_activated",
+            "Family Spots Plus ist jetzt aktiv – gute Fahrt & viel Freude auf euren Touren!"
+          )
+        );
+      } catch (err) {
+        console.error(err);
+        showToast(
+          t(
+            "plus_code_failed",
+            "Code konnte nicht geprüft werden. Versuch es später noch einmal."
+          )
+        );
+      }
+    });
+  }
 }
 
-function locateAndCenter() {
-  if (!navigator.geolocation || !map) {
-    console.warn('Geolocation not available');
+// -----------------------------------------------------
+// Routing / Filter / Auswahl
+// -----------------------------------------------------
+
+function updateRoute(route, indexFromClick) {
+  const viewMap = document.getElementById("view-map");
+  const viewAbout = document.getElementById("view-about");
+  const navIndicator = document.getElementById("bottom-nav-indicator");
+  const buttons = Array.from(document.querySelectorAll(".bottom-nav-item"));
+
+  if (!viewMap || !viewAbout || buttons.length === 0) return;
+
+  const targetRoute = route === "about" ? "about" : "map";
+
+  if (targetRoute === "about") {
+    viewMap.classList.remove("view--active");
+    viewAbout.classList.add("view--active");
+  } else {
+    viewAbout.classList.remove("view--active");
+    viewMap.classList.add("view--active");
+    const map = getMap();
+    if (map) {
+      setTimeout(() => map.invalidateSize(), 0);
+    }
+  }
+
+  buttons.forEach((btn, index) => {
+    const isActive = btn.dataset.route === targetRoute;
+    btn.classList.toggle("bottom-nav-item--active", isActive);
+    if (isActive && navIndicator) {
+      const idx = indexFromClick != null ? indexFromClick : index;
+      navIndicator.style.transform = `translateX(${idx * 100}%)`;
+    }
+  });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function handleFilterChange(filterState) {
+  currentFilterState = filterState;
+  const map = getMap();
+  const center = map ? map.getCenter() : null;
+
+  filteredSpots = applyFilters(allSpots, {
+    ...filterState,
+    favorites: getFavorites(),
+    mapCenter: center
+  });
+
+  setSpotsOnMap(filteredSpots);
+  renderSpotList(filteredSpots, {
+    favorites: filterState.favorites,
+    onSelect: handleSpotSelect
+  });
+}
+
+function handleSpotSelect(id) {
+  const spot = findSpotById(id);
+  if (!spot) return;
+
+  currentSelectedSpotId = spot.id;
+  focusOnSpot(spot);
+
+  const favorites = getFavorites();
+  const isFav = favorites.includes(spot.id);
+
+  renderSpotDetails(spot, {
+    isFavorite: isFav,
+    onToggleFavorite: (spotId) => {
+      const updatedFavorites = toggleFavorite(spotId);
+      showToast(
+        updatedFavorites.includes(spotId)
+          ? t("toast_fav_added", "Zu euren Lieblingsspots gelegt 💛")
+          : t("toast_fav_removed", "Aus den Lieblingsspots entfernt.")
+      );
+      handleFilterChange({
+        ...currentFilterState,
+        favorites: updatedFavorites
+      });
+      const freshSpot = findSpotById(spotId);
+      renderSpotDetails(freshSpot, {
+        isFavorite: updatedFavorites.includes(spotId),
+        onToggleFavorite: () => handleSpotSelect(spotId)
+      });
+    }
+  });
+}
+
+function rerenderCurrentSpotDetails() {
+  if (!currentSelectedSpotId) return;
+  const spot = findSpotById(currentSelectedSpotId);
+  if (!spot) return;
+  const favorites = getFavorites();
+  const isFav = favorites.includes(spot.id);
+  renderSpotDetails(spot, {
+    isFavorite: isFav,
+    onToggleFavorite: () => handleSpotSelect(spot.id)
+  });
+}
+
+// -----------------------------------------------------
+// Theme / Plus-Status
+// -----------------------------------------------------
+
+function applyTheme(theme) {
+  const value = theme === "dark" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", value);
+}
+
+function updatePlusStatusUI(status) {
+  const el = document.getElementById("plus-status-text");
+  if (!el) return;
+  const lang = getLanguage() || "de";
+  const isDe = lang.startsWith("de");
+  if (!status || !status.active) {
+    el.textContent = isDe
+      ? "Family Spots Plus ist nicht aktiviert."
+      : "Family Spots Plus is not activated.";
     return;
   }
+  let baseText = isDe
+    ? "Family Spots Plus ist aktiv"
+    : "Family Spots Plus is active";
+  if (status.expiresAt) {
+    const d = new Date(status.expiresAt);
+    const dateStr = d.toLocaleDateString(isDe ? "de-DE" : "en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
+    baseText += isDe ? ` (bis ${dateStr})` : ` (until ${dateStr})`;
+  }
+  if (status.partner) {
+    baseText += isDe
+      ? ` – Partner: ${status.partner}`
+      : ` – partner: ${status.partner}`;
+  }
+  el.textContent = baseText;
+}
 
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const { latitude, longitude } = pos.coords;
-      map.setView([latitude, longitude], 13, { animate: true });
-    },
-    (err) => {
-      console.warn('Could not get position', err);
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 8000,
-      maximumAge: 600000
-    }
+// -----------------------------------------------------
+// Statische Texte für DE / EN
+// -----------------------------------------------------
+
+function updateStaticLanguageTexts(lang) {
+  const isDe = (lang || "de").startsWith("de");
+
+  // Header-Tagline
+  const headerTagline = $("#header-tagline");
+  if (headerTagline) {
+    headerTagline.textContent = isDe
+      ? "Die schönste Karte für Familien-Abenteuer. Finde geprüfte Ausflugsziele in deiner Nähe – von Eltern für Eltern."
+      : "The most beautiful map for family adventures. Find curated family spots near you – by parents for parents.";
+  }
+
+  // Familien-Kompass
+  const compassLabel = $("#compass-label");
+  if (compassLabel) {
+    compassLabel.textContent = isDe ? "Familien-Kompass" : "Family Compass";
+  }
+  const compassHelper = $("#compass-helper");
+  if (compassHelper) {
+    compassHelper.textContent = isDe
+      ? "Der Familien-Kompass hilft euch mit einem Klick Spots zu finden, die zu eurer Zeit, eurem Alter und eurer Energie passen."
+      : "The family compass helps you find spots that match your time, your kids' age and your energy today – with just one tap.";
+  }
+  const compassApplyLabel = $("#compass-apply-label");
+  if (compassApplyLabel) {
+    compassApplyLabel.textContent = isDe ? "Kompass anwenden" : "Apply compass";
+  }
+
+  // Mein Tag
+  const daylogTitle = document.querySelector(
+    "#daylog-section .sidebar-section-title"
   );
-}
-
-function maybeShowTurtleTooltipOnce() {
-  try {
-    const seen = localStorage.getItem(TURTLE_TOOLTIP_SEEN_KEY);
-    if (seen || !turtleTooltip) return;
-
-    turtleTooltip.hidden = false;
-    localStorage.setItem(TURTLE_TOOLTIP_SEEN_KEY, '1');
-
-    setTimeout(() => {
-      turtleTooltip.hidden = true;
-    }, 6000);
-  } catch (e) {
-    // ignore
+  if (daylogTitle) {
+    daylogTitle.textContent = isDe ? "Mein Tag 💛" : "My day 💛";
   }
-}
-
-// --- About modal ---
-
-function initAbout() {
-  if (!aboutBtn || !aboutOverlay) return;
-
-  const open = () => {
-    aboutOverlay.hidden = false;
-  };
-  const close = () => {
-    aboutOverlay.hidden = true;
-  };
-
-  aboutBtn.addEventListener('click', open);
-  if (aboutCloseBtn) {
-    aboutCloseBtn.addEventListener('click', close);
+  const daylogLabel = document.querySelector('label[for="daylog-text"]');
+  if (daylogLabel) {
+    daylogLabel.textContent = isDe ? "Wie war euer Tag?" : "How was your day?";
+  }
+  const daylogTextarea = $("#daylog-text");
+  if (daylogTextarea) {
+    daylogTextarea.placeholder = isDe
+      ? "Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
+      : "Today we went to the wildlife park – the goats were sooo cute!";
+  }
+  const daylogSaveBtn = $("#daylog-save");
+  if (daylogSaveBtn) {
+    daylogSaveBtn.textContent = isDe ? "Speichern 💾" : "Save 💾";
   }
 
-  aboutOverlay.addEventListener('click', (e) => {
-    if (e.target === aboutOverlay) {
-      close();
-    }
-  });
+  // Filter-Titel
+  const filterTitle = $("#filter-title");
+  if (filterTitle) {
+    filterTitle.textContent = isDe ? "Filter" : "Filters";
+  }
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !aboutOverlay.hidden) {
-      close();
-    }
-  });
-}
+  // Suchfeld
+  const searchLabel = $("#filter-search-label");
+  if (searchLabel) {
+    searchLabel.textContent = isDe ? "Suche" : "Search";
+  }
+  const searchInput = $("#filter-search");
+  if (searchInput) {
+    searchInput.placeholder = isDe
+      ? "Ort, Spot, Stichwörter …"
+      : "Place, spot, keywords …";
+  }
 
-// --- Closeable sections (My day / Filters) ---
+  // Kategorie
+  const catLabel = $("#filter-category-label");
+  if (catLabel) {
+    catLabel.textContent = isDe ? "Kategorie" : "Category";
+  }
+  const catAllOption = document.querySelector(
+    "#filter-category option[value='']"
+  );
+  if (catAllOption) {
+    catAllOption.textContent = isDe ? "Alle Kategorien" : "All categories";
+  }
 
-function initCloseableSections() {
-  document.querySelectorAll('.card-close-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.closeTarget;
-      if (!id) return;
-      const section = document.getElementById(id);
-      if (!section) return;
-      section.hidden = true;
-      const reopen = document.querySelector(
-        `.reopen-btn[data-reopen-target="${id}"]`
-      );
-      if (reopen) reopen.hidden = false;
-    });
-  });
+  // Stimmung
+  const moodLabel = $("#filter-mood-label");
+  if (moodLabel) {
+    moodLabel.textContent = isDe ? "Stimmung" : "Mood";
+  }
+  const moodHelper = $("#filter-mood-helper");
+  if (moodHelper) {
+    moodHelper.textContent = isDe
+      ? "Wonach fühlt es sich heute an?"
+      : "What does today feel like?";
+  }
+  const moodRelaxed = $("#mood-relaxed-label");
+  if (moodRelaxed) {
+    moodRelaxed.textContent = isDe ? "Entspannt" : "Relaxed";
+  }
+  const moodAction = $("#mood-action-label");
+  if (moodAction) {
+    moodAction.textContent = isDe ? "Bewegung" : "Active";
+  }
+  const moodWater = $("#mood-water-label");
+  if (moodWater) {
+    moodWater.textContent = isDe ? "Wasser & Sand" : "Water & sand";
+  }
+  const moodAnimals = $("#mood-animals-label");
+  if (moodAnimals) {
+    moodAnimals.textContent = isDe ? "Tier-Tag" : "Animal day";
+  }
 
-  document.querySelectorAll('.reopen-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.reopenTarget;
-      if (!id) return;
-      const section = document.getElementById(id);
-      if (section) section.hidden = false;
-      btn.hidden = true;
-    });
-  });
-}
+  // Reise-Modus
+  const travelLabel = $("#filter-travel-label");
+  if (travelLabel) {
+    travelLabel.textContent = isDe ? "Reise-Modus" : "Travel mode";
+  }
+  const travelHelper = $("#filter-travel-helper");
+  if (travelHelper) {
+    travelHelper.textContent = isDe
+      ? "Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo, Auto oder Bahn?"
+      : "Are you out and about in everyday life or on a trip with RV, car or train today?";
+  }
+  const travelEveryday = $("#travel-everyday-label");
+  if (travelEveryday) {
+    travelEveryday.textContent = isDe ? "Alltag" : "Everyday";
+  }
+  const travelTrip = $("#travel-trip-label");
+  if (travelTrip) {
+    travelTrip.textContent = isDe ? "Unterwegs" : "On the road";
+  }
 
-// --- Utils ---
+  // Alter der Kinder
+  const ageLabel = $("#filter-age-label");
+  if (ageLabel) {
+    ageLabel.textContent = isDe ? "Alter der Kinder" : "Children's age";
+  }
+  const ageAll = $("#filter-age-all");
+  if (ageAll) {
+    ageAll.textContent = isDe ? "Alle Altersstufen" : "All age groups";
+  }
+  const age03 = $("#filter-age-0-3");
+  if (age03) {
+    age03.textContent = isDe ? "0–3 Jahre" : "0–3 years";
+  }
+  const age49 = $("#filter-age-4-9");
+  if (age49) {
+    age49.textContent = isDe ? "4–9 Jahre" : "4–9 years";
+  }
+  const age10 = $("#filter-age-10-plus");
+  if (age10) {
+    age10.textContent = isDe ? "10+ Jahre" : "10+ years";
+  }
 
-function debounce(fn, delay) {
-  let t;
-  return function debounced(...args) {
-    clearTimeout(t);
-    t = setTimeout(() => fn.apply(this, args), delay);
-  };
+  // Radius
+  const radiusLabel = $("#filter-radius-label");
+  if (radiusLabel) {
+    radiusLabel.textContent = isDe
+      ? "Micro-Abenteuer-Radius"
+      : "Micro-adventure radius";
+  }
+  const radiusHelper = $("#filter-radius-helper");
+  if (radiusHelper) {
+    radiusHelper.textContent = isDe
+      ? "Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …)."
+      : "How far may your adventure go today? The radius is based on the map centre (home, holiday flat, hotel …).";
+  }
+  const radiusMaxLabel = $("#filter-radius-max-label");
+  if (radiusMaxLabel) {
+    radiusMaxLabel.textContent = isDe ? "Alle Spots" : "All spots";
+  }
+  const radiusDesc = $("#filter-radius-description");
+  if (radiusDesc) {
+    radiusDesc.textContent = isDe
+      ? "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
+      : "All spots – no radius limit. The map is yours.";
+  }
+
+  // Checkboxen
+  const bigLabel = $("#filter-big-label span");
+  if (bigLabel) {
+    bigLabel.textContent = isDe ? "Nur große Abenteuer" : "Big adventures only";
+  }
+  const verifiedLabel = $("#filter-verified-label span");
+  if (verifiedLabel) {
+    verifiedLabel.textContent = isDe
+      ? "Nur verifizierte Spots"
+      : "Verified spots only";
+  }
+  const favsLabel = $("#filter-favs-label span");
+  if (favsLabel) {
+    favsLabel.textContent = isDe ? "Nur Favoriten" : "Favourites only";
+  }
+
+  // Spots-Sektion
+  const spotsTitle = $("#spots-title");
+  if (spotsTitle) {
+    spotsTitle.textContent = isDe ? "Spots" : "Spots";
+  }
+
+  // Bottom-Navigation
+  const bottomMap = $("#bottom-nav-map-label");
+  if (bottomMap) {
+    bottomMap.textContent = isDe ? "Karte" : "Map";
+  }
+  const bottomAbout = $("#bottom-nav-about-label");
+  if (bottomAbout) {
+    bottomAbout.textContent = isDe ? "Über" : "About";
+  }
+
+  // Filter-Toggle-Button (Starttext)
+  const filterToggleLabel = $("#btn-toggle-filters span");
+  if (filterToggleLabel) {
+    filterToggleLabel.textContent = isDe
+      ? "Filter ausblenden"
+      : "Hide filters";
+  }
+
+  // Nur Karte / Map only
+  const toggleViewLabel = $("#btn-toggle-view span");
+  if (toggleViewLabel) {
+    toggleViewLabel.textContent = isDe ? "Nur Karte" : "Map only";
+  }
+
+  // Plus-Formular (Label + Button + Hinweis)
+  const plusLabel = document.querySelector('label[for="plus-code-input"]');
+  if (plusLabel) {
+    plusLabel.textContent = isDe
+      ? "Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
+      : "Enter partner code (e.g. from campsite, municipality or sponsor):";
+  }
+  const plusBtn = $("#plus-code-submit");
+  if (plusBtn) {
+    plusBtn.textContent = isDe ? "Code aktivieren" : "Activate code";
+  }
+  const plusNote = $(".plus-note");
+  if (plusNote) {
+    plusNote.textContent = isDe
+      ? "Family Spots Plus schaltet zusätzliche Filter & Spots frei – ganz ohne Abo-Falle."
+      : "Family Spots Plus unlocks extra filters & spots – with no subscription trap.";
+  }
+
+  // ---------------------------------------------------
+  // About-Seite: DE/EN umschalten
+  // ---------------------------------------------------
+  const aboutDe = document.getElementById("page-about-de");
+  const aboutEn = document.getElementById("page-about-en");
+  if (aboutDe && aboutEn) {
+    aboutDe.classList.toggle("hidden", !isDe);
+    aboutEn.classList.toggle("hidden", isDe);
+  }
 }
