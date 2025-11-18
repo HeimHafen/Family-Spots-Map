@@ -55,7 +55,7 @@ html[data-theme="dark"] body {
   --color-map-bg: #fff8e1;
 }
 
-/* Warm-dark Theme (kein kaltes Blau, sondern warmes Orange als Akzent) */
+/* Warm-dark Theme */
 html[data-theme="dark"] {
   --color-bg: #020617;
   --color-bg-elevated: #020617;
@@ -63,7 +63,7 @@ html[data-theme="dark"] {
   --color-border-strong: #334155;
   --color-text: #e5e7eb;
   --color-text-subtle: #9ca3af;
-  --color-accent: #f59e0b; /* warm amber */
+  --color-accent: #f59e0b;
   --color-accent-soft: rgba(245, 158, 11, 0.18);
   --color-accent-strong: #f97316;
   --color-danger: #f97373;
@@ -97,17 +97,27 @@ html[data-theme="dark"] {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.6rem 1rem 0.7rem;
-  background: #ff9500;
+  padding: 0.7rem 1.1rem 0.8rem;
+  background: linear-gradient(
+    145deg,
+    #ffb347 0%,
+    #ff9500 40%,
+    #ff7a00 100%
+  );
   color: #ffffff;
   border-bottom: none;
-  box-shadow: 0 8px 24px rgba(153, 75, 0, 0.45);
+  box-shadow: 0 14px 28px rgba(153, 75, 0, 0.55);
 }
 
 html[data-theme="dark"] .app-header {
-  background-color: var(--color-bg-elevated);
+  background: radial-gradient(
+    circle at 0% -30%,
+    #111827 0%,
+    #020617 50%,
+    #020617 100%
+  );
   color: var(--color-text);
-  box-shadow: 0 1px 2px var(--color-shadow-soft);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.9);
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
@@ -120,7 +130,7 @@ html[data-theme="dark"] .app-header {
 
 .app-header-center {
   text-align: center;
-  max-width: 420px;
+  max-width: 460px;
 }
 
 /* Logo */
@@ -129,7 +139,7 @@ html[data-theme="dark"] .app-header {
   width: 36px;
   height: 36px;
   border-radius: 14px;
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.2);
   background: #ffffff;
 }
 
@@ -137,13 +147,35 @@ html[data-theme="dark"] .app-header {
 
 .header-title {
   margin: 0;
-  font-size: 1.35rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   flex-wrap: nowrap;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 4px rgba(153, 75, 0, 0.55);
+}
+
+.header-title-spots {
+  background: linear-gradient(
+    120deg,
+    #fff7e9 0%,
+    #ffe0b2 40%,
+    #ffd180 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-theme="dark"] .header-title-spots {
+  background: linear-gradient(120deg, #22d3ee, #0ea5e9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
 }
 
 .header-flag {
@@ -151,13 +183,42 @@ html[data-theme="dark"] .app-header {
 }
 
 .header-tagline {
-  margin: 0.1rem 0 0;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.9);
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.96);
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 249, 237, 0.24);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 10px rgba(153, 75, 0, 0.35);
 }
 
 html[data-theme="dark"] .header-tagline {
   color: var(--color-text-subtle);
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* Header-Buttons: glasige Floating-Buttons */
+.app-header .btn-icon {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 249, 237, 0.9);
+  background-color: rgba(255, 249, 237, 0.18);
+  box-shadow: 0 4px 10px rgba(153, 75, 0, 0.55);
+  color: #fffdf7;
+}
+
+.app-header .btn-icon:hover {
+  background-color: rgba(255, 249, 237, 0.32);
+  transform: translateY(-1px);
+}
+
+/* Dark Mode: Buttons ruhiger */
+html[data-theme="dark"] .app-header .btn-icon {
+  border-color: var(--color-border-subtle);
+  background-color: rgba(15, 23, 42, 0.9);
+  box-shadow: none;
 }
 
 .app-header-right .btn-icon:last-child {
@@ -535,6 +596,30 @@ html[data-theme="dark"] .map-section {
   background-color: var(--color-map-bg);
 }
 
+/* Custom Map Marker (Spot-Punkte) */
+
+.spot-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.spot-marker-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  border: 3px solid #ffe7c7;
+  background: radial-gradient(circle at 30% 30%, #ffd28a, #ff8a1f);
+  box-shadow: 0 6px 10px rgba(191, 117, 34, 0.45);
+}
+
+html[data-theme="dark"] .spot-marker-inner {
+  border-color: #020617;
+  background: radial-gradient(circle at 30% 30%, #f97316, #c2410c);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.85);
+}
+
 /* Spot-Details */
 
 .spot-details {
@@ -892,17 +977,18 @@ html[data-theme="dark"] .btn-icon:hover {
 /* Language Switcher */
 
 .language-switcher {
-  padding: 0.25rem 0.4rem;
+  padding: 0.25rem 0.6rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  background-color: rgba(255, 249, 237, 0.35);
-  color: #fff7e9;
+  border: 1px solid rgba(255, 249, 237, 0.9);
+  background-color: rgba(255, 249, 237, 0.18);
+  color: #fffdf7;
   font-size: 0.8rem;
+  font-weight: 500;
 }
 
 html[data-theme="dark"] .language-switcher {
-  border: 1px solid var(--color-border-subtle);
-  background-color: var(--color-bg-elevated);
+  border-color: var(--color-border-subtle);
+  background-color: rgba(15, 23, 42, 0.9);
   color: var(--color-text-subtle);
 }
 
