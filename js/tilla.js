@@ -6,7 +6,7 @@ let initialized = false;
 
 /**
  * Initialisiert Tilla einmalig und setzt sie fest oben in die Sidebar.
- * Sie soll eure Familien dauerhaft begleiten – nicht nur kurz aufpoppen.
+ * Sie soll eure Familie dauerhaft begleiten – nicht nur kurz aufpoppen.
  */
 export function initTilla() {
   // nur einmal initialisieren, sonst flackert sie
@@ -57,5 +57,8 @@ export function showTillaMessage(msg) {
  * Die Funktion bleibt als No-Op erhalten, damit alte Aufrufe nichts kaputt machen.
  */
 export function hideTilla() {
-  // absichtlich leer
+  // Kleine No-Op, damit ESLint keinen "leere Funktion"-Fehler wirft
+  if (!container) return;
+  // Früher: container.classList.remove("tilla-hint--visible");
+  // Jetzt: Tilla bleibt sichtbar.
 }
