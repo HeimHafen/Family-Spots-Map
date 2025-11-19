@@ -4,61 +4,25 @@ import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 
 /**
- * Helper: aktuelle Sprache → true, wenn Deutsch.
+ * Kurzbeschreibung für die Listenkarte bauen.
  */
-function isGerman() {
-  const lang =
-    getLanguage() ||
-    document.documentElement.lang ||
-    navigator.language ||
-    "de";
-  return lang.toLowerCase().startsWith("de");
-}
-
-/**
- * Helper: Sprachabhängige Texte eines Spots holen.
- * Unterstützt sowohl visitLabel_* als auch visit_label_*.
- */
-function getSpotTexts(spot) {
-  const isDe = isGerman();
-
+function buildSpotListDescription(spot, isDe) {
   const primarySummary = isDe ? spot.summary_de : spot.summary_en;
   const secondarySummary = isDe ? spot.summary_en : spot.summary_de;
 
-  // Unterstütze beide Schreibweisen: visitLabel_* UND visit_label_*
-  const visitLabelDe = spot.visitLabel_de || spot.visit_label_de;
-  const visitLabelEn = spot.visitLabel_en || spot.visit_label_en;
-
-  const primaryVisit = isDe ? visitLabelDe : visitLabelEn;
-  const secondaryVisit = isDe ? visitLabelEn : visitLabelDe;
-
-  const summary =
-    (primarySummary && String(primarySummary).trim()) ||
-    (secondarySummary && String(secondarySummary).trim()) ||
-    "";
-
+  // WICHTIG: beide Varianten unterstützen (visitLabel_* UND visit_label_*)
   const visitLabel =
-    (primaryVisit && String(primaryVisit).trim()) ||
-    (secondaryVisit && String(secondaryVisit).trim()) ||
-    "";
+    (isDe
+      ? spot.visitLabel_de || spot.visit_label_de
+      : spot.visitLabel_en || spot.visit_label_en) || "";
 
-  return {
-    summary,
-    visitLabel,
-    poetry: spot.poetry || "",
-  };
-}
-
-/**
- * Kurzbeschreibung für die Listenkarte bauen.
- */
-function buildSpotListDescription(spot) {
-  const { summary, visitLabel, poetry } = getSpotTexts(spot);
+  const poetry = spot.poetry;
 
   let text =
-    (summary && summary.trim()) ||
-    (visitLabel && visitLabel.trim()) ||
-    (poetry && poetry.trim()) ||
+    (primarySummary && String(primarySummary).trim()) ||
+    (visitLabel && String(visitLabel).trim()) ||
+    (poetry && String(poetry).trim()) ||
+    (secondarySummary && String(secondarySummary).trim()) ||
     "";
 
   if (!text) return "";
@@ -78,7 +42,8 @@ export function renderSpotList(spots, options) {
   const container = $("#spot-list");
   if (!container) return;
 
-  const isDe = isGerman();
+  const lang = getLanguage() || "de";
+  const isDe = lang.startsWith("de");
 
   container.innerHTML = "";
 
@@ -124,7 +89,7 @@ export function renderSpotList(spots, options) {
       meta.appendChild(catEl);
     }
 
-    const descText = buildSpotListDescription(spot);
+    const descText = buildSpotListDescription(spot, isDe);
     let descEl = null;
     if (descText) {
       descEl = document.createElement("p");
@@ -206,18 +171,26 @@ export function renderSpotDetails(spot, options) {
   const container = $("#spot-detail");
   if (!container || !spot) return;
 
-  const isDe = isGerman();
+  const lang = getLanguage() || "de";
+  const isDe = lang.startsWith("de");
 
   container.classList.remove("spot-details--hidden");
 
   const title = spot.name || spot.title || "Spot";
 
-  // Sprachabhängige Texte für Beschreibung & Besuchsdauer-Label
-  const { summary, visitLabel, poetry } = getSpotTexts(spot);
+  const summaryPrimary = isDe ? spot.summary_de : spot.summary_en;
+  const summarySecondary = isDe ? spot.summary_en : spot.summary_de;
+
+  // WICHTIG: beide Varianten visitLabel_* und visit_label_*.
+  const visitLabel =
+    (isDe
+      ? spot.visitLabel_de || spot.visit_label_de
+      : spot.visitLabel_en || spot.visit_label_en) || "";
 
   let description = "";
-  if (summary) description = summary;
+  if (summaryPrimary) description = summaryPrimary;
   else if (visitLabel) description = visitLabel;
+  else if (summarySecondary) description = summarySecondary;
 
   let visitTimeText = "";
   if (spot.visit_minutes && Number(spot.visit_minutes) > 0) {
@@ -333,9 +306,9 @@ export function renderSpotDetails(spot, options) {
     }
 
     ${
-      poetry
+      spot.poetry
         ? `<p class="spot-details-poetry">„${escapeHtml(
-            poetry,
+            spot.poetry,
           )}“</p>`
         : ""
     }
