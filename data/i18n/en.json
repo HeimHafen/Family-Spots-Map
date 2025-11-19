@@ -2,31 +2,24 @@
   "error_data_load": "Oops – we couldn’t load the data right now. Please try again in a moment.",
   "toast_location_ok": "Your starting point is set – have fun on your next adventure!",
   "toast_location_error": "We couldn’t access your location. Please check permissions or zoom into your region manually.",
-
   "btn_show_list": "Show list",
   "btn_only_map": "Map only",
   "btn_show_filters": "Show filters",
   "btn_hide_filters": "Hide filters",
-
   "toast_fav_added": "Added to your favourite places.",
   "toast_fav_removed": "Removed from your favourite places.",
-
   "filter_category_all": "All categories",
-
   "plus_code_empty": "Please enter an action code first.",
   "plus_code_unknown": "This code is unknown or no longer valid.",
   "plus_code_activated": "Family Spots Plus has been activated – enjoy your trips!",
   "plus_code_failed": "The code could not be verified right now. Please try again later.",
-
   "filter_radius_max_label": "All spots",
   "filter_radius_description_step0": "Tiny micro adventures within walking distance – perfect for a quick break.",
   "filter_radius_description_step1": "Short trips for spontaneous outings – hop in the car or on the bike and you’re there.",
   "filter_radius_description_step2": "A small family tour – just right for a half day full of experiences.",
   "filter_radius_description_step3": "Big adventure radius – destinations for full-day trips are waiting here.",
   "filter_radius_description_all": "All spots – no radius limit. The map is all yours.",
-
   "turtle_intro_1": "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!",
   "turtle_intro_2": "I'm here when you're unsure where to go – or just want to take it slow. 🐢💛",
-
-  "daylog_saved": "Your day moment has been saved 💾 – you can read it again later."
+  "daylog_saved": "Your day moment has been saved 💾 – you can look back on it later."
 }
