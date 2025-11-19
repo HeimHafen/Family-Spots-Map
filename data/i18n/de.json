@@ -1,28 +1,29 @@
 {
   "error_data_load": "Ups – die Daten konnten gerade nicht geladen werden. Bitte versuch es gleich noch einmal.",
-  "toast_location_ok": "Dein Startpunkt ist gesetzt – viel Spaß beim nächsten Abenteuer!",
-  "toast_location_error": "Standort konnte nicht ermittelt werden. Bitte prüfe die Freigabe oder zoom manuell in deine Region.",
-  "btn_show_list": "Liste einblenden",
-  "btn_only_map": "Nur Karte anzeigen",
+  "toast_location_ok": "Euer Startpunkt ist gesetzt – viel Spaß beim nächsten Abenteuer!",
+  "toast_location_error": "Euer Standort lässt sich gerade nicht bestimmen. Bitte prüft die Berechtigungen oder zoomt manuell in eure Region.",
+  "btn_show_list": "Liste zeigen",
+  "btn_only_map": "Nur Karte",
   "btn_show_filters": "Filter anzeigen",
   "btn_hide_filters": "Filter ausblenden",
-  "toast_fav_added": "Zu euren Lieblingsorten hinzugefügt.",
-  "toast_fav_removed": "Aus den Lieblingsorten entfernt.",
+  "toast_fav_added": "Zu euren Lieblingsspots gelegt 💛",
+  "toast_fav_removed": "Aus den Lieblingsspots entfernt.",
   "filter_category_all": "Alle Kategorien",
 
-  "plus_code_empty": "Bitte gib zuerst einen Aktions-Code ein.",
-  "plus_code_unknown": "Dieser Code ist nicht bekannt oder nicht mehr gültig.",
-  "plus_code_activated": "Family Spots Plus wurde aktiviert – viel Freude auf euren Touren!",
+  "plus_code_empty": "Bitte zuerst einen Aktions-Code eingeben.",
+  "plus_code_unknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
+  "plus_code_activated": "Family Spots Plus ist aktiviert – gute Fahrt & viel Freude auf euren Touren!",
   "plus_code_failed": "Der Code konnte gerade nicht geprüft werden. Bitte versuch es später noch einmal.",
 
   "filter_radius_max_label": "Alle Spots",
-  "filter_radius_description_step0": "Fußläufige Mikro-Abenteuer – perfekt für eine kleine Runde zwischendurch.",
-  "filter_radius_description_step1": "Kurzstrecke für spontane Ausflüge – einmal losfahren und ihr seid mittendrin.",
-  "filter_radius_description_step2": "Eine kleine Familien-Tour – ideal für einen halben Tag voller Erlebnisse.",
-  "filter_radius_description_step3": "Großer Abenteuerradius – hier warten Ziele für ganze Ausflugstage.",
-  "filter_radius_description_all": "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
-}
-  {
-  "turtle_intro_1": "Hallo, ich bin Tilla, eure Schildkröten‑Begleiterin für entspannte Familien‑Abenteuer!",
-  "turtle_intro_2": "Ich bin da, wenn ihr mal nicht wisst, wohin – oder einfach etwas Langsames sucht. 🐢💛"
+  "filter_radius_description_step0": "Mini-Micro-Abenteuer in Laufweite – perfekt für eine kurze Pause.",
+  "filter_radius_description_step1": "Kurze Ausflüge für spontane Runden – einmal ins Auto oder aufs Rad und ihr seid da.",
+  "filter_radius_description_step2": "Eine kleine Familientour – genau richtig für einen halben Tag voller Erlebnisse.",
+  "filter_radius_description_step3": "Großer Abenteuer-Radius – hier warten Ziele für ganze Tagesausflüge.",
+  "filter_radius_description_all": "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
+
+  "turtle_intro_1": "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
+  "turtle_intro_2": "Ich bin da, wenn ihr nicht wisst, wohin – oder es heute einfach langsamer angehen wollt. 🐢💛",
+
+  "daylog_saved": "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern."
 }
