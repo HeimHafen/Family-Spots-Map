@@ -10,8 +10,9 @@ let radiusCircle = null;
 let currentMarkerRunId = 0;
 
 /**
- * Einheitliches Marker-Icon (orange Punkt, der zur CSS passt)
- * Wichtig: html mit innerem Kreis, sonst sieht man im Cluster-Spiderfy nur die Linien.
+ * Einheitliches Marker-Icon (orange Punkt, wie im Design).
+ * Wichtig: eigenes HTML mit innerem Kreis, damit wir DOM-Marker
+ * benutzen können und MarkerCluster korrekt damit umgehen kann.
  */
 const spotMarkerIcon = L.divIcon({
   className: "spot-marker",
@@ -22,7 +23,8 @@ const spotMarkerIcon = L.divIcon({
 });
 
 /**
- * Sichere Sprach-Ermittlung ("de" / "en"), robust gegen Fehler.
+ * Sichere Sprach-Ermittlung ("de" / "en"),
+ * mit mehreren Fallbacks, damit nichts crasht.
  */
 function getCurrentLanguage() {
   try {
@@ -45,8 +47,7 @@ function getCurrentLanguage() {
 }
 
 /**
- * Kleiner Helfer zum HTML-Escapen, damit Sonderzeichen in Titeln etc.
- * keine Probleme machen.
+ * Kleiner Helfer zum HTML-Escapen.
  */
 function escapeHtml(str) {
   if (!str) return "";
@@ -68,9 +69,7 @@ function getSpotPopupSummary(spot) {
   const poetry = (spot.poetry || "").trim();
   const summaryPrimary = (isEn ? spot.summary_en : spot.summary_de) || "";
   const summarySecondary = (isEn ? spot.summary_de : spot.summary_en) || "";
-  const visitLabel =
-    (isEn ? spot.visitLabel_en || spot.visit_label_en
-          : spot.visitLabel_de || spot.visit_label_de) || "";
+  const visitLabel = (isEn ? spot.visitLabel_en : spot.visitLabel_de) || "";
 
   let text = "";
 
@@ -100,17 +99,20 @@ function getSpotPopupSummary(spot) {
  * @param {(spotId: string) => void} [options.onMarkerSelect]
  */
 export function initMap(options) {
-  const { center, zoom, onMarkerSelect } = options;
+  const center = options.center;
+  const zoom = options.zoom;
+  const onMarkerSelect = options.onMarkerSelect;
 
-  onMarkerSelectCallback = typeof onMarkerSelect === "function"
-    ? onMarkerSelect
-    : null;
+  onMarkerSelectCallback = onMarkerSelect || null;
 
   map = L.map("map", {
     center: [center.lat, center.lng],
     zoom,
-    zoomControl: true
-    // preferCanvas NICHT aktivieren – MarkerCluster + DOM-Icons funktionieren hier gut
+    zoomControl: true,
+    // WICHTIG: preferCanvas NICHT aktivieren.
+    // MarkerCluster + DOM-Icons (L.divIcon) funktionieren dann
+    // nicht sauber (keine Popups / komische Spider-Lines).
+    preferCanvas: false
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -121,7 +123,7 @@ export function initMap(options) {
   }).addTo(map);
 
   // Workaround: direkt nach Init einmal invalidateSize,
-  // damit die Karte auch in flex-Layouts korrekt berechnet.
+  // damit die Karte im flex-Layout korrekt berechnet wird.
   setTimeout(() => {
     map.invalidateSize();
   }, 0);
@@ -139,7 +141,8 @@ export function getMap() {
 }
 
 /**
- * Sorgt dafür, dass eine Marker-LayerGroup (oder Cluster-Gruppe) existiert.
+ * Stellt sicher, dass ein Marker-Layer (Cluster oder einfache LayerGroup)
+ * existiert und an die Karte gehängt ist.
  */
 function ensureMarkerLayer() {
   if (!map) return null;
@@ -150,13 +153,19 @@ function ensureMarkerLayer() {
       markerLayer = L.markerClusterGroup({
         showCoverageOnHover: false,
         removeOutsideVisibleBounds: true,
-        spiderfyOnEveryZoom: true,
-        maxClusterRadius: 60
-        // zoomToBoundsOnClick: Standard (true) lassen:
-        // Klick auf Cluster zoomt erst rein, bei max Zoom spiderfy.
+        // Wir spiderfyen nur auf Max-Zoom, nicht bei jedem Zoom.
+        spiderfyOnEveryZoom: false,
+        spiderfyOnMaxZoom: true,
+        // Linien beim Spiderfy unsichtbar machen (nur Pins, keine „Sonnenstrahlen“)
+        spiderLegPolylineOptions: {
+          weight: 0,
+          opacity: 0
+        },
+        maxClusterRadius: 60,
+        chunkedLoading: true
       });
     } else {
-      // Fallback: normale LayerGroup
+      // Fallback: normale LayerGroup ohne Cluster
       markerLayer = L.layerGroup();
     }
 
@@ -194,7 +203,7 @@ export function setSpotsOnMap(spots) {
   const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
   const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
 
-  const markers = [];
+  const markerQueue = [];
 
   (spots || []).forEach((spot) => {
     if (!spot || !spot.location) return;
@@ -203,9 +212,7 @@ export function setSpotsOnMap(spots) {
     if (lat == null || lng == null) return;
 
     const marker = L.marker([lat, lng], {
-      icon: spotMarkerIcon,
-      // eigene ID merken (hilft, falls wir später Cluster-Events brauchen)
-      spotId: spot.id
+      icon: spotMarkerIcon
     });
 
     const summary = getSpotPopupSummary(spot);
@@ -246,7 +253,7 @@ export function setSpotsOnMap(spots) {
     marker.bindPopup(popupHtml);
 
     // Klick auf den Pin: Popup + Detail-Panel in der Sidebar
-    marker.on("click", function () {
+    marker.on("click", () => {
       if (onMarkerSelectCallback) {
         onMarkerSelectCallback(spot.id);
       }
@@ -256,22 +263,22 @@ export function setSpotsOnMap(spots) {
     marker.on("add", () => {
       const el = marker.getElement();
       if (!el) return;
-      // Cluster-Icons nicht animieren
+      // Cluster-Icons selbst nicht animieren
       if (el.classList.contains("marker-cluster")) return;
       el.classList.add("pin-pop");
       setTimeout(() => el.classList.remove("pin-pop"), 260);
     });
 
-    markers.push({ spot, marker });
+    markerQueue.push({ spot, marker });
   });
 
   // Marker schubweise hinzufügen (sanftes „Aufpoppen“)
   let delay = 0;
   const step = 18; // ms zwischen den Pins
 
-  markers.forEach(({ spot, marker }) => {
+  markerQueue.forEach(({ spot, marker }) => {
     setTimeout(() => {
-      if (runId !== currentMarkerRunId) return; // veralteter Lauf – ignorieren
+      if (runId !== currentMarkerRunId) return; // veralteter Lauf
       layer.addLayer(marker);
       markersById.set(spot.id, marker);
     }, delay);
@@ -280,7 +287,7 @@ export function setSpotsOnMap(spots) {
 }
 
 /**
- * Zentriert die Karte auf einen Spot und öffnet ggf. das Popup.
+ * Zentriert die Karte auf einen Spot und öffnet das Popup.
  *
  * @param {{id: string, location?: {lat: number, lng: number}}} spot
  */
@@ -301,7 +308,7 @@ export function focusOnSpot(spot) {
 }
 
 /**
- * Aktualisiert/zeichnet den Radius-Kreis für den Micro-Abenteuer-Radius.
+ * Aktualisiert / zeichnet den Radius-Kreis für den Micro-Abenteuer-Radius.
  *
  * @param {{lat: number, lng: number} | null} origin
  * @param {number | null} radiusKm
