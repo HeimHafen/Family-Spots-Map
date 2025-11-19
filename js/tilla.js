@@ -2,59 +2,42 @@
 import { t } from "./i18n.js";
 
 let container = null;
-const SEEN_KEY = "fsm.tilla.seen.v1";
 let initialized = false;
 
-function hasSeen() {
-  try {
-    return window.localStorage.getItem(SEEN_KEY) === "true";
-  } catch (e) {
-    return false;
-  }
-}
-
-function markSeen() {
-  try {
-    window.localStorage.setItem(SEEN_KEY, "true");
-  } catch (e) {
-    // z. B. Safari Private Mode – ignorieren
-  }
-}
-
+/**
+ * Initialisiert Tilla einmalig und setzt sie fest oben in die Sidebar.
+ */
 export function initTilla() {
-  // nur einmal initialisieren
+  // nur einmal initialisieren, sonst flackert sie
   if (initialized) return;
   initialized = true;
 
   const sidebar = document.querySelector(".sidebar");
   if (!sidebar) return;
 
-  // vorhandenen Container wiederverwenden oder neu anlegen
+  // Falls Tilla schon existiert (alte Version o.ä.), wiederverwenden
   const existing = sidebar.querySelector(".tilla-hint");
   if (existing) {
     container = existing;
   } else {
     container = document.createElement("div");
     container.className = "tilla-hint";
-    // ganz oben in der Sidebar
+    // direkt ganz oben in der Sidebar
     sidebar.prepend(container);
   }
 
-  const firstTime = !hasSeen();
-
-  // Tilla-Standardbotschaft (immer sichtbar, nicht nur beim ersten Mal)
+  // Standard-Text: Tilla ist immer als Begleiterin sichtbar
   showTillaMessage(
     t(
       "turtle_intro_1",
       "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
     )
   );
-
-  if (firstTime) {
-    markSeen();
-  }
 }
 
+/**
+ * Zeigt eine Sprechblase für Tilla an.
+ */
 export function showTillaMessage(msg) {
   if (!container) return;
 
@@ -67,7 +50,13 @@ export function showTillaMessage(msg) {
   container.classList.add("tilla-hint--visible");
 }
 
+/**
+ * Tilla nicht mehr unsichtbar machen – sie bleibt bewusst sichtbar.
+ * Diese Funktion bleibt als No-Op erhalten, damit alte Aufrufe nichts kaputt machen.
+ */
 export function hideTilla() {
-  if (!container) return;
-  container.classList.remove("tilla-hint--visible");
+  // Früher:
+  // if (!container) return;
+  // container.classList.remove("tilla-hint--visible");
+  // Jetzt: bewusst leer gelassen, damit Tilla immer bei der Familie bleibt. 🐢
 }
