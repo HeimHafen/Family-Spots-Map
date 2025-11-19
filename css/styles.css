@@ -23,9 +23,9 @@ body {
 body {
   background: linear-gradient(
     to bottom,
-    #ffb347 0%,
-    #ffe3c2 32%,
-    #fff7e9 100%
+    #ffc15a 0%,
+    #ffe1b8 30%,
+    #fff4dd 100%
   );
   color: var(--color-text);
 }
@@ -43,18 +43,18 @@ html[data-theme="dark"] body {
    =========================== */
 
 :root {
-  /* warmes Family-Spots-Theme (Hell) */
-  --color-bg: #ffe7c7;
-  --color-bg-elevated: #fff6e7;
-  --color-border-subtle: #f1c997;
-  --color-border-strong: #e5b474;
-  --color-text: #4e342e;
-  --color-text-subtle: #8d6e63;
-  --color-accent: #ff8a1f;
-  --color-accent-soft: #ffe0b2;
-  --color-accent-strong: #ff7a00;
-  --color-shadow-soft: rgba(191, 117, 34, 0.18);
-  --color-map-bg: #fff8e1;
+  /* warmes Family-Spots-Theme (Hell) – nah am Mockup */
+  --color-bg: #ffefcf;
+  --color-bg-elevated: #ffe6bd;
+  --color-border-subtle: #f1c38c;
+  --color-border-strong: #e4ac5b;
+  --color-text: #4a3425;
+  --color-text-subtle: #8c6b4b;
+  --color-accent: #ff9f2a;
+  --color-accent-soft: #ffe2b8;
+  --color-accent-strong: #ff8900;
+  --color-shadow-soft: rgba(180, 110, 30, 0.26);
+  --color-map-bg: #ffedd0;
 }
 
 /* Warm-dark Theme */
@@ -101,14 +101,14 @@ html[data-theme="dark"] {
   gap: 0.75rem;
   padding: 0.7rem 1.1rem 0.8rem;
   background: linear-gradient(
-    145deg,
-    #ffb347 0%,
-    #ff9500 40%,
-    #ff7a00 100%
+    180deg,
+    #ffc15a 0%,
+    #ff9f2a 55%,
+    #ff8900 100%
   );
   color: #ffffff;
   border-bottom: none;
-  box-shadow: 0 14px 28px rgba(153, 75, 0, 0.55);
+  box-shadow: 0 14px 28px rgba(153, 75, 0, 0.45);
 }
 
 html[data-theme="dark"] .app-header {
@@ -264,7 +264,7 @@ html[data-theme="dark"] .app-header .btn-icon {
   min-width: 280px;
   max-width: 420px;
   border-right: 1px solid var(--color-border-subtle);
-  background-color: rgba(255, 246, 231, 0.96);
+  background-color: rgba(255, 231, 191, 0.96);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -495,7 +495,7 @@ html[data-theme="dark"] .travel-chip:hover {
 .spot-card:hover {
   border-color: var(--color-accent);
   box-shadow: 0 8px 20px var(--color-shadow-soft);
-  background-color: #fffaf2;
+  background-color: #fff2dc;
   transform: translateY(-1px);
 }
 
@@ -611,9 +611,9 @@ html[data-theme="dark"] .map-section {
   width: 100%;
   height: 100%;
   border-radius: 999px;
-  border: 3px solid #ffe7c7;
-  background: radial-gradient(circle at 30% 30%, #ffd28a, #ff8a1f);
-  box-shadow: 0 6px 10px rgba(191, 117, 34, 0.45);
+  border: 3px solid #ffefcf;
+  background: radial-gradient(circle at 30% 30%, #ffd889, var(--color-accent));
+  box-shadow: 0 6px 12px rgba(187, 110, 20, 0.55);
 }
 
 html[data-theme="dark"] .spot-marker-inner {
@@ -926,14 +926,14 @@ html[data-theme="dark"] .input::placeholder {
   );
   color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 8px 18px rgba(204, 102, 0, 0.45);
+  box-shadow: 0 8px 18px rgba(187, 110, 20, 0.5);
 }
 
 .btn:hover {
   background: linear-gradient(
     180deg,
     var(--color-accent-strong) 0%,
-    #f06500 100%
+    #ff7a00 100%
   );
 }
 
