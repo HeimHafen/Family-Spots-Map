@@ -1184,3 +1184,97 @@ html[data-theme="dark"] .noscript-warning {
     padding: 0.6rem 0.65rem;
   }
 }
+/* ===================================================== */
+/* HEADER – Layout fix + Farben wie gewünscht            */
+/* (bitte ganz ans Ende der styles.css setzen)           */
+/* ===================================================== */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 8px 16px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: 12px;
+}
+
+/* Links und rechts: Buttons in einer Reihe */
+.app-header-left,
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Mitte: Titel + Slogan zentriert untereinander */
+.app-header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Titel-Grundstil (wird pro Theme eingefärbt) */
+.header-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.header-title-spots {
+  font-weight: 800;
+}
+
+/* Slogan-Pill unter dem Titel */
+.header-tagline {
+  margin-top: 6px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* -------------------------- */
+/* LIGHT MODE                 */
+/* -------------------------- */
+
+html[data-theme="light"] .header-title {
+  color: #201108;        /* fast schwarz, warm */
+}
+
+html[data-theme="light"] .header-title-spots {
+  color: #201108;        /* auch schwarz – wie gewünscht */
+}
+
+/* Slogan im Light Mode: warm orange, wie auf Bild 1 */
+html[data-theme="light"] .header-tagline {
+  background: linear-gradient(135deg, #ffb04a, #ff8f1f);
+  color: #ffffff;
+  box-shadow: 0 10px 18px rgba(181, 96, 6, 0.45);
+}
+
+/* -------------------------- */
+/* DARK MODE                  */
+/* -------------------------- */
+
+html[data-theme="dark"] .header-title {
+  color: #fdfdfd;        /* Titel weiß */
+}
+
+/* "Spots" in blau wie auf deinem Lieblings-Screenshot */
+html[data-theme="dark"] .header-title-spots {
+  color: #1eb2ff;
+}
+
+/* Slogan im Dark Mode: dunkles, weiches Pill */
+html[data-theme="dark"] .header-tagline {
+  background: rgba(9, 15, 32, 0.92);
+  color: #d7ddff;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.7);
+}
