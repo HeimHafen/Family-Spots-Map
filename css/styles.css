@@ -357,6 +357,76 @@ html[data-theme="dark"] .compass-card {
   align-items: center;
 }
 
+/* ===========================
+   "MY DAY" CARD
+   =========================== */
+
+.my-day-card {
+  background-color: var(--color-bg-elevated);
+  border-radius: 1.35rem;
+  border: 1px solid var(--color-border-subtle);
+  padding: 0.9rem 1rem 1rem;
+  box-shadow: 0 12px 28px var(--color-shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.my-day-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.my-day-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.my-day-emoji {
+  font-size: 1.1rem;
+}
+
+.my-day-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-subtle);
+}
+
+.my-day-textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  border-radius: 1rem;
+  border: 1px solid var(--color-border-strong);
+  padding: 0.55rem 0.75rem;
+  font: inherit;
+  font-size: 0.9rem;
+  background-color: #ffeeda;
+  color: var(--color-text);
+}
+
+.my-day-textarea::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.my-day-textarea:focus {
+  outline: 2px solid var(--color-accent-soft);
+  outline-offset: 1px;
+  border-color: var(--color-accent);
+}
+
+.my-day-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.2rem;
+}
+
 /* Stimmung – Chips */
 
 .mood-row {
@@ -461,7 +531,7 @@ html[data-theme="dark"] .travel-chip:hover {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.55rem;
 }
 
 .spot-list-empty,
@@ -471,17 +541,17 @@ html[data-theme="dark"] .travel-chip:hover {
   color: var(--color-text-subtle);
 }
 
-/* Spot-Karten */
+/* Spot-Karten – mehr "Card"-Look */
 
 .spot-card {
   background-color: var(--color-bg-elevated);
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   border: 1px solid var(--color-border-subtle);
-  padding: 0.65rem 0.8rem;
-  box-shadow: 0 4px 12px var(--color-shadow-soft);
+  padding: 0.8rem 0.95rem;
+  box-shadow: 0 10px 26px var(--color-shadow-soft);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.3rem;
   cursor: pointer;
   transition: border-color 0.12s ease-out, box-shadow 0.12s ease-out,
     transform 0.05s ease-out, background-color 0.12s ease-out;
@@ -494,7 +564,7 @@ html[data-theme="dark"] .travel-chip:hover {
 
 .spot-card:hover {
   border-color: var(--color-accent);
-  box-shadow: 0 8px 20px var(--color-shadow-soft);
+  box-shadow: 0 14px 30px var(--color-shadow-soft);
   background-color: #fff2dc;
   transform: translateY(-1px);
 }
