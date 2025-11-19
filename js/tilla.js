@@ -17,36 +17,40 @@ function markSeen() {
   try {
     window.localStorage.setItem(SEEN_KEY, "true");
   } catch (e) {
-    // z.B. Safari Private Mode – ignorieren
+    // z. B. Safari Private Mode – ignorieren
   }
 }
 
 export function initTilla() {
-  // WICHTIG: nur einmal initialisieren, sonst flackert sie
+  // nur einmal initialisieren
   if (initialized) return;
   initialized = true;
 
   const sidebar = document.querySelector(".sidebar");
   if (!sidebar) return;
 
-  // Falls Tilla schon existiert (alte Version o.ä.), wiederverwenden
+  // vorhandenen Container wiederverwenden oder neu anlegen
   const existing = sidebar.querySelector(".tilla-hint");
   if (existing) {
     container = existing;
   } else {
     container = document.createElement("div");
     container.className = "tilla-hint";
-    // direkt ganz oben in der Sidebar
+    // ganz oben in der Sidebar
     sidebar.prepend(container);
   }
 
-  if (!hasSeen()) {
-    showTillaMessage(
-      t(
-        "turtle_intro_1",
-        "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
-      )
-    );
+  const firstTime = !hasSeen();
+
+  // Tilla-Standardbotschaft (immer sichtbar, nicht nur beim ersten Mal)
+  showTillaMessage(
+    t(
+      "turtle_intro_1",
+      "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+    )
+  );
+
+  if (firstTime) {
     markSeen();
   }
 }
