@@ -13,7 +13,7 @@ const MOOD_CATEGORY_MAP = {
     "park-garten",
     "badesee",
     "wanderweg-kinderwagen",
-    "radweg-family",
+    "radweg-family"
   ],
   action: [
     "abenteuerspielplatz",
@@ -25,10 +25,10 @@ const MOOD_CATEGORY_MAP = {
     "kletterhalle",
     "kletteranlage-outdoor",
     "boulderpark",
-    "trampolinpark",
+    "trampolinpark"
   ],
   water: ["abenteuerspielplatz", "wasserspielplatz", "badesee", "schwimmbad"],
-  animals: ["zoo", "wildpark", "tierpark", "bauernhof"],
+  animals: ["zoo", "wildpark", "tierpark", "bauernhof"]
 };
 
 const MOOD_KEYWORDS = {
@@ -43,7 +43,7 @@ const MOOD_KEYWORDS = {
     "pumptrack",
     "skate",
     "sport",
-    "action",
+    "action"
   ],
   water: [
     "wasser",
@@ -53,7 +53,7 @@ const MOOD_KEYWORDS = {
     "bach",
     "nass",
     "planschen",
-    "wasserspiel",
+    "wasserspiel"
   ],
   animals: [
     "zoo",
@@ -62,8 +62,8 @@ const MOOD_KEYWORDS = {
     "tiere",
     "safari",
     "giraffe",
-    "bauernhof",
-  ],
+    "bauernhof"
+  ]
 };
 
 // Travel-Heuristiken: welche Kategorien sind eher „Alltag“, welche „Unterwegs“
@@ -80,7 +80,7 @@ const TRAVEL_CATS_EVERYDAY = new Set([
   "bewegungspark",
   "multifunktionsfeld",
   "bolzplatz",
-  "verkehrsgarten",
+  "verkehrsgarten"
 ]);
 
 const TRAVEL_CATS_TRIP = new Set([
@@ -94,7 +94,7 @@ const TRAVEL_CATS_TRIP = new Set([
   "wildpark",
   "tierpark",
   "strand",
-  "badesee",
+  "badesee"
 ]);
 
 // Alters-Heuristiken
@@ -104,7 +104,7 @@ const AGE_CATS_TODDLER = new Set([
   "indoor-spielplatz",
   "waldspielplatz",
   "wasserspielplatz",
-  "verkehrsgarten",
+  "verkehrsgarten"
 ]);
 
 const AGE_CATS_ACTION = new Set([
@@ -113,11 +113,12 @@ const AGE_CATS_ACTION = new Set([
   "boulderpark",
   "kletteranlage-outdoor",
   "kletterhalle",
-  "freizeitpark",
+  "freizeitpark"
 ]);
 
 function buildCategoryOptions(categorySelect, categories) {
-  const lang = getLanguage();
+  const langRaw = getLanguage() || "de";
+  const baseLang = langRaw.split("-")[0]; // z.B. "en-US" -> "en"
   const currentValue = categorySelect.value || "";
 
   categorySelect.innerHTML = "";
@@ -126,7 +127,7 @@ function buildCategoryOptions(categorySelect, categories) {
   allOpt.value = "";
   allOpt.textContent = t(
     "filter_category_all",
-    lang === "de" ? "Alle Kategorien" : "All categories",
+    baseLang === "de" ? "Alle Kategorien" : "All categories"
   );
   categorySelect.appendChild(allOpt);
 
@@ -135,9 +136,17 @@ function buildCategoryOptions(categorySelect, categories) {
     const slug = typeof c === "string" ? c : c.slug;
     const labelObj = typeof c === "string" ? null : c.label;
 
+    let label = slug;
+    if (labelObj && typeof labelObj === "object") {
+      label =
+        labelObj[baseLang] ||
+        labelObj[langRaw] ||
+        labelObj.de ||
+        label;
+    }
+
     opt.value = slug;
-    opt.textContent =
-      (labelObj && (labelObj[lang] || labelObj.de)) || slug;
+    opt.textContent = label;
     categorySelect.appendChild(opt);
   });
 
@@ -184,7 +193,7 @@ function getMoodScore(spot, mood) {
     spot.summary_de,
     spot.summary_en,
     spot.visitLabel_de,
-    spot.visitLabel_en,
+    spot.visitLabel_en
   ]
     .filter(Boolean)
     .map((s) => String(s).toLowerCase());
@@ -254,7 +263,7 @@ function isBigAdventure(spot) {
     freizeitpark: true,
     zoo: true,
     wildpark: true,
-    tierpark: true,
+    tierpark: true
   };
 
   for (let i = 0; i < categories.length; i++) {
@@ -264,7 +273,7 @@ function isBigAdventure(spot) {
   }
 
   const visitMinutes = Number(
-    spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes,
+    spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes
   );
   if (!Number.isNaN(visitMinutes) && visitMinutes >= 240) {
     return true;
@@ -350,7 +359,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     mood: null,
     radiusIndex: 4, // 4 => Alle Spots
     travelMode: null, // "everyday" | "trip" | null
-    ageGroup: "all", // "all" | "0-3" | "4-9" | "10+"
+    ageGroup: "all" // "all" | "0-3" | "4-9" | "10+"
   };
 
   const searchInput = $("#filter-search");
@@ -377,7 +386,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
       debounce((e) => {
         state.query = e.target.value || "";
         notify();
-      }, 200),
+      }, 200)
     );
   }
 
@@ -553,7 +562,7 @@ export function applyFilters(spots, state) {
         spot.poetry,
         ...(spot.tags || []),
         ...(spot.usps || []),
-        ...(spot.categories || []),
+        ...(spot.categories || [])
       ]
         .filter(Boolean)
         .map((x) => String(x).toLowerCase());
@@ -574,7 +583,7 @@ export function applyFilters(spots, state) {
         centerLat,
         centerLng,
         spot.location.lat,
-        spot.location.lng,
+        spot.location.lng
       );
       if (distanceKm > radiusKm) {
         continue;
@@ -594,7 +603,7 @@ export function applyFilters(spots, state) {
       moodScore,
       travelScore,
       ageScore,
-      distanceKm,
+      distanceKm
     });
   }
 
