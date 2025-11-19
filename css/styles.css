@@ -55,6 +55,9 @@ html[data-theme="dark"] body {
   --color-accent-strong: #ff7a00;
   --color-shadow-soft: rgba(191, 117, 34, 0.18);
   --color-map-bg: #fff8e1;
+
+  /* Headline-Farbe im Header (light) – fast schwarz */
+  --color-header-title: #2b211d;
 }
 
 /* Warm-dark Theme */
@@ -71,6 +74,9 @@ html[data-theme="dark"] {
   --color-danger: #f97373;
   --color-shadow-soft: rgba(15, 23, 42, 0.8);
   --color-map-bg: #020617;
+
+  /* Headline-Farbe im Header (dark) – weiß */
+  --color-header-title: #f9fafb;
 }
 
 .hidden {
@@ -97,97 +103,23 @@ html[data-theme="dark"] {
   position: sticky;
   top: 0;
   z-index: 20;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding-top: calc(0.35rem + env(safe-area-inset-top, 0px));
-  padding-right: calc(0.9rem + env(safe-area-inset-right, 0px));
-  padding-bottom: 0.55rem;
-  padding-left: calc(0.9rem + env(safe-area-inset-left, 0px));
+  min-height: 56px;
+  padding: 0.7rem 1.1rem 0.8rem;
   background: linear-gradient(
     145deg,
     #ffb347 0%,
     #ff9500 40%,
     #ff7a00 100%
   );
-  color: #ffffff;
   border-bottom: none;
   box-shadow: 0 14px 28px rgba(153, 75, 0, 0.55);
-}
 
-/* obere Zeile: Controls links/rechts */
-.app-header-top {
-  display: flex;
+  /* 3-Spalten-Grid, damit die Mitte wirklich mittig sitzt */
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
+  column-gap: 0.75rem;
 }
-
-/* untere Zeile: Titel + Slogan */
-.app-header-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin-top: 0.1rem;
-}
-
-.app-header-left,
-.app-header-right {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* Titel & Flags */
-
-.header-title {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3rem;
-  flex-wrap: nowrap;
-  letter-spacing: 0.04em;
-  color: #3e2723; /* dunkler im Light Mode */
-  text-shadow: none;
-}
-
-.header-title-spots {
-  background: linear-gradient(
-    120deg,
-    #ffb74d 0%,
-    #ff9800 40%,
-    #f57c00 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.header-flag {
-  font-size: 1.1rem;
-}
-
-/* Slogan / Tagline */
-
-.header-tagline {
-  margin: 0.25rem 0 0;
-  font-size: 0.9rem;
-  color: #3e2723;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.35rem 1.2rem;
-  border-radius: 999px;
-  background: rgba(255, 249, 237, 0.88);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 10px rgba(153, 75, 0, 0.35);
-}
-
-/* Dark Mode Header */
 
 html[data-theme="dark"] .app-header {
   background: radial-gradient(
@@ -201,21 +133,76 @@ html[data-theme="dark"] .app-header {
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
-html[data-theme="dark"] .header-title {
-  color: #e5e7eb;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+.app-header-left,
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-html[data-theme="dark"] .header-title-spots {
-  background: linear-gradient(120deg, #38bdf8, #0ea5e9);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.app-header-center {
+  text-align: center;
+  max-width: 460px;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Logo */
+
+.app-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.2);
+  background: #ffffff;
+}
+
+/* Titel & Flags */
+
+.header-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: nowrap;
+  letter-spacing: 0.04em;
+  color: var(--color-header-title);
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.35);
+}
+
+html[data-theme="dark"] .header-title {
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9);
+}
+
+/* „Spots“ hat keine eigene Farbe mehr, übernimmt einfach die Headline-Farbe */
+.header-title-spots {
+  color: inherit;
+}
+
+.header-flag {
+  font-size: 1.1rem;
+}
+
+.header-tagline {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.96);
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 249, 237, 0.24);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 10px rgba(153, 75, 0, 0.35);
 }
 
 html[data-theme="dark"] .header-tagline {
-  color: #e5e7eb;
-  background: rgba(15, 23, 42, 0.88);
+  color: var(--color-text-subtle);
+  background: rgba(15, 23, 42, 0.9);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
@@ -241,30 +228,10 @@ html[data-theme="dark"] .app-header .btn-icon {
 }
 
 .app-header-right .btn-icon:last-child {
-  margin-right: 0.1rem;
+  margin-right: 0.35rem;
 }
 
-/* Language Switcher */
-
-.language-switcher {
-  padding: 0.25rem 0.6rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 249, 237, 0.9);
-  background-color: rgba(255, 249, 237, 0.18);
-  color: #fffdf7;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-html[data-theme="dark"] .language-switcher {
-  border-color: var(--color-border-subtle);
-  background-color: rgba(15, 23, 42, 0.9);
-  color: var(--color-text-subtle);
-}
-
-/* ===========================
-   MAIN
-   =========================== */
+/* Main */
 
 .app-main {
   flex: 1;
@@ -1013,6 +980,24 @@ html[data-theme="dark"] .btn-icon:hover {
   background-color: rgba(15, 23, 42, 0.9);
 }
 
+/* Language Switcher */
+
+.language-switcher {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 249, 237, 0.9);
+  background-color: rgba(255, 249, 237, 0.18);
+  color: #fffdf7;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+html[data-theme="dark"] .language-switcher {
+  border-color: var(--color-border-subtle);
+  background-color: rgba(15, 23, 42, 0.9);
+  color: var(--color-text-subtle);
+}
+
 /* ===========================
    PLUS CODE FORM
    =========================== */
@@ -1146,17 +1131,20 @@ html[data-theme="dark"] .noscript-warning {
 
 @media (max-width: 420px) {
   .app-header {
-    padding-right: calc(0.7rem + env(safe-area-inset-right, 0px));
-    padding-left: calc(0.7rem + env(safe-area-inset-left, 0px));
+    padding: 0.35rem 0.7rem 0.45rem;
   }
 
   .header-title {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
   }
 
-  .header-tagline {
-    font-size: 0.82rem;
-    padding-inline: 0.9rem;
+  .header-flag {
+    font-size: 0.95rem;
+  }
+
+  .app-logo {
+    width: 32px;
+    height: 32px;
   }
 }
 
