@@ -552,8 +552,8 @@ function updateStaticLanguageTexts(lang) {
   const headerTagline = $("#header-tagline");
   if (headerTagline) {
     headerTagline.textContent = isDe
-      ? "Die schönste Karte für Familien-Abenteuer. Finde geprüfte Ausflugsziele in deiner Nähe – von Eltern für Eltern."
-      : "The most beautiful map for family adventures. Find curated family spots near you – by parents for parents.";
+      ? "Die schönste Karte für Familienabenteuer – von Eltern für Eltern."
+      : "The most beautiful map for family adventures – by parents for parents.";
   }
 
   // Familien-Kompass
