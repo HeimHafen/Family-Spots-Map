@@ -6,110 +6,6 @@ import { updateRadiusCircle } from "./map.js";
 
 const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
-// Feste Labels für Kategorien (DE/EN)
-const CATEGORY_LABELS = {
-  "spielplatz": { de: "Spielplatz", en: "Playground" },
-  "abenteuerspielplatz": {
-    de: "Abenteuerspielplatz",
-    en: "Adventure playground",
-  },
-  "indoor-spielplatz": {
-    de: "Indoor-Spielplatz",
-    en: "Indoor playground",
-  },
-  "waldspielplatz": { de: "Waldspielplatz", en: "Forest playground" },
-  "wasserspielplatz": {
-    de: "Wasserspielplatz",
-    en: "Water playground",
-  },
-  zoo: { de: "Zoo", en: "Zoo" },
-  wildpark: {
-    de: "Wildpark & Safaris",
-    en: "Wildlife park & safaris",
-  },
-  tierpark: { de: "Tierpark", en: "Animal park" },
-  bauernhof: { de: "Bauernhof", en: "Farm" },
-  schwimmbad: { de: "Schwimmbad", en: "Swimming pool" },
-  badesee: { de: "Badesee", en: "Lake for swimming" },
-  "park-garten": { de: "Park / Garten", en: "Park / garden" },
-  picknickwiese: { de: "Picknickwiese", en: "Picnic meadow" },
-  "wanderweg-kinderwagen": {
-    de: "Wanderweg (kinderwagenfreundlich)",
-    en: "Hiking trail (stroller-friendly)",
-  },
-  "radweg-family": {
-    de: "Familien-Radweg",
-    en: "Family cycle route",
-  },
-  "museum-kinder": { de: "Museum (Kinder)", en: "Museum (kids)" },
-  bibliothek: { de: "Bibliothek (Kinder)", en: "Library (kids)" },
-  freizeitpark: { de: "Freizeitpark", en: "Theme park" },
-  minigolf: { de: "Minigolf", en: "Mini golf" },
-  kletterhalle: { de: "Kletterhalle", en: "Climbing hall" },
-  "kletteranlage-outdoor": {
-    de: "Kletteranlage / Boulder (draußen)",
-    en: "Outdoor climbing / bouldering",
-  },
-  boulderpark: { de: "Boulderpark", en: "Bouldering park" },
-  trampolinpark: { de: "Trampolinpark", en: "Trampoline park" },
-  skatepark: { de: "Skatepark", en: "Skate park" },
-  pumptrack: { de: "Pumptrack", en: "Pump track" },
-  multifunktionsfeld: {
-    de: "Multifunktionsfeld",
-    en: "Multi-sport field",
-  },
-  bolzplatz: { de: "Bolzplatz", en: "Soccer court" },
-  bewegungspark: { de: "Bewegungspark", en: "Movement park" },
-  familiencafe: { de: "Familien-Café", en: "Family café" },
-  "kinder-familiencafe": {
-    de: "Kinder- & Familien-Café",
-    en: "Kids & family café",
-  },
-  "familien-restaurant": {
-    de: "Familien-Restaurant",
-    en: "Family restaurant",
-  },
-  eisbahn: { de: "Eisbahn", en: "Ice rink" },
-  rodelhuegel: { de: "Rodelhügel", en: "Sledding hill" },
-  "oeffentliche-toilette": {
-    de: "Öffentliche Toilette",
-    en: "Public toilet",
-  },
-  wickelraum: { de: "Wickelraum", en: "Baby changing room" },
-  "familien-event": { de: "Familien-Event", en: "Family event" },
-  "rastplatz-spielplatz-dusche": {
-    de: "Rastplatz mit Spielplatz & Duschen",
-    en: "Rest area with playground & showers",
-  },
-  "stellplatz-spielplatz-naehe-kostenlos": {
-    de: "Kostenloser Stellplatz in Spielplatznähe",
-    en: "Free RV spot near playground",
-  },
-  "wohnmobil-service-station": {
-    de: "Wohnmobil-Service-Station",
-    en: "RV service station",
-  },
-  "bikepacking-spot": { de: "Bikepacking-Spot", en: "Bikepacking spot" },
-  "toddler-barfuss-motorik": {
-    de: "Barfuß- & Motorikpfad (Kleinkinder)",
-    en: "Barefoot & motor skills trail (toddlers)",
-  },
-  naturerlebnispfad: {
-    de: "Natur-Erlebnispfad",
-    en: "Nature discovery trail",
-  },
-  walderlebnisroute: {
-    de: "Walderlebnisroute",
-    en: "Forest discovery route",
-  },
-  verkehrsgarten: { de: "Verkehrsgarten", en: "Traffic training park" },
-  strand: { de: "Familien-Strand", en: "Family beach" },
-  "campingplatz-familien": {
-    de: "Campingplatz (Familien)",
-    en: "Family campground",
-  },
-};
-
 const MOOD_CATEGORY_MAP = {
   relaxed: [
     "spielplatz",
@@ -117,7 +13,7 @@ const MOOD_CATEGORY_MAP = {
     "park-garten",
     "badesee",
     "wanderweg-kinderwagen",
-    "radweg-family",
+    "radweg-family"
   ],
   action: [
     "abenteuerspielplatz",
@@ -129,10 +25,10 @@ const MOOD_CATEGORY_MAP = {
     "kletterhalle",
     "kletteranlage-outdoor",
     "boulderpark",
-    "trampolinpark",
+    "trampolinpark"
   ],
   water: ["abenteuerspielplatz", "wasserspielplatz", "badesee", "schwimmbad"],
-  animals: ["zoo", "wildpark", "tierpark", "bauernhof"],
+  animals: ["zoo", "wildpark", "tierpark", "bauernhof"]
 };
 
 const MOOD_KEYWORDS = {
@@ -147,7 +43,7 @@ const MOOD_KEYWORDS = {
     "pumptrack",
     "skate",
     "sport",
-    "action",
+    "action"
   ],
   water: [
     "wasser",
@@ -157,7 +53,7 @@ const MOOD_KEYWORDS = {
     "bach",
     "nass",
     "planschen",
-    "wasserspiel",
+    "wasserspiel"
   ],
   animals: [
     "zoo",
@@ -166,8 +62,8 @@ const MOOD_KEYWORDS = {
     "tiere",
     "safari",
     "giraffe",
-    "bauernhof",
-  ],
+    "bauernhof"
+  ]
 };
 
 // Travel-Heuristiken: welche Kategorien sind eher „Alltag“, welche „Unterwegs“
@@ -184,7 +80,7 @@ const TRAVEL_CATS_EVERYDAY = new Set([
   "bewegungspark",
   "multifunktionsfeld",
   "bolzplatz",
-  "verkehrsgarten",
+  "verkehrsgarten"
 ]);
 
 const TRAVEL_CATS_TRIP = new Set([
@@ -198,7 +94,7 @@ const TRAVEL_CATS_TRIP = new Set([
   "wildpark",
   "tierpark",
   "strand",
-  "badesee",
+  "badesee"
 ]);
 
 // Alters-Heuristiken
@@ -208,7 +104,7 @@ const AGE_CATS_TODDLER = new Set([
   "indoor-spielplatz",
   "waldspielplatz",
   "wasserspielplatz",
-  "verkehrsgarten",
+  "verkehrsgarten"
 ]);
 
 const AGE_CATS_ACTION = new Set([
@@ -217,18 +113,12 @@ const AGE_CATS_ACTION = new Set([
   "boulderpark",
   "kletteranlage-outdoor",
   "kletterhalle",
-  "freizeitpark",
+  "freizeitpark"
 ]);
 
 function buildCategoryOptions(categorySelect, categories) {
-  // Sprache möglichst sicher bestimmen
-  const lang =
-    getLanguage() ||
-    document.documentElement.lang ||
-    navigator.language ||
-    "de";
-  const isDe = lang.toLowerCase().startsWith("de");
-
+  const langRaw = getLanguage() || "de";
+  const baseLang = langRaw.split("-")[0]; // z.B. "en-US" -> "en"
   const currentValue = categorySelect.value || "";
 
   categorySelect.innerHTML = "";
@@ -237,7 +127,7 @@ function buildCategoryOptions(categorySelect, categories) {
   allOpt.value = "";
   allOpt.textContent = t(
     "filter_category_all",
-    isDe ? "Alle Kategorien" : "All categories",
+    baseLang === "de" ? "Alle Kategorien" : "All categories"
   );
   categorySelect.appendChild(allOpt);
 
@@ -246,27 +136,21 @@ function buildCategoryOptions(categorySelect, categories) {
     const slug = typeof c === "string" ? c : c.slug;
     const labelObj = typeof c === "string" ? null : c.label;
 
-    const mapLabel = CATEGORY_LABELS[slug];
-    let text;
-
-    if (mapLabel) {
-      text = isDe ? mapLabel.de : mapLabel.en;
-    } else if (labelObj) {
-      text = (labelObj[lang] || labelObj.de || slug).trim();
-    } else {
-      text = slug;
+    let label = slug;
+    if (labelObj && typeof labelObj === "object") {
+      label =
+        labelObj[baseLang] ||
+        labelObj[langRaw] ||
+        labelObj.de ||
+        label;
     }
 
     opt.value = slug;
-    opt.textContent = text;
+    opt.textContent = label;
     categorySelect.appendChild(opt);
   });
 
-  // Falls der aktuelle Wert noch existiert, wieder auswählen
-  const hasCurrent = Array.from(categorySelect.options).some(
-    (o) => o.value === currentValue,
-  );
-  categorySelect.value = hasCurrent ? currentValue : "";
+  categorySelect.value = currentValue;
 }
 
 function distanceInKm(lat1, lon1, lat2, lon2) {
@@ -309,7 +193,7 @@ function getMoodScore(spot, mood) {
     spot.summary_de,
     spot.summary_en,
     spot.visitLabel_de,
-    spot.visitLabel_en,
+    spot.visitLabel_en
   ]
     .filter(Boolean)
     .map((s) => String(s).toLowerCase());
@@ -379,7 +263,7 @@ function isBigAdventure(spot) {
     freizeitpark: true,
     zoo: true,
     wildpark: true,
-    tierpark: true,
+    tierpark: true
   };
 
   for (let i = 0; i < categories.length; i++) {
@@ -389,7 +273,7 @@ function isBigAdventure(spot) {
   }
 
   const visitMinutes = Number(
-    spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes,
+    spot.visitMinutes != null ? spot.visitMinutes : spot.visit_minutes
   );
   if (!Number.isNaN(visitMinutes) && visitMinutes >= 240) {
     return true;
@@ -398,11 +282,11 @@ function isBigAdventure(spot) {
   const tags = Array.isArray(spot.tags) ? spot.tags : [];
   const lowerTags = tags.map((t) => String(t).toLowerCase());
   for (let i = 0; i < lowerTags.length; i++) {
-    const tt = lowerTags[i];
+    const t = lowerTags[i];
     if (
-      tt.indexOf("ganzer tag") !== -1 ||
-      tt.indexOf("riesig") !== -1 ||
-      tt.indexOf("groß") !== -1
+      t.indexOf("ganzer tag") !== -1 ||
+      t.indexOf("riesig") !== -1 ||
+      t.indexOf("groß") !== -1
     ) {
       return true;
     }
@@ -475,7 +359,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
     mood: null,
     radiusIndex: 4, // 4 => Alle Spots
     travelMode: null, // "everyday" | "trip" | null
-    ageGroup: "all", // "all" | "0-3" | "4-9" | "10+"
+    ageGroup: "all" // "all" | "0-3" | "4-9" | "10+"
   };
 
   const searchInput = $("#filter-search");
@@ -502,7 +386,7 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
       debounce((e) => {
         state.query = e.target.value || "";
         notify();
-      }, 200),
+      }, 200)
     );
   }
 
@@ -580,4 +464,184 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
         }
 
         travelButtons.forEach((b) => {
-          const m = b.dataset.travelMode || null
+          const m = b.dataset.travelMode || null;
+          b.classList.toggle("travel-chip--active", state.travelMode === m);
+        });
+
+        notify();
+      });
+    });
+  }
+
+  // Alters-Select
+  if (ageSelect) {
+    ageSelect.value = state.ageGroup;
+    ageSelect.addEventListener("change", (e) => {
+      state.ageGroup = e.target.value || "all";
+      notify();
+    });
+  }
+
+  return state;
+}
+
+// Wird aus app.js aufgerufen, wenn sich die Sprache ändert
+export function refreshCategorySelect(categories) {
+  const categorySelect = $("#filter-category");
+  if (!categorySelect) return;
+  buildCategoryOptions(categorySelect, categories);
+}
+
+export function applyFilters(spots, state) {
+  const query = (state.query || "").trim().toLowerCase();
+  const category = state.category || "";
+  const favoritesSet = new Set(state.favorites || []);
+  const verifiedOnly = !!state.verifiedOnly;
+  const favoritesOnly = !!state.favoritesOnly;
+  const bigOnly = !!state.bigOnly;
+  const mood = state.mood || null;
+  const travelMode = state.travelMode || null;
+  const ageGroup = state.ageGroup || "all";
+
+  let centerLat = null;
+  let centerLng = null;
+  if (state.mapCenter) {
+    const c = state.mapCenter;
+    if (typeof c.lat === "number" && typeof c.lng === "number") {
+      centerLat = c.lat;
+      centerLng = c.lng;
+    } else if (typeof c.lat === "function" && typeof c.lng === "function") {
+      centerLat = c.lat();
+      centerLng = c.lng();
+    }
+  }
+
+  const radiusIndex =
+    typeof state.radiusIndex === "number" ? state.radiusIndex : 4;
+  const radiusKm =
+    radiusIndex >= 0 && radiusIndex < RADIUS_LEVELS_KM.length
+      ? RADIUS_LEVELS_KM[radiusIndex]
+      : null;
+
+  // Neu: Kreis auf der Karte aktualisieren (oder entfernen)
+  if (radiusKm != null && centerLat != null && centerLng != null) {
+    updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
+  } else {
+    updateRadiusCircle(null, null);
+  }
+
+  const results = [];
+
+  for (let i = 0; i < spots.length; i++) {
+    const spot = spots[i];
+    if (!spot) continue;
+
+    const cats = Array.isArray(spot.categories) ? spot.categories : [];
+
+    if (category && cats.indexOf(category) === -1) {
+      continue;
+    }
+
+    if (verifiedOnly && !spot.verified) {
+      continue;
+    }
+
+    if (favoritesOnly && !favoritesSet.has(spot.id)) {
+      continue;
+    }
+
+    if (bigOnly && !isBigAdventure(spot)) {
+      continue;
+    }
+
+    if (query) {
+      const parts = [
+        spot.name,
+        spot.city,
+        spot.address,
+        spot.poetry,
+        ...(spot.tags || []),
+        ...(spot.usps || []),
+        ...(spot.categories || [])
+      ]
+        .filter(Boolean)
+        .map((x) => String(x).toLowerCase());
+
+      if (parts.join(" ").indexOf(query) === -1) {
+        continue;
+      }
+    }
+
+    let distanceKm = null;
+    if (
+      radiusKm != null &&
+      centerLat != null &&
+      centerLng != null &&
+      spot.location
+    ) {
+      distanceKm = distanceInKm(
+        centerLat,
+        centerLng,
+        spot.location.lat,
+        spot.location.lng
+      );
+      if (distanceKm > radiusKm) {
+        continue;
+      }
+    }
+
+    const moodScore = getMoodScore(spot, mood);
+    if (mood && moodScore <= 0) {
+      continue;
+    }
+
+    const travelScore = getTravelScore(spot, travelMode);
+    const ageScore = getAgeScore(spot, ageGroup);
+
+    results.push({
+      spot,
+      moodScore,
+      travelScore,
+      ageScore,
+      distanceKm
+    });
+  }
+
+  // NextGen-Ranking:
+  // 1. Mood (stark gewichtet)
+  // 2. Travel-Mode + Alters-Match
+  // 3. Distanz
+  // 4. Name
+  results.sort((a, b) => {
+    const scoreA =
+      (a.moodScore || 0) * 10 +
+      (a.travelScore || 0) * 3 +
+      (a.ageScore || 0);
+    const scoreB =
+      (b.moodScore || 0) * 10 +
+      (b.travelScore || 0) * 3 +
+      (b.ageScore || 0);
+
+    if (scoreA !== scoreB) {
+      return scoreB - scoreA;
+    }
+
+    const dA = a.distanceKm != null ? a.distanceKm : Infinity;
+    const dB = b.distanceKm != null ? b.distanceKm : Infinity;
+    if (dA !== dB) {
+      return dA - dB;
+    }
+
+    const nameA = a.spot.name || "";
+    const nameB = b.spot.name || "";
+    return nameA.localeCompare(nameB, "de");
+  });
+
+  return results.map((r) => {
+    r.spot._moodScore = r.moodScore;
+    r.spot._distanceKm = r.distanceKm;
+    r.spot._travelScore = r.travelScore;
+    r.spot._ageScore = r.ageScore;
+    return r.spot;
+  });
+}
