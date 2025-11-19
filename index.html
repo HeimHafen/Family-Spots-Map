@@ -56,58 +56,60 @@
       <!-- HEADER                  -->
       <!-- ======================= -->
       <header class="app-header">
-        <div class="app-header-left">
-          <button
-            id="btn-help"
-            class="btn-icon"
-            type="button"
-            aria-label="Über Family Spots Map"
-          >
-            ❓
-          </button>
+        <div class="app-header-inner">
+          <div class="app-header-left">
+            <button
+              id="btn-help"
+              class="btn-icon"
+              type="button"
+              aria-label="Über Family Spots Map"
+            >
+              ❓
+            </button>
 
-          <select
-            id="language-switcher"
-            class="language-switcher"
-            aria-label="Sprache auswählen"
-          >
-            <option value="de">DE</option>
-            <option value="en">EN</option>
-          </select>
-        </div>
+            <select
+              id="language-switcher"
+              class="language-switcher"
+              aria-label="Sprache auswählen"
+            >
+              <option value="de">DE</option>
+              <option value="en">EN</option>
+            </select>
+          </div>
 
-        <div class="app-header-center">
-          <h1 class="header-title">
-            <span class="header-flag" aria-hidden="true">🇩🇪</span>
-            Family
-            <span class="header-title-spots">
-              Spots
-            </span>
-            Map
-            <span class="header-flag" aria-hidden="true">🇩🇰</span>
-          </h1>
-          <p class="header-tagline" id="header-tagline">
-            Make today a family day.
-          </p>
-        </div>
+          <div class="app-header-center">
+            <h1 class="header-title">
+              <span class="header-flag" aria-hidden="true">🇩🇪</span>
+              <span class="header-title-text">
+                Family
+                <span class="header-title-spots">Spots</span>
+                Map
+              </span>
+              <span class="header-flag" aria-hidden="true">🇩🇰</span>
+            </h1>
+            <p class="header-tagline" id="header-tagline">
+              Make today a family day.
+            </p>
+          </div>
 
-        <div class="app-header-right">
-          <button
-            id="theme-toggle"
-            class="btn-icon"
-            type="button"
-            aria-label="Theme wechseln"
-          >
-            🌓
-          </button>
-          <button
-            id="btn-locate"
-            class="btn-icon"
-            type="button"
-            aria-label="Eigenen Standort anzeigen"
-          >
-            📍
-          </button>
+          <div class="app-header-right">
+            <button
+              id="theme-toggle"
+              class="btn-icon"
+              type="button"
+              aria-label="Theme wechseln"
+            >
+              🌓
+            </button>
+            <button
+              id="btn-locate"
+              class="btn-icon"
+              type="button"
+              aria-label="Eigenen Standort anzeigen"
+            >
+              📍
+            </button>
+          </div>
         </div>
       </header>
 
@@ -122,11 +124,7 @@
             <!-- Tilla wird hier per JS eingefügt (siehe js/tilla.js) -->
 
             <!-- Familien-Kompass (einklappbar) -->
-            <details
-              class="sidebar-section"
-              id="compass-section"
-              open
-            >
+            <details class="sidebar-section" id="compass-section" open>
               <summary class="sidebar-section-header">
                 <h2
                   class="sidebar-section-title"
@@ -166,11 +164,7 @@
             </details>
 
             <!-- Family Spots Plus (einklappbar) -->
-            <details
-              class="sidebar-section"
-              id="plus-section"
-              open
-            >
+            <details class="sidebar-section" id="plus-section" open>
               <summary class="sidebar-section-header">
                 <h2 class="sidebar-section-title">
                   Family Spots Plus
