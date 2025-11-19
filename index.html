@@ -41,6 +41,8 @@
     <!-- App-Styles -->
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/badges.css" />
+    <!-- Tilla-Styles -->
+    <link rel="stylesheet" href="css/tilla.css" />
   </head>
   <body>
     <noscript>
@@ -116,14 +118,12 @@
       <main class="app-main">
         <!-- MAP VIEW -->
         <section id="view-map" class="view view--active" aria-label="Karte">
-          <!-- Sidebar (Kompass + Plus + Filter + Liste) -->
+          <!-- Sidebar (Kompass + Tilla + Plus + Filter + Liste) -->
           <aside class="sidebar">
+            <!-- Tilla kommt hier per JS (tilla.js) per .prepend() rein -->
+
             <!-- Familien-Kompass (einklappbar) -->
-            <details
-              class="sidebar-section"
-              id="compass-section"
-              open
-            >
+            <details class="sidebar-section" id="compass-section" open>
               <summary class="sidebar-section-header">
                 <h2
                   class="sidebar-section-title"
@@ -163,11 +163,7 @@
             </details>
 
             <!-- Family Spots Plus (einklappbar) -->
-            <details
-              class="sidebar-section"
-              id="plus-section"
-              open
-            >
+            <details class="sidebar-section" id="plus-section" open>
               <summary class="sidebar-section-header">
                 <h2 class="sidebar-section-title">
                   Family Spots Plus
