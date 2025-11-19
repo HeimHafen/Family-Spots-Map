@@ -15,8 +15,6 @@ body {
   height: 100%;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  /* WICHTIG: verhindert „zu breite“ Seite / horizontales Scrollen */
-  overflow-x: hidden;
 }
 
 /* Warmes, weiches Grund-Gradient wie im Mockup (Light) */
@@ -87,6 +85,13 @@ html[data-theme="dark"] {
   flex-direction: column;
   /* Platz für die warme Bottom-Nav wie bei nativen Apps */
   padding-bottom: 72px;
+
+  /* NEU: App in der Bildschirmmitte „einrasten“, damit sie
+     auf dem iPhone nicht so randlos-breit wirkt. */
+  max-width: 960px;
+  margin: 0 auto;
+  padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
+  padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
 }
 
 /* Header */
