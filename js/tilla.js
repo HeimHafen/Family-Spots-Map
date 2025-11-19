@@ -67,8 +67,6 @@ export function showTillaMessage(msg) {
       <div class="tilla-bubble">${msg}</div>
     </div>
   `;
-
-  container.classList.add("tilla-hint--visible");
 }
 
 /**
@@ -76,5 +74,5 @@ export function showTillaMessage(msg) {
  */
 export function hideTilla() {
   if (!container) return;
-  container.classList.remove("tilla-hint--visible");
+  container.style.display = "none";
 }
