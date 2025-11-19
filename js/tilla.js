@@ -6,6 +6,7 @@ let initialized = false;
 
 /**
  * Initialisiert Tilla einmalig und setzt sie fest oben in die Sidebar.
+ * Sie soll eure Familien dauerhaft begleiten – nicht nur kurz aufpoppen.
  */
 export function initTilla() {
   // nur einmal initialisieren, sonst flackert sie
@@ -51,12 +52,10 @@ export function showTillaMessage(msg) {
 }
 
 /**
- * Tilla nicht mehr unsichtbar machen – sie bleibt bewusst sichtbar.
- * Diese Funktion bleibt als No-Op erhalten, damit alte Aufrufe nichts kaputt machen.
+ * Früher wurde Tilla hier ausgeblendet.
+ * Jetzt bleibt sie bewusst sichtbar – damit sie immer mit euch unterwegs ist. 🐢
+ * Die Funktion bleibt als No-Op erhalten, damit alte Aufrufe nichts kaputt machen.
  */
 export function hideTilla() {
-  // Früher:
-  // if (!container) return;
-  // container.classList.remove("tilla-hint--visible");
-  // Jetzt: bewusst leer gelassen, damit Tilla immer bei der Familie bleibt. 🐢
+  // absichtlich leer
 }
