@@ -56,7 +56,8 @@
       <!-- HEADER                  -->
       <!-- ======================= -->
       <header class="app-header">
-        <div class="app-header-inner">
+        <!-- Obere Kontroll-Zeile -->
+        <div class="app-header-top">
           <div class="app-header-left">
             <button
               id="btn-help"
@@ -77,21 +78,6 @@
             </select>
           </div>
 
-          <div class="app-header-center">
-            <h1 class="header-title">
-              <span class="header-flag" aria-hidden="true">🇩🇪</span>
-              <span class="header-title-text">
-                Family
-                <span class="header-title-spots">Spots</span>
-                Map
-              </span>
-              <span class="header-flag" aria-hidden="true">🇩🇰</span>
-            </h1>
-            <p class="header-tagline" id="header-tagline">
-              Make today a family day.
-            </p>
-          </div>
-
           <div class="app-header-right">
             <button
               id="theme-toggle"
@@ -110,6 +96,22 @@
               📍
             </button>
           </div>
+        </div>
+
+        <!-- Hauptzeile: Titel + Flaggen + Slogan -->
+        <div class="app-header-main">
+          <h1 class="header-title">
+            <span class="header-flag" aria-hidden="true">🇩🇪</span>
+            Family
+            <span class="header-title-spots">
+              Spots
+            </span>
+            Map
+            <span class="header-flag" aria-hidden="true">🇩🇰</span>
+          </h1>
+          <p class="header-tagline" id="header-tagline">
+            Make today a family day.
+          </p>
         </div>
       </header>
 
@@ -234,7 +236,11 @@
                   rows="3"
                   placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
                 ></textarea>
-                <button id="daylog-save" class="btn btn-small" type="button">
+                <button
+                  id="daylog-save"
+                  class="btn btn-small"
+                  type="button"
+                >
                   Speichern 💾
                 </button>
               </div>
