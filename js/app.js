@@ -551,9 +551,7 @@ function updateStaticLanguageTexts(lang) {
   // Header-Tagline
   const headerTagline = $("#header-tagline");
   if (headerTagline) {
-    headerTagline.textContent = isDe
-      ? "Die schönste Karte für Familienabenteuer – von Eltern für Eltern."
-      : "The most beautiful map for family adventures – by parents for parents.";
+    headerTagline.textContent = "Make today a family day.";
   }
 
   // Familien-Kompass
