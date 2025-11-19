@@ -2,7 +2,7 @@
 
 import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
-import { showTillaMessage } from "./tilla.js"; // 🐢
+import { showTillaMessage } from "./tilla.js"; // 🐢 Tilla bleibt sichtbar
 
 // ------------------------------------------------------
 // Hilfsfunktionen
