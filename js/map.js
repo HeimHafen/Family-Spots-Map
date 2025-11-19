@@ -9,8 +9,10 @@ const markersById = new Map();
 let radiusCircle = null;
 let currentMarkerRunId = 0;
 
-// Einheitliches Marker-Icon (orange Punkt wie im Mockup)
-// WICHTIG: html mit innerem Kreis, damit der Punkt sichtbar ist
+/**
+ * Einheitliches Marker-Icon (orange Punkt, der zur CSS passt)
+ * Wichtig: html mit innerem Kreis, sonst sieht man im Cluster-Spiderfy nur die Linien.
+ */
 const spotMarkerIcon = L.divIcon({
   className: "spot-marker",
   html: '<div class="spot-marker-inner"></div>',
@@ -20,11 +22,11 @@ const spotMarkerIcon = L.divIcon({
 });
 
 /**
- * Hilfsfunktion: sichert uns eine brauchbare Sprache ("de" / "en").
+ * Sichere Sprach-Ermittlung ("de" / "en"), robust gegen Fehler.
  */
 function getCurrentLanguage() {
   try {
-    const langFromI18n = getLanguage && getLanguage();
+    const langFromI18n = typeof getLanguage === "function" && getLanguage();
     if (langFromI18n) return langFromI18n;
   } catch {
     // Fallbacks weiter unten
@@ -66,7 +68,9 @@ function getSpotPopupSummary(spot) {
   const poetry = (spot.poetry || "").trim();
   const summaryPrimary = (isEn ? spot.summary_en : spot.summary_de) || "";
   const summarySecondary = (isEn ? spot.summary_de : spot.summary_en) || "";
-  const visitLabel = (isEn ? spot.visitLabel_en : spot.visitLabel_de) || "";
+  const visitLabel =
+    (isEn ? spot.visitLabel_en || spot.visit_label_en
+          : spot.visitLabel_de || spot.visit_label_de) || "";
 
   let text = "";
 
@@ -78,8 +82,6 @@ function getSpotPopupSummary(spot) {
     text = visitLabel;
   } else if (summarySecondary) {
     text = summarySecondary;
-  } else {
-    text = "";
   }
 
   const maxLen = 260;
@@ -98,15 +100,15 @@ function getSpotPopupSummary(spot) {
  * @param {(spotId: string) => void} [options.onMarkerSelect]
  */
 export function initMap(options) {
-  const center = options.center;
-  const zoom = options.zoom;
-  const onMarkerSelect = options.onMarkerSelect;
+  const { center, zoom, onMarkerSelect } = options;
 
-  onMarkerSelectCallback = onMarkerSelect || null;
+  onMarkerSelectCallback = typeof onMarkerSelect === "function"
+    ? onMarkerSelect
+    : null;
 
   map = L.map("map", {
     center: [center.lat, center.lng],
-    zoom: zoom,
+    zoom,
     zoomControl: true
     // preferCanvas NICHT aktivieren – MarkerCluster + DOM-Icons funktionieren hier gut
   });
@@ -136,6 +138,9 @@ export function getMap() {
   return map;
 }
 
+/**
+ * Sorgt dafür, dass eine Marker-LayerGroup (oder Cluster-Gruppe) existiert.
+ */
 function ensureMarkerLayer() {
   if (!map) return null;
 
@@ -199,7 +204,8 @@ export function setSpotsOnMap(spots) {
 
     const marker = L.marker([lat, lng], {
       icon: spotMarkerIcon,
-      spotId: spot.id // Spot-ID für später merken
+      // eigene ID merken (hilft, falls wir später Cluster-Events brauchen)
+      spotId: spot.id
     });
 
     const summary = getSpotPopupSummary(spot);
@@ -265,7 +271,7 @@ export function setSpotsOnMap(spots) {
 
   markers.forEach(({ spot, marker }) => {
     setTimeout(() => {
-      if (runId !== currentMarkerRunId) return; // veralteter Lauf
+      if (runId !== currentMarkerRunId) return; // veralteter Lauf – ignorieren
       layer.addLayer(marker);
       markersById.set(spot.id, marker);
     }, delay);
