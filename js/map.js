@@ -25,7 +25,7 @@ function getCurrentLanguage() {
     const langFromI18n = getLanguage && getLanguage();
     if (langFromI18n) return langFromI18n;
   } catch {
-    // falls irgendwas schief geht, gehen wir unten auf Fallbacks
+    // Fallbacks weiter unten
   }
 
   if (typeof document !== "undefined" && document.documentElement) {
@@ -105,8 +105,9 @@ export function initMap(options) {
   map = L.map("map", {
     center: [center.lat, center.lng],
     zoom: zoom,
-    zoomControl: true,
-    preferCanvas: true
+    zoomControl: true
+    // wichtig: preferCanvas NICHT aktivieren, das kann mit Cluster-Klicks zicken
+    // preferCanvas: true
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -145,6 +146,35 @@ function ensureMarkerLayer() {
         removeOutsideVisibleBounds: true,
         spiderfyOnEveryZoom: true,
         maxClusterRadius: 60
+        // zoomToBoundsOnClick lassen wir auf Default (true),
+        // wir ergänzen aber einen clusterclick-Handler für Spiderfy.
+      });
+
+      // 👇 WICHTIG: Cluster-Klick sauber behandeln
+      markerLayer.on("clusterclick", (e) => {
+        const childMarkers = e.layer.getAllChildMarkers
+          ? e.layer.getAllChildMarkers()
+          : [];
+
+        if (!childMarkers || childMarkers.length === 0) return;
+
+        // Fall 1: genau ein Spot im Cluster → verhalte dich wie ein normaler Marker
+        if (childMarkers.length === 1) {
+          const m = childMarkers[0];
+          const spotId = m.options && m.options.spotId;
+
+          if (spotId && typeof onMarkerSelectCallback === "function") {
+            onMarkerSelectCallback(spotId);
+          }
+
+          if (typeof m.openPopup === "function") {
+            m.openPopup();
+          }
+          return;
+        }
+
+        // Fall 2: mehrere Spots → Cluster aufknoten (Spiderfy)
+        e.layer.spiderfy();
       });
     } else {
       // Fallback: normale LayerGroup
@@ -194,7 +224,9 @@ export function setSpotsOnMap(spots) {
     if (lat == null || lng == null) return;
 
     const marker = L.marker([lat, lng], {
-      icon: spotMarkerIcon
+      icon: spotMarkerIcon,
+      // Spot-ID im Marker speichern, damit Cluster-Events darauf zugreifen können
+      spotId: spot.id
     });
 
     const summary = getSpotPopupSummary(spot);
