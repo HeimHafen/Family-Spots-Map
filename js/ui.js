@@ -2,7 +2,7 @@
 
 import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
-import { showTillaMessage } from "./tilla.js"; // 🐢 Tilla bleibt sichtbar
+import { showTillaMessage } from "./tilla.js"; // 🐢 nur showTilla, kein hideTilla mehr
 
 /**
  * Kurzbeschreibung für die Listenkarte bauen.
@@ -48,8 +48,8 @@ export function renderSpotList(spots, options) {
 
   container.innerHTML = "";
 
-  // Tilla bleibt grundsätzlich sichtbar – sie reist immer mit euch mit 🐢
-  // Den Text passen wir nur in Spezialfällen an (z. B. wenn keine Spots gefunden werden).
+  // Tilla bleibt grundsätzlich sichtbar.
+  // Wenn keine Spots matchen, bekommt sie eine tröstende Nachricht 🐢
 
   if (!spots || spots.length === 0) {
     const empty = document.createElement("div");
@@ -71,9 +71,6 @@ export function renderSpotList(spots, options) {
 
     return;
   }
-
-  // Bei Treffern lassen wir Tilla mit ihrer Standard-Botschaft stehen.
-  // (Sie wurde in initTilla() gesetzt bzw. beim Sprachwechsel aktualisiert.)
 
   spots.forEach((spot) => {
     const isFav = favorites.includes(spot.id);
@@ -236,7 +233,7 @@ export function renderSpotDetails(spot, options) {
     const lat = spot.location.lat;
     const lng = spot.location.lng;
     const encodedName = encodeURIComponent(
-      (spot.name || spot.title || "") + (spot.city ? " " + spot.city : ""),
+      (spot.name || spot.title || "") + (spot.city ? " " + spot.city : "")
     );
 
     googleMapsUrl =
@@ -307,8 +304,8 @@ export function renderSpotDetails(spot, options) {
                .map(
                  (tag) =>
                    `<span class="badge badge--tag">${escapeHtml(
-                     String(tag),
-                   )}</span>`,
+                     String(tag)
+                   )}</span>`
                )
                .join(" ")}
            </div>`
@@ -318,7 +315,7 @@ export function renderSpotDetails(spot, options) {
     ${
       description
         ? `<p class="spot-details-description">${escapeHtml(
-            description,
+            description
           )}</p>`
         : ""
     }
@@ -326,7 +323,7 @@ export function renderSpotDetails(spot, options) {
     ${
       spot.poetry
         ? `<p class="spot-details-poetry">„${escapeHtml(
-            spot.poetry,
+            spot.poetry
           )}“</p>`
         : ""
     }
@@ -334,7 +331,7 @@ export function renderSpotDetails(spot, options) {
     ${
       spot.address
         ? `<p class="spot-details-address">${escapeHtml(
-            spot.address,
+            spot.address
           )}</p>`
         : ""
     }
@@ -345,14 +342,14 @@ export function renderSpotDetails(spot, options) {
              ${
                googleMapsUrl
                  ? `<a class="spot-details-route-link" href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(
-                     googleLabel,
+                     googleLabel
                    )}</a>`
                  : ""
              }
              ${
                appleMapsUrl
                  ? `<a class="spot-details-route-link" href="${appleMapsUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(
-                     appleLabel,
+                     appleLabel
                    )}</a>`
                  : ""
              }
@@ -381,7 +378,7 @@ export function renderSpotDetails(spot, options) {
     setTimeout(() => {
       container.scrollIntoView({
         behavior: "smooth",
-        block: "start",
+        block: "start"
       });
     }, 0);
   }
