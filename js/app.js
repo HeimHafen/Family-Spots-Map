@@ -28,7 +28,7 @@ import {
   getMap
 } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
-import { initTilla } from "./tilla.js"; // 🐢 NEU
+import { initTilla, showTillaMessage } from "./tilla.js";
 
 let currentFilterState = null;
 let allSpots = [];
@@ -103,9 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Mein Tag Modul initialisieren
   initDayLog();
-
-  // Tilla initialisieren 🐢
-  initTilla();
 });
 
 async function bootstrapApp() {
@@ -119,6 +116,9 @@ async function bootstrapApp() {
   await initI18n(initialLang);
   applyTranslations();
   updateStaticLanguageTexts(initialLang);
+
+  // Tilla nach I18n initialisieren (damit Text zur Sprache passt)
+  initTilla();
 
   const { index } = await loadAppData();
   allSpots = getSpots();
@@ -186,6 +186,16 @@ function initUIEvents() {
       saveSettings({ ...settings, language: nextLang });
       applyTranslations();
       updateStaticLanguageTexts(nextLang);
+
+      // Tilla-Text an neue Sprache anpassen
+      showTillaMessage(
+        t(
+          "turtle_intro_1",
+          nextLang.startsWith("de")
+            ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+            : "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!"
+        )
+      );
 
       const categories = getCategories();
       refreshCategorySelect(categories);
