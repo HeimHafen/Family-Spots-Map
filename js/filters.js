@@ -6,7 +6,7 @@ import { updateRadiusCircle } from "./map.js";
 
 const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
-// Feste Labels für Kategorien (DE/EN), unabhängig von den Rohdaten
+// Feste Labels für Kategorien (DE/EN)
 const CATEGORY_LABELS = {
   "spielplatz": { de: "Spielplatz", en: "Playground" },
   "abenteuerspielplatz": {
@@ -256,8 +256,6 @@ function buildCategoryOptions(categorySelect, categories) {
     categorySelect.appendChild(opt);
   });
 
-  // Wenn der bisherige Wert noch existiert, wieder setzen,
-  // ansonsten auf "Alle Kategorien" zurückfallen.
   const hasCurrent = Array.from(categorySelect.options).some(
     (o) => o.value === currentValue
   );
