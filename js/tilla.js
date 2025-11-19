@@ -17,29 +17,26 @@ function markSeen() {
   try {
     window.localStorage.setItem(SEEN_KEY, "true");
   } catch (e) {
-    // Safari Private Mode o.ä. – ignorieren
+    // z.B. Safari Private Mode – ignorieren
   }
 }
 
-// Öffentliche API
 export function initTilla() {
-  // Schutz: nur einmal initialisieren,
-  // sonst flackert sie, wenn initTilla doppelt aufgerufen wird.
+  // WICHTIG: nur einmal initialisieren, sonst flackert sie
   if (initialized) return;
   initialized = true;
 
   const sidebar = document.querySelector(".sidebar");
   if (!sidebar) return;
 
-  // Falls es schon ein .tilla-hint Element gibt (z.B. aus altem HTML),
-  // wiederverwenden.
+  // Falls Tilla schon existiert (alte Version o.ä.), wiederverwenden
   const existing = sidebar.querySelector(".tilla-hint");
   if (existing) {
     container = existing;
   } else {
     container = document.createElement("div");
     container.className = "tilla-hint";
-    // Tilla ganz oben in der Sidebar vor den Kompass
+    // direkt ganz oben in der Sidebar
     sidebar.prepend(container);
   }
 
