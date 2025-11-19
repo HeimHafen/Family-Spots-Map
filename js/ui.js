@@ -4,10 +4,6 @@ import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 import { showTillaMessage } from "./tilla.js"; // 🐢 Tilla bleibt sichtbar
 
-// ------------------------------------------------------
-// Hilfsfunktionen
-// ------------------------------------------------------
-
 /**
  * Kurzbeschreibung für die Listenkarte bauen.
  */
@@ -52,8 +48,8 @@ export function renderSpotList(spots, options) {
 
   container.innerHTML = "";
 
-  // WICHTIG: Tilla wird NICHT mehr standardmäßig ausgeblendet.
-  // Sie bleibt als fester Begleiter oben in der Sidebar.
+  // Tilla bleibt grundsätzlich sichtbar – sie reist immer mit euch mit 🐢
+  // Den Text passen wir nur in Spezialfällen an (z. B. wenn keine Spots gefunden werden).
 
   if (!spots || spots.length === 0) {
     const empty = document.createElement("div");
@@ -76,7 +72,7 @@ export function renderSpotList(spots, options) {
     return;
   }
 
-  // Bei Treffern lassen wir Tilla einfach mit ihrer Standard-Botschaft stehen.
+  // Bei Treffern lassen wir Tilla mit ihrer Standard-Botschaft stehen.
   // (Sie wurde in initTilla() gesetzt bzw. beim Sprachwechsel aktualisiert.)
 
   spots.forEach((spot) => {
@@ -420,7 +416,7 @@ function escapeHtml(str) {
   if (!str) return "";
   return String(str)
     .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;/g")
+    .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
