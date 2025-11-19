@@ -6,6 +6,110 @@ import { updateRadiusCircle } from "./map.js";
 
 const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
+// Feste Labels für Kategorien (DE/EN), unabhängig von den Rohdaten
+const CATEGORY_LABELS = {
+  "spielplatz": { de: "Spielplatz", en: "Playground" },
+  "abenteuerspielplatz": {
+    de: "Abenteuerspielplatz",
+    en: "Adventure playground"
+  },
+  "indoor-spielplatz": {
+    de: "Indoor-Spielplatz",
+    en: "Indoor playground"
+  },
+  "waldspielplatz": { de: "Waldspielplatz", en: "Forest playground" },
+  "wasserspielplatz": {
+    de: "Wasserspielplatz",
+    en: "Water playground"
+  },
+  zoo: { de: "Zoo", en: "Zoo" },
+  wildpark: {
+    de: "Wildpark & Safaris",
+    en: "Wildlife park & safaris"
+  },
+  tierpark: { de: "Tierpark", en: "Animal park" },
+  bauernhof: { de: "Bauernhof", en: "Farm" },
+  schwimmbad: { de: "Schwimmbad", en: "Swimming pool" },
+  badesee: { de: "Badesee", en: "Lake for swimming" },
+  "park-garten": { de: "Park / Garten", en: "Park / garden" },
+  picknickwiese: { de: "Picknickwiese", en: "Picnic meadow" },
+  "wanderweg-kinderwagen": {
+    de: "Wanderweg (kinderwagenfreundlich)",
+    en: "Hiking trail (stroller-friendly)"
+  },
+  "radweg-family": {
+    de: "Familien-Radweg",
+    en: "Family cycle route"
+  },
+  "museum-kinder": { de: "Museum (Kinder)", en: "Museum (kids)" },
+  bibliothek: { de: "Bibliothek (Kinder)", en: "Library (kids)" },
+  freizeitpark: { de: "Freizeitpark", en: "Theme park" },
+  minigolf: { de: "Minigolf", en: "Mini golf" },
+  kletterhalle: { de: "Kletterhalle", en: "Climbing hall" },
+  "kletteranlage-outdoor": {
+    de: "Kletteranlage / Boulder (draußen)",
+    en: "Outdoor climbing / bouldering"
+  },
+  boulderpark: { de: "Boulderpark", en: "Bouldering park" },
+  trampolinpark: { de: "Trampolinpark", en: "Trampoline park" },
+  skatepark: { de: "Skatepark", en: "Skate park" },
+  pumptrack: { de: "Pumptrack", en: "Pump track" },
+  multifunktionsfeld: {
+    de: "Multifunktionsfeld",
+    en: "Multi-sport field"
+  },
+  bolzplatz: { de: "Bolzplatz", en: "Soccer court" },
+  bewegungspark: { de: "Bewegungspark", en: "Movement park" },
+  familiencafe: { de: "Familien-Café", en: "Family café" },
+  "kinder-familiencafe": {
+    de: "Kinder- & Familien-Café",
+    en: "Kids & family café"
+  },
+  "familien-restaurant": {
+    de: "Familien-Restaurant",
+    en: "Family restaurant"
+  },
+  eisbahn: { de: "Eisbahn", en: "Ice rink" },
+  rodelhuegel: { de: "Rodelhügel", en: "Sledding hill" },
+  "oeffentliche-toilette": {
+    de: "Öffentliche Toilette",
+    en: "Public toilet"
+  },
+  wickelraum: { de: "Wickelraum", en: "Baby changing room" },
+  "familien-event": { de: "Familien-Event", en: "Family event" },
+  "rastplatz-spielplatz-dusche": {
+    de: "Rastplatz mit Spielplatz & Duschen",
+    en: "Rest area with playground & showers"
+  },
+  "stellplatz-spielplatz-naehe-kostenlos": {
+    de: "Kostenloser Stellplatz in Spielplatznähe",
+    en: "Free RV spot near playground"
+  },
+  "wohnmobil-service-station": {
+    de: "Wohnmobil-Service-Station",
+    en: "RV service station"
+  },
+  "bikepacking-spot": { de: "Bikepacking-Spot", en: "Bikepacking spot" },
+  "toddler-barfuss-motorik": {
+    de: "Barfuß- & Motorikpfad (Kleinkinder)",
+    en: "Barefoot & motor skills trail (toddlers)"
+  },
+  naturerlebnispfad: {
+    de: "Natur-Erlebnispfad",
+    en: "Nature discovery trail"
+  },
+  walderlebnisroute: {
+    de: "Walderlebnisroute",
+    en: "Forest discovery route"
+  },
+  verkehrsgarten: { de: "Verkehrsgarten", en: "Traffic training park" },
+  strand: { de: "Familien-Strand", en: "Family beach" },
+  "campingplatz-familien": {
+    de: "Campingplatz (Familien)",
+    en: "Family campground"
+  }
+};
+
 const MOOD_CATEGORY_MAP = {
   relaxed: [
     "spielplatz",
@@ -117,8 +221,8 @@ const AGE_CATS_ACTION = new Set([
 ]);
 
 function buildCategoryOptions(categorySelect, categories) {
-  const langRaw = getLanguage() || "de";
-  const baseLang = langRaw.split("-")[0]; // z.B. "en-US" -> "en"
+  const lang = getLanguage() || "de";
+  const isDe = lang.startsWith("de");
   const currentValue = categorySelect.value || "";
 
   categorySelect.innerHTML = "";
@@ -127,7 +231,7 @@ function buildCategoryOptions(categorySelect, categories) {
   allOpt.value = "";
   allOpt.textContent = t(
     "filter_category_all",
-    baseLang === "de" ? "Alle Kategorien" : "All categories"
+    isDe ? "Alle Kategorien" : "All categories"
   );
   categorySelect.appendChild(allOpt);
 
@@ -136,21 +240,28 @@ function buildCategoryOptions(categorySelect, categories) {
     const slug = typeof c === "string" ? c : c.slug;
     const labelObj = typeof c === "string" ? null : c.label;
 
-    let label = slug;
-    if (labelObj && typeof labelObj === "object") {
-      label =
-        labelObj[baseLang] ||
-        labelObj[langRaw] ||
-        labelObj.de ||
-        label;
+    const mapLabel = CATEGORY_LABELS[slug];
+    let text;
+
+    if (mapLabel) {
+      text = isDe ? mapLabel.de : mapLabel.en;
+    } else if (labelObj) {
+      text = (labelObj[lang] || labelObj.de || slug).trim();
+    } else {
+      text = slug;
     }
 
     opt.value = slug;
-    opt.textContent = label;
+    opt.textContent = text;
     categorySelect.appendChild(opt);
   });
 
-  categorySelect.value = currentValue;
+  // Wenn der bisherige Wert noch existiert, wieder setzen,
+  // ansonsten auf "Alle Kategorien" zurückfallen.
+  const hasCurrent = Array.from(categorySelect.options).some(
+    (o) => o.value === currentValue
+  );
+  categorySelect.value = hasCurrent ? currentValue : "";
 }
 
 function distanceInKm(lat1, lon1, lat2, lon2) {
@@ -282,11 +393,11 @@ function isBigAdventure(spot) {
   const tags = Array.isArray(spot.tags) ? spot.tags : [];
   const lowerTags = tags.map((t) => String(t).toLowerCase());
   for (let i = 0; i < lowerTags.length; i++) {
-    const t = lowerTags[i];
+    const tt = lowerTags[i];
     if (
-      t.indexOf("ganzer tag") !== -1 ||
-      t.indexOf("riesig") !== -1 ||
-      t.indexOf("groß") !== -1
+      tt.indexOf("ganzer tag") !== -1 ||
+      tt.indexOf("riesig") !== -1 ||
+      tt.indexOf("groß") !== -1
     ) {
       return true;
     }
