@@ -1,21 +1,35 @@
 /* css/tilla.css */
-/* Tilla, die Schildkröten-Begleiterin 🐢 */
+/* Stil für Tilla die Schildkröte 🐢 */
 
-/* Tilla-Container: immer sichtbar, kein display: none mehr */
 .tilla-hint {
-  margin-bottom: 0.55rem;
+  /* Grundzustand: unsichtbar und ohne Höhe,
+     damit bei "gesehen" kein leerer Abstand bleibt */
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(4px);
+  transition:
+    max-height 0.3s ease-out,
+    opacity 0.3s ease-out,
+    transform 0.3s ease-out;
+  margin-bottom: 0.6rem;
 }
 
-/* Innenleben der Bubble */
+.tilla-hint--visible {
+  max-height: 200px; /* reicht locker für den Text */
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .tilla-inner {
   display: flex;
   align-items: flex-start;
   gap: 0.6rem;
-  border-radius: 0.9rem;
+  border-radius: 0.75rem;
   background-color: var(--color-accent-soft);
   border: 1px solid var(--color-border-subtle);
-  padding: 0.7rem 0.8rem;
-  box-shadow: 0 1px 4px var(--color-shadow-soft);
+  padding: 0.65rem 0.7rem;
+  box-shadow: 0 1px 3px var(--color-shadow-soft);
 }
 
 .tilla-emoji {
@@ -30,30 +44,8 @@
   line-height: 1.45;
 }
 
-/* Dark-Mode-Anpassung */
+/* Dark Mode leicht abdunkeln */
 html[data-theme="dark"] .tilla-inner {
-  background-color: rgba(15, 23, 42, 0.9);
+  background-color: rgba(245, 158, 11, 0.18);
   border-color: var(--color-border-subtle);
-  box-shadow: 0 2px 8px var(--color-shadow-soft);
-}
-
-html[data-theme="dark"] .tilla-bubble {
-  color: var(--color-text);
-}
-
-/* Sanfte Fade-in-Animation – beeinflusst NICHT die Sichtbarkeit */
-@keyframes tillaFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Wenn JS die Klasse hinzufügt, wird nur animiert, nicht versteckt */
-.tilla-hint--visible .tilla-inner {
-  animation: tillaFadeIn 0.3s ease-out;
 }
