@@ -2,14 +2,12 @@
 import { t } from "./i18n.js";
 
 let container = null;
-
-// Version hochgezählt, damit Tilla bei allen Geräten noch mal erscheint
-const SEEN_KEY = "fsm.tilla.seen.v2";
+const SEEN_KEY = "fsm.tilla.seen.v1";
 
 function hasSeen() {
   try {
     return window.localStorage.getItem(SEEN_KEY) === "true";
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -17,37 +15,49 @@ function hasSeen() {
 function markSeen() {
   try {
     window.localStorage.setItem(SEEN_KEY, "true");
-  } catch (e) {
-    // absichtlich ignoriert (z.B. Safari Private Mode)
+  } catch {
+    // z.B. Safari Private Mode – ignorieren
   }
 }
 
+/**
+ * Tilla initialisieren – wird aus app.js nach DOMContentLoaded aufgerufen.
+ * Sie sitzt immer ganz oben in der Sidebar, direkt vor dem Familien-Kompass.
+ */
 export function initTilla() {
-  // Nur im Browser
-  if (typeof document === "undefined") return;
-
   const sidebar = document.querySelector(".sidebar");
   if (!sidebar) return;
 
+  // Container nur einmal anlegen
   if (!container) {
     container = document.createElement("div");
     container.className = "tilla-hint";
-    // Ganz oben in der Sidebar
     sidebar.prepend(container);
   }
 
-  // Beim ersten Mal automatisch Begrüßung anzeigen
-  if (!hasSeen()) {
-    showTillaMessage(
-      t(
+  const alreadySeen = hasSeen();
+
+  // Erster Besuch: Intro 1, danach Intro 2
+  const message = alreadySeen
+    ? t(
+        "turtle_intro_2",
+        "Ich bin da, wenn ihr nicht wisst, wohin – oder es heute einfach langsam angehen wollt. 🐢💛"
+      )
+    : t(
         "turtle_intro_1",
         "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
-      )
-    );
+      );
+
+  showTillaMessage(message);
+
+  if (!alreadySeen) {
     markSeen();
   }
 }
 
+/**
+ * Zeigt eine beliebige Nachricht in der Tilla-Bubble an.
+ */
 export function showTillaMessage(msg) {
   if (!container) return;
 
@@ -57,9 +67,13 @@ export function showTillaMessage(msg) {
       <div class="tilla-bubble">${msg}</div>
     </div>
   `;
+
   container.classList.add("tilla-hint--visible");
 }
 
+/**
+ * Blend Tilla komplett aus (momentan nirgendwo automatisch genutzt).
+ */
 export function hideTilla() {
   if (!container) return;
   container.classList.remove("tilla-hint--visible");
