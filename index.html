@@ -233,17 +233,32 @@
                 </button>
               </summary>
 
-              <div class="filter-group">
-                <label for="daylog-text">Wie war euer Tag?</label>
+              <div class="my-day-card">
+                <div class="my-day-header-row">
+                  <h3 class="my-day-title">
+                    <span class="my-day-emoji" aria-hidden="true">💛</span>
+                    Mein Tag
+                  </h3>
+                  <label
+                    class="my-day-subtitle"
+                    for="daylog-text"
+                  >
+                    Wie war euer Tag?
+                  </label>
+                </div>
+
                 <textarea
                   id="daylog-text"
-                  class="input"
+                  class="my-day-textarea"
                   rows="3"
                   placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
                 ></textarea>
-                <button id="daylog-save" class="btn btn-small" type="button">
-                  Speichern 💾
-                </button>
+
+                <div class="my-day-actions">
+                  <button id="daylog-save" class="btn" type="button">
+                    Speichern
+                  </button>
+                </div>
               </div>
             </details>
 
