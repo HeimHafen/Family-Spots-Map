@@ -17,7 +17,7 @@ function markSeen() {
   try {
     window.localStorage.setItem(SEEN_KEY, "true");
   } catch (e) {
-    // absichtlich ignoriert (z.B. Safari Private Mode)
+    // z.B. Safari Private Mode – absichtlich ignoriert
   }
 }
 
@@ -25,15 +25,19 @@ export function initTilla() {
   const sidebar = document.querySelector(".sidebar");
   if (!sidebar) return;
 
-  container = document.createElement("div");
-  container.className = "tilla-hint";
-  sidebar.prepend(container);
+  // Container nur einmal anlegen
+  if (!container) {
+    container = document.createElement("div");
+    container.className = "tilla-hint";
+    sidebar.prepend(container);
+  }
 
+  // Einmalige Begrüßung beim ersten Besuch
   if (!hasSeen()) {
     showTillaMessage(
       t(
         "turtle_intro_1",
-        "Hallo, ich bin Tilla, eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+        "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
       )
     );
     markSeen();
