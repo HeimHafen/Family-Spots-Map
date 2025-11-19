@@ -305,6 +305,47 @@ html[data-theme="dark"] .sidebar {
   font-weight: 600;
 }
 
+/* Spezielle, extra-weiche Filter-Card */
+
+.sidebar-section--filters {
+  padding: 0.9rem 0.95rem 0.85rem;
+  background: radial-gradient(
+    circle at top left,
+    #fff7e3 0%,
+    #ffe6bd 45%,
+    #ffe0b2 100%
+  );
+  box-shadow: 0 14px 32px var(--color-shadow-soft);
+}
+
+.sidebar-section--filters .sidebar-section-header {
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(241, 195, 140, 0.7);
+}
+
+.sidebar-section--filters .filter-group {
+  margin-bottom: 0.6rem;
+}
+
+.sidebar-section--filters .filter-group:last-of-type {
+  margin-bottom: 0;
+}
+
+html[data-theme="dark"] .sidebar-section--filters {
+  background: radial-gradient(
+    circle at top left,
+    #020617 0%,
+    #020617 60%,
+    #020617 100%
+  );
+  box-shadow: 0 10px 26px var(--color-shadow-soft);
+}
+
+html[data-theme="dark"] .sidebar-section--filters .sidebar-section-header {
+  border-bottom-color: var(--color-border-subtle);
+}
+
 /* Filtergruppen */
 
 .filter-group {
@@ -1251,5 +1292,9 @@ html[data-theme="dark"] .noscript-warning {
 @media (max-width: 600px) {
   .sidebar-section {
     padding: 0.6rem 0.65rem;
+  }
+
+  .sidebar-section--filters {
+    padding: 0.75rem 0.8rem 0.8rem;
   }
 }
