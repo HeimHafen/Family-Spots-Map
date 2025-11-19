@@ -2,6 +2,7 @@
 
 import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
+import { showTillaMessage, hideTilla } from "./tilla.js"; // 🐢
 
 /**
  * Kurzbeschreibung für die Listenkarte bauen.
@@ -47,6 +48,9 @@ export function renderSpotList(spots, options) {
 
   container.innerHTML = "";
 
+  // Standardfall: Tilla ausblenden – wir entscheiden unten neu
+  hideTilla();
+
   if (!spots || spots.length === 0) {
     const empty = document.createElement("div");
     empty.className = "spot-list-empty";
@@ -54,6 +58,17 @@ export function renderSpotList(spots, options) {
       ? "Gerade passt kein Spot zu euren Filtern. Probiert andere Kategorien oder einen größeren Radius."
       : "No spots match your filters right now. Try other categories or a wider radius.";
     container.appendChild(empty);
+
+    // Tilla tröstet euch, wenn die Liste leer ist 🐢
+    showTillaMessage(
+      t(
+        "turtle_intro_2",
+        isDe
+          ? "Ich bin da, wenn ihr nicht wisst, wohin – oder es heute einfach langsam angehen wollt. 🐢💛"
+          : "I'm here when you're unsure where to go – or just want to take it slow. 🐢💛"
+      )
+    );
+
     return;
   }
 
