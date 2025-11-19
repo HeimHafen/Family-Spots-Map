@@ -4,19 +4,61 @@ import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 
 /**
- * Kurzbeschreibung für die Listenkarte bauen.
+ * Helper: aktuelle Sprache → true, wenn Deutsch.
  */
-function buildSpotListDescription(spot, isDe) {
+function isGerman() {
+  const lang =
+    getLanguage() ||
+    document.documentElement.lang ||
+    navigator.language ||
+    "de";
+  return lang.toLowerCase().startsWith("de");
+}
+
+/**
+ * Helper: Sprachabhängige Texte eines Spots holen.
+ * Unterstützt sowohl visitLabel_* als auch visit_label_*.
+ */
+function getSpotTexts(spot) {
+  const isDe = isGerman();
+
   const primarySummary = isDe ? spot.summary_de : spot.summary_en;
   const secondarySummary = isDe ? spot.summary_en : spot.summary_de;
-  const visitLabel = isDe ? spot.visitLabel_de : spot.visitLabel_en;
-  const poetry = spot.poetry;
+
+  // Unterstütze beide Schreibweisen: visitLabel_* UND visit_label_*
+  const visitLabelDe = spot.visitLabel_de || spot.visit_label_de;
+  const visitLabelEn = spot.visitLabel_en || spot.visit_label_en;
+
+  const primaryVisit = isDe ? visitLabelDe : visitLabelEn;
+  const secondaryVisit = isDe ? visitLabelEn : visitLabelDe;
+
+  const summary =
+    (primarySummary && String(primarySummary).trim()) ||
+    (secondarySummary && String(secondarySummary).trim()) ||
+    "";
+
+  const visitLabel =
+    (primaryVisit && String(primaryVisit).trim()) ||
+    (secondaryVisit && String(secondaryVisit).trim()) ||
+    "";
+
+  return {
+    summary,
+    visitLabel,
+    poetry: spot.poetry || "",
+  };
+}
+
+/**
+ * Kurzbeschreibung für die Listenkarte bauen.
+ */
+function buildSpotListDescription(spot) {
+  const { summary, visitLabel, poetry } = getSpotTexts(spot);
 
   let text =
-    (primarySummary && primarySummary.trim()) ||
+    (summary && summary.trim()) ||
     (visitLabel && visitLabel.trim()) ||
     (poetry && poetry.trim()) ||
-    (secondarySummary && secondarySummary.trim()) ||
     "";
 
   if (!text) return "";
@@ -36,8 +78,7 @@ export function renderSpotList(spots, options) {
   const container = $("#spot-list");
   if (!container) return;
 
-  const lang = getLanguage() || "de";
-  const isDe = lang.startsWith("de");
+  const isDe = isGerman();
 
   container.innerHTML = "";
 
@@ -83,7 +124,7 @@ export function renderSpotList(spots, options) {
       meta.appendChild(catEl);
     }
 
-    const descText = buildSpotListDescription(spot, isDe);
+    const descText = buildSpotListDescription(spot);
     let descEl = null;
     if (descText) {
       descEl = document.createElement("p");
@@ -165,21 +206,18 @@ export function renderSpotDetails(spot, options) {
   const container = $("#spot-detail");
   if (!container || !spot) return;
 
-  const lang = getLanguage() || "de";
-  const isDe = lang.startsWith("de");
+  const isDe = isGerman();
 
   container.classList.remove("spot-details--hidden");
 
   const title = spot.name || spot.title || "Spot";
 
-  const summaryPrimary = isDe ? spot.summary_de : spot.summary_en;
-  const summarySecondary = isDe ? spot.summary_en : spot.summary_de;
-  const visitLabel = isDe ? spot.visitLabel_de : spot.visitLabel_en;
+  // Sprachabhängige Texte für Beschreibung & Besuchsdauer-Label
+  const { summary, visitLabel, poetry } = getSpotTexts(spot);
 
   let description = "";
-  if (summaryPrimary) description = summaryPrimary;
+  if (summary) description = summary;
   else if (visitLabel) description = visitLabel;
-  else if (summarySecondary) description = summarySecondary;
 
   let visitTimeText = "";
   if (spot.visit_minutes && Number(spot.visit_minutes) > 0) {
@@ -295,9 +333,9 @@ export function renderSpotDetails(spot, options) {
     }
 
     ${
-      spot.poetry
+      poetry
         ? `<p class="spot-details-poetry">„${escapeHtml(
-            spot.poetry,
+            poetry,
           )}“</p>`
         : ""
     }
