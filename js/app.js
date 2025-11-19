@@ -28,7 +28,6 @@ import {
   getMap
 } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
-import { initTilla } from "./tilla.js";
 
 let currentFilterState = null;
 let allSpots = [];
@@ -103,9 +102,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Mein Tag Modul initialisieren
   initDayLog();
-
-  // Tilla initialisieren
-  initTilla();
 });
 
 async function bootstrapApp() {
@@ -118,6 +114,7 @@ async function bootstrapApp() {
 
   await initI18n(initialLang);
   applyTranslations();
+  updateStaticLanguageTexts(initialLang);
 
   const { index } = await loadAppData();
   allSpots = getSpots();
@@ -157,10 +154,6 @@ async function bootstrapApp() {
     onSelect: handleSpotSelect
   });
 
-  // WICHTIG: statische Texte NACH den Filtern setzen,
-  // damit „All categories“ nicht von initFilters überschrieben wird.
-  updateStaticLanguageTexts(initialLang);
-
   initUIEvents();
   updateRoute("map");
 }
@@ -188,6 +181,7 @@ function initUIEvents() {
       await initI18n(nextLang);
       saveSettings({ ...settings, language: nextLang });
       applyTranslations();
+      updateStaticLanguageTexts(nextLang);
 
       const categories = getCategories();
       refreshCategorySelect(categories);
@@ -198,10 +192,6 @@ function initUIEvents() {
       });
       updatePlusStatusUI(plusStatus);
       rerenderCurrentSpotDetails();
-
-      // WICHTIG: Platzhalter / statische Texte NACH dem Refresh setzen,
-      // damit die „All categories“-Option sicher in der richtigen Sprache ist.
-      updateStaticLanguageTexts(nextLang);
     });
   }
 
@@ -504,12 +494,6 @@ function rerenderCurrentSpotDetails() {
 function applyTheme(theme) {
   const value = theme === "dark" ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", value);
-
-  // Browser-UI (Adressleiste etc.) anpassen
-  const metaTheme = document.querySelector('meta[name="theme-color"]');
-  if (metaTheme) {
-    metaTheme.setAttribute("content", value === "dark" ? "#020617" : "#fb8c00");
-  }
 }
 
 function updatePlusStatusUI(status) {
@@ -550,20 +534,12 @@ function updatePlusStatusUI(status) {
 function updateStaticLanguageTexts(lang) {
   const isDe = (lang || "de").startsWith("de");
 
-  // Header-Tagline – KURZER, EINZEILIGER SLOGAN
+  // Header-Tagline
   const headerTagline = $("#header-tagline");
   if (headerTagline) {
     headerTagline.textContent = isDe
-      ? "Die Karte für eure Familien-Abenteuer."
-      : "Your map for family adventures.";
-  }
-
-  // Tilla – Schildkröte
-  const tillaBubble = $("#tilla-bubble-text");
-  if (tillaBubble) {
-    tillaBubble.textContent = isDe
-      ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
-      : "Hi, I’m Tilla – your turtle guide for relaxed family adventures!";
+      ? "Die schönste Karte für Familien-Abenteuer. Finde geprüfte Ausflugsziele in deiner Nähe – von Eltern für Eltern."
+      : "The most beautiful map for family adventures. Find curated family spots near you – by parents for parents.";
   }
 
   // Familien-Kompass
@@ -792,7 +768,9 @@ function updateStaticLanguageTexts(lang) {
       : "Family Spots Plus unlocks extra filters & spots – with no subscription trap.";
   }
 
+  // ---------------------------------------------------
   // About-Seite: DE/EN umschalten
+  // ---------------------------------------------------
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
   if (aboutDe && aboutEn) {
