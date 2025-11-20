@@ -297,9 +297,7 @@ function initUIEvents() {
     });
   }
 
-  // ---------------------------------------------------
   // Filter ein-/ausblenden
-  // ---------------------------------------------------
   const filterToggleBtn = $("#btn-toggle-filters");
   if (filterToggleBtn) {
     const filterSection = filterToggleBtn.closest(".sidebar-section");
@@ -567,7 +565,17 @@ function updateStaticLanguageTexts(lang) {
   // Header-Tagline
   const headerTagline = $("#header-tagline");
   if (headerTagline) {
-    headerTagline.textContent = "Make today a family day.";
+    headerTagline.textContent = isDe
+      ? "Mach heute einen Familien-Tag."
+      : "Make today a family day.";
+  }
+
+  // Tilla-Sidebar-Text
+  const tillaSidebarText = $("#tilla-sidebar-text");
+  if (tillaSidebarText) {
+    tillaSidebarText.textContent = isDe
+      ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+      : "Hi, I’m Tilla – your turtle companion for relaxed family adventures!";
   }
 
   // Familien-Kompass
@@ -778,7 +786,7 @@ function updateStaticLanguageTexts(lang) {
     toggleViewLabel.textContent = isDe ? "Nur Karte" : "Map only";
   }
 
-  // Plus-Formular (Label + Button + Hinweis)
+  // Plus-Formular
   const plusLabel = document.querySelector('label[for="plus-code-input"]');
   if (plusLabel) {
     plusLabel.textContent = isDe
@@ -796,9 +804,7 @@ function updateStaticLanguageTexts(lang) {
       : "Family Spots Plus unlocks extra filters & spots – with no subscription trap.";
   }
 
-  // ---------------------------------------------------
   // About-Seite: DE/EN umschalten
-  // ---------------------------------------------------
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
   if (aboutDe && aboutEn) {
