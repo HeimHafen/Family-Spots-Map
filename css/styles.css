@@ -27,6 +27,91 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* -----------------------------------------
+   THEME SWITCH (LIGHT / DARK)
+   data-theme wird in app.js gesetzt
+   ----------------------------------------- */
+
+html[data-theme="dark"] body {
+  color: #ffe9c7;
+  background: radial-gradient(circle at top, #3b2414 0, #5b3920 30%, #2a1910 75%);
+}
+
+/* Header im Dark Mode etwas dunkler/orangener */
+html[data-theme="dark"] .app-header {
+  background: linear-gradient(135deg, #f57c00, #e65100);
+  box-shadow: 0 14px 35px rgba(20, 10, 4, 0.85);
+}
+
+/* Karten / Panels / Map-Hintergrund im Dark Mode */
+html[data-theme="dark"] .sidebar-section,
+html[data-theme="dark"] .page-about,
+html[data-theme="dark"] .map-section {
+  background: rgba(34, 22, 14, 0.96);
+  color: #ffe9c7;
+  box-shadow:
+    0 10px 26px rgba(7, 3, 1, 0.85),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Inputs / Buttons im Dark Mode leicht abdunkeln */
+html[data-theme="dark"] .input,
+html[data-theme="dark"] textarea.input,
+html[data-theme="dark"] select.input {
+  background: #3b2719;
+  color: #ffe9c7;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+html[data-theme="dark"] .filter-group-helper,
+html[data-theme="dark"] .radius-description,
+html[data-theme="dark"] .spot-card-subtitle,
+html[data-theme="dark"] .spot-card-meta {
+  color: #f3c89a;
+}
+
+/* Mood / Travel Chips im Dark Mode */
+html[data-theme="dark"] .mood-chip,
+html[data-theme="dark"] .travel-chip {
+  background: #4a2d1b;
+  color: #ffe9c7;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Spot-Karten im Dark Mode */
+html[data-theme="dark"] .spot-card {
+  background: #3a2617;
+  color: #ffe9c7;
+  box-shadow:
+    0 5px 12px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* Bottom-Nav im Dark Mode */
+html[data-theme="dark"] .bottom-nav-background {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+html[data-theme="dark"] .bottom-nav-item {
+  background: rgba(43, 26, 15, 0.98);
+  color: #ffd9a0;
+}
+
+html[data-theme="dark"] .bottom-nav-item--active {
+  background: #ffb54f;
+  color: #321806;
+}
+
+/* Toast im Dark Mode */
+html[data-theme="dark"] .toast {
+  background: rgba(8, 6, 4, 0.98);
+  color: #ffe9c7;
+}
+
 /* Hilfsklasse für JS-Toggles (Filter, About DE/EN, Liste …) */
 .hidden {
   display: none !important;
@@ -520,6 +605,12 @@ select.input:focus {
   padding: 10px 12px 11px;
 }
 
+/* Leaflet Marker-Fix – Marker immer sichtbar halten */
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  opacity: 1 !important;
+}
+
 /* Auf größeren Screens: Sidebar + Map nebeneinander */
 @media (min-width: 900px) {
   #view-map {
@@ -582,7 +673,8 @@ select.input:focus {
   font-size: 15px;
 }
 
-/* Tilla-Hero – Grundabstände für die Seite */
+/* Tilla-Hero – Grundabstände für die Seite
+   (Detail-Styles bleiben in tilla.css) */
 .tilla-hero {
   margin-bottom: 16px;
 }
