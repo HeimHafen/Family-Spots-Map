@@ -1,67 +1,80 @@
-/* css/tilla.css */
+/* =========================================
+   Tilla – Hero-Karte im Über-Tab
+   ========================================= */
 
-/* Wrapper um Tilla-Karte */
 .tilla-hero {
-  margin: 1.4rem 0 1.8rem;
-  padding: 1.4rem 1.2rem 1.6rem;
-  border-radius: 1.8rem;
-  border: 2px dashed rgba(245, 158, 11, 0.65);
-  /* Hintergrund jetzt warm-creme statt Weiß */
-  background: radial-gradient(circle at top,
-      #fff7ea 0%,
-      #ffe7c7 55%,
-      #ffe1bd 100%);
-  box-shadow: 0 14px 32px rgba(191, 117, 34, 0.24);
-  text-align: center;
+  margin: 1.4rem 0 1.2rem;
+  padding: 1.6rem 1.4rem 1.8rem;
+  border-radius: 1.6rem;
+  border: 2px dashed #f4a24e;
+  /* sanft cremiger Hintergrund, nicht hart weiß */
+  background: linear-gradient(
+    180deg,
+    #fff6e9 0%,
+    #ffe9cf 100%
+  );
+  box-shadow: 0 14px 30px rgba(191, 117, 34, 0.16);
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.9rem;
+  text-align: center;
+  gap: 1.1rem;
 }
 
-/* dunkles Theme – etwas dunkler, aber gleiche Struktur */
-[data-theme="dark"] .tilla-hero {
-  background: radial-gradient(circle at top,
-      #0b1220 0%,
-      #020617 60%,
-      #020617 100%);
-  border-color: rgba(248, 181, 88, 0.7);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
-}
-
-/* Bereich für Illustration */
+/* Illustration-Container: KEIN background-image! */
 .tilla-hero-illustration {
-  width: 100%;
-  max-width: 260px;
-  display: flex;
-  justify-content: center;
+  width: 190px;
+  max-width: 65%;
+  margin: 0 auto;
 }
 
-/* Bild / SVG selbst */
+/* SVG (oder <img>) auf die Breite vom Container begrenzen */
 .tilla-hero-svg,
-.tilla-hero-img {
+.tilla-hero-illustration img {
+  display: block;
   width: 100%;
   height: auto;
-  display: block;
 }
 
-/* Text unter Tilla */
+/* Begrüßungs-Text von Tilla */
 .tilla-hero-text {
   margin: 0;
   font-size: 1rem;
   line-height: 1.5;
   font-weight: 600;
-  color: var(--color-text);
+  color: #5a3b2b;
 }
 
-/* etwas mehr Abstand auf sehr kleinen Screens */
+/* Dark Mode – leicht abgedunkelte Variante */
+html[data-theme="dark"] .tilla-hero {
+  border-color: #f59e0b;
+  background: radial-gradient(
+    circle at top,
+    rgba(17, 24, 39, 0.95),
+    rgba(15, 23, 42, 0.98)
+  );
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+}
+
+html[data-theme="dark"] .tilla-hero-text {
+  color: #f9fafb;
+}
+
+/* etwas kompakter auf kleinen Screens */
+
 @media (max-width: 480px) {
   .tilla-hero {
-    padding: 1.1rem 0.9rem 1.3rem;
-    border-radius: 1.6rem;
+    padding: 1.3rem 1.1rem 1.5rem;
+    border-radius: 1.4rem;
+    margin: 1.1rem 0 1rem;
+  }
+
+  .tilla-hero-illustration {
+    width: 170px;
   }
 
   .tilla-hero-text {
-    font-size: 0.96rem;
+    font-size: 0.95rem;
   }
 }
