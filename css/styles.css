@@ -114,11 +114,10 @@ html[data-theme="dark"] {
   border-bottom: none;
   box-shadow: 0 14px 28px rgba(153, 75, 0, 0.55);
 
-  /* 3-Spalten-Grid, damit die Mitte wirklich mittig sitzt */
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  column-gap: 0.75rem;
+  /* Spalten-Layout raus, wir stapeln: Top-Zeile + Hauptzeile */
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
 html[data-theme="dark"] .app-header {
@@ -133,6 +132,14 @@ html[data-theme="dark"] .app-header {
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
+/* Obere Zeile: Buttons links & rechts wie auf Bild 2 */
+
+.app-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .app-header-left,
 .app-header-right {
   display: flex;
@@ -140,16 +147,18 @@ html[data-theme="dark"] .app-header {
   gap: 0.5rem;
 }
 
-.app-header-center {
+/* Hauptzeile: Titel + Tagline mittig */
+
+.app-header-main {
   text-align: center;
   max-width: 460px;
-  justify-self: center;
+  align-self: center;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Logo */
+/* Logo (falls später genutzt) */
 
 .app-logo {
   width: 36px;
@@ -181,6 +190,7 @@ html[data-theme="dark"] .header-title {
 }
 
 /* „Spots“ erbt die Headline-Farbe */
+
 .header-title-spots {
   color: inherit !important;
 }
@@ -208,6 +218,7 @@ html[data-theme="dark"] .header-tagline {
 }
 
 /* Header-Buttons: glasige Floating-Buttons */
+
 .app-header .btn-icon {
   border-radius: 999px;
   border: 1px solid rgba(255, 249, 237, 0.9);
@@ -222,6 +233,7 @@ html[data-theme="dark"] .header-tagline {
 }
 
 /* Dark Mode: Buttons ruhiger */
+
 html[data-theme="dark"] .app-header .btn-icon {
   border-color: var(--color-border-subtle);
   background-color: rgba(15, 23, 42, 0.9);
@@ -895,6 +907,7 @@ html[data-theme="dark"] .bottom-nav {
 }
 
 /* Dark Inputs */
+
 html[data-theme="dark"] .input {
   background-color: #020617;
   color: var(--color-text);
@@ -1133,6 +1146,10 @@ html[data-theme="dark"] .noscript-warning {
 @media (max-width: 420px) {
   .app-header {
     padding: 0.35rem 0.7rem 0.45rem;
+  }
+
+  .app-header-top {
+    gap: 0.4rem;
   }
 
   .header-title {
