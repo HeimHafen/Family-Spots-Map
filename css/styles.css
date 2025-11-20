@@ -229,7 +229,6 @@ a {
     inset 0 0 0 1px rgba(255, 255, 255, 0.85);
 }
 
-/* details-Element optisch wie Karte */
 .sidebar-section[open] {
   padding-bottom: 14px;
 }
@@ -246,10 +245,6 @@ a {
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  color: #fdf3e4;
-}
-
-[data-theme="light"] .sidebar-section-title {
   color: #5b3621;
 }
 
@@ -470,7 +465,7 @@ select.input:focus {
   padding-right: 4px;
 }
 
-/* Spot-Karten (Liste) – einfache, warme Karten */
+/* Spot-Karten (Liste) */
 .spot-card {
   background: #fff7ec;
   border-radius: 18px;
@@ -508,7 +503,7 @@ select.input:focus {
   background: #fdf4e6;
   min-height: 320px;
   position: relative;
-  z-index: 0; /* Karte unter dem Header halten */
+  z-index: 0; /* unter Header bleiben */
 }
 
 .map-container {
@@ -560,7 +555,7 @@ select.input:focus {
 }
 
 /* =========================================
-   ABOUT VIEW (Tilla-Block + Text)
+   ABOUT VIEW
    ========================================= */
 
 .page-about {
@@ -591,7 +586,7 @@ select.input:focus {
   font-size: 15px;
 }
 
-/* Tilla-Hero – Rahmen & Innenfläche in tilla.css */
+/* Tilla-Hero Block */
 .tilla-hero {
   margin-bottom: 16px;
 }
@@ -607,7 +602,7 @@ select.input:focus {
   bottom: 0;
   z-index: 30;
   height: 70px;
-  pointer-events: none; /* nur Buttons aktiv */
+  pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -626,7 +621,7 @@ select.input:focus {
 }
 
 .bottom-nav-indicator {
-  display: none; /* optional – aktuell nicht genutzt */
+  display: none;
 }
 
 .bottom-nav-item {
@@ -656,7 +651,6 @@ select.input:focus {
   color: #4b280f;
 }
 
-/* Icons in Bottom-Nav */
 .bottom-nav-icon {
   font-size: 18px;
 }
@@ -680,7 +674,6 @@ select.input:focus {
     0 8px 16px rgba(0, 0, 0, 0.45);
 }
 
-/* kleiner Glow beim „Poppen“ */
 @keyframes pin-pop {
   0% {
     transform: scale(0.6);
@@ -774,7 +767,7 @@ hr {
 }
 
 /* =========================================
-   DARK THEME
+   DARK THEME – NIGHT MODE
    ========================================= */
 
 [data-theme="dark"] body {
@@ -782,10 +775,14 @@ hr {
   background: radial-gradient(circle at top, #020617 0, #020617 45%, #000 100%);
 }
 
-/* Header im Dark Mode */
+/* Header im Dark Mode: bleibt „sunset“, aber etwas tiefer */
 [data-theme="dark"] .app-header {
   background: linear-gradient(135deg, #f97316, #ea580c);
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
+}
+
+[data-theme="dark"] .header-title {
+  text-shadow: 0 2px 6px rgba(15, 23, 42, 0.9);
 }
 
 [data-theme="dark"] .header-tagline {
@@ -796,12 +793,13 @@ hr {
     inset 0 0 0 1px rgba(248, 250, 252, 0.25);
 }
 
+/* Controls im Header */
 [data-theme="dark"] .language-switcher {
   background: rgba(15, 23, 42, 0.98);
   color: #facc15;
   box-shadow:
     0 4px 12px rgba(15, 23, 42, 0.9),
-    inset 0 0 0 1px rgba(248, 250, 252, 0.18);
+    inset 0 0 0 1pxrgba(248, 250, 252, 0.18);
 }
 
 [data-theme="dark"] .language-switcher::after {
@@ -809,38 +807,49 @@ hr {
 }
 
 [data-theme="dark"] .btn-icon {
-  background: radial-gradient(circle at 30% 20%, #111827 0, #1e293b 45%, #020617 100%);
+  background: radial-gradient(circle at 30% 20%, #111827 0, #1f2937 40%, #020617 100%);
   box-shadow:
     0 4px 12px rgba(15, 23, 42, 0.9),
     inset 0 0 0 1px rgba(248, 250, 252, 0.25);
 }
 
-/* Hauptflächen im Dark Mode */
+/* Karten / Panels */
 [data-theme="dark"] .sidebar-section,
 [data-theme="dark"] .page-about,
 [data-theme="dark"] .spot-card,
 [data-theme="dark"] .spot-details {
-  background: radial-gradient(circle at top left, #0b1120 0, #020617 45%, #000 100%);
+  background: radial-gradient(circle at top left, #020617 0, #020617 55%, #000 100%);
   box-shadow:
-    0 14px 40px rgba(15, 23, 42, 0.95),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+    0 16px 40px rgba(15, 23, 42, 0.96),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.25);
 }
 
 [data-theme="dark"] .sidebar-section-title,
-[data-theme="dark"] .filter-group-label,
-[data-theme="dark"] .filter-group-helper,
-[data-theme="dark"] .spot-card-subtitle,
-[data-theme="dark"] .spot-card-meta {
+[data-theme="dark"] .page-about h2,
+[data-theme="dark"] .page-about h3 {
+  color: #fef9c3;
+}
+
+[data-theme="dark"] .filter-group-label {
   color: #e5e7eb;
 }
 
-[data-theme="dark"] .compass-card {
-  background: radial-gradient(circle at top left, #111827 0, #020617 60%);
-  box-shadow:
-    inset 0 0 0 1px rgba(148, 163, 184, 0.35),
-    0 8px 20px rgba(15, 23, 42, 0.9);
+[data-theme="dark"] .filter-group-helper,
+[data-theme="dark"] .spot-card-subtitle,
+[data-theme="dark"] .spot-card-meta,
+[data-theme="dark"] .page-about p {
+  color: #e5e7eb;
 }
 
+/* Kompass */
+[data-theme="dark"] .compass-card {
+  background: radial-gradient(circle at top left, #0b1120 0, #020617 65%);
+  box-shadow:
+    inset 0 0 0 1px rgba(148, 163, 184, 0.4),
+    0 8px 20px rgba(15, 23, 42, 0.95);
+}
+
+/* Inputs */
 [data-theme="dark"] .input,
 [data-theme="dark"] textarea.input,
 [data-theme="dark"] select.input {
@@ -851,6 +860,12 @@ hr {
     0 4px 12px rgba(15, 23, 42, 0.8);
 }
 
+[data-theme="dark"] .input::placeholder,
+[data-theme="dark"] textarea.input::placeholder {
+  color: rgba(148, 163, 184, 0.8);
+}
+
+/* Mood & Travel Chips */
 [data-theme="dark"] .mood-chip,
 [data-theme="dark"] .travel-chip {
   background: #020617;
@@ -866,15 +881,32 @@ hr {
   color: #111827;
 }
 
+/* Buttons */
+[data-theme="dark"] .btn {
+  background: linear-gradient(135deg, #f97316, #facc15);
+  color: #111827;
+  box-shadow:
+    0 8px 20px rgba(15, 23, 42, 0.9),
+    inset 0 0 0 1px rgba(248, 250, 252, 0.2);
+}
+
+[data-theme="dark"] .btn-ghost {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.9),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.6);
+}
+
 /* Map-Section */
 [data-theme="dark"] .map-section {
   background: #020617;
   box-shadow:
-    0 18px 42px rgba(15, 23, 42, 0.95),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.25);
+    0 18px 42px rgba(15, 23, 42, 0.96),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.3);
 }
 
-/* Bottom Nav im Dark Mode */
+/* Bottom Nav */
 [data-theme="dark"] .bottom-nav-background {
   background: rgba(15, 23, 42, 0.96);
 }
@@ -888,7 +920,7 @@ hr {
 }
 
 [data-theme="dark"] .bottom-nav-item--active {
-  background: linear-gradient(135deg, #f97316, #f59e0b);
+  background: linear-gradient(135deg, #f97316, #facc15);
   color: #111827;
 }
 
