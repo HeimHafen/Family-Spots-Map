@@ -1,12 +1,8 @@
-/* =========================================================
-   Family Spots Map – styles.css
-   Komplett-Datei zum Ersetzen
-   ========================================================= */
+/* =========================================
+   FAMILY SPOTS MAP – GLOBAL STYLES
+   ========================================= */
 
-/* ------------------------------
-   Basis / Reset
-   ------------------------------ */
-
+/* Reset & Basics */
 *,
 *::before,
 *::after {
@@ -19,814 +15,677 @@ body {
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top, #ffe9c6 0, #f8c58c 35%, #f5b26a 70%, #f0a356 100%);
-  color: #5b3b24;
+  color: #5b3621;
+  background: radial-gradient(circle at top, #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
   -webkit-font-smoothing: antialiased;
 }
 
-/* ------------------------------
-   Farb-Variablen (Light Theme)
-   ------------------------------ */
-
-:root {
-  --fsm-bg: #ffe9cc;
-  --fsm-bg-alt: #fcd3a4;
-  --fsm-bg-soft: #ffeed9;
-
-  --fsm-header-grad-from: #ff9800;
-  --fsm-header-grad-to: #fb8c00;
-
-  --fsm-card: #ffecd7;
-  --fsm-card-strong: #ffe1c0;
-  --fsm-card-border: #ffc27b;
-
-  --fsm-text-main: #5b3b24;
-  --fsm-text-soft: #8a6040;
-
-  --fsm-accent: #ff9800;
-  --fsm-accent-strong: #ff6f00;
-
-  --fsm-radius-lg: 24px;
-  --fsm-radius-md: 18px;
-  --fsm-radius-pill: 999px;
-
-  --fsm-shadow-soft: 0 18px 45px rgba(191, 114, 39, 0.35);
-  --fsm-shadow-card: 0 10px 28px rgba(191, 114, 39, 0.24);
-  --fsm-shadow-subtle: 0 4px 12px rgba(191, 114, 39, 0.18);
-
-  --fsm-border-dashed: 2px dashed rgba(255, 157, 79, 0.75);
-
-  --fsm-input-bg: rgba(255, 255, 255, 0.85);
-  --fsm-input-border: rgba(180, 110, 72, 0.3);
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* ------------------------------
-   Dark Theme (per data-theme)
-   ------------------------------ */
-
-html[data-theme="dark"] {
-  --fsm-bg: #1f130c;
-  --fsm-bg-alt: #271812;
-  --fsm-bg-soft: #2e1b13;
-
-  --fsm-header-grad-from: #ffb74d;
-  --fsm-header-grad-to: #f57c00;
-
-  --fsm-card: #2b1911;
-  --fsm-card-strong: #301d15;
-  --fsm-card-border: #8d4a1c;
-
-  --fsm-text-main: #ffe9d5;
-  --fsm-text-soft: #f3c49c;
-
-  --fsm-accent: #ffb74d;
-  --fsm-accent-strong: #ff9800;
-
-  --fsm-shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
-  --fsm-shadow-card: 0 10px 28px rgba(0, 0, 0, 0.6);
-  --fsm-shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.5);
-
-  --fsm-border-dashed: 2px dashed rgba(255, 183, 91, 0.8);
-
-  --fsm-input-bg: rgba(40, 24, 17, 0.9);
-  --fsm-input-border: rgba(255, 200, 150, 0.4);
-}
-
-/* ------------------------------
-   App-Rahmen
-   ------------------------------ */
-
+/* App-Wrapper */
 .app {
   min-height: 100vh;
-  max-width: 840px;
-  margin: 0 auto;
-  background: radial-gradient(circle at top, #ffeeda 0, var(--fsm-bg-soft) 42%, var(--fsm-bg-alt) 100%);
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
-/* ------------------------------
-   NoScript Hinweis
-   ------------------------------ */
-
-.noscript-warning {
-  background: #d32f2f;
-  color: #fff;
-  padding: 0.8rem 1rem;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-/* ========================================================
+/* =========================================
    HEADER
-   ======================================================== */
+   ========================================= */
 
 .app-header {
-  position: sticky;
+  position: sticky; /* NICHT fixed – überlappt nichts mehr */
   top: 0;
   z-index: 20;
-  padding: 0.8rem 1rem 1.1rem;
-  background: linear-gradient(
-    135deg,
-    var(--fsm-header-grad-from),
-    var(--fsm-header-grad-to)
-  );
+  padding: 10px 14px 14px;
+  background: linear-gradient(135deg, #ff9800, #ffb300);
   color: #fff;
-  box-shadow: 0 12px 30px rgba(191, 114, 39, 0.45);
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
+  box-shadow: 0 14px 35px rgba(199, 110, 21, 0.55);
 }
 
-/* Top-Zeile */
-
+/* Top-Zeile mit ? / Sprache / Theme / Locate */
 .app-header-top {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.65rem;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .app-header-left,
 .app-header-right {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
-/* Icon-Buttons (Fragezeichen, Theme, Locate) */
-
+/* Icon-Buttons (? | Theme | Locate) */
 .btn-icon {
   border: none;
-  border-radius: var(--fsm-radius-pill);
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
+  padding: 0;
+  margin: 0;
   width: 40px;
   height: 40px;
-  padding: 0;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  background: radial-gradient(circle at 30% 20%, #ffe7c2 0, #ffca80 40%, #ffb14d 100%);
+  box-shadow:
+    0 4px 10px rgba(156, 76, 16, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+  font-size: 20px;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(123, 73, 24, 0.45);
-  backdrop-filter: blur(18px);
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
 }
 
 .btn-icon:active {
-  transform: translateY(1px) scale(0.98);
+  transform: translateY(1px) scale(0.97);
+  box-shadow:
+    0 2px 5px rgba(156, 76, 16, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55);
 }
 
-/* Sprache-Umschalter – "DE" Chip */
-
+/* Sprach-Umschalter wie runde Pille */
 .language-switcher {
-  min-width: 60px;
-  padding: 0.28rem 0.9rem;
-  border-radius: var(--fsm-radius-pill);
-  border: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  padding: 0 18px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 243, 224, 0.92);
+  box-shadow:
+    0 4px 12px rgba(132, 70, 18, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  font-size: 14px;
   font-weight: 600;
-  font-size: 0.9rem;
-  line-height: 1.1;
-  text-align: center;
-  color: #fff;
-  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.15));
-  box-shadow: 0 2px 7px rgba(123, 73, 24, 0.45);
-  backdrop-filter: blur(16px);
-  appearance: none; /* iOS: trotzdem eigene Pfeile, aber sauber in der Kapsel */
+  color: #8b4c16;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  padding-right: 28px; /* Platz für kleinen Pfeil */
+  position: relative;
 }
 
-.language-switcher:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.85);
-  outline-offset: 2px;
+/* Kleiner Pfeil – dezent */
+.language-switcher::after {
+  content: "▾";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-52%);
+  font-size: 10px;
+  color: rgba(139, 76, 22, 0.7);
+  pointer-events: none;
 }
 
-/* Optionen */
-
-.language-switcher option {
-  color: #333;
+.language-switcher:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.9),
+    0 0 0 4px rgba(255, 171, 64, 0.7);
 }
 
-/* --------- Title + Claim ---------- */
-
+/* Hauptzeile mit Titel + Claim */
 .app-header-main {
   text-align: center;
 }
 
 .header-title {
-  margin: 0 0 0.35rem;
-  font-size: 1.55rem;
+  margin: 0;
+  font-size: 22px;
   font-weight: 800;
-  letter-spacing: 0.03em;
-  text-shadow: 0 2px 4px rgba(161, 84, 10, 0.45);
-  display: flex;
+  letter-spacing: 0.02em;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
+  gap: 6px;
+  text-shadow: 0 2px 4px rgba(124, 65, 12, 0.65);
 }
 
 .header-flag {
-  font-size: 1.35rem;
+  font-size: 20px;
 }
 
 .header-title-spots {
-  position: relative;
-}
-
-.header-title-spots::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -0.06rem;
-  height: 0.15rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
 /* Claim-Button */
-
 .header-tagline {
-  margin: 0 auto;
-  padding: 0.55rem 1.5rem;
-  max-width: 280px;
+  display: inline-block;
+  margin: 8px auto 0;
+  padding: 8px 20px;
+  background: rgba(255, 247, 230, 0.88);
+  color: #7c4314;
   border-radius: 999px;
+  font-size: 14px;
   font-weight: 600;
-  font-size: 0.95rem;
-  background: radial-gradient(circle at top, #ffe0b2, #ffb74d);
-  color: #8a4c15;
-  box-shadow: 0 12px 30px rgba(160, 84, 18, 0.55);
+  box-shadow:
+    0 6px 16px rgba(141, 73, 15, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
 }
 
-/* ========================================================
-   MAIN / Views
-   ======================================================== */
+/* =========================================
+   MAIN LAYOUT
+   ========================================= */
 
 .app-main {
   flex: 1;
-  padding: 0.8rem 0.8rem 0.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px 12px 96px; /* unten Platz für Bottom-Nav */
 }
 
 /* Views (Karte / Über) */
-
 .view {
   display: none;
 }
 
-.view.view--active {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.view--active {
+  display: block;
 }
 
-/* ========================================================
-   MAP-VIEW LAYOUT
-   ======================================================== */
+/* =========================================
+   MAP VIEW: SIDEBAR + MAP
+   ========================================= */
 
 #view-map {
-  min-height: 60vh;
-}
-
-/* Sidebar mit Kompass / Plus / Filter / Liste */
-
-.sidebar {
-  background: radial-gradient(circle at top, var(--fsm-bg-soft) 0, var(--fsm-bg) 40%, var(--fsm-bg-alt) 100%);
-  border-radius: var(--fsm-radius-lg);
-  box-shadow: var(--fsm-shadow-card);
-  padding: 0.85rem 0.9rem 0.95rem;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  max-height: 52vh;           /* -> mehr Platz für Karte */
-  overflow-y: auto;
+  gap: 14px;
 }
 
-/* Jede Sidebar-Section ist wie eine Karte */
+/* Sidebar mit Kompass, Plus, Tag, Filter, Liste */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
+/* Neumorph-Karten */
 .sidebar-section {
-  background: var(--fsm-card);
-  border-radius: var(--fsm-radius-md);
-  padding: 0.7rem 0.8rem 0.75rem;
-  box-shadow: var(--fsm-shadow-subtle);
+  background: rgba(255, 245, 233, 0.98);
+  border-radius: 24px;
+  padding: 12px 14px 14px;
+  box-shadow:
+    0 10px 26px rgba(163, 95, 36, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+}
+
+/* details-Element optisch wie Karte */
+.sidebar-section[open] {
+  padding-bottom: 14px;
 }
 
 .sidebar-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.45rem;
+  gap: 8px;
+  list-style: none;
 }
 
 .sidebar-section-title {
-  font-size: 1.0rem;
   margin: 0;
-  color: var(--fsm-text-main);
-}
-
-/* Close-Button rechts in den Details */
-
-.sidebar-section[open] > summary.sidebar-section-header::-webkit-details-marker {
-  display: none;
-}
-
-.sidebar-section[open] > summary.sidebar-section-header {
-  cursor: default;
+  font-size: 18px;
+  font-weight: 700;
+  color: #5b3621;
 }
 
 .sidebar-section-close {
-  width: 28px;
-  height: 28px;
+  border: none;
+  padding: 0;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
-  font-size: 1.1rem;
-  background: rgba(255, 255, 255, 0.9);
-  color: #c17842;
-  box-shadow: 0 3px 8px rgba(151, 92, 47, 0.45);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 10px rgba(140, 86, 40, 0.35);
+  font-size: 18px;
+  cursor: pointer;
 }
 
 /* Kompass-Karte */
-
 .compass-card {
-  background: linear-gradient(145deg, #ffe9d2, #ffd1a3);
-  border-radius: var(--fsm-radius-md);
-  padding: 0.8rem 0.85rem;
-  box-shadow: inset 0 0 0 2px rgba(255, 189, 120, 0.65);
+  margin-top: 4px;
+  padding: 10px 10px 12px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #ffe4c2, #ffd2a3);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.75),
+    0 6px 14px rgba(177, 104, 40, 0.42);
 }
 
-.filter-group-helper {
-  margin: 0 0 0.65rem;
-  font-size: 0.88rem;
-  color: var(--fsm-text-soft);
-}
-
-/* Plus Code-Bereich */
-
-.plus-code-form label {
-  display: block;
-  font-size: 0.88rem;
-  margin-bottom: 0.35rem;
-}
-
-.plus-code-row {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin-bottom: 0.35rem;
-}
-
-.plus-note {
-  margin: 0;
-  font-size: 0.78rem;
-  color: var(--fsm-text-soft);
-}
-
-/* Filter-Gruppen allgemein */
-
+/* Allgemeine Form Controls */
 .filter-group {
-  margin-bottom: 0.55rem;
-}
-
-.filter-group:last-child {
-  margin-bottom: 0;
+  margin-top: 8px;
 }
 
 .filter-group-label {
   display: block;
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 0.15rem;
+  font-size: 13px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--fsm-text-soft);
+  letter-spacing: 0.08em;
+  color: #7a4a2b;
+  margin-bottom: 4px;
 }
 
-/* Stimmung & Reise-Modus (Chips) */
-
-.mood-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.2rem;
+.filter-group-helper {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #8a6441;
 }
-
-.mood-chip,
-.travel-chip {
-  border: none;
-  border-radius: var(--fsm-radius-pill);
-  padding: 0.25rem 0.75rem;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 3px 8px rgba(179, 107, 50, 0.25);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.mood-chip-emoji {
-  font-size: 1.1rem;
-}
-
-/* Aktiver Chip (wird per JS Klasse .is-active gesetzt) */
-
-.mood-chip.is-active,
-.travel-chip.is-active {
-  background: linear-gradient(135deg, #ffe0b2, #ffb74d);
-  color: #8a4c15;
-  box-shadow: 0 4px 11px rgba(179, 107, 50, 0.45);
-}
-
-/* Radius-Slider */
-
-.radius-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.radius-max-label {
-  font-size: 0.82rem;
-  color: var(--fsm-text-soft);
-}
-
-.radius-description {
-  font-size: 0.8rem;
-  margin: 0.25rem 0 0;
-  color: var(--fsm-text-soft);
-}
-
-/* Checkbox-Gruppen */
-
-.filter-group--checkbox .checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.9rem;
-}
-
-/* Spot-Liste Block wächst */
-
-.sidebar-section--grow {
-  flex: 1 1 auto;
-  min-height: 120px;
-}
-
-/* Spot-Liste selbst */
-
-.spot-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-/* Spot-Karte (Liste) – Basis-Styles, damit nichts kaputt geht,
-   auch wenn JS Details ergänzt. */
-
-.spot-card {
-  background: var(--fsm-card);
-  border-radius: 16px;
-  padding: 0.6rem 0.7rem;
-  box-shadow: 0 3px 8px rgba(179, 107, 50, 0.25);
-  font-size: 0.9rem;
-}
-
-.spot-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem;
-}
-
-.spot-card-title {
-  font-weight: 600;
-}
-
-.spot-card-distance {
-  font-size: 0.78rem;
-  color: var(--fsm-text-soft);
-}
-
-/* ========================================================
-   MAP-SECTION
-   ======================================================== */
-
-.map-section {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 38vh;
-  margin-top: 0.3rem;
-}
-
-.map-container {
-  width: 100%;
-  height: 100%;
-  border-radius: var(--fsm-radius-lg);
-  overflow: hidden;
-  box-shadow: var(--fsm-shadow-soft);
-}
-
-/* Spot-Details (rechts/unterhalb der Karte – aktuell mobil i.d.R. unten) */
-
-.spot-details {
-  position: absolute;
-  bottom: 0.7rem;
-  left: 0.5rem;
-  right: 0.5rem;
-  max-height: 50%;
-  overflow-y: auto;
-  background: rgba(255, 239, 222, 0.95);
-  border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(136, 80, 36, 0.65);
-  padding: 0.75rem 0.85rem;
-  font-size: 0.9rem;
-  backdrop-filter: blur(16px);
-}
-
-/* ========================================================
-   Inputs, Buttons, Slider
-   ======================================================== */
 
 .input,
 textarea.input,
 select.input {
   width: 100%;
-  border-radius: 14px;
-  border: 1px solid var(--fsm-input-border);
-  padding: 0.5rem 0.7rem;
-  font: inherit;
-  background: var(--fsm-input-bg);
-  color: var(--fsm-text-main);
-  box-shadow: 0 2px 6px rgba(179, 107, 50, 0.18) inset;
-}
-
-.input::placeholder,
-textarea.input::placeholder {
-  color: rgba(139, 91, 58, 0.6);
+  border-radius: 999px;
+  border: none;
+  padding: 9px 13px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff7ee;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
+    0 4px 10px rgba(147, 90, 45, 0.25);
+  color: #5b3621;
 }
 
 textarea.input {
+  border-radius: 16px;
   resize: vertical;
 }
 
-/* Range-Slider */
-
-input[type="range"] {
-  width: 100%;
-  accent-color: var(--fsm-accent);
+.input:focus,
+textarea.input:focus,
+select.input:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.9),
+    0 0 0 4px rgba(255, 171, 64, 0.6);
 }
 
-/* Primäre Buttons */
+/* Mood- / Travel-Chips */
+.mood-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
-.btn {
-  border-radius: var(--fsm-radius-pill);
+.mood-chip,
+.travel-chip {
   border: none;
-  padding: 0.55rem 1.05rem;
-  font-weight: 600;
-  font-size: 0.92rem;
+  border-radius: 999px;
+  padding: 6px 10px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  background: #fff4e5;
+  color: #6b4124;
+  box-shadow:
+    0 4px 10px rgba(152, 92, 45, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  background: linear-gradient(135deg, var(--fsm-accent), var(--fsm-accent-strong));
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(191, 114, 39, 0.55);
+}
+
+.mood-chip-emoji {
+  font-size: 15px;
+}
+
+/* Radius-Slider */
+.radius-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#filter-radius {
+  flex: 1;
+}
+
+.radius-max-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a4a2b;
+}
+
+.radius-description {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #8a6441;
+}
+
+/* Checkboxen */
+.filter-group--checkbox {
+  margin-top: 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  background: linear-gradient(135deg, #ff9800, #ffb300);
+  color: #fffdf8;
+  box-shadow:
+    0 6px 14px rgba(180, 96, 33, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  cursor: pointer;
 }
 
 .btn-small {
-  padding: 0.4rem 0.9rem;
-  font-size: 0.86rem;
+  padding: 7px 14px;
+  font-size: 13px;
 }
 
-/* Ghost-Button (Filter anzeigen / Nur Karte etc.) */
-
 .btn-ghost {
-  border-radius: var(--fsm-radius-pill);
+  border-radius: 999px;
   border: none;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--fsm-text-main);
-  padding: 0.25rem 0.85rem;
-  font-size: 0.86rem;
-  box-shadow: 0 4px 10px rgba(179, 107, 50, 0.25);
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #7a4a2b;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.35);
   cursor: pointer;
 }
 
-/* ========================================================
-   ABOUT / PAGE LAYOUT
-   ======================================================== */
-
-.page {
-  background: radial-gradient(circle at top, var(--fsm-bg-soft) 0, var(--fsm-bg) 40%, var(--fsm-bg-alt) 100%);
-  border-radius: var(--fsm-radius-lg);
-  padding: 1.1rem 1rem 1.4rem;
-  box-shadow: var(--fsm-shadow-card);
+/* Plus-Code-Form */
+.plus-code-form {
+  margin-top: 6px;
+  font-size: 14px;
 }
 
+.plus-code-row {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.plus-note {
+  margin: 0;
+  font-size: 13px;
+  color: #8a6441;
+}
+
+/* Tagesprotokoll */
+#daylog-text {
+  min-height: 70px;
+}
+
+/* Filter-Section */
+.sidebar-section--grow {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#spot-list {
+  margin-top: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Spot-Karten (Liste) – einfache, warme Karten */
+.spot-card {
+  background: #fff7ec;
+  border-radius: 18px;
+  padding: 10px 11px 11px;
+  margin-bottom: 8px;
+  box-shadow:
+    0 5px 12px rgba(160, 98, 44, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.spot-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 3px;
+}
+
+.spot-card-subtitle {
+  font-size: 13px;
+  margin: 0 0 4px;
+  color: #7e5635;
+}
+
+.spot-card-meta {
+  font-size: 12px;
+  color: #8f6a46;
+}
+
+/* Map-Bereich */
+.map-section {
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow:
+    0 16px 36px rgba(148, 86, 38, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  background: #fdf4e6;
+  min-height: 320px;
+  position: relative;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+}
+
+/* Spot-Detail rechts (Desktop) oder über Karte (Mobile) */
+.spot-details {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  max-height: 45%;
+  overflow-y: auto;
+  background: rgba(255, 248, 239, 0.96);
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(116, 68, 33, 0.65);
+  padding: 10px 12px 11px;
+}
+
+/* Auf größeren Screens: Sidebar + Map nebeneinander */
+@media (min-width: 900px) {
+  #view-map {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .sidebar {
+    flex: 0 0 380px;
+  }
+
+  .map-section {
+    flex: 1 1 auto;
+    min-height: 520px;
+  }
+
+  #spot-list {
+    max-height: 380px;
+  }
+
+  .spot-details {
+    right: 16px;
+    left: auto;
+    width: 320px;
+    max-height: 75%;
+  }
+}
+
+/* =========================================
+   ABOUT VIEW (Tilla-Block + Text)
+   ========================================= */
+
 .page-about {
-  font-size: 0.98rem;
-  line-height: 1.55;
+  background: rgba(255, 245, 233, 0.96);
+  border-radius: 26px;
+  padding: 18px 16px 22px;
+  box-shadow:
+    0 14px 32px rgba(155, 93, 45, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
 .page-about h2 {
   margin-top: 0;
-  margin-bottom: 0.9rem;
-  font-size: 1.4rem;
-  color: var(--fsm-text-main);
+  margin-bottom: 16px;
+  font-size: 22px;
 }
 
 .page-about h3 {
-  margin-top: 1.4rem;
-  margin-bottom: 0.4rem;
-  font-size: 1.1rem;
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-size: 18px;
 }
 
 .page-about p {
-  margin: 0.3rem 0;
-  color: var(--fsm-text-main);
+  margin-top: 4px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+  font-size: 15px;
 }
 
-/* Tilla-Hero-Karte (Layout-Hüllen – Detailstyles sind in tilla.css) */
-
-.tilla-hero-card {
-  display: flex;
-  align-items: center;
-  gap: 1.0rem;
-  margin: 0 0 0.9rem;
-  padding: 0.65rem 0.8rem 0.75rem;
-  border-radius: var(--fsm-radius-lg);
-  background: radial-gradient(circle at top left, #ffe9cc 0, #ffe0bf 40%, #ffd7b0 100%);
-  border: var(--fsm-border-dashed);
-  box-shadow: var(--fsm-shadow-subtle);
+/* Tilla-Hero – Rahmen und Innenfläche sind in tilla.css
+   hier nur Grundabstände für die Seite */
+.tilla-hero {
+  margin-bottom: 16px;
 }
 
-.tilla-hero-image-wrapper {
-  flex: 0 0 110px;
-  max-width: 40%;
+/* =========================================
+   BOTTOM NAV
+   ========================================= */
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  height: 70px;
+  pointer-events: none; /* nur Buttons aktiv */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.tilla-hero-image {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.tilla-hero-text-block {
-  flex: 1 1 auto;
-  font-weight: 600;
-  text-align: left;
-  color: #8a4c26;
-}
-
-/* ========================================================
-   BOTTOM NAVIGATION
-   ======================================================== */
-
-.bottom-nav {
-  position: sticky;
-  bottom: 0;
-  z-index: 15;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 0.4rem 0.6rem 0.65rem;
-}
-
 .bottom-nav-background {
   position: absolute;
-  inset: 0;
-  margin: 0;
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
-  background: linear-gradient(to top, rgba(120, 70, 35, 0.22), rgba(255, 244, 229, 0.92));
-  backdrop-filter: blur(18px);
-  z-index: -2;
-  box-shadow: 0 -10px 25px rgba(120, 70, 35, 0.55);
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  top: 10px;
+  border-radius: 22px;
+  background: rgba(53, 30, 15, 0.82);
+  filter: blur(12px);
+  opacity: 0.5;
 }
 
 .bottom-nav-indicator {
-  position: absolute;
-  bottom: 0.7rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 78px;
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(120, 70, 35, 0.4);
-  z-index: -1;
+  display: none; /* optional – aktuell nicht genutzt */
 }
 
 .bottom-nav-item {
-  position: relative;
-  background: transparent;
+  pointer-events: auto;
   border: none;
-  padding: 0.2rem 0.6rem 0.1rem;
+  background: rgba(255, 245, 233, 0.98);
   border-radius: 999px;
-  display: flex;
+  padding: 8px 16px;
+  margin: 0 6px;
+  min-width: 88px;
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.05rem;
-  font-size: 0.78rem;
-  color: rgba(92, 55, 30, 0.7);
+  justify-content: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8a5a32;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
 }
 
 .bottom-nav-item--active {
-  background: rgba(255, 255, 255, 0.98);
-  color: #e07a19;
-  box-shadow: 0 4px 11px rgba(136, 80, 36, 0.35);
+  background: #ffb54f;
+  color: #4b280f;
 }
 
+/* Icons in Bottom-Nav */
 .bottom-nav-icon {
-  font-size: 1.1rem;
+  font-size: 18px;
 }
 
-/* ========================================================
-   Toast
-   ======================================================== */
+/* =========================================
+   TOAST
+   ========================================= */
 
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 4.2rem;
+  bottom: 90px;
   transform: translateX(-50%);
-  max-width: 85%;
-  padding: 0.6rem 0.9rem;
+  max-width: 90%;
+  background: rgba(55, 35, 21, 0.95);
+  color: #fff7ec;
   border-radius: 999px;
-  background: rgba(60, 35, 18, 0.9);
-  color: #ffe9d5;
-  font-size: 0.86rem;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55);
+  padding: 8px 16px;
+  font-size: 14px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
 }
 
-.toast.is-visible {
+.toast--visible {
   opacity: 1;
-  transform: translateX(-50%) translateY(-6px);
+  transform: translateX(-50%) translateY(-4px);
 }
 
-/* ========================================================
-   Responsive
-   ======================================================== */
+/* =========================================
+   NOSCRIPT
+   ========================================= */
 
-@media (min-width: 720px) {
-  .app-main {
-    padding: 1.0rem 1rem 0.8rem;
-  }
-
-  #view-map {
-    flex-direction: row;
-    gap: 0.9rem;
-  }
-
-  .sidebar {
-    flex: 0 0 310px;
-    max-height: none;
-    height: auto;
-  }
-
-  .map-section {
-    flex: 1 1 auto;
-    min-height: 460px;
-  }
-
-  .spot-details {
-    right: 1rem;
-    left: auto;
-    width: 320px;
-  }
-
-  .page {
-    padding: 1.4rem 1.4rem 1.6rem;
-  }
-
-  .tilla-hero-card {
-    padding: 0.8rem 1.1rem 0.9rem;
-  }
+.noscript-warning {
+  padding: 8px 12px;
+  background: #d84315;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
 }
 
-@media (max-width: 360px) {
-  .tilla-hero-card {
-    flex-direction: column;
-    text-align: center;
-  }
+/* =========================================
+   MISC
+   ========================================= */
 
-  .tilla-hero-text-block {
-    text-align: center;
-  }
-
-  .sidebar {
-    padding-inline: 0.75rem;
-  }
+hr {
+  border: none;
+  border-bottom: 1px solid rgba(193, 137, 91, 0.35);
+  margin: 16px 0;
 }
