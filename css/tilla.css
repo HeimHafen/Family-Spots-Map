@@ -1,47 +1,15 @@
 /* css/tilla.css */
-/* Dark-Mode-Overlay-Fix für About-Seite */
+/* Tilla-Hero – steht links, Text rechts wie im Mockup */
 
-[data-theme="dark"] #view-about::before {
-  content: none !important;
-  background: none !important;
-}
-
-[data-theme="dark"] #view-about {
-  background: radial-gradient(circle at top, #050816 0%, #020308 55%, #000000 100%);
-}
-
-[data-theme="dark"] #view-about .page-about {
-  background: rgba(6, 9, 22, 0.96);
-  color: #f6f6ff;
-}
-
-[data-theme="dark"] #view-about .page-about h2,
-[data-theme="dark"] #view-about .page-about h3 {
-  color: #ffffff;
-}
-
-/* ===========================
-   TILLA HERO – wie in Mockup 2
-   =========================== */
-
+/* Container unter der Überschrift "Über Family Spots Map" */
 .tilla-hero {
-  margin: 0.9rem 0 1.6rem;
-  padding: 1.2rem 1.4rem;
-  border-radius: 1.6rem;
-  background: #fff7e9;
-  box-shadow: 0 14px 32px rgba(191, 117, 34, 0.25);
+  margin: 1.1rem 0 1.6rem;
   display: flex;
   align-items: center;
   gap: 1.4rem;
 }
 
-[data-theme="dark"] .tilla-hero {
-  background: radial-gradient(circle at top, #020617 0%, #020308 60%, #000 100%);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75);
-}
-
-/* Bild links – groß und präsent */
-
+/* Bildseite links – Tilla groß und präsent */
 .tilla-hero-image {
   flex: 0 0 170px;
   display: flex;
@@ -60,7 +28,6 @@
 }
 
 /* Text rechts */
-
 .tilla-hero-text {
   flex: 1;
 }
@@ -72,10 +39,6 @@
   color: var(--color-text);
 }
 
-[data-theme="dark"] .tilla-hero-title {
-  color: #f9fafb;
-}
-
 .tilla-hero-message {
   margin: 0;
   font-size: 1.05rem;
@@ -83,12 +46,16 @@
   color: var(--color-text-subtle);
 }
 
+/* Dark Mode Anpassungen */
+[data-theme="dark"] .tilla-hero-title {
+  color: #f9fafb;
+}
+
 [data-theme="dark"] .tilla-hero-message {
   color: #e5e7eb;
 }
 
 /* Kleine einmalige Pop-in-Animation */
-
 @keyframes tilla-pop-in {
   0% {
     transform: scale(0.75) translateY(10px);
@@ -101,10 +68,8 @@
 }
 
 /* Responsive Tweaks */
-
 @media (max-width: 680px) {
   .tilla-hero {
-    padding: 1rem 1.1rem;
     gap: 1rem;
   }
 
