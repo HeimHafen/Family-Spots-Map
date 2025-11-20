@@ -15,10 +15,6 @@ body {
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
@@ -27,100 +23,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* -----------------------------------------
-   THEME SWITCH (LIGHT / DARK)
-   data-theme wird in app.js gesetzt
-   ----------------------------------------- */
-
-html[data-theme="dark"] body {
-  color: #ffe9c7;
-  background: radial-gradient(circle at top, #3b2414 0, #5b3920 30%, #2a1910 75%);
-}
-
-/* Header im Dark Mode etwas dunkler/orangener */
-html[data-theme="dark"] .app-header {
-  background: linear-gradient(135deg, #f57c00, #e65100);
-  box-shadow: 0 14px 35px rgba(20, 10, 4, 0.85);
-}
-
-/* Karten / Panels / Map-Hintergrund im Dark Mode */
-html[data-theme="dark"] .sidebar-section,
-html[data-theme="dark"] .page-about,
-html[data-theme="dark"] .map-section {
-  background: rgba(34, 22, 14, 0.96);
-  color: #ffe9c7;
-  box-shadow:
-    0 10px 26px rgba(7, 3, 1, 0.85),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-
-/* Inputs / Buttons im Dark Mode leicht abdunkeln */
-html[data-theme="dark"] .input,
-html[data-theme="dark"] textarea.input,
-html[data-theme="dark"] select.input {
-  background: #3b2719;
-  color: #ffe9c7;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
-    0 4px 10px rgba(0, 0, 0, 0.6);
-}
-
-html[data-theme="dark"] .filter-group-helper,
-html[data-theme="dark"] .radius-description,
-html[data-theme="dark"] .spot-card-subtitle,
-html[data-theme="dark"] .spot-card-meta {
-  color: #f3c89a;
-}
-
-/* Mood / Travel Chips im Dark Mode */
-html[data-theme="dark"] .mood-chip,
-html[data-theme="dark"] .travel-chip {
-  background: #4a2d1b;
-  color: #ffe9c7;
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.7),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-}
-
-/* Spot-Karten im Dark Mode */
-html[data-theme="dark"] .spot-card {
-  background: #3a2617;
-  color: #ffe9c7;
-  box-shadow:
-    0 5px 12px rgba(0, 0, 0, 0.8),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-}
-
-/* Bottom-Nav im Dark Mode */
-html[data-theme="dark"] .bottom-nav-background {
-  background: rgba(0, 0, 0, 0.9);
-}
-
-html[data-theme="dark"] .bottom-nav-item {
-  background: rgba(43, 26, 15, 0.98);
-  color: #ffd9a0;
-}
-
-html[data-theme="dark"] .bottom-nav-item--active {
-  background: #ffb54f;
-  color: #321806;
-}
-
-/* Toast im Dark Mode */
-html[data-theme="dark"] .toast {
-  background: rgba(8, 6, 4, 0.98);
-  color: #ffe9c7;
-}
-
-/* Hilfsklasse für JS-Toggles (Filter, About DE/EN, Liste …) */
-.hidden {
-  display: none !important;
-}
-
 /* Links */
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
 }
 
 /* App-Wrapper */
@@ -297,7 +208,7 @@ a {
 
 #view-map {
   display: flex;
-  flex-direction: column-reverse; /* Mobile: Karte zuerst, dann Sidebar */
+  flex-direction: column;
   gap: 14px;
 }
 
@@ -605,12 +516,6 @@ select.input:focus {
   padding: 10px 12px 11px;
 }
 
-/* Leaflet Marker-Fix – Marker immer sichtbar halten */
-.leaflet-marker-icon,
-.leaflet-marker-shadow {
-  opacity: 1 !important;
-}
-
 /* Auf größeren Screens: Sidebar + Map nebeneinander */
 @media (min-width: 900px) {
   #view-map {
@@ -650,8 +555,6 @@ select.input:focus {
   box-shadow:
     0 14px 32px rgba(155, 93, 45, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
-  max-width: 780px;
-  margin: 0 auto;
 }
 
 .page-about h2 {
@@ -673,8 +576,8 @@ select.input:focus {
   font-size: 15px;
 }
 
-/* Tilla-Hero – Grundabstände für die Seite
-   (Detail-Styles bleiben in tilla.css) */
+/* Tilla-Hero – Rahmen und Innenfläche sind in tilla.css
+   hier nur Grundabstände für die Seite */
 .tilla-hero {
   margin-bottom: 16px;
 }
@@ -790,4 +693,124 @@ hr {
   border: none;
   border-bottom: 1px solid rgba(193, 137, 91, 0.35);
   margin: 16px 0;
+}
+
+/* =========================================
+   ACTIVE STATES FOR MOOD / TRAVEL
+   ========================================= */
+
+.mood-chip--active,
+.travel-chip--active {
+  background: linear-gradient(135deg, #ffb300, #ff9800);
+  color: #fffdf5;
+  box-shadow:
+    0 5px 14px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+}
+
+.mood-chip--active .mood-chip-emoji,
+.travel-chip--active .mood-chip-emoji {
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   DARK THEME (html[data-theme="dark"])
+   ========================================= */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* Hintergrund & Grundfarbe */
+html[data-theme="dark"] body {
+  color: #ffeede;
+  background: radial-gradient(circle at top, #263248 0, #101523 40%, #050812 80%);
+}
+
+/* Header */
+html[data-theme="dark"] .app-header {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.85);
+}
+
+html[data-theme="dark"] .header-tagline {
+  background: rgba(8, 10, 18, 0.92);
+  color: #ffd8a6;
+}
+
+html[data-theme="dark"] .language-switcher {
+  background: rgba(8, 10, 18, 0.92);
+  color: #ffe3bf;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* Karten / Sektionen */
+html[data-theme="dark"] .sidebar-section,
+html[data-theme="dark"] .page-about,
+html[data-theme="dark"] .spot-card,
+html[data-theme="dark"] .map-section,
+html[data-theme="dark"] .spot-details {
+  background: rgba(15, 18, 30, 0.96);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  color: #ffeede;
+}
+
+/* Tilla-Karte im Dark Mode – Hintergrund abdunkeln, Tilla bleibt leuchtend */
+html[data-theme="dark"] .tilla-hero-card {
+  background: rgba(15, 18, 30, 0.96);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* Inputs im Dark Mode */
+html[data-theme="dark"] .input,
+html[data-theme="dark"] textarea.input,
+html[data-theme="dark"] select.input {
+  background: rgba(10, 13, 23, 0.96);
+  color: #ffeede;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 4px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Chips im Dark Mode (nicht aktiv) */
+html[data-theme="dark"] .mood-chip,
+html[data-theme="dark"] .travel-chip {
+  background: rgba(15, 18, 30, 0.96);
+  color: #f8e4cf;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Active-State bleibt der gleiche Farb-Boost wie oben */
+html[data-theme="dark"] .mood-chip--active,
+html[data-theme="dark"] .travel-chip--active {
+  background: linear-gradient(135deg, #ffb300, #ff9800);
+  color: #fffdf5;
+}
+
+/* Buttons & Bottom-Nav */
+html[data-theme="dark"] .btn,
+html[data-theme="dark"] .btn-ghost,
+html[data-theme="dark"] .btn-icon,
+html[data-theme="dark"] .bottom-nav-item {
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+html[data-theme="dark"] .bottom-nav-background {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+/* Toast im Dark Mode */
+html[data-theme="dark"] .toast {
+  background: rgba(0, 0, 0, 0.95);
+  color: #ffeede;
 }
