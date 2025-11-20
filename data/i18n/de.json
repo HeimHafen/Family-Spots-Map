@@ -21,5 +21,9 @@
   "filter_radius_description_all": "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
   "turtle_intro_1": "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
   "turtle_intro_2": "Ich bin da, wenn ihr nicht wisst, wohin – oder es heute einfach langsam angehen wollt. 🐢💛",
+  "turtle_location_ok": "Euer Standort ist gesetzt – ich habe die Karte für euch dort ausgerichtet.",
+  "turtle_location_error": "Ich konnte euren Standort gerade nicht finden. Prüft kurz die Freigabe oder verschiebt die Karte dorthin, wo ihr seid.",
+  "turtle_plus_activated": "Family Spots Plus ist jetzt aktiv – ich zeige euch zusätzliche Spots für eure Touren.",
+  "turtle_plus_unknown": "Diesen Code kenne ich nicht – vielleicht hat sich ein Tippfehler eingeschlichen oder der Code ist abgelaufen.",
   "daylog_saved": "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern."
 }
