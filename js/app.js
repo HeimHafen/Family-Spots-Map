@@ -1,5 +1,3 @@
-// js/app.js
-
 import { $, $$, getGeolocation } from "./utils.js";
 import {
   getSettings,
@@ -29,8 +27,7 @@ import {
 } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
 
-// Tilla wird optional dynamisch geladen, damit die App nicht kaputtgeht,
-// wenn tilla.js (noch) fehlt oder einen Fehler hat.
+// Tilla wird optional dynamisch geladen
 let tillaModule = null;
 
 let currentFilterState = null;
@@ -41,20 +38,15 @@ let partnerCodesCache = null;
 let currentSelectedSpotId = null;
 
 // -----------------------------------------------------
-// Partner-Codes laden (lokale Helper-Funktion)
+// Partner-Codes laden
 // -----------------------------------------------------
 
 async function loadPartnerCodes() {
   if (partnerCodesCache) return partnerCodesCache;
-
-  const res = await fetch("data/partner-codes.json", {
-    cache: "no-store"
-  });
-
+  const res = await fetch("data/partner-codes.json", { cache: "no-store" });
   if (!res.ok) {
     throw new Error("Failed to load partner codes");
   }
-
   const json = await res.json();
   const codes = Array.isArray(json) ? json : json.codes || [];
   partnerCodesCache = codes;
@@ -68,16 +60,13 @@ async function loadPartnerCodes() {
 function initDayLog() {
   const textArea = document.getElementById("daylog-text");
   const saveBtn = document.getElementById("daylog-save");
-
   if (!textArea || !saveBtn) return;
 
-  // Laden beim Start
   const saved = localStorage.getItem("fsm.daylog");
   if (saved) {
     textArea.value = saved;
   }
 
-  // Speichern bei Klick
   saveBtn.addEventListener("click", () => {
     localStorage.setItem("fsm.daylog", textArea.value || "");
     showToast(
@@ -110,8 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function bootstrapApp() {
   const settings = getSettings();
-
-  // HTML lang + Theme setzen
   const initialLang = settings.language || "de";
   document.documentElement.lang = initialLang;
   applyTheme(settings.theme);
@@ -120,8 +107,7 @@ async function bootstrapApp() {
   applyTranslations();
   updateStaticLanguageTexts(initialLang);
 
-  // Tilla nach I18n optional initialisieren (damit Text zur Sprache passt),
-  // aber die App soll auch laufen, wenn tilla.js fehlt oder Fehler hat.
+  // Tilla nach I18n optional initialisieren
   try {
     tillaModule = await import("./tilla.js");
     if (tillaModule && typeof tillaModule.initTilla === "function") {
@@ -570,7 +556,7 @@ function updateStaticLanguageTexts(lang) {
       : "Make today a family day.";
   }
 
-  // Tilla-Sidebar-Text
+  // Tilla in der Sidebar
   const tillaSidebarText = $("#tilla-sidebar-text");
   if (tillaSidebarText) {
     tillaSidebarText.textContent = isDe
@@ -772,7 +758,7 @@ function updateStaticLanguageTexts(lang) {
     bottomAbout.textContent = isDe ? "Über" : "About";
   }
 
-  // Filter-Toggle-Button (Starttext)
+  // Filter-Toggle-Button
   const filterToggleLabel = $("#btn-toggle-filters span");
   if (filterToggleLabel) {
     filterToggleLabel.textContent = isDe
