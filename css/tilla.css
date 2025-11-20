@@ -1,110 +1,100 @@
-/* Tilla-Hero Karte im About-View
-   - warmer Hintergrund
-   - schmalere Karte, zentriert
-   - Tilla links, Text rechts (wie Sprechblase)
-*/
+/* ===========================
+   TILLA – HERO CARD / ABOUT
+   =========================== */
 
 .tilla-hero {
+  margin: 1.75rem 0 2.5rem;
+}
+
+/* Außenkarte mit gestricheltem Rahmen */
+.tilla-hero-card {
   position: relative;
-  margin: 1.75rem auto 2.75rem auto;
-  padding: 1.75rem 1.8rem;
-  max-width: 680px; /* macht den Kasten schmaler */
-  border-radius: 18px;
-
-  /* warmer, weicher Verlauf wie im Referenzbild */
+  padding: 1.6rem 1.6rem 1.8rem;
+  border-radius: 22px;
+  border: 2px dashed rgba(255, 157, 74, 0.7);
   background: radial-gradient(
-      circle at top left,
-      #ffeacc 0%,
-      #ffe1c0 40%,
-      #fdd5a8 85%,
-      #f7c48f 100%
-    );
-
-  border: 2px dashed rgba(243, 158, 87, 0.95);
+    circle at top left,
+    #ffe9cc 0,
+    #fff6e7 55%,
+    #ffe1c0 100%
+  );
   box-shadow:
-    0 14px 30px rgba(166, 92, 34, 0.28),
-    0 0 0 1px rgba(255, 255, 255, 0.5);
+    0 14px 28px rgba(179, 93, 11, 0.22),
+    0 4px 10px rgba(179, 93, 11, 0.18);
+}
 
+/* Innenlayout: Bild links, Text rechts */
+.tilla-hero-layout {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 1.75rem;
 }
 
-/* kleine weiche Vignette, damit der Block wie eine Karte wirkt */
-.tilla-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 26px 40px rgba(124, 69, 25, 0.22);
-  opacity: 0.55;
-  z-index: -1;
-}
-
-/* Illustration links */
-.tilla-hero-illustration {
-  flex: 0 0 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+/* Bildblock */
 .tilla-hero-image {
-  display: block;
-  width: 150px;
-  height: auto;
+  flex: 0 0 auto;
 }
 
-/* Text rechts – wirkt wie der gesprochene Satz von Tilla */
-.tilla-hero-text {
+.tilla-hero-img {
+  display: block;
+  max-width: 190px;
+  width: min(40vw, 190px);
+  height: auto;
+  /* Tilla nach rechts spiegeln, damit sie zum Text schaut */
+  transform: scaleX(-1);
+  transform-origin: center;
+}
+
+/* Textblock */
+.tilla-hero-text-block {
   flex: 1 1 auto;
+}
+
+.tilla-hero-text {
   margin: 0;
   font-size: 1.05rem;
   line-height: 1.55;
-  font-weight: 600;
-  color: #7a4a26;
   text-align: left;
+  color: #7a4a25;
+  font-weight: 600;
 }
 
-/* Leichte Anpassung im About-Layout, damit oben Luft bleibt */
-.page-about > h2 {
-  margin-top: 0.75rem;
-  margin-bottom: 1.5rem;
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 640px) {
+  .tilla-hero-card {
+    padding: 1.4rem 1.25rem 1.5rem;
+  }
+
+  .tilla-hero-layout {
+    gap: 1.25rem;
+  }
+
+  .tilla-hero-img {
+    width: min(36vw, 170px);
+  }
+
+  .tilla-hero-text {
+    font-size: 1rem;
+  }
 }
 
-/* Mobile-Optimierung – auf kleineren Geräten etwas kompakter,
-   aber weiter mit Bild links und Text rechts. */
 @media (max-width: 480px) {
-  .tilla-hero {
-    padding: 1.5rem 1.4rem;
-    gap: 1.4rem;
-    max-width: 100%;
+  .tilla-hero-card {
+    padding: 1.25rem 1.1rem 1.3rem;
   }
 
-  .tilla-hero-illustration {
-    flex-basis: 130px;
+  .tilla-hero-layout {
+    gap: 1rem;
   }
 
-  .tilla-hero-image {
-    width: 130px;
+  .tilla-hero-img {
+    width: min(34vw, 150px);
   }
 
   .tilla-hero-text {
     font-size: 0.98rem;
-    line-height: 1.5;
-  }
-}
-
-/* Extrem kleine Bildschirme: notfalls untereinander stapeln,
-   damit nichts gequetscht wirkt. */
-@media (max-width: 360px) {
-  .tilla-hero {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .tilla-hero-text {
-    text-align: center;
   }
 }
