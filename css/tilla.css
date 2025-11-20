@@ -1,26 +1,33 @@
 /* css/tilla.css */
-/* Tilla-Hero – steht links, Text rechts wie im Mockup */
+/* Tilla-Hero – wie im Mockup: Tilla links groß, Text rechts */
 
 /* Container unter der Überschrift "Über Family Spots Map" */
-.tilla-hero {
+#page-about-de .tilla-hero,
+#page-about-en .tilla-hero {
   margin: 1.1rem 0 1.6rem;
+  padding: 0 !important;
+  background: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   display: flex;
   align-items: center;
   gap: 1.4rem;
 }
 
 /* Bildseite links – Tilla groß und präsent */
-.tilla-hero-image {
-  flex: 0 0 170px;
+#page-about-de .tilla-hero-image,
+#page-about-en .tilla-hero-image {
+  flex: 0 0 180px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.tilla-hero-image img {
+#page-about-de .tilla-hero-image img,
+#page-about-en .tilla-hero-image img {
   display: block;
-  width: 170px;
-  max-width: 45vw;
+  width: 180px;
+  max-width: 48vw;
   height: auto;
   filter: drop-shadow(0 14px 20px rgba(191, 117, 34, 0.55));
   animation: tilla-pop-in 260ms ease-out;
@@ -28,30 +35,35 @@
 }
 
 /* Text rechts */
-.tilla-hero-text {
+#page-about-de .tilla-hero-text,
+#page-about-en .tilla-hero-text {
   flex: 1;
 }
 
-.tilla-hero-title {
+#page-about-de .tilla-hero-title,
+#page-about-en .tilla-hero-title {
   margin: 0 0 0.25rem;
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-text);
 }
 
-.tilla-hero-message {
+#page-about-de .tilla-hero-message,
+#page-about-en .tilla-hero-message {
   margin: 0;
   font-size: 1.05rem;
   line-height: 1.6;
   color: var(--color-text-subtle);
 }
 
-/* Dark Mode Anpassungen */
-[data-theme="dark"] .tilla-hero-title {
+/* Dark Mode */
+[data-theme="dark"] #page-about-de .tilla-hero-title,
+[data-theme="dark"] #page-about-en .tilla-hero-title {
   color: #f9fafb;
 }
 
-[data-theme="dark"] .tilla-hero-message {
+[data-theme="dark"] #page-about-de .tilla-hero-message,
+[data-theme="dark"] #page-about-en .tilla-hero-message {
   color: #e5e7eb;
 }
 
@@ -69,42 +81,51 @@
 
 /* Responsive Tweaks */
 @media (max-width: 680px) {
-  .tilla-hero {
+  #page-about-de .tilla-hero,
+  #page-about-en .tilla-hero {
     gap: 1rem;
   }
 
-  .tilla-hero-image {
-    flex: 0 0 150px;
+  #page-about-de .tilla-hero-image,
+  #page-about-en .tilla-hero-image {
+    flex: 0 0 160px;
   }
 
-  .tilla-hero-image img {
-    width: 150px;
+  #page-about-de .tilla-hero-image img,
+  #page-about-en .tilla-hero-image img {
+    width: 160px;
   }
 
-  .tilla-hero-title {
+  #page-about-de .tilla-hero-title,
+  #page-about-en .tilla-hero-title {
     font-size: 1.05rem;
   }
 
-  .tilla-hero-message {
+  #page-about-de .tilla-hero-message,
+  #page-about-en .tilla-hero-message {
     font-size: 0.98rem;
   }
 }
 
 @media (max-width: 480px) {
-  .tilla-hero {
+  #page-about-de .tilla-hero,
+  #page-about-en .tilla-hero {
     align-items: flex-start;
     gap: 0.9rem;
   }
 
-  .tilla-hero-image {
-    flex: 0 0 135px;
+  #page-about-de .tilla-hero-image,
+  #page-about-en .tilla-hero-image {
+    flex: 0 0 140px;
   }
 
-  .tilla-hero-image img {
-    width: 135px;
+  #page-about-de .tilla-hero-image img,
+  #page-about-en .tilla-hero-image img {
+    width: 140px;
   }
 
-  .tilla-hero-message {
+  #page-about-de .tilla-hero-message,
+  #page-about-en .tilla-hero-message {
     font-size: 0.92rem;
   }
 }
