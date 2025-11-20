@@ -1,25 +1,26 @@
 /* =========================================
-   TILLA – HERO-KARTE AUF DER ÜBER-SEITE
-   Datei: css/tilla.css
+   TILLA – HERO CARD STYLES
    ========================================= */
 
-/* Grundkarte für Tilla */
+/* Grundlayout der Tilla-Karte auf der About-Seite */
 .tilla-hero {
-  margin: 1.4rem 0 1.6rem;
-  padding: 1.6rem 1.4rem 1.8rem;
+  margin: 1.4rem 0 1.8rem;
+  padding: 1.4rem 1.6rem 1.6rem;
   border-radius: 1.6rem;
 
-  /* warme, gestrichelte Umrandung wie bei den anderen Karten */
-  border: 2px dashed rgba(255, 153, 0, 0.65);
-
-  /* weicher, warmer Hintergrund (statt reines Weiß) */
+  /* warme, leicht cremige Fläche – näher am Seitenhintergrund */
   background: linear-gradient(
-    180deg,
-    #fff7ec 0%,
-    #ffe7c7 100%
+    145deg,
+    #fff0dd 0%,
+    #ffe7c4 35%,
+    #ffedd6 70%,
+    #fff7e9 100%
   );
 
-  box-shadow: 0 16px 34px rgba(191, 117, 34, 0.32);
+  /* gestrichelter Rahmen wie bei Kompass/Plus, aber etwas dezenter */
+  border: 2px dashed rgba(245, 158, 11, 0.9);
+
+  box-shadow: 0 16px 32px rgba(191, 117, 34, 0.22);
 
   display: flex;
   flex-direction: column;
@@ -27,39 +28,31 @@
   text-align: center;
 }
 
-/* Bereich, in dem SVG oder IMG sitzt */
+/* Illustration (img oder svg) wird zentriert, bekommt festen Rahmenbereich */
 .tilla-hero-illustration {
   width: 190px;
-  max-width: 60%;
-  margin-bottom: 0.9rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  max-width: 70vw;
+  margin: 0 0 1rem;
 }
 
-/* Falls du irgendwann ein PNG/JPG statt SVG nutzt */
-.tilla-hero-img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* Aktuell verwendetes Inline-SVG */
+/* Bild / SVG selber */
+.tilla-hero-illustration img,
 .tilla-hero-svg {
   display: block;
   width: 100%;
   height: auto;
+
+  /* sanfter Schatten, damit Tilla etwas „auf“ der Karte steht */
+  filter: drop-shadow(0 10px 18px rgba(191, 117, 34, 0.35));
 }
 
 /* Text unter Tilla */
 .tilla-hero-text {
   margin: 0;
-  max-width: 36rem;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--color-text, #4e342e);
 }
 
 /* -----------------------------------------
@@ -67,43 +60,64 @@
    ----------------------------------------- */
 
 html[data-theme="dark"] .tilla-hero {
-  border-color: rgba(249, 250, 251, 0.18);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
-
-  /* ruhiger, aber trotzdem warmer Dark-Mode-Verlauf */
   background: radial-gradient(
       circle at top left,
-      rgba(248, 250, 252, 0.08),
+      rgba(248, 181, 88, 0.22),
       transparent 55%
     ),
-    radial-gradient(
-      circle at bottom,
-      rgba(248, 181, 88, 0.18),
-      #020617
+    linear-gradient(
+      150deg,
+      #020617 0%,
+      #050815 40%,
+      #060a18 100%
     );
+
+  border-color: rgba(245, 158, 11, 0.8);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
 }
 
 html[data-theme="dark"] .tilla-hero-text {
-  color: var(--color-text);
+  color: #f9fafb;
+}
+
+/* Im Dark Mode das Bild leicht aufhellen, damit es nicht „absäuft“ */
+html[data-theme="dark"] .tilla-hero-illustration img,
+html[data-theme="dark"] .tilla-hero-svg {
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.85));
 }
 
 /* -----------------------------------------
-   RESPONSIVE
+   RESPONSIVE / KLEINE SCREENS
    ----------------------------------------- */
 
 @media (max-width: 480px) {
   .tilla-hero {
-    padding: 1.4rem 1.1rem 1.6rem;
-    border-radius: 1.4rem;
+    margin: 1.1rem -0.25rem 1.6rem;
+    padding: 1.2rem 1.1rem 1.4rem;
+    border-radius: 1.3rem;
   }
 
   .tilla-hero-illustration {
     width: 170px;
-    max-width: 70%;
     margin-bottom: 0.8rem;
   }
 
   .tilla-hero-text {
     font-size: 0.96rem;
+  }
+}
+
+@media (min-width: 900px) {
+  /* auf größeren Screens darf die Karte etwas „luftiger“ wirken */
+  .tilla-hero {
+    padding: 1.6rem 2.2rem 1.9rem;
+  }
+
+  .tilla-hero-illustration {
+    width: 210px;
+  }
+
+  .tilla-hero-text {
+    font-size: 1.02rem;
   }
 }
