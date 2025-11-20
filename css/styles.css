@@ -171,6 +171,7 @@ html[data-theme="dark"] .app-header {
   gap: 0.3rem;
   flex-wrap: nowrap;
   letter-spacing: 0.04em;
+  /* Textfarbe: hell = fast schwarz, dark = weiß */
   color: var(--color-header-title) !important;
   text-shadow: 0 2px 4px rgba(255, 255, 255, 0.35);
 }
@@ -179,7 +180,7 @@ html[data-theme="dark"] .header-title {
   text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9);
 }
 
-/* „Spots“ hat keine eigene Farbe mehr, übernimmt einfach die Headline-Farbe */
+/* „Spots“ erbt die Headline-Farbe */
 .header-title-spots {
   color: inherit !important;
 }
