@@ -2,6 +2,56 @@
    FAMILY SPOTS MAP – GLOBAL STYLES
    ========================================= */
 
+/* Design-Tokens (Light / Dark via data-theme) */
+:root {
+  --page-bg: radial-gradient(circle at top, #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
+  --text-main: #5b3621;
+  --text-muted: #8a6441;
+
+  --card-bg: rgba(255, 245, 233, 0.98);
+  --card-shadow: 0 10px 26px rgba(163, 95, 36, 0.45);
+  --card-inner-border: rgba(255, 255, 255, 0.85);
+
+  --chip-bg: #fff4e5;
+  --chip-text: #6b4124;
+
+  --input-bg: #fff7ee;
+  --input-shadow: 0 4px 10px rgba(147, 90, 45, 0.25);
+
+  --nav-glass: rgba(53, 30, 15, 0.82);
+
+  --radius-circle-fill: rgba(255, 171, 64, 0.15);
+  --radius-circle-stroke: rgba(255, 171, 64, 0.9);
+
+  --popup-bg: #ffffff;
+  --popup-text: #222;
+}
+
+/* Dark Mode: kühler Navy-Look */
+[data-theme="dark"] {
+  --page-bg: radial-gradient(circle at top, #020617 0, #020617 35%, #000000 100%);
+  --text-main: #f9fafb;
+  --text-muted: #cbd5f5;
+
+  --card-bg: #020617;
+  --card-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+  --card-inner-border: rgba(148, 163, 184, 0.45);
+
+  --chip-bg: #0b1120;
+  --chip-text: #e5e7eb;
+
+  --input-bg: #020617;
+  --input-shadow: 0 0 0 1px rgba(30, 64, 175, 0.7);
+
+  --nav-glass: rgba(15, 23, 42, 0.9);
+
+  --radius-circle-fill: rgba(56, 189, 248, 0.18);
+  --radius-circle-stroke: rgba(56, 189, 248, 0.9);
+
+  --popup-bg: #0b1120;
+  --popup-text: #e5e7eb;
+}
+
 /* Reset & Basics */
 *,
 *::before,
@@ -18,8 +68,8 @@ body {
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
-  color: #5b3621;
-  background: radial-gradient(circle at top, #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
+  color: var(--text-main);
+  background: var(--page-bg);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -27,6 +77,11 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
 }
 
 /* App-Wrapper */
@@ -41,7 +96,7 @@ a {
    ========================================= */
 
 .app-header {
-  position: sticky; /* NICHT fixed – überlappt nichts mehr */
+  position: sticky;
   top: 0;
   z-index: 20;
   padding: 10px 14px 14px;
@@ -176,6 +231,15 @@ a {
     inset 0 0 0 1px rgba(255, 255, 255, 0.85);
 }
 
+/* Dark-Mode-Tagline-Style */
+[data-theme="dark"] .header-tagline {
+  background: rgba(15, 23, 42, 0.95);
+  color: #f9fafb;
+  box-shadow:
+    0 10px 24px rgba(15, 23, 42, 0.9),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.5);
+}
+
 /* =========================================
    MAIN LAYOUT
    ========================================= */
@@ -198,13 +262,22 @@ a {
 }
 
 /* =========================================
-   MAP VIEW: SIDEBAR + MAP
+   MAP VIEW: MAP OBEN (MOBILE) + SIDEBAR
    ========================================= */
 
 #view-map {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+/* Map soll auf dem Handy OBEN stehen */
+.map-section {
+  order: 1;
+}
+
+.sidebar {
+  order: 2;
 }
 
 /* Sidebar mit Kompass, Plus, Tag, Filter, Liste */
@@ -216,12 +289,12 @@ a {
 
 /* Neumorph-Karten */
 .sidebar-section {
-  background: rgba(255, 245, 233, 0.98);
+  background: var(--card-bg);
   border-radius: 24px;
   padding: 12px 14px 14px;
   box-shadow:
-    0 10px 26px rgba(163, 95, 36, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+    var(--card-shadow),
+    inset 0 0 0 1px var(--card-inner-border);
 }
 
 /* details-Element optisch wie Karte */
@@ -241,7 +314,7 @@ a {
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  color: #5b3621;
+  color: var(--text-main);
 }
 
 .sidebar-section-close {
@@ -285,9 +358,10 @@ a {
 .filter-group-helper {
   margin: 0 0 6px;
   font-size: 13px;
-  color: #8a6441;
+  color: var(--text-muted);
 }
 
+/* Inputs */
 .input,
 textarea.input,
 select.input {
@@ -297,11 +371,11 @@ select.input {
   padding: 9px 13px;
   font-size: 14px;
   font-family: inherit;
-  background: #fff7ee;
+  background: var(--input-bg);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.9),
-    0 4px 10px rgba(147, 90, 45, 0.25);
-  color: #5b3621;
+    var(--input-shadow);
+  color: var(--text-main);
 }
 
 textarea.input {
@@ -334,8 +408,8 @@ select.input:focus {
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  background: #fff4e5;
-  color: #6b4124;
+  background: var(--chip-bg);
+  color: var(--chip-text);
   box-shadow:
     0 4px 10px rgba(152, 92, 45, 0.3),
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
@@ -344,6 +418,16 @@ select.input:focus {
 
 .mood-chip-emoji {
   font-size: 15px;
+}
+
+/* Active-State Chips */
+.mood-chip--active,
+.travel-chip--active {
+  box-shadow:
+    0 6px 14px rgba(245, 127, 23, 0.7),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, #ffb74d, #ff9800);
+  color: #4b280f;
 }
 
 /* Radius-Slider */
@@ -366,7 +450,7 @@ select.input:focus {
 .radius-description {
   margin: 4px 0 0;
   font-size: 13px;
-  color: #8a6441;
+  color: var(--text-muted);
 }
 
 /* Checkboxen */
@@ -429,7 +513,7 @@ select.input:focus {
 .plus-note {
   margin: 0;
   font-size: 13px;
-  color: #8a6441;
+  color: var(--text-muted);
 }
 
 /* Tagesprotokoll */
@@ -451,7 +535,7 @@ select.input:focus {
   padding-right: 4px;
 }
 
-/* Spot-Karten (Liste) – einfache, warme Karten */
+/* Spot-Karten (Liste) */
 .spot-card {
   background: #fff7ec;
   border-radius: 18px;
@@ -460,6 +544,13 @@ select.input:focus {
   box-shadow:
     0 5px 12px rgba(160, 98, 44, 0.35),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .spot-card {
+  background: #020617;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.4);
 }
 
 .spot-card-title {
@@ -472,6 +563,10 @@ select.input:focus {
   font-size: 13px;
   margin: 0 0 4px;
   color: #7e5635;
+}
+
+[data-theme="dark"] .spot-card-subtitle {
+  color: var(--text-muted);
 }
 
 .spot-card-meta {
@@ -489,6 +584,13 @@ select.input:focus {
   background: #fdf4e6;
   min-height: 320px;
   position: relative;
+}
+
+[data-theme="dark"] .map-section {
+  background: #020617;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.95),
+    inset 0 0 0 1px rgba(30, 64, 175, 0.8);
 }
 
 .map-container {
@@ -511,18 +613,30 @@ select.input:focus {
   padding: 10px 12px 11px;
 }
 
-/* Auf größeren Screens: Sidebar + Map nebeneinander */
+[data-theme="dark"] .spot-details {
+  background: rgba(15, 23, 42, 0.96);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+}
+
+/* =========================================
+   DESKTOP: SIDEBAR + MAP NEBENEINANDER
+   ========================================= */
+
 @media (min-width: 900px) {
   #view-map {
     flex-direction: row;
     align-items: flex-start;
   }
 
+  /* Reihenfolge auf Desktop wieder normal:
+     Sidebar links, Karte rechts */
   .sidebar {
+    order: 0;
     flex: 0 0 380px;
   }
 
   .map-section {
+    order: 0;
     flex: 1 1 auto;
     min-height: 520px;
   }
@@ -544,12 +658,12 @@ select.input:focus {
    ========================================= */
 
 .page-about {
-  background: rgba(255, 245, 233, 0.96);
+  background: var(--card-bg);
   border-radius: 26px;
   padding: 18px 16px 22px;
   box-shadow:
     0 14px 32px rgba(155, 93, 45, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+    inset 0 0 0 1px var(--card-inner-border);
 }
 
 .page-about h2 {
@@ -571,8 +685,7 @@ select.input:focus {
   font-size: 15px;
 }
 
-/* Tilla-Hero – Rahmen und Innenfläche sind in tilla.css
-   hier nur Grundabstände für die Seite */
+/* Tilla-Hero – Rahmen und Innenfläche steckt in tilla.css */
 .tilla-hero {
   margin-bottom: 16px;
 }
@@ -601,7 +714,7 @@ select.input:focus {
   bottom: 10px;
   top: 10px;
   border-radius: 22px;
-  background: rgba(53, 30, 15, 0.82);
+  background: var(--nav-glass);
   filter: blur(12px);
   opacity: 0.5;
 }
@@ -681,75 +794,78 @@ select.input:focus {
 }
 
 /* =========================================
-   MISC
-   ========================================= */
-
-hr {
-  border: none;
-  border-bottom: 1px solid rgba(193, 137, 91, 0.35);
-  margin: 16px 0;
-}
-
-/* =========================================
    MAP MARKER – ORANGE PINS
    ========================================= */
 
-.leaflet-marker-icon.spot-marker {
-  width: 26px;
-  height: 26px;
+.spot-marker {
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
-  background: radial-gradient(circle at 30% 30%, #ffe7c2 0, #ffb300 45%, #ef6c00 100%);
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.95),
-    0 8px 16px rgba(0, 0, 0, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: transparent;
 }
 
 .spot-marker-inner {
-  width: 14px;
-  height: 14px;
-  border-radius: inherit;
-  background: #fffdf8;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #fff3e0 0, #ffb74d 40%, #fb8c00 100%);
   box-shadow:
-    inset 0 0 0 2px rgba(176, 88, 18, 0.9);
+    0 0 0 2px rgba(255, 255, 255, 0.8),
+    0 6px 14px rgba(230, 81, 0, 0.95);
 }
 
-/* sanfte „Aufpoppen“-Animation, wenn Pins erscheinen */
+[data-theme="dark"] .spot-marker-inner {
+  background: radial-gradient(circle at 30% 20%, #fef3c7 0, #fb923c 40%, #ea580c 100%);
+  box-shadow:
+    0 0 0 2px rgba(15, 23, 42, 0.9),
+    0 8px 18px rgba(0, 0, 0, 0.95);
+}
+
+/* sanfter „Pop“, wenn Marker gezeichnet werden */
 .pin-pop {
-  animation: pin-pop 0.22s ease-out;
+  animation: pin-pop 0.25s ease-out;
 }
 
 @keyframes pin-pop {
   0% {
-    transform: translateY(6px) scale(0.6);
+    transform: scale(0.4);
     opacity: 0;
   }
   60% {
-    transform: translateY(-1px) scale(1.05);
+    transform: scale(1.12);
     opacity: 1;
   }
   100% {
-    transform: translateY(0) scale(1);
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
-/* Radius-Kreis für Micro-Abenteuer-Radius */
+/* Radius-Kreis für Micro-Abenteuer */
 .radius-circle {
-  stroke: rgba(255, 152, 0, 0.9);
+  fill: var(--radius-circle-fill);
+  stroke: var(--radius-circle-stroke);
   stroke-width: 2;
-  fill: rgba(255, 213, 128, 0.18);
 }
 
-/* Popup-Layout */
+/* Leaflet-Popups */
+.leaflet-popup-content-wrapper {
+  background: var(--popup-bg);
+  color: var(--popup-text);
+  border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5);
+}
+
+.leaflet-popup-tip {
+  background: var(--popup-bg);
+}
+
 .popup {
   font-size: 14px;
-  line-height: 1.4;
 }
 
 .popup-actions {
-  margin-top: 6px;
+  margin-top: 4px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -758,144 +874,15 @@ hr {
 .popup-link {
   font-size: 13px;
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* =========================================
-   MOOD / TRAVEL CHIPS – ACTIVE STATE
+   MISC
    ========================================= */
 
-.mood-chip--active,
-.travel-chip--active {
-  background: linear-gradient(135deg, #ffb54f, #ff9800);
-  color: #4b280f;
-  box-shadow:
-    0 5px 12px rgba(171, 101, 35, 0.75),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
-  transform: translateY(-1px);
-}
-
-/* =========================================
-   DARK THEME OVERRIDES
-   ========================================= */
-
-html[data-theme="dark"] body {
-  background: radial-gradient(circle at top, #111827 0, #020617 55%, #000000 100%);
-  color: #f9e7d6;
-}
-
-/* Header bleibt warm, aber mit Night-Glow */
-html[data-theme="dark"] .app-header {
-  background: linear-gradient(135deg, #f59e0b, #ea580c);
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.85);
-}
-
-html[data-theme="dark"] .header-tagline {
-  background: rgba(15, 23, 42, 0.95);
-  color: #fef3c7;
-  box-shadow:
-    0 6px 16px rgba(15, 23, 42, 0.9),
-    inset 0 0 0 1px rgba(251, 191, 36, 0.35);
-}
-
-/* Panels / Karten */
-html[data-theme="dark"] .sidebar-section,
-html[data-theme="dark"] .page-about {
-  background: rgba(15, 23, 42, 0.96);
-  box-shadow:
-    0 14px 32px rgba(0, 0, 0, 0.9),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.18);
-}
-
-html[data-theme="dark"] .sidebar-section-title,
-html[data-theme="dark"] h2,
-html[data-theme="dark"] h3 {
-  color: #fde68a;
-}
-
-/* Map-Container */
-html[data-theme="dark"] .map-section {
-  background: #020617;
-  box-shadow:
-    0 16px 36px rgba(0, 0, 0, 0.95),
-    inset 0 0 0 1px rgba(30, 64, 175, 0.35);
-}
-
-/* Spotkarten */
-html[data-theme="dark"] .spot-card {
-  background: #020617;
-  color: #f9e7d6;
-  box-shadow:
-    0 5px 12px rgba(0, 0, 0, 0.9),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.25);
-}
-
-html[data-theme="dark"] .spot-card-subtitle {
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] .spot-card-meta {
-  color: #9ca3af;
-}
-
-/* Formulare */
-html[data-theme="dark"] .input,
-html[data-theme="dark"] textarea.input,
-html[data-theme="dark"] select.input {
-  background: #020617;
-  color: #f9e7d6;
-  box-shadow:
-    inset 0 0 0 1px rgba(148, 163, 184, 0.4),
-    0 4px 10px rgba(0, 0, 0, 0.8);
-}
-
-html[data-theme="dark"] .input::placeholder,
-html[data-theme="dark"] textarea.input::placeholder {
-  color: #6b7280;
-}
-
-/* Mood / Travel Chips im Dark Mode (nicht aktiv) */
-html[data-theme="dark"] .mood-chip,
-html[data-theme="dark"] .travel-chip {
-  background: #020617;
-  color: #e5e7eb;
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.9),
-    inset 0 0 0 1px rgba(55, 65, 81, 0.9);
-}
-
-/* Aktive Chips im Dark Mode */
-html[data-theme="dark"] .mood-chip--active,
-html[data-theme="dark"] .travel-chip--active {
-  background: linear-gradient(135deg, #fbbf24, #f97316);
-  color: #111827;
-}
-
-/* Bottom-Nav */
-html[data-theme="dark"] .bottom-nav-background {
-  background: rgba(15, 23, 42, 0.95);
-}
-
-html[data-theme="dark"] .bottom-nav-item {
-  background: rgba(15, 23, 42, 0.98);
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] .bottom-nav-item--active {
-  background: #f59e0b;
-  color: #111827;
-}
-
-/* Radius-Kreis im Dark Mode */
-html[data-theme="dark"] .radius-circle {
-  stroke: rgba(251, 191, 36, 0.95);
-  fill: rgba(37, 99, 235, 0.12);
-}
-
-/* Popup im Dark Mode */
-html[data-theme="dark"] .popup {
-  color: #f9fafb;
-}
-
-html[data-theme="dark"] .popup-link {
-  color: #bfdbfe;
+hr {
+  border: none;
+  border-bottom: 1px solid rgba(193, 137, 91, 0.35);
+  margin: 16px 0;
 }
