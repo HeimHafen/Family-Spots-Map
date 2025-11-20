@@ -731,8 +731,7 @@ select.input:focus {
 }
 
 /* =========================================
-   TILLA – HERO (Über-Seite – aktuell ohne Bild genutzt,
-   Styles bleiben für später vorhanden)
+   TILLA – HERO (Über-Seite)
    ========================================= */
 
 .tilla-hero {
@@ -775,6 +774,12 @@ select.input:focus {
   flex: 1 1 auto;
 }
 
+.tilla-hero-title {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
 .tilla-hero-text {
   margin: 0;
   font-size: 15px;
@@ -790,8 +795,7 @@ select.input:focus {
   padding-bottom: 10px;
 }
 
-/* Warmes Kärtchen – bewusst WIE die anderen Karten,
-   keine Icon-/Button-Optik */
+/* Warmes Kärtchen – bewusst wie die anderen Karten */
 .tilla-sidebar-card {
   display: flex;
   align-items: center;
@@ -804,7 +808,6 @@ select.input:focus {
     inset 0 0 0 1px var(--card-border);
 }
 
-/* im Dark Mode leicht abgedunkelt, aber kein „Button-Scheinwerfer“ */
 [data-theme="dark"] .tilla-sidebar-card {
   background: rgba(15, 23, 42, 0.97);
   box-shadow:
@@ -812,7 +815,7 @@ select.input:focus {
     inset 0 0 0 1px rgba(148, 163, 184, 0.45);
 }
 
-/* Avatar ohne extra Kreis-Button */
+/* Avatar mit leichtem „Atmen“ */
 .tilla-sidebar-avatar {
   flex: 0 0 auto;
 }
@@ -821,12 +824,12 @@ select.input:focus {
   display: block;
   width: 60px;
   height: auto;
-  /* Blick nach rechts zum Text */
   transform: scaleX(-1);
-  transform-origin: center;
+  transform-origin: center bottom;
+  animation: tilla-idle 12s infinite;
 }
 
-/* Text neben Tilla */
+/* Tilla-Text neben dem Avatar */
 .tilla-sidebar-text {
   flex: 1 1 auto;
 }
@@ -835,6 +838,31 @@ select.input:focus {
   margin: 0;
   font-size: 14px;
   line-height: 1.5;
+}
+
+/* sanfte Idle-Animation */
+@keyframes tilla-idle {
+  0% {
+    transform: scaleX(-1) translateY(0);
+  }
+  2% {
+    transform: scaleX(-1) translateY(-1px);
+  }
+  4% {
+    transform: scaleX(-1) translateY(0);
+  }
+  50% {
+    transform: scaleX(-1) translateY(0);
+  }
+  52% {
+    transform: scaleX(-1) translateY(-0.5px);
+  }
+  54% {
+    transform: scaleX(-1) translateY(0);
+  }
+  100% {
+    transform: scaleX(-1) translateY(0);
+  }
 }
 
 /* =========================================
@@ -1069,26 +1097,4 @@ hr {
 
 [data-theme="dark"] hr {
   border-bottom-color: rgba(148, 163, 184, 0.35);
-}
-
-/* =========================================
-   PATCH: Tilla unten auf der Über-Seite entfernen
-   ========================================= */
-
-/* Entfernt mögliche Pseudo-Elemente mit Tilla als Bild */
-#view-about::after,
-#page-about-de::after,
-#page-about-en::after {
-  display: none !important;
-  content: none !important;
-  background-image: none !important;
-}
-
-/* Entfernt mögliche Tilla-Illustrationen, falls als Hero-Karte eingebunden */
-.tilla-hero,
-.tilla-hero-card,
-.tilla-hero-layout,
-.tilla-hero-image,
-.tilla-hero-img {
-  display: none !important;
 }
