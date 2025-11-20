@@ -1,11 +1,11 @@
 /* =========================================================
    Family Spots Map – styles.css
-   Layout, Typografie, Map + Sidebar, About-Seite
+   Komplett-Datei zum Ersetzen
    ========================================================= */
 
-/* -----------------------------
-   RESET & BASICS
---------------------------------*/
+/* ------------------------------
+   Basis / Reset
+   ------------------------------ */
 
 *,
 *::before,
@@ -19,131 +19,139 @@ body {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
-  color: #5a3b28;
-  background: #fdd8aa; /* Fallback, falls App-Wrapper fehlt */
+    "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #ffe9c6 0, #f8c58c 35%, #f5b26a 70%, #f0a356 100%);
+  color: #5b3b24;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* -----------------------------
-   THEME VARIABLES
---------------------------------*/
+/* ------------------------------
+   Farb-Variablen (Light Theme)
+   ------------------------------ */
 
 :root {
-  --color-header-bg: linear-gradient(135deg, #ff9800, #fb8c00);
-  --color-header-text: #fff;
-  --color-header-tagline-bg: #ffb74d;
+  --fsm-bg: #ffe9cc;
+  --fsm-bg-alt: #fcd3a4;
+  --fsm-bg-soft: #ffeed9;
 
-  --color-page-bg: linear-gradient(
-    180deg,
-    #ffe1bf 0%,
-    #ffddb4 32%,
-    #ffd39e 100%
-  );
+  --fsm-header-grad-from: #ff9800;
+  --fsm-header-grad-to: #fb8c00;
 
-  --color-surface: #ffe9cf;
-  --color-surface-soft: #ffeeda;
-  --color-surface-strong: #ffebc9;
+  --fsm-card: #ffecd7;
+  --fsm-card-strong: #ffe1c0;
+  --fsm-card-border: #ffc27b;
 
-  --color-border-soft: #f4bc7f;
-  --color-border-strong: #e59c5c;
+  --fsm-text-main: #5b3b24;
+  --fsm-text-soft: #8a6040;
 
-  --color-text-main: #5a3b28;
-  --color-text-soft: #7b5740;
-  --color-text-strong: #4a2f20;
+  --fsm-accent: #ff9800;
+  --fsm-accent-strong: #ff6f00;
 
-  --color-accent: #fb8c00;
-  --color-accent-strong: #f57c00;
-  --color-accent-soft: #ffe0b2;
+  --fsm-radius-lg: 24px;
+  --fsm-radius-md: 18px;
+  --fsm-radius-pill: 999px;
 
-  --shadow-soft: 0 12px 30px rgba(180, 110, 50, 0.25);
-  --shadow-card: 0 10px 25px rgba(163, 102, 55, 0.28);
+  --fsm-shadow-soft: 0 18px 45px rgba(191, 114, 39, 0.35);
+  --fsm-shadow-card: 0 10px 28px rgba(191, 114, 39, 0.24);
+  --fsm-shadow-subtle: 0 4px 12px rgba(191, 114, 39, 0.18);
 
-  --radius-lg: 28px;
-  --radius-md: 18px;
-  --radius-sm: 12px;
+  --fsm-border-dashed: 2px dashed rgba(255, 157, 79, 0.75);
+
+  --fsm-input-bg: rgba(255, 255, 255, 0.85);
+  --fsm-input-border: rgba(180, 110, 72, 0.3);
 }
 
-/* Dark-Mode (wird über data-theme="dark" auf <html> geschaltet) */
+/* ------------------------------
+   Dark Theme (per data-theme)
+   ------------------------------ */
 
 html[data-theme="dark"] {
-  --color-header-bg: linear-gradient(135deg, #f57c00, #ef6c00);
-  --color-header-text: #fff;
-  --color-header-tagline-bg: #ffa726;
+  --fsm-bg: #1f130c;
+  --fsm-bg-alt: #271812;
+  --fsm-bg-soft: #2e1b13;
 
-  --color-page-bg: radial-gradient(circle at top, #3b2414 0%, #1a120c 55%, #120b07 100%);
+  --fsm-header-grad-from: #ffb74d;
+  --fsm-header-grad-to: #f57c00;
 
-  --color-surface: #2d1c12;
-  --color-surface-soft: #362218;
-  --color-surface-strong: #3e2617;
+  --fsm-card: #2b1911;
+  --fsm-card-strong: #301d15;
+  --fsm-card-border: #8d4a1c;
 
-  --color-border-soft: #a06232;
-  --color-border-strong: #ef6c00;
+  --fsm-text-main: #ffe9d5;
+  --fsm-text-soft: #f3c49c;
 
-  --color-text-main: #ffe0c2;
-  --color-text-soft: #f5c18c;
-  --color-text-strong: #ffffff;
+  --fsm-accent: #ffb74d;
+  --fsm-accent-strong: #ff9800;
 
-  --color-accent: #ff9800;
-  --color-accent-strong: #ffb74d;
-  --color-accent-soft: #4a2814;
+  --fsm-shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
+  --fsm-shadow-card: 0 10px 28px rgba(0, 0, 0, 0.6);
+  --fsm-shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.5);
 
-  --shadow-soft: 0 14px 36px rgba(0, 0, 0, 0.65);
-  --shadow-card: 0 18px 40px rgba(0, 0, 0, 0.8);
+  --fsm-border-dashed: 2px dashed rgba(255, 183, 91, 0.8);
+
+  --fsm-input-bg: rgba(40, 24, 17, 0.9);
+  --fsm-input-border: rgba(255, 200, 150, 0.4);
 }
 
-/* -----------------------------
-   GENERELLE UTILITY-KLASSEN
---------------------------------*/
-
-.hidden {
-  display: none !important;
-}
-
-.noscript-warning {
-  padding: 1rem 1.25rem;
-  text-align: center;
-  background: #ffccbc;
-  color: #5d4037;
-  font-weight: 600;
-}
-
-/* -----------------------------
-   APP FRAME
---------------------------------*/
+/* ------------------------------
+   App-Rahmen
+   ------------------------------ */
 
 .app {
   min-height: 100vh;
+  max-width: 840px;
+  margin: 0 auto;
+  background: radial-gradient(circle at top, #ffeeda 0, var(--fsm-bg-soft) 42%, var(--fsm-bg-alt) 100%);
   display: flex;
   flex-direction: column;
-  background: var(--color-page-bg);
-  color: var(--color-text-main);
+  position: relative;
 }
 
-/* -----------------------------
+/* ------------------------------
+   NoScript Hinweis
+   ------------------------------ */
+
+.noscript-warning {
+  background: #d32f2f;
+  color: #fff;
+  padding: 0.8rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* ========================================================
    HEADER
---------------------------------*/
+   ======================================================== */
 
 .app-header {
-  background: var(--color-header-bg);
-  color: var(--color-header-text);
-  padding: 0.75rem 1.1rem 0.8rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: 20;
+  padding: 0.8rem 1rem 1.1rem;
+  background: linear-gradient(
+    135deg,
+    var(--fsm-header-grad-from),
+    var(--fsm-header-grad-to)
+  );
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(191, 114, 39, 0.45);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
 }
 
-/* Obere Reihe: Buttons + Sprache + Theme + Locate */
+/* Top-Zeile */
 
 .app-header-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.65rem;
 }
 
 .app-header-left,
@@ -153,112 +161,122 @@ html[data-theme="dark"] {
   gap: 0.5rem;
 }
 
+/* Icon-Buttons (Fragezeichen, Theme, Locate) */
+
 .btn-icon {
   border: none;
+  border-radius: var(--fsm-radius-pill);
   background: rgba(255, 255, 255, 0.16);
-  color: inherit;
-  border-radius: 999px;
-  width: 34px;
-  height: 34px;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(80, 40, 0, 0.4);
-  backdrop-filter: blur(8px);
-  transition: transform 0.12s ease, box-shadow 0.12s ease,
-    background-color 0.12s ease;
-}
-
-.btn-icon:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(80, 40, 0, 0.5);
-  background: rgba(255, 255, 255, 0.26);
+  box-shadow: 0 2px 6px rgba(123, 73, 24, 0.45);
+  backdrop-filter: blur(18px);
 }
 
 .btn-icon:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 6px rgba(80, 40, 0, 0.35);
+  transform: translateY(1px) scale(0.98);
 }
 
-/* Sprache-Auswahl */
+/* Sprache-Umschalter – "DE" Chip */
 
 .language-switcher {
-  border-radius: 999px;
-  border: none;
-  padding: 0.3rem 0.8rem 0.3rem 0.6rem;
+  min-width: 60px;
+  padding: 0.28rem 0.9rem;
+  border-radius: var(--fsm-radius-pill);
+  border: 0;
   font-weight: 600;
-  font-size: 0.88rem;
-  background: rgba(255, 255, 255, 0.18);
+  font-size: 0.9rem;
+  line-height: 1.1;
+  text-align: center;
   color: #fff;
-  outline: none;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(80, 40, 0, 0.35);
-  appearance: none;
-  background-image: linear-gradient(
-      45deg,
-      transparent 50%,
-      rgba(255, 255, 255, 0.85) 50%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.85) 50%,
-      transparent 50%
-    );
-  background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
-  background-size: 6px 6px, 6px 6px;
-  background-repeat: no-repeat;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.15));
+  box-shadow: 0 2px 7px rgba(123, 73, 24, 0.45);
+  backdrop-filter: blur(16px);
+  appearance: none; /* iOS: trotzdem eigene Pfeile, aber sauber in der Kapsel */
 }
 
-/* Hauptzeile: Titel + Tagline */
+.language-switcher:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 2px;
+}
+
+/* Optionen */
+
+.language-switcher option {
+  color: #333;
+}
+
+/* --------- Title + Claim ---------- */
 
 .app-header-main {
   text-align: center;
 }
 
 .header-title {
-  margin: 0;
-  font-size: 1.35rem;
+  margin: 0 0 0.35rem;
+  font-size: 1.55rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 4px rgba(161, 84, 10, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.38rem;
-}
-
-.header-title-spots {
-  font-weight: 900;
+  gap: 0.25rem;
 }
 
 .header-flag {
-  font-size: 1.2rem;
+  font-size: 1.35rem;
 }
+
+.header-title-spots {
+  position: relative;
+}
+
+.header-title-spots::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.06rem;
+  height: 0.15rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Claim-Button */
 
 .header-tagline {
-  margin: 0.5rem auto 0;
-  padding: 0.5rem 1.6rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
+  margin: 0 auto;
+  padding: 0.55rem 1.5rem;
+  max-width: 280px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 6px 18px rgba(160, 80, 10, 0.55);
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: radial-gradient(circle at top, #ffe0b2, #ffb74d);
+  color: #8a4c15;
+  box-shadow: 0 12px 30px rgba(160, 84, 18, 0.55);
 }
 
-/* -----------------------------
-   MAIN LAYOUT
---------------------------------*/
+/* ========================================================
+   MAIN / Views
+   ======================================================== */
 
 .app-main {
   flex: 1;
-  padding: 0.75rem 0.9rem 4.3rem;
-  background: var(--color-page-bg);
+  padding: 0.8rem 0.8rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-/* Views (Map / About) */
+/* Views (Karte / Über) */
 
 .view {
   display: none;
@@ -266,213 +284,165 @@ html[data-theme="dark"] {
 
 .view.view--active {
   display: flex;
-}
-
-/* Map-View Layout: Sidebar + Karte */
-
-#view-map {
+  flex-direction: column;
   gap: 0.75rem;
 }
 
-/* Sidebar */
+/* ========================================================
+   MAP-VIEW LAYOUT
+   ======================================================== */
+
+#view-map {
+  min-height: 60vh;
+}
+
+/* Sidebar mit Kompass / Plus / Filter / Liste */
 
 .sidebar {
-  flex: 0 0 340px;
-  max-width: 380px;
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  padding: 0.85rem 0.85rem 1rem;
-  box-shadow: var(--shadow-soft);
+  background: radial-gradient(circle at top, var(--fsm-bg-soft) 0, var(--fsm-bg) 40%, var(--fsm-bg-alt) 100%);
+  border-radius: var(--fsm-radius-lg);
+  box-shadow: var(--fsm-shadow-card);
+  padding: 0.85rem 0.9rem 0.95rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  overflow: hidden;
+  gap: 0.55rem;
+  max-height: 52vh;           /* -> mehr Platz für Karte */
+  overflow-y: auto;
 }
 
-/* Sidebar-Sektionen */
+/* Jede Sidebar-Section ist wie eine Karte */
 
 .sidebar-section {
-  background: var(--color-surface-soft);
-  border-radius: var(--radius-md);
-  padding: 0.65rem 0.8rem 0.8rem;
-  box-shadow: 0 5px 14px rgba(150, 90, 40, 0.25);
+  background: var(--fsm-card);
+  border-radius: var(--fsm-radius-md);
+  padding: 0.7rem 0.8rem 0.75rem;
+  box-shadow: var(--fsm-shadow-subtle);
 }
-
-.sidebar-section summary {
-  list-style: none;
-}
-
-.sidebar-section[open] > summary::-webkit-details-marker {
-  display: none;
-}
-
-/* Header innerhalb der Sidebar-Sektion */
 
 .sidebar-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.4rem;
-  margin: -0.1rem 0 0.35rem;
+  gap: 0.75rem;
+  margin-bottom: 0.45rem;
 }
 
 .sidebar-section-title {
-  font-size: 0.98rem;
+  font-size: 1.0rem;
   margin: 0;
-  font-weight: 700;
-  color: var(--color-text-strong);
+  color: var(--fsm-text-main);
+}
+
+/* Close-Button rechts in den Details */
+
+.sidebar-section[open] > summary.sidebar-section-header::-webkit-details-marker {
+  display: none;
+}
+
+.sidebar-section[open] > summary.sidebar-section-header {
+  cursor: default;
 }
 
 .sidebar-section-close {
-  font-size: 1.1rem;
-  min-width: 28px;
+  width: 28px;
   height: 28px;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #c17842;
+  box-shadow: 0 3px 8px rgba(151, 92, 47, 0.45);
 }
 
 /* Kompass-Karte */
 
 .compass-card {
-  margin-top: 0.3rem;
-  padding: 0.7rem 0.8rem 0.9rem;
-  border-radius: var(--radius-md);
-  border: 2px dashed var(--color-border-soft);
-  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-}
-
-/* Filter-Gruppen */
-
-.filter-group {
-  margin-top: 0.55rem;
-}
-
-.filter-group-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  margin-bottom: 0.1rem;
-  color: var(--color-text-soft);
+  background: linear-gradient(145deg, #ffe9d2, #ffd1a3);
+  border-radius: var(--fsm-radius-md);
+  padding: 0.8rem 0.85rem;
+  box-shadow: inset 0 0 0 2px rgba(255, 189, 120, 0.65);
 }
 
 .filter-group-helper {
-  margin: 0.1rem 0 0.35rem;
-  font-size: 0.8rem;
-  color: var(--color-text-soft);
+  margin: 0 0 0.65rem;
+  font-size: 0.88rem;
+  color: var(--fsm-text-soft);
 }
 
-/* Inputs & Selects */
-
-.input,
-textarea.input {
-  width: 100%;
-  border-radius: 14px;
-  border: 1px solid rgba(192, 140, 90, 0.65);
-  padding: 0.5rem 0.7rem;
-  font-size: 0.9rem;
-  outline: none;
-  background: #fffaf3;
-  color: var(--color-text-main);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-.input:focus,
-textarea.input:focus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(251, 140, 0, 0.25);
-}
-
-/* Buttons */
-
-.btn {
-  border-radius: 999px;
-  border: none;
-  padding: 0.55rem 1.2rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  background: linear-gradient(135deg, #ff9800, #fb8c00);
-  color: #fff;
-  box-shadow: 0 8px 18px rgba(190, 100, 10, 0.55);
-  transition: transform 0.12s ease, box-shadow 0.12s ease,
-    filter 0.12s ease;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.05);
-  box-shadow: 0 10px 22px rgba(190, 100, 10, 0.7);
-}
-
-.btn:active {
-  transform: translateY(1px);
-  box-shadow: 0 4px 10px rgba(190, 100, 10, 0.55);
-}
-
-.btn-small {
-  padding: 0.45rem 0.95rem;
-  font-size: 0.85rem;
-}
-
-.btn-ghost {
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.14);
-  color: var(--color-text-strong);
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0.25rem 0.7rem;
-  font-size: 0.8rem;
-  box-shadow: 0 4px 10px rgba(160, 100, 60, 0.3);
-}
-
-/* Plus-Code */
+/* Plus Code-Bereich */
 
 .plus-code-form label {
-  font-size: 0.85rem;
-  color: var(--color-text-main);
+  display: block;
+  font-size: 0.88rem;
+  margin-bottom: 0.35rem;
 }
 
 .plus-code-row {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0.3rem;
+  align-items: center;
+  margin-bottom: 0.35rem;
 }
 
 .plus-note {
-  margin: 0.4rem 0 0;
+  margin: 0;
   font-size: 0.78rem;
-  color: var(--color-text-soft);
+  color: var(--fsm-text-soft);
 }
 
-/* Stimmung & Reise-Modus Chips */
+/* Filter-Gruppen allgemein */
+
+.filter-group {
+  margin-bottom: 0.55rem;
+}
+
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+
+.filter-group-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fsm-text-soft);
+}
+
+/* Stimmung & Reise-Modus (Chips) */
 
 .mood-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
+  margin-top: 0.2rem;
 }
 
 .mood-chip,
 .travel-chip {
-  border-radius: 999px;
   border: none;
-  padding: 0.35rem 0.75rem;
-  background: rgba(255, 255, 255, 0.7);
-  cursor: pointer;
+  border-radius: var(--fsm-radius-pill);
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 3px 8px rgba(179, 107, 50, 0.25);
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.85rem;
-  box-shadow: 0 4px 10px rgba(150, 90, 40, 0.3);
+  cursor: pointer;
+  font-size: 0.9rem;
 }
 
 .mood-chip-emoji {
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
-.mood-chip-label {
-  font-size: 0.85rem;
+/* Aktiver Chip (wird per JS Klasse .is-active gesetzt) */
+
+.mood-chip.is-active,
+.travel-chip.is-active {
+  background: linear-gradient(135deg, #ffe0b2, #ffb74d);
+  color: #8a4c15;
+  box-shadow: 0 4px 11px rgba(179, 107, 50, 0.45);
 }
 
 /* Radius-Slider */
@@ -483,343 +453,380 @@ textarea.input:focus {
   gap: 0.5rem;
 }
 
-#filter-radius {
-  flex: 1;
-}
-
 .radius-max-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-text-soft);
+  font-size: 0.82rem;
+  color: var(--fsm-text-soft);
 }
 
 .radius-description {
-  margin: 0.25rem 0 0;
   font-size: 0.8rem;
-  color: var(--color-text-soft);
+  margin: 0.25rem 0 0;
+  color: var(--fsm-text-soft);
 }
 
-/* Checkboxen */
+/* Checkbox-Gruppen */
 
-.filter-group--checkbox {
-  margin-top: 0.5rem;
-}
-
-.checkbox-label {
+.filter-group--checkbox .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.88rem;
-  color: var(--color-text-main);
+  gap: 0.45rem;
+  font-size: 0.9rem;
 }
 
-/* Sidebar, die mit der Liste mitwächst */
+/* Spot-Liste Block wächst */
 
 .sidebar-section--grow {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 120px;
 }
+
+/* Spot-Liste selbst */
 
 .spot-list {
-  margin-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 240px;
   overflow-y: auto;
-  max-height: 360px;
-  padding-right: 0.2rem;
 }
 
-/* Map-Sektion */
+/* Spot-Karte (Liste) – Basis-Styles, damit nichts kaputt geht,
+   auch wenn JS Details ergänzt. */
+
+.spot-card {
+  background: var(--fsm-card);
+  border-radius: 16px;
+  padding: 0.6rem 0.7rem;
+  box-shadow: 0 3px 8px rgba(179, 107, 50, 0.25);
+  font-size: 0.9rem;
+}
+
+.spot-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.spot-card-title {
+  font-weight: 600;
+}
+
+.spot-card-distance {
+  font-size: 0.78rem;
+  color: var(--fsm-text-soft);
+}
+
+/* ========================================================
+   MAP-SECTION
+   ======================================================== */
 
 .map-section {
-  flex: 1;
-  min-width: 0;
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-  overflow: hidden;
-  display: flex;
   position: relative;
+  flex: 1 1 auto;
+  min-height: 38vh;
+  margin-top: 0.3rem;
 }
 
 .map-container {
-  flex: 1 1 auto;
-  min-height: 420px;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--fsm-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--fsm-shadow-soft);
 }
+
+/* Spot-Details (rechts/unterhalb der Karte – aktuell mobil i.d.R. unten) */
 
 .spot-details {
   position: absolute;
-  right: 0.6rem;
-  bottom: 0.6rem;
-  left: 0.6rem;
-  max-height: 46%;
-  background: rgba(255, 248, 240, 0.96);
-  border-radius: 18px;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+  bottom: 0.7rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  max-height: 50%;
   overflow-y: auto;
-  padding: 0.7rem 0.85rem 0.8rem;
+  background: rgba(255, 239, 222, 0.95);
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(136, 80, 36, 0.65);
+  padding: 0.75rem 0.85rem;
+  font-size: 0.9rem;
+  backdrop-filter: blur(16px);
 }
 
-/* -----------------------------
-   ABOUT VIEW
---------------------------------*/
+/* ========================================================
+   Inputs, Buttons, Slider
+   ======================================================== */
 
-#view-about {
+.input,
+textarea.input,
+select.input {
   width: 100%;
-  justify-content: center;
+  border-radius: 14px;
+  border: 1px solid var(--fsm-input-border);
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  background: var(--fsm-input-bg);
+  color: var(--fsm-text-main);
+  box-shadow: 0 2px 6px rgba(179, 107, 50, 0.18) inset;
 }
+
+.input::placeholder,
+textarea.input::placeholder {
+  color: rgba(139, 91, 58, 0.6);
+}
+
+textarea.input {
+  resize: vertical;
+}
+
+/* Range-Slider */
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--fsm-accent);
+}
+
+/* Primäre Buttons */
+
+.btn {
+  border-radius: var(--fsm-radius-pill);
+  border: none;
+  padding: 0.55rem 1.05rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--fsm-accent), var(--fsm-accent-strong));
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(191, 114, 39, 0.55);
+}
+
+.btn-small {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.86rem;
+}
+
+/* Ghost-Button (Filter anzeigen / Nur Karte etc.) */
+
+.btn-ghost {
+  border-radius: var(--fsm-radius-pill);
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--fsm-text-main);
+  padding: 0.25rem 0.85rem;
+  font-size: 0.86rem;
+  box-shadow: 0 4px 10px rgba(179, 107, 50, 0.25);
+  cursor: pointer;
+}
+
+/* ========================================================
+   ABOUT / PAGE LAYOUT
+   ======================================================== */
 
 .page {
-  max-width: 960px;
-  width: 100%;
-  margin: 0 auto;
+  background: radial-gradient(circle at top, var(--fsm-bg-soft) 0, var(--fsm-bg) 40%, var(--fsm-bg-alt) 100%);
+  border-radius: var(--fsm-radius-lg);
+  padding: 1.1rem 1rem 1.4rem;
+  box-shadow: var(--fsm-shadow-card);
 }
 
-/* Hintergrund der About-Seite bleibt warm, kein Weiß beim Scrollen */
 .page-about {
-  background: transparent;
-  padding: 1.2rem 0.4rem 4.8rem;
-  color: var(--color-text-main);
+  font-size: 0.98rem;
+  line-height: 1.55;
 }
-
-/* Typografie */
 
 .page-about h2 {
-  font-size: 1.5rem;
-  margin: 0 0 1rem;
-  color: var(--color-text-strong);
+  margin-top: 0;
+  margin-bottom: 0.9rem;
+  font-size: 1.4rem;
+  color: var(--fsm-text-main);
 }
 
 .page-about h3 {
-  font-size: 1.08rem;
-  margin: 1.6rem 0 0.5rem;
-  color: var(--color-text-strong);
+  margin-top: 1.4rem;
+  margin-bottom: 0.4rem;
+  font-size: 1.1rem;
 }
 
 .page-about p {
-  margin: 0 0 0.9rem;
+  margin: 0.3rem 0;
+  color: var(--fsm-text-main);
 }
 
-.page-about strong {
-  color: var(--color-text-strong);
-}
-
-/* Trenner */
-
-.page-about hr {
-  border: none;
-  border-top: 1px solid rgba(201, 140, 86, 0.4);
-  margin: 1.5rem 0 1.2rem;
-}
-
-/* -----------------------------
-   TILLA HERO (About)
---------------------------------*/
-
-/* Allgemeiner Wrapper – beide Varianten (alte .tilla-hero und neue .tilla-hero-card)
-   bekommen denselben Look als warme Karte. */
-
-.tilla-hero,
-.tilla-hero-card {
-  margin: 0.6rem 0 1.4rem;
-  padding: 1.1rem 1.1rem 1.3rem;
-  border-radius: var(--radius-lg);
-  background: radial-gradient(circle at top left, #ffe9c5 0%, #ffdeb0 40%, #ffd7a1 100%);
-  border: 2px dashed var(--color-border-soft);
-  box-shadow: var(--shadow-card);
-}
-
-/* Alte Variante: Illustration oben, Text darunter (SVG oder Bild in .tilla-hero-illustration) */
-
-.tilla-hero {
-  text-align: center;
-}
-
-.tilla-hero-illustration {
-  margin-bottom: 0.45rem;
-}
-
-.tilla-hero-svg {
-  max-width: 180px;
-  width: 60%;
-  height: auto;
-}
-
-/* Neue Variante: Tilla links, Text rechts  */
+/* Tilla-Hero-Karte (Layout-Hüllen – Detailstyles sind in tilla.css) */
 
 .tilla-hero-card {
-  display: grid;
-  grid-template-columns: minmax(0, 170px) minmax(0, 1.5fr);
-  gap: 1.1rem;
+  display: flex;
   align-items: center;
+  gap: 1.0rem;
+  margin: 0 0 0.9rem;
+  padding: 0.65rem 0.8rem 0.75rem;
+  border-radius: var(--fsm-radius-lg);
+  background: radial-gradient(circle at top left, #ffe9cc 0, #ffe0bf 40%, #ffd7b0 100%);
+  border: var(--fsm-border-dashed);
+  box-shadow: var(--fsm-shadow-subtle);
 }
 
 .tilla-hero-image-wrapper {
+  flex: 0 0 110px;
+  max-width: 40%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .tilla-hero-image {
-  max-width: 170px;
   width: 100%;
   height: auto;
   display: block;
 }
 
-.tilla-hero-text {
-  margin: 0;
+.tilla-hero-text-block {
+  flex: 1 1 auto;
   font-weight: 600;
-  font-size: 1rem;
-  color: var(--color-text-strong);
+  text-align: left;
+  color: #8a4c26;
 }
 
-/* Responsive: auf sehr schmalen Screens Tilla über dem Text zentrieren */
-
-@media (max-width: 600px) {
-  .tilla-hero-card {
-    grid-template-columns: minmax(0, 1fr);
-    text-align: center;
-  }
-
-  .tilla-hero-text {
-    margin-top: 0.3rem;
-  }
-}
-
-/* -----------------------------
+/* ========================================================
    BOTTOM NAVIGATION
---------------------------------*/
+   ======================================================== */
 
 .bottom-nav {
-  position: fixed;
+  position: sticky;
   bottom: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
+  z-index: 15;
   display: flex;
-  align-items: stretch;
   justify-content: space-around;
-  padding: 0 0.6rem env(safe-area-inset-bottom);
-  z-index: 50;
-  pointer-events: none;
+  align-items: center;
+  padding: 0.4rem 0.6rem 0.65rem;
 }
 
 .bottom-nav-background {
   position: absolute;
   inset: 0;
-  margin: 0 auto;
-  max-width: 640px;
-  border-radius: 28px 28px 0 0;
-  background: rgba(255, 240, 223, 0.96);
-  box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.3);
-  pointer-events: none;
+  margin: 0;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  background: linear-gradient(to top, rgba(120, 70, 35, 0.22), rgba(255, 244, 229, 0.92));
+  backdrop-filter: blur(18px);
+  z-index: -2;
+  box-shadow: 0 -10px 25px rgba(120, 70, 35, 0.55);
 }
 
 .bottom-nav-indicator {
   position: absolute;
-  bottom: 6px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  width: 40px;
+  bottom: 0.7rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 78px;
   height: 4px;
   border-radius: 999px;
-  background: rgba(120, 80, 50, 0.35);
+  background: rgba(120, 70, 35, 0.4);
+  z-index: -1;
 }
-
-/* Buttons */
 
 .bottom-nav-item {
   position: relative;
-  z-index: 1;
-  flex: 1;
+  background: transparent;
   border: none;
-  background: none;
+  padding: 0.2rem 0.6rem 0.1rem;
+  border-radius: 999px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.1rem;
+  gap: 0.05rem;
   font-size: 0.78rem;
-  color: #9e7b5e;
+  color: rgba(92, 55, 30, 0.7);
   cursor: pointer;
-  pointer-events: auto;
-}
-
-.bottom-nav-icon {
-  font-size: 1.25rem;
 }
 
 .bottom-nav-item--active {
-  color: #f57c00;
-  font-weight: 700;
+  background: rgba(255, 255, 255, 0.98);
+  color: #e07a19;
+  box-shadow: 0 4px 11px rgba(136, 80, 36, 0.35);
 }
 
-/* -----------------------------
-   TOAST
---------------------------------*/
+.bottom-nav-icon {
+  font-size: 1.1rem;
+}
+
+/* ========================================================
+   Toast
+   ======================================================== */
 
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 78px;
+  bottom: 4.2rem;
   transform: translateX(-50%);
-  max-width: 80%;
-  background: rgba(51, 26, 11, 0.94);
-  color: #fff7e9;
+  max-width: 85%;
   padding: 0.6rem 0.9rem;
   border-radius: 999px;
-  font-size: 0.85rem;
-  text-align: center;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  background: rgba(60, 35, 18, 0.9);
+  color: #ffe9d5;
+  font-size: 0.86rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.toast.toast--visible {
+.toast.is-visible {
   opacity: 1;
-  transform: translateX(-50%) translateY(-4px);
+  transform: translateX(-50%) translateY(-6px);
 }
 
-/* -----------------------------
-   RESPONSIVE BREAKPOINTS
---------------------------------*/
+/* ========================================================
+   Responsive
+   ======================================================== */
 
-@media (max-width: 960px) {
+@media (min-width: 720px) {
+  .app-main {
+    padding: 1.0rem 1rem 0.8rem;
+  }
+
   #view-map {
-    flex-direction: column;
+    flex-direction: row;
+    gap: 0.9rem;
   }
 
   .sidebar {
-    max-width: 100%;
-    width: 100%;
+    flex: 0 0 310px;
+    max-height: none;
+    height: auto;
   }
 
   .map-section {
-    min-height: 320px;
+    flex: 1 1 auto;
+    min-height: 460px;
   }
 
   .spot-details {
-    position: static;
-    max-height: none;
-    margin: 0.6rem;
+    right: 1rem;
+    left: auto;
+    width: 320px;
+  }
+
+  .page {
+    padding: 1.4rem 1.4rem 1.6rem;
+  }
+
+  .tilla-hero-card {
+    padding: 0.8rem 1.1rem 0.9rem;
   }
 }
 
-@media (min-width: 961px) {
-  .app-main {
-    padding-left: 1.4rem;
-    padding-right: 1.4rem;
+@media (max-width: 360px) {
+  .tilla-hero-card {
+    flex-direction: column;
+    text-align: center;
   }
 
-  .bottom-nav-background {
-    max-width: 480px;
+  .tilla-hero-text-block {
+    text-align: center;
   }
-}
 
-/* Kleiner Text & Feinheiten */
-
-small {
-  font-size: 0.78rem;
+  .sidebar {
+    padding-inline: 0.75rem;
+  }
 }
