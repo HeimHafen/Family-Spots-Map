@@ -15,12 +15,21 @@ body {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
   color: #5b3621;
   background: radial-gradient(circle at top, #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Hilfsklasse für JS-Toggles (Filter, About DE/EN, Liste …) */
+.hidden {
+  display: none !important;
 }
 
 /* Links */
@@ -203,7 +212,7 @@ a {
 
 #view-map {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse; /* Mobile: Karte zuerst, dann Sidebar */
   gap: 14px;
 }
 
@@ -550,6 +559,8 @@ select.input:focus {
   box-shadow:
     0 14px 32px rgba(155, 93, 45, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  max-width: 780px;
+  margin: 0 auto;
 }
 
 .page-about h2 {
@@ -571,8 +582,7 @@ select.input:focus {
   font-size: 15px;
 }
 
-/* Tilla-Hero – Rahmen und Innenfläche sind in tilla.css
-   hier nur Grundabstände für die Seite */
+/* Tilla-Hero – Grundabstände für die Seite */
 .tilla-hero {
   margin-bottom: 16px;
 }
