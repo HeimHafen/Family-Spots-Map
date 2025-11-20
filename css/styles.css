@@ -1269,3 +1269,21 @@ html[data-theme="dark"] .noscript-warning {
 [data-theme="dark"] #view-about .page-about h3 {
   color: #ffffff;
 }
+/* ===========================
+   ABOUT-HINTERGRUND WARM
+   =========================== */
+
+.app-main {
+  /* Warmes Basis-Creme – gleiche Stimmung wie Startbereich */
+  background-color: #fde3c4;
+}
+
+/* Seiten sollen nicht pauschal weiß hinterlegt sein */
+.page {
+  background-color: transparent;
+}
+
+/* About-Seite: leicht aufgehelltes Creme */
+.page-about {
+  background-color: #fde9d1;
+}
