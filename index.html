@@ -121,9 +121,98 @@
       <main class="app-main">
         <!-- MAP VIEW -->
         <section id="view-map" class="view view--active" aria-label="Karte">
-          <!-- Sidebar (Tilla-Bubble per JS, Daylog, Filter, Liste) -->
+          <!-- Sidebar (Tilla + Kompass + Plus + Filter + Liste) -->
           <aside class="sidebar">
-            <!-- Tilla-Bubble wird hier per JS eingefügt (siehe js/tilla.js) -->
+            <!-- Tilla wird hier per JS eingefügt (siehe js/tilla.js) -->
+
+            <!-- Familien-Kompass (einklappbar) -->
+            <details class="sidebar-section" id="compass-section" open>
+              <summary class="sidebar-section-header">
+                <h2
+                  class="sidebar-section-title"
+                  id="compass-label"
+                >
+                  Familien-Kompass
+                </h2>
+                <button
+                  type="button"
+                  class="btn-icon sidebar-section-close"
+                  data-target="compass-section"
+                  aria-label="Kompass-Bereich schließen"
+                >
+                  ×
+                </button>
+              </summary>
+
+              <div class="compass-card">
+                <p
+                  class="filter-group-helper"
+                  id="compass-helper"
+                >
+                  Der Familien-Kompass hilft euch mit einem Klick Spots zu
+                  finden, die zu eurer Zeit, eurem Alter und eurer Energie
+                  passen.
+                </p>
+                <button
+                  type="button"
+                  id="compass-apply"
+                  class="btn btn-small"
+                >
+                  <span id="compass-apply-label">
+                    Kompass anwenden
+                  </span>
+                </button>
+              </div>
+            </details>
+
+            <!-- Family Spots Plus (einklappbar) -->
+            <details class="sidebar-section" id="plus-section" open>
+              <summary class="sidebar-section-header">
+                <h2 class="sidebar-section-title">
+                  Family Spots Plus
+                </h2>
+                <button
+                  type="button"
+                  class="btn-icon sidebar-section-close"
+                  data-target="plus-section"
+                  aria-label="Family Spots Plus schließen"
+                >
+                  ×
+                </button>
+              </summary>
+
+              <div class="filter-group">
+                <p id="plus-status-text">
+                  Family Spots Plus ist nicht aktiviert.
+                </p>
+              </div>
+
+              <div class="plus-code-form">
+                <label for="plus-code-input">
+                  Partner-Code eingeben (z. B. von Campingplatz,
+                  Kommune oder Sponsor):
+                </label>
+                <div class="plus-code-row">
+                  <input
+                    id="plus-code-input"
+                    class="input"
+                    type="text"
+                    autocomplete="off"
+                  />
+                  <button
+                    id="plus-code-submit"
+                    class="btn"
+                    type="button"
+                  >
+                    Code aktivieren
+                  </button>
+                </div>
+                <p class="plus-note">
+                  Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei
+                  – ganz ohne Abo-Falle.
+                </p>
+              </div>
+            </details>
 
             <!-- Mein Tag / Tagesprotokoll (einklappbar) -->
             <details class="sidebar-section" id="daylog-section" open>
@@ -440,87 +529,90 @@
           class="view"
           aria-label="Über Family Spots Map"
         >
+          <!-- Deutsch -->
           <article
+            id="page-about-de"
             class="page page-about"
-            id="page-about-container"
+            lang="de"
           >
-            <!-- Tilla-Hero -->
-            <section class="about-hero">
-              <div class="about-hero-illustration" aria-hidden="true">
-                <!-- einfache 2D-Tilla als Inline-SVG -->
+            <h2>Über Family Spots Map</h2>
+
+            <!-- Tilla-Hero (DE) -->
+            <div class="tilla-hero">
+              <div class="tilla-hero-illustration" aria-hidden="true">
                 <svg
-                  viewBox="0 0 260 160"
-                  class="about-tilla-svg"
+                  class="tilla-hero-svg"
+                  viewBox="0 0 260 180"
                   role="img"
                   aria-hidden="true"
                 >
                   <!-- Schatten -->
                   <ellipse
                     cx="120"
-                    cy="135"
+                    cy="150"
                     rx="80"
-                    ry="16"
+                    ry="18"
                     fill="#e0a96c"
-                    opacity="0.28"
+                    opacity="0.25"
                   />
                   <!-- Beine -->
                   <g fill="#6ac059">
-                    <rect x="70" y="108" width="30" height="28" rx="8" />
-                    <rect x="118" y="108" width="30" height="28" rx="8" />
-                    <rect x="152" y="108" width="28" height="26" rx="8" />
+                    <rect x="60" y="120" width="32" height="32" rx="8" />
+                    <rect x="112" y="120" width="32" height="32" rx="8" />
+                    <rect x="152" y="120" width="32" height="32" rx="8" />
                   </g>
-                  <!-- Körper / Unterbau -->
-                  <ellipse cx="130" cy="104" rx="70" ry="34" fill="#59b94a" />
+                  <!-- Körper -->
+                  <ellipse cx="130" cy="105" rx="70" ry="40" fill="#59b94a" />
                   <!-- Bauch -->
-                  <ellipse cx="130" cy="110" rx="42" ry="22" fill="#f4c566" />
-                  <!-- Panzer -->
+                  <ellipse cx="130" cy="112" rx="42" ry="25" fill="#f4c566" />
+                  <!-- Panzer-Hintergrund -->
                   <path
-                    d="M80 72c16-22 46-30 76-18 19 8 31 22 34 40-3 17-15 29-31 34-24 7-61 4-81-11-7-5-11-12-11-21 0-9 4-18 13-24z"
+                    d="M80 70c15-22 45-32 75-22 20 7 32 22 36 42-3 18-15 30-31 35-24 8-60 4-80-12 0 0-9-6-10-20 0-11 4-19 10-23z"
                     fill="#f5863c"
                   />
                   <!-- Panzer-Rand -->
                   <path
-                    d="M83 74c13-18 40-26 65-18 18 6 29 19 32 35-3 14-13 24-29 28-22 6-52 4-71-9-6-4-14-11-14-22 0-7 3-11 7-14z"
+                    d="M82 72c13-18 40-27 66-19 18 5 30 18 34 35-3 15-13 25-28 29-22 6-53 4-72-10-6-4-14-11-14-23 0-7 3-11 7-12z"
                     fill="none"
                     stroke="#d4642b"
                     stroke-width="4"
                   />
                   <!-- Herz-Patch -->
                   <path
-                    d="M175 96c6-9 18-5 18 4 0 6-4 10-9 13l-4 3-4-3c-5-3-9-7-9-13 0-9 12-13 18-4z"
+                    d="M172 96c6-9 18-5 18 4 0 6-4 10-9 13l-4 3-4-3c-5-3-9-7-9-13 0-9 12-13 18-4z"
                     fill="#ff6f4f"
                   />
                   <!-- Kopf -->
                   <g transform="translate(40,40)">
-                    <circle cx="38" cy="40" r="30" fill="#6ac059" />
+                    <circle cx="40" cy="40" r="32" fill="#6ac059" />
                     <!-- Augen -->
-                    <circle cx="31" cy="38" r="4.1" fill="#263238" />
-                    <circle cx="45" cy="38" r="4.1" fill="#263238" />
-                    <circle cx="29.8" cy="36.8" r="1.25" fill="#ffffff" />
-                    <circle cx="43.8" cy="36.8" r="1.25" fill="#ffffff" />
+                    <circle cx="32" cy="38" r="4.2" fill="#263238" />
+                    <circle cx="48" cy="38" r="4.2" fill="#263238" />
+                    <circle cx="30.8" cy="36.8" r="1.3" fill="#ffffff" />
+                    <circle cx="46.8" cy="36.8" r="1.3" fill="#ffffff" />
                     <!-- Wange -->
-                    <circle cx="48" cy="48" r="3.4" fill="#ffb26b" />
+                    <circle cx="51" cy="48" r="3.5" fill="#ffb26b" />
                     <!-- Mund -->
                     <path
-                      d="M29 50c3 4 7 6 11 6s8-2 11-6"
+                      d="M30 50c3 4 7 6 11 6 4 0 8-2 11-6"
                       fill="none"
                       stroke="#2f4a27"
                       stroke-width="2.3"
                       stroke-linecap="round"
                     />
-                    <!-- Nasenpunkte -->
-                    <circle cx="34" cy="44" r="1.1" fill="#2f4a27" />
-                    <circle cx="38" cy="45" r="1.1" fill="#2f4a27" />
+                    <!-- Nase / Punkte -->
+                    <circle cx="36" cy="44" r="1.1" fill="#2f4a27" />
+                    <circle cx="40" cy="45" r="1.1" fill="#2f4a27" />
                     <!-- Augenbrauen -->
                     <path
-                      d="M26 32c2-2 4-3 7-3"
+                      d="M27 32c2-2 4-3 7-3"
                       fill="none"
                       stroke="#2f4a27"
                       stroke-width="2"
                       stroke-linecap="round"
                     />
                     <path
-                      d="M44 29c3 0 5 1 7 3"
+                      d="M47 29c3 0 5 1 7 3"
                       fill="none"
                       stroke="#2f4a27"
                       stroke-width="2"
@@ -529,417 +621,388 @@
                   </g>
                   <!-- Schwanz -->
                   <path
-                    d="M196 112c4 4 6 8 6 12 0 3-2 6-5 8-4 1-8-1-11-4"
+                    d="M195 115c4 5 6 9 6 13 0 4-2 7-5 9-4 1-8-1-11-4"
                     fill="#59b94a"
                   />
                 </svg>
               </div>
+              <p class="tilla-hero-text">
+                Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für
+                entspannte Familien-Abenteuer!
+              </p>
+            </div>
 
-              <div class="about-hero-text">
-                <p id="tilla-hero-text">
-                  Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für
-                  entspannte Familien-Abenteuer!
-                </p>
-              </div>
-            </section>
+            <p>
+              Family Spots Map ist eine kuratierte Karte für Familien-Abenteuer
+              – von Eltern für Eltern. Statt unübersichtlicher Listen oder
+              anonymer Bewertungen findest du hier ausgewählte Spielplätze,
+              Zoos, Wildparks, Wasser-Spots, Museen, Bewegungsparks und viele
+              weitere Orte, die sich in der Praxis bewährt haben.
+            </p>
+            <p>
+              Der Fokus: Qualität, Sicherheit und echte Erlebnisse mit Kindern –
+              nicht die größte, sondern die verlässlichste Karte.
+            </p>
 
-            <!-- Kompass & Plus im Über-Tab -->
-            <section class="about-cards">
-              <!-- Familien-Kompass -->
-              <details
-                class="sidebar-section about-card"
-                id="compass-section"
-                open
+            <p>
+              Family Spots Map entsteht aus der Sicht einer jungen Familie, die
+              selbst mit Kindern unterwegs ist – oft mit wenig Zeit, manchmal
+              müde, aber immer auf der Suche nach einem guten Ort für ein paar
+              schöne Stunden.
+            </p>
+
+            <p>
+              <strong
+                >Tilla, unsere kleine Schildkröte, erinnert uns daran, wie
+                kostbar gemeinsame Zeit ist.</strong
               >
-                <summary class="sidebar-section-header">
-                  <h2
-                    class="sidebar-section-title"
-                    id="compass-label"
-                  >
-                    Familien-Kompass
-                  </h2>
-                  <button
-                    type="button"
-                    class="btn-icon sidebar-section-close"
-                    data-target="compass-section"
-                    aria-label="Kompass-Bereich schließen"
-                  >
-                    ×
-                  </button>
-                </summary>
+              Sie steht dafür, das Tempo rauszunehmen, innezuhalten und einen
+              guten Ort für ein paar schöne Stunden als Familie zu finden.
+            </p>
 
-                <div class="compass-card">
-                  <p
-                    class="filter-group-helper"
-                    id="compass-helper"
-                  >
-                    Der Familien-Kompass hilft euch mit einem Klick Spots zu
-                    finden, die zu eurer Zeit, eurem Alter und eurer Energie
-                    passen.
-                  </p>
-                  <button
-                    type="button"
-                    id="compass-apply"
-                    class="btn btn-small"
-                  >
-                    <span id="compass-apply-label">
-                      Kompass anwenden
-                    </span>
-                  </button>
-                </div>
-              </details>
+            <hr />
 
-              <!-- Family Spots Plus -->
-              <details
-                class="sidebar-section about-card"
-                id="plus-section"
-                open
-              >
-                <summary class="sidebar-section-header">
-                  <h2 class="sidebar-section-title">
-                    Family Spots Plus
-                  </h2>
-                  <button
-                    type="button"
-                    class="btn-icon sidebar-section-close"
-                    data-target="plus-section"
-                    aria-label="Family Spots Plus schließen"
-                  >
-                    ×
-                  </button>
-                </summary>
+            <h3>So funktioniert Family Spots Map</h3>
+            <p>
+              • <strong>Karte &amp; Filter:</strong> Zoome in deine Region und
+              filtere nach Kategorien (z.&nbsp;B. Spielplatz, Wildpark,
+              Pumptrack) oder Stichworten.<br />
+              • <strong>Spot-Karten:</strong> Jeder Spot zeigt dir eine
+              Kurzbeschreibung, Besonderheiten (z.&nbsp;B. „Autosafari“,
+              „barrierefrei“) und ob er von uns verifiziert wurde.<br />
+              • <strong>Favoriten:</strong> Markiere eure Lieblingsorte mit dem
+              Stern und habt sie unterwegs schnell parat – auch offline.<br />
+              • <strong>Offline-Grundfunktion:</strong> Wichtige Daten werden
+              lokal gespeichert, damit ihr eure Spots auch mit schwachem Empfang
+              wiederfindet.
+            </p>
 
-                <div class="filter-group">
-                  <p id="plus-status-text">
-                    Family Spots Plus ist nicht aktiviert.
-                  </p>
-                </div>
+            <hr />
 
-                <div class="plus-code-form">
-                  <label for="plus-code-input">
-                    Partner-Code eingeben (z. B. von Campingplatz,
-                    Kommune oder Sponsor):
-                  </label>
-                  <div class="plus-code-row">
-                    <input
-                      id="plus-code-input"
-                      class="input"
-                      type="text"
-                      autocomplete="off"
-                    />
-                    <button
-                      id="plus-code-submit"
-                      class="btn"
-                      type="button"
-                    >
-                      Code aktivieren
-                    </button>
-                  </div>
-                  <p class="plus-note">
-                    Family Spots Plus schaltet zusätzliche Filter &amp; Spots
-                    frei – ganz ohne Abo-Falle.
-                  </p>
-                </div>
-              </details>
-            </section>
+            <h3>Kuratiert &amp; verifiziert – unser Qualitätsversprechen</h3>
+            <p>
+              Family Spots Map ist keine anonyme Sammelplattform. Jeder Spot
+              wird bewusst ausgewählt und laufend gepflegt.
+            </p>
+            <p>
+              <strong>Verifizierte Spots</strong> tragen ein entsprechendes
+              Label. Das bedeutet zum Beispiel:
+            </p>
+            <p>
+              – der Ort wurde persönlich besucht oder ausführlich
+              recherchiert,<br />
+              – Lage, Kategorie und Eckdaten wurden geprüft,<br />
+              – besondere Hinweise (z.&nbsp;B. Eintritt, Saison, Parken) sind
+              soweit möglich ergänzt.
+            </p>
+            <p>
+              Trotzdem können sich Bedingungen vor Ort ändern – prüft deshalb
+              immer die Hinweise vor Ort und aktuelle Informationen der
+              Betreiber.
+            </p>
 
-            <!-- Deutsch -->
-            <article
-              id="page-about-de"
-              lang="de"
-            >
-              <h2>Über Family Spots Map</h2>
+            <hr />
 
-              <p>
-                Family Spots Map ist eine kuratierte Karte für Familien-Abenteuer
-                – von Eltern für Eltern. Statt unübersichtlicher Listen oder
-                anonymer Bewertungen findest du hier ausgewählte Spielplätze,
-                Zoos, Wildparks, Wasser-Spots, Museen, Bewegungsparks und viele
-                weitere Orte, die sich in der Praxis bewährt haben.
-              </p>
-              <p>
-                Der Fokus: Qualität, Sicherheit und echte Erlebnisse mit Kindern –
-                nicht die größte, sondern die verlässlichste Karte.
-              </p>
+            <h3>Family Spots Plus – mehr für Camping, WoMo &amp; Abenteuer</h3>
+            <p>
+              Neben den Basis-Kategorien gibt es mit
+              <strong>Family Spots Plus</strong> zusätzliche Spezial-Kategorien,
+              zum Beispiel:
+            </p>
+            <p>
+              – Rastplätze mit Spielplatz &amp; Dusche<br />
+              – kostenlose Stellplätze in Spielplatznähe<br />
+              – Wohnmobil-Service-Stationen<br />
+              – familienfreundliche Campingplätze<br />
+              – Bikepacking-Spots und besondere Abenteuer-Routen
+            </p>
+            <p>
+              Plus wird über zeitlich begrenzte
+              <strong>Aktions-Codes</strong> aktiviert – zum Beispiel auf Messen
+              wie der ABF, bei Partnern oder in speziellen Aktionen.
+            </p>
+            <p>
+              Dein aktueller Status wird in der App angezeigt, zum Beispiel:
+              „Family Spots Plus ist nicht aktiviert“ oder „Family Spots Plus ist
+              aktiv bis …“.
+            </p>
 
-              <p>
-                Family Spots Map entsteht aus der Sicht einer jungen Familie, die
-                selbst mit Kindern unterwegs ist – oft mit wenig Zeit, manchmal
-                müde, aber immer auf der Suche nach einem guten Ort für ein paar
-                schöne Stunden.
-              </p>
+            <hr />
 
-              <p>
-                <strong
-                  >Tilla, unsere kleine Schildkröte, erinnert uns daran, wie
-                  kostbar gemeinsame Zeit ist.</strong
+            <h3>Mitmachen – hilf, die Karte besser zu machen</h3>
+            <p>
+              Du kennst einen Spot, der hier unbedingt auftauchen sollte – einen
+              besonderen Spielplatz, ein verstecktes Natur-Highlight oder einen
+              perfekten Familien-Campingplatz?
+            </p>
+            <p>
+              Dann melde dich gern mit den wichtigsten Infos (Ort, Kategorie,
+              kurzer Grund, warum er besonders familiengeeignet ist). Gemeinsam
+              machen wir die Karte Schritt für Schritt besser.
+            </p>
+
+            <hr />
+
+            <h3>Nutzung, Verantwortung &amp; Sicherheit</h3>
+            <p>
+              Family Spots Map stellt Informationen nach bestem Wissen zur
+              Verfügung, übernimmt aber keine Haftung für Vollständigkeit,
+              Sicherheit oder die Einhaltung lokaler Regeln.
+            </p>
+            <p>
+              Bitte achtet vor Ort immer auf:
+            </p>
+            <p>
+              – Beschilderung und lokale Hinweise,<br />
+              – Naturschutz-Bestimmungen, Badeaufsicht und Wetter,<br />
+              – Alter und Fähigkeiten eurer Kinder.
+            </p>
+            <p>
+              Die Nutzung der App erfolgt auf eigene Verantwortung – ihr kennt
+              eure Kinder und eure Situation am besten.
+            </p>
+
+            <hr />
+
+            <h3>Projektstatus &amp; Version</h3>
+            <p>
+              Family Spots Map ist ein wachsendes Herzensprojekt. Neue Spots,
+              Regionen und Kategorien kommen Schritt für Schritt dazu – zuerst
+              dort, wo wir selbst mit unseren Kindern unterwegs sind, dann
+              gemeinsam mit Partnern und der Community.
+            </p>
+            <p>
+              Aktuelle Karten-Version:
+              <strong>2025-11-08</strong> (siehe Datenstand in der App).
+            </p>
+
+            <p>
+              Wenn dir die Karte geholfen hat, einen schönen Tag mit deiner
+              Familie zu verbringen, dann hat sie ihren Zweck erfüllt.
+            </p>
+          </article>
+
+          <!-- Englisch -->
+          <article
+            id="page-about-en"
+            class="page page-about hidden"
+            lang="en"
+          >
+            <h2>About Family Spots Map</h2>
+
+            <!-- Tilla-Hero (EN) -->
+            <div class="tilla-hero">
+              <div class="tilla-hero-illustration" aria-hidden="true">
+                <svg
+                  class="tilla-hero-svg"
+                  viewBox="0 0 260 180"
+                  role="img"
+                  aria-hidden="true"
                 >
-                Sie steht dafür, das Tempo rauszunehmen, innezuhalten und einen
-                guten Ort für ein paar schöne Stunden als Familie zu finden.
+                  <!-- same Tilla SVG as above -->
+                  <ellipse
+                    cx="120"
+                    cy="150"
+                    rx="80"
+                    ry="18"
+                    fill="#e0a96c"
+                    opacity="0.25"
+                  />
+                  <g fill="#6ac059">
+                    <rect x="60" y="120" width="32" height="32" rx="8" />
+                    <rect x="112" y="120" width="32" height="32" rx="8" />
+                    <rect x="152" y="120" width="32" height="32" rx="8" />
+                  </g>
+                  <ellipse cx="130" cy="105" rx="70" ry="40" fill="#59b94a" />
+                  <ellipse cx="130" cy="112" rx="42" ry="25" fill="#f4c566" />
+                  <path
+                    d="M80 70c15-22 45-32 75-22 20 7 32 22 36 42-3 18-15 30-31 35-24 8-60 4-80-12 0 0-9-6-10-20 0-11 4-19 10-23z"
+                    fill="#f5863c"
+                  />
+                  <path
+                    d="M82 72c13-18 40-27 66-19 18 5 30 18 34 35-3 15-13 25-28 29-22 6-53 4-72-10-6-4-14-11-14-23 0-7 3-11 7-12z"
+                    fill="none"
+                    stroke="#d4642b"
+                    stroke-width="4"
+                  />
+                  <path
+                    d="M172 96c6-9 18-5 18 4 0 6-4 10-9 13l-4 3-4-3c-5-3-9-7-9-13 0-9 12-13 18-4z"
+                    fill="#ff6f4f"
+                  />
+                  <g transform="translate(40,40)">
+                    <circle cx="40" cy="40" r="32" fill="#6ac059" />
+                    <circle cx="32" cy="38" r="4.2" fill="#263238" />
+                    <circle cx="48" cy="38" r="4.2" fill="#263238" />
+                    <circle cx="30.8" cy="36.8" r="1.3" fill="#ffffff" />
+                    <circle cx="46.8" cy="36.8" r="1.3" fill="#ffffff" />
+                    <circle cx="51" cy="48" r="3.5" fill="#ffb26b" />
+                    <path
+                      d="M30 50c3 4 7 6 11 6 4 0 8-2 11-6"
+                      fill="none"
+                      stroke="#2f4a27"
+                      stroke-width="2.3"
+                      stroke-linecap="round"
+                    />
+                    <circle cx="36" cy="44" r="1.1" fill="#2f4a27" />
+                    <circle cx="40" cy="45" r="1.1" fill="#2f4a27" />
+                    <path
+                      d="M27 32c2-2 4-3 7-3"
+                      fill="none"
+                      stroke="#2f4a27"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                    <path
+                      d="M47 29c3 0 5 1 7 3"
+                      fill="none"
+                      stroke="#2f4a27"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </g>
+                  <path
+                    d="M195 115c4 5 6 9 6 13 0 4-2 7-5 9-4 1-8-1-11-4"
+                    fill="#59b94a"
+                  />
+                </svg>
+              </div>
+              <p class="tilla-hero-text">
+                Hi, I’m Tilla – your turtle companion for relaxed family
+                adventures!
               </p>
+            </div>
 
-              <hr />
+            <p>
+              Family Spots Map is a curated map for family adventures – by
+              parents for parents. Instead of endless lists or anonymous
+              ratings, you’ll find selected playgrounds, zoos, wildlife parks,
+              water spots, museums, movement parks and many more places that
+              have proved themselves in real life with kids.
+            </p>
+            <p>
+              The focus: quality, safety and real experiences with children –
+              not the biggest, but the most reliable map.
+            </p>
 
-              <h3>So funktioniert Family Spots Map</h3>
-              <p>
-                • <strong>Karte &amp; Filter:</strong> Zoome in deine Region und
-                filtere nach Kategorien (z.&nbsp;B. Spielplatz, Wildpark,
-                Pumptrack) oder Stichworten.<br />
-                • <strong>Spot-Karten:</strong> Jeder Spot zeigt dir eine
-                Kurzbeschreibung, Besonderheiten (z.&nbsp;B. „Autosafari“,
-                „barrierefrei“) und ob er von uns verifiziert wurde.<br />
-                • <strong>Favoriten:</strong> Markiere eure Lieblingsorte mit dem
-                Stern und habt sie unterwegs schnell parat – auch offline.<br />
-                • <strong>Offline-Grundfunktion:</strong> Wichtige Daten werden
-                lokal gespeichert, damit ihr eure Spots auch mit schwachem Empfang
-                wiederfindet.
-              </p>
+            <p>
+              Family Spots Map is created from the perspective of a young family
+              travelling with kids themselves – often with little time,
+              sometimes tired, but always looking for a good place to spend a
+              few happy hours together.
+            </p>
 
-              <hr />
+            <hr />
 
-              <h3>Kuratiert &amp; verifiziert – unser Qualitätsversprechen</h3>
-              <p>
-                Family Spots Map ist keine anonyme Sammelplattform. Jeder Spot
-                wird bewusst ausgewählt und laufend gepflegt.
-              </p>
-              <p>
-                <strong>Verifizierte Spots</strong> tragen ein entsprechendes
-                Label. Das bedeutet zum Beispiel:
-              </p>
-              <p>
-                – der Ort wurde persönlich besucht oder ausführlich
-                recherchiert,<br />
-                – Lage, Kategorie und Eckdaten wurden geprüft,<br />
-                – besondere Hinweise (z.&nbsp;B. Eintritt, Saison, Parken) sind
-                soweit möglich ergänzt.
-              </p>
-              <p>
-                Trotzdem können sich Bedingungen vor Ort ändern – prüft deshalb
-                immer die Hinweise vor Ort und aktuelle Informationen der
-                Betreiber.
-              </p>
+            <h3>How Family Spots Map works</h3>
+            <p>
+              • <strong>Map &amp; filters:</strong> Zoom into your region and
+              filter by category (e.g. playground, wildlife park, pumptrack) or
+              keywords.<br />
+              • <strong>Spot cards:</strong> Each spot shows a short
+              description, special features (e.g. “drive-through safari”,
+              “accessible”) and whether it has been verified by us.<br />
+              • <strong>Favourites:</strong> Mark your favourite places with the
+              star and keep them handy on the go – even offline.<br />
+              • <strong>Offline basics:</strong> Important data is stored
+              locally so you can rediscover your spots even with poor reception.
+            </p>
 
-              <hr />
+            <hr />
 
-              <h3>Family Spots Plus – mehr für Camping, WoMo &amp; Abenteuer</h3>
-              <p>
-                Neben den Basis-Kategorien gibt es mit
-                <strong>Family Spots Plus</strong> zusätzliche Spezial-Kategorien,
-                zum Beispiel:
-              </p>
-              <p>
-                – Rastplätze mit Spielplatz &amp; Dusche<br />
-                – kostenlose Stellplätze in Spielplatznähe<br />
-                – Wohnmobil-Service-Stationen<br />
-                – familienfreundliche Campingplätze<br />
-                – Bikepacking-Spots und besondere Abenteuer-Routen
-              </p>
-              <p>
-                Plus wird über zeitlich begrenzte
-                <strong>Aktions-Codes</strong> aktiviert – zum Beispiel auf Messen
-                wie der ABF, bei Partnern oder in speziellen Aktionen.
-              </p>
-              <p>
-                Dein aktueller Status wird in der App angezeigt, zum Beispiel:
-                „Family Spots Plus ist nicht aktiviert“ oder „Family Spots Plus ist
-                aktiv bis …“.
-              </p>
+            <h3>Curated &amp; verified – our quality promise</h3>
+            <p>
+              Family Spots Map is not an anonymous dumping ground for pins. Each
+              spot is chosen consciously and kept up to date.
+            </p>
+            <p>
+              <strong>Verified spots</strong> carry a label. That usually means:
+            </p>
+            <p>
+              – the place has been visited in person or researched in detail,<br />
+              – location, category and key facts have been checked,<br />
+              – special notes (e.g. entry fee, season, parking) are added where
+              possible.
+            </p>
+            <p>
+              Still, things can change on site – always check local signs and
+              the latest info from the operator.
+            </p>
 
-              <hr />
+            <hr />
 
-              <h3>Mitmachen – hilf, die Karte besser zu machen</h3>
-              <p>
-                Du kennst einen Spot, der hier unbedingt auftauchen sollte – einen
-                besonderen Spielplatz, ein verstecktes Natur-Highlight oder einen
-                perfekten Familien-Campingplatz?
-              </p>
-              <p>
-                Dann melde dich gern mit den wichtigsten Infos (Ort, Kategorie,
-                kurzer Grund, warum er besonders familiengeeignet ist). Gemeinsam
-                machen wir die Karte Schritt für Schritt besser.
-              </p>
+            <h3>Family Spots Plus – more for camping, RV &amp; adventures</h3>
+            <p>
+              Alongside the core categories, <strong>Family Spots Plus</strong>
+              offers additional speciality categories, for example:
+            </p>
+            <p>
+              – rest areas with playground &amp; shower<br />
+              – free overnight RV spots near playgrounds<br />
+              – RV service stations<br />
+              – family-friendly campgrounds<br />
+              – bikepacking spots and special adventure routes
+            </p>
+            <p>
+              Plus is activated via time-limited <strong>promo codes</strong> –
+              for example at fairs, via partners or special campaigns.
+            </p>
+            <p>
+              Your current status is shown in the app, such as “Family Spots
+              Plus is not activated” or “Family Spots Plus active until …”.
+            </p>
 
-              <hr />
+            <hr />
 
-              <h3>Nutzung, Verantwortung &amp; Sicherheit</h3>
-              <p>
-                Family Spots Map stellt Informationen nach bestem Wissen zur
-                Verfügung, übernimmt aber keine Haftung für Vollständigkeit,
-                Sicherheit oder die Einhaltung lokaler Regeln.
-              </p>
-              <p>
-                Bitte achtet vor Ort immer auf:
-              </p>
-              <p>
-                – Beschilderung und lokale Hinweise,<br />
-                – Naturschutz-Bestimmungen, Badeaufsicht und Wetter,<br />
-                – Alter und Fähigkeiten eurer Kinder.
-              </p>
-              <p>
-                Die Nutzung der App erfolgt auf eigene Verantwortung – ihr kennt
-                eure Kinder und eure Situation am besten.
-              </p>
+            <h3>Contribute – help make the map better</h3>
+            <p>
+              Do you know a spot that absolutely belongs on this map – a special
+              playground, a hidden nature highlight or a perfect family camping
+              place?
+            </p>
+            <p>
+              Then send us the key info (place, category, short note why it’s
+              great for families). Step by step we can make the map better
+              together.
+            </p>
 
-              <hr />
+            <hr />
 
-              <h3>Projektstatus &amp; Version</h3>
-              <p>
-                Family Spots Map ist ein wachsendes Herzensprojekt. Neue Spots,
-                Regionen und Kategorien kommen Schritt für Schritt dazu – zuerst
-                dort, wo wir selbst mit unseren Kindern unterwegs sind, dann
-                gemeinsam mit Partnern und der Community.
-              </p>
-              <p>
-                Aktuelle Karten-Version:
-                <strong>2025-11-08</strong> (siehe Datenstand in der App).
-              </p>
+            <h3>Usage, responsibility &amp; safety</h3>
+            <p>
+              Family Spots Map provides information to the best of our
+              knowledge, but cannot guarantee completeness, safety or compliance
+              with local rules.
+            </p>
+            <p>
+              On site, please always pay attention to:
+            </p>
+            <p>
+              – signs and local information,<br />
+              – nature protection rules, lifeguards and weather conditions,<br />
+              – your children’s age and abilities.
+            </p>
+            <p>
+              Using the app is at your own responsibility – you know your kids
+              and your situation best.
+            </p>
 
-              <p>
-                Wenn dir die Karte geholfen hat, einen schönen Tag mit deiner
-                Familie zu verbringen, dann hat sie ihren Zweck erfüllt.
-              </p>
-            </article>
+            <hr />
 
-            <!-- Englisch -->
-            <article
-              id="page-about-en"
-              class="hidden"
-              lang="en"
-            >
-              <h2>About Family Spots Map</h2>
+            <h3>Project status &amp; version</h3>
+            <p>
+              Family Spots Map is a growing passion project. New spots, regions
+              and categories are added step by step – first where we travel with
+              our own children, then together with partners and the community.
+            </p>
+            <p>
+              Current map version:
+              <strong>2025-11-08</strong> (see data version in the app).
+            </p>
 
-              <p>
-                Family Spots Map is a curated map for family adventures – by
-                parents for parents. Instead of endless lists or anonymous
-                ratings, you’ll find selected playgrounds, zoos, wildlife parks,
-                water spots, museums, movement parks and many more places that
-                have proved themselves in real life with kids.
-              </p>
-              <p>
-                The focus: quality, safety and real experiences with children –
-                not the biggest, but the most reliable map.
-              </p>
-
-              <p>
-                Family Spots Map is created from the perspective of a young family
-                travelling with kids themselves – often with little time,
-                sometimes tired, but always looking for a good place to spend a
-                few happy hours together.
-              </p>
-
-              <hr />
-
-              <h3>How Family Spots Map works</h3>
-              <p>
-                • <strong>Map &amp; filters:</strong> Zoom into your region and
-                filter by category (e.g. playground, wildlife park, pumptrack) or
-                keywords.<br />
-                • <strong>Spot cards:</strong> Each spot shows a short
-                description, special features (e.g. “drive-through safari”,
-                “accessible”) and whether it has been verified by us.<br />
-                • <strong>Favourites:</strong> Mark your favourite places with the
-                star and keep them handy on the go – even offline.<br />
-                • <strong>Offline basics:</strong> Important data is stored
-                locally so you can rediscover your spots even with poor reception.
-              </p>
-
-              <hr />
-
-              <h3>Curated &amp; verified – our quality promise</h3>
-              <p>
-                Family Spots Map is not an anonymous dumping ground for pins. Each
-                spot is chosen consciously and kept up to date.
-              </p>
-              <p>
-                <strong>Verified spots</strong> carry a label. That usually means:
-              </p>
-              <p>
-                – the place has been visited in person or researched in detail,<br />
-                – location, category and key facts have been checked,<br />
-                – special notes (e.g. entry fee, season, parking) are added where
-                possible.
-              </p>
-              <p>
-                Still, things can change on site – always check local signs and
-                the latest info from the operator.
-              </p>
-
-              <hr />
-
-              <h3>Family Spots Plus – more for camping, RV &amp; adventures</h3>
-              <p>
-                Alongside the core categories, <strong>Family Spots Plus</strong>
-                offers additional speciality categories, for example:
-              </p>
-              <p>
-                – rest areas with playground &amp; shower<br />
-                – free overnight RV spots near playgrounds<br />
-                – RV service stations<br />
-                – family-friendly campgrounds<br />
-                – bikepacking spots and special adventure routes
-              </p>
-              <p>
-                Plus is activated via time-limited <strong>promo codes</strong> –
-                for example at fairs, via partners or special campaigns.
-              </p>
-              <p>
-                Your current status is shown in the app, such as “Family Spots
-                Plus is not activated” or “Family Spots Plus active until …”.
-              </p>
-
-              <hr />
-
-              <h3>Contribute – help make the map better</h3>
-              <p>
-                Do you know a spot that absolutely belongs on this map – a special
-                playground, a hidden nature highlight or a perfect family camping
-                place?
-              </p>
-              <p>
-                Then send us the key info (place, category, short note why it’s
-                great for families). Step by step we can make the map better
-                together.
-              </p>
-
-              <hr />
-
-              <h3>Usage, responsibility &amp; safety</h3>
-              <p>
-                Family Spots Map provides information to the best of our
-                knowledge, but cannot guarantee completeness, safety or compliance
-                with local rules.
-              </p>
-              <p>
-                On site, please always pay attention to:
-              </p>
-              <p>
-                – signs and local information,<br />
-                – nature protection rules, lifeguards and weather conditions,<br />
-                – your children’s age and abilities.
-              </p>
-              <p>
-                Using the app is at your own responsibility – you know your kids
-                and your situation best.
-              </p>
-
-              <hr />
-
-              <h3>Project status &amp; version</h3>
-              <p>
-                Family Spots Map is a growing passion project. New spots, regions
-                and categories are added step by step – first where we travel with
-                our own children, then together with partners and the community.
-              </p>
-              <p>
-                Current map version:
-                <strong>2025-11-08</strong> (see data version in the app).
-              </p>
-
-              <p>
-                If this map helped you spend a good day with your family, then it
-                has fulfilled its purpose.
-              </p>
-            </article>
+            <p>
+              If this map helped you spend a good day with your family, then it
+              has fulfilled its purpose.
+            </p>
           </article>
         </section>
       </main>
