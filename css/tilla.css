@@ -1,23 +1,19 @@
 /* css/tilla.css */
-/* Tilla-Hero – wie im Mockup: Tilla links groß, Text rechts */
+/* Tilla-Hero – wie im Mockup: große Tilla links, Text rechts */
 
-/* Container unter der Überschrift "Über Family Spots Map" */
+/* Container unter "Über Family Spots Map" */
 #page-about-de .tilla-hero,
 #page-about-en .tilla-hero {
-  margin: 1.1rem 0 1.6rem;
-  padding: 0 !important;
-  background: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  margin: 1.1rem 0 1.8rem;
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.6rem;
 }
 
 /* Bildseite links – Tilla groß und präsent */
 #page-about-de .tilla-hero-image,
 #page-about-en .tilla-hero-image {
-  flex: 0 0 180px;
+  flex: 0 0 210px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,8 +22,8 @@
 #page-about-de .tilla-hero-image img,
 #page-about-en .tilla-hero-image img {
   display: block;
-  width: 180px;
-  max-width: 48vw;
+  width: 210px;
+  max-width: 52vw;
   height: auto;
   filter: drop-shadow(0 14px 20px rgba(191, 117, 34, 0.55));
   animation: tilla-pop-in 260ms ease-out;
@@ -67,7 +63,7 @@
   color: #e5e7eb;
 }
 
-/* Kleine einmalige Pop-in-Animation */
+/* Pop-in-Animation beim Laden */
 @keyframes tilla-pop-in {
   0% {
     transform: scale(0.75) translateY(10px);
@@ -83,22 +79,22 @@
 @media (max-width: 680px) {
   #page-about-de .tilla-hero,
   #page-about-en .tilla-hero {
-    gap: 1rem;
+    gap: 1.2rem;
   }
 
   #page-about-de .tilla-hero-image,
   #page-about-en .tilla-hero-image {
-    flex: 0 0 160px;
+    flex: 0 0 190px;
   }
 
   #page-about-de .tilla-hero-image img,
   #page-about-en .tilla-hero-image img {
-    width: 160px;
+    width: 190px;
   }
 
   #page-about-de .tilla-hero-title,
   #page-about-en .tilla-hero-title {
-    font-size: 1.05rem;
+    font-size: 1.08rem;
   }
 
   #page-about-de .tilla-hero-message,
@@ -111,17 +107,17 @@
   #page-about-de .tilla-hero,
   #page-about-en .tilla-hero {
     align-items: flex-start;
-    gap: 0.9rem;
+    gap: 1rem;
   }
 
   #page-about-de .tilla-hero-image,
   #page-about-en .tilla-hero-image {
-    flex: 0 0 140px;
+    flex: 0 0 165px;
   }
 
   #page-about-de .tilla-hero-image img,
   #page-about-en .tilla-hero-image img {
-    width: 140px;
+    width: 165px;
   }
 
   #page-about-de .tilla-hero-message,
