@@ -1,5 +1,5 @@
 // js/tilla.js
-// Tilla-Hero im Über-Tab (DE/EN)
+// Tilla-Hero im Über-Tab (DE/EN) – Bild links, Text rechts
 
 function insertHero(container, lang) {
   if (!container || container.querySelector(".tilla-hero")) return;
@@ -34,7 +34,6 @@ function insertHero(container, lang) {
     </div>
   `;
 
-  // Direkt nach der ersten h2-Überschrift im Artikel einfügen
   const firstHeading = container.querySelector("h2");
   if (firstHeading) {
     const parent = firstHeading.parentNode;
