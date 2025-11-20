@@ -1205,3 +1205,27 @@ html[data-theme="dark"] .noscript-warning {
     padding: 0.6rem 0.65rem;
   }
 }
+/* =========================================
+   Fix: Dark-Mode-Overlay für "Über"-Seite
+   ========================================= */
+
+[data-theme="dark"] #view-about::before {
+  /* milchigen Karten-Overlay im About-View deaktivieren */
+  content: none !important;
+  background: none !important;
+}
+
+/* optional: eigener Hintergrund & Textfarben für die About-Seite im Dark Mode */
+[data-theme="dark"] #view-about {
+  background: radial-gradient(circle at top, #050816 0%, #020308 55%, #000000 100%);
+}
+
+[data-theme="dark"] #view-about .page-about {
+  background: rgba(6, 9, 22, 0.96);
+  color: #f6f6ff;
+}
+
+[data-theme="dark"] #view-about .page-about h2,
+[data-theme="dark"] #view-about .page-about h3 {
+  color: #ffffff;
+}
