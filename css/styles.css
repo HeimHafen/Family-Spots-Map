@@ -1070,3 +1070,25 @@ hr {
 [data-theme="dark"] hr {
   border-bottom-color: rgba(148, 163, 184, 0.35);
 }
+
+/* =========================================
+   PATCH: Tilla unten auf der Über-Seite entfernen
+   ========================================= */
+
+/* Entfernt mögliche Pseudo-Elemente mit Tilla als Bild */
+#view-about::after,
+#page-about-de::after,
+#page-about-en::after {
+  display: none !important;
+  content: none !important;
+  background-image: none !important;
+}
+
+/* Entfernt mögliche Tilla-Illustrationen, falls als Hero-Karte eingebunden */
+.tilla-hero,
+.tilla-hero-card,
+.tilla-hero-layout,
+.tilla-hero-image,
+.tilla-hero-img {
+  display: none !important;
+}
