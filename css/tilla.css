@@ -1,7 +1,6 @@
 /* css/tilla.css */
-/* Tilla-Hero im Über-Tab, angelehnt an dein Mockup */
+/* Dark-Mode-Overlay-Fix für About-Seite */
 
-/* Dark-Mode-Overlay-Fix für About-Seite bleibt wie gehabt */
 [data-theme="dark"] #view-about::before {
   content: none !important;
   background: none !important;
@@ -22,36 +21,29 @@
 }
 
 /* ===========================
-   TILLA HERO
+   TILLA HERO – wie in Mockup 2
    =========================== */
 
 .tilla-hero {
-  margin: 0.8rem 0 1.6rem;
-  padding: 1rem 1.2rem;
-  border-radius: 1.4rem;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 183, 94, 0.18),
-    rgba(255, 237, 213, 0.98)
-  );
-  box-shadow: 0 12px 26px var(--color-shadow-soft);
+  margin: 0.9rem 0 1.6rem;
+  padding: 1.2rem 1.4rem;
+  border-radius: 1.6rem;
+  background: #fff7e9;
+  box-shadow: 0 14px 32px rgba(191, 117, 34, 0.25);
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1.4rem;
 }
 
 [data-theme="dark"] .tilla-hero {
-  background: linear-gradient(
-    135deg,
-    rgba(245, 158, 11, 0.18),
-    rgba(15, 23, 42, 0.96)
-  );
+  background: radial-gradient(circle at top, #020617 0%, #020308 60%, #000 100%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75);
 }
 
-/* Bildseite links */
+/* Bild links – groß und präsent */
 
 .tilla-hero-image {
-  flex: 0 0 140px;
+  flex: 0 0 170px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,20 +51,23 @@
 
 .tilla-hero-image img {
   display: block;
-  width: 140px;
-  max-width: 40vw;
+  width: 170px;
+  max-width: 45vw;
   height: auto;
+  filter: drop-shadow(0 14px 20px rgba(191, 117, 34, 0.55));
+  animation: tilla-pop-in 260ms ease-out;
+  transform-origin: bottom center;
 }
 
-/* Textseite rechts */
+/* Text rechts */
 
 .tilla-hero-text {
   flex: 1;
 }
 
 .tilla-hero-title {
-  margin: 0 0 0.4rem;
-  font-size: 1.1rem;
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-text);
 }
@@ -83,7 +78,7 @@
 
 .tilla-hero-message {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.6;
   color: var(--color-text-subtle);
 }
@@ -92,16 +87,11 @@
   color: #e5e7eb;
 }
 
-/* Kleine, sehr dezente „Leben“-Animation beim Laden (einmalig) */
-
-.tilla-hero-image img {
-  animation: tilla-pop-in 260ms ease-out;
-  transform-origin: bottom center;
-}
+/* Kleine einmalige Pop-in-Animation */
 
 @keyframes tilla-pop-in {
   0% {
-    transform: scale(0.75) translateY(8px);
+    transform: scale(0.75) translateY(10px);
     opacity: 0;
   }
   100% {
@@ -110,45 +100,46 @@
   }
 }
 
-/* Responsive */
+/* Responsive Tweaks */
 
-@media (max-width: 600px) {
+@media (max-width: 680px) {
   .tilla-hero {
-    padding: 0.9rem 1rem;
+    padding: 1rem 1.1rem;
+    gap: 1rem;
+  }
+
+  .tilla-hero-image {
+    flex: 0 0 150px;
+  }
+
+  .tilla-hero-image img {
+    width: 150px;
+  }
+
+  .tilla-hero-title {
+    font-size: 1.05rem;
+  }
+
+  .tilla-hero-message {
+    font-size: 0.98rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tilla-hero {
+    align-items: flex-start;
     gap: 0.9rem;
   }
 
   .tilla-hero-image {
-    flex: 0 0 120px;
+    flex: 0 0 135px;
   }
 
   .tilla-hero-image img {
-    width: 120px;
-  }
-
-  .tilla-hero-title {
-    font-size: 1.02rem;
+    width: 135px;
   }
 
   .tilla-hero-message {
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 430px) {
-  .tilla-hero {
-    align-items: flex-start;
-  }
-
-  .tilla-hero-image {
-    flex: 0 0 110px;
-  }
-
-  .tilla-hero-image img {
-    width: 110px;
-  }
-
-  .tilla-hero-message {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
   }
 }
