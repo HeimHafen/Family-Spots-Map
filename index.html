@@ -123,15 +123,12 @@
         <section id="view-map" class="view view--active" aria-label="Karte">
           <!-- Sidebar (Tilla + Kompass + Plus + Filter + Liste) -->
           <aside class="sidebar">
-            <!-- (Tilla auf Karte wird per JS eingefügt, falls genutzt) -->
+            <!-- Tilla wird hier per JS eingefügt (siehe js/tilla.js) -->
 
             <!-- Familien-Kompass (einklappbar) -->
             <details class="sidebar-section" id="compass-section" open>
               <summary class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  id="compass-label"
-                >
+                <h2 class="sidebar-section-title" id="compass-label">
                   Familien-Kompass
                 </h2>
                 <button
@@ -145,10 +142,7 @@
               </summary>
 
               <div class="compass-card">
-                <p
-                  class="filter-group-helper"
-                  id="compass-helper"
-                >
+                <p class="filter-group-helper" id="compass-helper">
                   Der Familien-Kompass hilft euch mit einem Klick Spots zu
                   finden, die zu eurer Zeit, eurem Alter und eurer Energie
                   passen.
@@ -158,9 +152,7 @@
                   id="compass-apply"
                   class="btn btn-small"
                 >
-                  <span id="compass-apply-label">
-                    Kompass anwenden
-                  </span>
+                  <span id="compass-apply-label">Kompass anwenden</span>
                 </button>
               </div>
             </details>
@@ -168,9 +160,7 @@
             <!-- Family Spots Plus (einklappbar) -->
             <details class="sidebar-section" id="plus-section" open>
               <summary class="sidebar-section-header">
-                <h2 class="sidebar-section-title">
-                  Family Spots Plus
-                </h2>
+                <h2 class="sidebar-section-title">Family Spots Plus</h2>
                 <button
                   type="button"
                   class="btn-icon sidebar-section-close"
@@ -182,15 +172,13 @@
               </summary>
 
               <div class="filter-group">
-                <p id="plus-status-text">
-                  Family Spots Plus ist nicht aktiviert.
-                </p>
+                <p id="plus-status-text">Family Spots Plus ist nicht aktiviert.</p>
               </div>
 
               <div class="plus-code-form">
                 <label for="plus-code-input">
-                  Partner-Code eingeben (z. B. von Campingplatz,
-                  Kommune oder Sponsor):
+                  Partner-Code eingeben (z. B. von Campingplatz, Kommune oder
+                  Sponsor):
                 </label>
                 <div class="plus-code-row">
                   <input
@@ -199,11 +187,7 @@
                     type="text"
                     autocomplete="off"
                   />
-                  <button
-                    id="plus-code-submit"
-                    class="btn"
-                    type="button"
-                  >
+                  <button id="plus-code-submit" class="btn" type="button">
                     Code aktivieren
                   </button>
                 </div>
@@ -236,11 +220,7 @@
                   rows="3"
                   placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
                 ></textarea>
-                <button
-                  id="daylog-save"
-                  class="btn btn-small"
-                  type="button"
-                >
+                <button id="daylog-save" class="btn btn-small" type="button">
                   Speichern 💾
                 </button>
               </div>
@@ -249,12 +229,7 @@
             <!-- Filter-Section -->
             <section class="sidebar-section">
               <header class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  id="filter-title"
-                >
-                  Filter
-                </h2>
+                <h2 class="sidebar-section-title" id="filter-title">Filter</h2>
                 <button
                   id="btn-toggle-filters"
                   class="btn-ghost btn-small"
@@ -298,16 +273,10 @@
 
               <!-- Stimmung -->
               <div class="filter-group">
-                <label
-                  class="filter-group-label"
-                  id="filter-mood-label"
-                >
+                <label class="filter-group-label" id="filter-mood-label">
                   Stimmung
                 </label>
-                <p
-                  class="filter-group-helper"
-                  id="filter-mood-helper"
-                >
+                <p class="filter-group-helper" id="filter-mood-helper">
                   Wonach fühlt es sich heute an?
                 </p>
                 <div class="mood-row" aria-label="Stimmung wählen">
@@ -321,31 +290,19 @@
                       Entspannt
                     </span>
                   </button>
-                  <button
-                    type="button"
-                    class="mood-chip"
-                    data-mood="action"
-                  >
+                  <button type="button" class="mood-chip" data-mood="action">
                     <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
                     <span class="mood-chip-label" id="mood-action-label">
                       Bewegung
                     </span>
                   </button>
-                  <button
-                    type="button"
-                    class="mood-chip"
-                    data-mood="water"
-                  >
+                  <button type="button" class="mood-chip" data-mood="water">
                     <span class="mood-chip-emoji" aria-hidden="true">💧</span>
                     <span class="mood-chip-label" id="mood-water-label">
                       Wasser &amp; Sand
                     </span>
                   </button>
-                  <button
-                    type="button"
-                    class="mood-chip"
-                    data-mood="animals"
-                  >
+                  <button type="button" class="mood-chip" data-mood="animals">
                     <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
                     <span class="mood-chip-label" id="mood-animals-label">
                       Tier-Tag
@@ -356,16 +313,10 @@
 
               <!-- Reise-Modus -->
               <div class="filter-group">
-                <label
-                  class="filter-group-label"
-                  id="filter-travel-label"
-                >
+                <label class="filter-group-label" id="filter-travel-label">
                   Reise-Modus
                 </label>
-                <p
-                  class="filter-group-helper"
-                  id="filter-travel-helper"
-                >
+                <p class="filter-group-helper" id="filter-travel-helper">
                   Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo,
                   Auto oder Bahn?
                 </p>
@@ -406,15 +357,9 @@
                   <option value="all" id="filter-age-all">
                     Alle Altersstufen
                   </option>
-                  <option value="0-3" id="filter-age-0-3">
-                    0–3 Jahre
-                  </option>
-                  <option value="4-9" id="filter-age-4-9">
-                    4–9 Jahre
-                  </option>
-                  <option value="10+" id="filter-age-10-plus">
-                    10+ Jahre
-                  </option>
+                  <option value="0-3" id="filter-age-0-3">0–3 Jahre</option>
+                  <option value="4-9" id="filter-age-4-9">4–9 Jahre</option>
+                  <option value="10+" id="filter-age-10-plus">10+ Jahre</option>
                 </select>
               </div>
 
@@ -427,10 +372,7 @@
                 >
                   Micro-Abenteuer-Radius
                 </label>
-                <p
-                  class="filter-group-helper"
-                  id="filter-radius-helper"
-                >
+                <p class="filter-group-helper" id="filter-radius-helper">
                   Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht
                   sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).
                 </p>
@@ -451,10 +393,7 @@
                     Alle Spots
                   </span>
                 </div>
-                <p
-                  id="filter-radius-description"
-                  class="radius-description"
-                >
+                <p id="filter-radius-description" class="radius-description">
                   Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
                 </p>
               </div>
@@ -462,10 +401,7 @@
               <!-- Checkboxen -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-big-label">
-                  <input
-                    id="filter-big-adventures"
-                    type="checkbox"
-                  />
+                  <input id="filter-big-adventures" type="checkbox" />
                   <span>Nur große Abenteuer</span>
                 </label>
               </div>
@@ -491,12 +427,7 @@
               aria-label="Spots"
             >
               <header class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  id="spots-title"
-                >
-                  Spots
-                </h2>
+                <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
                 <button
                   id="btn-toggle-view"
                   class="btn-ghost btn-small"
@@ -530,36 +461,30 @@
           aria-label="Über Family Spots Map"
         >
           <!-- Deutsch -->
-          <article
-            id="page-about-de"
-            class="page page-about"
-            lang="de"
-          >
+          <article id="page-about-de" class="page page-about" lang="de">
             <h2>Über Family Spots Map</h2>
 
             <!-- Tilla-Hero (DE) -->
             <div class="tilla-hero">
-              <div class="tilla-hero-inner">
-                <div class="tilla-hero-illustration">
-                  <img
-                    src="assets/tilla/tilla-hero.png"
-                    alt="Tilla, die grüne Schildkröte mit orangem Herz-Panzer"
-                    class="tilla-hero-image"
-                  />
-                </div>
-                <p class="tilla-hero-text">
-                  Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für
-                  entspannte Familien-Abenteuer!
-                </p>
+              <div class="tilla-hero-illustration" aria-hidden="true">
+                <img
+                  src="assets/tilla/tilla-hero-card.png"
+                  class="tilla-hero-image"
+                  alt="Illustration von Tilla, der kleinen Schildkröte."
+                />
               </div>
+              <p class="tilla-hero-text">
+                Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte
+                Familien-Abenteuer!
+              </p>
             </div>
 
             <p>
               Family Spots Map ist eine kuratierte Karte für Familien-Abenteuer
               – von Eltern für Eltern. Statt unübersichtlicher Listen oder
-              anonymer Bewertungen findest du hier ausgewählte Spielplätze,
-              Zoos, Wildparks, Wasser-Spots, Museen, Bewegungsparks und viele
-              weitere Orte, die sich in der Praxis bewährt haben.
+              anonymer Bewertungen findest du hier ausgewählte Spielplätze, Zoos,
+              Wildparks, Wasser-Spots, Museen, Bewegungsparks und viele weitere
+              Orte, die sich in der Praxis bewährt haben.
             </p>
             <p>
               Der Fokus: Qualität, Sicherheit und echte Erlebnisse mit Kindern –
@@ -705,28 +630,22 @@
           </article>
 
           <!-- Englisch -->
-          <article
-            id="page-about-en"
-            class="page page-about hidden"
-            lang="en"
-          >
+          <article id="page-about-en" class="page page-about hidden" lang="en">
             <h2>About Family Spots Map</h2>
 
             <!-- Tilla-Hero (EN) -->
             <div class="tilla-hero">
-              <div class="tilla-hero-inner">
-                <div class="tilla-hero-illustration">
-                  <img
-                    src="assets/tilla/tilla-hero.png"
-                    alt="Tilla, the green turtle with an orange shell and heart patch"
-                    class="tilla-hero-image"
-                  />
-                </div>
-                <p class="tilla-hero-text">
-                  Hi, I’m Tilla – your turtle companion for relaxed family
-                  adventures!
-                </p>
+              <div class="tilla-hero-illustration" aria-hidden="true">
+                <img
+                  src="assets/tilla/tilla-hero-card.png"
+                  class="tilla-hero-image"
+                  alt="Illustration of Tilla, the little turtle."
+                />
               </div>
+              <p class="tilla-hero-text">
+                Hi, I’m Tilla – your turtle companion for relaxed family
+                adventures!
+              </p>
             </div>
 
             <p>
@@ -868,10 +787,7 @@
       <!-- BOTTOM NAV + TOAST      -->
       <!-- ======================= -->
       <nav class="bottom-nav" aria-label="Hauptnavigation">
-        <div
-          class="bottom-nav-background"
-          aria-hidden="true"
-        ></div>
+        <div class="bottom-nav-background" aria-hidden="true"></div>
         <div
           id="bottom-nav-indicator"
           class="bottom-nav-indicator"
@@ -887,11 +803,7 @@
           <span id="bottom-nav-map-label">Karte</span>
         </button>
 
-        <button
-          class="bottom-nav-item"
-          type="button"
-          data-route="about"
-        >
+        <button class="bottom-nav-item" type="button" data-route="about">
           <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
           <span id="bottom-nav-about-label">Über</span>
         </button>
