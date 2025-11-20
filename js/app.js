@@ -187,12 +187,13 @@ function initUIEvents() {
       applyTranslations();
       updateStaticLanguageTexts(nextLang);
 
-      // Tilla-Text an neue Sprache anpassen – aber nur, wenn Tilla geladen ist
+      // Optional: Hero-Text von Tilla aktualisieren, falls Modul geladen
       if (tillaModule && typeof tillaModule.showTillaMessage === "function") {
+        const isDe = nextLang.startsWith("de");
         tillaModule.showTillaMessage(
           t(
             "turtle_intro_1",
-            nextLang.startsWith("de")
+            isDe
               ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
               : "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!"
           )
@@ -556,12 +557,15 @@ function updateStaticLanguageTexts(lang) {
       : "Make today a family day.";
   }
 
-  // Tilla in der Sidebar
+  // Tilla in der Sidebar (über i18n-Text)
   const tillaSidebarText = $("#tilla-sidebar-text");
   if (tillaSidebarText) {
-    tillaSidebarText.textContent = isDe
-      ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
-      : "Hi, I’m Tilla – your turtle companion for relaxed family adventures!";
+    tillaSidebarText.textContent = t(
+      "turtle_intro_1",
+      isDe
+        ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+        : "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!"
+    );
   }
 
   // Familien-Kompass
@@ -572,8 +576,8 @@ function updateStaticLanguageTexts(lang) {
   const compassHelper = $("#compass-helper");
   if (compassHelper) {
     compassHelper.textContent = isDe
-      ? "Der Familien-Kompass hilft euch mit einem Klick Spots zu finden, die zu eurer Zeit, eurem Alter und eurer Energie passen."
-      : "The family compass helps you find spots that match your time, your kids' age and your energy today – with just one tap.";
+      ? "Lasst mich kurz fragen, wie ihr heute drauf seid – dann suche ich passende Spots für euch."
+      : "Let me quickly ask how you feel today – then I’ll find some fitting spots for you.";
   }
   const compassApplyLabel = $("#compass-apply-label");
   if (compassApplyLabel) {
@@ -717,13 +721,19 @@ function updateStaticLanguageTexts(lang) {
   }
   const radiusMaxLabel = $("#filter-radius-max-label");
   if (radiusMaxLabel) {
-    radiusMaxLabel.textContent = isDe ? "Alle Spots" : "All spots";
+    radiusMaxLabel.textContent = t(
+      "filter_radius_max_label",
+      isDe ? "Alle Spots" : "All spots"
+    );
   }
   const radiusDesc = $("#filter-radius-description");
   if (radiusDesc) {
-    radiusDesc.textContent = isDe
-      ? "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
-      : "All spots – no radius limit. The map is yours.";
+    radiusDesc.textContent = t(
+      "filter_radius_description_all",
+      isDe
+        ? "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
+        : "All spots – no radius limit. The map is yours."
+    );
   }
 
   // Checkboxen
