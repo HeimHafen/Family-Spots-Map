@@ -1,100 +1,99 @@
-/* ===========================
-   TILLA – HERO CARD / ABOUT
-   =========================== */
+/* =========================================
+   TILLA – HERO (Über-Seite)
+   ========================================= */
 
 .tilla-hero {
-  margin: 1.75rem 0 2.5rem;
+  margin-bottom: 16px;
 }
 
-/* Außenkarte mit gestricheltem Rahmen */
 .tilla-hero-card {
-  position: relative;
-  padding: 1.6rem 1.6rem 1.8rem;
-  border-radius: 22px;
-  border: 2px dashed rgba(255, 157, 74, 0.7);
-  background: radial-gradient(
-    circle at top left,
-    #ffe9cc 0,
-    #fff6e7 55%,
-    #ffe1c0 100%
-  );
+  border-radius: 24px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #ffe4c2, #ffd2a3);
   box-shadow:
-    0 14px 28px rgba(179, 93, 11, 0.22),
-    0 4px 10px rgba(179, 93, 11, 0.18);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85),
+    0 8px 18px rgba(177, 104, 40, 0.45);
 }
 
-/* Innenlayout: Bild links, Text rechts */
+[data-theme="dark"] .tilla-hero-card {
+  background: radial-gradient(circle at top left, #1e293b 0, #020617 80%);
+  box-shadow:
+    inset 0 0 0 1px rgba(148, 163, 184, 0.4),
+    0 12px 26px rgba(0, 0, 0, 0.9);
+}
+
 .tilla-hero-layout {
   display: flex;
   align-items: center;
-  gap: 1.75rem;
+  gap: 14px;
 }
 
-/* Bildblock */
 .tilla-hero-image {
   flex: 0 0 auto;
 }
 
 .tilla-hero-img {
   display: block;
-  max-width: 190px;
-  width: min(40vw, 190px);
+  width: 96px;
   height: auto;
-  /* Tilla nach rechts spiegeln, damit sie zum Text schaut */
-  transform: scaleX(-1);
-  transform-origin: center;
 }
 
-/* Textblock */
 .tilla-hero-text-block {
   flex: 1 1 auto;
 }
 
 .tilla-hero-text {
   margin: 0;
-  font-size: 1.05rem;
-  line-height: 1.55;
-  text-align: left;
-  color: #7a4a25;
-  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
-/* ===========================
-   RESPONSIVE
-   =========================== */
+/* =========================================
+   TILLA – SIDEBAR-KARTE (oben auf der Map)
+   ========================================= */
 
-@media (max-width: 640px) {
-  .tilla-hero-card {
-    padding: 1.4rem 1.25rem 1.5rem;
-  }
-
-  .tilla-hero-layout {
-    gap: 1.25rem;
-  }
-
-  .tilla-hero-img {
-    width: min(36vw, 170px);
-  }
-
-  .tilla-hero-text {
-    font-size: 1rem;
-  }
+/* Der Tilla-Block nutzt dieselbe "Karten"-Optik wie andere Sections */
+.tilla-sidebar-section {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
-@media (max-width: 480px) {
-  .tilla-hero-card {
-    padding: 1.25rem 1.1rem 1.3rem;
-  }
+/* Innenkarte in warmem Verlauf, aber ohne Button-Optik */
+.tilla-sidebar-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #ffe4c2, #ffd2a3);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
+    0 6px 14px rgba(177, 104, 40, 0.42);
+}
 
-  .tilla-hero-layout {
-    gap: 1rem;
-  }
+/* Avatar: kein eigener Button-Hintergrund mehr,
+   damit Tilla "im Feld" sitzt */
+.tilla-sidebar-avatar {
+  flex: 0 0 auto;
+}
 
-  .tilla-hero-img {
-    width: min(34vw, 150px);
-  }
+.tilla-sidebar-avatar img {
+  display: block;
+  width: 60px;
+  height: auto;
+  /* Blick nach rechts: horizontal spiegeln */
+  transform: scaleX(-1);
+  transform-origin: center;
+}
 
-  .tilla-hero-text {
-    font-size: 0.98rem;
-  }
+/* Textteil neben Tilla */
+.tilla-sidebar-text {
+  flex: 1 1 auto;
+}
+
+.tilla-sidebar-text p,
+#tilla-sidebar-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
 }
