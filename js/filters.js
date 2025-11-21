@@ -1,5 +1,3 @@
-// js/filters.js
-
 import { $, debounce } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 import { updateRadiusCircle } from "./map.js";
@@ -468,12 +466,11 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
           b.classList.toggle("travel-chip--active", state.travelMode === m);
         });
 
-        // 🐢 Event für Tilla auslösen – sie reagiert in app.js (initTillaReactions)
-        document.dispatchEvent(
-          new CustomEvent("fsm:travelModeChanged", {
-            detail: { mode: state.travelMode }
-          })
-        );
+        // Event für Tilla: Reise-Modus geändert
+        const event = new CustomEvent("fsm:travelModeChanged", {
+          detail: { mode: state.travelMode }
+        });
+        document.dispatchEvent(event);
 
         notify();
       });
