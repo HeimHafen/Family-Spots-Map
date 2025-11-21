@@ -751,6 +751,46 @@
 
       <!-- Toast -->
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+      <!-- ======================= -->
+      <!-- ONBOARDING OVERLAY      -->
+      <!-- ======================= -->
+      <div
+        id="onboarding-overlay"
+        class="onboarding-overlay hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="onboarding-title"
+      >
+        <div class="onboarding-backdrop" aria-hidden="true"></div>
+        <div class="onboarding-dialog">
+          <div class="onboarding-content">
+            <div class="onboarding-slide" id="onboarding-slide-main">
+              <h2 id="onboarding-title"></h2>
+              <p id="onboarding-body"></p>
+              <p id="onboarding-hint" class="onboarding-hint"></p>
+
+              <div class="onboarding-actions onboarding-actions--stack">
+                <button
+                  type="button"
+                  class="btn"
+                  id="onboarding-primary-btn"
+                ></button>
+                <button
+                  type="button"
+                  class="btn-ghost"
+                  id="onboarding-secondary-btn"
+                ></button>
+              </div>
+            </div>
+
+            <div class="onboarding-dots">
+              <span class="onboarding-dot onboarding-dot--active"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Ende Onboarding -->
     </div>
 
     <!-- Scripts: Leaflet + MarkerCluster -->
