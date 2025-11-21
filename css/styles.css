@@ -1186,3 +1186,151 @@ body.onboarding-open {
     padding: 20px 20px 16px;
   }
 }
+
+/* =========================================
+   SPOT-LISTE & DETAILS – FEINTUNING
+   ========================================= */
+
+/* Leerer Zustand der Liste (wenn Tilla tröstet) */
+.spot-list-empty {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-soft);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] .spot-list-empty {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+}
+
+/* Beschreibung & Badges in der Spot-Karte */
+.spot-card-description {
+  margin: 4px 0 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
+.spot-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+/* Actions-Zeile in der Spot-Karte */
+.spot-card-actions {
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.spot-card-fav-icon {
+  font-size: 16px;
+}
+
+.spot-card-detail-label {
+  font-weight: 600;
+}
+
+/* Detailpanel – Struktur */
+.spot-details--hidden {
+  display: none;
+}
+
+.spot-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.spot-details-title {
+  margin: 0 0 2px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.spot-details-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.spot-details-meta span {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] .spot-details-meta span {
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+.spot-details-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Tags im Detailpanel */
+.spot-details-tags {
+  margin: 4px 0 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Beschreibung, Poetry, Adresse */
+.spot-details-description {
+  margin: 4px 0 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.spot-details-poetry {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text-soft);
+}
+
+.spot-details-address {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* Routen-Links */
+.spot-details-routes {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.spot-details-route-link {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1f2933;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .spot-details-route-link {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+}
