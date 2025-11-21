@@ -195,7 +195,7 @@ const CATEGORY_LABELS = {
     de: "Kinder- & Familienmuseum",
     en: "Children’s & family museum"
   },
-  indoor-spielplatz: {
+  "indoor-spielplatz": {
     de: "Indoor-Spielplatz",
     en: "Indoor playground"
   },
@@ -472,6 +472,17 @@ function getCategoryLabel(slug) {
   return slug.replace(/_/g, " ");
 }
 
+// statische Texte im HTML über data-i18n-* setzen
+function applyStaticI18n() {
+  document.querySelectorAll("[data-i18n-de]").forEach((el) => {
+    const key = currentLang === "de" ? "i18n-de" : "i18n-en";
+    const text = el.getAttribute(`data-${key}`);
+    if (text) {
+      el.textContent = text;
+    }
+  });
+}
+
 function setLanguage(lang, { initial = false } = {}) {
   currentLang = lang === "en" ? "en" : "de";
   localStorage.setItem("fs_lang", currentLang);
@@ -535,11 +546,12 @@ function setLanguage(lang, { initial = false } = {}) {
   }
 
   // Tilla informieren
-  if (!initial && tilla) {
-    if (typeof tilla.onLanguageChanged === "function") {
-      tilla.onLanguageChanged();
-    }
+  if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
+    tilla.onLanguageChanged();
   }
+
+  // statische Texte im HTML aktualisieren
+  applyStaticI18n();
 }
 
 // ------------------------------------------------------
