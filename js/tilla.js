@@ -1,23 +1,28 @@
 // js/tilla.js
 // ------------------------------------------------------
 // Tilla – eure Schildkröten-Begleiterin für Familien-Abenteuer 🐢
-// ------------------------------------------------------
 //
-// Diese Datei kapselt alle Logiken rund um Tilla:
-// - Initialer Begrüßungstext in der Sidebar
-// - Reaktionen auf Ereignisse (Favorit, Mein Tag, Reise-Modus, Plus…)
-// - Sprachwechsel / Übersetzungen über eine getText-Funktion
+// Idee:
+// Tilla ist kein reiner Infokasten, sondern ein kleiner, freundlicher
+// Begleiter. Sie reagiert auf Ereignisse in der App (Reise-Modus,
+// Plus-Aktivierung, Favoriten, Mein Tag, leere Ergebnisse) und spricht
+// in kurzen, warmen Sätzen – auf Deutsch oder Englisch.
 //
-// Integration:
-// In app.js in etwa so verwenden:
+// Highlights dieser Version:
+// - Mehrere Textvarianten pro Zustand (Intro, Alltag, Trip, Plus, …)
+// - Sprache automatisch über <html lang="…"> oder eigenes i18n
+// - Sanfter Fallback, wenn getText() nichts liefert
+// - Kein „Spam“: pro Key wird nicht ständig derselbe Satz wiederholt
+//
+// Integration (in app.js):
 //
 //   import { TillaCompanion } from './tilla.js';
 //
 //   const tilla = new TillaCompanion({
-//     getText: (key) => i18n.t(key) // oder dein bestehendes Übersetzungs-System
+//     getText: (key) => i18n.t?.(key)  // optional
 //   });
 //
-//   // Beispiele später in app.js:
+//   // Beispiele:
 //   // tilla.setTravelMode('trip');
 //   // tilla.onFavoriteAdded();
 //   // tilla.onDaylogSaved();
@@ -28,42 +33,78 @@
 // ------------------------------------------------------
 
 // Fallback-Texte, falls getText() nichts liefert oder (noch) nicht verkabelt ist.
+// Jeder Key kann ein String ODER ein Array von Strings sein.
+// Bei Arrays wählt Tilla automatisch eine passende Variante aus.
 const FALLBACK_TEXTS = {
   de: {
-    turtle_intro_1:
-      "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
-    turtle_intro_2:
-      "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein kleiner Spaziergang in eurer Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢",
-    turtle_after_daylog_save:
+    // Intro: kombiniert sich mit Alltag- oder Trip-Sätzen
+    turtle_intro_1: [
+      "Hallo, ich bin Tilla – eure kleine Schildkröten-Begleiterin für Familien-Abenteuer.",
+      "Ich bin Tilla. Mit mir wird eure Karte zu einer Schatzkarte voller Familienmomente."
+    ],
+    // Wenn keine Spots im Radius / mit Filtern gefunden werden
+    turtle_intro_2: [
+      "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein Spaziergang ganz in der Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢",
+      "Mit diesen Filtern ist die Karte gerade leer. Probiert einen größeren Radius oder eine andere Kategorie – irgendwo wartet ein guter Ort auf euch. 🐢"
+    ],
+    turtle_after_daylog_save: [
       "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛",
-    turtle_after_fav_added:
+      "Ein paar Zeilen heute – viele Erinnerungen morgen. Danke, dass ihr euren Tag teilt. 💛"
+    ],
+    turtle_after_fav_added: [
       "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer Familienkarte. ⭐",
-    turtle_after_fav_removed:
+      "Gut gewählt! Dieser Spot ist jetzt Teil eurer persönlichen Schatzkarte. ⭐"
+    ],
+    turtle_after_fav_removed: [
       "Alles gut – manchmal passen Orte nur zu bestimmten Phasen. Ich helfe euch, neue zu finden. 🐢",
-    turtle_trip_mode:
+      "Manche Spots dürfen gehen, damit Platz für neue Highlights ist. Wir finden gemeinsam frische Lieblingsorte. 🐢"
+    ],
+    turtle_trip_mode: [
       "Ihr seid unterwegs – ich halte Ausschau nach guten Zwischenstopps für euch. 🚐",
-    turtle_everyday_mode:
+      "Roadtrip-Tag? Dann suchen wir jetzt nach Orten zum Toben, Auftanken und Durchatmen. 🚐"
+    ],
+    turtle_everyday_mode: [
       "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿",
-    turtle_plus_activated:
-      "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨"
+      "Vielleicht reicht heute ein kleiner Ausflug um die Ecke. Ich zeige euch, was nah dran gut tut. 🌿"
+    ],
+    turtle_plus_activated: [
+      "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
+      "Plus ist an Bord! Ab jetzt achte ich extra auf Spots für WoMo, Camping und große Abenteuer. ✨"
+    ]
   },
   en: {
-    turtle_intro_1:
-      "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!",
-    turtle_intro_2:
+    turtle_intro_1: [
+      "Hi, I’m Tilla – your little turtle companion for family adventures.",
+      "I’m Tilla. Together we’ll turn this map into a treasure map of family moments."
+    ],
+    turtle_intro_2: [
       "Right now I can’t find a fitting spot. Maybe a small walk nearby is perfect today – or you widen the radius a little. 🐢",
-    turtle_after_daylog_save:
+      "With these filters the map is empty. Try a wider radius or a different category – somewhere a good place is waiting for you. 🐢"
+    ],
+    turtle_after_daylog_save: [
       "Nice that you captured your day. These small notes turn into big memories later. 💛",
-    turtle_after_fav_added:
+      "A few lines today – many memories tomorrow. Thanks for sharing your day. 💛"
+    ],
+    turtle_after_fav_added: [
       "You’ve saved this place – a small gem on your family map. ⭐",
-    turtle_after_fav_removed:
+      "Great choice! This spot is now part of your personal treasure map. ⭐"
+    ],
+    turtle_after_fav_removed: [
       "All good – some places only fit certain phases. I’ll help you find new ones. 🐢",
-    turtle_trip_mode:
+      "Some spots leave so new highlights can arrive. We’ll find fresh favourites together. 🐢"
+    ],
+    turtle_trip_mode: [
       "You’re on the road – I’ll watch out for good stopovers for you. 🚐",
-    turtle_everyday_mode:
+      "Roadtrip day? Let’s look for places to play, recharge and breathe deeply. 🚐"
+    ],
+    turtle_everyday_mode: [
       "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿",
-    turtle_plus_activated:
-      "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨"
+      "Maybe today a small trip around the corner is just right. I’ll show you what feels good nearby. 🌿"
+    ],
+    turtle_plus_activated: [
+      "Family Spots Plus is active – I can now highlight rest areas, RV spots and campgrounds for you. ✨",
+      "Plus is on board! From now on I’ll pay special attention to RV, camping and big adventure spots. ✨"
+    ]
   }
 };
 
@@ -86,7 +127,8 @@ export class TillaCompanion {
    * @param {(key: string) => string} [options.getText] - Funktion, um Übersetzungen zu holen (z. B. i18n.t)
    */
   constructor(options = {}) {
-    this.getText = typeof options.getText === "function" ? options.getText : null;
+    this.getText =
+      typeof options.getText === "function" ? options.getText : null;
 
     // Sidebar-Text-Element
     this.textEl = document.getElementById("tilla-sidebar-text");
@@ -101,6 +143,10 @@ export class TillaCompanion {
     this.state = "intro"; // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots
     this.travelMode = "everyday"; // everyday | trip
     this.lastInteraction = Date.now();
+
+    // Merkt sich, welcher Variant-Index zuletzt für einen Key genutzt wurde,
+    // damit nicht permanent derselbe Satz wiederholt wird.
+    this._lastVariantIndex = {};
 
     // Initial: freundliche Begrüßung
     this._renderState();
@@ -206,6 +252,12 @@ export class TillaCompanion {
   // Interne Helfer
   // --------------------------------------------------
 
+  /**
+   * Übersetzungs-/Text-Funktion:
+   * 1. versucht getText(key)
+   * 2. nutzt FALLBACK_TEXTS[lang][key] (String oder Array)
+   * 3. fällt ansonsten auf den Key zurück
+   */
   _t(key) {
     // 1. Versuch: externes getText (z. B. i18n)
     if (this.getText) {
@@ -221,14 +273,42 @@ export class TillaCompanion {
 
     // 2. Fallback auf interne Texte
     const lang = getCurrentLang();
-    const fallbackLang = FALLBACK_TEXTS[lang] ? lang : "de";
-    const fromFallback = FALLBACK_TEXTS[fallbackLang][key];
-    if (typeof fromFallback === "string") {
-      return fromFallback;
+    const bundle = FALLBACK_TEXTS[lang] || FALLBACK_TEXTS.de;
+    const entry = bundle[key];
+
+    if (Array.isArray(entry) && entry.length > 0) {
+      return this._pickVariant(key, entry);
+    }
+
+    if (typeof entry === "string") {
+      return entry;
     }
 
     // 3. Letzter Fallback: Key selbst
     return key;
+  }
+
+  /**
+   * Wählt eine Variante aus einem Array von Texten aus.
+   * Versucht, nicht zweimal hintereinander denselben Index zu verwenden.
+   */
+  _pickVariant(key, variants) {
+    if (!Array.isArray(variants) || variants.length === 0) return "";
+
+    const lastIndex = this._lastVariantIndex[key];
+    let index;
+
+    if (variants.length === 1) {
+      index = 0;
+    } else {
+      // so lange würfeln, bis ein anderer Index als zuletzt getroffen wurde
+      do {
+        index = Math.floor(Math.random() * variants.length);
+      } while (index === lastIndex);
+    }
+
+    this._lastVariantIndex[key] = index;
+    return variants[index];
   }
 
   _renderState() {
