@@ -13,7 +13,6 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
 }
 
 /* ---------- THEME TOKENS (LIGHT / DARK) ---------- */
@@ -101,7 +100,7 @@ body {
 
   --header-tagline-bg: linear-gradient(135deg, #ffb74d, #ff9800);
   --header-tagline-color: #1a1309;
-  --header-tagline-shadow: 0 14px 32px rgba(0, 0, 0, 0.9);
+  --header-tagline-shadow: 0 10px 24px rgba(0, 0, 0, 0.8);
 
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
@@ -142,7 +141,6 @@ body {
   color: var(--text-color);
   background: var(--app-bg);
   -webkit-font-smoothing: antialiased;
-  transition: background 0.4s ease, color 0.3s ease;
 }
 
 /* Links */
@@ -181,6 +179,11 @@ a {
   outline-offset: 2px;
 }
 
+/* Theme-Übergänge */
+body {
+  transition: background 0.4s ease, color 0.3s ease;
+}
+
 /* =========================================
    HEADER
    ========================================= */
@@ -188,7 +191,7 @@ a {
 .app-header {
   position: sticky;
   top: 0;
-  z-index: 25; /* über Map, unter Bottom-Nav & Toast */
+  z-index: 20;
   padding: 10px 14px 14px;
   background: linear-gradient(135deg, var(--header-bg-top), var(--header-bg-bottom));
   color: var(--header-text-color);
@@ -413,6 +416,15 @@ a {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.9);
 }
 
+/* Filter-Section eingeklappt: nur Header bleibt sichtbar */
+.sidebar-section--collapsed {
+  padding-bottom: 10px;
+}
+
+.sidebar-section--collapsed > .filter-group {
+  display: none;
+}
+
 /* Kompass-Karte */
 .compass-card {
   margin-top: 4px;
@@ -520,6 +532,14 @@ select.input:focus {
     0 8px 18px rgba(245, 158, 11, 0.7),
     inset 0 0 0 1px rgba(255, 255, 255, 0.85);
   transform: translateY(-1px);
+}
+
+/* Dark Mode – orange Glow entschärfen */
+[data-theme="dark"] .mood-chip--active,
+[data-theme="dark"] .travel-chip--active {
+  box-shadow:
+    0 6px 14px rgba(245, 158, 11, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
 /* Radius-Slider */
@@ -671,15 +691,12 @@ select.input:focus {
   background: var(--map-card-bg);
   min-height: 320px;
   position: relative;
-  z-index: 0; /* Header liegt darüber */
 }
 
 .map-container {
   width: 100%;
   height: 100%;
   min-height: 320px;
-  position: relative;
-  z-index: 0;
 }
 
 /* Spot-Detail Panel */
@@ -906,6 +923,13 @@ select.input:focus {
 .bottom-nav-item--active {
   background: var(--bottom-nav-item-active-bg);
   color: var(--bottom-nav-item-active-color);
+}
+
+/* Dark Mode – aktiver Nav-Pill etwas softer */
+[data-theme="dark"] .bottom-nav-item--active {
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
 .bottom-nav-item:active {
