@@ -1,6 +1,7 @@
 // js/app.js
 // ======================================================
 // Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
+// (merged version aus deinen beiden app.js-Dateien)
 // ======================================================
 
 import { TillaCompanion } from "./tilla.js";
@@ -155,7 +156,9 @@ const UI_STRINGS = {
   }
 };
 
+// ------------------------------------------------------
 // Kategorien lesbarer machen
+// ------------------------------------------------------
 const CATEGORY_LABELS = {
   wildpark: {
     de: "Wildpark & Safaripark",
@@ -200,7 +203,7 @@ const CATEGORY_LABELS = {
 };
 
 // Master-Liste aller Kategorien (auch wenn noch 0 Spots)
-// (Basis: dein v2025-11-08 Set)
+// (Basis: v2025-11-08 Set)
 const MASTER_CATEGORY_SLUGS = [
   "spielplatz",
   "abenteuerspielplatz",
@@ -261,7 +264,7 @@ let favorites = new Set();
 
 let plusActive = false;
 let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
-let travelMode = "everyday"; // "everyday" | "trip"
+let travelMode = "everyday"; // "everyday" | "trip" | null
 let radiusStep = 4; // 0–4
 let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
@@ -343,8 +346,8 @@ function getCategoryLabel(slug) {
   if (entry) {
     return entry[currentLang] || entry.de || slug;
   }
-  // Fallback: _ → Leerzeichen, Bindestriche bleiben
-  return slug.replace(/_/g, " ");
+  // Fallback: _ → Leerzeichen
+  return String(slug).replace(/_/g, " ");
 }
 
 function setLanguage(lang, { initial = false } = {}) {
@@ -379,10 +382,10 @@ function setLanguage(lang, { initial = false } = {}) {
     compassApplyLabelEl.textContent = t("compass_apply_label");
   }
 
-  // Filter-Buttons
+  // Filter-Buttons (wie in erster Version: data-collapsed nutzen)
   if (btnToggleFiltersEl && filterSectionEl) {
-    const isHidden = filterSectionEl.classList.contains("hidden");
-    btnToggleFiltersEl.querySelector("span").textContent = isHidden
+    const isCollapsed = filterSectionEl.dataset.collapsed === "true";
+    btnToggleFiltersEl.querySelector("span").textContent = isCollapsed
       ? t("btn_show_filters")
       : t("btn_hide_filters");
   }
@@ -396,21 +399,17 @@ function setLanguage(lang, { initial = false } = {}) {
   // Radius-Texte
   updateRadiusTexts();
 
-  // Kategorie-Placeholder
+  // Kategorie-Placeholder & Optionen
   if (filterCategoryEl) {
     const firstOption = filterCategoryEl.querySelector("option[value='']");
     if (firstOption) {
       firstOption.textContent = t("filter_category_all");
     }
-  }
-
-  // Kategorien-Optionen neu mit lokalisierter Beschriftung befüllen
-  if (filterCategoryEl) {
     populateCategoryOptions();
   }
 
-  // Tilla informieren
-  if (!initial && tilla) {
+  // Tilla informieren (nur wenn nicht initial)
+  if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
     tilla.onLanguageChanged();
   }
 }
@@ -487,7 +486,11 @@ async function loadSpots() {
       if (normalized.lon != null && normalized.lng == null) {
         normalized.lng = normalized.lon;
       }
-      if (!normalized.category && Array.isArray(normalized.categories) && normalized.categories.length) {
+      if (
+        !normalized.category &&
+        Array.isArray(normalized.categories) &&
+        normalized.categories.length
+      ) {
         normalized.category = normalized.categories[0];
       }
 
@@ -544,19 +547,18 @@ function getSpotSubtitle(spot) {
   if (spot.town && spot.country) return `${spot.town}, ${spot.country}`;
   if (spot.address) return spot.address;
 
-  return (
-    spot.subtitle ||
-    spot.shortDescription ||
-    ""
-  );
+  return spot.subtitle || spot.shortDescription || "";
 }
 
 // Kategorien ins Dropdown schreiben (Master-Liste + tatsächlich vorkommende)
 function populateCategoryOptions() {
   if (!filterCategoryEl) return;
 
+  const current = categoryFilter || filterCategoryEl.value || "";
+
   const firstOption =
-    filterCategoryEl.querySelector("option[value='']") || document.createElement("option");
+    filterCategoryEl.querySelector("option[value='']") ||
+    document.createElement("option");
   firstOption.value = "";
   firstOption.textContent = t("filter_category_all");
 
@@ -588,8 +590,7 @@ function populateCategoryOptions() {
     filterCategoryEl.appendChild(opt);
   });
 
-  // aktuellen Filterwert erhalten
-  filterCategoryEl.value = categoryFilter || "";
+  filterCategoryEl.value = current;
 }
 
 // Hilfsfunktion: Entfernungsfilter (Radius)
@@ -609,7 +610,9 @@ function applyFiltersAndRender() {
     filteredSpots = [];
     renderSpotList();
     renderMarkers();
-    if (tilla) tilla.onNoSpotsFound();
+    if (tilla && typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
+    }
     return;
   }
 
@@ -636,12 +639,22 @@ function applyFiltersAndRender() {
       if (!haystack.includes(term)) return false;
     }
 
-    // Kategorie
+    // Kategorie (robuste Logik aus erster Version)
     if (categoryFilter) {
-      const cat = spot.category || "";
+      const filterSlug = String(categoryFilter);
+      const categories = [];
+
       if (Array.isArray(spot.categories)) {
-        if (!spot.categories.includes(categoryFilter)) return false;
-      } else if (cat !== categoryFilter) {
+        categories.push(...spot.categories.map(String));
+      } else if (spot.category || spot.type) {
+        categories.push(String(spot.category || spot.type));
+      }
+
+      if (
+        !categories.some((c) => {
+          return c === filterSlug;
+        })
+      ) {
         return false;
       }
     }
@@ -677,9 +690,7 @@ function applyFiltersAndRender() {
     // Nur große Abenteuer
     if (onlyBigAdventures) {
       const big =
-        !!spot.bigAdventure ||
-        !!spot.isBigAdventure ||
-        !!spot.longTrip;
+        !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
       if (!big) return false;
     }
 
@@ -706,8 +717,10 @@ function applyFiltersAndRender() {
 
   if (tilla) {
     if (filteredSpots.length === 0) {
-      tilla.onNoSpotsFound();
-    } else {
+      if (typeof tilla.onNoSpotsFound === "function") {
+        tilla.onNoSpotsFound();
+      }
+    } else if (typeof tilla.onSpotsFound === "function") {
       tilla.onSpotsFound();
     }
   }
@@ -946,12 +959,16 @@ function toggleFavorite(spot) {
     favorites.delete(spotId);
     saveFavoritesToStorage();
     showToast("toast_fav_removed");
-    if (tilla) tilla.onFavoriteRemoved();
+    if (tilla && typeof tilla.onFavoriteRemoved === "function") {
+      tilla.onFavoriteRemoved();
+    }
   } else {
     favorites.add(spotId);
     saveFavoritesToStorage();
     showToast("toast_fav_added");
-    if (tilla) tilla.onFavoriteAdded();
+    if (tilla && typeof tilla.onFavoriteAdded === "function") {
+      tilla.onFavoriteAdded();
+    }
   }
 
   // Liste neu malen, damit Sternchen überall stimmt
@@ -983,13 +1000,13 @@ function updateRadiusTexts() {
 // Kompass
 // ------------------------------------------------------
 function handleCompassApply() {
-  // einfache Logik:
   if (!filterRadiusEl) return;
 
-  if (travelMode === "everyday") {
-    radiusStep = 1; // z.B. 5 km
-  } else {
+  // einfache Logik: null/everyday => "nah", trip => "weit"
+  if (travelMode === "trip") {
     radiusStep = 3; // z.B. 40 km
+  } else {
+    radiusStep = 1; // z.B. 5 km
   }
 
   filterRadiusEl.value = String(radiusStep);
@@ -1023,7 +1040,7 @@ function handlePlusCodeSubmit() {
       ? "Family Spots Plus ist aktiv – zusätzliche Kategorien sind freigeschaltet."
       : "Family Spots Plus is active – additional categories have been unlocked.";
 
-  if (tilla) {
+  if (tilla && typeof tilla.onPlusActivated === "function") {
     tilla.onPlusActivated();
   }
 
@@ -1052,7 +1069,7 @@ function handleDaylogSave() {
   }
 
   showToast("daylog_saved");
-  if (tilla) {
+  if (tilla && typeof tilla.onDaylogSaved === "function") {
     tilla.onDaylogSaved();
   }
 }
@@ -1108,10 +1125,20 @@ function switchRoute(route) {
 // ------------------------------------------------------
 function handleToggleFilters() {
   if (!filterSectionEl || !btnToggleFiltersEl) return;
-  const isHidden = filterSectionEl.classList.toggle("hidden");
+
+  const currentlyCollapsed = filterSectionEl.dataset.collapsed === "true";
+  const newCollapsed = !currentlyCollapsed;
+  filterSectionEl.dataset.collapsed = newCollapsed ? "true" : "false";
+
+  // alle Kinder außer Header zeigen/verstecken
+  Array.from(filterSectionEl.children).forEach((child) => {
+    if (child.classList.contains("sidebar-section-header")) return;
+    child.style.display = newCollapsed ? "none" : "";
+  });
+
   btnToggleFiltersEl
     .querySelector("span")
-    .textContent = isHidden
+    .textContent = newCollapsed
       ? t("btn_show_filters")
       : t("btn_hide_filters");
 }
@@ -1294,11 +1321,13 @@ function init() {
     });
   }
 
-  // Stimmung-Chips
+  // Stimmung-Chips (mit Ein-/Ausschalten wie in erster Version)
   document.querySelectorAll(".mood-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       const value = chip.getAttribute("data-mood");
-      if (moodFilter === value) {
+      const isActive = chip.classList.contains("mood-chip--active");
+
+      if (isActive) {
         moodFilter = null;
         chip.classList.remove("mood-chip--active");
       } else {
@@ -1308,22 +1337,33 @@ function init() {
           .forEach((c) => c.classList.remove("mood-chip--active"));
         chip.classList.add("mood-chip--active");
       }
+
       applyFiltersAndRender();
     });
   });
 
-  // Reise-Modus-Chips
+  // Reise-Modus-Chips (ein-/ausschaltbar wie in erster Version)
   document.querySelectorAll(".travel-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       const mode = chip.getAttribute("data-travel-mode") || "everyday";
-      travelMode = mode;
-      document
-        .querySelectorAll(".travel-chip")
-        .forEach((c) => c.classList.remove("travel-chip--active"));
-      chip.classList.add("travel-chip--active");
+      const isAlreadyActive = chip.classList.contains("travel-chip--active");
 
-      if (tilla) {
-        tilla.setTravelMode(mode);
+      if (isAlreadyActive) {
+        // ausschalten
+        travelMode = null;
+        document
+          .querySelectorAll(".travel-chip")
+          .forEach((c) => c.classList.remove("travel-chip--active"));
+      } else {
+        travelMode = mode;
+        document
+          .querySelectorAll(".travel-chip")
+          .forEach((c) => c.classList.remove("travel-chip--active"));
+        chip.classList.add("travel-chip--active");
+      }
+
+      if (tilla && typeof tilla.setTravelMode === "function") {
+        tilla.setTravelMode(travelMode);
       }
 
       applyFiltersAndRender();
@@ -1338,9 +1378,11 @@ function init() {
   }
 
   // Filter-Umschalter
-  if (btnToggleFiltersEl) {
+  if (btnToggleFiltersEl && filterSectionEl) {
     btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
+    // Text initial setzen (Filter sichtbar)
     btnToggleFiltersEl.querySelector("span").textContent = t("btn_hide_filters");
+    filterSectionEl.dataset.collapsed = "false";
   }
 
   // View-Umschalter (Liste/Karte)
@@ -1363,6 +1405,25 @@ function init() {
   if (compassApplyBtnEl) {
     compassApplyBtnEl.addEventListener("click", handleCompassApply);
   }
+
+  // Sektionen schließen (X-Button) – aus erster Version übernommen
+  document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+      if (!targetId) return;
+      const section = document.getElementById(targetId);
+      if (!section) return;
+
+      if (
+        section.tagName &&
+        section.tagName.toLowerCase() === "details"
+      ) {
+        section.open = false;
+      } else {
+        section.classList.add("hidden");
+      }
+    });
+  });
 
   // Initiales Route
   switchRoute("map");
