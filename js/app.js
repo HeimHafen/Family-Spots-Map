@@ -532,6 +532,14 @@ function setLanguage(lang, { initial = false } = {}) {
       : t("btn_only_map");
   }
 
+  // **Such-Placeholder dynamisch setzen**
+  if (filterSearchEl) {
+    filterSearchEl.placeholder =
+      currentLang === "de"
+        ? "Ort, Spot, Stichwörter …"
+        : "Place, spot, keywords …";
+  }
+
   // Radius-Texte
   updateRadiusTexts();
 
