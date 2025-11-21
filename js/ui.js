@@ -113,7 +113,8 @@ export function renderSpotList(spots, options) {
     }
 
     const badgesRow = document.createElement("div");
-    badgesRow.className = "spot-card-badges";
+    // beide Klassen, damit badges.css sicher greift
+    badgesRow.className = "spot-card-badges spot-card__badges";
 
     if (spot.verified) {
       const b = document.createElement("span");
