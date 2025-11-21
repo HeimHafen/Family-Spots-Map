@@ -386,7 +386,7 @@ let favorites = new Set();
 
 let plusActive = false;
 let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
-let travelMode = "everyday"; // "everyday" | "trip"
+let travelMode = "everyday"; // "everyday" | "trip" | null
 let radiusStep = 4; // 0–4
 let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
@@ -394,6 +394,7 @@ let categoryFilter = "";
 let onlyBigAdventures = false;
 let onlyVerified = false;
 let onlyFavorites = false;
+let filtersCollapsed = false;
 
 // DOM-Elemente (werden in init() gesetzt)
 let languageSwitcherEl;
@@ -517,10 +518,7 @@ function setLanguage(lang, { initial = false } = {}) {
 
   // Filter-Buttons
   if (btnToggleFiltersEl && filterSectionEl) {
-    const isHidden = filterSectionEl.classList.contains("hidden");
-    btnToggleFiltersEl.querySelector("span").textContent = isHidden
-      ? t("btn_show_filters")
-      : t("btn_hide_filters");
+    updateFilterToggleLabel();
   }
   if (btnToggleViewEl && sidebarEl) {
     const sidebarHidden = sidebarEl.classList.contains("hidden");
@@ -1252,12 +1250,20 @@ function switchRoute(route) {
 // ------------------------------------------------------
 function handleToggleFilters() {
   if (!filterSectionEl || !btnToggleFiltersEl) return;
-  const isHidden = filterSectionEl.classList.toggle("hidden");
-  btnToggleFiltersEl
-    .querySelector("span")
-    .textContent = isHidden
-      ? t("btn_show_filters")
-      : t("btn_hide_filters");
+  filtersCollapsed = !filtersCollapsed;
+  filterSectionEl.classList.toggle(
+    "sidebar-section--collapsed",
+    filtersCollapsed
+  );
+  updateFilterToggleLabel();
+}
+
+function updateFilterToggleLabel() {
+  if (!btnToggleFiltersEl) return;
+  const span = btnToggleFiltersEl.querySelector("span") || btnToggleFiltersEl;
+  span.textContent = t(
+    filtersCollapsed ? "btn_show_filters" : "btn_hide_filters"
+  );
 }
 
 function handleToggleView() {
@@ -1265,14 +1271,58 @@ function handleToggleView() {
   const isHidden = sidebarEl.classList.toggle("hidden");
   btnToggleViewEl
     .querySelector("span")
-    .textContent = isHidden
-      ? t("btn_show_list")
-      : t("btn_only_map");
+    .textContent = isHidden ? t("btn_show_list") : t("btn_only_map");
 
   if (map) {
     setTimeout(() => {
       map.invalidateSize();
     }, 300);
+  }
+}
+
+// ------------------------------------------------------
+// Reise-Modus-Chips (Alltag / Unterwegs)
+// ------------------------------------------------------
+function initTravelChips() {
+  const chips = document.querySelectorAll(".travel-chip");
+  if (!chips.length) return;
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const mode = chip.getAttribute("data-travel-mode") || "everyday";
+      const isActive = chip.classList.contains("travel-chip--active");
+
+      // erst alle deaktivieren
+      chips.forEach((c) => c.classList.remove("travel-chip--active"));
+
+      if (isActive) {
+        // auf aktiven Chip klicken -> alles AUS
+        travelMode = null;
+        if (tilla && typeof tilla.setTravelMode === "function") {
+          tilla.setTravelMode(null);
+        }
+      } else {
+        travelMode = mode;
+        chip.classList.add("travel-chip--active");
+        if (tilla && typeof tilla.setTravelMode === "function") {
+          tilla.setTravelMode(mode);
+        }
+      }
+
+      applyFiltersAndRender();
+    });
+  });
+
+  // Startzustand: Alltag aktiv
+  const defaultChip = document.querySelector(
+    ".travel-chip[data-travel-mode='everyday']"
+  );
+  if (defaultChip) {
+    defaultChip.classList.add("travel-chip--active");
+    travelMode = "everyday";
+    if (tilla && typeof tilla.setTravelMode === "function") {
+      tilla.setTravelMode("everyday");
+    }
   }
 }
 
@@ -1348,6 +1398,9 @@ function init() {
   tilla = new TillaCompanion({
     getText: (key) => t(key)
   });
+
+  // Travel-Chips initialisieren
+  initTravelChips();
 
   // Events – Sprache
   if (languageSwitcherEl) {
@@ -1456,35 +1509,10 @@ function init() {
     });
   });
 
-  // Reise-Modus-Chips
-  document.querySelectorAll(".travel-chip").forEach((chip) => {
-    chip.addEventListener("click", () => {
-      const mode = chip.getAttribute("data-travel-mode") || "everyday";
-      travelMode = mode;
-      document
-        .querySelectorAll(".travel-chip")
-        .forEach((c) => c.classList.remove("travel-chip--active"));
-      chip.classList.add("travel-chip--active");
-
-      if (tilla && typeof tilla.setTravelMode === "function") {
-        tilla.setTravelMode(mode);
-      }
-
-      applyFiltersAndRender();
-    });
-  });
-
-  const defaultTravelChip = document.querySelector(
-    ".travel-chip[data-travel-mode='everyday']"
-  );
-  if (defaultTravelChip) {
-    defaultTravelChip.classList.add("travel-chip--active");
-  }
-
   // Filter-Umschalter
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
-    btnToggleFiltersEl.querySelector("span").textContent = t("btn_hide_filters");
+    updateFilterToggleLabel();
   }
 
   // View-Umschalter (Liste/Karte)
