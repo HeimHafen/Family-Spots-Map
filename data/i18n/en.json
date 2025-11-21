@@ -20,6 +20,12 @@
   "filter_radius_description_step3": "Big adventure radius – destinations for full-day trips are waiting here.",
   "filter_radius_description_all": "All spots – no radius limit. The map is all yours.",
   "turtle_intro_1": "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!",
-  "turtle_intro_2": "I'm here when you're unsure where to go – or just want to take it slow. 🐢💛",
+  "turtle_intro_2": "Right now I can’t find a fitting spot. Maybe a small walk nearby is perfect today – or you widen the radius a little. 🐢",
+  "turtle_after_daylog_save": "Nice that you captured your day. These small notes turn into big memories later. 💛",
+  "turtle_after_fav_added": "You’ve saved this place – a small gem on your family map. ⭐",
+  "turtle_after_fav_removed": "All good – some places only fit certain phases. I’ll help you find new ones. 🐢",
+  "turtle_trip_mode": "You’re on the road – I’ll watch out for good stopovers for you. 🚐",
+  "turtle_everyday_mode": "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿",
+  "turtle_plus_activated": "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨",
   "daylog_saved": "Your day moment has been saved 💾 – you can look back on it later."
 }
