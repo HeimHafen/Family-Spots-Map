@@ -1358,3 +1358,33 @@ body.onboarding-open {
   background: rgba(15, 23, 42, 0.98);
   color: #e5e7eb;
 }
+/* === GOLD EDITION PATCH === */
+
+/* Reduziertes Leuchten bei aktiven Mood-/Travel-Chips */
+.mood-chip--active,
+.travel-chip--active {
+  background: linear-gradient(135deg, #ffb74d, #ffa000); /* sanfteres Orange */
+  color: #3b2313;
+  box-shadow:
+    0 3px 8px rgba(245, 158, 11, 0.4), /* weniger Glow */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .mood-chip--active,
+[data-theme="dark"] .travel-chip--active {
+  box-shadow:
+    0 3px 8px rgba(245, 158, 11, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+/* Karte unter Header, kein Überlappen */
+.map-section {
+  margin-top: 14px; /* Abstand zur Kopfzeile */
+  z-index: 10;
+  position: relative;
+}
+
+.app-header {
+  z-index: 100; /* Damit Header drüber bleibt */
+}
