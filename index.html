@@ -42,12 +42,16 @@
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/badges.css" />
 
-    <!-- Kleine Ergänzung für den Claim unter dem Header -->
+    <!-- Feinschliff Header-Claim -->
     <style>
       .header-subtagline {
-        margin-top: 0.25rem;
-        font-size: 0.9rem;
+        margin-top: 0.1rem;
+        font-size: 0.8rem;
+        line-height: 1.2;
         opacity: 0.9;
+        max-width: 18rem;
+        margin-left: auto;
+        margin-right: auto;
       }
     </style>
   </head>
@@ -62,7 +66,7 @@
       <!-- ======================= -->
       <!-- HEADER                  -->
       <!-- ======================= -->
-      <header class="app-header" style="padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
+      <header class="app-header" style="padding-bottom: 0.4rem; margin-bottom: 0.75rem;">
         <!-- Obere Kontroll-Zeile -->
         <div class="app-header-top">
           <div class="app-header-left">
@@ -1017,5 +1021,33 @@
 
     <!-- App (als ES-Modul) -->
     <script type="module" src="./js/app.js"></script>
+
+    <!-- Kleines Script nur für das Daylog-Placeholder (DE/EN) -->
+    <script>
+      (function () {
+        const textarea = document.getElementById("daylog-text");
+        const languageSelect = document.getElementById("language-switcher");
+        if (!textarea || !languageSelect) return;
+
+        const placeholders = {
+          de: "Heute waren wir im Wildpark – die Ziegen waren sooo süß!",
+          en: "Today we went to the wildlife park – the goats were sooo cute!",
+        };
+
+        function updatePlaceholder(lang) {
+          textarea.placeholder = placeholders[lang] || placeholders.de;
+        }
+
+        // Initial setzen
+        const initialLang =
+          languageSelect.value || document.documentElement.lang || "de";
+        updatePlaceholder(initialLang);
+
+        // Auf Sprachwechsel reagieren
+        languageSelect.addEventListener("change", () => {
+          updatePlaceholder(languageSelect.value);
+        });
+      })();
+    </script>
   </body>
 </html>
