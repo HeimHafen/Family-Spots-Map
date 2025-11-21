@@ -19,7 +19,7 @@
 //   import { TillaCompanion } from './tilla.js';
 //
 //   const tilla = new TillaCompanion({
-//     getText: (key) => i18n.t?.(key)  // optional
+//     getText: (key) => t(key)  // optional: Überschreiben einzelner Texte möglich
 //   });
 //
 //   // Beispiele:
@@ -141,7 +141,7 @@ export class TillaCompanion {
 
     // State
     this.state = "intro"; // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots
-    this.travelMode = "everyday"; // everyday | trip
+    this.travelMode = "everyday"; // everyday | trip | null
     this.lastInteraction = Date.now();
 
     // Merkt sich, welcher Variant-Index zuletzt für einen Key genutzt wurde,
@@ -165,10 +165,20 @@ export class TillaCompanion {
   }
 
   /**
-   * Reise-Modus gesetzt (everyday | trip).
+   * Reise-Modus gesetzt (everyday | trip | null).
+   * Bei null kehrt Tilla in den Intro-Zustand zurück.
    */
   setTravelMode(mode) {
     if (!this.textEl) return;
+
+    if (mode === null || mode === undefined) {
+      this.travelMode = null;
+      this.state = "intro";
+      this.lastInteraction = Date.now();
+      this._renderState();
+      return;
+    }
+
     if (mode !== "everyday" && mode !== "trip") return;
 
     this.travelMode = mode;
@@ -263,7 +273,12 @@ export class TillaCompanion {
     if (this.getText) {
       try {
         const value = this.getText(key);
-        if (typeof value === "string" && value.trim() !== "") {
+        // Nur akzeptieren, wenn es NICHT einfach wieder der Key selbst ist
+        if (
+          typeof value === "string" &&
+          value.trim() !== "" &&
+          value !== key
+        ) {
           return value;
         }
       } catch (err) {
@@ -322,8 +337,10 @@ export class TillaCompanion {
         const intro = this._t("turtle_intro_1");
         if (this.travelMode === "trip") {
           text = intro + " " + this._t("turtle_trip_mode");
-        } else {
+        } else if (this.travelMode === "everyday") {
           text = intro + " " + this._t("turtle_everyday_mode");
+        } else {
+          text = intro;
         }
         break;
       }
@@ -375,8 +392,10 @@ export class TillaCompanion {
         const intro = this._t("turtle_intro_1");
         if (this.travelMode === "trip") {
           text = intro + " " + this._t("turtle_trip_mode");
-        } else {
+        } else if (this.travelMode === "everyday") {
           text = intro + " " + this._t("turtle_everyday_mode");
+        } else {
+          text = intro;
         }
       }
     }
