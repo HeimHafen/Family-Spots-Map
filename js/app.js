@@ -386,7 +386,7 @@ let favorites = new Set();
 
 let plusActive = false;
 let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
-let travelMode = "everyday"; // "everyday" | "trip" | null
+let travelMode = null; // "everyday" | "trip" | null
 let radiusStep = 4; // 0–4
 let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
@@ -437,6 +437,9 @@ let compassApplyBtnEl;
 
 // Tilla
 let tilla = null;
+
+// Filter-Body innerhalb der Filter-Section (alles außer Header)
+let filterBodyEls = [];
 
 // Radius-Stufen (km)
 const RADIUS_STEPS_KM = [1, 5, 15, 40, Infinity];
@@ -517,8 +520,10 @@ function setLanguage(lang, { initial = false } = {}) {
   }
 
   // Filter-Buttons
-  if (btnToggleFiltersEl && filterSectionEl) {
-    updateFilterToggleLabel();
+  if (btnToggleFiltersEl) {
+    btnToggleFiltersEl.querySelector("span").textContent = filtersCollapsed
+      ? t("btn_show_filters")
+      : t("btn_hide_filters");
   }
   if (btnToggleViewEl && sidebarEl) {
     const sidebarHidden = sidebarEl.classList.contains("hidden");
@@ -1249,21 +1254,19 @@ function switchRoute(route) {
 // Filter-Umschalter
 // ------------------------------------------------------
 function handleToggleFilters() {
-  if (!filterSectionEl || !btnToggleFiltersEl) return;
-  filtersCollapsed = !filtersCollapsed;
-  filterSectionEl.classList.toggle(
-    "sidebar-section--collapsed",
-    filtersCollapsed
-  );
-  updateFilterToggleLabel();
-}
+  if (!btnToggleFiltersEl || !filterBodyEls.length) return;
 
-function updateFilterToggleLabel() {
-  if (!btnToggleFiltersEl) return;
-  const span = btnToggleFiltersEl.querySelector("span") || btnToggleFiltersEl;
-  span.textContent = t(
-    filtersCollapsed ? "btn_show_filters" : "btn_hide_filters"
-  );
+  filtersCollapsed = !filtersCollapsed;
+
+  filterBodyEls.forEach((el) => {
+    el.classList.toggle("hidden", filtersCollapsed);
+  });
+
+  btnToggleFiltersEl
+    .querySelector("span")
+    .textContent = filtersCollapsed
+      ? t("btn_show_filters")
+      : t("btn_hide_filters");
 }
 
 function handleToggleView() {
@@ -1271,58 +1274,14 @@ function handleToggleView() {
   const isHidden = sidebarEl.classList.toggle("hidden");
   btnToggleViewEl
     .querySelector("span")
-    .textContent = isHidden ? t("btn_show_list") : t("btn_only_map");
+    .textContent = isHidden
+      ? t("btn_show_list")
+      : t("btn_only_map");
 
   if (map) {
     setTimeout(() => {
       map.invalidateSize();
     }, 300);
-  }
-}
-
-// ------------------------------------------------------
-// Reise-Modus-Chips (Alltag / Unterwegs)
-// ------------------------------------------------------
-function initTravelChips() {
-  const chips = document.querySelectorAll(".travel-chip");
-  if (!chips.length) return;
-
-  chips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      const mode = chip.getAttribute("data-travel-mode") || "everyday";
-      const isActive = chip.classList.contains("travel-chip--active");
-
-      // erst alle deaktivieren
-      chips.forEach((c) => c.classList.remove("travel-chip--active"));
-
-      if (isActive) {
-        // auf aktiven Chip klicken -> alles AUS
-        travelMode = null;
-        if (tilla && typeof tilla.setTravelMode === "function") {
-          tilla.setTravelMode(null);
-        }
-      } else {
-        travelMode = mode;
-        chip.classList.add("travel-chip--active");
-        if (tilla && typeof tilla.setTravelMode === "function") {
-          tilla.setTravelMode(mode);
-        }
-      }
-
-      applyFiltersAndRender();
-    });
-  });
-
-  // Startzustand: Alltag aktiv
-  const defaultChip = document.querySelector(
-    ".travel-chip[data-travel-mode='everyday']"
-  );
-  if (defaultChip) {
-    defaultChip.classList.add("travel-chip--active");
-    travelMode = "everyday";
-    if (tilla && typeof tilla.setTravelMode === "function") {
-      tilla.setTravelMode("everyday");
-    }
   }
 }
 
@@ -1349,6 +1308,12 @@ function init() {
   filterSectionEl = filterTitleEl
     ? filterTitleEl.closest(".sidebar-section")
     : null;
+
+  if (filterSectionEl) {
+    filterBodyEls = Array.from(filterSectionEl.children).filter(
+      (el) => !el.classList.contains("sidebar-section-header")
+    );
+  }
 
   btnToggleFiltersEl = document.getElementById("btn-toggle-filters");
   btnToggleViewEl = document.getElementById("btn-toggle-view");
@@ -1398,9 +1363,6 @@ function init() {
   tilla = new TillaCompanion({
     getText: (key) => t(key)
   });
-
-  // Travel-Chips initialisieren
-  initTravelChips();
 
   // Events – Sprache
   if (languageSwitcherEl) {
@@ -1509,10 +1471,36 @@ function init() {
     });
   });
 
+  // Reise-Modus-Chips (jetzt mit "alles aus"-Möglichkeit)
+  document.querySelectorAll(".travel-chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const mode = chip.getAttribute("data-travel-mode") || "everyday";
+
+      if (travelMode === mode) {
+        // ausschalten
+        travelMode = null;
+        chip.classList.remove("travel-chip--active");
+        if (tilla && typeof tilla.setTravelMode === "function") {
+          tilla.setTravelMode(null);
+        }
+      } else {
+        travelMode = mode;
+        document.querySelectorAll(".travel-chip").forEach((c) => {
+          c.classList.toggle("travel-chip--active", c === chip);
+        });
+        if (tilla && typeof tilla.setTravelMode === "function") {
+          tilla.setTravelMode(mode);
+        }
+      }
+
+      applyFiltersAndRender();
+    });
+  });
+
   // Filter-Umschalter
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
-    updateFilterToggleLabel();
+    btnToggleFiltersEl.querySelector("span").textContent = t("btn_hide_filters");
   }
 
   // View-Umschalter (Liste/Karte)
@@ -1535,6 +1523,29 @@ function init() {
   if (compassApplyBtnEl) {
     compassApplyBtnEl.addEventListener("click", handleCompassApply);
   }
+
+  // Close-Buttons (X) in Sidebar-Sections, z.B. Kompass, Plus, Mein Tag
+  document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
+    const targetId = btn.getAttribute("data-target");
+    let section = null;
+    if (targetId) {
+      section = document.getElementById(targetId);
+    }
+    if (!section) {
+      section = btn.closest(".sidebar-section");
+    }
+    if (!section) return;
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const tag = section.tagName.toLowerCase();
+      if (tag === "details") {
+        section.open = false;
+      } else {
+        section.classList.add("hidden");
+      }
+    });
+  });
 
   // Initiales Route
   switchRoute("map");
