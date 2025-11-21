@@ -1107,15 +1107,50 @@ function updateRadiusTexts() {
 function handleCompassApply() {
   if (!filterRadiusEl) return;
 
-  if (travelMode === "everyday" || !travelMode) {
-    radiusStep = 1; // z.B. 5 km
+  // Basis: aktueller Reise-Modus oder Alltag
+  const mode = travelMode || "everyday";
+  const mood = moodFilter || null;
+
+  let newRadiusStep;
+
+  if (mode === "trip") {
+    // Unterwegs-Tag
+    if (mood === "relaxed") {
+      // Unterwegs, aber entspannt → mittlerer Radius
+      newRadiusStep = 2; // ~15 km
+    } else if (mood === "water" || mood === "animals" || mood === "action") {
+      // Auf Tour + Abenteuerlust → großer Radius
+      newRadiusStep = 3; // ~40 km
+    } else {
+      // Neutral unterwegs → groß
+      newRadiusStep = 3;
+    }
   } else {
-    radiusStep = 3; // z.B. 40 km
+    // Alltag / kein Modus
+    if (mood === "relaxed") {
+      // Ganz bewusst klein & nah
+      newRadiusStep = 0; // ~1 km
+    } else if (mood === "water" || mood === "animals") {
+      // Für Wasser & Tiere darf es ein bisschen weiter sein
+      newRadiusStep = 2; // ~15 km
+    } else if (mood === "action") {
+      // Action, aber trotzdem Alltag → mittlerer Radius
+      newRadiusStep = 2; // ~15 km
+    } else {
+      // Standard-Alltag → in der Nähe, aber nicht ultra-klein
+      newRadiusStep = 1; // ~5 km
+    }
   }
 
+  radiusStep = newRadiusStep;
   filterRadiusEl.value = String(radiusStep);
   updateRadiusTexts();
   applyFiltersAndRender();
+
+  // Tilla kommentiert die Kompass-Wahl
+  if (tilla && typeof tilla.onCompassApplied === "function") {
+    tilla.onCompassApplied({ travelMode, mood: moodFilter, radiusStep });
+  }
 }
 
 // ------------------------------------------------------
@@ -1444,7 +1479,7 @@ function init() {
     });
   });
 
-  // Reise-Modus-Chips (jetzt mit "alles aus"-Möglichkeit)
+  // Reise-Modus-Chips (mit "alles aus"-Möglichkeit)
   document.querySelectorAll(".travel-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       const mode = chip.getAttribute("data-travel-mode") || "everyday";
