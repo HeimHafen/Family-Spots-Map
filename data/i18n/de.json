@@ -20,6 +20,12 @@
   "filter_radius_description_step3": "Großer Abenteuer-Radius – hier warten Ziele für ganze Tagesausflüge.",
   "filter_radius_description_all": "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
   "turtle_intro_1": "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
-  "turtle_intro_2": "Ich bin da, wenn ihr nicht wisst, wohin – oder es heute einfach langsam angehen wollt. 🐢💛",
+  "turtle_intro_2": "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein kleiner Spaziergang in eurer Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢",
+  "turtle_after_daylog_save": "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛",
+  "turtle_after_fav_added": "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer Familienkarte. ⭐",
+  "turtle_after_fav_removed": "Alles gut – manchmal passen Orte nur zu bestimmten Phasen. Ich helfe euch, neue zu finden. 🐢",
+  "turtle_trip_mode": "Ihr seid unterwegs – ich halte Ausschau nach guten Zwischenstopps für euch. 🚐",
+  "turtle_everyday_mode": "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿",
+  "turtle_plus_activated": "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
   "daylog_saved": "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern."
 }
