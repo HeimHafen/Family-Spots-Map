@@ -41,6 +41,15 @@
     <!-- App-Styles -->
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/badges.css" />
+
+    <!-- Kleine Ergänzung für den Claim unter dem Header -->
+    <style>
+      .header-subtagline {
+        margin-top: 0.25rem;
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+    </style>
   </head>
   <body>
     <noscript>
@@ -53,7 +62,7 @@
       <!-- ======================= -->
       <!-- HEADER                  -->
       <!-- ======================= -->
-      <header class="app-header">
+      <header class="app-header" style="padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
         <!-- Obere Kontroll-Zeile -->
         <div class="app-header-top">
           <div class="app-header-left">
@@ -1004,7 +1013,7 @@
 
     <!-- Scripts: Leaflet + MarkerCluster -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
     <!-- App (als ES-Modul) -->
     <script type="module" src="./js/app.js"></script>
