@@ -5,8 +5,8 @@
 // Idee:
 // Tilla ist kein reiner Infokasten, sondern ein kleiner, freundlicher
 // Begleiter. Sie reagiert auf Ereignisse in der App (Reise-Modus,
-// Plus-Aktivierung, Favoriten, Mein Tag, leere Ergebnisse) und spricht
-// in kurzen, warmen Sätzen – auf Deutsch oder Englisch.
+// Plus-Aktivierung, Favoriten, Mein Tag, leere Ergebnisse, Kompass)
+// und spricht in kurzen, warmen Sätzen – auf Deutsch oder Englisch.
 //
 // Highlights dieser Version:
 // - Mehrere Textvarianten pro Zustand (Intro, Alltag, Trip, Plus, …)
@@ -28,6 +28,7 @@
 //   // tilla.onDaylogSaved();
 //   // tilla.onNoSpotsFound();
 //   // tilla.onPlusActivated();
+//   // tilla.onCompassApplied({ travelMode, mood, radiusStep });
 //   // tilla.onLanguageChanged();
 //
 // ------------------------------------------------------
@@ -70,6 +71,15 @@ const FALLBACK_TEXTS = {
     turtle_plus_activated: [
       "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
       "Plus ist an Bord! Ab jetzt achte ich extra auf Spots für WoMo, Camping und große Abenteuer. ✨"
+    ],
+    // NEU: Kompass-Kommentare
+    turtle_compass_everyday: [
+      "Ich habe den Radius auf eure Alltagslaune eingestellt – wir bleiben in eurer Nähe. 🌿",
+      "Kompass sagt: Heute reicht ein kleines Abenteuer in eurer Umgebung – schaut mal, was ich gefunden habe."
+    ],
+    turtle_compass_trip: [
+      "Kompass ist gesetzt – ich schaue jetzt in einem größeren Radius nach Zwischenstopps für eure Tour. 🚐",
+      "Für euren Unterwegs-Tag habe ich den Radius großzügig gestellt. Wir suchen nach guten Pausenplätzen für euch. 🚐"
     ]
   },
   en: {
@@ -104,6 +114,14 @@ const FALLBACK_TEXTS = {
     turtle_plus_activated: [
       "Family Spots Plus is active – I can now highlight rest areas, RV spots and campgrounds for you. ✨",
       "Plus is on board! From now on I’ll pay special attention to RV, camping and big adventure spots. ✨"
+    ],
+    turtle_compass_everyday: [
+      "I’ve set the radius to match your everyday mood – we’ll stay close to home. 🌿",
+      "Compass says: today a small nearby adventure is enough – let’s see what I’ve found for you."
+    ],
+    turtle_compass_trip: [
+      "Compass set – I’m now looking in a wider radius for good stopovers on your trip. 🚐",
+      "For your travel day I’ve opened up the radius. We’ll look for great places to pause and recharge. 🚐"
     ]
   }
 };
@@ -256,6 +274,32 @@ export class TillaCompanion {
     }
 
     this._renderState();
+  }
+
+  /**
+   * Kompass wurde angewendet – Tilla kommentiert die Auswahl kurz.
+   * @param {{travelMode?: string|null, mood?: string|null, radiusStep?: number}} context
+   */
+  onCompassApplied(context = {}) {
+    if (!this.textEl) return;
+
+    this.lastInteraction = Date.now();
+
+    const mode = context.travelMode ?? this.travelMode;
+    const key =
+      mode === "trip" ? "turtle_compass_trip" : "turtle_compass_everyday";
+
+    const text = this._t(key);
+    this.textEl.textContent = text;
+
+    // State sanft anpassen
+    if (mode === "trip") {
+      this.state = "trip";
+      this.travelMode = "trip";
+    } else if (mode === "everyday" || mode == null) {
+      this.state = "everyday";
+      if (mode) this.travelMode = mode;
+    }
   }
 
   // --------------------------------------------------
