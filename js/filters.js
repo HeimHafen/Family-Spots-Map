@@ -468,6 +468,13 @@ export function initFilters({ categories, favoritesProvider, onFilterChange }) {
           b.classList.toggle("travel-chip--active", state.travelMode === m);
         });
 
+        // 🐢 Event für Tilla auslösen – sie reagiert in app.js (initTillaReactions)
+        document.dispatchEvent(
+          new CustomEvent("fsm:travelModeChanged", {
+            detail: { mode: state.travelMode }
+          })
+        );
+
         notify();
       });
     });
