@@ -1,5 +1,5 @@
 /* =========================================
-   FAMILY SPOTS MAP – GLOBAL STYLES (GOLD EDITION)
+   FAMILY SPOTS MAP – GLOBAL STYLES (GOLD EDITION v2)
    ========================================= */
 
 /* Reset & Basics */
@@ -29,20 +29,20 @@ body {
 
   --chip-bg: #ffedd5;
   --chip-color: #6b4124;
-  --chip-shadow: 0 3px 8px rgba(152, 92, 45, 0.3);
+  --chip-shadow: 0 2px 5px rgba(152, 92, 45, 0.28);
 
   --input-bg: #fff1e0;
-  --input-shadow: 0 4px 9px rgba(147, 90, 45, 0.25);
+  --input-shadow: 0 3px 7px rgba(147, 90, 45, 0.22);
 
   --header-bg-top: #ff9800;
   --header-bg-bottom: #ffb300;
   --header-shadow: 0 12px 30px rgba(199, 110, 21, 0.55);
   --header-text-color: #ffffff;
 
-  /* etwas weniger Glow */
-  --header-tagline-bg: rgba(255, 245, 222, 0.95);
+  /* Claim-Pill – weiches Orange ohne starken Glow */
+  --header-tagline-bg: rgba(255, 245, 222, 0.96);
   --header-tagline-color: #7c4314;
-  --header-tagline-shadow: 0 4px 12px rgba(141, 73, 15, 0.45);
+  --header-tagline-shadow: 0 3px 8px rgba(141, 73, 15, 0.35);
 
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
@@ -50,15 +50,15 @@ body {
     #ffca80 40%,
     #ffb14d 100%
   );
-  --header-icon-shadow: 0 3px 8px rgba(156, 76, 16, 0.4);
+  --header-icon-shadow: 0 3px 6px rgba(156, 76, 16, 0.35);
   --header-icon-border: rgba(255, 255, 255, 0.6);
 
   --language-pill-bg: rgba(255, 243, 224, 0.94);
-  --language-pill-shadow: 0 3px 9px rgba(132, 70, 18, 0.4);
+  --language-pill-shadow: 0 3px 7px rgba(132, 70, 18, 0.35);
 
   --sidebar-bg: #050816;
   --sidebar-section-bg: rgba(255, 245, 233, 0.98);
-  --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
+  --sidebar-section-shadow: 0 8px 18px rgba(163, 95, 36, 0.4);
   --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
   --bottom-nav-backdrop: rgba(53, 30, 15, 0.82);
@@ -70,7 +70,7 @@ body {
   --toast-bg: rgba(55, 35, 21, 0.95);
 
   --map-card-bg: #fdf4e6;
-  --map-card-shadow: 0 14px 32px rgba(148, 86, 38, 0.55);
+  --map-card-shadow: 0 12px 26px rgba(148, 86, 38, 0.5);
   --map-card-border: rgba(255, 255, 255, 0.95);
 
   --radius-circle-stroke: rgba(255, 165, 0, 0.6);
@@ -84,24 +84,24 @@ body {
   --text-strong: #fef3e7;
 
   --card-bg: rgba(9, 18, 38, 0.98);
-  --card-shadow: 0 18px 36px rgba(0, 0, 0, 0.8);
+  --card-shadow: 0 16px 32px rgba(0, 0, 0, 0.8);
   --card-border: rgba(148, 163, 184, 0.35);
 
   --chip-bg: rgba(15, 23, 42, 0.98);
   --chip-color: #e5e7eb;
-  --chip-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
+  --chip-shadow: 0 4px 9px rgba(0, 0, 0, 0.7);
 
   --input-bg: rgba(15, 23, 42, 0.98);
-  --input-shadow: 0 7px 15px rgba(15, 23, 42, 0.9);
+  --input-shadow: 0 6px 14px rgba(15, 23, 42, 0.9);
 
   --header-bg-top: #0b1020;
   --header-bg-bottom: #050816;
-  --header-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
+  --header-shadow: 0 18px 36px rgba(0, 0, 0, 0.9);
   --header-text-color: #fef3e7;
 
   --header-tagline-bg: linear-gradient(135deg, #ffb74d, #ff9800);
   --header-tagline-color: #1a1309;
-  --header-tagline-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
+  --header-tagline-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
 
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
@@ -109,15 +109,15 @@ body {
     #020617 45%,
     #020617 100%
   );
-  --header-icon-shadow: 0 7px 16px rgba(0, 0, 0, 0.9);
+  --header-icon-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
   --header-icon-border: rgba(148, 163, 184, 0.9);
 
   --language-pill-bg: rgba(15, 23, 42, 0.98);
-  --language-pill-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
+  --language-pill-shadow: 0 5px 11px rgba(0, 0, 0, 0.9);
 
   --sidebar-bg: #020617;
   --sidebar-section-bg: rgba(9, 18, 38, 0.98);
-  --sidebar-section-shadow: 0 16px 34px rgba(0, 0, 0, 0.9);
+  --sidebar-section-shadow: 0 14px 30px rgba(0, 0, 0, 0.9);
   --sidebar-section-border: rgba(30, 64, 175, 0.35);
 
   --bottom-nav-backdrop: rgba(15, 23, 42, 0.92);
@@ -129,7 +129,7 @@ body {
   --toast-bg: rgba(15, 23, 42, 0.98);
 
   --map-card-bg: #020617;
-  --map-card-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
+  --map-card-shadow: 0 16px 32px rgba(0, 0, 0, 0.9);
   --map-card-border: rgba(30, 64, 175, 0.4);
 
   --radius-circle-stroke: rgba(250, 204, 21, 0.75);
@@ -192,7 +192,7 @@ body {
 .app-header {
   position: sticky;
   top: 0;
-  z-index: 1200; /* Header klar über der Karte / Leaflet-Panes */
+  z-index: 1200; /* Header sicher über Leaflet-Karte */
   padding: 10px 14px 14px;
   background: linear-gradient(135deg, var(--header-bg-top), var(--header-bg-bottom));
   color: var(--header-text-color);
@@ -240,7 +240,7 @@ body {
 .btn-icon:active {
   transform: translateY(1px) scale(0.97);
   box-shadow:
-    0 2px 5px rgba(0, 0, 0, 0.45),
+    0 2px 4px rgba(0, 0, 0, 0.45),
     inset 0 0 0 1px var(--header-icon-border);
   opacity: 0.92;
 }
@@ -406,7 +406,7 @@ body {
   height: 32px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   font-size: 18px;
   cursor: pointer;
 }
@@ -414,7 +414,7 @@ body {
 [data-theme="dark"] .sidebar-section-close {
   background: rgba(15, 23, 42, 0.98);
   color: #e5e7eb;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 6px 13px rgba(0, 0, 0, 0.9);
 }
 
 /* Filter-Section eingeklappt: nur Header bleibt sichtbar */
@@ -434,14 +434,14 @@ body {
   background: linear-gradient(145deg, #ffe4c2, #ffd2a3);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.75),
-    0 6px 12px rgba(177, 104, 40, 0.4);
+    0 4px 10px rgba(177, 104, 40, 0.36);
 }
 
 [data-theme="dark"] .compass-card {
   background: radial-gradient(circle at top left, #1e293b 0, #020617 80%);
   box-shadow:
     inset 0 0 0 1px rgba(148, 163, 184, 0.4),
-    0 10px 22px rgba(0, 0, 0, 0.9);
+    0 8px 18px rgba(0, 0, 0, 0.9);
 }
 
 /* Allgemeine Form Controls */
@@ -530,16 +530,16 @@ select.input:focus {
   background: linear-gradient(145deg, #ffb54f, #ff9800);
   color: #3b2313;
   box-shadow:
-    0 4px 10px rgba(245, 158, 11, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+    0 2px 4px rgba(245, 158, 11, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
   transform: translateY(-1px);
 }
 
-/* Dark Mode – orange Glow weiter entschärft */
+/* Dark Mode – orange Glow noch mal reduziert */
 [data-theme="dark"] .mood-chip--active,
 [data-theme="dark"] .travel-chip--active {
   box-shadow:
-    0 4px 10px rgba(245, 158, 11, 0.45),
+    0 2px 4px rgba(245, 158, 11, 0.32),
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
@@ -586,11 +586,11 @@ select.input:focus {
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
-  background: linear-gradient(135deg, #ff9800, #ffb300);
+  background: linear-gradient(135deg, #ffad33, #ff9800);
   color: #fffdf8;
   box-shadow:
-    0 4px 10px rgba(180, 96, 33, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+    0 2px 5px rgba(180, 96, 33, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
 }
 
@@ -607,14 +607,14 @@ select.input:focus {
   color: #7a4a2b;
   font-size: 13px;
   font-weight: 600;
-  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
+  box-shadow: 0 2px 5px rgba(165, 100, 53, 0.3);
   cursor: pointer;
 }
 
 [data-theme="dark"] .btn-ghost {
   background: rgba(15, 23, 42, 0.98);
   color: #e5e7eb;
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 4px 9px rgba(0, 0, 0, 0.85);
 }
 
 /* Plus-Code-Form */
@@ -710,14 +710,14 @@ select.input:focus {
   overflow-y: auto;
   background: rgba(255, 248, 239, 0.96);
   border-radius: 18px;
-  box-shadow: 0 10px 24px rgba(116, 68, 33, 0.6);
+  box-shadow: 0 8px 20px rgba(116, 68, 33, 0.6);
   padding: 10px 12px 11px;
 }
 
 [data-theme="dark"] .spot-details {
   background: rgba(15, 23, 42, 0.98);
   color: #fef3e7;
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.9);
 }
 
 /* Auf größeren Screens: Sidebar + Map nebeneinander */
@@ -752,7 +752,6 @@ select.input:focus {
    TILLA – SIDEBAR (Map-Ansicht)
    ========================================= */
 
-/* Sanftes Schaukeln + leichte Kopfneigung */
 @keyframes tilla-bob {
   0% {
     transform: scaleX(-1) translateY(0) rotate(0deg);
@@ -771,7 +770,6 @@ select.input:focus {
   }
 }
 
-/* Einblende-Animation für das ganze Kärtchen */
 @keyframes tilla-card-in {
   0% {
     opacity: 0;
@@ -788,7 +786,6 @@ select.input:focus {
   padding-bottom: 10px;
 }
 
-/* Warmes Kärtchen wie andere Karten */
 .tilla-sidebar-card {
   display: flex;
   align-items: center;
@@ -805,11 +802,10 @@ select.input:focus {
 [data-theme="dark"] .tilla-sidebar-card {
   background: rgba(15, 23, 42, 0.97);
   box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.9),
+    0 12px 24px rgba(0, 0, 0, 0.9),
     inset 0 0 0 1px rgba(148, 163, 184, 0.45);
 }
 
-/* Avatar – Tilla schaut nach rechts und schaukelt leicht */
 .tilla-sidebar-avatar {
   flex: 0 0 auto;
 }
@@ -822,7 +818,6 @@ select.input:focus {
   animation: tilla-bob 3.5s ease-in-out infinite;
 }
 
-/* Text neben Tilla */
 .tilla-sidebar-text {
   flex: 1 1 auto;
 }
@@ -890,7 +885,7 @@ select.input:focus {
   top: 10px;
   border-radius: 22px;
   background: var(--bottom-nav-backdrop);
-  filter: blur(10px);
+  filter: blur(9px);
   opacity: 0.6;
 }
 
@@ -915,7 +910,7 @@ select.input:focus {
   font-weight: 600;
   color: var(--bottom-nav-item-color);
   box-shadow:
-    0 3px 9px rgba(0, 0, 0, 0.4),
+    0 2px 5px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
@@ -926,17 +921,16 @@ select.input:focus {
   color: var(--bottom-nav-item-active-color);
 }
 
-/* Dark Mode – aktiver Nav-Pill etwas softer */
 [data-theme="dark"] .bottom-nav-item--active {
   box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.7),
+    0 2px 4px rgba(0, 0, 0, 0.7),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
 .bottom-nav-item:active {
   transform: translateY(1px) scale(0.97);
   box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.55),
+    0 1px 3px rgba(0, 0, 0, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
@@ -959,7 +953,7 @@ select.input:focus {
   border-radius: 999px;
   padding: 8px 16px;
   font-size: 14px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.7);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.18s ease-out, transform 0.18s ease-out;
@@ -1078,7 +1072,6 @@ hr {
    ONBOARDING OVERLAY
    ========================================= */
 
-/* Scroll sperren, wenn Onboarding offen ist */
 body.onboarding-open {
   overflow: hidden;
 }
@@ -1104,7 +1097,6 @@ body.onboarding-open {
   background: radial-gradient(circle at top, rgba(255, 243, 224, 0.8), rgba(0, 0, 0, 0.55));
 }
 
-/* Dialog-Karte in der Mitte */
 .onboarding-dialog {
   position: relative;
   max-width: 380px;
@@ -1117,11 +1109,10 @@ body.onboarding-open {
   border-radius: 24px;
   padding: 16px 16px 14px;
   box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.85),
+    0 16px 30px rgba(0, 0, 0, 0.85),
     inset 0 0 0 1px var(--card-border);
 }
 
-/* Slides */
 .onboarding-slide {
   animation: onboarding-fade-in 0.18s ease-out;
 }
@@ -1145,7 +1136,6 @@ body.onboarding-open {
   color: var(--text-soft);
 }
 
-/* Buttons unten */
 .onboarding-actions {
   margin-top: 10px;
   display: flex;
@@ -1165,7 +1155,6 @@ body.onboarding-open {
   justify-content: center;
 }
 
-/* Dots */
 .onboarding-dots {
   margin-top: 8px;
   display: flex;
@@ -1189,7 +1178,6 @@ body.onboarding-open {
   background: linear-gradient(135deg, #ff9800, #ffb300);
 }
 
-/* Einblende-Animation */
 @keyframes onboarding-fade-in {
   0% {
     opacity: 0;
@@ -1201,7 +1189,6 @@ body.onboarding-open {
   }
 }
 
-/* Größere Screens: etwas mehr Luft */
 @media (min-width: 768px) {
   .onboarding-dialog {
     max-width: 420px;
@@ -1216,7 +1203,6 @@ body.onboarding-open {
    SPOT-LISTE & DETAILS – FEINTUNING
    ========================================= */
 
-/* Leerer Zustand der Liste (wenn Tilla tröstet) */
 .spot-list-empty {
   padding: 10px 12px;
   border-radius: 16px;
@@ -1232,7 +1218,6 @@ body.onboarding-open {
   color: #e5e7eb;
 }
 
-/* Beschreibung & Badges in der Spot-Karte */
 .spot-card-description {
   margin: 4px 0 6px;
   font-size: 13px;
@@ -1247,7 +1232,6 @@ body.onboarding-open {
   margin-top: 4px;
 }
 
-/* Actions-Zeile in der Spot-Karte */
 .spot-card-actions {
   margin-top: 4px;
   display: flex;
@@ -1265,7 +1249,6 @@ body.onboarding-open {
   font-weight: 600;
 }
 
-/* Detailpanel – Struktur */
 .spot-details--hidden {
   display: none;
 }
@@ -1309,7 +1292,6 @@ body.onboarding-open {
   gap: 6px;
 }
 
-/* Tags im Detailpanel */
 .spot-details-tags {
   margin: 4px 0 6px;
   display: flex;
@@ -1317,7 +1299,6 @@ body.onboarding-open {
   gap: 4px;
 }
 
-/* Beschreibung, Poetry, Adresse */
 .spot-details-description {
   margin: 4px 0 6px;
   font-size: 14px;
@@ -1337,7 +1318,6 @@ body.onboarding-open {
   color: var(--text-soft);
 }
 
-/* Routen-Links */
 .spot-details-routes {
   margin-top: 6px;
   display: flex;
