@@ -1,79 +1,123 @@
 // js/tilla.js
 // Tilla – eure kleine Begleiterin in der App.
-//
-// Neu:
-// - Reagiert auf Reise-Modus (Alltag / Unterwegs) über das Event "fsm:travelModeChanged"
-// - Nutzt die aktuelle Sprache (DE / EN)
-// - showTillaMessage bleibt als API erhalten (für app.js & ui.js)
+// Steuert, was Tilla im Sidebar-Kärtchen sagt.
 
 import { getLanguage, t } from "./i18n.js";
 
-let hasInit = false;
-let lastRenderedText = null;
-
 /**
- * Initialisiert Tilla:
- * - registriert Listener für Reise-Modus-Wechsel
+ * Zentraler Tilla-Helfer – aktualisiert den Text im Sidebar-Kärtchen.
  */
-export function initTilla() {
-  if (hasInit) return;
-  hasInit = true;
+export function showTillaMessage(text) {
+  if (!text) return;
+  const el = document.getElementById("tilla-sidebar-text");
+  if (!el) return;
 
+  // Duplikate vermeiden – Tilla soll nicht dauernd denselben Satz neu schreiben
+  if (el.dataset.lastMessage === text) return;
+
+  el.textContent = text;
+  el.dataset.lastMessage = text;
+}
+
+let initialized = false;
+
+export function initTilla() {
+  if (initialized) return;
+  initialized = true;
+
+  // Reise-Modus (Alltag / Unterwegs) aus filters.js
   document.addEventListener("fsm:travelModeChanged", (event) => {
     const mode = event && event.detail ? event.detail.mode : null;
     handleTravelModeChange(mode);
   });
+
+  // Fallback: Begrüßung, falls das Kärtchen noch leer ist
+  const lang = getLanguage() || "de";
+  const isDe = lang.startsWith("de");
+  const intro = t(
+    "turtle_intro_1",
+    isDe
+      ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+      : "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!"
+  );
+  showTillaMessage(intro);
 }
 
-/**
- * Wird aufgerufen, wenn der Reise-Modus geändert wird.
- * mode: "everyday" | "trip" | null
- */
 function handleTravelModeChange(mode) {
   const lang = getLanguage() || "de";
-  const isDe = lang.toLowerCase().startsWith("de");
+  const isDe = lang.startsWith("de");
 
-  let text = "";
+  let key;
+  let fallback;
 
   if (!mode) {
-    // Reise-Modus wieder ausgeschaltet -> sanft zurück zur Grund-Einladung
-    text = t(
-      "turtle_intro_1",
-      isDe
-        ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
-        : "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!"
-    );
+    key = "turtle_intro_1";
+    fallback = isDe
+      ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!"
+      : "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!";
   } else if (mode === "everyday") {
-    // Alltag
-    text = isDe
-      ? "Heute seid ihr im Alltags-Modus unterwegs – ich schaue nach Spots, die gut in euren Tag passen."
-      : "Today you’re in everyday mode – I’ll look for spots that fit smoothly into your day.";
+    key = "turtle_everyday_mode";
+    fallback = isDe
+      ? "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿"
+      : "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿";
   } else if (mode === "trip") {
-    // Unterwegs / Tour
-    text = isDe
-      ? "Unterwegs-Modus aktiviert – ich denke jetzt größer und suche gute Orte für eure Strecke."
-      : "On-the-road mode activated – I’ll think bigger and look for great places along your route.";
+    key = "turtle_trip_mode";
+    fallback = isDe
+      ? "Ihr seid unterwegs – ich halte Ausschau nach guten Zwischenstopps für euch. 🚐"
+      : "You’re on the road – I’ll watch out for good stopovers for you. 🚐";
   }
 
-  if (text) {
-    showTillaMessage(text);
-  }
+  if (!key) return;
+  const text = t(key, fallback);
+  showTillaMessage(text);
 }
 
-/**
- * Öffentliche Funktion:
- * Setzt Tillas Text im Sidebar-Kärtchen.
- * Wird z. B. von app.js (Sprachwechsel) und ui.js (wenn keine Spots passen) genutzt.
- */
-export function showTillaMessage(text) {
-  if (!text) return;
+// ---- Domain-Aktionen, die Tilla kommentiert ----
 
-  const el = document.getElementById("tilla-sidebar-text");
-  if (!el) return;
+export function onDaylogSaved() {
+  const lang = getLanguage() || "de";
+  const isDe = lang.startsWith("de");
+  const text = t(
+    "turtle_after_daylog_save",
+    isDe
+      ? "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛"
+      : "Nice that you captured your day. These small notes turn into big memories later. 💛"
+  );
+  showTillaMessage(text);
+}
 
-  // Verhindert unnötiges Flackern, wenn der gleiche Text nochmal gesetzt würde
-  if (lastRenderedText === text) return;
+export function onFavoriteAdded() {
+  const lang = getLanguage() || "de";
+  const isDe = lang.startsWith("de");
+  const text = t(
+    "turtle_after_fav_added",
+    isDe
+      ? "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer Familienkarte. ⭐"
+      : "You’ve saved this place – a small gem on your family map. ⭐"
+  );
+  showTillaMessage(text);
+}
 
-  el.textContent = text;
-  lastRenderedText = text;
+export function onFavoriteRemoved() {
+  const lang = getLanguage() || "de";
+  const isDe = lang.startsWith("de");
+  const text = t(
+    "turtle_after_fav_removed",
+    isDe
+      ? "Alles gut – manchmal passen Orte nur zu bestimmten Phasen. Ich helfe euch, neue zu finden. 🐢"
+      : "All good – some places only fit certain phases. I’ll help you find new ones. 🐢"
+  );
+  showTillaMessage(text);
+}
+
+export function onPlusActivated() {
+  const lang = getLanguage() || "de";
+  const isDe = lang.startsWith("de");
+  const text = t(
+    "turtle_plus_activated",
+    isDe
+      ? "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨"
+      : "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨"
+  );
+  showTillaMessage(text);
 }
