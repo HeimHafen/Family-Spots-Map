@@ -1,5 +1,3 @@
-// js/app.js
-
 import { $, $$, getGeolocation } from "./utils.js";
 import {
   getSettings,
@@ -28,9 +26,14 @@ import {
   getMap
 } from "./map.js";
 import { renderSpotList, renderSpotDetails, showToast } from "./ui.js";
-
-// Tilla wird optional dynamisch geladen
-let tillaModule = null;
+import {
+  initTilla,
+  showTillaMessage,
+  onDaylogSaved,
+  onFavoriteAdded,
+  onFavoriteRemoved,
+  onPlusActivated
+} from "./tilla.js";
 
 let currentFilterState = null;
 let allSpots = [];
@@ -74,27 +77,14 @@ function initDayLog() {
 
   saveBtn.addEventListener("click", () => {
     localStorage.setItem("fsm.daylog", textArea.value || "");
-
-    // Toast wie bisher
     showToast(
       t(
         "daylog_saved",
         "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern."
       )
     );
-
-    // 🐢 Tilla freut sich über euren Eintrag
-    if (tillaModule && typeof tillaModule.showTillaMessage === "function") {
-      const isDe = (getLanguage() || "de").startsWith("de");
-      tillaModule.showTillaMessage(
-        t(
-          "turtle_after_daylog_save",
-          isDe
-            ? "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛"
-            : "Nice that you captured your day. These small notes turn into big memories later. 💛"
-        )
-      );
-    }
+    // Tilla reagiert auf euren Tagesmoment
+    onDaylogSaved();
   });
 }
 
@@ -129,19 +119,7 @@ async function bootstrapApp() {
   await initI18n(initialLang);
   applyTranslations();
   updateStaticLanguageTexts(initialLang);
-
-  // Tilla nach I18n optional initialisieren
-  try {
-    tillaModule = await import("./tilla.js");
-    if (tillaModule && typeof tillaModule.initTilla === "function") {
-      tillaModule.initTilla();
-    }
-  } catch (err) {
-    console.warn(
-      "Tilla-Modul konnte nicht geladen werden – App läuft ohne Tilla weiter.",
-      err
-    );
-  }
+  initTilla();
 
   const { index } = await loadAppData();
   allSpots = getSpots();
@@ -182,8 +160,6 @@ async function bootstrapApp() {
   });
 
   initUIEvents();
-  initTillaReactions(); // 🐢 neue Reaktionen von Tilla initialisieren
-
   updateRoute("map");
 
   // Onboarding nur beim ersten Besuch automatisch zeigen
@@ -219,10 +195,10 @@ function initUIEvents() {
       applyTranslations();
       updateStaticLanguageTexts(nextLang);
 
-      // Optional: Hero-Text von Tilla aktualisieren, falls Modul geladen
-      if (tillaModule && typeof tillaModule.showTillaMessage === "function") {
+      // Tilla-Text an neue Sprache anpassen
+      {
         const isDe = nextLang.startsWith("de");
-        tillaModule.showTillaMessage(
+        showTillaMessage(
           t(
             "turtle_intro_1",
             isDe
@@ -421,19 +397,8 @@ function initUIEvents() {
             "Family Spots Plus ist jetzt aktiv – gute Fahrt & viel Freude auf euren Touren!"
           )
         );
-
-        // 🐢 Tilla erklärt kurz, was Plus bedeutet
-        if (tillaModule && typeof tillaModule.showTillaMessage === "function") {
-          const isDe = (getLanguage() || "de").startsWith("de");
-          tillaModule.showTillaMessage(
-            t(
-              "turtle_plus_activated",
-              isDe
-                ? "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨"
-                : "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨"
-            )
-          );
-        }
+        // Tilla freut sich über Plus
+        onPlusActivated();
       } catch (err) {
         console.error(err);
         showToast(
@@ -445,41 +410,6 @@ function initUIEvents() {
       }
     });
   }
-}
-
-// -----------------------------------------------------
-// Tilla – Reaktionen auf globale Events
-// -----------------------------------------------------
-
-function initTillaReactions() {
-  // Reise-Modus (Alltag / Unterwegs) – Event aus filters.js
-  document.addEventListener("fsm:travelModeChanged", (event) => {
-    if (!tillaModule || typeof tillaModule.showTillaMessage !== "function") {
-      return;
-    }
-
-    const mode = event.detail?.mode || null;
-    if (!mode) {
-      // Wenn der Modus wieder zurückgesetzt wird, sagen wir nichts extra
-      return;
-    }
-
-    const isDe = (getLanguage() || "de").startsWith("de");
-    const key = mode === "trip" ? "turtle_trip_mode" : "turtle_everyday_mode";
-
-    tillaModule.showTillaMessage(
-      t(
-        key,
-        isDe
-          ? mode === "trip"
-            ? "Ihr seid unterwegs – ich halte Ausschau nach guten Zwischenstopps für euch. 🚐"
-            : "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿"
-          : mode === "trip"
-            ? "You’re on the road – I’ll watch out for good stopovers for you. 🚐"
-            : "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿"
-      )
-    );
-  });
 }
 
 // -----------------------------------------------------
@@ -552,36 +482,18 @@ function handleSpotSelect(id) {
     isFavorite: isFav,
     onToggleFavorite: (spotId) => {
       const updatedFavorites = toggleFavorite(spotId);
-      const isNowFav = updatedFavorites.includes(spotId);
+      const isNowFavorite = updatedFavorites.includes(spotId);
 
       showToast(
-        isNowFav
+        isNowFavorite
           ? t("toast_fav_added", "Zu euren Lieblingsspots gelegt 💛")
           : t("toast_fav_removed", "Aus den Lieblingsspots entfernt.")
       );
 
-      // 🐢 Tilla kommentiert das Favoriten-Setzen
-      if (tillaModule && typeof tillaModule.showTillaMessage === "function") {
-        const isDe = (getLanguage() || "de").startsWith("de");
-        if (isNowFav) {
-          tillaModule.showTillaMessage(
-            t(
-              "turtle_after_fav_added",
-              isDe
-                ? "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer Familienkarte. ⭐"
-                : "You’ve saved this place – a small gem on your family map. ⭐"
-            )
-          );
-        } else {
-          tillaModule.showTillaMessage(
-            t(
-              "turtle_after_fav_removed",
-              isDe
-                ? "Alles gut – manchmal passen Orte nur zu bestimmten Phasen. Ich helfe euch, neue zu finden. 🐢"
-                : "All good – some places only fit certain phases. I’ll help you find new ones. 🐢"
-            )
-          );
-        }
+      if (isNowFavorite) {
+        onFavoriteAdded();
+      } else {
+        onFavoriteRemoved();
       }
 
       handleFilterChange({
@@ -590,7 +502,7 @@ function handleSpotSelect(id) {
       });
       const freshSpot = findSpotById(spotId);
       renderSpotDetails(freshSpot, {
-        isFavorite: updatedFavorites.includes(spotId),
+        isFavorite: isNowFavorite,
         onToggleFavorite: () => handleSpotSelect(spotId)
       });
     }
