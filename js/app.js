@@ -1,7 +1,6 @@
 // js/app.js
 // ======================================================
 // Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
-// (merged version aus deinen beiden app.js-Dateien)
 // ======================================================
 
 import { TillaCompanion } from "./tilla.js";
@@ -76,8 +75,8 @@ const UI_STRINGS = {
       "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern.",
 
     // Header / Navigation (dynamisch)
-    header_tagline:
-      "Die kuratierte Abenteuerkarte für Familien – von Eltern für Eltern.",
+    // Zurück auf die alte Version:
+    header_tagline: "Heute ist Familientag.",
     nav_map: "Karte",
     nav_about: "Über",
 
@@ -144,8 +143,8 @@ const UI_STRINGS = {
     daylog_saved:
       "Your day moment has been saved 💾 – you can look back on it later.",
 
-    header_tagline:
-      "A curated adventure map for families – by parents for parents.",
+    // Zurück auf die alte englische Version:
+    header_tagline: "Make today a family day.",
     nav_map: "Map",
     nav_about: "About",
 
@@ -157,21 +156,9 @@ const UI_STRINGS = {
 };
 
 // ------------------------------------------------------
-// Kategorien lesbarer machen
+// Kategorien – vollständige Labels für alle Master-Slugs
 // ------------------------------------------------------
 const CATEGORY_LABELS = {
-  wildpark: {
-    de: "Wildpark & Safaripark",
-    en: "Wildlife & safari park"
-  },
-  zoo: {
-    de: "Zoo & Tierpark",
-    en: "Zoo & animal park"
-  },
-  freizeitpark: {
-    de: "Freizeitpark",
-    en: "Theme park"
-  },
   spielplatz: {
     de: "Spielplatz",
     en: "Playground"
@@ -180,22 +167,171 @@ const CATEGORY_LABELS = {
     de: "Abenteuerspielplatz",
     en: "Adventure playground"
   },
+  "indoor-spielplatz": {
+    de: "Indoor-Spielplatz",
+    en: "Indoor playground"
+  },
   waldspielplatz: {
     de: "Waldspielplatz",
     en: "Forest playground"
   },
-  multifunktionsfeld: {
-    de: "Sport- & Multifunktionsfeld",
-    en: "Sports & multi-use court"
+  wasserspielplatz: {
+    de: "Wasserspielplatz",
+    en: "Water playground"
   },
-  pumptrack: {
-    de: "Pumptrack",
-    en: "Pump track"
+  zoo: {
+    de: "Zoo",
+    en: "Zoo"
+  },
+  wildpark: {
+    de: "Wildpark & Safaripark",
+    en: "Wildlife & safari park"
+  },
+  tierpark: {
+    de: "Tierpark",
+    en: "Animal park"
+  },
+  bauernhof: {
+    de: "Bauernhof",
+    en: "Farm"
+  },
+  schwimmbad: {
+    de: "Schwimmbad",
+    en: "Swimming pool"
+  },
+  badesee: {
+    de: "Badesee",
+    en: "Swimming lake"
+  },
+  "park-garten": {
+    de: "Park & Garten",
+    en: "Park & garden"
+  },
+  picknickwiese: {
+    de: "Picknickwiese",
+    en: "Picnic meadow"
+  },
+  "wanderweg-kinderwagen": {
+    de: "Wanderweg mit Kinderwagen",
+    en: "Stroller-friendly trail"
+  },
+  "radweg-family": {
+    de: "Familien-Radweg",
+    en: "Family cycling route"
+  },
+  "museum-kinder": {
+    de: "Kinder- & Familienmuseum",
+    en: "Children’s & family museum"
+  },
+  bibliothek: {
+    de: "Kinderbibliothek",
+    en: "Children’s library"
+  },
+  freizeitpark: {
+    de: "Freizeitpark",
+    en: "Theme park"
+  },
+  minigolf: {
+    de: "Minigolf",
+    en: "Mini golf"
+  },
+  kletterhalle: {
+    de: "Kletterhalle",
+    en: "Climbing hall"
+  },
+  "kletteranlage-outdoor": {
+    de: "Kletteranlage (Outdoor)",
+    en: "Outdoor climbing area"
+  },
+  boulderpark: {
+    de: "Boulderpark",
+    en: "Bouldering park"
+  },
+  trampolinpark: {
+    de: "Trampolinpark",
+    en: "Trampoline park"
   },
   skatepark: {
     de: "Skatepark",
     en: "Skate park"
   },
+  pumptrack: {
+    de: "Pumptrack",
+    en: "Pump track"
+  },
+  multifunktionsfeld: {
+    de: "Sport- & Multifunktionsfeld",
+    en: "Sports & multi-use court"
+  },
+  bolzplatz: {
+    de: "Bolzplatz",
+    en: "Kick-about pitch"
+  },
+  bewegungspark: {
+    de: "Bewegungspark",
+    en: "Movement park"
+  },
+  familiencafe: {
+    de: "Familiencafé",
+    en: "Family café"
+  },
+  "familien-restaurant": {
+    de: "Familien-Restaurant",
+    en: "Family restaurant"
+  },
+  "kinder-familiencafe": {
+    de: "Kinder- & Familiencafé",
+    en: "Kids & family café"
+  },
+  eisbahn: {
+    de: "Eisbahn",
+    en: "Ice rink"
+  },
+  rodelhuegel: {
+    de: "Rodelhügel",
+    en: "Sledding hill"
+  },
+  "oeffentliche-toilette": {
+    de: "Öffentliche Toilette",
+    en: "Public toilet"
+  },
+  wickelraum: {
+    de: "Wickelraum",
+    en: "Baby changing room"
+  },
+  "familien-event": {
+    de: "Familien-Event",
+    en: "Family event"
+  },
+  "rastplatz-spielplatz-dusche": {
+    de: "Rastplatz mit Spielplatz & Dusche",
+    en: "Rest area with playground & showers"
+  },
+  "stellplatz-spielplatz-naehe-kostenlos": {
+    de: "Kostenloser Stellplatz (Spielplatznähe)",
+    en: "Free RV pitch near playground"
+  },
+  "wohnmobil-service-station": {
+    de: "Wohnmobil-Service-Station",
+    en: "RV service station"
+  },
+  "bikepacking-spot": {
+    de: "Bikepacking-Spot",
+    en: "Bikepacking spot"
+  },
+  "toddler-barfuss-motorik": {
+    de: "Barfußpfad & Motorik (Kleinkinder)",
+    en: "Barefoot & toddler motor skills"
+  },
+  naturerlebnispfad: {
+    de: "Naturerlebnispfad",
+    en: "Nature discovery trail"
+  },
+  walderlebnisroute: {
+    de: "Walderlebnisroute",
+    en: "Forest adventure route"
+  },
+  // Falls noch alte Keys wie kinder_museum vorkommen:
   kinder_museum: {
     de: "Kinder- & Familienmuseum",
     en: "Children’s & family museum"
@@ -203,7 +339,6 @@ const CATEGORY_LABELS = {
 };
 
 // Master-Liste aller Kategorien (auch wenn noch 0 Spots)
-// (Basis: v2025-11-08 Set)
 const MASTER_CATEGORY_SLUGS = [
   "spielplatz",
   "abenteuerspielplatz",
@@ -346,8 +481,9 @@ function getCategoryLabel(slug) {
   if (entry) {
     return entry[currentLang] || entry.de || slug;
   }
-  // Fallback: _ → Leerzeichen
-  return String(slug).replace(/_/g, " ");
+  // Fallback: erste Buchstabe groß, _ → Leerzeichen
+  const readable = String(slug).replace(/_/g, " ");
+  return readable.charAt(0).toUpperCase() + readable.slice(1);
 }
 
 function setLanguage(lang, { initial = false } = {}) {
@@ -382,7 +518,7 @@ function setLanguage(lang, { initial = false } = {}) {
     compassApplyLabelEl.textContent = t("compass_apply_label");
   }
 
-  // Filter-Buttons (wie in erster Version: data-collapsed nutzen)
+  // Filter-Buttons (mit data-collapsed-Logik)
   if (btnToggleFiltersEl && filterSectionEl) {
     const isCollapsed = filterSectionEl.dataset.collapsed === "true";
     btnToggleFiltersEl.querySelector("span").textContent = isCollapsed
@@ -408,7 +544,7 @@ function setLanguage(lang, { initial = false } = {}) {
     populateCategoryOptions();
   }
 
-  // Tilla informieren (nur wenn nicht initial)
+  // Tilla informieren
   if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
     tilla.onLanguageChanged();
   }
@@ -639,7 +775,7 @@ function applyFiltersAndRender() {
       if (!haystack.includes(term)) return false;
     }
 
-    // Kategorie (robuste Logik aus erster Version)
+    // Kategorie
     if (categoryFilter) {
       const filterSlug = String(categoryFilter);
       const categories = [];
@@ -1321,7 +1457,7 @@ function init() {
     });
   }
 
-  // Stimmung-Chips (mit Ein-/Ausschalten wie in erster Version)
+  // Stimmung-Chips (mit Ein-/Ausschalten)
   document.querySelectorAll(".mood-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       const value = chip.getAttribute("data-mood");
@@ -1342,14 +1478,13 @@ function init() {
     });
   });
 
-  // Reise-Modus-Chips (ein-/ausschaltbar wie in erster Version)
+  // Reise-Modus-Chips (ein-/ausschaltbar)
   document.querySelectorAll(".travel-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       const mode = chip.getAttribute("data-travel-mode") || "everyday";
       const isAlreadyActive = chip.classList.contains("travel-chip--active");
 
       if (isAlreadyActive) {
-        // ausschalten
         travelMode = null;
         document
           .querySelectorAll(".travel-chip")
@@ -1380,7 +1515,6 @@ function init() {
   // Filter-Umschalter
   if (btnToggleFiltersEl && filterSectionEl) {
     btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
-    // Text initial setzen (Filter sichtbar)
     btnToggleFiltersEl.querySelector("span").textContent = t("btn_hide_filters");
     filterSectionEl.dataset.collapsed = "false";
   }
@@ -1406,7 +1540,7 @@ function init() {
     compassApplyBtnEl.addEventListener("click", handleCompassApply);
   }
 
-  // Sektionen schließen (X-Button) – aus erster Version übernommen
+  // Sektionen schließen (X-Button)
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
     btn.addEventListener("click", () => {
       const targetId = btn.getAttribute("data-target");
@@ -1414,10 +1548,7 @@ function init() {
       const section = document.getElementById(targetId);
       if (!section) return;
 
-      if (
-        section.tagName &&
-        section.tagName.toLowerCase() === "details"
-      ) {
+      if (section.tagName && section.tagName.toLowerCase() === "details") {
         section.open = false;
       } else {
         section.classList.add("hidden");
