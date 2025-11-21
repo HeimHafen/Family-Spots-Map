@@ -37,6 +37,9 @@ let plusStatus = null;
 let partnerCodesCache = null;
 let currentSelectedSpotId = null;
 
+// Onboarding-Status
+let onboardingCurrentStep = 0;
+
 // -----------------------------------------------------
 // Partner-Codes laden
 // -----------------------------------------------------
@@ -95,6 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Mein Tag Modul initialisieren
   initDayLog();
+
+  // Onboarding-Klicks vorbereiten
+  initOnboarding();
 });
 
 async function bootstrapApp() {
@@ -160,6 +166,12 @@ async function bootstrapApp() {
 
   initUIEvents();
   updateRoute("map");
+
+  // Onboarding nur beim ersten Besuch automatisch zeigen
+  const onboardingSeen = localStorage.getItem("fsm.onboardingSeen");
+  if (onboardingSeen !== "true") {
+    showOnboarding(0);
+  }
 }
 
 // -----------------------------------------------------
@@ -170,7 +182,8 @@ function initUIEvents() {
   const helpBtn = $("#btn-help");
   if (helpBtn) {
     helpBtn.addEventListener("click", () => {
-      updateRoute("about", 1);
+      // Statt direkt "Über"-Seite: Onboarding öffnen
+      showOnboarding(0);
     });
   }
 
@@ -557,6 +570,15 @@ function updateStaticLanguageTexts(lang) {
       : "Make today a family day.";
   }
 
+  // Help-Button (Onboarding)
+  const helpBtn = $("#btn-help");
+  if (helpBtn) {
+    helpBtn.setAttribute(
+      "aria-label",
+      isDe ? "Kurze Einführung anzeigen" : "Show quick introduction"
+    );
+  }
+
   // Tilla in der Sidebar (über i18n-Text)
   const tillaSidebarText = $("#tilla-sidebar-text");
   if (tillaSidebarText) {
@@ -807,4 +829,170 @@ function updateStaticLanguageTexts(lang) {
     aboutDe.classList.toggle("hidden", !isDe);
     aboutEn.classList.toggle("hidden", isDe);
   }
+
+  // Onboarding-Texte
+  setOnboardingLanguageTexts(lang);
+}
+
+// -----------------------------------------------------
+// Onboarding
+// -----------------------------------------------------
+
+function setOnboardingLanguageTexts(lang) {
+  const isDe = (lang || "de").startsWith("de");
+
+  const step1Title = $("#onb-step1-title");
+  if (step1Title) {
+    step1Title.textContent = isDe
+      ? "Willkommen bei Family Spots Map 👋"
+      : "Welcome to Family Spots Map 👋";
+  }
+  const step1Body = $("#onb-step1-body");
+  if (step1Body) {
+    step1Body.textContent = isDe
+      ? "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin. Hier findet ihr liebevoll ausgewählte Orte für eure Familien-Abenteuer, damit ihr die gemeinsame Zeit noch mehr genießen könnt."
+      : "Hi, I’m Tilla, your turtle companion. Here you’ll find carefully selected places for family adventures so you can enjoy your time together even more.";
+  }
+  const step1Skip = $("#onb-step1-skip");
+  if (step1Skip) {
+    step1Skip.textContent = isDe ? "Überspringen" : "Skip";
+  }
+  const step1Next = $("#onb-step1-next");
+  if (step1Next) {
+    step1Next.textContent = isDe ? "Weiter" : "Next";
+  }
+
+  const step2Title = $("#onb-step2-title");
+  if (step2Title) {
+    step2Title.textContent = isDe
+      ? "Wie fühlt sich euer Tag heute an?"
+      : "What does your day feel like?";
+  }
+  const step2Body = $("#onb-step2-body");
+  if (step2Body) {
+    step2Body.textContent = isDe
+      ? "Mit dem Familien-Kompass und den Filtern suche ich Spots, die zu eurer Stimmung passen – entspannt, aktiv, Wasser & Sand oder ein Tier-Tag. Auf der Karte seht ihr dann passende Orte in eurer Nähe."
+      : "With the family compass and filters, I’ll suggest spots that match your mood – relaxed, active, water & sand or an animal day. The map then shows suitable places near you.";
+  }
+  const step2Hint = $("#onb-step2-hint");
+  if (step2Hint) {
+    step2Hint.textContent = isDe
+      ? "Tipp: Ihr könnt die Filter jederzeit über „Filter anzeigen“ ändern."
+      : "Tip: You can change filters anytime via “Show filters”.";
+  }
+  const compassBtn = $("#onb-compass-btn");
+  if (compassBtn) {
+    compassBtn.textContent = isDe ? "Kompass starten" : "Start compass";
+  }
+  const step2Next = $("#onb-step2-next");
+  if (step2Next) {
+    step2Next.textContent = isDe ? "Weiter" : "Next";
+  }
+
+  const step3Title = $("#onb-step3-title");
+  if (step3Title) {
+    step3Title.textContent = isDe
+      ? "Speichert eure Lieblingsmomente"
+      : "Save your favourite moments";
+  }
+  const step3Body = $("#onb-step3-body");
+  if (step3Body) {
+    step3Body.textContent = isDe
+      ? "Markiert eure Lieblings-Spots als Favoriten, damit ihr sie schnell wiederfindet. Und mit „Mein Tag“ könnt ihr kurz festhalten, wie euer Familien-Tag war – wie ein kleines, leichtes Tagebuch."
+      : "Mark your favourite spots so you can find them again quickly. And with “My day” you can briefly jot down how your family day was – like a small, light diary.";
+  }
+  const step3Hint = $("#onb-step3-hint");
+  if (step3Hint) {
+    step3Hint.textContent = isDe
+      ? "Ihr könnt diese kurze Einführung später über das ?-Symbol oben links noch einmal ansehen."
+      : "You can view this short introduction again later via the ? icon at the top left.";
+  }
+  const finishBtn = $("#onb-finish-btn");
+  if (finishBtn) {
+    finishBtn.textContent = isDe ? "Los geht’s!" : "Let’s go!";
+  }
+}
+
+function initOnboarding() {
+  const overlay = $("#onboarding-overlay");
+  if (!overlay) return;
+
+  const nextButtons = $$(".onboarding-next");
+  const skipButtons = $$(".onboarding-skip");
+  const finishBtn = $("#onb-finish-btn");
+  const compassBtn = $("#onb-compass-btn");
+
+  onboardingCurrentStep = 0;
+
+  nextButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      goToOnboardingStep(onboardingCurrentStep + 1);
+    });
+  });
+
+  skipButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      hideOnboarding(true);
+    });
+  });
+
+  if (finishBtn) {
+    finishBtn.addEventListener("click", () => {
+      hideOnboarding(true);
+    });
+  }
+
+  if (compassBtn) {
+    compassBtn.addEventListener("click", () => {
+      hideOnboarding(true);
+      const compassSection = $("#compass-section");
+      if (compassSection && typeof compassSection.scrollIntoView === "function") {
+        compassSection.open = true;
+        compassSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+}
+
+function showOnboarding(step = 0) {
+  const overlay = $("#onboarding-overlay");
+  if (!overlay) return;
+
+  overlay.classList.remove("hidden");
+  overlay.setAttribute("aria-hidden", "false");
+  document.body.classList.add("onboarding-open");
+  goToOnboardingStep(step);
+}
+
+function hideOnboarding(markSeen) {
+  const overlay = $("#onboarding-overlay");
+  if (!overlay) return;
+
+  overlay.classList.add("hidden");
+  overlay.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("onboarding-open");
+
+  if (markSeen) {
+    localStorage.setItem("fsm.onboardingSeen", "true");
+  }
+}
+
+function goToOnboardingStep(step) {
+  const slides = $$(".onboarding-slide");
+  const dots = $$(".onboarding-dot");
+  if (!slides.length) return;
+
+  const maxIndex = slides.length - 1;
+  const targetStep = Math.max(0, Math.min(step, maxIndex));
+  onboardingCurrentStep = targetStep;
+
+  slides.forEach((slide) => {
+    const s = Number(slide.dataset.step || 0);
+    slide.classList.toggle("hidden", s !== targetStep);
+  });
+
+  dots.forEach((dot) => {
+    const s = Number(dot.dataset.step || 0);
+    dot.classList.toggle("onboarding-dot--active", s === targetStep);
+  });
 }
