@@ -1,8 +1,6 @@
-// js/ui.js
-
 import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
-import { showTillaMessage } from "./tilla.js"; // 🐢 nur showTilla, kein hideTilla mehr
+import { showTillaMessage } from "./tilla.js"; // 🐢
 
 /**
  * Kurzbeschreibung für die Listenkarte bauen.
@@ -48,9 +46,7 @@ export function renderSpotList(spots, options) {
 
   container.innerHTML = "";
 
-  // Tilla bleibt grundsätzlich sichtbar.
-  // Wenn keine Spots matchen, bekommt sie eine tröstende Nachricht 🐢
-
+  // Wenn keine Spots matchen, bekommt Tilla eine tröstende Nachricht 🐢
   if (!spots || spots.length === 0) {
     const empty = document.createElement("div");
     empty.className = "spot-list-empty";
@@ -59,13 +55,12 @@ export function renderSpotList(spots, options) {
       : "No spots match your filters right now. Try other categories or a wider radius.";
     container.appendChild(empty);
 
-    // Tilla tröstet euch, wenn die Liste leer ist 🐢
     showTillaMessage(
       t(
         "turtle_intro_2",
         isDe
-          ? "Ich bin da, wenn ihr nicht wisst, wohin – oder es heute einfach langsam angehen wollt. 🐢💛"
-          : "I'm here when you're unsure where to go – or just want to take it slow. 🐢💛"
+          ? "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein kleiner Spaziergang in eurer Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢"
+          : "Right now I can’t find a fitting spot. Maybe a small walk nearby is perfect today – or you widen the radius a little. 🐢"
       )
     );
 
@@ -113,8 +108,7 @@ export function renderSpotList(spots, options) {
     }
 
     const badgesRow = document.createElement("div");
-    // beide Klassen, damit badges.css sicher greift
-    badgesRow.className = "spot-card-badges spot-card__badges";
+    badgesRow.className = "spot-card-badges";
 
     if (spot.verified) {
       const b = document.createElement("span");
