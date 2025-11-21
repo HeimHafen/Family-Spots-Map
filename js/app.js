@@ -6,7 +6,7 @@
 import { TillaCompanion } from "./tilla.js";
 
 // ------------------------------------------------------
-// Sprach-Tabelle (DE / EN) – inkl. Tilla, Kompass & Toasts
+// Sprach-Tabelle (DE / EN) – inkl. Kompass & Toasts
 // ------------------------------------------------------
 const UI_STRINGS = {
   de: {
@@ -51,24 +51,6 @@ const UI_STRINGS = {
       "Großer Abenteuer-Radius – hier warten Ziele für ganze Tagesausflüge.",
     filter_radius_description_all:
       "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
-
-    // Tilla – Intro & Zustände
-    turtle_intro_1:
-      "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
-    turtle_intro_2:
-      "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein kleiner Spaziergang in eurer Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢",
-    turtle_after_daylog_save:
-      "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛",
-    turtle_after_fav_added:
-      "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer Familienkarte. ⭐",
-    turtle_after_fav_removed:
-      "Alles gut – manchmal passen Orte nur zu bestimmten Phasen. Ich helfe euch, neue zu finden. 🐢",
-    turtle_trip_mode:
-      "Ihr seid unterwegs – ich halte Ausschau nach guten Zwischenstopps für euch. 🚐",
-    turtle_everyday_mode:
-      "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿",
-    turtle_plus_activated:
-      "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
 
     // Mein Tag
     daylog_saved:
@@ -121,23 +103,6 @@ const UI_STRINGS = {
       "Big adventure radius – destinations for full-day trips are waiting here.",
     filter_radius_description_all:
       "All spots – no radius limit. The map is all yours.",
-
-    turtle_intro_1:
-      "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!",
-    turtle_intro_2:
-      "Right now I can’t find a fitting spot. Maybe a small walk nearby is perfect today – or you widen the radius a little. 🐢",
-    turtle_after_daylog_save:
-      "Nice that you captured your day. These small notes turn into big memories later. 💛",
-    turtle_after_fav_added:
-      "You’ve saved this place – a small gem on your family map. ⭐",
-    turtle_after_fav_removed:
-      "All good – some places only fit certain phases. I’ll help you find new ones. 🐢",
-    turtle_trip_mode:
-      "You’re on the road – I’ll watch out for good stopovers for you. 🚐",
-    turtle_everyday_mode:
-      "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿",
-    turtle_plus_activated:
-      "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨",
 
     daylog_saved:
       "Your day moment has been saved 💾 – you can look back on it later.",
@@ -532,7 +497,7 @@ function setLanguage(lang, { initial = false } = {}) {
       : t("btn_only_map");
   }
 
-  // **Such-Placeholder dynamisch setzen**
+  // Such-Placeholder dynamisch setzen
   if (filterSearchEl) {
     filterSearchEl.placeholder =
       currentLang === "de"
