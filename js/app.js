@@ -199,6 +199,54 @@ const CATEGORY_LABELS = {
   }
 };
 
+// Master-Liste aller Kategorien (auch wenn noch 0 Spots)
+// (Basis: dein v2025-11-08 Set)
+const MASTER_CATEGORY_SLUGS = [
+  "spielplatz",
+  "abenteuerspielplatz",
+  "indoor-spielplatz",
+  "waldspielplatz",
+  "wasserspielplatz",
+  "zoo",
+  "wildpark",
+  "tierpark",
+  "bauernhof",
+  "schwimmbad",
+  "badesee",
+  "park-garten",
+  "picknickwiese",
+  "wanderweg-kinderwagen",
+  "radweg-family",
+  "museum-kinder",
+  "bibliothek",
+  "freizeitpark",
+  "minigolf",
+  "kletterhalle",
+  "kletteranlage-outdoor",
+  "boulderpark",
+  "trampolinpark",
+  "skatepark",
+  "pumptrack",
+  "multifunktionsfeld",
+  "bolzplatz",
+  "bewegungspark",
+  "familiencafe",
+  "familien-restaurant",
+  "kinder-familiencafe",
+  "eisbahn",
+  "rodelhuegel",
+  "oeffentliche-toilette",
+  "wickelraum",
+  "familien-event",
+  "rastplatz-spielplatz-dusche",
+  "stellplatz-spielplatz-naehe-kostenlos",
+  "wohnmobil-service-station",
+  "bikepacking-spot",
+  "toddler-barfuss-motorik",
+  "naturerlebnispfad",
+  "walderlebnisroute"
+];
+
 // ------------------------------------------------------
 // Globale State-Variablen
 // ------------------------------------------------------
@@ -295,7 +343,7 @@ function getCategoryLabel(slug) {
   if (entry) {
     return entry[currentLang] || entry.de || slug;
   }
-  // Fallback: Slug in etwas lesbarer Form bringen
+  // Fallback: _ → Leerzeichen, Bindestriche bleiben
   return slug.replace(/_/g, " ");
 }
 
@@ -357,11 +405,11 @@ function setLanguage(lang, { initial = false } = {}) {
   }
 
   // Kategorien-Optionen neu mit lokalisierter Beschriftung befüllen
-  if (spots && spots.length && filterCategoryEl) {
+  if (filterCategoryEl) {
     populateCategoryOptions();
   }
 
-  // Tilla informieren (aber nicht beim allerersten Konstruktor-Aufruf doppelt)
+  // Tilla informieren
   if (!initial && tilla) {
     tilla.onLanguageChanged();
   }
@@ -503,17 +551,18 @@ function getSpotSubtitle(spot) {
   );
 }
 
-// Kategorien aus Spots ins Dropdown schreiben
+// Kategorien ins Dropdown schreiben (Master-Liste + tatsächlich vorkommende)
 function populateCategoryOptions() {
-  if (!filterCategoryEl || !spots.length) return;
+  if (!filterCategoryEl) return;
 
   const firstOption =
     filterCategoryEl.querySelector("option[value='']") || document.createElement("option");
   firstOption.value = "";
   firstOption.textContent = t("filter_category_all");
 
-  // Alle Kategorien sammeln
-  const catSet = new Set();
+  const catSet = new Set(MASTER_CATEGORY_SLUGS);
+
+  // zusätzlich alles, was in den Spots vorkommt
   spots.forEach((spot) => {
     if (Array.isArray(spot.categories)) {
       spot.categories.forEach((c) => c && catSet.add(c));
@@ -934,8 +983,7 @@ function updateRadiusTexts() {
 // Kompass
 // ------------------------------------------------------
 function handleCompassApply() {
-  // Ganz einfache Logik:
-  // Alltag = eher kleiner Radius, Reise = größerer Radius
+  // einfache Logik:
   if (!filterRadiusEl) return;
 
   if (travelMode === "everyday") {
@@ -989,7 +1037,6 @@ function handleDaylogSave() {
   if (!daylogTextEl) return;
   const text = daylogTextEl.value.trim();
   if (!text) {
-    // Kein Fehler, einfach nichts tun
     return;
   }
 
@@ -1104,7 +1151,6 @@ function init() {
   bottomNavAboutLabelEl = document.getElementById("bottom-nav-about-label");
 
   sidebarEl = document.querySelector(".sidebar");
-  // Filter-Section über die Überschrift finden
   const filterTitleEl = document.getElementById("filter-title");
   filterSectionEl = filterTitleEl
     ? filterTitleEl.closest(".sidebar-section")
@@ -1154,7 +1200,7 @@ function init() {
   // Map initialisieren
   initMap();
 
-  // Tilla initialisieren (nachdem DOM da ist)
+  // Tilla initialisieren
   tilla = new TillaCompanion({
     getText: (key) => t(key)
   });
@@ -1225,7 +1271,6 @@ function init() {
       updateRadiusTexts();
       applyFiltersAndRender();
     });
-    // initial
     updateRadiusTexts();
   }
 
@@ -1285,7 +1330,6 @@ function init() {
     });
   });
 
-  // Standard-Reisemodus optisch (Alltag) aktiv setzen
   const defaultTravelChip = document.querySelector(
     ".travel-chip[data-travel-mode='everyday']"
   );
@@ -1296,7 +1340,6 @@ function init() {
   // Filter-Umschalter
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
-    // Text initial setzen
     btnToggleFiltersEl.querySelector("span").textContent = t("btn_hide_filters");
   }
 
