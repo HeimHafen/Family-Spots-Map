@@ -990,19 +990,71 @@ function showSpotDetails(spot) {
 
   const name = getSpotName(spot);
   const subtitle = getSpotSubtitle(spot);
+  const categoryLabel = spot.category ? getCategoryLabel(spot.category) : "";
 
-  const metaParts = [];
-  if (spot.category) metaParts.push(getCategoryLabel(spot.category));
-  if (spot.verified)
-    metaParts.push(currentLang === "de" ? "verifiziert" : "verified");
-  if (Array.isArray(spot.tags) && spot.tags.length)
-    metaParts.push(spot.tags.join(", "));
+  // Meta-Chips (Dauer, Alter, verifiziert …)
+  const metaChips = [];
+
+  // Besuchsdauer
   if (spot.visit_minutes) {
-    metaParts.push(
+    const durationText =
       currentLang === "de"
-        ? `~${spot.visit_minutes} Min.`
-        : `~${spot.visit_minutes} min`
+        ? `⏱ ~${spot.visit_minutes} Min.`
+        : `⏱ ~${spot.visit_minutes} min`;
+    metaChips.push(durationText);
+  }
+
+  // Altersgruppen (falls vorhanden)
+  const agesRaw = spot.ageGroups || spot.age || spot.ages;
+  let ageCodes = [];
+  if (Array.isArray(agesRaw)) {
+    ageCodes = agesRaw;
+  } else if (typeof agesRaw === "string" && agesRaw.trim()) {
+    ageCodes = agesRaw.split(",").map((a) => a.trim());
+  }
+
+  if (ageCodes.length) {
+    const ageText = ageCodes
+      .map((code) => {
+        if (currentLang === "de") {
+          if (code === "0-3") return "0–3 Jahre";
+          if (code === "4-9") return "4–9 Jahre";
+          if (code === "10+") return "10+ Jahre";
+          return code;
+        } else {
+          if (code === "0-3") return "0–3 yrs";
+          if (code === "4-9") return "4–9 yrs";
+          if (code === "10+") return "10+ yrs";
+          return code;
+        }
+      })
+      .join(", ");
+
+    metaChips.push(
+      (currentLang === "de" ? "👶 Alter: " : "👶 Age: ") + ageText
     );
+  }
+
+  // Verifiziert
+  if (spot.verified) {
+    metaChips.push(currentLang === "de" ? "✅ verifiziert" : "✅ verified");
+  }
+
+  // Tags / USPs
+  const tagChips = [];
+  if (Array.isArray(spot.tags)) {
+    spot.tags.forEach((tag) => {
+      if (tag && tagChips.length < 8) {
+        tagChips.push(tag);
+      }
+    });
+  }
+  if (Array.isArray(spot.usps)) {
+    spot.usps.forEach((u) => {
+      if (u && tagChips.length < 12 && !tagChips.includes(u)) {
+        tagChips.push(u);
+      }
+    });
   }
 
   // Beschreibung aus summary_* oder poetry ziehen
@@ -1015,43 +1067,133 @@ function showSpotDetails(spot) {
       spot.summary_en || spot.poetry || spot.description || spot.text || "";
   }
 
-  spotDetailEl.innerHTML = "";
+  // Maps-Link
+  let mapsUrl = "";
+  if (spot.lat && spot.lng) {
+    const lat = String(spot.lat);
+    const lng = String(spot.lng);
+    mapsUrl =
+      "https://www.google.com/maps?q=" +
+      encodeURIComponent(lat + "," + lng);
+  }
 
-  const titleEl = document.createElement("h3");
-  titleEl.className = "spot-card-title";
-  titleEl.textContent = name;
+  const mapsLabel =
+    currentLang === "de" ? "In Karten-App öffnen" : "Open in maps";
+  const closeLabel =
+    currentLang === "de" ? "Details schließen" : "Close details";
 
-  const subtitleEl = document.createElement("p");
-  subtitleEl.className = "spot-card-subtitle";
-  subtitleEl.textContent = subtitle;
+  const metaHtml = metaChips
+    .map(
+      (chip) =>
+        `<span class="spot-detail-meta-chip">${chip}</span>`
+    )
+    .join("");
 
-  const metaEl = document.createElement("p");
-  metaEl.className = "spot-card-meta";
-  metaEl.textContent = metaParts.join(" · ");
+  const tagsHtml = tagChips.length
+    ? `<div class="spot-detail-tags">
+         ${tagChips
+           .map(
+             (tag) => `<span class="spot-detail-tag">${tag}</span>`
+           )
+           .join("")}
+       </div>`
+    : "";
 
-  const descEl = document.createElement("p");
-  descEl.className = "spot-card-meta";
-  descEl.textContent = description;
+  const mapsButtonHtml = mapsUrl
+    ? `<a class="btn btn-small spot-detail-maplink" href="${mapsUrl}" target="_blank" rel="noopener noreferrer">${mapsLabel}</a>`
+    : "";
 
-  const actionsRow = document.createElement("div");
-  actionsRow.className = "popup-actions";
+  spotDetailEl.innerHTML = `
+    <article class="spot-detail-card">
+      <header class="spot-detail-header">
+        <div class="spot-detail-title-block">
+          ${
+            categoryLabel
+              ? `<p class="spot-detail-category">${categoryLabel}</p>`
+              : ""
+          }
+          <h3 class="spot-detail-title">${name}</h3>
+          ${
+            subtitle
+              ? `<p class="spot-detail-location">${subtitle}</p>`
+              : ""
+          }
+        </div>
+        <div class="spot-detail-header-actions">
+          <button
+            type="button"
+            class="spot-detail-fav-btn"
+            aria-label="${
+              isFav
+                ? currentLang === "de"
+                  ? "Aus Favoriten entfernen"
+                  : "Remove from favourites"
+                : currentLang === "de"
+                ? "Zu Favoriten hinzufügen"
+                : "Add to favourites"
+            }"
+          >
+            ${isFav ? "★" : "☆"}
+          </button>
+          <button
+            type="button"
+            class="spot-detail-close"
+            aria-label="${closeLabel}"
+          >
+            ×
+          </button>
+        </div>
+      </header>
 
-  const favBtn = document.createElement("button");
-  favBtn.type = "button";
-  favBtn.className = "btn-ghost btn-small";
-  favBtn.textContent = isFav ? "★" : "☆";
-  favBtn.addEventListener("click", () => {
-    toggleFavorite(spot);
-    favBtn.textContent = favorites.has(spotId) ? "★" : "☆";
-  });
+      ${
+        metaChips.length
+          ? `<div class="spot-detail-meta-row">${metaHtml}</div>`
+          : ""
+      }
 
-  actionsRow.appendChild(favBtn);
+      ${tagsHtml}
 
-  spotDetailEl.appendChild(titleEl);
-  if (subtitle) spotDetailEl.appendChild(subtitleEl);
-  if (metaParts.length) spotDetailEl.appendChild(metaEl);
-  if (description) spotDetailEl.appendChild(descEl);
-  spotDetailEl.appendChild(actionsRow);
+      ${
+        description
+          ? `<p class="spot-detail-description">${description}</p>`
+          : ""
+      }
+
+      ${
+        mapsButtonHtml
+          ? `<footer class="spot-detail-footer">${mapsButtonHtml}</footer>`
+          : ""
+      }
+    </article>
+  `;
+
+  spotDetailEl.classList.remove("spot-details--hidden");
+
+  const favBtn = spotDetailEl.querySelector(".spot-detail-fav-btn");
+  if (favBtn) {
+    favBtn.addEventListener("click", () => {
+      toggleFavorite(spot);
+      const nowFav = favorites.has(spotId);
+      favBtn.textContent = nowFav ? "★" : "☆";
+      favBtn.setAttribute(
+        "aria-label",
+        nowFav
+          ? currentLang === "de"
+            ? "Aus Favoriten entfernen"
+            : "Remove from favourites"
+          : currentLang === "de"
+          ? "Zu Favoriten hinzufügen"
+          : "Add to favourites"
+      );
+    });
+  }
+
+  const closeBtn = spotDetailEl.querySelector(".spot-detail-close");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      spotDetailEl.classList.add("spot-details--hidden");
+    });
+  }
 }
 
 // ------------------------------------------------------
