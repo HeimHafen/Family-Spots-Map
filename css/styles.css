@@ -15,6 +15,11 @@ body {
   height: 100%;
 }
 
+html {
+  /* wichtig: verhindert das orange „Drumherum“ unten */
+  background: #f3f4f6;
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", Roboto, sans-serif;
@@ -357,7 +362,9 @@ html[data-theme="dark"] .sidebar-section {
   align-items: center;
   justify-content: space-between;
   gap: 0.4rem;
-  margin: -0.2rem -0.1rem 0.4rem;
+  /* keine negativen Margins, damit z.B. „Spots | Nur Karte“ nicht wie ein
+     zusammengeklebter Pill aussieht */
+  margin: 0 0 0.4rem;
 }
 
 .sidebar-section-title {
@@ -367,6 +374,14 @@ html[data-theme="dark"] .sidebar-section {
   color: var(--fs-text-soft);
 }
 
+/* Filter-Buttons in Header etwas kompakter */
+#btn-toggle-filters.btn-ghost,
+#btn-toggle-view.btn-ghost {
+  padding-inline: 0.7rem;
+  font-size: 0.78rem;
+}
+
+/* X-Buttons rechts oben in Sections */
 .sidebar-section-close {
   border-radius: 999px;
 }
@@ -426,14 +441,15 @@ html[data-theme="dark"] .sidebar-section {
 .mood-chip,
 .travel-chip {
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
   padding: 0.25rem 0.55rem;
   font-size: 0.75rem;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
   cursor: pointer;
+  color: #374151;
 }
 
 html[data-theme="dark"] .mood-chip,
@@ -610,144 +626,10 @@ html[data-theme="dark"] .compass-card {
   display: none;
 }
 
-.spot-detail-card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 0.9rem 1rem 0.85rem;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.28);
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  max-width: 420px;
-}
-
-html[data-theme="dark"] .spot-detail-card {
-  background: #020617;
-  border-color: rgba(148, 163, 184, 0.5);
-  color: #e5e7eb;
-}
-
-.spot-detail-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.spot-detail-title-block {
-  min-width: 0;
-}
-
-.spot-detail-category {
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #fb8c00;
-  margin: 0 0 0.15rem;
-}
-
-html[data-theme="dark"] .spot-detail-category {
-  color: #fdba74;
-}
-
-.spot-detail-title {
-  font-size: 1.05rem;
-  margin: 0;
-}
-
-.spot-detail-location {
-  margin: 0.1rem 0 0;
-  font-size: 0.8rem;
-  color: #64748b;
-}
-
-html[data-theme="dark"] .spot-detail-location {
-  color: #9ca3af;
-}
-
-.spot-detail-header-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.spot-detail-fav-btn,
-.spot-detail-close {
-  border: none;
-  background: transparent;
-  padding: 0.15rem;
-  cursor: pointer;
-  font-size: 1.1rem;
-}
-
-.spot-detail-fav-btn {
-  line-height: 1;
-}
-
-.spot-detail-close {
-  align-self: flex-end;
-  font-size: 1.1rem;
-  opacity: 0.75;
-}
-
-.spot-detail-close:hover {
-  opacity: 1;
-}
-
-.spot-detail-meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin: 0.4rem 0 0.3rem;
-}
-
-.spot-detail-meta-chip {
-  font-size: 0.7rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: 999px;
-  background: #f1f5f9;
-  color: #475569;
-}
-
-html[data-theme="dark"] .spot-detail-meta-chip {
-  background: #020617;
-  border: 1px solid #1e293b;
-  color: #e5e7eb;
-}
-
-.spot-detail-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-bottom: 0.35rem;
-}
-
-.spot-detail-tag {
-  font-size: 0.7rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: 999px;
-  background: #fff7ed;
-  color: #92400e;
-}
-
-html[data-theme="dark"] .spot-detail-tag {
-  background: rgba(251, 146, 60, 0.1);
-  color: #fed7aa;
-}
-
-.spot-detail-description {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  margin: 0.15rem 0 0.5rem;
-}
-
-.spot-detail-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.15rem;
-}
-
-.spot-detail-maplink {
-  text-decoration: none;
+/* (App.js nutzt momentan noch die „alte“ Struktur – deshalb hier nur
+   allgemeine Text-Styles, damit nichts wild aussieht) */
+.spot-details h3 {
+  margin-top: 0;
 }
 
 /* Desktop: Card schwebt über Karte rechts unten */
@@ -760,6 +642,7 @@ html[data-theme="dark"] .spot-detail-tag {
     position: absolute;
     right: 16px;
     bottom: 24px;
+    max-width: 420px;
   }
 }
 
@@ -769,16 +652,20 @@ html[data-theme="dark"] .spot-detail-tag {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
-    padding: 0.4rem 0.65rem 0.7rem;
+    bottom: 56px; /* über der Bottom-Nav */
+    padding: 0.4rem 0.65rem 0.6rem;
     display: flex;
     justify-content: center;
   }
 
-  .spot-detail-card {
-    width: 100%;
-    max-width: 640px;
+  .spot-details > * {
+    background: #ffffff;
     border-radius: 18px 18px 0 0;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.28);
+  }
+
+  html[data-theme="dark"] .spot-details > * {
+    background: #020617;
   }
 }
 
@@ -827,7 +714,6 @@ html[data-theme="dark"] .page-about {
   color: var(--fs-text-soft);
 }
 
-/* Versteckte EN-Version bei DE usw. */
 .page.hidden {
   display: none;
 }
