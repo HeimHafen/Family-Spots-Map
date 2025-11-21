@@ -147,7 +147,10 @@
             <!-- Familien-Kompass -->
             <details class="sidebar-section" id="compass-section" open>
               <summary class="sidebar-section-header">
-                <h2 class="sidebar-section-title" id="compass-label">
+                <h2
+                  class="sidebar-section-title"
+                  id="compass-label"
+                >
                   <!-- Wird per JS gesetzt -->
                 </h2>
                 <button
@@ -179,7 +182,12 @@
             <!-- Filter-Section -->
             <section class="sidebar-section">
               <header class="sidebar-section-header">
-                <h2 class="sidebar-section-title" id="filter-title">
+                <h2
+                  class="sidebar-section-title"
+                  id="filter-title"
+                  data-i18n-de="Filter"
+                  data-i18n-en="Filters"
+                >
                   Filter
                 </h2>
                 <button
@@ -197,6 +205,8 @@
                   class="filter-group-label"
                   for="filter-search"
                   id="filter-search-label"
+                  data-i18n-de="Suche"
+                  data-i18n-en="Search"
                 >
                   Suche
                 </label>
@@ -215,20 +225,38 @@
                   class="filter-group-label"
                   for="filter-category"
                   id="filter-category-label"
+                  data-i18n-de="Kategorie"
+                  data-i18n-en="Category"
                 >
                   Kategorie
                 </label>
                 <select id="filter-category" class="input">
-                  <option value="">Alle Kategorien</option>
+                  <option
+                    value=""
+                    data-i18n-de="Alle Kategorien"
+                    data-i18n-en="All categories"
+                  >
+                    Alle Kategorien
+                  </option>
                 </select>
               </div>
 
               <!-- Stimmung -->
               <div class="filter-group">
-                <label class="filter-group-label" id="filter-mood-label">
+                <label
+                  class="filter-group-label"
+                  id="filter-mood-label"
+                  data-i18n-de="Stimmung"
+                  data-i18n-en="Mood"
+                >
                   Stimmung
                 </label>
-                <p class="filter-group-helper" id="filter-mood-helper">
+                <p
+                  class="filter-group-helper"
+                  id="filter-mood-helper"
+                  data-i18n-de="Wonach fühlt es sich heute an?"
+                  data-i18n-en="What does today feel like?"
+                >
                   Wonach fühlt es sich heute an?
                 </p>
                 <div class="mood-row" aria-label="Stimmung wählen">
@@ -238,7 +266,12 @@
                     data-mood="relaxed"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
-                    <span class="mood-chip-label" id="mood-relaxed-label">
+                    <span
+                      class="mood-chip-label"
+                      id="mood-relaxed-label"
+                      data-i18n-de="Entspannt"
+                      data-i18n-en="Relaxed"
+                    >
                       Entspannt
                     </span>
                   </button>
@@ -248,7 +281,12 @@
                     data-mood="action"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
-                    <span class="mood-chip-label" id="mood-action-label">
+                    <span
+                      class="mood-chip-label"
+                      id="mood-action-label"
+                      data-i18n-de="Bewegung"
+                      data-i18n-en="Active"
+                    >
                       Bewegung
                     </span>
                   </button>
@@ -258,7 +296,12 @@
                     data-mood="water"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">💧</span>
-                    <span class="mood-chip-label" id="mood-water-label">
+                    <span
+                      class="mood-chip-label"
+                      id="mood-water-label"
+                      data-i18n-de="Wasser &amp; Sand"
+                      data-i18n-en="Water &amp; sand"
+                    >
                       Wasser &amp; Sand
                     </span>
                   </button>
@@ -268,7 +311,12 @@
                     data-mood="animals"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
-                    <span class="mood-chip-label" id="mood-animals-label">
+                    <span
+                      class="mood-chip-label"
+                      id="mood-animals-label"
+                      data-i18n-de="Tier-Tag"
+                      data-i18n-en="Animal day"
+                    >
                       Tier-Tag
                     </span>
                   </button>
@@ -277,10 +325,20 @@
 
               <!-- Reise-Modus -->
               <div class="filter-group">
-                <label class="filter-group-label" id="filter-travel-label">
+                <label
+                  class="filter-group-label"
+                  id="filter-travel-label"
+                  data-i18n-de="Reise-Modus"
+                  data-i18n-en="Travel mode"
+                >
                   Reise-Modus
                 </label>
-                <p class="filter-group-helper" id="filter-travel-helper">
+                <p
+                  class="filter-group-helper"
+                  id="filter-travel-helper"
+                  data-i18n-de="Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo, Auto oder Bahn?"
+                  data-i18n-en="Are you staying close to home today or travelling by camper, car or train?"
+                >
                   Seid ihr heute im Alltag unterwegs oder auf Tour mit WoMo,
                   Auto oder Bahn?
                 </p>
@@ -291,7 +349,12 @@
                     data-travel-mode="everyday"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🏡</span>
-                    <span class="mood-chip-label" id="travel-everyday-label">
+                    <span
+                      class="mood-chip-label"
+                      id="travel-everyday-label"
+                      data-i18n-de="Alltag"
+                      data-i18n-en="Everyday"
+                    >
                       Alltag
                     </span>
                   </button>
@@ -301,7 +364,12 @@
                     data-travel-mode="trip"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🚐</span>
-                    <span class="mood-chip-label" id="travel-trip-label">
+                    <span
+                      class="mood-chip-label"
+                      id="travel-trip-label"
+                      data-i18n-de="Unterwegs"
+                      data-i18n-en="On the road"
+                    >
                       Unterwegs
                     </span>
                   </button>
@@ -314,20 +382,42 @@
                   class="filter-group-label"
                   for="filter-age"
                   id="filter-age-label"
+                  data-i18n-de="Alter der Kinder"
+                  data-i18n-en="Age of children"
                 >
                   Alter der Kinder
                 </label>
                 <select id="filter-age" class="input">
-                  <option value="all" id="filter-age-all">
+                  <option
+                    value="all"
+                    id="filter-age-all"
+                    data-i18n-de="Alle Altersstufen"
+                    data-i18n-en="All age groups"
+                  >
                     Alle Altersstufen
                   </option>
-                  <option value="0-3" id="filter-age-0-3">
+                  <option
+                    value="0-3"
+                    id="filter-age-0-3"
+                    data-i18n-de="0–3 Jahre"
+                    data-i18n-en="0–3 years"
+                  >
                     0–3 Jahre
                   </option>
-                  <option value="4-9" id="filter-age-4-9">
+                  <option
+                    value="4-9"
+                    id="filter-age-4-9"
+                    data-i18n-de="4–9 Jahre"
+                    data-i18n-en="4–9 years"
+                  >
                     4–9 Jahre
                   </option>
-                  <option value="10+" id="filter-age-10-plus">
+                  <option
+                    value="10+"
+                    id="filter-age-10-plus"
+                    data-i18n-de="10+ Jahre"
+                    data-i18n-en="10+ years"
+                  >
                     10+ Jahre
                   </option>
                 </select>
@@ -339,10 +429,17 @@
                   class="filter-group-label"
                   for="filter-radius"
                   id="filter-radius-label"
+                  data-i18n-de="Micro-Abenteuer-Radius"
+                  data-i18n-en="Micro-adventure radius"
                 >
                   Micro-Abenteuer-Radius
                 </label>
-                <p class="filter-group-helper" id="filter-radius-helper">
+                <p
+                  class="filter-group-helper"
+                  id="filter-radius-helper"
+                  data-i18n-de="Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …)."
+                  data-i18n-en="How far may your adventure go today? The radius relates to the map centre (home, holiday flat, hotel …)."
+                >
                   Wie weit darf euer Abenteuer heute gehen? Der Radius bezieht
                   sich auf die Kartenmitte (Zuhause, Ferienwohnung, Hotel …).
                 </p>
@@ -359,6 +456,8 @@
                   <span
                     id="filter-radius-max-label"
                     class="radius-max-label"
+                    data-i18n-de="Alle Spots"
+                    data-i18n-en="All spots"
                   >
                     Alle Spots
                   </span>
@@ -366,6 +465,8 @@
                 <p
                   id="filter-radius-description"
                   class="radius-description"
+                  data-i18n-de="Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
+                  data-i18n-en="All spots – no radius limit. The map is all yours."
                 >
                   Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
                 </p>
@@ -373,23 +474,47 @@
 
               <!-- Checkboxen -->
               <div class="filter-group filter-group--checkbox">
-                <label class="checkbox-label" id="filter-big-label">
+                <label
+                  class="checkbox-label"
+                  id="filter-big-label"
+                >
                   <input id="filter-big-adventures" type="checkbox" />
-                  <span>Nur große Abenteuer</span>
+                  <span
+                    data-i18n-de="Nur große Abenteuer"
+                    data-i18n-en="Only big adventures"
+                  >
+                    Nur große Abenteuer
+                  </span>
                 </label>
               </div>
 
               <div class="filter-group filter-group--checkbox">
-                <label class="checkbox-label" id="filter-verified-label">
+                <label
+                  class="checkbox-label"
+                  id="filter-verified-label"
+                >
                   <input id="filter-verified" type="checkbox" />
-                  <span>Nur verifizierte Spots</span>
+                  <span
+                    data-i18n-de="Nur verifizierte Spots"
+                    data-i18n-en="Only verified spots"
+                  >
+                    Nur verifizierte Spots
+                  </span>
                 </label>
               </div>
 
               <div class="filter-group filter-group--checkbox">
-                <label class="checkbox-label" id="filter-favs-label">
+                <label
+                  class="checkbox-label"
+                  id="filter-favs-label"
+                >
                   <input id="filter-favorites" type="checkbox" />
-                  <span>Nur Favoriten</span>
+                  <span
+                    data-i18n-de="Nur Favoriten"
+                    data-i18n-en="Only favourites"
+                  >
+                    Nur Favoriten
+                  </span>
                 </label>
               </div>
             </section>
@@ -432,13 +557,21 @@
               </summary>
 
               <div class="filter-group">
-                <p id="plus-status-text">
+                <p
+                  id="plus-status-text"
+                  data-i18n-de="Family Spots Plus ist nicht aktiviert."
+                  data-i18n-en="Family Spots Plus is not activated."
+                >
                   Family Spots Plus ist nicht aktiviert.
                 </p>
               </div>
 
               <div class="plus-code-form">
-                <label for="plus-code-input">
+                <label
+                  for="plus-code-input"
+                  data-i18n-de="Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
+                  data-i18n-en="Enter partner code (e.g. from campground, municipality or sponsor):"
+                >
                   Partner-Code eingeben (z. B. von Campingplatz, Kommune oder
                   Sponsor):
                 </label>
@@ -454,10 +587,19 @@
                     class="btn"
                     type="button"
                   >
-                    Code aktivieren
+                    <span
+                      data-i18n-de="Code aktivieren"
+                      data-i18n-en="Activate code"
+                    >
+                      Code aktivieren
+                    </span>
                   </button>
                 </div>
-                <p class="plus-note">
+                <p
+                  class="plus-note"
+                  data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
+                  data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap."
+                >
                   Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei
                   – ganz ohne Abo-Falle.
                 </p>
@@ -467,7 +609,13 @@
             <!-- Mein Tag (eingeklappt) -->
             <details class="sidebar-section" id="daylog-section">
               <summary class="sidebar-section-header">
-                <h2 class="sidebar-section-title">Mein Tag 💛</h2>
+                <h2
+                  class="sidebar-section-title"
+                  data-i18n-de="Mein Tag 💛"
+                  data-i18n-en="My day 💛"
+                >
+                  Mein Tag 💛
+                </h2>
                 <button
                   type="button"
                   class="btn-icon sidebar-section-close"
@@ -479,7 +627,13 @@
               </summary>
 
               <div class="filter-group">
-                <label for="daylog-text">Wie war euer Tag?</label>
+                <label
+                  for="daylog-text"
+                  data-i18n-de="Wie war euer Tag?"
+                  data-i18n-en="How was your day?"
+                >
+                  Wie war euer Tag?
+                </label>
                 <textarea
                   id="daylog-text"
                   class="input"
@@ -491,7 +645,12 @@
                   class="btn btn-small"
                   type="button"
                 >
-                  Speichern 💾
+                  <span
+                    data-i18n-de="Speichern 💾"
+                    data-i18n-en="Save 💾"
+                  >
+                    Speichern 💾
+                  </span>
                 </button>
               </div>
             </details>
