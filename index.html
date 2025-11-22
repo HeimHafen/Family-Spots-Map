@@ -54,7 +54,6 @@
       <!-- HEADER                  -->
       <!-- ======================= -->
       <header class="app-header">
-        <!-- Obere Kontroll-Zeile -->
         <div class="app-header-top">
           <div class="app-header-left">
             <button
@@ -99,7 +98,6 @@
           </div>
         </div>
 
-        <!-- Hauptzeile: Titel + Flaggen + Slogan -->
         <div class="app-header-main">
           <h1 class="header-title">
             <span class="header-flag" aria-hidden="true">🇩🇪</span>
@@ -108,9 +106,7 @@
             Map
             <span class="header-flag" aria-hidden="true">🇩🇰</span>
           </h1>
-          <p class="header-tagline" id="header-tagline">
-            <!-- Text wird per JS gesetzt -->
-          </p>
+          <p class="header-tagline" id="header-tagline"></p>
         </div>
       </header>
 
@@ -122,7 +118,7 @@
         <section id="view-map" class="view view--active" aria-label="Karte">
           <!-- Sidebar -->
           <aside class="sidebar">
-            <!-- Tilla-Begleiterin ganz oben -->
+            <!-- Tilla -->
             <section
               id="tilla-section"
               class="sidebar-section tilla-sidebar-section"
@@ -137,9 +133,7 @@
                   />
                 </div>
                 <div class="tilla-sidebar-text">
-                  <p id="tilla-sidebar-text">
-                    <!-- Text wird per JS gesetzt -->
-                  </p>
+                  <p id="tilla-sidebar-text"></p>
                 </div>
               </div>
             </section>
@@ -147,12 +141,7 @@
             <!-- Familien-Kompass -->
             <details class="sidebar-section" id="compass-section" open>
               <summary class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  id="compass-label"
-                >
-                  <!-- Wird per JS gesetzt -->
-                </h2>
+                <h2 class="sidebar-section-title" id="compass-label"></h2>
                 <button
                   type="button"
                   class="btn-icon sidebar-section-close"
@@ -164,17 +153,13 @@
               </summary>
 
               <div class="compass-card">
-                <p class="filter-group-helper" id="compass-helper">
-                  <!-- Wird per JS gesetzt -->
-                </p>
+                <p class="filter-group-helper" id="compass-helper"></p>
                 <button
                   type="button"
                   id="compass-apply"
                   class="btn btn-small"
                 >
-                  <span id="compass-apply-label">
-                    <!-- Wird per JS gesetzt -->
-                  </span>
+                  <span id="compass-apply-label"></span>
                 </button>
               </div>
             </details>
@@ -537,12 +522,10 @@
                 </button>
               </header>
 
-              <div id="spot-list" class="spot-list">
-                <!-- Spotkarten werden per JS gerendert -->
-              </div>
+              <div id="spot-list" class="spot-list"></div>
             </section>
 
-            <!-- Family Spots Plus (eingeklappt) -->
+            <!-- Family Spots Plus -->
             <details class="sidebar-section" id="plus-section">
               <summary class="sidebar-section-header">
                 <h2 class="sidebar-section-title">Family Spots Plus</h2>
@@ -606,7 +589,7 @@
               </div>
             </details>
 
-            <!-- Mein Tag (eingeklappt) -->
+            <!-- Mein Tag -->
             <details class="sidebar-section" id="daylog-section">
               <summary class="sidebar-section-header">
                 <h2
@@ -679,7 +662,19 @@
             class="page page-about"
             lang="de"
           >
-            <!-- ... (Rest deines About-Textes unverändert) ... -->
+            <h2>Über Family Spots Map</h2>
+
+            <!-- Tilla-Hero wird von js/tilla.js dynamisch hier eingefügt -->
+
+            <p>
+              Family Spots Map ist eine kuratierte Karte für
+              Familien-Abenteuer – von Eltern für Eltern. Statt
+              unübersichtlicher Listen oder anonymer Bewertungen findest du
+              hier ausgewählte Spielplätze, Zoos, Wildparks, Wasser-Spots,
+              Museen, Bewegungsparks und viele weitere Orte, die sich in der
+              Praxis bewährt haben.
+            </p>
+            <!-- ... (Rest deines About-Textes wie gehabt) ... -->
           </article>
 
           <!-- Englisch -->
@@ -688,7 +683,15 @@
             class="page page-about hidden"
             lang="en"
           >
-            <!-- ... (englischer About-Text unverändert) ... -->
+            <h2>About Family Spots Map</h2>
+
+            <!-- Tilla-Hero wird von js/tilla.js dynamisch hier eingefügt -->
+
+            <p>
+              Family Spots Map is a curated map for family adventures – by
+              parents for parents.
+            </p>
+            <!-- ... Rest des EN-Textes ... -->
           </article>
         </section>
       </main>
@@ -727,14 +730,13 @@
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </div>
 
-    <!-- Scripts: Leaflet + MarkerCluster -->
+    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
-    <!-- App (als ES-Modul) -->
     <script type="module" src="./js/app.js"></script>
 
-    <!-- Kleines Script nur für das Daylog-Placeholder (DE/EN) -->
+    <!-- Daylog-Placeholder (DE/EN) -->
     <script>
       (function () {
         const textarea = document.getElementById("daylog-text");
