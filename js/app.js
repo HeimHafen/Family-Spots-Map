@@ -153,7 +153,7 @@ const UI_STRINGS = {
   }
 };
 
-// Kategorie-Labels & MASTER_CATEGORY_SLUGS (unverändert)
+// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert – gekürzt hier)
 const CATEGORY_LABELS = {
   wildpark: {
     de: "Wildpark & Safaripark",
@@ -494,7 +494,8 @@ function setLanguage(lang, { initial = false } = {}) {
 
   if (compassLabelEl) compassLabelEl.textContent = t("compass_title");
   if (compassHelperEl) compassHelperEl.textContent = t("compass_helper");
-  if (compassApplyLabelEl) compassApplyLabelEl.textContent = t("compass_apply_label");
+  if (compassApplyLabelEl)
+    compassApplyLabelEl.textContent = t("compass_apply_label");
 
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.querySelector("span").textContent = filtersCollapsed
@@ -841,7 +842,7 @@ function renderMarkers() {
 
     marker.bindPopup(popupHtml);
 
-    // Nur Leaflet-Popup
+    // Nur Leaflet-Popup, kein Overlay mehr
     markersLayer.addLayer(marker);
   });
 }
@@ -1296,7 +1297,7 @@ function init() {
 
   initMap();
 
-  // Map-Klick schließt Detail-Panel
+  // Map-Klick schließt unser Detail-Panel
   if (map && spotDetailEl) {
     map.on("click", () => {
       spotDetailEl.classList.add("spot-details--hidden");
