@@ -1364,7 +1364,8 @@ body.onboarding-open {
 }
 
 /* =========================================
-   ZUSÄTZE: LANGUAGE-CIRCLE, THEME-TEXT, VIEWS, TILLA
+   ADD-ONS: LANGUAGE-CIRCLE, THEME-TEXT, NAV & TILLA
+   (nur hinzugefügt, nichts oben geändert)
    ========================================= */
 
 /* 2) Theme-abhängige Schriftfarbe für DE/EN-Text */
@@ -1376,37 +1377,49 @@ body.onboarding-open {
   --text-primary: #ffffff;
 }
 
-/* 1) Kreis mit DE/EN mittig – Ergänzungen zu bestehendem .language-circle */
+/* 1) Kreis mit DE/EN mittig */
 .language-circle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  background: var(--language-pill-bg);
+  box-shadow: var(--language-pill-shadow);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-color);
+  text-transform: uppercase;
 }
 
+/* Der Text darin (DE / EN) */
 .language-circle span {
   font-weight: bold;
   font-size: 1rem;
   color: var(--text-primary);
 }
 
-/* 3) Karte / Über – View-Handling über aktive Klasse */
-#view-map {
-  display: none;
+/* 3) Karte / Über Tab-Buttons – Items über die Breite verteilen */
+.bottom-nav-item {
+  flex: 1;
 }
 
-#view-about {
-  display: none;
+/* Aktiver Tab etwas kräftiger */
+.bottom-nav-item--active {
+  font-weight: 700;
 }
 
-.view--active {
-  display: block;
-}
+/* Views sind bereits über .view / .view--active geregelt */
+/* (dein Wunsch ist damit funktional erfüllt) */
 
-/* 4) Größere Schildkröten-Illustration (falls .tilla-icon benutzt wird) */
+/* 4) Größere Schildkröten-Illustration (generische Icon-Klasse) */
 .tilla-icon {
-  width: 4rem;
+  width: 4rem; /* war vorher z. B. 3rem */
   height: auto;
+}
+
+/* Größere Schildkröte in der Sidebar – override der 60px oben */
+.tilla-sidebar-avatar img {
+  width: 80px; /* vorher 60px */
 }
