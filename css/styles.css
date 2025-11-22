@@ -1,9 +1,8 @@
-/* ======================================================
-   Family Spots Map – styles.css (stabil & mobile-first)
-   Stand: Fix Header/Tilla + Bottom-Nav
-   ====================================================== */
+/* css/styles.css
+ * Family Spots Map – Light/Dark Theme, Header, Sidebar, Map, Bottom-Nav
+ */
 
-/* ---------- Reset & Base ---------- */
+/* Reset & Base -------------------------------------------------- */
 
 *,
 *::before,
@@ -19,66 +18,73 @@ body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  background: #fdf3e8;
-  color: #3b2c23;
+  background: #fbe9e0;
+  color: #3b2314;
 }
 
-/* Safari-iOS: 100dvh für bessere Vollhöhe */
-.app {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ---------- Theming ---------- */
+/* Design-Tokens -------------------------------------------------- */
 
 :root {
-  --fs-color-orange: #fb8c00;
-  --fs-color-orange-soft: #ffe3ba;
-  --fs-color-cream: #fff7ef;
-  --fs-color-cream-strong: #f8dcc0;
-  --fs-color-text: #3b2c23;
-  --fs-color-text-soft: #775b48;
-  --fs-radius-lg: 18px;
+  --fs-orange-strong: #fb8c00;
+  --fs-orange-soft: #ffe2bf;
+  --fs-bg-main: #fff7f0;
+  --fs-bg-card: #ffffff;
+  --fs-bg-card-soft: #fff2e6;
+  --fs-text-main: #3b2314;
+  --fs-text-soft: #6d4c41;
+  --fs-border-soft: rgba(0, 0, 0, 0.06);
+  --fs-shadow-soft: 0 14px 24px rgba(0, 0, 0, 0.18);
+  --fs-radius-card: 22px;
   --fs-radius-pill: 999px;
-  --fs-shadow-soft: 0 14px 30px rgba(0, 0, 0, 0.08);
-  --fs-shadow-card: 0 18px 40px rgba(0, 0, 0, 0.12);
 }
 
-html[data-theme="dark"] {
-  --fs-color-orange: #ffb74d;
-  --fs-color-orange-soft: #2a1a08;
-  --fs-color-cream: #050816;
-  --fs-color-cream-strong: #0e1729;
-  --fs-color-text: #fdf5e7;
-  --fs-color-text-soft: #c7b3a1;
-  --fs-shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.65);
-  --fs-shadow-card: 0 22px 60px rgba(0, 0, 0, 0.9);
+/* Dark-Theme ----------------------------------------------------- */
+
+html[data-theme="dark"] body {
+  background: radial-gradient(circle at top, #212121 0, #050816 60%);
+  color: #fbe9e7;
 }
 
-/* ---------- App Layout ---------- */
+html[data-theme="dark"] :root {
+  --fs-bg-main: #050816;
+  --fs-bg-card: #111827;
+  --fs-bg-card-soft: #141b2f;
+  --fs-text-main: #f5f5f5;
+  --fs-text-soft: #d1d5db;
+  --fs-border-soft: rgba(250, 250, 250, 0.06);
+  --fs-shadow-soft: 0 18px 30px rgba(0, 0, 0, 0.65);
+}
 
-.app-main {
-  flex: 1 1 auto;
+/* App Shell ------------------------------------------------------ */
+
+.app {
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  background: radial-gradient(circle at top left, #ffe5c1 0, #fdf3e8 45%, #f9e1c8 100%);
-  color: var(--fs-color-text);
-  /* Platz für die Bottom-Navigation, damit nichts darunter liegt */
-  padding-bottom: 78px;
+  background: radial-gradient(circle at top, #ffe0b2 0, #fbe9e0 38%, #f3e5f5 100%);
 }
 
-/* ---------- Header ---------- */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header --------------------------------------------------------- */
 
 .app-header {
-  background: linear-gradient(135deg, var(--fs-color-orange) 0%, #ff9800 40%, #ffb74d 100%);
-  color: #fff;
-  padding: 8px 16px 18px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
   position: relative;
+  padding: 12px 16px 14px;
+  background: linear-gradient(135deg, #ff9800 0%, #fb8c00 40%, #ff7043 100%);
+  color: #fff;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.25);
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
   z-index: 10;
 }
 
@@ -86,7 +92,7 @@ html[data-theme="dark"] {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .app-header-left,
@@ -96,563 +102,571 @@ html[data-theme="dark"] {
   gap: 10px;
 }
 
+/* Header Controls */
+
 .btn-icon {
   border: none;
   outline: none;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--fs-color-text);
-  width: 42px;
-  height: 42px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+  font-size: 18px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.22);
 }
 
-/* Sprachwahl */
+html[data-theme="dark"] .btn-icon {
+  background: rgba(15, 23, 42, 0.96);
+  color: #f5f5f5;
+}
+
 .language-switcher {
-  border-radius: 999px;
   border: none;
-  padding: 7px 16px;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 15px;
   font-weight: 600;
   background: rgba(255, 255, 255, 0.96);
-  color: var(--fs-color-text);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
-  -webkit-appearance: none;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.22);
   appearance: none;
+  position: relative;
 }
 
-/* Titelzeile */
+.language-switcher:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+/* Header Main Line */
+
 .app-header-main {
-  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 2px 6px;
 }
 
 .header-title {
   margin: 0;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .header-flag {
-  font-size: 19px;
+  font-size: 22px;
 }
 
 .header-title-spots {
-  background: rgba(255, 252, 244, 0.96);
-  color: #a4551c;
-  padding: 2px 10px 4px;
+  padding: 4px 12px;
   border-radius: var(--fs-radius-pill);
+  background: rgba(255, 248, 225, 0.95);
+  color: #6d4c41;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-/* erste Zeile: Heute ist Familientag */
+/* Slogan unter dem Titel */
+
 .header-tagline {
-  margin: 5px 0 0;
-  font-size: 15px;
-  font-weight: 500;
+  margin: 0;
+  margin-top: 4px;
+  padding: 6px 14px;
+  border-radius: var(--fs-radius-pill);
+  background: rgba(255, 253, 245, 0.98);
+  color: #6d4c41;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
 }
 
-/* ---------- Sidebar / Map-View ---------- */
+html[data-theme="dark"] .header-tagline {
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.4);
+}
+
+/* Views ---------------------------------------------------------- */
 
 .view {
   display: none;
-  height: 100%;
+  padding: 0;
 }
 
 .view.view--active {
-  display: block;
+  display: flex;
+  flex: 1;
 }
+
+/* Map-View Layout (Mobile: Sidebar oben, Map unten) -------------- */
 
 #view-map {
-  height: 100%;
-}
-
-#view-map .view {
-  height: 100%;
-}
-
-.app-main > #view-map {
-  height: 100%;
-}
-
-/* Karte + Sidebar */
-.view#view-map {
-  display: flex;
   flex-direction: column;
-  height: 100%;
 }
-
-/* ---------- Sidebar ---------- */
 
 .sidebar {
-  padding: 14px 12px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  padding: 12px 12px 96px; /* Platz für Bottom-Nav */
+  background: var(--fs-bg-main);
 }
+
+.map-section {
+  position: relative;
+  flex: 1;
+  min-height: 260px;
+}
+
+/* Cards / Sidebar Sections --------------------------------------- */
 
 .sidebar-section {
-  background: rgba(255, 255, 255, 0.98);
-  border-radius: var(--fs-radius-lg);
-  box-shadow: var(--fs-shadow-soft);
-  padding: 10px 12px 12px;
-}
-
-.sidebar-section--grow {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar-section.hidden {
-  display: none;
+  margin-bottom: 12px;
 }
 
 .sidebar-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin: 2px 0 10px;
+  margin-bottom: 6px;
 }
 
 .sidebar-section-title {
   margin: 0;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
+  color: var(--fs-text-main);
 }
 
-/* Close-Button im Header */
-.sidebar-section-close {
-  width: 32px;
-  height: 32px;
-  font-size: 22px;
-  background: rgba(0, 0, 0, 0.04);
-  box-shadow: none;
+.sidebar-section--grow {
+  margin-bottom: 16px;
 }
 
-/* ---------- Tilla-Karte ---------- */
+/* Tilla-Card ganz oben */
 
 .tilla-sidebar-section {
-  padding: 0;
-  background: transparent;
-  box-shadow: none;
+  margin-top: 8px;
 }
 
 .tilla-sidebar-card {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px;
-  align-items: center;
-  padding: 14px 14px 14px 14px;
-  border-radius: var(--fs-radius-lg);
-  background: linear-gradient(135deg, #ffe7c5 0%, #fff7ef 40%, #ffe7c5 100%);
-  box-shadow: var(--fs-shadow-card);
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--fs-radius-card);
+  background: radial-gradient(circle at top left, #ffe8c8 0, #fff7f0 55%, #ffffff 100%);
+  box-shadow: var(--fs-shadow-soft);
 }
 
 .tilla-sidebar-avatar img {
   width: 52px;
   height: 52px;
+  object-fit: contain;
 }
 
 .tilla-sidebar-text p {
   margin: 0;
-  font-size: 15px;
-  line-height: 1.45;
-  color: var(--fs-color-text-soft);
+  font-size: 14px;
+  color: var(--fs-text-soft);
 }
 
-/* ---------- Kompass ---------- */
+/* Kompass-Karte */
 
 .compass-card {
-  border-radius: calc(var(--fs-radius-lg) - 4px);
-  padding: 12px 12px 14px;
-  border: 2px dashed rgba(245, 124, 0, 0.4);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 244, 229, 0.9),
-    rgba(255, 255, 255, 0.96)
-  );
+  padding: 14px 16px 16px;
+  border-radius: var(--fs-radius-card);
+  background: var(--fs-bg-card);
+  box-shadow: var(--fs-shadow-soft);
+  border: 1px dashed rgba(251, 140, 0, 0.45);
 }
 
-.filter-group-helper {
-  margin: 0 0 10px;
-  font-size: 14px;
-  color: var(--fs-color-text-soft);
-}
+/* Filter-Card */
 
-/* ---------- Form Controls / Filter ---------- */
+#filter-title {
+  font-size: 18px;
+}
 
 .filter-group {
-  margin-bottom: 12px;
+  margin-top: 8px;
 }
 
 .filter-group-label {
   display: block;
-  margin-bottom: 4px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fs-text-main);
+  margin-bottom: 3px;
 }
 
-.input {
+.filter-group-helper {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--fs-text-soft);
+}
+
+/* Inputs & Selects ----------------------------------------------- */
+
+.input,
+textarea.input,
+select.input {
   width: 100%;
-  border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
   padding: 10px 14px;
   font-size: 15px;
-  background: rgba(255, 255, 255, 0.98);
-  color: var(--fs-color-text);
+  background: #ffffff;
+  color: var(--fs-text-main);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
 }
 
-.input:focus {
-  outline: 2px solid rgba(251, 140, 0, 0.5);
-  outline-offset: 1px;
+html[data-theme="dark"] .input,
+html[data-theme="dark"] textarea.input,
+html[data-theme="dark"] select.input {
+  background: #020617;
+  border-color: rgba(148, 163, 184, 0.3);
+  color: #e5e7eb;
 }
 
-/* Stimmung & Reise-Modus Chips */
+/* Chips (Stimmung / Reise-Modus) -------------------------------- */
 
 .mood-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 .mood-chip,
 .travel-chip {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 999px;
-  padding: 7px 11px;
-  background: rgba(255, 255, 255, 0.98);
+  border-radius: var(--fs-radius-pill);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 6px 12px;
+  font-size: 14px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 14px;
+  gap: 6px;
+  background: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08);
+}
+
+.mood-chip-emoji {
+  font-size: 16px;
 }
 
 .mood-chip--active,
 .travel-chip--active {
-  border-color: rgba(251, 140, 0, 0.85);
-  background: linear-gradient(135deg, #ffe7c5 0, #ffd08a 100%);
+  background: #ffe0b2;
+  border-color: #fb8c00;
+  color: #fb8c00;
 }
 
-/* Radius */
+html[data-theme="dark"] .mood-chip,
+html[data-theme="dark"] .travel-chip {
+  background: #020617;
+  border-color: rgba(148, 163, 184, 0.4);
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .mood-chip--active,
+html[data-theme="dark"] .travel-chip--active {
+  background: #f97316;
+  border-color: #fdba74;
+  color: #020617;
+}
+
+/* Radius --------------------------------------------------------- */
 
 .radius-row {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-top: 4px;
+}
+
+#filter-radius {
+  flex: 1;
 }
 
 .radius-max-label {
   font-size: 13px;
-  color: var(--fs-color-text-soft);
+  color: var(--fs-text-soft);
 }
 
 .radius-description {
   margin: 4px 0 0;
   font-size: 13px;
-  color: var(--fs-color-text-soft);
+  color: var(--fs-text-soft);
 }
 
-/* Checkbox-Gruppen */
+/* Checkbox-Gruppen ----------------------------------------------- */
 
-.filter-group--checkbox .checkbox-label {
+.filter-group--checkbox {
+  margin-top: 6px;
+}
+
+.checkbox-label {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
+  color: var(--fs-text-soft);
 }
 
-/* ---------- Buttons ---------- */
+.checkbox-label input {
+  width: 18px;
+  height: 18px;
+}
+
+/* Buttons -------------------------------------------------------- */
 
 .btn {
-  border: none;
   border-radius: var(--fs-radius-pill);
-  background: linear-gradient(135deg, #ff9800 0%, #fb8c00 50%, #f57c00 100%);
-  color: #fff;
+  border: none;
   padding: 10px 18px;
   font-size: 15px;
   font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #ffb300 0%, #fb8c00 40%, #f57c00 100%);
+  color: #fff;
+  box-shadow: 0 8px 16px rgba(251, 140, 0, 0.55);
 }
 
 .btn-small {
-  padding: 7px 14px;
+  padding: 8px 14px;
   font-size: 14px;
 }
 
 .btn-ghost {
   border-radius: var(--fs-radius-pill);
-  border: 1px solid rgba(0, 0, 0, 0.16);
-  padding: 7px 16px;
-  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 6px 14px;
   font-size: 14px;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
 }
 
-/* ---------- Spot-Liste ---------- */
+html[data-theme="dark"] .btn-ghost {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(148, 163, 184, 0.5);
+  color: #e5e7eb;
+}
+
+/* Spot-Liste ----------------------------------------------------- */
 
 .spot-list {
-  margin-top: 4px;
-  padding-right: 2px;
-  overflow-y: auto;
-  flex: 1 1 auto;
-  min-height: 0;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .spot-card {
+  padding: 10px 12px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.98);
-  padding: 10px 13px 11px;
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.06);
-  margin-bottom: 10px;
+  background: #ffffff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+html[data-theme="dark"] .spot-card {
+  background: #020617;
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.75);
 }
 
 .spot-card-title {
   margin: 0 0 2px;
   font-size: 15px;
   font-weight: 700;
+  color: var(--fs-text-main);
 }
 
 .spot-card-subtitle {
-  margin: 0 0 4px;
+  margin: 0 0 2px;
   font-size: 13px;
-  color: var(--fs-color-text-soft);
+  color: var(--fs-text-soft);
 }
 
 .spot-card-meta {
   margin: 0;
-  font-size: 13px;
-  color: var(--fs-color-text-soft);
+  font-size: 12px;
+  color: var(--fs-text-soft);
 }
 
-/* ---------- Map Section ---------- */
-
-.map-section {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 260px;
-}
+/* Map / Marker --------------------------------------------------- */
 
 .map-container {
-  height: 100%;
   width: 100%;
+  height: 320px;
 }
 
-/* Detail-Pane rechts/unten */
+.leaflet-container {
+  background: #d7e3fc;
+}
+
+.spot-marker-inner {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 3px solid #ffffff;
+  background: #fb8c00;
+  box-shadow: 0 0 0 3px rgba(251, 140, 0, 0.3);
+}
+
+/* Details-Panel (nur bei Klick aus Liste) ------------------------ */
 
 .spot-details {
   position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 12px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.97);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
-  padding: 10px 13px 11px;
-  max-height: 45%;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 18px 28px rgba(0, 0, 0, 0.35);
+  padding: 10px 12px 8px;
+  max-height: 55%;
   overflow-y: auto;
-  z-index: 550; /* unter Map-Popups, über Karte */
+  z-index: 50;
 }
 
 .spot-details--hidden {
   display: none;
 }
 
-.popup-actions {
-  margin-top: 8px;
-  display: flex;
-  justify-content: flex-end;
+html[data-theme="dark"] .spot-details {
+  background: #020617;
 }
 
-/* Leaflet-Popups über Bottom-Nav */
-
-.leaflet-container a {
-  color: #1976d2;
-}
-
-.leaflet-pane {
-  z-index: 400;
-}
-
-.leaflet-top,
-.leaflet-bottom {
-  z-index: 450;
-}
-
-/* ---------- About-Page ---------- */
-
-.page-about {
-  padding: 16px 14px 40px;
-  max-width: 800px;
-  margin: 0 auto;
-  color: var(--fs-color-text);
-}
-
-.page-about h2 {
-  margin-top: 0;
-}
-
-.page-about.hidden {
-  display: none;
-}
-
-/* ---------- Bottom Navigation ---------- */
+/* Bottom Navigation ---------------------------------------------- */
 
 .bottom-nav {
   position: fixed;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  padding-bottom: env(safe-area-inset-bottom, 0);
-  z-index: 600;
+  height: 64px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  height: 64px;
-  pointer-events: auto;
+  justify-content: space-evenly;
+  background: #ffffff;
+  box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.25);
+  z-index: 100;
 }
 
-/* Hintergrundplatte */
-.bottom-nav-background {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 23, 42, 0) 0%,
-    rgba(15, 23, 42, 0.18) 20%,
-    rgba(15, 23, 42, 0.32) 100%
-  );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+html[data-theme="dark"] .bottom-nav {
+  background: #020617;
+  box-shadow: 0 -12px 28px rgba(0, 0, 0, 0.9);
 }
-
-/* Indikator (kleine Leiste) – optional */
-.bottom-nav-indicator {
-  position: absolute;
-  top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 52px;
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.35);
-}
-
-/* Buttons */
 
 .bottom-nav-item {
-  position: relative;
-  z-index: 1;
-  flex: 0 0 auto;
-  min-width: 90px;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.85);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
   font-size: 12px;
+  color: #6d4c41;
+  cursor: pointer;
 }
 
 .bottom-nav-icon {
   font-size: 20px;
 }
 
-.bottom-nav-item--active {
-  color: #ffd180;
+.bottom-nav-item--active .bottom-nav-icon,
+.bottom-nav-item--active span {
+  color: #fb8c00;
+  font-weight: 600;
 }
 
-/* ---------- Toast ---------- */
+/* Toast ---------------------------------------------------------- */
 
 .toast {
   position: fixed;
   left: 50%;
   bottom: 80px;
-  transform: translateX(-50%);
-  background: rgba(33, 33, 33, 0.92);
-  color: #fff;
-  padding: 8px 14px;
+  transform: translateX(-50%) translateY(24px);
+  padding: 10px 16px;
   border-radius: 999px;
-  font-size: 13px;
-  max-width: 90%;
-  text-align: center;
+  background: rgba(33, 33, 33, 0.95);
+  color: #fff;
+  font-size: 14px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
-  z-index: 900;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 200;
 }
 
-.toast.toast--visible {
+.toast--visible {
   opacity: 1;
-  transform: translateX(-50%) translateY(-6px);
+  transform: translateX(-50%) translateY(0);
 }
 
-/* ---------- Utility ---------- */
+/* About-Page ----------------------------------------------------- */
+
+.page-about {
+  padding: 14px 16px 96px;
+  background: var(--fs-bg-main);
+}
+
+.page-about h2,
+.page-about h3 {
+  color: var(--fs-text-main);
+}
+
+.page-about p {
+  color: var(--fs-text-soft);
+  font-size: 15px;
+}
+
+/* Hilfsklassen --------------------------------------------------- */
 
 .hidden {
   display: none !important;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
+.noscript-warning {
+  padding: 8px 12px;
+  background: #c62828;
+  color: #fff;
+  text-align: center;
 }
 
-/* ---------- Desktop / größere Screens ---------- */
+/* Screen > 900px: Sidebar links, Map rechts ---------------------- */
 
 @media (min-width: 900px) {
-  .app-main {
-    flex-direction: column;
-    padding-bottom: 0;
-  }
-
-  .view#view-map {
+  #view-map {
     flex-direction: row;
   }
 
   .sidebar {
     flex: 0 0 380px;
     max-width: 420px;
-    padding: 16px;
+    height: calc(100vh - 96px);
     overflow-y: auto;
+    padding-bottom: 120px;
   }
 
   .map-section {
-    flex: 1 1 auto;
-    padding: 16px 16px 16px 0;
+    flex: 1;
+    min-height: calc(100vh - 96px);
+  }
+
+  .map-container {
+    height: 100%;
   }
 
   .bottom-nav {
-    max-width: 480px;
-    margin: 0 auto;
-    left: 0;
-    right: 0;
-    bottom: 18px;
+    left: auto;
+    width: 360px;
+    right: 16px;
     border-radius: 999px;
-  }
-
-  .bottom-nav-background {
-    border-radius: 999px;
-  }
-
-  .toast {
-    bottom: 110px;
+    bottom: 12px;
   }
 }
