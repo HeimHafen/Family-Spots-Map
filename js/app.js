@@ -153,6 +153,7 @@ const UI_STRINGS = {
   }
 };
 
+// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert – gekürzt hier)
 const CATEGORY_LABELS = {
   wildpark: {
     de: "Wildpark & Safaripark",
@@ -383,10 +384,10 @@ let filteredSpots = [];
 let favorites = new Set();
 
 let plusActive = false;
-let moodFilter = null;
-let travelMode = null;
-let radiusStep = 4;
-let ageFilter = "all";
+let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
+let travelMode = null; // "everyday" | "trip" | null
+let radiusStep = 4; // 0–4
+let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
 let categoryFilter = "";
 let onlyBigAdventures = false;
@@ -489,13 +490,11 @@ function setLanguage(lang, { initial = false } = {}) {
     headerTaglineEl.textContent = t("header_tagline");
   }
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
-  if (bottomNavAboutLabelEl)
-    bottomNavAboutLabelEl.textContent = t("nav_about");
+  if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
 
   if (compassLabelEl) compassLabelEl.textContent = t("compass_title");
   if (compassHelperEl) compassHelperEl.textContent = t("compass_helper");
-  if (compassApplyLabelEl)
-    compassApplyLabelEl.textContent = t("compass_apply_label");
+  if (compassApplyLabelEl) compassApplyLabelEl.textContent = t("compass_apply_label");
 
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.querySelector("span").textContent = filtersCollapsed
@@ -523,20 +522,6 @@ function setLanguage(lang, { initial = false } = {}) {
     if (firstOption) firstOption.textContent = t("filter_category_all");
     populateCategoryOptions();
   }
-
-  // >>> NEU: About-Seite je nach Sprache umschalten
-  const aboutDe = document.getElementById("page-about-de");
-  const aboutEn = document.getElementById("page-about-en");
-  if (aboutDe && aboutEn) {
-    if (currentLang === "de") {
-      aboutDe.classList.remove("hidden");
-      aboutEn.classList.add("hidden");
-    } else {
-      aboutDe.classList.add("hidden");
-      aboutEn.classList.remove("hidden");
-    }
-  }
-  // <<< ENDE NEU
 
   if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
     tilla.onLanguageChanged();
@@ -856,6 +841,8 @@ function renderMarkers() {
 
     marker.bindPopup(popupHtml);
 
+    // WICHTIG: Nur das Leaflet-Popup benutzen.
+    // KEIN showSpotDetails() mehr hier, damit nichts die Karte überlagert.
     markersLayer.addLayer(marker);
   });
 }
@@ -1310,7 +1297,7 @@ function init() {
 
   initMap();
 
-  // Map-Klick schließt unser Detail-Panel
+  // Map-Klick schließt unser Detail-Panel, damit Leaflet-Popups frei sind
   if (map && spotDetailEl) {
     map.on("click", () => {
       spotDetailEl.classList.add("spot-details--hidden");
