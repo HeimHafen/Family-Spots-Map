@@ -524,6 +524,20 @@ function setLanguage(lang, { initial = false } = {}) {
     populateCategoryOptions();
   }
 
+  // >>> NEU: About-Seite je nach Sprache umschalten
+  const aboutDe = document.getElementById("page-about-de");
+  const aboutEn = document.getElementById("page-about-en");
+  if (aboutDe && aboutEn) {
+    if (currentLang === "de") {
+      aboutDe.classList.remove("hidden");
+      aboutEn.classList.add("hidden");
+    } else {
+      aboutDe.classList.add("hidden");
+      aboutEn.classList.remove("hidden");
+    }
+  }
+  // <<< ENDE NEU
+
   if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
     tilla.onLanguageChanged();
   }
