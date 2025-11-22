@@ -10,6 +10,7 @@ import { TillaCompanion } from "./tilla.js";
 // ------------------------------------------------------
 const UI_STRINGS = {
   de: {
+    // Fehler / Status
     error_data_load:
       "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
     toast_location_ok:
@@ -17,16 +18,20 @@ const UI_STRINGS = {
     toast_location_error:
       "Euer Standort lässt sich gerade nicht bestimmen. Vielleicht ist die Freigabe gesperrt oder ihr seid offline.",
 
+    // Buttons
     btn_show_list: "Liste zeigen",
     btn_only_map: "Nur Karte",
     btn_show_filters: "Filter anzeigen",
     btn_hide_filters: "Filter ausblenden",
 
+    // Favoriten
     toast_fav_added: "Zu euren Lieblingsspots gelegt 💛",
     toast_fav_removed: "Aus den Lieblingsspots entfernt.",
 
+    // Filter allgemein
     filter_category_all: "Alle Kategorien",
 
+    // Plus-Code
     plus_code_empty: "Bitte gib zuerst einen Aktions-Code ein.",
     plus_code_unknown: "Dieser Code ist unbekannt oder nicht mehr gültig.",
     plus_code_activated:
@@ -34,6 +39,7 @@ const UI_STRINGS = {
     plus_code_failed:
       "Der Code konnte gerade nicht geprüft werden. Versuch es später noch einmal.",
 
+    // Radius
     filter_radius_max_label: "Alle Spots",
     filter_radius_description_step0:
       "Mini-Microabenteuer zu Fuß erreichbar – perfekt für eine kurze Pause.",
@@ -46,6 +52,7 @@ const UI_STRINGS = {
     filter_radius_description_all:
       "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
 
+    // Tilla – Intro & Zustände
     turtle_intro_1:
       "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
     turtle_intro_2:
@@ -63,13 +70,16 @@ const UI_STRINGS = {
     turtle_plus_activated:
       "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
 
+    // Mein Tag
     daylog_saved:
       "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern.",
 
+    // Header / Navigation (dynamisch)
     header_tagline: "Heute ist Familientag.",
     nav_map: "Karte",
     nav_about: "Über",
 
+    // Familien-Kompass
     compass_title: "Familien-Kompass",
     compass_helper:
       "Keine Lust auf lange Planung? Ich helfe euch, den Radius passend zu heute zu wählen – Alltag oder Unterwegs-Modus.",
@@ -143,54 +153,120 @@ const UI_STRINGS = {
   }
 };
 
-// Kategorie-Labels & MASTER_CATEGORY_SLUGS wie gehabt (unverändert)
+// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert)
 const CATEGORY_LABELS = {
-  wildpark: { de: "Wildpark & Safaripark", en: "Wildlife & safari park" },
-  zoo: { de: "Zoo & Tierpark", en: "Zoo & animal park" },
-  freizeitpark: { de: "Freizeitpark", en: "Theme park" },
-  spielplatz: { de: "Spielplatz", en: "Playground" },
+  wildpark: {
+    de: "Wildpark & Safaripark",
+    en: "Wildlife & safari park"
+  },
+  zoo: {
+    de: "Zoo & Tierpark",
+    en: "Zoo & animal park"
+  },
+  freizeitpark: {
+    de: "Freizeitpark",
+    en: "Theme park"
+  },
+  spielplatz: {
+    de: "Spielplatz",
+    en: "Playground"
+  },
   abenteuerspielplatz: {
     de: "Abenteuerspielplatz",
     en: "Adventure playground"
   },
-  waldspielplatz: { de: "Waldspielplatz", en: "Forest playground" },
+  waldspielplatz: {
+    de: "Waldspielplatz",
+    en: "Forest playground"
+  },
   multifunktionsfeld: {
     de: "Sport- & Multifunktionsfeld",
     en: "Sports & multi-use court"
   },
-  pumptrack: { de: "Pumptrack", en: "Pump track" },
-  skatepark: { de: "Skatepark", en: "Skate park" },
+  pumptrack: {
+    de: "Pumptrack",
+    en: "Pump track"
+  },
+  skatepark: {
+    de: "Skatepark",
+    en: "Skate park"
+  },
   kinder_museum: {
     de: "Kinder- & Familienmuseum",
     en: "Children’s & family museum"
   },
-  "indoor-spielplatz": { de: "Indoor-Spielplatz", en: "Indoor playground" },
-  wasserspielplatz: { de: "Wasserspielplatz", en: "Water playground" },
-  bauernhof: { de: "Bauernhof", en: "Farm" },
-  schwimmbad: { de: "Schwimmbad", en: "Indoor pool" },
-  badesee: { de: "Badesee", en: "Swimming lake" },
-  "park-garten": { de: "Park & Garten", en: "Park & garden" },
-  picknickwiese: { de: "Picknickwiese", en: "Picnic meadow" },
+  "indoor-spielplatz": {
+    de: "Indoor-Spielplatz",
+    en: "Indoor playground"
+  },
+  wasserspielplatz: {
+    de: "Wasserspielplatz",
+    en: "Water playground"
+  },
+  bauernhof: {
+    de: "Bauernhof",
+    en: "Farm"
+  },
+  schwimmbad: {
+    de: "Schwimmbad",
+    en: "Indoor pool"
+  },
+  badesee: {
+    de: "Badesee",
+    en: "Swimming lake"
+  },
+  "park-garten": {
+    de: "Park & Garten",
+    en: "Park & garden"
+  },
+  picknickwiese: {
+    de: "Picknickwiese",
+    en: "Picnic meadow"
+  },
   "wanderweg-kinderwagen": {
     de: "Wanderweg mit Kinderwagen",
     en: "Trail suitable for strollers"
   },
-  "radweg-family": { de: "Familien-Radweg", en: "Family cycle route" },
+  "radweg-family": {
+    de: "Familien-Radweg",
+    en: "Family cycle route"
+  },
   bibliothek: {
     de: "Kinder- & Familienbibliothek",
     en: "Children’s & family library"
   },
-  minigolf: { de: "Minigolf", en: "Mini golf" },
-  kletterhalle: { de: "Kletterhalle", en: "Indoor climbing" },
+  minigolf: {
+    de: "Minigolf",
+    en: "Mini golf"
+  },
+  kletterhalle: {
+    de: "Kletterhalle",
+    en: "Indoor climbing"
+  },
   "kletteranlage-outdoor": {
     de: "Kletteranlage (outdoor)",
     en: "Outdoor climbing area"
   },
-  boulderpark: { de: "Boulderpark", en: "Bouldering park" },
-  trampolinpark: { de: "Trampolinpark", en: "Trampoline park" },
-  bolzplatz: { de: "Bolzplatz", en: "Kick-about pitch" },
-  bewegungspark: { de: "Bewegungspark", en: "Movement park" },
-  familiencafe: { de: "Familiencafé", en: "Family café" },
+  boulderpark: {
+    de: "Boulderpark",
+    en: "Bouldering park"
+  },
+  trampolinpark: {
+    de: "Trampolinpark",
+    en: "Trampoline park"
+  },
+  bolzplatz: {
+    de: "Bolzplatz",
+    en: "Kick-about pitch"
+  },
+  bewegungspark: {
+    de: "Bewegungspark",
+    en: "Movement park"
+  },
+  familiencafe: {
+    de: "Familiencafé",
+    en: "Family café"
+  },
   "familien-restaurant": {
     de: "Familien-Restaurant",
     en: "Family restaurant"
@@ -199,14 +275,26 @@ const CATEGORY_LABELS = {
     de: "Kinder- & Familiencafé",
     en: "Kids & family café"
   },
-  eisbahn: { de: "Eisbahn", en: "Ice rink" },
-  rodelhuegel: { de: "Rodelhügel", en: "Sledging hill" },
+  eisbahn: {
+    de: "Eisbahn",
+    en: "Ice rink"
+  },
+  rodelhuegel: {
+    de: "Rodelhügel",
+    en: "Sledging hill"
+  },
   "oeffentliche-toilette": {
     de: "Öffentliche Toilette",
     en: "Public toilet"
   },
-  wickelraum: { de: "Wickelraum", en: "Baby changing room" },
-  "familien-event": { de: "Familien-Event", en: "Family event" },
+  wickelraum: {
+    de: "Wickelraum",
+    en: "Baby changing room"
+  },
+  "familien-event": {
+    de: "Familien-Event",
+    en: "Family event"
+  },
   "rastplatz-spielplatz-dusche": {
     de: "Rastplatz mit Spielplatz & Dusche",
     en: "Rest area with playground & shower"
@@ -219,13 +307,22 @@ const CATEGORY_LABELS = {
     de: "Wohnmobil-Service-Station",
     en: "RV service station"
   },
-  "bikepacking-spot": { de: "Bikepacking-Spot", en: "Bikepacking spot" },
+  "bikepacking-spot": {
+    de: "Bikepacking-Spot",
+    en: "Bikepacking spot"
+  },
   "toddler-barfuss-motorik": {
     de: "Barfuß- & Motorikpfad (Kleinkind)",
     en: "Barefoot & motor skills trail (toddlers)"
   },
-  naturerlebnispfad: { de: "Naturerlebnispfad", en: "Nature discovery trail" },
-  walderlebnisroute: { de: "Walderlebnisroute", en: "Forest adventure route" }
+  naturerlebnispfad: {
+    de: "Naturerlebnispfad",
+    en: "Nature discovery trail"
+  },
+  walderlebnisroute: {
+    de: "Walderlebnisroute",
+    en: "Forest adventure route"
+  }
 };
 
 const MASTER_CATEGORY_SLUGS = [
@@ -287,10 +384,10 @@ let filteredSpots = [];
 let favorites = new Set();
 
 let plusActive = false;
-let moodFilter = null;
-let travelMode = null;
-let radiusStep = 4;
-let ageFilter = "all";
+let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
+let travelMode = null; // "everyday" | "trip" | null
+let radiusStep = 4; // 0–4
+let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
 let categoryFilter = "";
 let onlyBigAdventures = false;
@@ -330,10 +427,6 @@ let plusStatusTextEl;
 let daylogTextEl;
 let daylogSaveEl;
 let toastEl;
-
-// About-Seiten
-let pageAboutDeEl;
-let pageAboutEnEl;
 
 // Kompass
 let compassLabelEl;
@@ -386,6 +479,7 @@ function applyStaticI18n() {
   });
 }
 
+// Button-Beschriftung & ARIA aktualisieren
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
 
@@ -416,14 +510,16 @@ function setLanguage(lang, { initial = false } = {}) {
   if (compassApplyLabelEl)
     compassApplyLabelEl.textContent = t("compass_apply_label");
 
-  // About-Seite umschalten
-  if (pageAboutDeEl && pageAboutEnEl) {
+  // About-Seite DE/EN umschalten
+  const aboutDe = document.getElementById("page-about-de");
+  const aboutEn = document.getElementById("page-about-en");
+  if (aboutDe && aboutEn) {
     if (currentLang === "de") {
-      pageAboutDeEl.classList.remove("hidden");
-      pageAboutEnEl.classList.add("hidden");
+      aboutDe.classList.remove("hidden");
+      aboutEn.classList.add("hidden");
     } else {
-      pageAboutEnEl.classList.remove("hidden");
-      pageAboutDeEl.classList.add("hidden");
+      aboutEn.classList.remove("hidden");
+      aboutDe.classList.add("hidden");
     }
   }
 
@@ -1128,6 +1224,8 @@ function switchRoute(route) {
     }
   });
 
+  // Beim Wechsel immer nach oben scrollen,
+  // damit Karte / Über-Text direkt sichtbar sind
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1221,10 +1319,6 @@ function init() {
 
   toastEl = document.getElementById("toast");
 
-  // About-Pages
-  pageAboutDeEl = document.getElementById("page-about-de");
-  pageAboutEnEl = document.getElementById("page-about-en");
-
   // Kompass
   compassLabelEl = document.getElementById("compass-label");
   compassHelperEl = document.getElementById("compass-helper");
@@ -1240,6 +1334,7 @@ function init() {
 
   initMap();
 
+  // Map-Klick schließt unser Detail-Panel
   if (map && spotDetailEl) {
     map.on("click", () => {
       spotDetailEl.classList.add("spot-details--hidden");
@@ -1252,7 +1347,7 @@ function init() {
     getText: (key) => t(key)
   });
 
-  // Events
+  // Events – Sprache (Toggle via Button)
   if (languageSwitcherEl) {
     languageSwitcherEl.addEventListener("click", () => {
       const nextLang = currentLang === "de" ? "en" : "de";
