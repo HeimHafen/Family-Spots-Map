@@ -61,7 +61,6 @@ body {
   --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
   --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
-  /* unten kein schwarzer Schimmer mehr, Wert bleibt aber bestehen */
   --bottom-nav-backdrop: rgba(53, 30, 15, 0.82);
   --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
   --bottom-nav-item-color: #8a5a32;
@@ -217,13 +216,13 @@ body {
   gap: 8px;
 }
 
-/* Icon-Buttons (? | Theme | Locate) – KLEINER GEMACHT */
+/* Icon-Buttons (? | Theme | Locate) */
 .btn-icon {
   border: none;
   padding: 0;
   margin: 0;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -232,7 +231,7 @@ body {
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
     opacity 0.12s;
@@ -246,33 +245,37 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter als runder Icon-Button wie 🌗/📍 – KLEIN + TEXT MITTIG */
+/* Sprach-Umschalter als runder Icon-Button wie 🌗/📍 */
 .language-switcher {
   -webkit-appearance: none;
   appearance: none;
   border: none;
   padding: 0;
   margin: 0;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   background: var(--header-icon-bg);
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  color: #1a1309;
+  color: #1a1309;            /* Schrift im Hell-Mode */
   letter-spacing: 0.03em;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  line-height: 32px;  /* auf iOS vertikal mittig */
+  justify-content: center;   /* vertikal zentriert */
+  text-align: center;        /* HORIZONTAL zentriert */
   cursor: pointer;
 }
 
-/* Standard-Pfeil ausblenden */
+/* Dark-Mode: Text weiß */
+[data-theme="dark"] .language-switcher {
+  color: #fef3e7;
+}
+
+/* Pfeil verstecken – im Kreis soll nur "DE"/"EN" stehen */
 .language-switcher::after {
   content: "";
 }
@@ -803,14 +806,13 @@ select.input:focus {
 }
 
 /* Avatar – Tilla schaut nach rechts und schaukelt leicht */
-/* WIRD GRÖSSER GEMACHT */
 .tilla-sidebar-avatar {
   flex: 0 0 auto;
 }
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 76px;   /* vorher 60px */
+  width: 72px; /* etwas größer als vorher */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -869,14 +871,14 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 54px;            /* etwas kleiner */
+  height: 56px;            /* etwas kleiner */
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent; /* kein dunkler Balken */
+  background: transparent; /* kein eigener Hintergrund */
 }
 
-/* Schwarzer Schimmer komplett entfernen */
+/* Schwarzer, verschwommener Balken AUSBLENDEN */
 .bottom-nav-background {
   display: none;
 }
@@ -885,25 +887,24 @@ select.input:focus {
   display: none;
 }
 
-/* Items insgesamt kleiner */
+/* Buttons wie in deinem Bild 3: kleine Pills ohne dunklen Schimmer */
 .bottom-nav-item {
-  pointer-events: auto;
   border: none;
   background: var(--bottom-nav-item-bg);
   border-radius: 999px;
   padding: 4px 10px;
-  margin: 0 4px;
-  min-width: 64px;
+  margin: 0 6px;
+  min-width: 68px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
   box-shadow:
-    0 3px 9px rgba(0, 0, 0, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.35),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
