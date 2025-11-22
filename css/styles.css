@@ -1362,3 +1362,51 @@ body.onboarding-open {
   background: rgba(15, 23, 42, 0.98);
   color: #e5e7eb;
 }
+
+/* =========================================
+   ZUSÄTZE: LANGUAGE-CIRCLE, THEME-TEXT, VIEWS, TILLA
+   ========================================= */
+
+/* 2) Theme-abhängige Schriftfarbe für DE/EN-Text */
+:root[data-theme="light"] {
+  --text-primary: #000000;
+}
+
+[data-theme="dark"] {
+  --text-primary: #ffffff;
+}
+
+/* 1) Kreis mit DE/EN mittig – Ergänzungen zu bestehendem .language-circle */
+.language-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+.language-circle span {
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+/* 3) Karte / Über – View-Handling über aktive Klasse */
+#view-map {
+  display: none;
+}
+
+#view-about {
+  display: none;
+}
+
+.view--active {
+  display: block;
+}
+
+/* 4) Größere Schildkröten-Illustration (falls .tilla-icon benutzt wird) */
+.tilla-icon {
+  width: 4rem;
+  height: auto;
+}
