@@ -153,7 +153,7 @@ const UI_STRINGS = {
   }
 };
 
-// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert – gekürzt hier)
+// Kategorie-Labels & MASTER_CATEGORY_SLUGS (unverändert)
 const CATEGORY_LABELS = {
   wildpark: {
     de: "Wildpark & Safaripark",
@@ -841,8 +841,7 @@ function renderMarkers() {
 
     marker.bindPopup(popupHtml);
 
-    // WICHTIG: Nur das Leaflet-Popup benutzen.
-    // KEIN showSpotDetails() mehr hier, damit nichts die Karte überlagert.
+    // Nur Leaflet-Popup
     markersLayer.addLayer(marker);
   });
 }
@@ -1297,7 +1296,7 @@ function init() {
 
   initMap();
 
-  // Map-Klick schließt unser Detail-Panel, damit Leaflet-Popups frei sind
+  // Map-Klick schließt Detail-Panel
   if (map && spotDetailEl) {
     map.on("click", () => {
       spotDetailEl.classList.add("spot-details--hidden");
