@@ -153,7 +153,6 @@ const UI_STRINGS = {
   }
 };
 
-// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert – gekürzt hier)
 const CATEGORY_LABELS = {
   wildpark: {
     de: "Wildpark & Safaripark",
@@ -384,10 +383,10 @@ let filteredSpots = [];
 let favorites = new Set();
 
 let plusActive = false;
-let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
-let travelMode = null; // "everyday" | "trip" | null
-let radiusStep = 4; // 0–4
-let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
+let moodFilter = null;
+let travelMode = null;
+let radiusStep = 4;
+let ageFilter = "all";
 let searchTerm = "";
 let categoryFilter = "";
 let onlyBigAdventures = false;
@@ -484,21 +483,19 @@ function setLanguage(lang, { initial = false } = {}) {
   localStorage.setItem("fs_lang", currentLang);
   document.documentElement.lang = currentLang;
 
-  if (languageSwitcherEl) {
-    languageSwitcherEl.value = currentLang;
-    // wichtig für das zentrierte Fake-Label im Kreis
-    languageSwitcherEl.setAttribute("data-label", currentLang.toUpperCase());
-  }
+  if (languageSwitcherEl) languageSwitcherEl.value = currentLang;
 
   if (headerTaglineEl) {
     headerTaglineEl.textContent = t("header_tagline");
   }
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
-  if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
+  if (bottomNavAboutLabelEl)
+    bottomNavAboutLabelEl.textContent = t("nav_about");
 
   if (compassLabelEl) compassLabelEl.textContent = t("compass_title");
   if (compassHelperEl) compassHelperEl.textContent = t("compass_helper");
-  if (compassApplyLabelEl) compassApplyLabelEl.textContent = t("compass_apply_label");
+  if (compassApplyLabelEl)
+    compassApplyLabelEl.textContent = t("compass_apply_label");
 
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.querySelector("span").textContent = filtersCollapsed
@@ -845,7 +842,6 @@ function renderMarkers() {
 
     marker.bindPopup(popupHtml);
 
-    // Nur Leaflet-Popup benutzen
     markersLayer.addLayer(marker);
   });
 }
