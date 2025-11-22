@@ -484,7 +484,11 @@ function setLanguage(lang, { initial = false } = {}) {
   localStorage.setItem("fs_lang", currentLang);
   document.documentElement.lang = currentLang;
 
-  if (languageSwitcherEl) languageSwitcherEl.value = currentLang;
+  if (languageSwitcherEl) {
+    languageSwitcherEl.value = currentLang;
+    // wichtig für das zentrierte Fake-Label im Kreis
+    languageSwitcherEl.setAttribute("data-label", currentLang.toUpperCase());
+  }
 
   if (headerTaglineEl) {
     headerTaglineEl.textContent = t("header_tagline");
@@ -494,8 +498,7 @@ function setLanguage(lang, { initial = false } = {}) {
 
   if (compassLabelEl) compassLabelEl.textContent = t("compass_title");
   if (compassHelperEl) compassHelperEl.textContent = t("compass_helper");
-  if (compassApplyLabelEl)
-    compassApplyLabelEl.textContent = t("compass_apply_label");
+  if (compassApplyLabelEl) compassApplyLabelEl.textContent = t("compass_apply_label");
 
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.querySelector("span").textContent = filtersCollapsed
@@ -842,7 +845,7 @@ function renderMarkers() {
 
     marker.bindPopup(popupHtml);
 
-    // Nur Leaflet-Popup, kein Overlay mehr
+    // Nur Leaflet-Popup benutzen
     markersLayer.addLayer(marker);
   });
 }
