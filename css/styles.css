@@ -1,11 +1,9 @@
-/* =========================================================
-   Family Spots Map – styles.css
-   Mobile-first, helles Layout + Dark-Mode
+/* ======================================================
+   Family Spots Map – styles.css (stabil & mobile-first)
+   Stand: Fix Header/Tilla + Bottom-Nav
    ====================================================== */
 
-/* -------------------------
-   Reset & Base
-   ------------------------- */
+/* ---------- Reset & Base ---------- */
 
 *,
 *::before,
@@ -21,14 +19,586 @@ body {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  background: #fff7ef;
-  color: #3a2618;
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: #fdf3e8;
+  color: #3b2c23;
 }
 
-/* Hilfsklassen */
+/* Safari-iOS: 100dvh für bessere Vollhöhe */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Theming ---------- */
+
+:root {
+  --fs-color-orange: #fb8c00;
+  --fs-color-orange-soft: #ffe3ba;
+  --fs-color-cream: #fff7ef;
+  --fs-color-cream-strong: #f8dcc0;
+  --fs-color-text: #3b2c23;
+  --fs-color-text-soft: #775b48;
+  --fs-radius-lg: 18px;
+  --fs-radius-pill: 999px;
+  --fs-shadow-soft: 0 14px 30px rgba(0, 0, 0, 0.08);
+  --fs-shadow-card: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="dark"] {
+  --fs-color-orange: #ffb74d;
+  --fs-color-orange-soft: #2a1a08;
+  --fs-color-cream: #050816;
+  --fs-color-cream-strong: #0e1729;
+  --fs-color-text: #fdf5e7;
+  --fs-color-text-soft: #c7b3a1;
+  --fs-shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.65);
+  --fs-shadow-card: 0 22px 60px rgba(0, 0, 0, 0.9);
+}
+
+/* ---------- App Layout ---------- */
+
+.app-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at top left, #ffe5c1 0, #fdf3e8 45%, #f9e1c8 100%);
+  color: var(--fs-color-text);
+  /* Platz für die Bottom-Navigation, damit nichts darunter liegt */
+  padding-bottom: 78px;
+}
+
+/* ---------- Header ---------- */
+
+.app-header {
+  background: linear-gradient(135deg, var(--fs-color-orange) 0%, #ff9800 40%, #ffb74d 100%);
+  color: #fff;
+  padding: 8px 16px 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+  position: relative;
+  z-index: 10;
+}
+
+.app-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.app-header-left,
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-icon {
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--fs-color-text);
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+}
+
+/* Sprachwahl */
+.language-switcher {
+  border-radius: 999px;
+  border: none;
+  padding: 7px 16px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--fs-color-text);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Titelzeile */
+.app-header-main {
+  margin-top: 6px;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-flag {
+  font-size: 19px;
+}
+
+.header-title-spots {
+  background: rgba(255, 252, 244, 0.96);
+  color: #a4551c;
+  padding: 2px 10px 4px;
+  border-radius: var(--fs-radius-pill);
+}
+
+/* erste Zeile: Heute ist Familientag */
+.header-tagline {
+  margin: 5px 0 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* ---------- Sidebar / Map-View ---------- */
+
+.view {
+  display: none;
+  height: 100%;
+}
+
+.view.view--active {
+  display: block;
+}
+
+#view-map {
+  height: 100%;
+}
+
+#view-map .view {
+  height: 100%;
+}
+
+.app-main > #view-map {
+  height: 100%;
+}
+
+/* Karte + Sidebar */
+.view#view-map {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ---------- Sidebar ---------- */
+
+.sidebar {
+  padding: 14px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-section {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: var(--fs-radius-lg);
+  box-shadow: var(--fs-shadow-soft);
+  padding: 10px 12px 12px;
+}
+
+.sidebar-section--grow {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-section.hidden {
+  display: none;
+}
+
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 2px 0 10px;
+}
+
+.sidebar-section-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* Close-Button im Header */
+.sidebar-section-close {
+  width: 32px;
+  height: 32px;
+  font-size: 22px;
+  background: rgba(0, 0, 0, 0.04);
+  box-shadow: none;
+}
+
+/* ---------- Tilla-Karte ---------- */
+
+.tilla-sidebar-section {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.tilla-sidebar-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 14px 14px 14px 14px;
+  border-radius: var(--fs-radius-lg);
+  background: linear-gradient(135deg, #ffe7c5 0%, #fff7ef 40%, #ffe7c5 100%);
+  box-shadow: var(--fs-shadow-card);
+}
+
+.tilla-sidebar-avatar img {
+  width: 52px;
+  height: 52px;
+}
+
+.tilla-sidebar-text p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--fs-color-text-soft);
+}
+
+/* ---------- Kompass ---------- */
+
+.compass-card {
+  border-radius: calc(var(--fs-radius-lg) - 4px);
+  padding: 12px 12px 14px;
+  border: 2px dashed rgba(245, 124, 0, 0.4);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 244, 229, 0.9),
+    rgba(255, 255, 255, 0.96)
+  );
+}
+
+.filter-group-helper {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--fs-color-text-soft);
+}
+
+/* ---------- Form Controls / Filter ---------- */
+
+.filter-group {
+  margin-bottom: 12px;
+}
+
+.filter-group-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 10px 14px;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.98);
+  color: var(--fs-color-text);
+}
+
+.input:focus {
+  outline: 2px solid rgba(251, 140, 0, 0.5);
+  outline-offset: 1px;
+}
+
+/* Stimmung & Reise-Modus Chips */
+
+.mood-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mood-chip,
+.travel-chip {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: rgba(255, 255, 255, 0.98);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.mood-chip--active,
+.travel-chip--active {
+  border-color: rgba(251, 140, 0, 0.85);
+  background: linear-gradient(135deg, #ffe7c5 0, #ffd08a 100%);
+}
+
+/* Radius */
+
+.radius-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.radius-max-label {
+  font-size: 13px;
+  color: var(--fs-color-text-soft);
+}
+
+.radius-description {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--fs-color-text-soft);
+}
+
+/* Checkbox-Gruppen */
+
+.filter-group--checkbox .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  border: none;
+  border-radius: var(--fs-radius-pill);
+  background: linear-gradient(135deg, #ff9800 0%, #fb8c00 50%, #f57c00 100%);
+  color: #fff;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.btn-small {
+  padding: 7px 14px;
+  font-size: 14px;
+}
+
+.btn-ghost {
+  border-radius: var(--fs-radius-pill);
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  padding: 7px 16px;
+  background: rgba(255, 255, 255, 0.96);
+  font-size: 14px;
+}
+
+/* ---------- Spot-Liste ---------- */
+
+.spot-list {
+  margin-top: 4px;
+  padding-right: 2px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.spot-card {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 10px 13px 11px;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.06);
+  margin-bottom: 10px;
+}
+
+.spot-card-title {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.spot-card-subtitle {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--fs-color-text-soft);
+}
+
+.spot-card-meta {
+  margin: 0;
+  font-size: 13px;
+  color: var(--fs-color-text-soft);
+}
+
+/* ---------- Map Section ---------- */
+
+.map-section {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 260px;
+}
+
+.map-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* Detail-Pane rechts/unten */
+
+.spot-details {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+  padding: 10px 13px 11px;
+  max-height: 45%;
+  overflow-y: auto;
+  z-index: 550; /* unter Map-Popups, über Karte */
+}
+
+.spot-details--hidden {
+  display: none;
+}
+
+.popup-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Leaflet-Popups über Bottom-Nav */
+
+.leaflet-container a {
+  color: #1976d2;
+}
+
+.leaflet-pane {
+  z-index: 400;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 450;
+}
+
+/* ---------- About-Page ---------- */
+
+.page-about {
+  padding: 16px 14px 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  color: var(--fs-color-text);
+}
+
+.page-about h2 {
+  margin-top: 0;
+}
+
+.page-about.hidden {
+  display: none;
+}
+
+/* ---------- Bottom Navigation ---------- */
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 64px;
+  pointer-events: auto;
+}
+
+/* Hintergrundplatte */
+.bottom-nav-background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0) 0%,
+    rgba(15, 23, 42, 0.18) 20%,
+    rgba(15, 23, 42, 0.32) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Indikator (kleine Leiste) – optional */
+.bottom-nav-indicator {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Buttons */
+
+.bottom-nav-item {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  min-width: 90px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+}
+
+.bottom-nav-icon {
+  font-size: 20px;
+}
+
+.bottom-nav-item--active {
+  color: #ffd180;
+}
+
+/* ---------- Toast ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 80px;
+  transform: translateX(-50%);
+  background: rgba(33, 33, 33, 0.92);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  max-width: 90%;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+  z-index: 900;
+}
+
+.toast.toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-6px);
+}
+
+/* ---------- Utility ---------- */
 
 .hidden {
   display: none !important;
@@ -42,761 +612,47 @@ body {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
   border: 0;
 }
 
-/* -------------------------
-   App Layout
-   ------------------------- */
-
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* -------------------------
-   Header
-   ------------------------- */
-
-.app-header {
-  background: linear-gradient(135deg, #ff9800, #ffb74d);
-  color: #fff;
-  padding: 0.75rem 1rem 1.1rem;
-  position: relative;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-  z-index: 5;
-}
-
-/* kleine „helle“ Fläche unterhalb des Headers wie auf Bild 2/3 */
-.app-header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -18px;
-  height: 18px;
-  border-bottom-left-radius: 24px;
-  border-bottom-right-radius: 24px;
-  background: #ffeede;
-}
-
-/* obere Zeile: ? + Sprache / Theme + Locate */
-
-.app-header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.7rem;
-}
-
-.app-header-left,
-.app-header-right {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* Titelzeile */
-
-.app-header-main {
-  text-align: left;
-}
-
-.header-title {
-  margin: 0 0 0.35rem;
-  font-size: 1.4rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  flex-wrap: wrap;
-}
-
-.header-title-spots {
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  background: rgba(255, 244, 225, 0.9);
-  color: #8a4300;
-}
-
-.header-flag {
-  font-size: 1.1rem;
-}
-
-.header-tagline {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-/* -------------------------
-   Buttons & Inputs
-   ------------------------- */
-
-.btn-icon {
-  border: none;
-  outline: none;
-  border-radius: 999px;
-  padding: 0.45rem 0.6rem;
-  background: #ffeede;
-  color: #b13a00;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
-}
-
-.btn-icon:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.language-switcher {
-  border-radius: 999px;
-  border: none;
-  padding: 0.35rem 0.9rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  background: rgba(255, 248, 234, 0.9);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
-  color: #7f4312;
-}
-
-.btn,
-.btn-small,
-.btn-ghost {
-  border-radius: 999px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.btn {
-  padding: 0.65rem 1.1rem;
-  background: linear-gradient(to right, #ff9800, #ffb300);
-  color: #fff;
-  box-shadow: 0 5px 14px rgba(230, 118, 0, 0.6);
-}
-
-.btn-small {
-  padding: 0.5rem 0.9rem;
-  background: linear-gradient(to right, #ff9800, #ffb300);
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(230, 118, 0, 0.6);
-  font-size: 0.9rem;
-}
-
-.btn-ghost {
-  padding: 0.45rem 0.9rem;
-  background: #ffffff;
-  color: #744024;
-  border: 1px solid rgba(209, 139, 89, 0.45);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  font-size: 0.85rem;
-}
-
-.btn:active,
-.btn-small:active,
-.btn-ghost:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-}
-
-.input,
-textarea.input,
-select.input {
-  width: 100%;
-  border-radius: 999px;
-  border: 1px solid #f0cba1;
-  padding: 0.65rem 0.9rem;
-  font-size: 0.95rem;
-  font-family: inherit;
-  background: #fff;
-  color: #3a2618;
-}
-
-/* Textearea bleibt optisch rund, aber mehr Höhe */
-textarea.input {
-  border-radius: 1rem;
-}
-
-/* -------------------------
-   Main Layout
-   ------------------------- */
-
-.app-main {
-  flex: 1;
-  background: radial-gradient(circle at top, #ffeede 0, #fff7ef 40%, #fff 100%);
-  padding: 1.4rem 0.9rem 6.5rem; /* unten extra Platz für Bottom-Navigation + iOS-Bar */
-}
-
-/* Map-View Layout */
-
-.view {
-  display: none;
-}
-
-.view.view--active {
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-/* Sidebar-Sektionen */
-
-.sidebar-section {
-  background: #fff;
-  border-radius: 18px;
-  padding: 0.75rem 0.9rem;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-.sidebar-section--grow {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar-section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.45rem;
-}
-
-.sidebar-section-title {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-/* kleines X rechts oben auf Karten */
-.sidebar-section-close.btn-icon {
-  padding: 0.25rem 0.45rem;
-  box-shadow: none;
-  background: #f9f2ea;
-}
-
-/* Filter-Body (alles außer Header) wird über JS versteckt/gezeigt */
-.sidebar-section .filter-group,
-.sidebar-section .mood-row,
-.sidebar-section .radius-row,
-.sidebar-section .filter-group--checkbox,
-.sidebar-section .spot-list {
-  transition: opacity 0.2s ease, max-height 0.2s ease;
-}
-
-/* -------------------------
-   Tilla – kleine Begleiter-Karte
-   ------------------------- */
-
-.tilla-sidebar-section {
-  padding-top: 0;
-}
-
-.tilla-sidebar-card {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  background: #ffe6c9;
-  border-radius: 18px;
-  padding: 0.8rem 0.9rem;
-  box-shadow: 0 5px 14px rgba(201, 124, 41, 0.35);
-}
-
-.tilla-sidebar-avatar img {
-  width: 46px;
-  height: 46px;
-  display: block;
-}
-
-.tilla-sidebar-text {
-  font-size: 0.95rem;
-  line-height: 1.4;
-  color: #5a3516;
-}
-
-/* -------------------------
-   Filtergruppen
-   ------------------------- */
-
-.filter-group {
-  margin-bottom: 0.6rem;
-}
-
-.filter-group-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin-bottom: 0.2rem;
-}
-
-.filter-group-helper {
-  margin: 0 0 0.35rem;
-  font-size: 0.8rem;
-  color: #7b6a5c;
-}
-
-/* Stimmung / Reise-Chips */
-
-.mood-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.mood-chip,
-.travel-chip {
-  border-radius: 999px;
-  border: 1px solid #e0c5a6;
-  background: #ffffff;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  cursor: pointer;
-}
-
-.mood-chip-emoji {
-  font-size: 1rem;
-}
-
-.mood-chip--active,
-.travel-chip--active {
-  background: #ffe6c9;
-  border-color: #ff9800;
-  box-shadow: 0 3px 8px rgba(255, 152, 0, 0.4);
-}
-
-/* Radius-Slider */
-
-.radius-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
-}
-
-.radius-max-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #a15b11;
-}
-
-.radius-description {
-  margin: 0;
-  font-size: 0.8rem;
-  color: #7b6a5c;
-}
-
-/* Checkbox-Gruppen */
-
-.filter-group--checkbox {
-  margin-top: 0.3rem;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.88rem;
-}
-
-/* -------------------------
-   Spot-Liste
-   ------------------------- */
-
-.spot-list {
-  margin-top: 0.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  overflow-y: auto;
-  max-height: 26rem;
-  padding-bottom: 0.6rem;
-}
-
-.spot-card {
-  background: #fffdf9;
-  border-radius: 16px;
-  padding: 0.6rem 0.75rem 0.7rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1dec6;
-  cursor: pointer;
-}
-
-.spot-card-title {
-  margin: 0;
-  font-size: 0.98rem;
-  font-weight: 700;
-}
-
-.spot-card-subtitle {
-  margin: 0.15rem 0 0.15rem;
-  font-size: 0.85rem;
-  color: #756055;
-}
-
-.spot-card-meta {
-  margin: 0.15rem 0 0;
-  font-size: 0.78rem;
-  color: #8a6b54;
-}
-
-/* pop-up actions in Detail-Panel */
-
-.popup-actions {
-  margin-top: 0.45rem;
-  display: flex;
-  gap: 0.4rem;
-}
-
-/* -------------------------
-   Map + Detail-Panel
-   ------------------------- */
-
-.map-section {
-  margin-top: 0.9rem;
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-}
-
-.map-container {
-  width: 100%;
-  height: 360px;
-}
-
-/* Leaflet-Default etwas „freundlicher“ */
-
-.leaflet-container {
-  font: inherit;
-}
-
-.leaflet-popup-content-wrapper {
-  border-radius: 14px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-}
-
-.leaflet-popup-content {
-  margin: 0.45rem 0.6rem;
-  font-size: 0.9rem;
-}
-
-/* unsere Spot-Detail-Karte am rechten Rand – erstmal dezent */
-
-.spot-details {
-  position: absolute;
-  right: 0.75rem;
-  bottom: 4.2rem;
-  max-width: 320px;
-  width: calc(100% - 1.5rem);
-  background: #fffdf9;
-  border-radius: 18px;
-  padding: 0.7rem 0.9rem 0.8rem;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
-  border: 1px solid #f2ddc3;
-  z-index: 4;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.spot-details--hidden {
-  opacity: 0;
-  transform: translateY(10px);
-  pointer-events: none;
-}
-
-/* -------------------------
-   Marker (Cluster) – „Bubble“-Pins
-   ------------------------- */
-
-.spot-marker {
-  width: 24px;
-  height: 24px;
-}
-
-.spot-marker-inner {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #ffe0b2 0, #ff9800 40%, #e65100 100%);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6), 0 6px 12px rgba(0, 0, 0, 0.45);
-}
-
-/* -------------------------
-   Bottom Navigation
-   ------------------------- */
-
-.bottom-nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 0.35rem 1.5rem 0.75rem;
-  z-index: 50;
-  pointer-events: none; /* Buttons selbst haben pointer-events wieder an */
-}
-
-.bottom-nav-background {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(40, 23, 10, 0.3),
-    rgba(40, 23, 10, 0)
-  );
-}
-
-.bottom-nav-indicator {
-  display: none; /* aktuell nicht genutzt, könnte später animiert werden */
-}
-
-.bottom-nav-item {
-  pointer-events: auto;
-  border: none;
-  background: #fffdf9;
-  color: #7a5a3a;
-  border-radius: 999px;
-  padding: 0.25rem 1.1rem 0.35rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
-
-.bottom-nav-item + .bottom-nav-item {
-  margin-left: 0.8rem;
-}
-
-.bottom-nav-item--active {
-  background: linear-gradient(to right, #ff9800, #ffb300);
-  color: #fff;
-}
-
-.bottom-nav-icon {
-  font-size: 1.05rem;
-}
-
-/* Zentrierung der zwei Buttons */
-
-.bottom-nav > *:not(.bottom-nav-background):not(.bottom-nav-indicator) {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  gap: 0.8rem;
-}
-
-/* -------------------------
-   Toast
-   ------------------------- */
-
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 4.8rem;
-  transform: translateX(-50%) translateY(18px);
-  background: #333;
-  color: #fff;
-  border-radius: 999px;
-  padding: 0.55rem 1rem;
-  font-size: 0.87rem;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 60;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.toast.toast--visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* -------------------------
-   About-Seite
-   ------------------------- */
-
-.page {
-  background: #fffdf9;
-  border-radius: 18px;
-  padding: 1rem 1rem 1.2rem;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.page-about h2 {
-  margin-top: 0;
-}
-
-.page-about p {
-  margin-top: 0.4rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.93rem;
-  line-height: 1.5;
-}
-
-.page-about hr {
-  border: none;
-  border-top: 1px solid #f0dac2;
-  margin: 0.9rem 0;
-}
-
-/* -------------------------
-   Dark Theme
-   ------------------------- */
-
-html[data-theme="dark"] body {
-  background: #050712;
-  color: #f4ede6;
-}
-
-html[data-theme="dark"] .app-header {
-  background: radial-gradient(circle at top left, #ffb74d 0, #ff9800 20%, #050712 68%, #050712 100%);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.8);
-}
-
-html[data-theme="dark"] .app-header::after {
-  background: #071020;
-}
-
-html[data-theme="dark"] .header-title-spots {
-  background: rgba(255, 248, 225, 0.12);
-  color: #ffe0b2;
-}
-
-html[data-theme="dark"] .language-switcher,
-html[data-theme="dark"] .btn-icon {
-  background: #111627;
-  color: #ffe0b2;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.9);
-}
-
-html[data-theme="dark"] .app-main {
-  background: radial-gradient(circle at top, #14192b 0, #050712 55%, #050712 100%);
-}
-
-html[data-theme="dark"] .sidebar-section,
-html[data-theme="dark"] .page {
-  background: #101523;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
-  border: 1px solid #252c42;
-}
-
-html[data-theme="dark"] .tilla-sidebar-card {
-  background: #1e2439;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
-}
-
-html[data-theme="dark"] .input,
-html[data-theme="dark"] textarea.input,
-html[data-theme="dark"] select.input {
-  background: #060914;
-  color: #f4ede6;
-  border-color: #313852;
-}
-
-html[data-theme="dark"] .filter-group-helper,
-html[data-theme="dark"] .spot-card-subtitle,
-html[data-theme="dark"] .spot-card-meta {
-  color: #c7c0ba;
-}
-
-html[data-theme="dark"] .btn,
-html[data-theme="dark"] .btn-small {
-  background: linear-gradient(to right, #ffb74d, #ff9800);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 1);
-}
-
-html[data-theme="dark"] .btn-ghost {
-  background: transparent;
-  border-color: #39415d;
-  color: #f4ede6;
-}
-
-html[data-theme="dark"] .spot-card {
-  background: #0e1220;
-  border-color: #2d3351;
-}
-
-html[data-theme="dark"] .map-section {
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 1);
-}
-
-html[data-theme="dark"] .spot-details {
-  background: #0e1220;
-  border-color: #2d3351;
-}
-
-html[data-theme="dark"] .bottom-nav-item {
-  background: #0e1220;
-  color: #f4ede6;
-}
-
-html[data-theme="dark"] .bottom-nav-item--active {
-  background: linear-gradient(to right, #ffb74d, #ff9800);
-  color: #050712;
-}
-
-html[data-theme="dark"] .toast {
-  background: #111627;
-}
-
-/* -------------------------
-   Größere Screens
-   ------------------------- */
+/* ---------- Desktop / größere Screens ---------- */
 
 @media (min-width: 900px) {
   .app-main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1.8rem 1.2rem 6.5rem;
+    flex-direction: column;
+    padding-bottom: 0;
   }
 
-  .view.view--active {
+  .view#view-map {
     flex-direction: row;
-    align-items: flex-start;
-    gap: 1.1rem;
   }
 
   .sidebar {
-    flex: 0 0 360px;
-    max-height: calc(100vh - 180px);
+    flex: 0 0 380px;
+    max-width: 420px;
+    padding: 16px;
     overflow-y: auto;
   }
 
   .map-section {
-    flex: 1;
-    margin-top: 0;
-    height: calc(100vh - 190px);
+    flex: 1 1 auto;
+    padding: 16px 16px 16px 0;
   }
 
-  .map-container {
-    height: 100%;
+  .bottom-nav {
+    max-width: 480px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    border-radius: 999px;
   }
 
-  .spot-list {
-    max-height: none;
+  .bottom-nav-background {
+    border-radius: 999px;
   }
 
-  .spot-details {
-    bottom: 5.2rem;
-    right: 1.4rem;
+  .toast {
+    bottom: 110px;
   }
 }
