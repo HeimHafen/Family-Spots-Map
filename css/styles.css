@@ -124,7 +124,7 @@ body {
   --bottom-nav-item-bg: rgba(15, 23, 42, 0.98);
   --bottom-nav-item-color: #e5e7eb;
   --bottom-nav-item-active-bg: #f59e0b;
-  --bottom-nav-item-active-color: #111827;
+  --bottom-nav-item-active-color: #fef3e7;
 
   --toast-bg: rgba(15, 23, 42, 0.98);
 
@@ -221,8 +221,8 @@ body {
   border: none;
   padding: 0;
   margin: 0;
-  width: 40px;
-  height: 40px;
+  width: 34px;   /* kleiner */
+  height: 34px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -231,7 +231,7 @@ body {
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
     opacity 0.12s;
@@ -252,32 +252,48 @@ body {
   border: none;
   padding: 0;
   margin: 0;
-  width: 40px;
-  height: 40px;
+  width: 34px;   /* gleich groß wie andere */
+  height: 34px;
   border-radius: 999px;
   background: var(--header-icon-bg);
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: #1a1309;            /* Schrift im Hell-Mode */
-  letter-spacing: 0.03em;
+  color: transparent;       /* Text selbst ausblenden, wir zeichnen ihn mit ::before */
+  letter-spacing: 0.04em;
   display: inline-flex;
   align-items: center;
-  justify-content: center;   /* vertikal zentriert */
-  text-align: center;        /* HORIZONTAL zentriert */
+  justify-content: center;
   cursor: pointer;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Dark-Mode: Text weiß */
-[data-theme="dark"] .language-switcher {
-  color: #fef3e7;
+/* Fake-Label zentriert im Kreis (DE/EN) */
+.language-switcher::before {
+  content: attr(data-label);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1309;
+  pointer-events: none;
 }
 
 /* Pfeil verstecken – im Kreis soll nur "DE"/"EN" stehen */
 .language-switcher::after {
   content: "";
+}
+
+/* Dark Mode – Text im Kreis weiß */
+[data-theme="dark"] .language-switcher::before {
+  color: #fef3e7;
 }
 
 /* Hauptzeile mit Titel + Claim */
@@ -812,7 +828,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 72px; /* etwas größer als vorher */
+  width: 60px;
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -871,14 +887,14 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 56px;            /* etwas kleiner */
+  height: 56px;            /* etwas niedriger, wie Bild 3 */
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  background: transparent; /* kein eigener Hintergrund */
+  background: transparent;
 }
 
-/* Schwarzer, verschwommener Balken AUSBLENDEN */
+/* Schwarzer Schimmer komplett weg */
 .bottom-nav-background {
   display: none;
 }
@@ -887,50 +903,42 @@ select.input:focus {
   display: none;
 }
 
-/* Buttons wie in deinem Bild 3: kleine Pills ohne dunklen Schimmer */
+/* Buttons: nur Icon + Label, ohne Pill-Hintergrund */
 .bottom-nav-item {
+  pointer-events: auto;
   border: none;
-  background: var(--bottom-nav-item-bg);
-  border-radius: 999px;
-  padding: 4px 10px;
-  margin: 0 6px;
-  min-width: 68px;
+  background: transparent;
+  border-radius: 0;
+  padding: 0 18px 6px;
+  margin: 0;
+  min-width: auto;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.35),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  box-shadow: none;
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+  transition: transform 0.08s ease-out;
 }
 
 .bottom-nav-item--active {
-  background: var(--bottom-nav-item-active-bg);
   color: var(--bottom-nav-item-active-color);
 }
 
-/* Dark Mode – aktiver Nav-Pill etwas softer */
 [data-theme="dark"] .bottom-nav-item--active {
-  box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.7),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  box-shadow: none;
 }
 
 .bottom-nav-item:active {
-  transform: translateY(1px) scale(0.97);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  transform: translateY(1px);
 }
 
 .bottom-nav-icon {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 /* =========================================
