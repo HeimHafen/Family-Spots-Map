@@ -479,12 +479,25 @@ function applyStaticI18n() {
   });
 }
 
+// Button-Beschriftung & ARIA aktualisieren
+function updateLanguageSwitcherVisual() {
+  if (!languageSwitcherEl) return;
+
+  const label = currentLang === "de" ? "DE" : "EN";
+  languageSwitcherEl.textContent = label;
+
+  languageSwitcherEl.setAttribute(
+    "aria-label",
+    currentLang === "de"
+      ? "Sprache: Deutsch (Tippen für Englisch)"
+      : "Language: English (tap for German)"
+  );
+}
+
 function setLanguage(lang, { initial = false } = {}) {
   currentLang = lang === "en" ? "en" : "de";
   localStorage.setItem("fs_lang", currentLang);
   document.documentElement.lang = currentLang;
-
-  if (languageSwitcherEl) languageSwitcherEl.value = currentLang;
 
   if (headerTaglineEl) {
     headerTaglineEl.textContent = t("header_tagline");
@@ -494,7 +507,8 @@ function setLanguage(lang, { initial = false } = {}) {
 
   if (compassLabelEl) compassLabelEl.textContent = t("compass_title");
   if (compassHelperEl) compassHelperEl.textContent = t("compass_helper");
-  if (compassApplyLabelEl) compassApplyLabelEl.textContent = t("compass_apply_label");
+  if (compassApplyLabelEl)
+    compassApplyLabelEl.textContent = t("compass_apply_label");
 
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.querySelector("span").textContent = filtersCollapsed
@@ -515,6 +529,13 @@ function setLanguage(lang, { initial = false } = {}) {
         : "Place, spot, keywords …";
   }
 
+  if (daylogTextEl) {
+    daylogTextEl.placeholder =
+      currentLang === "de"
+        ? "Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
+        : "Today we went to the wildlife park – the goats were sooo cute!";
+  }
+
   updateRadiusTexts();
 
   if (filterCategoryEl) {
@@ -527,6 +548,7 @@ function setLanguage(lang, { initial = false } = {}) {
     tilla.onLanguageChanged();
   }
 
+  updateLanguageSwitcherVisual();
   applyStaticI18n();
 }
 
@@ -841,8 +863,7 @@ function renderMarkers() {
 
     marker.bindPopup(popupHtml);
 
-    // WICHTIG: Nur das Leaflet-Popup benutzen.
-    // KEIN showSpotDetails() mehr hier, damit nichts die Karte überlagert.
+    // Nur Leaflet-Popup benutzen.
     markersLayer.addLayer(marker);
   });
 }
@@ -1297,7 +1318,7 @@ function init() {
 
   initMap();
 
-  // Map-Klick schließt unser Detail-Panel, damit Leaflet-Popups frei sind
+  // Map-Klick schließt unser Detail-Panel
   if (map && spotDetailEl) {
     map.on("click", () => {
       spotDetailEl.classList.add("spot-details--hidden");
@@ -1310,10 +1331,11 @@ function init() {
     getText: (key) => t(key)
   });
 
-  // Events – Sprache
+  // Events – Sprache (Toggle via Button)
   if (languageSwitcherEl) {
-    languageSwitcherEl.addEventListener("change", (e) => {
-      setLanguage(e.target.value);
+    languageSwitcherEl.addEventListener("click", () => {
+      const nextLang = currentLang === "de" ? "en" : "de";
+      setLanguage(nextLang);
     });
   }
 
@@ -1476,14 +1498,3 @@ function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
-
-// ------------------------------------------------------
-// ZUSÄTZLICH EINGEFÜGT: Sprach-Listener (ohne bestehenden Code zu ändern)
-// ------------------------------------------------------
-languageSwitcherEl = document.getElementById("language-switcher");
-
-if (languageSwitcherEl) {
-  languageSwitcherEl.addEventListener("change", (e) => {
-    setLanguage(e.target.value);
-  });
-}
