@@ -147,10 +147,7 @@
             <!-- Familien-Kompass -->
             <details class="sidebar-section" id="compass-section" open>
               <summary class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  id="compass-label"
-                >
+                <h2 class="sidebar-section-title" id="compass-label">
                   <!-- Wird per JS gesetzt -->
                 </h2>
                 <button
@@ -474,10 +471,7 @@
 
               <!-- Checkboxen -->
               <div class="filter-group filter-group--checkbox">
-                <label
-                  class="checkbox-label"
-                  id="filter-big-label"
-                >
+                <label class="checkbox-label" id="filter-big-label">
                   <input id="filter-big-adventures" type="checkbox" />
                   <span
                     data-i18n-de="Nur große Abenteuer"
@@ -489,10 +483,7 @@
               </div>
 
               <div class="filter-group filter-group--checkbox">
-                <label
-                  class="checkbox-label"
-                  id="filter-verified-label"
-                >
+                <label class="checkbox-label" id="filter-verified-label">
                   <input id="filter-verified" type="checkbox" />
                   <span
                     data-i18n-de="Nur verifizierte Spots"
@@ -504,10 +495,7 @@
               </div>
 
               <div class="filter-group filter-group--checkbox">
-                <label
-                  class="checkbox-label"
-                  id="filter-favs-label"
-                >
+                <label class="checkbox-label" id="filter-favs-label">
                   <input id="filter-favorites" type="checkbox" />
                   <span
                     data-i18n-de="Nur Favoriten"
@@ -582,11 +570,7 @@
                     type="text"
                     autocomplete="off"
                   />
-                  <button
-                    id="plus-code-submit"
-                    class="btn"
-                    type="button"
-                  >
+                  <button id="plus-code-submit" class="btn" type="button">
                     <span
                       data-i18n-de="Code aktivieren"
                       data-i18n-en="Activate code"
@@ -640,11 +624,7 @@
                   rows="3"
                   placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
                 ></textarea>
-                <button
-                  id="daylog-save"
-                  class="btn btn-small"
-                  type="button"
-                >
+                <button id="daylog-save" class="btn btn-small" type="button">
                   <span
                     data-i18n-de="Speichern 💾"
                     data-i18n-en="Save 💾"
@@ -674,11 +654,7 @@
           aria-label="Über Family Spots Map"
         >
           <!-- Deutsch -->
-          <article
-            id="page-about-de"
-            class="page page-about"
-            lang="de"
-          >
+          <article id="page-about-de" class="page page-about" lang="de">
             <h2>Über Family Spots Map</h2>
 
             <!-- Tilla-Hero wird von js/tilla.js dynamisch hier eingefügt -->
@@ -975,6 +951,7 @@
           class="bottom-nav-item bottom-nav-item--active"
           type="button"
           data-route="map"
+          aria-current="page"
         >
           <span class="bottom-nav-icon" aria-hidden="true">🗺️</span>
           <span id="bottom-nav-map-label">Karte</span>
@@ -984,6 +961,7 @@
           class="bottom-nav-item"
           type="button"
           data-route="about"
+          aria-current="false"
         >
           <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
           <span id="bottom-nav-about-label">Über</span>
