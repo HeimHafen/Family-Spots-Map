@@ -61,6 +61,7 @@ body {
   --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
   --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
+  /* unten kein schwarzer Schimmer mehr, Wert bleibt aber bestehen */
   --bottom-nav-backdrop: rgba(53, 30, 15, 0.82);
   --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
   --bottom-nav-item-color: #8a5a32;
@@ -192,7 +193,7 @@ body {
 .app-header {
   position: sticky;
   top: 0;
-  z-index: 1200;
+  z-index: 1200; /* Header klar über der Karte / Leaflet-Panes */
   padding: 10px 14px 14px;
   background: linear-gradient(135deg, var(--header-bg-top), var(--header-bg-bottom));
   color: var(--header-text-color);
@@ -216,7 +217,7 @@ body {
   gap: 8px;
 }
 
-/* Icon-Buttons (? | Theme | Locate) – KLEINER */
+/* Icon-Buttons (? | Theme | Locate) – KLEINER GEMACHT */
 .btn-icon {
   border: none;
   padding: 0;
@@ -245,7 +246,7 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter jetzt als BUTTON, kleiner & mittig */
+/* Sprach-Umschalter als runder Icon-Button wie 🌗/📍 – KLEIN + TEXT MITTIG */
 .language-switcher {
   -webkit-appearance: none;
   appearance: none;
@@ -254,20 +255,26 @@ body {
   margin: 0;
   width: 32px;
   height: 32px;
-  min-width: 32px;
   border-radius: 999px;
   background: var(--header-icon-bg);
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: #1a1309;
   letter-spacing: 0.03em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  line-height: 32px;  /* auf iOS vertikal mittig */
   cursor: pointer;
+}
+
+/* Standard-Pfeil ausblenden */
+.language-switcher::after {
+  content: "";
 }
 
 /* Hauptzeile mit Titel + Claim */
@@ -795,14 +802,15 @@ select.input:focus {
     inset 0 0 0 1px rgba(148, 163, 184, 0.45);
 }
 
-/* Avatar – Tilla etwas größer */
+/* Avatar – Tilla schaut nach rechts und schaukelt leicht */
+/* WIRD GRÖSSER GEMACHT */
 .tilla-sidebar-avatar {
   flex: 0 0 auto;
 }
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 76px;
+  width: 76px;   /* vorher 60px */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -861,13 +869,14 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 56px; /* etwas kleiner */
+  height: 54px;            /* etwas kleiner */
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent; /* kein dunkler Balken */
 }
 
-/* Schwarzer Schimmer komplett entfernt */
+/* Schwarzer Schimmer komplett entfernen */
 .bottom-nav-background {
   display: none;
 }
@@ -876,25 +885,25 @@ select.input:focus {
   display: none;
 }
 
-/* kleinere Pills wie im zweiten Screenshot */
+/* Items insgesamt kleiner */
 .bottom-nav-item {
   pointer-events: auto;
   border: none;
   background: var(--bottom-nav-item-bg);
   border-radius: 999px;
   padding: 4px 10px;
-  margin: 0 6px;
-  min-width: 68px;
+  margin: 0 4px;
+  min-width: 64px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
   box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.35),
+    0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
@@ -915,7 +924,7 @@ select.input:focus {
 .bottom-nav-item:active {
   transform: translateY(1px) scale(0.97);
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
