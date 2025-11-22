@@ -66,20 +66,15 @@
               ❓
             </button>
 
-            <!-- NEU: Sprachwahl im Kreis -->
-            <div class="language-circle">
-              <label for="language-switcher" class="sr-only">
-                Sprache auswählen
-              </label>
-              <select
-                id="language-switcher"
-                class="language-switcher"
-                aria-label="Sprache auswählen"
-              >
-                <option value="de">DE</option>
-                <option value="en">EN</option>
-              </select>
-            </div>
+            <!-- Runder DE/EN-Button -->
+            <button
+              id="language-switcher"
+              class="language-switcher"
+              type="button"
+              aria-label="Sprache: Deutsch (Tippen für Englisch)"
+            >
+              DE
+            </button>
           </div>
 
           <div class="app-header-right">
@@ -1003,31 +998,5 @@
 
     <!-- App (als ES-Modul) -->
     <script type="module" src="./js/app.js"></script>
-
-    <!-- Kleines Script nur für das Daylog-Placeholder (DE/EN) -->
-    <script>
-      (function () {
-        const textarea = document.getElementById("daylog-text");
-        const languageSelect = document.getElementById("language-switcher");
-        if (!textarea || !languageSelect) return;
-
-        const placeholders = {
-          de: "Heute waren wir im Wildpark – die Ziegen waren sooo süß!",
-          en: "Today we went to the wildlife park – the goats were sooo cute!",
-        };
-
-        function updatePlaceholder(lang) {
-          textarea.placeholder = placeholders[lang] || placeholders.de;
-        }
-
-        const initialLang =
-          languageSelect.value || document.documentElement.lang || "de";
-        updatePlaceholder(initialLang);
-
-        languageSelect.addEventListener("change", () => {
-          updatePlaceholder(languageSelect.value);
-        });
-      })();
-    </script>
   </body>
 </html>
