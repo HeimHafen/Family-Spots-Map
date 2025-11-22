@@ -428,6 +428,10 @@ let daylogTextEl;
 let daylogSaveEl;
 let toastEl;
 
+// About-Seiten
+let aboutDeEl;
+let aboutEnEl;
+
 // Kompass
 let compassLabelEl;
 let compassHelperEl;
@@ -536,12 +540,25 @@ function setLanguage(lang, { initial = false } = {}) {
         : "Today we went to the wildlife park – the goats were sooo cute!";
   }
 
+  // Radius-Texte
   updateRadiusTexts();
 
+  // Kategorie-Dropdown
   if (filterCategoryEl) {
     const firstOption = filterCategoryEl.querySelector("option[value='']");
     if (firstOption) firstOption.textContent = t("filter_category_all");
     populateCategoryOptions();
+  }
+
+  // About-Seiten umschalten (DE/EN)
+  if (aboutDeEl && aboutEnEl) {
+    if (currentLang === "de") {
+      aboutDeEl.classList.remove("hidden");
+      aboutEnEl.classList.add("hidden");
+    } else {
+      aboutDeEl.classList.add("hidden");
+      aboutEnEl.classList.remove("hidden");
+    }
   }
 
   if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
@@ -1192,28 +1209,35 @@ function handleLocateClick() {
 // ------------------------------------------------------
 // Navigation (Karte / Über)
 // ------------------------------------------------------
-// Hier ist deine "initViewSwitching"-Logik in switchRoute integriert.
 function switchRoute(route) {
   if (!viewMapEl || !viewAboutEl || !bottomNavButtons) return;
 
-  // 1) Views umschalten
-  if (route === "about") {
-    viewMapEl.classList.remove("view--active");
+  const target = route === "about" ? "about" : "map";
+
+  // Views umschalten
+  viewMapEl.classList.remove("view--active");
+  viewAboutEl.classList.remove("view--active");
+  if (target === "about") {
     viewAboutEl.classList.add("view--active");
   } else {
-    viewAboutEl.classList.remove("view--active");
     viewMapEl.classList.add("view--active");
-    route = "map"; // Sicherheitsfallback
   }
 
-  // 2) Buttons optisch umschalten
+  // Buttons optisch umschalten
   bottomNavButtons.forEach((btn) => {
     const btnRoute = btn.getAttribute("data-route");
-    btn.classList.toggle("bottom-nav-item--active", btnRoute === route);
+    btn.classList.toggle("bottom-nav-item--active", btnRoute === target);
   });
 
-  // 3) Nach oben scrollen – wie in deinem Snippet
+  // Beim Routenwechsel nach oben scrollen
   window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // Wenn wir zur Karte zurückkehren: Map-Size neu berechnen
+  if (target === "map" && map) {
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 200);
+  }
 }
 
 // ------------------------------------------------------
@@ -1266,6 +1290,10 @@ function init() {
   bottomNavButtons = document.querySelectorAll(".bottom-nav-item");
   bottomNavMapLabelEl = document.getElementById("bottom-nav-map-label");
   bottomNavAboutLabelEl = document.getElementById("bottom-nav-about-label");
+
+  // About-Seiten
+  aboutDeEl = document.getElementById("page-about-de");
+  aboutEnEl = document.getElementById("page-about-en");
 
   sidebarEl = document.querySelector(".sidebar");
   const filterTitleEl = document.getElementById("filter-title");
@@ -1496,6 +1524,7 @@ function init() {
     });
   });
 
+  // Startansicht: Karte
   switchRoute("map");
   loadSpots();
 }
