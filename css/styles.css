@@ -245,43 +245,26 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter wie runde Pille */
+/* Sprach-Umschalter als runder Button */
 .language-switcher {
-  -webkit-appearance: none;
-  appearance: none;
   border: none;
-  padding: 0 18px;
+  padding: 0;
+  margin: 0;
+  width: 40px;
   height: 40px;
   border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--language-pill-bg);
   box-shadow:
     var(--language-pill-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: #ffd180;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
   cursor: pointer;
-  padding-right: 28px;
-  position: relative;
-}
-
-.language-switcher::after {
-  content: "▾";
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-52%);
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.7);
-  pointer-events: none;
-}
-
-.language-switcher:focus {
-  outline: none;
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.9),
-    0 0 0 4px rgba(255, 171, 64, 0.7);
 }
 
 /* Hauptzeile mit Titel + Claim */
@@ -1361,108 +1344,4 @@ body.onboarding-open {
 [data-theme="dark"] .spot-details-route-link {
   background: rgba(15, 23, 42, 0.98);
   color: #e5e7eb;
-}
-
-/* =========================================
-   ADD-ONS: LANGUAGE-CIRCLE, THEME-TEXT, NAV & TILLA
-   (nur hinzugefügt, nichts oben geändert)
-   ========================================= */
-
-/* 2) Theme-abhängige Schriftfarbe für DE/EN-Text */
-:root[data-theme="light"] {
-  --text-primary: #000000;
-}
-
-[data-theme="dark"] {
-  --text-primary: #ffffff;
-}
-
-/* 1) Kreis mit DE/EN mittig */
-.language-circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--language-pill-bg);
-  box-shadow: var(--language-pill-shadow);
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text-color);
-  text-transform: uppercase;
-}
-
-/* Der Text darin (DE / EN) */
-.language-circle span {
-  font-weight: bold;
-  font-size: 1rem;
-  color: var(--text-primary);
-}
-
-/* 3) Karte / Über Tab-Buttons – Items über die Breite verteilen */
-.bottom-nav-item {
-  flex: 1;
-}
-
-/* Aktiver Tab etwas kräftiger */
-.bottom-nav-item--active {
-  font-weight: 700;
-}
-
-/* Views sind bereits über .view / .view--active geregelt */
-/* (dein Wunsch ist damit funktional erfüllt) */
-
-/* 4) Größere Schildkröten-Illustration (generische Icon-Klasse) */
-.tilla-icon {
-  width: 4rem; /* war vorher z. B. 3rem */
-  height: auto;
-}
-
-/* Größere Schildkröte in der Sidebar – override der 60px oben */
-.tilla-sidebar-avatar img {
-  width: 80px; /* vorher 60px */
-}
-
-/* =========================================
-   LANGUAGE CIRCLE & BOTTOM NAV – OVERRIDES
-   ========================================= */
-
-/* Sprach-Badge links im Header als Kreis */
-.language-circle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--language-pill-bg);
-  box-shadow: var(--language-pill-shadow);
-  overflow: hidden; /* Select sauber einklemmen */
-}
-
-/* Select im Kreis kompakt darstellen (überschreibt die Pill-Version) */
-.language-circle .language-switcher {
-  -webkit-appearance: none;
-  appearance: none;
-  border: none;
-  background: transparent;
-  box-shadow: none;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  border-radius: 50%;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-align: center;
-  text-transform: uppercase;
-  color: var(--text-color);
-  cursor: pointer;
-}
-
-/* Pfeil der alten Pill-Variante ausblenden */
-.language-switcher::after {
-  content: none;
 }
