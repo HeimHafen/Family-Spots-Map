@@ -61,11 +61,12 @@ body {
   --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
   --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
-  --bottom-nav-backdrop: rgba(53, 30, 15, 0.82);
-  --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
+  /* Bottom-Nav: nur Text, kein dunkler Hintergrund */
+  --bottom-nav-backdrop: transparent;
+  --bottom-nav-item-bg: transparent;
   --bottom-nav-item-color: #8a5a32;
   --bottom-nav-item-active-bg: #ffb54f;
-  --bottom-nav-item-active-color: #4b280f;
+  --bottom-nav-item-active-color: #ff9800;
 
   --toast-bg: rgba(55, 35, 21, 0.95);
 
@@ -120,11 +121,11 @@ body {
   --sidebar-section-shadow: 0 16px 34px rgba(0, 0, 0, 0.9);
   --sidebar-section-border: rgba(30, 64, 175, 0.35);
 
-  --bottom-nav-backdrop: rgba(15, 23, 42, 0.92);
-  --bottom-nav-item-bg: rgba(15, 23, 42, 0.98);
+  --bottom-nav-backdrop: transparent;
+  --bottom-nav-item-bg: transparent;
   --bottom-nav-item-color: #e5e7eb;
-  --bottom-nav-item-active-bg: #f59e0b;
-  --bottom-nav-item-active-color: #111827;
+  --bottom-nav-item-active-bg: #facc15;
+  --bottom-nav-item-active-color: #facc15;
 
   --toast-bg: rgba(15, 23, 42, 0.98);
 
@@ -192,7 +193,7 @@ body {
 .app-header {
   position: sticky;
   top: 0;
-  z-index: 1200;
+  z-index: 1200; /* Header klar über der Karte / Leaflet-Panes */
   padding: 10px 14px 14px;
   background: linear-gradient(135deg, var(--header-bg-top), var(--header-bg-bottom));
   color: var(--header-text-color);
@@ -216,13 +217,13 @@ body {
   gap: 8px;
 }
 
-/* Icon-Buttons (? | Theme | Locate) – alle etwas kleiner */
+/* Icon-Buttons (? | Theme | Locate) */
 .btn-icon {
   border: none;
   padding: 0;
   margin: 0;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -231,7 +232,7 @@ body {
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
     opacity 0.12s;
@@ -245,7 +246,7 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter – kleiner Kreis, Text perfekt mittig */
+/* Sprach-Umschalter als kleiner runder Button */
 .language-switcher {
   -webkit-appearance: none;
   appearance: none;
@@ -261,24 +262,22 @@ body {
     inset 0 0 0 1px var(--header-icon-border);
   font-size: 12px;
   font-weight: 700;
-  color: #4b280f;
-  letter-spacing: 0.03em;
+  color: #1a1309;
+  letter-spacing: 0.04em;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  line-height: 1;
+  justify-content: center; /* Text perfekt mittig */
   cursor: pointer;
+  line-height: 1;
 }
 
-/* Dark-Mode: Text weiß */
-[data-theme="dark"] .language-switcher {
-  color: #fef3e7;
-}
-
-/* Pfeil verstecken – im Kreis steht nur "DE"/"EN" */
 .language-switcher::after {
   content: "";
+}
+
+/* Dark Mode: DE/EN weiß */
+[data-theme="dark"] .language-switcher {
+  color: #f9fafb;
 }
 
 /* Hauptzeile mit Titel + Claim */
@@ -331,7 +330,7 @@ body {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 16px 12px 96px;
+  padding: 16px 12px 96px; /* unten Platz für Bottom-Nav */
 }
 
 /* Views (Karte / Über) */
@@ -749,6 +748,7 @@ select.input:focus {
    TILLA – SIDEBAR (Map-Ansicht)
    ========================================= */
 
+/* Sanftes Schaukeln + leichte Kopfneigung */
 @keyframes tilla-bob {
   0% {
     transform: scaleX(-1) translateY(0) rotate(0deg);
@@ -767,6 +767,7 @@ select.input:focus {
   }
 }
 
+/* Einblende-Animation für das ganze Kärtchen */
 @keyframes tilla-card-in {
   0% {
     opacity: 0;
@@ -783,6 +784,7 @@ select.input:focus {
   padding-bottom: 10px;
 }
 
+/* Warmes Kärtchen wie andere Karten */
 .tilla-sidebar-card {
   display: flex;
   align-items: center;
@@ -803,19 +805,20 @@ select.input:focus {
     inset 0 0 0 1px rgba(148, 163, 184, 0.45);
 }
 
-/* Tilla etwas größer */
+/* Avatar – Tilla schaut nach rechts und schaukelt leicht */
 .tilla-sidebar-avatar {
   flex: 0 0 auto;
 }
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 72px;
+  width: 72px; /* etwas größer */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
 }
 
+/* Text neben Tilla */
 .tilla-sidebar-text {
   flex: 1 1 auto;
 }
@@ -868,13 +871,14 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 62px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
 }
 
-/* Schwarzer Schimmer weg */
+/* kein dunkler Schimmer mehr */
 .bottom-nav-background {
   display: none;
 }
@@ -887,10 +891,10 @@ select.input:focus {
   pointer-events: auto;
   border: none;
   background: var(--bottom-nav-item-bg);
-  border-radius: 999px;
-  padding: 5px 12px;
+  border-radius: 12px;
+  padding: 0 16px;
   margin: 0 4px;
-  min-width: 72px;
+  min-width: auto;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -899,29 +903,17 @@ select.input:focus {
   font-size: 11px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
-  box-shadow:
-    0 3px 9px rgba(0, 0, 0, 0.4),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  box-shadow: none;
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+  transition: transform 0.08s ease-out, opacity 0.08s ease-out;
 }
 
 .bottom-nav-item--active {
-  background: var(--bottom-nav-item-active-bg);
   color: var(--bottom-nav-item-active-color);
-}
-
-[data-theme="dark"] .bottom-nav-item--active {
-  box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.7),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
 .bottom-nav-item:active {
   transform: translateY(1px) scale(0.97);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
 .bottom-nav-icon {
@@ -1062,6 +1054,7 @@ hr {
    ONBOARDING OVERLAY
    ========================================= */
 
+/* Scroll sperren, wenn Onboarding offen ist */
 body.onboarding-open {
   overflow: hidden;
 }
@@ -1087,6 +1080,7 @@ body.onboarding-open {
   background: radial-gradient(circle at top, rgba(255, 243, 224, 0.8), rgba(0, 0, 0, 0.55));
 }
 
+/* Dialog-Karte in der Mitte */
 .onboarding-dialog {
   position: relative;
   max-width: 380px;
@@ -1103,6 +1097,7 @@ body.onboarding-open {
     inset 0 0 0 1px var(--card-border);
 }
 
+/* Slides */
 .onboarding-slide {
   animation: onboarding-fade-in 0.18s ease-out;
 }
@@ -1126,6 +1121,7 @@ body.onboarding-open {
   color: var(--text-soft);
 }
 
+/* Buttons unten */
 .onboarding-actions {
   margin-top: 10px;
   display: flex;
@@ -1145,6 +1141,7 @@ body.onboarding-open {
   justify-content: center;
 }
 
+/* Dots */
 .onboarding-dots {
   margin-top: 8px;
   display: flex;
@@ -1168,6 +1165,7 @@ body.onboarding-open {
   background: linear-gradient(135deg, #ff9800, #ffb300);
 }
 
+/* Einblende-Animation */
 @keyframes onboarding-fade-in {
   0% {
     opacity: 0;
@@ -1179,6 +1177,7 @@ body.onboarding-open {
   }
 }
 
+/* Größere Screens: etwas mehr Luft */
 @media (min-width: 768px) {
   .onboarding-dialog {
     max-width: 420px;
@@ -1193,6 +1192,7 @@ body.onboarding-open {
    SPOT-LISTE & DETAILS – FEINTUNING
    ========================================= */
 
+/* Leerer Zustand der Liste (wenn Tilla tröstet) */
 .spot-list-empty {
   padding: 10px 12px;
   border-radius: 16px;
@@ -1208,6 +1208,7 @@ body.onboarding-open {
   color: #e5e7eb;
 }
 
+/* Beschreibung & Badges in der Spot-Karte */
 .spot-card-description {
   margin: 4px 0 6px;
   font-size: 13px;
@@ -1222,6 +1223,7 @@ body.onboarding-open {
   margin-top: 4px;
 }
 
+/* Actions-Zeile in der Spot-Karte */
 .spot-card-actions {
   margin-top: 4px;
   display: flex;
@@ -1239,6 +1241,7 @@ body.onboarding-open {
   font-weight: 600;
 }
 
+/* Detailpanel – Struktur */
 .spot-details--hidden {
   display: none;
 }
@@ -1282,6 +1285,7 @@ body.onboarding-open {
   gap: 6px;
 }
 
+/* Tags im Detailpanel */
 .spot-details-tags {
   margin: 4px 0 6px;
   display: flex;
@@ -1289,6 +1293,7 @@ body.onboarding-open {
   gap: 4px;
 }
 
+/* Beschreibung, Poetry, Adresse */
 .spot-details-description {
   margin: 4px 0 6px;
   font-size: 14px;
@@ -1308,6 +1313,7 @@ body.onboarding-open {
   color: var(--text-soft);
 }
 
+/* Routen-Links */
 .spot-details-routes {
   margin-top: 6px;
   display: flex;
