@@ -61,13 +61,11 @@ body {
   --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
   --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
-  /* Bottom-Nav: Pills mit leichter Tiefe */
-  --bottom-nav-backdrop: transparent;
-  --bottom-nav-item-bg: rgba(255, 255, 255, 0.96);
-  --bottom-nav-item-color: #7a4a2b;
-  --bottom-nav-item-active-bg: linear-gradient(135deg, #ffb54f, #ff9800);
-  --bottom-nav-item-active-color: #3b2313;
-  --bottom-nav-item-shadow: 0 6px 12px rgba(165, 100, 53, 0.45);
+  --bottom-nav-backdrop: rgba(53, 30, 15, 0.82);
+  --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
+  --bottom-nav-item-color: #8a5a32;
+  --bottom-nav-item-active-bg: #ffb54f;
+  --bottom-nav-item-active-color: #4b280f;
 
   --toast-bg: rgba(55, 35, 21, 0.95);
 
@@ -122,12 +120,11 @@ body {
   --sidebar-section-shadow: 0 16px 34px rgba(0, 0, 0, 0.9);
   --sidebar-section-border: rgba(30, 64, 175, 0.35);
 
-  --bottom-nav-backdrop: transparent;
+  --bottom-nav-backdrop: rgba(15, 23, 42, 0.92);
   --bottom-nav-item-bg: rgba(15, 23, 42, 0.98);
   --bottom-nav-item-color: #e5e7eb;
-  --bottom-nav-item-active-bg: linear-gradient(135deg, #facc15, #f59e0b);
+  --bottom-nav-item-active-bg: #f59e0b;
   --bottom-nav-item-active-color: #111827;
-  --bottom-nav-item-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
 
   --toast-bg: rgba(15, 23, 42, 0.98);
 
@@ -248,39 +245,43 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter als kleiner runder Button */
+/* Sprach-Umschalter wie runde Pille */
 .language-switcher {
   -webkit-appearance: none;
   appearance: none;
   border: none;
-  padding: 0;
-  margin: 0;
-  width: 34px;
-  height: 34px;
+  padding: 0 18px;
+  height: 40px;
   border-radius: 999px;
-  background: var(--header-icon-bg);
+  background: var(--language-pill-bg);
   box-shadow:
-    var(--header-icon-shadow),
-    inset 0 0 0 1px var(--header-icon-border);
-  font-size: 12px;
-  font-weight: 700;
-  color: #1a1309; /* Light: dunkle Schrift */
-  letter-spacing: 0.04em;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center; /* Text exakt zentriert */
-  text-align: center;
+    var(--language-pill-shadow),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffd180;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  line-height: 1;
+  padding-right: 28px;
+  position: relative;
 }
 
 .language-switcher::after {
-  content: "";
+  content: "▾";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-52%);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
 }
 
-/* Dark Mode: DE/EN weiß */
-[data-theme="dark"] .language-switcher {
-  color: #f9fafb;
+.language-switcher:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.9),
+    0 0 0 4px rgba(255, 171, 64, 0.7);
 }
 
 /* Hauptzeile mit Titel + Claim */
@@ -699,14 +700,12 @@ select.input:focus {
   min-height: 320px;
 }
 
-/* Spot-Detail Panel */
+/* Spot-Detail Panel – MOBILE: unter der Karte, NICHT als Overlay */
 .spot-details {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
-  max-height: 45%;
-  overflow-y: auto;
+  position: static;
+  margin: 8px 10px 10px;
+  max-height: none;
+  overflow-y: visible;
   background: rgba(255, 248, 239, 0.96);
   border-radius: 18px;
   box-shadow: 0 10px 24px rgba(116, 68, 33, 0.6);
@@ -739,11 +738,16 @@ select.input:focus {
     max-height: 380px;
   }
 
+  /* DESKTOP: Detailpanel als Overlay rechts über der Karte */
   .spot-details {
+    position: absolute;
+    margin: 0;
     right: 16px;
+    bottom: 16px;
     left: auto;
     width: 320px;
     max-height: 75%;
+    overflow-y: auto;
   }
 }
 
@@ -766,7 +770,7 @@ select.input:focus {
     transform: scaleX(-1) translateY(-2px) rotate(-1.5deg);
   }
   100% {
-    transform: scaleX(-1) translateY(0) rotate(0);
+    transform: scaleX(-1) translateY(0) rotate(0deg);
   }
 }
 
@@ -815,7 +819,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 78px; /* etwas größer als vorher */
+  width: 60px;
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -874,46 +878,50 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 56px;
+  height: 70px;
+  pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
 }
 
-/* kein dunkler Schimmer mehr */
 .bottom-nav-background {
-  display: none;
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  top: 10px;
+  border-radius: 22px;
+  background: var(--bottom-nav-backdrop);
+  filter: blur(10px);
+  opacity: 0.6;
 }
 
 .bottom-nav-indicator {
   display: none;
 }
 
-/* Pills wie in deinem Screenshot: Icon + Text nebeneinander */
 .bottom-nav-item {
   pointer-events: auto;
   border: none;
   background: var(--bottom-nav-item-bg);
   border-radius: 999px;
-  padding: 6px 18px 7px;
-  margin: 0 4px;
-  min-width: auto;
+  padding: 8px 16px;
+  margin: 0 6px;
+  min-width: 88px;
   display: inline-flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: 2px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
-  box-shadow: var(--bottom-nav-item-shadow);
+  box-shadow:
+    0 3px 9px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition:
-    transform 0.08s ease-out,
-    opacity 0.08s ease-out,
-    box-shadow 0.08s ease-out,
-    background 0.12s ease-out;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
 }
 
 .bottom-nav-item--active {
@@ -921,8 +929,18 @@ select.input:focus {
   color: var(--bottom-nav-item-active-color);
 }
 
+/* Dark Mode – aktiver Nav-Pill etwas softer */
+[data-theme="dark"] .bottom-nav-item--active {
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
 .bottom-nav-item:active {
   transform: translateY(1px) scale(0.97);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
 .bottom-nav-icon {
