@@ -858,7 +858,7 @@ select.input:focus {
 }
 
 /* =========================================
-   BOTTOM NAV
+   BOTTOM NAV – Karte / Über wie in Bild 1
    ========================================= */
 
 .bottom-nav {
@@ -867,23 +867,17 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 70px;
+  padding: 4px 16px 10px;
   pointer-events: none;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: flex-start;
+  background: var(--bottom-nav-backdrop);
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .bottom-nav-background {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  top: 10px;
-  border-radius: 22px;
-  background: var(--bottom-nav-backdrop);
-  filter: blur(10px);
-  opacity: 0.6;
+  display: none;
 }
 
 .bottom-nav-indicator {
@@ -893,47 +887,44 @@ select.input:focus {
 .bottom-nav-item {
   pointer-events: auto;
   border: none;
-  background: var(--bottom-nav-item-bg);
-  border-radius: 999px;
-  padding: 8px 16px;
-  margin: 0 6px;
-  min-width: 88px;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  margin-right: 24px;
+  min-width: 0;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 2px;
   font-size: 12px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
-  box-shadow:
-    0 3px 9px rgba(0, 0, 0, 0.4),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  box-shadow: none;
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+  transition: transform 0.08s ease-out;
+}
+
+.bottom-nav-item:last-child {
+  margin-right: 0;
 }
 
 .bottom-nav-item--active {
-  background: var(--bottom-nav-item-active-bg);
   color: var(--bottom-nav-item-active-color);
 }
 
-/* Dark Mode – aktiver Nav-Pill etwas softer */
 [data-theme="dark"] .bottom-nav-item--active {
-  box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.7),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  color: var(--bottom-nav-item-active-color);
 }
 
 .bottom-nav-item:active {
-  transform: translateY(1px) scale(0.97);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  transform: translateY(1px);
+  box-shadow: none;
 }
 
 .bottom-nav-icon {
-  font-size: 18px;
+  font-size: 20px;
+  line-height: 1;
 }
 
 /* =========================================
