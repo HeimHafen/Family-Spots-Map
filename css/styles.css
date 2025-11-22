@@ -1,6 +1,11 @@
-/* =========================================
-   Family Spots Map – Styles (Orange Layout)
-   ========================================= */
+/* =========================================================
+   Family Spots Map – styles.css
+   Mobile-first, helles Layout + Dark-Mode
+   ====================================================== */
+
+/* -------------------------
+   Reset & Base
+   ------------------------- */
 
 *,
 *::before,
@@ -15,70 +20,15 @@ body {
   height: 100%;
 }
 
-/* ---- Basishintergrund: Orange -> Hell -> Neutral ---- */
-
-html {
-  background: #f3f4f6;
-}
-
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", Roboto, sans-serif;
-  /* oben satten Orange-Gradient, nach unten in hell */
-  background: linear-gradient(
-    180deg,
-    #fb8c00 0,
-    #fb8c00 120px,
-    #ffe2bf 260px,
-    #f3f4f6 100%
-  );
-  color: #3f2a13;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #fff7ef;
+  color: #3a2618;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Theme-Variablen (für Dark Mode wichtig) */
-
-:root {
-  --fs-bg: #f3f4f6;
-  --fs-surface: #ffffff;
-  --fs-surface-soft: #fff7ed;
-  --fs-border-subtle: #f5d0a9;
-  --fs-border-strong: #f59e0b;
-  --fs-text: #3f2a13;
-  --fs-text-soft: #5b4230;
-  --fs-text-muted: #7c6b5f;
-  --fs-accent: #fb8c00;
-  --fs-accent-soft: #ffedd5;
-  --fs-accent-strong: #f97316;
-  --fs-radius-lg: 22px;
-  --fs-radius-md: 16px;
-  --fs-radius-sm: 10px;
-  --fs-shadow-soft: 0 18px 40px rgba(191, 90, 21, 0.35);
-  --fs-shadow-strong: 0 26px 60px rgba(191, 90, 21, 0.6);
-}
-
-/* Dark Mode bleibt dunkler, reduziert aber den Orange-Gradient */
-
-html[data-theme="dark"] body {
-  background: radial-gradient(circle at top left, #0b1120, #020617 55%);
-  color: #e5e7eb;
-}
-
-html[data-theme="dark"] {
-  --fs-bg: #020617;
-  --fs-surface: #020617;
-  --fs-surface-soft: #020617;
-  --fs-border-subtle: #111827;
-  --fs-border-strong: #1f2937;
-  --fs-text: #e5e7eb;
-  --fs-text-soft: #e5e7eb;
-  --fs-text-muted: #9ca3af;
-  --fs-shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.8);
-  --fs-shadow-strong: 0 32px 70px rgba(0, 0, 0, 0.9);
-}
-
-/* =========================================
-   Utility
-   ========================================= */
+/* Hilfsklassen */
 
 .hidden {
   display: none !important;
@@ -91,289 +41,228 @@ html[data-theme="dark"] {
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  border: 0;
   clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* =========================================
+/* -------------------------
    App Layout
-   ========================================= */
+   ------------------------- */
 
 .app {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  color: var(--fs-text);
 }
 
-/* ================= Header ================= */
+/* -------------------------
+   Header
+   ------------------------- */
 
 .app-header {
-  padding: 0.7rem 0.9rem 0.9rem;
-  /* sattes Orangeband, leicht glänzend */
-  background: radial-gradient(circle at top left, #ffc56a, #fb8c00 50%);
-  color: #fff7ed;
-  box-shadow: 0 10px 40px rgba(120, 53, 15, 0.65);
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+  color: #fff;
+  padding: 0.75rem 1rem 1.1rem;
+  position: relative;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  z-index: 5;
 }
 
-html[data-theme="dark"] .app-header {
-  background: radial-gradient(circle at top left, #0b1120, #020617 55%);
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9);
+/* kleine „helle“ Fläche unterhalb des Headers wie auf Bild 2/3 */
+.app-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -18px;
+  height: 18px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  background: #ffeede;
 }
+
+/* obere Zeile: ? + Sprache / Theme + Locate */
 
 .app-header-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.7rem;
 }
 
 .app-header-left,
 .app-header-right {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
-/* Hauptzeile */
+/* Titelzeile */
 
 .app-header-main {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+  text-align: left;
 }
 
 .header-title {
-  margin: 0;
-  font-size: 1.35rem;
+  margin: 0 0 0.35rem;
+  font-size: 1.4rem;
   font-weight: 800;
   letter-spacing: 0.03em;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  color: #fff7ed;
+  gap: 0.35rem;
+  flex-wrap: wrap;
 }
 
 .header-title-spots {
-  padding: 0.05rem 0.35rem 0.15rem;
+  padding: 0.1rem 0.5rem;
   border-radius: 999px;
-  background: rgba(254, 243, 199, 0.72);
-  color: #7c2d12;
+  background: rgba(255, 244, 225, 0.9);
+  color: #8a4300;
 }
 
 .header-flag {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
 }
 
 .header-tagline {
   margin: 0;
-  font-size: 0.86rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  color: #fff7ed;
-  opacity: 0.96;
 }
 
-html[data-theme="dark"] .header-tagline {
-  color: #fed7aa;
-}
-
-/* =========================================
+/* -------------------------
    Buttons & Inputs
-   ========================================= */
+   ------------------------- */
 
-.btn {
-  appearance: none;
-  border-radius: 999px;
+.btn-icon {
   border: none;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.5rem 1.2rem;
-  background: linear-gradient(135deg, #fb8c00, #f97316);
-  color: #ffffff;
-  box-shadow: 0 14px 30px rgba(124, 45, 18, 0.55);
+  outline: none;
+  border-radius: 999px;
+  padding: 0.45rem 0.6rem;
+  background: #ffeede;
+  color: #b13a00;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
+  font-size: 1.1rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
 }
 
-.btn:hover {
-  filter: brightness(1.05);
+.btn-icon:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.language-switcher {
+  border-radius: 999px;
+  border: none;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: rgba(255, 248, 234, 0.9);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+  color: #7f4312;
+}
+
+.btn,
+.btn-small,
+.btn-ghost {
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn {
+  padding: 0.65rem 1.1rem;
+  background: linear-gradient(to right, #ff9800, #ffb300);
+  color: #fff;
+  box-shadow: 0 5px 14px rgba(230, 118, 0, 0.6);
 }
 
 .btn-small {
-  padding: 0.35rem 0.8rem;
-  font-size: 0.75rem;
+  padding: 0.5rem 0.9rem;
+  background: linear-gradient(to right, #ff9800, #ffb300);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(230, 118, 0, 0.6);
+  font-size: 0.9rem;
 }
 
 .btn-ghost {
-  background: transparent;
-  border-radius: 999px;
-  border: 1px solid rgba(250, 250, 250, 0.7);
-  color: #fefce8;
-  box-shadow: none;
+  padding: 0.45rem 0.9rem;
+  background: #ffffff;
+  color: #744024;
+  border: 1px solid rgba(209, 139, 89, 0.45);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  font-size: 0.85rem;
 }
 
-html[data-theme="light"] .btn-ghost {
-  border-color: rgba(148, 163, 184, 0.7);
-  color: #6b7280;
+.btn:active,
+.btn-small:active,
+.btn-ghost:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
-
-.btn-ghost:hover {
-  border-color: #fb8c00;
-  color: #fb8c00;
-}
-
-.btn-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  border: 1px solid rgba(250, 250, 250, 0.8);
-  background: rgba(255, 255, 255, 0.9);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1rem;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
-}
-
-html[data-theme="dark"] .btn-icon {
-  background: rgba(15, 23, 42, 0.96);
-  border-color: #1e293b;
-  color: #e5e7eb;
-}
-
-.btn-icon:hover {
-  border-color: #fb8c00;
-}
-
-/* Inputs */
 
 .input,
-.language-switcher {
+textarea.input,
+select.input {
   width: 100%;
-  padding: 0.45rem 0.65rem;
   border-radius: 999px;
-  border: 1px solid rgba(248, 198, 151, 0.9);
-  background: rgba(255, 255, 255, 0.96);
-  font-size: 0.8rem;
-  color: #4b2b16;
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9),
-    0 3px 10px rgba(191, 90, 21, 0.12);
+  border: 1px solid #f0cba1;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: #fff;
+  color: #3a2618;
 }
 
-.input::placeholder {
-  color: #9f856b;
-}
-
-.language-switcher {
-  width: auto;
-  min-width: 68px;
-  padding-right: 1.6rem;
-}
-
-/* Textarea bleibt „weich“ */
-
+/* Textearea bleibt optisch rund, aber mehr Höhe */
 textarea.input {
-  border-radius: 16px;
-  resize: vertical;
+  border-radius: 1rem;
 }
 
-/* Dark-Mode Inputs */
-
-html[data-theme="dark"] .input,
-html[data-theme="dark"] .language-switcher {
-  background: #020617;
-  border-color: #111827;
-  color: #e5e7eb;
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.8),
-    0 10px 24px rgba(0, 0, 0, 0.7);
-}
-
-/* =========================================
+/* -------------------------
    Main Layout
-   ========================================= */
+   ------------------------- */
 
 .app-main {
   flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
+  background: radial-gradient(circle at top, #ffeede 0, #fff7ef 40%, #fff 100%);
+  padding: 1.4rem 0.9rem 6.5rem; /* unten extra Platz für Bottom-Navigation + iOS-Bar */
 }
 
-/* Views */
+/* Map-View Layout */
 
 .view {
   display: none;
-  height: 100%;
 }
 
-.view--active {
-  display: flex;
-}
-
-/* Map View Layout */
-
-#view-map {
-  flex: 1;
-  min-height: 0;
-}
-
-/* Sidebar + Map */
-
-.sidebar {
-  width: 340px;
-  max-width: 380px;
-  padding: 0.9rem 0.9rem 0.9rem;
+.view.view--active {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  /* wichtig: Hintergrund durchsichtig, damit der orange Gradient durchschimmert */
-  background: transparent;
-  border-right: none;
 }
 
-html[data-theme="dark"] .sidebar {
-  background: transparent;
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.sidebar.hidden {
-  display: none;
-}
-
-.map-section {
-  flex: 1;
-  position: relative;
-  min-width: 0;
-}
-
-.map-container {
-  position: absolute;
-  inset: 0;
-}
-
-/* =========================================
-   Sidebar Sections – „neumorphische“ Karten
-   ========================================= */
+/* Sidebar-Sektionen */
 
 .sidebar-section {
-  background: rgba(255, 255, 255, 0.96);
-  border-radius: var(--fs-radius-lg);
-  padding: 0.7rem 0.8rem 0.8rem;
-  box-shadow: var(--fs-shadow-soft);
-  border: 1px solid rgba(248, 213, 171, 0.88);
-}
-
-html[data-theme="dark"] .sidebar-section {
-  background: #020617;
-  border-color: #111827;
-  box-shadow: var(--fs-shadow-soft);
+  background: #fff;
+  border-radius: 18px;
+  padding: 0.75rem 0.9rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .sidebar-section--grow {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -383,483 +272,531 @@ html[data-theme="dark"] .sidebar-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.4rem;
-  margin: 0 0 0.45rem;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
 }
 
 .sidebar-section-title {
   margin: 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--fs-text-soft);
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-/* Filter/Spots Header-Buttons */
-
-#btn-toggle-filters.btn-ghost,
-#btn-toggle-view.btn-ghost {
-  padding-inline: 0.75rem;
-  font-size: 0.76rem;
+/* kleines X rechts oben auf Karten */
+.sidebar-section-close.btn-icon {
+  padding: 0.25rem 0.45rem;
+  box-shadow: none;
+  background: #f9f2ea;
 }
 
-/* X-Buttons */
-
-.sidebar-section-close {
-  border-radius: 999px;
+/* Filter-Body (alles außer Header) wird über JS versteckt/gezeigt */
+.sidebar-section .filter-group,
+.sidebar-section .mood-row,
+.sidebar-section .radius-row,
+.sidebar-section .filter-group--checkbox,
+.sidebar-section .spot-list {
+  transition: opacity 0.2s ease, max-height 0.2s ease;
 }
 
-/* Filter-Gruppen */
-
-.filter-group {
-  margin-bottom: 0.5rem;
-}
-
-.filter-group:last-child {
-  margin-bottom: 0;
-}
-
-.filter-group-label {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--fs-text-soft);
-  margin-bottom: 0.2rem;
-}
-
-.filter-group-helper {
-  font-size: 0.73rem;
-  color: var(--fs-text-muted);
-  margin: 0.1rem 0 0.3rem;
-}
-
-/* Checkboxen */
-
-.filter-group--checkbox {
-  margin-top: 0.15rem;
-}
-
-.checkbox-label {
-  font-size: 0.78rem;
-  color: var(--fs-text-soft);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.checkbox-label input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: #fb8c00;
-}
-
-/* =========================================
-   Tilla-Karte
-   ========================================= */
+/* -------------------------
+   Tilla – kleine Begleiter-Karte
+   ------------------------- */
 
 .tilla-sidebar-section {
-  padding: 0;
-  background: transparent;
+  padding-top: 0;
 }
 
 .tilla-sidebar-card {
   display: flex;
+  gap: 0.75rem;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.8rem 0.95rem;
-  border-radius: var(--fs-radius-lg);
-  background: radial-gradient(circle at top left, #ffe9c7, #ffd6a5);
-  box-shadow: var(--fs-shadow-soft);
-  border: 1px solid rgba(248, 213, 171, 0.98);
-}
-
-html[data-theme="dark"] .tilla-sidebar-card {
-  background: radial-gradient(circle at top left, #2f1f10, #1b130b);
-  border-color: rgba(253, 186, 116, 0.7);
+  background: #ffe6c9;
+  border-radius: 18px;
+  padding: 0.8rem 0.9rem;
+  box-shadow: 0 5px 14px rgba(201, 124, 41, 0.35);
 }
 
 .tilla-sidebar-avatar img {
-  width: 48px;
-  height: 48px;
-  border-radius: 999px;
-  background: #ffffff;
-  padding: 4px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  width: 46px;
+  height: 46px;
+  display: block;
 }
 
 .tilla-sidebar-text {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: #4b2b16;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #5a3516;
 }
 
-html[data-theme="dark"] .tilla-sidebar-text {
-  color: #f9fafb;
+/* -------------------------
+   Filtergruppen
+   ------------------------- */
+
+.filter-group {
+  margin-bottom: 0.6rem;
 }
 
-/* =========================================
-   Familien-Kompass
-   ========================================= */
-
-.compass-card {
-  background: var(--fs-surface-soft);
-  border-radius: var(--fs-radius-md);
-  padding: 0.6rem 0.65rem 0.7rem;
-  border: 1px dashed rgba(248, 180, 114, 0.9);
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+.filter-group-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
 }
 
-html[data-theme="dark"] .compass-card {
-  background: #020617;
-  border-color: rgba(249, 115, 22, 0.6);
+.filter-group-helper {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  color: #7b6a5c;
 }
 
-/* =========================================
-   Stimmung & Reise-Chips
-   ========================================= */
+/* Stimmung / Reise-Chips */
 
 .mood-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
 .mood-chip,
 .travel-chip {
   border-radius: 999px;
-  border: 1px solid rgba(248, 213, 171, 0.95);
-  background: #fffdf8;
-  padding: 0.27rem 0.7rem;
-  font-size: 0.76rem;
+  border: 1px solid #e0c5a6;
+  background: #ffffff;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
   cursor: pointer;
-  color: #4b2b16;
-  box-shadow: 0 3px 8px rgba(191, 90, 21, 0.18);
 }
 
 .mood-chip-emoji {
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .mood-chip--active,
 .travel-chip--active {
-  border-color: #fb8c00;
-  background: #ffedd5;
-  color: #7c2d12;
-  box-shadow: 0 6px 14px rgba(191, 90, 21, 0.35);
+  background: #ffe6c9;
+  border-color: #ff9800;
+  box-shadow: 0 3px 8px rgba(255, 152, 0, 0.4);
 }
 
-html[data-theme="dark"] .mood-chip,
-html[data-theme="dark"] .travel-chip {
-  background: #020617;
-  border-color: #111827;
-  color: #e5e7eb;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
-}
-
-html[data-theme="dark"] .mood-chip--active,
-html[data-theme="dark"] .travel-chip--active {
-  background: rgba(251, 146, 60, 0.23);
-  border-color: #f97316;
-}
-
-/* =========================================
-   Radius
-   ========================================= */
+/* Radius-Slider */
 
 .radius-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .radius-max-label {
-  font-size: 0.76rem;
-  color: var(--fs-text-soft);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a15b11;
 }
 
 .radius-description {
-  font-size: 0.72rem;
-  color: var(--fs-text-muted);
-  margin: 0.25rem 0 0;
+  margin: 0;
+  font-size: 0.8rem;
+  color: #7b6a5c;
 }
 
-/* =========================================
-   Spots-Liste
-   ========================================= */
+/* Checkbox-Gruppen */
+
+.filter-group--checkbox {
+  margin-top: 0.3rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+}
+
+/* -------------------------
+   Spot-Liste
+   ------------------------- */
 
 .spot-list {
-  flex: 1;
-  min-height: 0;
+  margin-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
   overflow-y: auto;
-  padding-right: 0.2rem;
-  margin-top: 0.35rem;
+  max-height: 26rem;
+  padding-bottom: 0.6rem;
 }
 
 .spot-card {
   background: #fffdf9;
-  border-radius: 18px;
-  padding: 0.55rem 0.7rem;
-  margin-bottom: 0.45rem;
-  border: 1px solid rgba(248, 213, 171, 0.85);
+  border-radius: 16px;
+  padding: 0.6rem 0.75rem 0.7rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1dec6;
   cursor: pointer;
-  transition: transform 0.08s ease, box-shadow 0.08s ease,
-    border-color 0.08s ease;
-  box-shadow: 0 10px 24px rgba(191, 90, 21, 0.18);
-}
-
-.spot-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 16px 36px rgba(191, 90, 21, 0.36);
-  border-color: rgba(249, 115, 22, 0.75);
 }
 
 .spot-card-title {
   margin: 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--fs-text);
+  font-size: 0.98rem;
+  font-weight: 700;
 }
 
 .spot-card-subtitle {
-  margin: 0.2rem 0 0.1rem;
-  font-size: 0.8rem;
-  color: var(--fs-text-muted);
+  margin: 0.15rem 0 0.15rem;
+  font-size: 0.85rem;
+  color: #756055;
 }
 
 .spot-card-meta {
-  margin: 0;
-  font-size: 0.72rem;
-  color: var(--fs-text-muted);
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: #8a6b54;
 }
 
-/* Header innerhalb der Spot-Karte (Titel + Stern) */
-.spot-card h3 {
+/* pop-up actions in Detail-Panel */
+
+.popup-actions {
+  margin-top: 0.45rem;
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* -------------------------
+   Map + Detail-Panel
+   ------------------------- */
+
+.map-section {
+  margin-top: 0.9rem;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.map-container {
+  width: 100%;
+  height: 360px;
+}
+
+/* Leaflet-Default etwas „freundlicher“ */
+
+.leaflet-container {
+  font: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.leaflet-popup-content {
+  margin: 0.45rem 0.6rem;
   font-size: 0.9rem;
 }
 
-/* =========================================
-   Spot-Details – vorerst deaktiviert
-   ========================================= */
+/* unsere Spot-Detail-Karte am rechten Rand – erstmal dezent */
 
-.spot-details,
+.spot-details {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 4.2rem;
+  max-width: 320px;
+  width: calc(100% - 1.5rem);
+  background: #fffdf9;
+  border-radius: 18px;
+  padding: 0.7rem 0.9rem 0.8rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
+  border: 1px solid #f2ddc3;
+  z-index: 4;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .spot-details--hidden {
-  display: none !important;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
 }
 
-/* =========================================
-   About-Page
-   ========================================= */
+/* -------------------------
+   Marker (Cluster) – „Bubble“-Pins
+   ------------------------- */
 
-#view-about {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0.9rem 0.9rem 4.5rem;
+.spot-marker {
+  width: 24px;
+  height: 24px;
 }
 
-.page-about {
-  max-width: 800px;
-  margin: 0 auto;
-  background: var(--fs-surface);
-  border-radius: 22px;
-  padding: 1rem 1.1rem 1.3rem;
-  box-shadow: var(--fs-shadow-soft);
-  border: 1px solid rgba(248, 213, 171, 0.9);
+.spot-marker-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffe0b2 0, #ff9800 40%, #e65100 100%);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6), 0 6px 12px rgba(0, 0, 0, 0.45);
 }
 
-html[data-theme="dark"] .page-about {
-  background: #020617;
-  border-color: #111827;
-}
-
-.page-about h2 {
-  margin-top: 0.1rem;
-  margin-bottom: 0.6rem;
-  font-size: 1.1rem;
-}
-
-.page-about h3 {
-  margin-top: 0.8rem;
-  margin-bottom: 0.3rem;
-  font-size: 0.95rem;
-}
-
-.page-about p {
-  font-size: 0.83rem;
-  line-height: 1.65;
-  margin-top: 0.2rem;
-  margin-bottom: 0.35rem;
-  color: var(--fs-text-soft);
-}
-
-.page.hidden {
-  display: none;
-}
-
-/* =========================================
+/* -------------------------
    Bottom Navigation
-   ========================================= */
+   ------------------------- */
 
 .bottom-nav {
-  position: sticky;
+  position: fixed;
+  left: 0;
+  right: 0;
   bottom: 0;
-  z-index: 500;
-  height: 56px;
-  display: flex;
-  align-items: stretch;
-  justify-content: space-around;
-  border-top: 1px solid rgba(148, 163, 184, 0.3);
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(16px);
-}
-
-html[data-theme="dark"] .bottom-nav {
-  background: rgba(2, 6, 23, 0.96);
-  border-top-color: #111827;
+  padding: 0.35rem 1.5rem 0.75rem;
+  z-index: 50;
+  pointer-events: none; /* Buttons selbst haben pointer-events wieder an */
 }
 
 .bottom-nav-background {
   position: absolute;
   inset: 0;
-  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(40, 23, 10, 0.3),
+    rgba(40, 23, 10, 0)
+  );
 }
 
 .bottom-nav-indicator {
-  display: none;
+  display: none; /* aktuell nicht genutzt, könnte später animiert werden */
 }
 
 .bottom-nav-item {
-  flex: 1;
+  pointer-events: auto;
   border: none;
-  background: transparent;
-  font-size: 0.8rem;
-  color: var(--fs-text-muted);
-  display: flex;
-  flex-direction: column;
+  background: #fffdf9;
+  color: #7a5a3a;
+  border-radius: 999px;
+  padding: 0.25rem 1.1rem 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.15rem;
-  cursor: pointer;
+  gap: 0.35rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.bottom-nav-icon {
-  font-size: 1.1rem;
+.bottom-nav-item + .bottom-nav-item {
+  margin-left: 0.8rem;
 }
 
 .bottom-nav-item--active {
-  color: #fb8c00;
-  font-weight: 600;
+  background: linear-gradient(to right, #ff9800, #ffb300);
+  color: #fff;
 }
 
-/* =========================================
+.bottom-nav-icon {
+  font-size: 1.05rem;
+}
+
+/* Zentrierung der zwei Buttons */
+
+.bottom-nav > *:not(.bottom-nav-background):not(.bottom-nav-indicator) {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+/* -------------------------
    Toast
-   ========================================= */
+   ------------------------- */
 
 .toast {
   position: fixed;
-  bottom: 72px;
   left: 50%;
-  transform: translateX(-50%);
-  max-width: 90%;
-  background: #111827;
-  color: #f9fafb;
+  bottom: 4.8rem;
+  transform: translateX(-50%) translateY(18px);
+  background: #333;
+  color: #fff;
   border-radius: 999px;
-  padding: 0.5rem 0.9rem;
-  font-size: 0.8rem;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.7);
+  padding: 0.55rem 1rem;
+  font-size: 0.87rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  z-index: 999;
+  z-index: 60;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast.toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* -------------------------
+   About-Seite
+   ------------------------- */
+
+.page {
+  background: #fffdf9;
+  border-radius: 18px;
+  padding: 1rem 1rem 1.2rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.page-about h2 {
+  margin-top: 0;
+}
+
+.page-about p {
+  margin-top: 0.4rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+
+.page-about hr {
+  border: none;
+  border-top: 1px solid #f0dac2;
+  margin: 0.9rem 0;
+}
+
+/* -------------------------
+   Dark Theme
+   ------------------------- */
+
+html[data-theme="dark"] body {
+  background: #050712;
+  color: #f4ede6;
+}
+
+html[data-theme="dark"] .app-header {
+  background: radial-gradient(circle at top left, #ffb74d 0, #ff9800 20%, #050712 68%, #050712 100%);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.8);
+}
+
+html[data-theme="dark"] .app-header::after {
+  background: #071020;
+}
+
+html[data-theme="dark"] .header-title-spots {
+  background: rgba(255, 248, 225, 0.12);
+  color: #ffe0b2;
+}
+
+html[data-theme="dark"] .language-switcher,
+html[data-theme="dark"] .btn-icon {
+  background: #111627;
+  color: #ffe0b2;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.9);
+}
+
+html[data-theme="dark"] .app-main {
+  background: radial-gradient(circle at top, #14192b 0, #050712 55%, #050712 100%);
+}
+
+html[data-theme="dark"] .sidebar-section,
+html[data-theme="dark"] .page {
+  background: #101523;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+  border: 1px solid #252c42;
+}
+
+html[data-theme="dark"] .tilla-sidebar-card {
+  background: #1e2439;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+}
+
+html[data-theme="dark"] .input,
+html[data-theme="dark"] textarea.input,
+html[data-theme="dark"] select.input {
+  background: #060914;
+  color: #f4ede6;
+  border-color: #313852;
+}
+
+html[data-theme="dark"] .filter-group-helper,
+html[data-theme="dark"] .spot-card-subtitle,
+html[data-theme="dark"] .spot-card-meta {
+  color: #c7c0ba;
+}
+
+html[data-theme="dark"] .btn,
+html[data-theme="dark"] .btn-small {
+  background: linear-gradient(to right, #ffb74d, #ff9800);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 1);
+}
+
+html[data-theme="dark"] .btn-ghost {
+  background: transparent;
+  border-color: #39415d;
+  color: #f4ede6;
+}
+
+html[data-theme="dark"] .spot-card {
+  background: #0e1220;
+  border-color: #2d3351;
+}
+
+html[data-theme="dark"] .map-section {
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 1);
+}
+
+html[data-theme="dark"] .spot-details {
+  background: #0e1220;
+  border-color: #2d3351;
+}
+
+html[data-theme="dark"] .bottom-nav-item {
+  background: #0e1220;
+  color: #f4ede6;
+}
+
+html[data-theme="dark"] .bottom-nav-item--active {
+  background: linear-gradient(to right, #ffb74d, #ff9800);
+  color: #050712;
 }
 
 html[data-theme="dark"] .toast {
-  background: #f9fafb;
-  color: #0f172a;
+  background: #111627;
 }
 
-.toast--visible {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(-4px);
-}
+/* -------------------------
+   Größere Screens
+   ------------------------- */
 
-/* =========================================
-   Leaflet Marker Styling
-   ========================================= */
-
-.spot-marker {
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.spot-marker-inner {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 30%, #fef3c7, #fb8c00);
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.3), 0 8px 16px rgba(0, 0, 0, 0.35);
-}
-
-.pin-pop {
-  animation: pin-pop 0.25s ease-out;
-}
-
-@keyframes pin-pop {
-  from {
-    transform: scale(0.6) translateY(4px);
-    opacity: 0;
+@media (min-width: 900px) {
+  .app-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.8rem 1.2rem 6.5rem;
   }
-  to {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
-}
 
-/* =========================================
-   NoScript
-   ========================================= */
-
-.noscript-warning {
-  padding: 0.6rem 0.9rem;
-  background: #fee2e2;
-  color: #b91c1c;
-  font-size: 0.85rem;
-  text-align: center;
-}
-
-/* =========================================
-   Responsive (Mobile)
-   ========================================= */
-
-@media (max-width: 899px) {
-  .app-header {
-    padding: 0.6rem 0.75rem 0.85rem;
+  .view.view--active {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.1rem;
   }
 
   .sidebar {
-    width: 100%;
-    max-width: none;
-    height: auto;
-    position: relative;
-    z-index: 10;
-  }
-
-  #view-map {
-    flex-direction: column;
+    flex: 0 0 360px;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
   }
 
   .map-section {
-    position: relative;
     flex: 1;
-    min-height: 260px;
+    margin-top: 0;
+    height: calc(100vh - 190px);
+  }
+
+  .map-container {
+    height: 100%;
+  }
+
+  .spot-list {
+    max-height: none;
+  }
+
+  .spot-details {
+    bottom: 5.2rem;
+    right: 1.4rem;
   }
 }
