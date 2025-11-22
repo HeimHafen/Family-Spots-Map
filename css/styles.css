@@ -61,12 +61,11 @@ body {
   --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
   --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
-  /* Bottom-Nav: nur Text, kein dunkler Hintergrund */
+  /* Bottom-Nav: Segment-Buttons wie im Screenshot */
   --bottom-nav-backdrop: transparent;
-  --bottom-nav-item-bg: transparent;
-  --bottom-nav-item-color: #8a5a32;
-  --bottom-nav-item-active-bg: #ffb54f;
-  --bottom-nav-item-active-color: #ff9800;
+  --bottom-nav-item-bg: rgba(255, 255, 255, 0.96);
+  --bottom-nav-item-color: #7a4a2b;
+  --bottom-nav-item-active-color: #3b2313;
 
   --toast-bg: rgba(55, 35, 21, 0.95);
 
@@ -122,10 +121,9 @@ body {
   --sidebar-section-border: rgba(30, 64, 175, 0.35);
 
   --bottom-nav-backdrop: transparent;
-  --bottom-nav-item-bg: transparent;
+  --bottom-nav-item-bg: rgba(15, 23, 42, 0.98);
   --bottom-nav-item-color: #e5e7eb;
-  --bottom-nav-item-active-bg: #facc15;
-  --bottom-nav-item-active-color: #facc15;
+  --bottom-nav-item-active-color: #111827;
 
   --toast-bg: rgba(15, 23, 42, 0.98);
 
@@ -262,13 +260,14 @@ body {
     inset 0 0 0 1px var(--header-icon-border);
   font-size: 12px;
   font-weight: 700;
-  color: #1a1309;
+  color: #1a1309; /* hell: schwarze Schrift */
   letter-spacing: 0.04em;
   display: inline-flex;
   align-items: center;
   justify-content: center; /* Text perfekt mittig */
   cursor: pointer;
   line-height: 1;
+  text-align: center; /* zusätzliche Sicherheit für iOS */
 }
 
 .language-switcher::after {
@@ -763,7 +762,7 @@ select.input:focus {
     transform: scaleX(-1) translateY(-2px) rotate(-1.5deg);
   }
   100% {
-    transform: scaleX(-1) translateY(0) rotate(0deg);
+    transform: scaleX(-1) translateY(0) rotate(0);
   }
 }
 
@@ -812,7 +811,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 72px; /* etwas größer */
+  width: 80px; /* etwas größer, Position bleibt gleich */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -862,7 +861,7 @@ select.input:focus {
 }
 
 /* =========================================
-   BOTTOM NAV
+   BOTTOM NAV – Karte / Über (Segment-Buttons)
    ========================================= */
 
 .bottom-nav {
@@ -871,7 +870,7 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 56px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -891,25 +890,42 @@ select.input:focus {
   pointer-events: auto;
   border: none;
   background: var(--bottom-nav-item-bg);
-  border-radius: 12px;
-  padding: 0 16px;
+  border-radius: 999px;
+  padding: 7px 16px 8px;
   margin: 0 4px;
   min-width: auto;
   display: inline-flex;
-  flex-direction: column;
+  flex-direction: row; /* Icon + Label nebeneinander */
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  font-size: 11px;
+  gap: 6px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
-  box-shadow: none;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
   cursor: pointer;
-  transition: transform 0.08s ease-out, opacity 0.08s ease-out;
+  transition: transform 0.08s ease-out, opacity 0.08s ease-out,
+    box-shadow 0.08s ease-out, background 0.12s ease-out;
 }
 
 .bottom-nav-item--active {
+  background: linear-gradient(145deg, #ffb54f, #ff9800);
   color: var(--bottom-nav-item-active-color);
+  box-shadow:
+    0 8px 18px rgba(245, 158, 11, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .bottom-nav-item {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="dark"] .bottom-nav-item--active {
+  background: linear-gradient(145deg, #facc15, #fbbf24);
+  color: var(--bottom-nav-item-active-color);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.95),
+    inset 0 0 0 1px rgba(250, 250, 250, 0.8);
 }
 
 .bottom-nav-item:active {
