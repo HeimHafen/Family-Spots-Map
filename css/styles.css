@@ -216,13 +216,13 @@ body {
   gap: 8px;
 }
 
-/* Icon-Buttons (? | Theme | Locate) – KLEINER GEMACHT */
+/* Icon-Buttons (? | Theme | Locate) – KREISE KLEINER */
 .btn-icon {
   border: none;
   padding: 0;
   margin: 0;
-  width: 32px;            /* vorher 40px */
-  height: 32px;           /* vorher 40px */
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -231,7 +231,7 @@ body {
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 18px;        /* leicht kleiner */
+  font-size: 18px;
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
     opacity 0.12s;
@@ -245,28 +245,27 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter als runder Icon-Button wie 🌗/📍 – KLEINER & TEXT MITTIG */
+/* Sprach-Umschalter – ebenfalls kleiner, Text wirklich mittig */
 .language-switcher {
   -webkit-appearance: none;
   appearance: none;
   border: none;
   padding: 0;
   margin: 0;
-  width: 32px;            /* vorher 40px */
-  height: 32px;           /* vorher 40px */
+  width: 34px;
+  height: 34px;
+  line-height: 34px;          /* vertikal mittig */
   border-radius: 999px;
   background: var(--header-icon-bg);
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 12px;        /* etwas kleiner */
+  font-size: 13px;
   font-weight: 700;
-  color: #1a1309;         /* dunkle Schrift */
+  color: #1a1309;
   letter-spacing: 0.03em;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center; /* Text exakt mittig */
-  line-height: 1;          /* verhindert Verschiebung */
+  display: inline-block;      /* statt flex – stabiler auf iOS */
+  text-align: center;
   cursor: pointer;
 }
 
@@ -807,7 +806,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 72px;      /* vorher 60px – jetzt etwas größer */
+  width: 72px;          /* etwas größer als vorher */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -866,49 +865,40 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 62px;            /* etwas kleiner */
+  height: 52px;            /* kleiner als vorher */
   display: flex;
   align-items: center;
   justify-content: center;
-  /* WICHTIG: klickbar lassen */
 }
 
-/* Schwarzer Schimmer entfernt – komplett transparent */
+/* Schwarzer Schimmer komplett entfernen */
 .bottom-nav-background {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  top: 10px;
-  border-radius: 22px;
-  background: transparent;  /* vorher var(--bottom-nav-backdrop) */
-  filter: none;             /* kein Blur mehr */
-  opacity: 0;               /* unsichtbar */
-  pointer-events: none;     /* Hintergrund ignoriert Klicks */
+  display: none;
 }
 
 .bottom-nav-indicator {
   display: none;
 }
 
+/* Karte / Über – kleinere Pills, wie auf Bild 2 */
 .bottom-nav-item {
   pointer-events: auto;
   border: none;
   background: var(--bottom-nav-item-bg);
   border-radius: 999px;
-  padding: 5px 12px;       /* kleiner als vorher */
+  padding: 4px 10px;
   margin: 0 4px;
-  min-width: 72px;
+  min-width: 68px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
-  font-size: 11px;         /* etwas kleinere Schrift */
+  font-size: 11px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
   box-shadow:
-    0 3px 9px rgba(0, 0, 0, 0.4),
+    0 3px 6px rgba(0, 0, 0, 0.35),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
