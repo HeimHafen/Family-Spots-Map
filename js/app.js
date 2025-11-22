@@ -1192,25 +1192,28 @@ function handleLocateClick() {
 // ------------------------------------------------------
 // Navigation (Karte / Über)
 // ------------------------------------------------------
+// Hier ist deine "initViewSwitching"-Logik in switchRoute integriert.
 function switchRoute(route) {
   if (!viewMapEl || !viewAboutEl || !bottomNavButtons) return;
 
+  // 1) Views umschalten
   if (route === "about") {
     viewMapEl.classList.remove("view--active");
     viewAboutEl.classList.add("view--active");
   } else {
     viewAboutEl.classList.remove("view--active");
     viewMapEl.classList.add("view--active");
+    route = "map"; // Sicherheitsfallback
   }
 
+  // 2) Buttons optisch umschalten
   bottomNavButtons.forEach((btn) => {
     const btnRoute = btn.getAttribute("data-route");
-    if (btnRoute === route) {
-      btn.classList.add("bottom-nav-item--active");
-    } else {
-      btn.classList.remove("bottom-nav-item--active");
-    }
+    btn.classList.toggle("bottom-nav-item--active", btnRoute === route);
   });
+
+  // 3) Nach oben scrollen – wie in deinem Snippet
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // ------------------------------------------------------
