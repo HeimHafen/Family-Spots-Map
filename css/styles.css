@@ -245,24 +245,26 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter wie runde Pille */
+/* Sprach-Umschalter wie runde Pille
+   -> optisch näher an Bild 2: klarer DE-Chip, kräftige Schrift */
 .language-switcher {
   -webkit-appearance: none;
   appearance: none;
   border: none;
-  padding: 0 18px;
+  padding: 0 22px;
   height: 40px;
   border-radius: 999px;
   background: var(--language-pill-bg);
   box-shadow:
     var(--language-pill-shadow),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffd180;
-  letter-spacing: 0.02em;
+    inset 0 0 0 1px rgba(255, 255, 255, 0.95);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
-  padding-right: 28px;
+  padding-right: 30px;
   position: relative;
 }
 
@@ -273,7 +275,7 @@ body {
   top: 50%;
   transform: translateY(-52%);
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(124, 67, 20, 0.8);
   pointer-events: none;
 }
 
@@ -700,12 +702,14 @@ select.input:focus {
   min-height: 320px;
 }
 
-/* Spot-Detail Panel – MOBILE: unter der Karte, NICHT als Overlay */
+/* Spot-Detail Panel */
 .spot-details {
-  position: static;
-  margin: 8px 10px 10px;
-  max-height: none;
-  overflow-y: visible;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  max-height: 45%;
+  overflow-y: auto;
   background: rgba(255, 248, 239, 0.96);
   border-radius: 18px;
   box-shadow: 0 10px 24px rgba(116, 68, 33, 0.6);
@@ -738,16 +742,11 @@ select.input:focus {
     max-height: 380px;
   }
 
-  /* DESKTOP: Detailpanel als Overlay rechts über der Karte */
   .spot-details {
-    position: absolute;
-    margin: 0;
     right: 16px;
-    bottom: 16px;
     left: auto;
     width: 320px;
     max-height: 75%;
-    overflow-y: auto;
   }
 }
 
@@ -869,7 +868,7 @@ select.input:focus {
 }
 
 /* =========================================
-   BOTTOM NAV
+   BOTTOM NAV – an Bild 2 angelehnt
    ========================================= */
 
 .bottom-nav {
@@ -877,8 +876,8 @@ select.input:focus {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 30;
-  height: 70px;
+  z-index: 40;
+  height: 72px;
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -889,12 +888,25 @@ select.input:focus {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 10px;
-  top: 10px;
-  border-radius: 22px;
-  background: var(--bottom-nav-backdrop);
-  filter: blur(10px);
-  opacity: 0.6;
+  bottom: 8px;
+  top: 6px;
+  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 204, 128, 0.96),
+    rgba(255, 152, 0, 0.96)
+  );
+  box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.25);
+  opacity: 1;
+}
+
+[data-theme="dark"] .bottom-nav-background {
+  background: radial-gradient(
+    circle at top,
+    rgba(15, 23, 42, 0.98),
+    rgba(15, 23, 42, 0.98)
+  );
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.7);
 }
 
 .bottom-nav-indicator {
@@ -906,45 +918,52 @@ select.input:focus {
   border: none;
   background: var(--bottom-nav-item-bg);
   border-radius: 999px;
-  padding: 8px 16px;
-  margin: 0 6px;
-  min-width: 88px;
+  padding: 6px 16px 8px;
+  margin: 0 10px;
+  min-width: 96px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
   font-size: 12px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
   box-shadow:
-    0 3px 9px rgba(0, 0, 0, 0.4),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+    0 3px 8px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.95);
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
+    background 0.12s ease-out;
 }
 
 .bottom-nav-item--active {
   background: var(--bottom-nav-item-active-bg);
   color: var(--bottom-nav-item-active-color);
+  box-shadow:
+    0 5px 12px rgba(245, 158, 11, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.98);
 }
 
-/* Dark Mode – aktiver Nav-Pill etwas softer */
+[data-theme="dark"] .bottom-nav-item {
+  box-shadow:
+    0 5px 10px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.6);
+}
+
 [data-theme="dark"] .bottom-nav-item--active {
   box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.7),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+    0 5px 14px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.98);
 }
 
 .bottom-nav-item:active {
   transform: translateY(1px) scale(0.97);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
 .bottom-nav-icon {
-  font-size: 18px;
+  font-size: 20px;
+  line-height: 1;
 }
 
 /* =========================================
