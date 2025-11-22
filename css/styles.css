@@ -216,13 +216,13 @@ body {
   gap: 8px;
 }
 
-/* Icon-Buttons (? | Theme | Locate) */
+/* Icon-Buttons (? | Theme | Locate) – KLEINER GEMACHT */
 .btn-icon {
   border: none;
   padding: 0;
   margin: 0;
-  width: 40px;
-  height: 40px;
+  width: 32px;            /* vorher 40px */
+  height: 32px;           /* vorher 40px */
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -231,7 +231,7 @@ body {
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 20px;
+  font-size: 18px;        /* leicht kleiner */
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
     opacity 0.12s;
@@ -245,27 +245,28 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter als runder Icon-Button wie 🌗/📍 */
+/* Sprach-Umschalter als runder Icon-Button wie 🌗/📍 – KLEINER & TEXT MITTIG */
 .language-switcher {
   -webkit-appearance: none;
   appearance: none;
   border: none;
   padding: 0;
   margin: 0;
-  width: 40px;
-  height: 40px;
+  width: 32px;            /* vorher 40px */
+  height: 32px;           /* vorher 40px */
   border-radius: 999px;
   background: var(--header-icon-bg);
   box-shadow:
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
-  font-size: 13px;
+  font-size: 12px;        /* etwas kleiner */
   font-weight: 700;
-  color: #1a1309;            /* schwarze / sehr dunkle Schrift */
+  color: #1a1309;         /* dunkle Schrift */
   letter-spacing: 0.03em;
   display: inline-flex;
   align-items: center;
-  justify-content: center;   /* Text perfekt mittig */
+  justify-content: center; /* Text exakt mittig */
+  line-height: 1;          /* verhindert Verschiebung */
   cursor: pointer;
 }
 
@@ -806,7 +807,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 60px;
+  width: 72px;      /* vorher 60px – jetzt etwas größer */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -872,6 +873,7 @@ select.input:focus {
   /* WICHTIG: klickbar lassen */
 }
 
+/* Schwarzer Schimmer entfernt – komplett transparent */
 .bottom-nav-background {
   position: absolute;
   left: 10px;
@@ -879,10 +881,10 @@ select.input:focus {
   bottom: 10px;
   top: 10px;
   border-radius: 22px;
-  background: var(--bottom-nav-backdrop);
-  filter: blur(10px);
-  opacity: 0.6;
-  pointer-events: none;    /* Hintergrund ignoriert Klicks */
+  background: transparent;  /* vorher var(--bottom-nav-backdrop) */
+  filter: none;             /* kein Blur mehr */
+  opacity: 0;               /* unsichtbar */
+  pointer-events: none;     /* Hintergrund ignoriert Klicks */
 }
 
 .bottom-nav-indicator {
