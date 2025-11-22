@@ -1476,3 +1476,14 @@ function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
+// ------------------------------------------------------
+// ZUSÄTZLICH EINGEFÜGT: Sprach-Listener (ohne bestehenden Code zu ändern)
+// ------------------------------------------------------
+languageSwitcherEl = document.getElementById("language-switcher");
+
+if (languageSwitcherEl) {
+  languageSwitcherEl.addEventListener("change", (e) => {
+    setLanguage(e.target.value);
+  });
+}
