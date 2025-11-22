@@ -56,12 +56,14 @@ body {
   --language-pill-bg: rgba(255, 243, 224, 0.94);
   --language-pill-shadow: 0 3px 9px rgba(132, 70, 18, 0.4);
 
+  /* HELLERER Backdrop unten, kein schwarzer Schimmer mehr */
+  --bottom-nav-backdrop: rgba(255, 212, 170, 0.85);
+
   --sidebar-bg: #050816;
   --sidebar-section-bg: rgba(255, 245, 233, 0.98);
   --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
   --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
-  --bottom-nav-backdrop: rgba(53, 30, 15, 0.82);
   --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
   --bottom-nav-item-color: #8a5a32;
   --bottom-nav-item-active-bg: #ffb54f;
@@ -245,7 +247,7 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter als runder Button */
+/* Sprach-Umschalter als runder Button – Text schwarz/dunkel */
 .language-switcher {
   border: none;
   padding: 0;
@@ -262,9 +264,13 @@ body {
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
   font-size: 14px;
   font-weight: 700;
-  color: #ffd180;
+  color: var(--text-strong); /* statt gelb jetzt dunkle Schrift */
   letter-spacing: 0.06em;
   cursor: pointer;
+}
+
+[data-theme="dark"] .language-switcher {
+  color: #fef3e7; /* im Dark Mode hell lassen */
 }
 
 /* Hauptzeile mit Titel + Claim */
