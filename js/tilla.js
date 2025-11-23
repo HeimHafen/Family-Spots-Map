@@ -2,12 +2,6 @@
 // ------------------------------------------------------
 // Tilla – eure Schildkröten-Begleiterin für Familien-Abenteuer 🐢
 //
-// Idee:
-// Tilla ist kein reiner Infokasten, sondern ein kleiner, freundlicher
-// Begleiter. Sie reagiert auf Ereignisse in der App (Reise-Modus,
-// Plus-Aktivierung, Favoriten, Mein Tag, leere Ergebnisse, Kompass,
-// Spielideen) und spricht in kurzen, warmen Sätzen.
-//
 // Integration (in app.js):
 //
 //   import { TillaCompanion } from './tilla.js';
@@ -23,9 +17,8 @@
 //   // tilla.onNoSpotsFound();
 //   // tilla.onPlusActivated();
 //   // tilla.onCompassApplied({ travelMode, mood, radiusStep });
-//   // tilla.showGameIdea();
 //   // tilla.onLanguageChanged();
-//
+//   // tilla.showPlayIdea("Spielidee: ...");
 // ------------------------------------------------------
 
 // Fallback-Texte, falls getText() nichts liefert oder (noch) nicht verkabelt ist.
@@ -67,7 +60,7 @@ const FALLBACK_TEXTS = {
       "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
       "Plus ist an Bord! Ab jetzt achte ich extra auf Spots für WoMo, Camping und große Abenteuer. ✨"
     ],
-    // Kompass-Kommentare
+    // NEU: Kompass-Kommentare
     turtle_compass_everyday: [
       "Ich habe den Radius auf eure Alltagslaune eingestellt – wir bleiben in eurer Nähe. 🌿",
       "Kompass sagt: Heute reicht ein kleines Abenteuer in eurer Umgebung – schaut mal, was ich gefunden habe."
@@ -75,15 +68,6 @@ const FALLBACK_TEXTS = {
     turtle_compass_trip: [
       "Kompass ist gesetzt – ich schaue jetzt in einem größeren Radius nach Zwischenstopps für eure Tour. 🚐",
       "Für euren Unterwegs-Tag habe ich den Radius großzügig gestellt. Wir suchen nach guten Pausenplätzen für euch. 🚐"
-    ],
-    // NEU: Spielideen für unterwegs
-    turtle_game_ideas: [
-      "Spielidee: Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
-      "Spielidee: Sucht nacheinander Dinge in einer Farbe. Wer zuerst drei findet, gewinnt.",
-      "Spielidee: Jeder sagt abwechselnd ein Tier, dessen Name mit dem letzten Buchstaben des vorherigen Tieres beginnt.",
-      "Spielidee: Erfindet gemeinsam eine Geschichte. Jede Person fügt einen Satz hinzu.",
-      "Spielidee: Zählt Autos in eurer Lieblingsfarbe – schafft ihr zehn, bevor ihr am Ziel seid?",
-      "Spielidee: Überlegt euch Fantasie-Orte auf der Karte und gebt ihnen verrückte Namen."
     ]
   },
   en: {
@@ -126,14 +110,6 @@ const FALLBACK_TEXTS = {
     turtle_compass_trip: [
       "Compass set – I’m now looking in a wider radius for good stopovers on your trip. 🚐",
       "For your travel day I’ve opened up the radius. We’ll look for great places to pause and recharge. 🚐"
-    ],
-    turtle_game_ideas: [
-      "Game idea: I spy with my little eye – but only things outside the window.",
-      "Game idea: Take turns finding things in one colour. The first to spot three, wins.",
-      "Game idea: Say animal names – each new one has to start with the last letter of the previous animal.",
-      "Game idea: Tell a shared story. Everyone adds one sentence.",
-      "Game idea: Count cars in your favourite colour – can you reach ten before you arrive?",
-      "Game idea: Invent fantasy places on the map and give them funny names."
     ]
   }
 };
@@ -170,7 +146,7 @@ export class TillaCompanion {
     }
 
     // State
-    this.state = "intro"; // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots
+    this.state = "intro"; // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots | play-idea
     this.travelMode = "everyday"; // everyday | trip | null
     this.lastInteraction = Date.now();
 
@@ -269,8 +245,6 @@ export class TillaCompanion {
 
   /**
    * Es gibt wieder Spots (nachdem vorher keine gefunden wurden).
-   * Hier gehen wir zurück auf den Reise-Modus (everyday/trip)
-   * oder die Intro-Stimmung.
    */
   onSpotsFound() {
     if (!this.textEl) return;
@@ -315,33 +289,14 @@ export class TillaCompanion {
   }
 
   /**
-   * NEU: Eine Spielidee anzeigen.
-   * Wenn textOverride gesetzt ist, wird dieser Text direkt genutzt,
-   * sonst würfelt Tilla aus ihrem eigenen Spielideen-Pool.
+   * NEU: Spielidee anzeigen – wird vom 🎲-Button ausgelöst.
+   * @param {string} text Voller Text inkl. "Spielidee: ..."
    */
-  showGameIdea(textOverride) {
+  showPlayIdea(text) {
     if (!this.textEl) return;
-
     this.lastInteraction = Date.now();
-
-    if (typeof textOverride === "string" && textOverride.trim()) {
-      this.textEl.textContent = textOverride;
-      return;
-    }
-
-    const lang = getCurrentLang();
-    const bundle = FALLBACK_TEXTS[lang] || FALLBACK_TEXTS.de;
-    const entry = bundle.turtle_game_ideas;
-
-    if (Array.isArray(entry) && entry.length) {
-      const text = this._pickVariant("turtle_game_ideas", entry);
-      this.textEl.textContent = text;
-    } else {
-      this.textEl.textContent =
-        lang === "de"
-          ? "Spielidee: Ich sehe was, was du nicht siehst – draußen vor dem Fenster."
-          : "Game idea: I spy with my little eye – but only things outside the window.";
-    }
+    this.state = "play-idea";
+    this.textEl.textContent = text;
   }
 
   // --------------------------------------------------
@@ -349,17 +304,13 @@ export class TillaCompanion {
   // --------------------------------------------------
 
   /**
-   * Übersetzungs-/Text-Funktion:
-   * 1. versucht getText(key)
-   * 2. nutzt FALLBACK_TEXTS[lang][key] (String oder Array)
-   * 3. fällt ansonsten auf den Key zurück
+   * Übersetzungs-/Text-Funktion
    */
   _t(key) {
     // 1. Versuch: externes getText (z. B. i18n)
     if (this.getText) {
       try {
         const value = this.getText(key);
-        // Nur akzeptieren, wenn es NICHT einfach wieder der Key selbst ist
         if (
           typeof value === "string" &&
           value.trim() !== "" &&
@@ -391,7 +342,6 @@ export class TillaCompanion {
 
   /**
    * Wählt eine Variante aus einem Array von Texten aus.
-   * Versucht, nicht zweimal hintereinander denselben Index zu verwenden.
    */
   _pickVariant(key, variants) {
     if (!Array.isArray(variants) || variants.length === 0) return "";
@@ -402,7 +352,6 @@ export class TillaCompanion {
     if (variants.length === 1) {
       index = 0;
     } else {
-      // so lange würfeln, bis ein anderer Index als zuletzt getroffen wurde
       do {
         index = Math.floor(Math.random() * variants.length);
       } while (index === lastIndex);
@@ -415,11 +364,15 @@ export class TillaCompanion {
   _renderState() {
     if (!this.textEl) return;
 
+    // Wenn eine Spielidee aktiv ist, nichts überschreiben
+    if (this.state === "play-idea") {
+      return;
+    }
+
     let text = "";
 
     switch (this.state) {
       case "intro": {
-        // Warmes Willkommen: Intro + je nach Reise-Modus
         const intro = this._t("turtle_intro_1");
         if (this.travelMode === "trip") {
           text = intro + " " + this._t("turtle_trip_mode");
@@ -432,49 +385,41 @@ export class TillaCompanion {
       }
 
       case "everyday": {
-        // Alltag: Fokus auf Mikro-Abenteuer in der Nähe
         text = this._t("turtle_everyday_mode");
         break;
       }
 
       case "trip": {
-        // Unterwegs: Fokus auf Zwischenstopps
         text = this._t("turtle_trip_mode");
         break;
       }
 
       case "plus": {
-        // Plus aktiv
         text = this._t("turtle_plus_activated");
         break;
       }
 
       case "daylog": {
-        // Mein Tag gespeichert
         text = this._t("turtle_after_daylog_save");
         break;
       }
 
       case "fav-added": {
-        // Favorit gesetzt
         text = this._t("turtle_after_fav_added");
         break;
       }
 
       case "fav-removed": {
-        // Favorit entfernt
         text = this._t("turtle_after_fav_removed");
         break;
       }
 
       case "no-spots": {
-        // Keine Spots im Radius – Einladung zu Spaziergang / Radius anpassen
         text = this._t("turtle_intro_2");
         break;
       }
 
       default: {
-        // Fallback auf Intro
         const intro = this._t("turtle_intro_1");
         if (this.travelMode === "trip") {
           text = intro + " " + this._t("turtle_trip_mode");
