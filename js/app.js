@@ -52,7 +52,7 @@ const UI_STRINGS = {
     filter_radius_description_all:
       "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
 
-    // Tilla – Intro & Zustände (werden per getText an Tilla übergeben)
+    // Tilla – Intro & Zustände
     turtle_intro_1:
       "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
     turtle_intro_2:
@@ -151,6 +151,26 @@ const UI_STRINGS = {
       "Don’t feel like long planning today? I’ll help you pick a fitting radius – everyday mode or travel mode.",
     compass_apply_label: "Apply compass"
   }
+};
+
+// ------------------------------------------------------
+// Spielideen für unterwegs (Tilla / Würfel-Button)
+// ------------------------------------------------------
+const PLAY_IDEAS = {
+  de: [
+    "Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
+    "Sucht nacheinander Dinge in einer Farbe: Wer zuerst drei findet, gewinnt.",
+    "Denkt euch Tiere aus, die es nicht gibt – die anderen müssen erraten, wie sie aussehen.",
+    "Nacheinander: ‚Wohin würdest du gern mal reisen – und warum?‘ Jeder beantwortet die Frage.",
+    "Sucht Kennzeichen mit bestimmten Buchstaben und denkt euch passende Städte dazu aus."
+  ],
+  en: [
+    "I spy with my little eye – but only things outside the window.",
+    "Take turns spotting things in one colour: whoever finds three first wins.",
+    "Invent animals that don’t exist – the others guess what they look like.",
+    "Take turns: ‘Where would you like to travel one day – and why?’",
+    "Look for licence plates with certain letters and make up fitting city names."
+  ]
 };
 
 // (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert)
@@ -427,8 +447,6 @@ let plusStatusTextEl;
 let daylogTextEl;
 let daylogSaveEl;
 let toastEl;
-// NEU: Button im Tilla-Kästchen für Spielideen
-let gameIdeasBtnEl;
 
 // Kompass
 let compassLabelEl;
@@ -438,6 +456,9 @@ let compassApplyBtnEl;
 
 // Tilla
 let tilla = null;
+
+// Spielideen-Button
+let playIdeasBtnEl;
 
 // Filter-Body innerhalb der Filter-Section
 let filterBodyEls = [];
@@ -479,6 +500,14 @@ function applyStaticI18n() {
     const text = el.getAttribute(`data-${key}`);
     if (text) el.textContent = text;
   });
+}
+
+// Spielideen-Helfer
+function getRandomPlayIdea() {
+  const list = PLAY_IDEAS[currentLang] || PLAY_IDEAS.de;
+  if (!list || !list.length) return "";
+  const index = Math.floor(Math.random() * list.length);
+  return list[index];
 }
 
 // Button-Beschriftung & ARIA aktualisieren
@@ -878,6 +907,7 @@ function renderMarkers() {
 
     marker.bindPopup(popupHtml);
 
+    // NEU: Klick auf Marker öffnet das Detail-Kärtchen mit Routen-Buttons
     marker.on("click", () => {
       showSpotDetails(spot);
     });
@@ -983,6 +1013,29 @@ function focusSpotOnMap(spot) {
   showSpotDetails(spot);
 }
 
+// URL-Helfer für Routen
+function buildGoogleMapsUrl(spot) {
+  const name = getSpotName(spot);
+  const subtitle = getSpotSubtitle(spot);
+  if (spot.lat && spot.lng) {
+    return `https://www.google.com/maps/search/?api=1&query=${spot.lat},${spot.lng}`;
+  }
+  const query = encodeURIComponent(`${name} ${subtitle || ""}`.trim());
+  return `https://www.google.com/maps/search/?api=1&query=${query}`;
+}
+
+function buildAppleMapsUrl(spot) {
+  const name = getSpotName(spot);
+  const subtitle = getSpotSubtitle(spot);
+  if (spot.lat && spot.lng) {
+    return `http://maps.apple.com/?ll=${spot.lat},${spot.lng}&q=${encodeURIComponent(
+      name
+    )}`;
+  }
+  const query = encodeURIComponent(`${name} ${subtitle || ""}`.trim());
+  return `http://maps.apple.com/?q=${query}`;
+}
+
 function showSpotDetails(spot) {
   if (!spotDetailEl) return;
 
@@ -1022,18 +1075,54 @@ function showSpotDetails(spot) {
   titleEl.className = "spot-card-title";
   titleEl.textContent = name;
 
-  const subtitleEl = document.createElement("p");
-  subtitleEl.className = "spot-card-subtitle";
-  subtitleEl.textContent = subtitle;
+  if (subtitle) {
+    const subtitleEl = document.createElement("p");
+    subtitleEl.className = "spot-card-subtitle";
+    subtitleEl.textContent = subtitle;
+    spotDetailEl.appendChild(subtitleEl);
+  }
 
-  const metaEl = document.createElement("p");
-  metaEl.className = "spot-card-meta";
-  metaEl.textContent = metaParts.join(" · ");
+  spotDetailEl.appendChild(titleEl);
 
-  const descEl = document.createElement("p");
-  descEl.className = "spot-card-meta";
-  descEl.textContent = description;
+  if (metaParts.length) {
+    const metaEl = document.createElement("p");
+    metaEl.className = "spot-card-meta";
+    metaEl.textContent = metaParts.join(" · ");
+    spotDetailEl.appendChild(metaEl);
+  }
 
+  if (description) {
+    const descEl = document.createElement("p");
+    descEl.className = "spot-card-meta";
+    descEl.textContent = description;
+    spotDetailEl.appendChild(descEl);
+  }
+
+  // Routen-Buttons
+  const routesRow = document.createElement("div");
+  routesRow.className = "spot-details-routes";
+
+  const googleLink = document.createElement("a");
+  googleLink.href = buildGoogleMapsUrl(spot);
+  googleLink.target = "_blank";
+  googleLink.rel = "noopener";
+  googleLink.className = "spot-details-route-link";
+  googleLink.textContent =
+    currentLang === "de" ? "In Google Maps öffnen" : "Open in Google Maps";
+
+  const appleLink = document.createElement("a");
+  appleLink.href = buildAppleMapsUrl(spot);
+  appleLink.target = "_blank";
+  appleLink.rel = "noopener";
+  appleLink.className = "spot-details-route-link";
+  appleLink.textContent =
+    currentLang === "de" ? "In Apple Karten öffnen" : "Open in Apple Maps";
+
+  routesRow.appendChild(googleLink);
+  routesRow.appendChild(appleLink);
+  spotDetailEl.appendChild(routesRow);
+
+  // Actions (Favorit + Schließen)
   const actionsRow = document.createElement("div");
   actionsRow.className = "popup-actions";
 
@@ -1057,44 +1146,6 @@ function showSpotDetails(spot) {
 
   actionsRow.appendChild(favBtn);
   actionsRow.appendChild(closeBtn);
-
-  // Routen-Buttons (Google Maps / Apple Karten)
-  const routesRow = document.createElement("div");
-  routesRow.className = "spot-details-routes";
-
-  if (spot.lat && spot.lng) {
-    const lat = spot.lat;
-    const lng = spot.lng;
-
-    const googleLink = document.createElement("a");
-    googleLink.className = "spot-details-route-link";
-    googleLink.target = "_blank";
-    googleLink.rel = "noopener noreferrer";
-    googleLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-    googleLink.textContent =
-      currentLang === "de" ? "In Google Maps öffnen" : "Open in Google Maps";
-
-    const appleLink = document.createElement("a");
-    appleLink.className = "spot-details-route-link";
-    appleLink.target = "_blank";
-    appleLink.rel = "noopener noreferrer";
-    appleLink.href = `https://maps.apple.com/?ll=${lat},${lng}`;
-    appleLink.textContent =
-      currentLang === "de"
-        ? "In Apple Karten öffnen"
-        : "Open in Apple Maps";
-
-    routesRow.appendChild(googleLink);
-    routesRow.appendChild(appleLink);
-  }
-
-  spotDetailEl.appendChild(titleEl);
-  if (subtitle) spotDetailEl.appendChild(subtitleEl);
-  if (metaParts.length) spotDetailEl.appendChild(metaEl);
-  if (description) spotDetailEl.appendChild(descEl);
-  if (routesRow.childElementCount > 0) {
-    spotDetailEl.appendChild(routesRow);
-  }
   spotDetailEl.appendChild(actionsRow);
 }
 
@@ -1267,7 +1318,6 @@ function switchRoute(route) {
     }
   });
 
-  // Beim Wechsel immer nach oben scrollen
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1367,11 +1417,10 @@ function init() {
   compassApplyLabelEl = document.getElementById("compass-apply-label");
   compassApplyBtnEl = document.getElementById("compass-apply");
 
-  // Spielideen-Button im Tilla-Kärtchen (mehrere mögliche IDs zur Sicherheit)
-  gameIdeasBtnEl =
-    document.getElementById("tilla-game-button") ||
-    document.getElementById("btn-game-ideas") ||
-    document.getElementById("game-ideas-button");
+  // 🎲 Spielideen-Button (im Tilla-Kärtchen)
+  playIdeasBtnEl =
+    document.getElementById("btn-play-ideas") ||
+    document.querySelector("[data-role='play-ideas']");
 
   // Sprache / Theme / Map
   const initialLang = getInitialLang();
@@ -1539,11 +1588,18 @@ function init() {
     compassApplyBtnEl.addEventListener("click", handleCompassApply);
   }
 
-  // NEU: Spielideen-Button -> Tilla zeigt Idee im eigenen Kasten
-  if (gameIdeasBtnEl) {
-    gameIdeasBtnEl.addEventListener("click", () => {
-      if (tilla && typeof tilla.showGameIdea === "function") {
-        tilla.showGameIdea();
+  // 🎲 Spielideen-Button: Spielidee ermitteln & an Tilla geben
+  if (playIdeasBtnEl) {
+    playIdeasBtnEl.addEventListener("click", () => {
+      const idea = getRandomPlayIdea();
+      if (!idea) return;
+      const text =
+        currentLang === "de" ? `Spielidee: ${idea}` : `Play idea: ${idea}`;
+
+      if (tilla && typeof tilla.showPlayIdea === "function") {
+        tilla.showPlayIdea(text);
+      } else {
+        showToast(text);
       }
     });
   }
