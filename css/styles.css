@@ -683,10 +683,22 @@ select.input:focus {
   position: relative;
 }
 
+/* MOBILE: Karte nimmt ca. 60% der Bildschirmhöhe ein */
 .map-container {
   width: 100%;
   height: 100%;
   min-height: 320px;
+}
+
+/* Hier strecken wir die Karte bewusst auf kleineren Screens */
+@media (max-width: 899px) {
+  .map-section {
+    min-height: 60vh;
+  }
+
+  .map-container {
+    min-height: 60vh;
+  }
 }
 
 /* Spot-Detail Panel – MOBILE: unter der Karte, NICHT als Overlay */
@@ -791,7 +803,7 @@ select.input:focus {
   box-shadow:
     var(--card-shadow),
     inset 0 0 0 1px var(--card-border);
-  animation: tilla-card-in 0.45s ease-out 0.1s both;
+  animation: tilla-card-in 0.45s.ease-out 0.1s both;
 }
 
 [data-theme="dark"] .tilla-sidebar-card {
