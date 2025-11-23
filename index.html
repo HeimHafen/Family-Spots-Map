@@ -161,19 +161,18 @@
               </div>
             </section>
 
-            <!-- Familien-Kompass -->
+            <!-- Familien-Kompass (standardmäßig eingeklappt, ohne X) -->
             <details class="sidebar-section" id="compass-section">
               <summary class="sidebar-section-header">
                 <h2 class="sidebar-section-title" id="compass-label">
                   <!-- Wird per JS gesetzt -->
                 </h2>
                 <button
+                  id="btn-toggle-compass"
+                  class="btn-ghost btn-small"
                   type="button"
-                  class="btn-icon sidebar-section-close"
-                  data-target="compass-section"
-                  aria-label="Kompass-Bereich schließen"
                 >
-                  ×
+                  <span>Kompass anzeigen</span>
                 </button>
               </summary>
 
@@ -193,8 +192,8 @@
               </div>
             </details>
 
-            <!-- Filter-Section -->
-            <section class="sidebar-section">
+            <!-- Filter-Section (mit ein-/ausklappbarem Body) -->
+            <section class="sidebar-section" id="filter-section">
               <header class="sidebar-section-header">
                 <h2
                   class="sidebar-section-title"
@@ -209,7 +208,7 @@
                   class="btn-ghost btn-small"
                   type="button"
                 >
-                  <span>Filter ausblenden</span>
+                  <span>Filter anzeigen</span>
                 </button>
               </header>
 
@@ -564,7 +563,7 @@
               <h2 class="sidebar-section-title">Family Spots Plus</h2>
               <button
                 type="button"
-                class="btn-icon sidebar-section-close"
+                class="btn-icon.sidebar-section-close"
                 data-target="plus-section"
                 aria-label="Family Spots Plus schließen"
               >
@@ -630,7 +629,7 @@
               </h2>
               <button
                 type="button"
-                class="btn-icon sidebar-section-close"
+                class="btn-icon.sidebar-section-close"
                 data-target="daylog-section"
                 aria-label="Tagesprotokoll schließen"
               >
