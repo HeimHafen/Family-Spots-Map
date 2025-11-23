@@ -161,18 +161,23 @@
               </div>
             </section>
 
-            <!-- Familien-Kompass (standardmäßig eingeklappt, ohne X) -->
+            <!-- Familien-Kompass -->
             <details class="sidebar-section" id="compass-section">
               <summary class="sidebar-section-header">
-                <h2 class="sidebar-section-title" id="compass-label">
-                  <!-- Wird per JS gesetzt -->
+                <h2
+                  class="sidebar-section-title"
+                  id="compass-label"
+                  data-i18n-de="Familien-Kompass"
+                  data-i18n-en="Family Compass"
+                >
+                  Familien-Kompass
                 </h2>
                 <button
                   id="btn-toggle-compass"
                   class="btn-ghost btn-small"
                   type="button"
                 >
-                  <span>Kompass anzeigen</span>
+                  <span id="compass-toggle-label">Kompass anzeigen</span>
                 </button>
               </summary>
 
@@ -192,7 +197,7 @@
               </div>
             </details>
 
-            <!-- Filter-Section (mit ein-/ausklappbarem Body) -->
+            <!-- Filter-Section -->
             <section class="sidebar-section" id="filter-section">
               <header class="sidebar-section-header">
                 <h2
@@ -563,7 +568,7 @@
               <h2 class="sidebar-section-title">Family Spots Plus</h2>
               <button
                 type="button"
-                class="btn-icon.sidebar-section-close"
+                class="btn-icon sidebar-section-close"
                 data-target="plus-section"
                 aria-label="Family Spots Plus schließen"
               >
