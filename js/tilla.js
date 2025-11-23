@@ -8,6 +8,13 @@
 // Plus-Aktivierung, Favoriten, Mein Tag, leere Ergebnisse, Kompass)
 // und spricht in kurzen, warmen Sätzen – auf Deutsch oder Englisch.
 //
+// Highlights dieser Version:
+// - Mehrere Textvarianten pro Zustand (Intro, Alltag, Trip, Plus, …)
+// - Sprache automatisch über <html lang="…"> oder eigenes i18n
+// - Sanfter Fallback, wenn getText() nichts liefert
+// - Kein „Spam“: pro Key wird nicht ständig derselbe Satz wiederholt
+// - NEU: eigener Begrüßungstext beim ersten App-Start (localStorage)
+//
 // Integration (in app.js):
 //
 //   import { TillaCompanion } from './tilla.js';
@@ -16,6 +23,15 @@
 //     getText: (key) => t(key)  // optional: Überschreiben einzelner Texte möglich
 //   });
 //
+//   // Beispiele:
+//   // tilla.setTravelMode('trip');
+//   // tilla.onFavoriteAdded();
+//   // tilla.onDaylogSaved();
+//   // tilla.onNoSpotsFound();
+//   // tilla.onPlusActivated();
+//   // tilla.onCompassApplied({ travelMode, mood, radiusStep });
+//   // tilla.onLanguageChanged();
+//
 // ------------------------------------------------------
 
 // Fallback-Texte, falls getText() nichts liefert oder (noch) nicht verkabelt ist.
@@ -23,10 +39,16 @@
 // Bei Arrays wählt Tilla automatisch eine passende Variante aus.
 const FALLBACK_TEXTS = {
   de: {
+    // NEU: Spezieller erster App-Start
+    turtle_first_start: [
+      "Schön, dass ihr hier seid. Ich bin Tilla und helfe euch, aus dieser Karte eine Familien-Schatzkarte zu machen.",
+      "Hallo ihr Lieben – erster Start! Tippt euch einfach durch Stimmung, Radius und Kategorien, dann suche ich passende Spots für euren Tag."
+    ],
+
     // Intro: kombiniert sich mit Alltag- oder Trip-Sätzen
     turtle_intro_1: [
-      "Heute ist Familientag. Ich bin Tilla – eure kleine Schildkröten-Begleiterin für gemeinsame Zeit.",
-      "Hallo, ich bin Tilla. Lass uns aus dieser Karte eine Schatzkarte voller Familienmomente machen."
+      "Hallo, ich bin Tilla – eure kleine Schildkröten-Begleiterin für Familien-Abenteuer.",
+      "Ich bin Tilla. Mit mir wird eure Karte zu einer Schatzkarte voller Familienmomente."
     ],
     // Wenn keine Spots im Radius / mit Filtern gefunden werden
     turtle_intro_2: [
@@ -50,14 +72,14 @@ const FALLBACK_TEXTS = {
       "Roadtrip-Tag? Dann suchen wir jetzt nach Orten zum Toben, Auftanken und Durchatmen. 🚐"
     ],
     turtle_everyday_mode: [
-      "Alltag darf leicht sein. Lass uns schauen, welcher Ort in eurer Nähe euch heute ein Lächeln schenkt. 🌿",
+      "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿",
       "Vielleicht reicht heute ein kleiner Ausflug um die Ecke. Ich zeige euch, was nah dran gut tut. 🌿"
     ],
     turtle_plus_activated: [
       "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
       "Plus ist an Bord! Ab jetzt achte ich extra auf Spots für WoMo, Camping und große Abenteuer. ✨"
     ],
-    // Kompass-Kommentare
+    // NEU: Kompass-Kommentare
     turtle_compass_everyday: [
       "Ich habe den Radius auf eure Alltagslaune eingestellt – wir bleiben in eurer Nähe. 🌿",
       "Kompass sagt: Heute reicht ein kleines Abenteuer in eurer Umgebung – schaut mal, was ich gefunden habe."
@@ -68,9 +90,15 @@ const FALLBACK_TEXTS = {
     ]
   },
   en: {
+    // NEW: special first app start
+    turtle_first_start: [
+      "Nice to meet you! I’m Tilla and I’ll help you turn this map into a little treasure map of family adventures.",
+      "Hi there – first start! Just tap through mood, radius and categories and I’ll look for fitting spots for your day."
+    ],
+
     turtle_intro_1: [
-      "Today is family day. I’m Tilla – your little turtle companion for shared time together.",
-      "Hi, I’m Tilla. Let’s turn this map into a treasure map of family moments."
+      "Hi, I’m Tilla – your little turtle companion for family adventures.",
+      "I’m Tilla. Together we’ll turn this map into a treasure map of family moments."
     ],
     turtle_intro_2: [
       "Right now I can’t find a fitting spot. Maybe a small walk nearby is perfect today – or you widen the radius a little. 🐢",
@@ -143,13 +171,16 @@ export class TillaCompanion {
     }
 
     // State
-    this.state = "intro"; // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots
+    this.state = "intro"; // intro | first-start | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots
     this.travelMode = "everyday"; // everyday | trip | null
     this.lastInteraction = Date.now();
 
     // Merkt sich, welcher Variant-Index zuletzt für einen Key genutzt wurde,
     // damit nicht permanent derselbe Satz wiederholt wird.
     this._lastVariantIndex = {};
+
+    // NEU: Prüfen, ob das der erste App-Start ist
+    this._maybeSetFirstStartState();
 
     // Initial: freundliche Begrüßung
     this._renderState();
@@ -159,11 +190,18 @@ export class TillaCompanion {
   // Öffentliche API – wird von app.js aufgerufen
   // --------------------------------------------------
 
+  /**
+   * Sprache wurde gewechselt – aktuellen State neu rendern.
+   */
   onLanguageChanged() {
     if (!this.textEl) return;
     this._renderState();
   }
 
+  /**
+   * Reise-Modus gesetzt (everyday | trip | null).
+   * Bei null kehrt Tilla in den Intro-Zustand zurück.
+   */
   setTravelMode(mode) {
     if (!this.textEl) return;
 
@@ -183,6 +221,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Family Spots Plus wurde aktiviert.
+   */
   onPlusActivated() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -190,6 +231,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Tagesprotokoll wurde gespeichert.
+   */
   onDaylogSaved() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -197,6 +241,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Favorit hinzugefügt.
+   */
   onFavoriteAdded() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -204,6 +251,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Favorit entfernt.
+   */
   onFavoriteRemoved() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -211,6 +261,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Aktuell wurden keine Spots im gewählten Radius / Filtern gefunden.
+   */
   onNoSpotsFound() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -218,6 +271,11 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Es gibt wieder Spots (nachdem vorher keine gefunden wurden).
+   * Hier gehen wir zurück auf den Reise-Modus (everyday/trip)
+   * oder die Intro-Stimmung.
+   */
   onSpotsFound() {
     if (!this.textEl) return;
 
@@ -250,6 +308,7 @@ export class TillaCompanion {
     const text = this._t(key);
     this.textEl.textContent = text;
 
+    // State sanft anpassen
     if (mode === "trip") {
       this.state = "trip";
       this.travelMode = "trip";
@@ -263,11 +322,34 @@ export class TillaCompanion {
   // Interne Helfer
   // --------------------------------------------------
 
+  /**
+   * Prüft, ob es der erste Start ist – dann wird ein spezieller
+   * Begrüßungstext gezeigt.
+   */
+  _maybeSetFirstStartState() {
+    const STORAGE_KEY = "fs_tilla_first_start_v1";
+    try {
+      if (!localStorage.getItem(STORAGE_KEY)) {
+        localStorage.setItem(STORAGE_KEY, String(Date.now()));
+        this.state = "first-start";
+      }
+    } catch (err) {
+      // Wenn localStorage nicht geht (Privacy-Mode etc.), einfach still weitermachen.
+    }
+  }
+
+  /**
+   * Übersetzungs-/Text-Funktion:
+   * 1. versucht getText(key)
+   * 2. nutzt FALLBACK_TEXTS[lang][key] (String oder Array)
+   * 3. fällt ansonsten auf den Key zurück
+   */
   _t(key) {
     // 1. Versuch: externes getText (z. B. i18n)
     if (this.getText) {
       try {
         const value = this.getText(key);
+        // Nur akzeptieren, wenn es NICHT einfach wieder der Key selbst ist
         if (
           typeof value === "string" &&
           value.trim() !== "" &&
@@ -297,6 +379,10 @@ export class TillaCompanion {
     return key;
   }
 
+  /**
+   * Wählt eine Variante aus einem Array von Texten aus.
+   * Versucht, nicht zweimal hintereinander denselben Index zu verwenden.
+   */
   _pickVariant(key, variants) {
     if (!Array.isArray(variants) || variants.length === 0) return "";
 
@@ -306,6 +392,7 @@ export class TillaCompanion {
     if (variants.length === 1) {
       index = 0;
     } else {
+      // so lange würfeln, bis ein anderer Index als zuletzt getroffen wurde
       do {
         index = Math.floor(Math.random() * variants.length);
       } while (index === lastIndex);
@@ -321,7 +408,14 @@ export class TillaCompanion {
     let text = "";
 
     switch (this.state) {
+      case "first-start": {
+        // Spezielle erste Begrüßung
+        text = this._t("turtle_first_start");
+        break;
+      }
+
       case "intro": {
+        // Warmes Willkommen: Intro + je nach Reise-Modus
         const intro = this._t("turtle_intro_1");
         if (this.travelMode === "trip") {
           text = intro + " " + this._t("turtle_trip_mode");
@@ -334,41 +428,49 @@ export class TillaCompanion {
       }
 
       case "everyday": {
+        // Alltag: Fokus auf Mikro-Abenteuer in der Nähe
         text = this._t("turtle_everyday_mode");
         break;
       }
 
       case "trip": {
+        // Unterwegs: Fokus auf Zwischenstopps
         text = this._t("turtle_trip_mode");
         break;
       }
 
       case "plus": {
+        // Plus aktiv
         text = this._t("turtle_plus_activated");
         break;
       }
 
       case "daylog": {
+        // Mein Tag gespeichert
         text = this._t("turtle_after_daylog_save");
         break;
       }
 
       case "fav-added": {
+        // Favorit gesetzt
         text = this._t("turtle_after_fav_added");
         break;
       }
 
       case "fav-removed": {
+        // Favorit entfernt
         text = this._t("turtle_after_fav_removed");
         break;
       }
 
       case "no-spots": {
+        // Keine Spots im Radius – Einladung zu Spaziergang / Radius anpassen
         text = this._t("turtle_intro_2");
         break;
       }
 
       default: {
+        // Fallback auf Intro
         const intro = this._t("turtle_intro_1");
         if (this.travelMode === "trip") {
           text = intro + " " + this._t("turtle_trip_mode");
