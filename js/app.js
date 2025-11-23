@@ -559,7 +559,8 @@ function setLanguage(lang, { initial = false } = {}) {
     headerTaglineEl.textContent = t("header_tagline");
   }
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
-  if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
+  if (bottomNavAboutLabelEl)
+    bottomNavAboutLabelEl.textContent = t("nav_about");
 
   if (compassLabelEl) compassLabelEl.textContent = t("compass_title");
   if (compassHelperEl) compassHelperEl.textContent = t("compass_helper");
@@ -567,12 +568,7 @@ function setLanguage(lang, { initial = false } = {}) {
     compassApplyLabelEl.textContent = t("compass_apply_label");
 
   // Kompass-Toggle-Button
-  if (btnToggleCompassEl && compassSectionEl) {
-    const isOpen = !!compassSectionEl.open;
-    btnToggleCompassEl.querySelector("span").textContent = isOpen
-      ? t("btn_hide_compass")
-      : t("btn_show_compass");
-  }
+  updateCompassButtonLabel();
 
   // About-Seite DE/EN umschalten
   const aboutDe = document.getElementById("page-about-de");
@@ -1281,6 +1277,17 @@ function updateRadiusTexts() {
 // ------------------------------------------------------
 // Kompass
 // ------------------------------------------------------
+
+// Button-Label des Kompasses an den aktuellen Zustand anpassen
+function updateCompassButtonLabel() {
+  if (!btnToggleCompassEl || !compassSectionEl) return;
+  const span = btnToggleCompassEl.querySelector("span");
+  if (!span) return;
+  span.textContent = compassSectionEl.open
+    ? t("btn_hide_compass")
+    : t("btn_show_compass");
+}
+
 function handleCompassApply() {
   if (!filterRadiusEl) return;
 
@@ -1300,12 +1307,10 @@ function handleCompassApply() {
 }
 
 function handleToggleCompass() {
-  if (!compassSectionEl || !btnToggleCompassEl) return;
+  if (!compassSectionEl) return;
   const isOpen = !!compassSectionEl.open;
   compassSectionEl.open = !isOpen;
-  btnToggleCompassEl.querySelector("span").textContent = compassSectionEl.open
-    ? t("btn_hide_compass")
-    : t("btn_show_compass");
+  updateCompassButtonLabel();
 }
 
 // ------------------------------------------------------
@@ -1515,26 +1520,8 @@ function init() {
   compassHelperEl = document.getElementById("compass-helper");
   compassApplyLabelEl = document.getElementById("compass-apply-label");
   compassApplyBtnEl = document.getElementById("compass-apply");
-
-  // Kompass: Toggle-Button im Header dynamisch einfügen
-  if (compassLabelEl) {
-    const compassHeaderEl = compassLabelEl.closest(".sidebar-section-header");
-    if (compassHeaderEl) {
-      btnToggleCompassEl = document.createElement("button");
-      btnToggleCompassEl.type = "button";
-      btnToggleCompassEl.className = "btn-ghost btn-small";
-      const span = document.createElement("span");
-      span.textContent = t("btn_show_compass");
-      btnToggleCompassEl.appendChild(span);
-
-      const closeBtn = compassHeaderEl.querySelector(".sidebar-section-close");
-      if (closeBtn) {
-        compassHeaderEl.insertBefore(btnToggleCompassEl, closeBtn);
-      } else {
-        compassHeaderEl.appendChild(btnToggleCompassEl);
-      }
-    }
-  }
+  // vorhandenen Button aus dem HTML verwenden
+  btnToggleCompassEl = document.getElementById("btn-toggle-compass");
 
   // Kompass beim Start einklappen
   if (compassSectionEl) {
@@ -1696,8 +1683,17 @@ function init() {
   }
 
   if (btnToggleCompassEl && compassSectionEl) {
-    btnToggleCompassEl.addEventListener("click", handleToggleCompass);
-    btnToggleCompassEl.querySelector("span").textContent = t("btn_show_compass");
+    // Klick direkt auf dem Button, ohne das native Summary-Verhalten doppelt auszulösen
+    btnToggleCompassEl.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      handleToggleCompass();
+    });
+
+    // Wenn per Klick auf den Summary-Bereich getoggelt wird, Label aktualisieren
+    compassSectionEl.addEventListener("toggle", updateCompassButtonLabel);
+
+    updateCompassButtonLabel();
   }
 
   if (plusCodeSubmitEl) {
@@ -1753,9 +1749,7 @@ function init() {
 
       // Wenn der Kompass geschlossen wird, Button-Label anpassen
       if (section.id === "compass-section" && btnToggleCompassEl) {
-        btnToggleCompassEl.querySelector("span").textContent = t(
-          "btn_show_compass"
-        );
+        updateCompassButtonLabel();
       }
     });
   });
