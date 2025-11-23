@@ -10,28 +10,15 @@
 //     getText: (key) => t(key)  // optional: Überschreiben einzelner Texte möglich
 //   });
 //
-//   // Beispiele:
-//   // tilla.setTravelMode('trip');
-//   // tilla.onFavoriteAdded();
-//   // tilla.onDaylogSaved();
-//   // tilla.onNoSpotsFound();
-//   // tilla.onPlusActivated();
-//   // tilla.onCompassApplied({ travelMode, mood, radiusStep });
-//   // tilla.onLanguageChanged();
-//   // tilla.showPlayIdea("Spielidee: ...");
 // ------------------------------------------------------
 
 // Fallback-Texte, falls getText() nichts liefert oder (noch) nicht verkabelt ist.
-// Jeder Key kann ein String ODER ein Array von Strings sein.
-// Bei Arrays wählt Tilla automatisch eine passende Variante aus.
 const FALLBACK_TEXTS = {
   de: {
-    // Intro: kombiniert sich mit Alltag- oder Trip-Sätzen
     turtle_intro_1: [
       "Hallo, ich bin Tilla – eure kleine Schildkröten-Begleiterin für Familien-Abenteuer.",
       "Ich bin Tilla. Mit mir wird eure Karte zu einer Schatzkarte voller Familienmomente."
     ],
-    // Wenn keine Spots im Radius / mit Filtern gefunden werden
     turtle_intro_2: [
       "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein Spaziergang ganz in der Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢",
       "Mit diesen Filtern ist die Karte gerade leer. Probiert einen größeren Radius oder eine andere Kategorie – irgendwo wartet ein guter Ort auf euch. 🐢"
@@ -60,7 +47,6 @@ const FALLBACK_TEXTS = {
       "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
       "Plus ist an Bord! Ab jetzt achte ich extra auf Spots für WoMo, Camping und große Abenteuer. ✨"
     ],
-    // NEU: Kompass-Kommentare
     turtle_compass_everyday: [
       "Ich habe den Radius auf eure Alltagslaune eingestellt – wir bleiben in eurer Nähe. 🌿",
       "Kompass sagt: Heute reicht ein kleines Abenteuer in eurer Umgebung – schaut mal, was ich gefunden habe."
@@ -114,29 +100,17 @@ const FALLBACK_TEXTS = {
   }
 };
 
-// Hilfsfunktion: aktuelle Sprache aus dem <html>-Tag bestimmen
 function getCurrentLang() {
   const lang = (document.documentElement.lang || "de").toLowerCase();
   if (lang.startsWith("en")) return "en";
   return "de";
 }
 
-/**
- * TillaCompanion
- * --------------------------------------------------
- * Verwaltet den Text in der Sidebar und reagiert auf
- * Events aus der App.
- */
 export class TillaCompanion {
-  /**
-   * @param {Object} options
-   * @param {(key: string) => string} [options.getText] - Funktion, um Übersetzungen zu holen (z. B. i18n.t)
-   */
   constructor(options = {}) {
     this.getText =
       typeof options.getText === "function" ? options.getText : null;
 
-    // Sidebar-Text-Element
     this.textEl = document.getElementById("tilla-sidebar-text");
     if (!this.textEl) {
       console.warn(
@@ -145,35 +119,19 @@ export class TillaCompanion {
       return;
     }
 
-    // State
-    this.state = "intro"; // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots | play-idea
-    this.travelMode = "everyday"; // everyday | trip | null
+    this.state = "intro";
+    this.travelMode = "everyday";
     this.lastInteraction = Date.now();
-
-    // Merkt sich, welcher Variant-Index zuletzt für einen Key genutzt wurde,
-    // damit nicht permanent derselbe Satz wiederholt wird.
     this._lastVariantIndex = {};
 
-    // Initial: freundliche Begrüßung
     this._renderState();
   }
 
-  // --------------------------------------------------
-  // Öffentliche API – wird von app.js aufgerufen
-  // --------------------------------------------------
-
-  /**
-   * Sprache wurde gewechselt – aktuellen State neu rendern.
-   */
   onLanguageChanged() {
     if (!this.textEl) return;
     this._renderState();
   }
 
-  /**
-   * Reise-Modus gesetzt (everyday | trip | null).
-   * Bei null kehrt Tilla in den Intro-Zustand zurück.
-   */
   setTravelMode(mode) {
     if (!this.textEl) return;
 
@@ -189,13 +147,10 @@ export class TillaCompanion {
 
     this.travelMode = mode;
     this.lastInteraction = Date.now();
-    this.state = mode; // "everyday" oder "trip"
+    this.state = mode;
     this._renderState();
   }
 
-  /**
-   * Family Spots Plus wurde aktiviert.
-   */
   onPlusActivated() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -203,9 +158,6 @@ export class TillaCompanion {
     this._renderState();
   }
 
-  /**
-   * Tagesprotokoll wurde gespeichert.
-   */
   onDaylogSaved() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -213,9 +165,6 @@ export class TillaCompanion {
     this._renderState();
   }
 
-  /**
-   * Favorit hinzugefügt.
-   */
   onFavoriteAdded() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -223,9 +172,6 @@ export class TillaCompanion {
     this._renderState();
   }
 
-  /**
-   * Favorit entfernt.
-   */
   onFavoriteRemoved() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -233,9 +179,6 @@ export class TillaCompanion {
     this._renderState();
   }
 
-  /**
-   * Aktuell wurden keine Spots im gewählten Radius / Filtern gefunden.
-   */
   onNoSpotsFound() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -243,9 +186,6 @@ export class TillaCompanion {
     this._renderState();
   }
 
-  /**
-   * Es gibt wieder Spots (nachdem vorher keine gefunden wurden).
-   */
   onSpotsFound() {
     if (!this.textEl) return;
 
@@ -262,10 +202,6 @@ export class TillaCompanion {
     this._renderState();
   }
 
-  /**
-   * Kompass wurde angewendet – Tilla kommentiert die Auswahl kurz.
-   * @param {{travelMode?: string|null, mood?: string|null, radiusStep?: number}} context
-   */
   onCompassApplied(context = {}) {
     if (!this.textEl) return;
 
@@ -278,7 +214,6 @@ export class TillaCompanion {
     const text = this._t(key);
     this.textEl.textContent = text;
 
-    // State sanft anpassen
     if (mode === "trip") {
       this.state = "trip";
       this.travelMode = "trip";
@@ -288,10 +223,7 @@ export class TillaCompanion {
     }
   }
 
-  /**
-   * NEU: Spielidee anzeigen – wird vom 🎲-Button ausgelöst.
-   * @param {string} text Voller Text inkl. "Spielidee: ..."
-   */
+  // Spielidee direkt anzeigen (von app.js)
   showPlayIdea(text) {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -299,15 +231,7 @@ export class TillaCompanion {
     this.textEl.textContent = text;
   }
 
-  // --------------------------------------------------
-  // Interne Helfer
-  // --------------------------------------------------
-
-  /**
-   * Übersetzungs-/Text-Funktion
-   */
   _t(key) {
-    // 1. Versuch: externes getText (z. B. i18n)
     if (this.getText) {
       try {
         const value = this.getText(key);
@@ -323,7 +247,6 @@ export class TillaCompanion {
       }
     }
 
-    // 2. Fallback auf interne Texte
     const lang = getCurrentLang();
     const bundle = FALLBACK_TEXTS[lang] || FALLBACK_TEXTS.de;
     const entry = bundle[key];
@@ -336,13 +259,9 @@ export class TillaCompanion {
       return entry;
     }
 
-    // 3. Letzter Fallback: Key selbst
     return key;
   }
 
-  /**
-   * Wählt eine Variante aus einem Array von Texten aus.
-   */
   _pickVariant(key, variants) {
     if (!Array.isArray(variants) || variants.length === 0) return "";
 
@@ -364,7 +283,7 @@ export class TillaCompanion {
   _renderState() {
     if (!this.textEl) return;
 
-    // Wenn eine Spielidee aktiv ist, nichts überschreiben
+    // Wenn eine Spielidee aktiv ist, nicht überschreiben
     if (this.state === "play-idea") {
       return;
     }
