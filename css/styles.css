@@ -506,8 +506,8 @@ select.input:focus {
     var(--chip-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
-    background 0.12s ease-out;
+  transition: transform 0.06s ease-out, box-shadow 0.06s.ease-out,
+    background 0.12s.ease-out;
 }
 
 .mood-chip-emoji {
@@ -636,6 +636,15 @@ select.input:focus {
   flex-direction: column;
 }
 
+/* Einklappbare Spot-Liste (Klasse wird per JS gesetzt) */
+.sidebar-section--grow.spot-list-collapsed {
+  padding-bottom: 10px;
+}
+
+.sidebar-section--grow.spot-list-collapsed #spot-list {
+  display: none;
+}
+
 #spot-list {
   margin-top: 8px;
   max-height: 320px;
@@ -726,13 +735,14 @@ select.input:focus {
     align-items: flex-start;
   }
 
+  /* Sidebar schmaler -> Karte ~70–75% Breite */
   .sidebar {
-    flex: 0 0 380px;
+    flex: 0 0 320px;
   }
 
   .map-section {
     flex: 1 1 auto;
-    min-height: 520px;
+    min-height: 560px;
   }
 
   #spot-list {
@@ -803,7 +813,7 @@ select.input:focus {
   box-shadow:
     var(--card-shadow),
     inset 0 0 0 1px var(--card-border);
-  animation: tilla-card-in 0.45s.ease-out 0.1s both;
+  animation: tilla-card-in 0.45s ease-out 0.1s both;
 }
 
 [data-theme="dark"] .tilla-sidebar-card {
