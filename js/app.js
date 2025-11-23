@@ -440,8 +440,8 @@ let categoryFilter = "";
 let onlyBigAdventures = false;
 let onlyVerified = false;
 let onlyFavorites = false;
-let filtersCollapsed = true; // Start: Filter eingeklappt
-let spotListCollapsed = false; // Start: Spot-Liste ausgeklappt
+// 👉 Startzustand: Filter eingeklappt
+let filtersCollapsed = true;
 
 // DOM-Elemente
 let languageSwitcherEl;
@@ -468,8 +468,6 @@ let filterBigEl;
 let filterVerifiedEl;
 let filterFavoritesEl;
 let spotListEl;
-let spotListSectionEl;
-let spotsTitleEl;
 let spotDetailEl;
 let plusCodeInputEl;
 let plusCodeSubmitEl;
@@ -479,7 +477,6 @@ let daylogSaveEl;
 let toastEl;
 
 // Kompass
-let compassSectionEl;
 let compassLabelEl;
 let compassHelperEl;
 let compassApplyLabelEl;
@@ -1413,7 +1410,6 @@ function handleToggleFilters() {
       : t("btn_hide_filters");
 }
 
-// Sidebar ein-/ausblenden (Nur Karte / Liste)
 function handleToggleView() {
   if (!sidebarEl || !btnToggleViewEl) return;
   const isHidden = sidebarEl.classList.toggle("hidden");
@@ -1425,18 +1421,6 @@ function handleToggleView() {
     setTimeout(() => {
       map.invalidateSize();
     }, 300);
-  }
-}
-
-// Spot-Liste ein-/ausklappen (nur Liste, nicht ganze Sidebar)
-function updateSpotListCollapsedVisual() {
-  if (!spotListSectionEl) return;
-  spotListSectionEl.classList.toggle("spot-list-collapsed", spotListCollapsed);
-  if (spotsTitleEl) {
-    spotsTitleEl.setAttribute(
-      "aria-expanded",
-      spotListCollapsed ? "false" : "true"
-    );
   }
 }
 
@@ -1470,6 +1454,11 @@ function init() {
     );
   }
 
+  // 👉 direkt nach DOM-Grab: Body-Elemente verstecken, wenn collapsed
+  if (filtersCollapsed && filterBodyEls.length) {
+    filterBodyEls.forEach((el) => el.classList.add("hidden"));
+  }
+
   btnToggleFiltersEl = document.getElementById("btn-toggle-filters");
   btnToggleViewEl = document.getElementById("btn-toggle-view");
 
@@ -1491,21 +1480,6 @@ function init() {
   spotListEl = document.getElementById("spot-list");
   spotDetailEl = document.getElementById("spot-detail");
 
-  // Spot-Liste Section + Titel für Ein-/Ausklappen
-  spotListSectionEl = spotListEl
-    ? spotListEl.closest(".sidebar-section--grow") ||
-      spotListEl.closest(".sidebar-section")
-    : null;
-  spotsTitleEl = document.getElementById("spots-title");
-
-  if (spotsTitleEl) {
-    spotsTitleEl.style.cursor = "pointer";
-    spotsTitleEl.addEventListener("click", () => {
-      spotListCollapsed = !spotListCollapsed;
-      updateSpotListCollapsedVisual();
-    });
-  }
-
   plusCodeInputEl = document.getElementById("plus-code-input");
   plusCodeSubmitEl = document.getElementById("plus-code-submit");
   plusStatusTextEl = document.getElementById("plus-status-text");
@@ -1516,7 +1490,6 @@ function init() {
   toastEl = document.getElementById("toast");
 
   // Kompass
-  compassSectionEl = document.getElementById("compass-section");
   compassLabelEl = document.getElementById("compass-label");
   compassHelperEl = document.getElementById("compass-helper");
   compassApplyLabelEl = document.getElementById("compass-apply-label");
@@ -1668,8 +1641,11 @@ function init() {
 
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
-    // Start: eingeklappt
-    handleToggleFilters();
+    btnToggleFiltersEl
+      .querySelector("span")
+      .textContent = filtersCollapsed
+        ? t("btn_show_filters")
+        : t("btn_hide_filters");
   }
 
   if (btnToggleViewEl) {
@@ -1729,14 +1705,6 @@ function init() {
       }
     });
   });
-
-  // Kompass beim Start eingeklappt
-  if (compassSectionEl && typeof compassSectionEl.open === "boolean") {
-    compassSectionEl.open = false;
-  }
-
-  // Spot-Liste Visual (Startzustand)
-  updateSpotListCollapsedVisual();
 
   switchRoute("map");
   loadSpots();
