@@ -52,7 +52,7 @@ const UI_STRINGS = {
     filter_radius_description_all:
       "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
 
-    // Tilla – Intro & Zustände (werden von tilla.js über getText() genutzt)
+    // Tilla – Intro & Zustände
     turtle_intro_1:
       "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
     turtle_intro_2:
@@ -153,8 +153,7 @@ const UI_STRINGS = {
   }
 };
 
-// Kategorie-Labels & MASTER_CATEGORY_SLUGS wie gehabt ...
-// (ich kürze hier nichts; dein Original ist 1:1 übernommen)
+// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert)
 const CATEGORY_LABELS = {
   wildpark: {
     de: "Wildpark & Safaripark",
@@ -385,10 +384,10 @@ let filteredSpots = [];
 let favorites = new Set();
 
 let plusActive = false;
-let moodFilter = null;
-let travelMode = null;
-let radiusStep = 4;
-let ageFilter = "all";
+let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
+let travelMode = null; // "everyday" | "trip" | null
+let radiusStep = 4; // 0–4
+let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
 let categoryFilter = "";
 let onlyBigAdventures = false;
@@ -437,8 +436,6 @@ let compassApplyBtnEl;
 
 // Tilla
 let tilla = null;
-let tillaGameMoreBtnEl = null;
-let tillaTextWrapperEl = null;
 
 // Filter-Body innerhalb der Filter-Section
 let filterBodyEls = [];
@@ -550,14 +547,6 @@ function setLanguage(lang, { initial = false } = {}) {
       currentLang === "de"
         ? "Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
         : "Today we went to the wildlife park – the goats were sooo cute!";
-  }
-
-  // Tilla-Reisespiel-Button beschriften
-  if (tillaGameMoreBtnEl) {
-    tillaGameMoreBtnEl.textContent =
-      currentLang === "de"
-        ? "🎲 Noch eine Spielidee"
-        : "🎲 Another game idea";
   }
 
   updateRadiusTexts();
@@ -878,14 +867,41 @@ function renderMarkers() {
     const name = getSpotName(spot);
     const subtitle = getSpotSubtitle(spot);
 
-    const popupHtml = `
+    // Popup mit Routenlinks
+    let popupHtml = `
       <div class="popup">
         <strong>${name}</strong><br/>
         <small>${subtitle || ""}</small>
-      </div>
     `;
 
+    if (spot.lat && spot.lng) {
+      const lat = spot.lat;
+      const lng = spot.lng;
+      const encodedLabel = encodeURIComponent(name);
+      const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+      const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedLabel}`;
+
+      const googleLabel =
+        currentLang === "de" ? "Google Maps" : "Google Maps";
+      const appleLabel =
+        currentLang === "de" ? "Apple Karten" : "Apple Maps";
+
+      popupHtml += `
+        <div class="popup-actions">
+          <a class="popup-link" href="${googleUrl}" target="_blank" rel="noopener noreferrer">${googleLabel}</a>
+          <a class="popup-link" href="${appleUrl}" target="_blank" rel="noopener noreferrer">${appleLabel}</a>
+        </div>
+      `;
+    }
+
+    popupHtml += "</div>";
+
     marker.bindPopup(popupHtml);
+
+    // Marker-Klick zeigt auch das Detail-Kärtchen unten
+    marker.on("click", () => {
+      showSpotDetails(spot);
+    });
 
     markersLayer.addLayer(marker);
   });
@@ -1067,6 +1083,44 @@ function showSpotDetails(spot) {
   if (subtitle) spotDetailEl.appendChild(subtitleEl);
   if (metaParts.length) spotDetailEl.appendChild(metaEl);
   if (description) spotDetailEl.appendChild(descEl);
+
+  // Routen-Buttons im Detail-Kärtchen (Google Maps & Apple Karten)
+  if (spot.lat && spot.lng) {
+    const lat = spot.lat;
+    const lng = spot.lng;
+    const encodedLabel = encodeURIComponent(name);
+    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+    const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedLabel}`;
+
+    const routesRow = document.createElement("div");
+    routesRow.className = "spot-details-routes";
+
+    const googleLink = document.createElement("a");
+    googleLink.href = googleUrl;
+    googleLink.target = "_blank";
+    googleLink.rel = "noopener noreferrer";
+    googleLink.className = "spot-details-route-link";
+    googleLink.textContent =
+      currentLang === "de"
+        ? "Route mit Google Maps"
+        : "Route with Google Maps";
+
+    const appleLink = document.createElement("a");
+    appleLink.href = appleUrl;
+    appleLink.target = "_blank";
+    appleLink.rel = "noopener noreferrer";
+    appleLink.className = "spot-details-route-link";
+    appleLink.textContent =
+      currentLang === "de"
+        ? "Route mit Apple Karten"
+        : "Route with Apple Maps";
+
+    routesRow.appendChild(googleLink);
+    routesRow.appendChild(appleLink);
+
+    spotDetailEl.appendChild(routesRow);
+  }
+
   spotDetailEl.appendChild(actionsRow);
 }
 
@@ -1235,6 +1289,8 @@ function switchRoute(route) {
     }
   });
 
+  // Beim Wechsel immer nach oben scrollen,
+  // damit Karte / Über-Text direkt sichtbar sind
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1334,9 +1390,6 @@ function init() {
   compassApplyLabelEl = document.getElementById("compass-apply-label");
   compassApplyBtnEl = document.getElementById("compass-apply");
 
-  // Tilla Wrapper
-  tillaTextWrapperEl = document.querySelector(".tilla-sidebar-text");
-
   // Sprache / Theme / Map
   const initialLang = getInitialLang();
   setLanguage(initialLang, { initial: true });
@@ -1346,7 +1399,7 @@ function init() {
 
   initMap();
 
-  // Map-Klick schließt Detail-Panel
+  // Map-Klick schließt unser Detail-Panel
   if (map && spotDetailEl) {
     map.on("click", () => {
       spotDetailEl.classList.add("spot-details--hidden");
@@ -1359,24 +1412,7 @@ function init() {
     getText: (key) => t(key)
   });
 
-  // "Noch eine Spielidee"-Button unter Tilla erstellen
-  if (tillaTextWrapperEl) {
-    tillaGameMoreBtnEl = document.createElement("button");
-    tillaGameMoreBtnEl.type = "button";
-    tillaGameMoreBtnEl.className = "tilla-game-link";
-    tillaGameMoreBtnEl.textContent =
-      currentLang === "de"
-        ? "🎲 Noch eine Spielidee"
-        : "🎲 Another game idea";
-    tillaGameMoreBtnEl.addEventListener("click", () => {
-      if (tilla && typeof tilla.showAnotherTravelGame === "function") {
-        tilla.showAnotherTravelGame();
-      }
-    });
-    tillaTextWrapperEl.appendChild(tillaGameMoreBtnEl);
-  }
-
-  // Events – Sprache
+  // Events – Sprache (Toggle via Button)
   if (languageSwitcherEl) {
     languageSwitcherEl.addEventListener("click", () => {
       const nextLang = currentLang === "de" ? "en" : "de";
