@@ -440,7 +440,7 @@ let categoryFilter = "";
 let onlyBigAdventures = false;
 let onlyVerified = false;
 let onlyFavorites = false;
-let filtersCollapsed = false;
+let filtersCollapsed = true;
 
 // DOM-Elemente
 let languageSwitcherEl;
