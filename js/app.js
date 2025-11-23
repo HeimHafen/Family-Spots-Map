@@ -1456,8 +1456,8 @@ function init() {
   btnToggleFiltersEl = document.getElementById("btn-toggle-filters");
   btnToggleViewEl = document.getElementById("btn-toggle-view");
 
-  // Spielideen-Button (🎲)
-  playIdeasBtnEl = document.getElementById("btn-play-ideas");
+  // Spielideen-Button (🎲)  **FIX: korrekte ID ohne „s“**
+  playIdeasBtnEl = document.getElementById("btn-play-idea");
 
   filterSearchEl = document.getElementById("filter-search");
   filterCategoryEl = document.getElementById("filter-category");
