@@ -75,7 +75,7 @@ const UI_STRINGS = {
       "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern.",
 
     // Header / Navigation (dynamisch)
-    header_tagline: "Heute ist Familientag.",
+    header_tagline: "Heute ist Zeit für Familie.",
     nav_map: "Karte",
     nav_about: "Über",
 
