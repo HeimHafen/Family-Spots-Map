@@ -23,8 +23,6 @@ const UI_STRINGS = {
     btn_only_map: "Nur Karte",
     btn_show_filters: "Filter anzeigen",
     btn_hide_filters: "Filter ausblenden",
-    btn_open_gmaps: "In Google Maps öffnen",
-    btn_open_apple_maps: "In Apple Karten öffnen",
 
     // Favoriten
     toast_fav_added: "Zu euren Lieblingsspots gelegt 💛",
@@ -85,7 +83,11 @@ const UI_STRINGS = {
     compass_title: "Familien-Kompass",
     compass_helper:
       "Keine Lust auf lange Planung? Ich helfe euch, den Radius passend zu heute zu wählen – Alltag oder Unterwegs-Modus.",
-    compass_apply_label: "Kompass anwenden"
+    compass_apply_label: "Kompass anwenden",
+
+    // Routen-Links
+    route_apple: "In Apple Karten öffnen",
+    route_google: "In Google Maps öffnen"
   },
   en: {
     error_data_load:
@@ -99,8 +101,6 @@ const UI_STRINGS = {
     btn_only_map: "Map only",
     btn_show_filters: "Show filters",
     btn_hide_filters: "Hide filters",
-    btn_open_gmaps: "Open in Google Maps",
-    btn_open_apple_maps: "Open in Apple Maps",
 
     toast_fav_added: "Added to your favourite places.",
     toast_fav_removed: "Removed from your favourite places.",
@@ -153,7 +153,10 @@ const UI_STRINGS = {
     compass_title: "Family Compass",
     compass_helper:
       "Don’t feel like long planning today? I’ll help you pick a fitting radius – everyday mode or travel mode.",
-    compass_apply_label: "Apply compass"
+    compass_apply_label: "Apply compass",
+
+    route_apple: "Open in Apple Maps",
+    route_google: "Open in Google Maps"
   }
 };
 
@@ -567,10 +570,6 @@ function setLanguage(lang, { initial = false } = {}) {
 
   updateLanguageSwitcherVisual();
   applyStaticI18n();
-
-  if (!initial) {
-    applyFiltersAndRender();
-  }
 }
 
 // ------------------------------------------------------
@@ -875,25 +874,41 @@ function renderMarkers() {
     const name = getSpotName(spot);
     const subtitle = getSpotSubtitle(spot);
 
-    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${spot.lat},${spot.lng}`;
-    const appleUrl = `https://maps.apple.com/?ll=${spot.lat},${spot.lng}&q=${encodeURIComponent(
-      name
-    )}`;
-    const googleLabel = t("btn_open_gmaps");
-    const appleLabel = t("btn_open_apple_maps");
+    // Routing-Links für Popup (Google & Apple)
+    let routesHtml = "";
+    if (spot.lat && spot.lng) {
+      const lat = spot.lat;
+      const lng = spot.lng;
+      const encodedName = encodeURIComponent(name || "");
+      const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`;
+      const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+      const appleLabel =
+        currentLang === "de" ? "Apple Karten" : "Apple Maps";
+      const googleLabel =
+        currentLang === "de" ? "Google Maps" : "Google Maps";
+
+      routesHtml = `
+        <div class="popup-actions">
+          <a class="popup-link" href="${appleUrl}" target="_blank" rel="noopener noreferrer">${appleLabel}</a>
+          <a class="popup-link" href="${googleUrl}" target="_blank" rel="noopener noreferrer">${googleLabel}</a>
+        </div>
+      `;
+    }
 
     const popupHtml = `
       <div class="popup">
         <strong>${name}</strong><br/>
         <small>${subtitle || ""}</small>
-        <div class="popup-actions">
-          <a class="btn btn-small" href="${googleUrl}" target="_blank" rel="noopener noreferrer">${googleLabel}</a>
-          <a class="btn btn-small" href="${appleUrl}" target="_blank" rel="noopener noreferrer">${appleLabel}</a>
-        </div>
+        ${routesHtml}
       </div>
     `;
 
     marker.bindPopup(popupHtml);
+
+    marker.on("click", () => {
+      focusSpotOnMap(spot);
+    });
 
     markersLayer.addLayer(marker);
   });
@@ -1009,8 +1024,6 @@ function showSpotDetails(spot) {
   if (spot.category) metaParts.push(getCategoryLabel(spot.category));
   if (spot.verified)
     metaParts.push(currentLang === "de" ? "verifiziert" : "verified");
-  if (Array.isArray(spot.tags) && spot.tags.length)
-    metaParts.push(spot.tags.join(", "));
   if (spot.visit_minutes) {
     metaParts.push(
       currentLang === "de"
@@ -1018,6 +1031,8 @@ function showSpotDetails(spot) {
         : `~${spot.visit_minutes} min`
     );
   }
+
+  const tags = Array.isArray(spot.tags) ? spot.tags : [];
 
   let description = "";
   if (currentLang === "de") {
@@ -1028,54 +1043,38 @@ function showSpotDetails(spot) {
       spot.summary_en || spot.poetry || spot.description || spot.text || "";
   }
 
+  // Adresse möglichst freundlich zusammenbauen
+  const addressParts = [];
+  if (spot.address) addressParts.push(spot.address);
+  if (spot.postcode) addressParts.push(spot.postcode);
+  if (spot.city) addressParts.push(spot.city);
+  if (!addressParts.length && subtitle) addressParts.push(subtitle);
+  const addressText = addressParts.join(", ");
+
   spotDetailEl.innerHTML = "";
   spotDetailEl.classList.remove("spot-details--hidden");
 
+  // Header: Titel + Aktionen
+  const headerEl = document.createElement("div");
+  headerEl.className = "spot-details-header";
+
+  const titleWrapperEl = document.createElement("div");
+
   const titleEl = document.createElement("h3");
-  titleEl.className = "spot-card-title";
+  titleEl.className = "spot-details-title";
   titleEl.textContent = name;
 
-  const subtitleEl = document.createElement("p");
-  subtitleEl.className = "spot-card-subtitle";
-  subtitleEl.textContent = subtitle;
-
-  const metaEl = document.createElement("p");
-  metaEl.className = "spot-card-meta";
-  metaEl.textContent = metaParts.join(" · ");
-
-  const descEl = document.createElement("p");
-  descEl.className = "spot-card-meta";
-  descEl.textContent = description;
-
-  const navRow = document.createElement("div");
-  navRow.className = "popup-actions";
-
-  if (spot.lat && spot.lng) {
-    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${spot.lat},${spot.lng}`;
-    const appleUrl = `https://maps.apple.com/?ll=${spot.lat},${spot.lng}&q=${encodeURIComponent(
-      name
-    )}`;
-
-    const googleBtn = document.createElement("a");
-    googleBtn.href = googleUrl;
-    googleBtn.target = "_blank";
-    googleBtn.rel = "noopener noreferrer";
-    googleBtn.className = "btn btn-small";
-    googleBtn.textContent = t("btn_open_gmaps");
-
-    const appleBtn = document.createElement("a");
-    appleBtn.href = appleUrl;
-    appleBtn.target = "_blank";
-    appleBtn.rel = "noopener noreferrer";
-    appleBtn.className = "btn btn-small";
-    appleBtn.textContent = t("btn_open_apple_maps");
-
-    navRow.appendChild(googleBtn);
-    navRow.appendChild(appleBtn);
+  if (subtitle && !addressText) {
+    const subtitleEl = document.createElement("p");
+    subtitleEl.className = "spot-card-subtitle";
+    subtitleEl.textContent = subtitle;
+    titleWrapperEl.appendChild(subtitleEl);
   }
 
-  const actionsRow = document.createElement("div");
-  actionsRow.className = "popup-actions";
+  titleWrapperEl.insertBefore(titleEl, titleWrapperEl.firstChild);
+
+  const actionsEl = document.createElement("div");
+  actionsEl.className = "spot-details-actions";
 
   const favBtn = document.createElement("button");
   favBtn.type = "button";
@@ -1095,15 +1094,85 @@ function showSpotDetails(spot) {
     spotDetailEl.innerHTML = "";
   });
 
-  actionsRow.appendChild(favBtn);
-  actionsRow.appendChild(closeBtn);
+  actionsEl.appendChild(favBtn);
+  actionsEl.appendChild(closeBtn);
 
-  spotDetailEl.appendChild(titleEl);
-  if (subtitle) spotDetailEl.appendChild(subtitleEl);
-  if (metaParts.length) spotDetailEl.appendChild(metaEl);
-  if (description) spotDetailEl.appendChild(descEl);
-  if (navRow.children.length) spotDetailEl.appendChild(navRow);
-  spotDetailEl.appendChild(actionsRow);
+  headerEl.appendChild(titleWrapperEl);
+  headerEl.appendChild(actionsEl);
+
+  // Meta-Badges
+  const metaEl = document.createElement("div");
+  metaEl.className = "spot-details-meta";
+  metaParts.forEach((p) => {
+    const span = document.createElement("span");
+    span.textContent = p;
+    metaEl.appendChild(span);
+  });
+
+  // Tags
+  const tagsEl = document.createElement("div");
+  tagsEl.className = "spot-details-tags";
+  tags.forEach((tag) => {
+    const span = document.createElement("span");
+    span.className = "badge";
+    span.textContent = tag;
+    tagsEl.appendChild(span);
+  });
+
+  // Beschreibung
+  if (description) {
+    const descEl = document.createElement("p");
+    descEl.className = "spot-details-description";
+    descEl.textContent = description;
+    spotDetailEl.appendChild(descEl);
+  }
+
+  // Adresse
+  if (addressText) {
+    const addrEl = document.createElement("p");
+    addrEl.className = "spot-details-address";
+    addrEl.textContent = addressText;
+    spotDetailEl.appendChild(addrEl);
+  }
+
+  // Routen-Buttons (Apple / Google)
+  if (spot.lat && spot.lng) {
+    const routesEl = document.createElement("div");
+    routesEl.className = "spot-details-routes";
+
+    const lat = spot.lat;
+    const lng = spot.lng;
+    const encodedName = encodeURIComponent(name || "");
+
+    const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`;
+    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+    const appleLink = document.createElement("a");
+    appleLink.href = appleUrl;
+    appleLink.target = "_blank";
+    appleLink.rel = "noopener noreferrer";
+    appleLink.className = "spot-details-route-link";
+    appleLink.textContent = t("route_apple");
+
+    const googleLink = document.createElement("a");
+    googleLink.href = googleUrl;
+    googleLink.target = "_blank";
+    googleLink.rel = "noopener noreferrer";
+    googleLink.className = "spot-details-route-link";
+    googleLink.textContent = t("route_google");
+
+    routesEl.appendChild(appleLink);
+    routesEl.appendChild(googleLink);
+
+    spotDetailEl.appendChild(routesEl);
+  }
+
+  // Jetzt Header / Meta / Tags ganz nach oben einfügen
+  spotDetailEl.insertBefore(metaEl, spotDetailEl.firstChild);
+  spotDetailEl.insertBefore(headerEl, spotDetailEl.firstChild);
+  if (tags.length) {
+    spotDetailEl.appendChild(tagsEl);
+  }
 }
 
 // ------------------------------------------------------
@@ -1271,6 +1340,8 @@ function switchRoute(route) {
     }
   });
 
+  // Beim Wechsel immer nach oben scrollen,
+  // damit Karte / Über-Text direkt sichtbar sind
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1379,6 +1450,7 @@ function init() {
 
   initMap();
 
+  // Map-Klick schließt unser Detail-Panel
   if (map && spotDetailEl) {
     map.on("click", () => {
       spotDetailEl.classList.add("spot-details--hidden");
@@ -1391,6 +1463,7 @@ function init() {
     getText: (key) => t(key)
   });
 
+  // Events – Sprache (Toggle via Button)
   if (languageSwitcherEl) {
     languageSwitcherEl.addEventListener("click", () => {
       const nextLang = currentLang === "de" ? "en" : "de";
