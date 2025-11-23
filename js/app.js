@@ -33,7 +33,7 @@ const UI_STRINGS = {
 
     // Plus-Code
     plus_code_empty: "Bitte gib zuerst einen Aktions-Code ein.",
-    plus_code_unknown: "Dieser Code ist unbekannt oder nicht mehr gültig.",
+    plus_code_unknown: "Dieser Code ist unbekkannt oder nicht mehr gültig.",
     plus_code_activated:
       "Family Spots Plus wurde aktiviert – gute Fahrt & viel Freude auf euren Touren!",
     plus_code_failed:
@@ -440,7 +440,33 @@ let tilla = null;
 // Filter-Body innerhalb der Filter-Section
 let filterBodyEls = [];
 
+// NEU: Spielideen-Button
+let gameIdeasBtnEl = null;
+
+// Radius-Stufen
 const RADIUS_STEPS_KM = [1, 5, 15, 40, Infinity];
+
+// NEU: Spielideen-Pool
+const GAME_IDEAS = {
+  de: [
+    "Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
+    "Kennzeichen-Spiel: Sucht euch einen Buchstaben und sammelt alle Kennzeichen damit.",
+    "Geschichten-Staffel: Jede Person erzählt abwechselnd einen Satz – mal sehen, wo ihr landet.",
+    "Tier-ABC: Reihum Tiere von A bis Z nennen – wer bei einem Buchstaben nichts findet, ist raus.",
+    "Geräusche-Detektive: Einer macht ein Geräusch – die anderen raten, was es sein könnte.",
+    "Wörterkette: Das letzte Wort eines Satzes ist der Anfang des nächsten.",
+    "Was wäre wenn…? – Reihum verrückte ‚Was wäre, wenn…?‘-Fragen stellen und beantworten."
+  ],
+  en: [
+    "I spy with my little eye – but only things you can see outside the window.",
+    "Number plate game: Pick a letter and collect all license plates containing it.",
+    "Story relay: Everyone adds one sentence to a shared story.",
+    "Animal ABC: Take turns naming animals from A to Z.",
+    "Sound detectives: One person makes a sound, the others guess what it is.",
+    "Word chain: The last word of one sentence is the first word of the next.",
+    "What if…? – Take turns asking and answering funny ‘what if’ questions."
+  ]
+};
 
 // ------------------------------------------------------
 // Utility: Sprache & Übersetzung
@@ -557,6 +583,14 @@ function setLanguage(lang, { initial = false } = {}) {
     populateCategoryOptions();
   }
 
+  // NEU: Spielideen-Button-Beschriftung aktualisieren
+  if (gameIdeasBtnEl) {
+    gameIdeasBtnEl.textContent =
+      currentLang === "de"
+        ? "Spielideen für unterwegs"
+        : "On-the-road game ideas";
+  }
+
   if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
     tilla.onLanguageChanged();
   }
@@ -599,6 +633,28 @@ function showToast(keyOrMessage) {
   toastTimeoutId = setTimeout(() => {
     toastEl.classList.remove("toast--visible");
   }, 3200);
+}
+
+// ------------------------------------------------------
+// Spielideen
+// ------------------------------------------------------
+function getRandomGameIdea() {
+  const list = GAME_IDEAS[currentLang] || GAME_IDEAS.de;
+  if (!list || !list.length) return "";
+  const idx = Math.floor(Math.random() * list.length);
+  return list[idx];
+}
+
+function handleGameIdeaClick() {
+  const idea = getRandomGameIdea();
+  if (!idea) return;
+
+  const prefix = currentLang === "de" ? "Spielidee: " : "Game idea: ";
+  showToast(prefix + idea);
+
+  if (tilla && typeof tilla.onGameIdeaRequested === "function") {
+    tilla.onGameIdeaRequested();
+  }
 }
 
 // ------------------------------------------------------
@@ -867,38 +923,16 @@ function renderMarkers() {
     const name = getSpotName(spot);
     const subtitle = getSpotSubtitle(spot);
 
-    // Popup mit Routenlinks
-    let popupHtml = `
+    const popupHtml = `
       <div class="popup">
         <strong>${name}</strong><br/>
         <small>${subtitle || ""}</small>
+      </div>
     `;
-
-    if (spot.lat && spot.lng) {
-      const lat = spot.lat;
-      const lng = spot.lng;
-      const encodedLabel = encodeURIComponent(name);
-      const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-      const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedLabel}`;
-
-      const googleLabel =
-        currentLang === "de" ? "Google Maps" : "Google Maps";
-      const appleLabel =
-        currentLang === "de" ? "Apple Karten" : "Apple Maps";
-
-      popupHtml += `
-        <div class="popup-actions">
-          <a class="popup-link" href="${googleUrl}" target="_blank" rel="noopener noreferrer">${googleLabel}</a>
-          <a class="popup-link" href="${appleUrl}" target="_blank" rel="noopener noreferrer">${appleLabel}</a>
-        </div>
-      `;
-    }
-
-    popupHtml += "</div>";
 
     marker.bindPopup(popupHtml);
 
-    // Marker-Klick zeigt auch das Detail-Kärtchen unten
+    // Beim Tipp auf den Marker auch das Detailpanel unten öffnen
     marker.on("click", () => {
       showSpotDetails(spot);
     });
@@ -1030,33 +1064,48 @@ function showSpotDetails(spot) {
   let description = "";
   if (currentLang === "de") {
     description =
-      spot.summary_de || spot.poetry || spot.description || spot.text || "";
+      spot.summary_de || spot.description_de || spot.description || "";
   } else {
     description =
-      spot.summary_en || spot.poetry || spot.description || spot.text || "";
+      spot.summary_en || spot.description_en || spot.description || "";
   }
+
+  const poetry = spot.poetry || "";
+
+  // Adresse für Detail-Panel
+  const addressParts = [];
+  if (spot.street) addressParts.push(spot.street);
+  if (spot.postcode && spot.city) {
+    addressParts.push(`${spot.postcode} ${spot.city}`);
+  } else if (spot.city) {
+    addressParts.push(spot.city);
+  }
+  if (spot.country) addressParts.push(spot.country);
+  const address = addressParts.join(", ");
 
   spotDetailEl.innerHTML = "";
   spotDetailEl.classList.remove("spot-details--hidden");
 
+  // Header (Titel + Actions)
+  const headerEl = document.createElement("div");
+  headerEl.className = "spot-details-header";
+
+  const titleWrapEl = document.createElement("div");
+
   const titleEl = document.createElement("h3");
-  titleEl.className = "spot-card-title";
+  titleEl.className = "spot-details-title";
   titleEl.textContent = name;
+  titleWrapEl.appendChild(titleEl);
 
-  const subtitleEl = document.createElement("p");
-  subtitleEl.className = "spot-card-subtitle";
-  subtitleEl.textContent = subtitle;
+  if (subtitle) {
+    const subtitleEl = document.createElement("p");
+    subtitleEl.className = "spot-card-subtitle";
+    subtitleEl.textContent = subtitle;
+    titleWrapEl.appendChild(subtitleEl);
+  }
 
-  const metaEl = document.createElement("p");
-  metaEl.className = "spot-card-meta";
-  metaEl.textContent = metaParts.join(" · ");
-
-  const descEl = document.createElement("p");
-  descEl.className = "spot-card-meta";
-  descEl.textContent = description;
-
-  const actionsRow = document.createElement("div");
-  actionsRow.className = "popup-actions";
+  const actionsEl = document.createElement("div");
+  actionsEl.className = "spot-details-actions";
 
   const favBtn = document.createElement("button");
   favBtn.type = "button";
@@ -1076,52 +1125,80 @@ function showSpotDetails(spot) {
     spotDetailEl.innerHTML = "";
   });
 
-  actionsRow.appendChild(favBtn);
-  actionsRow.appendChild(closeBtn);
+  actionsEl.appendChild(favBtn);
+  actionsEl.appendChild(closeBtn);
 
-  spotDetailEl.appendChild(titleEl);
-  if (subtitle) spotDetailEl.appendChild(subtitleEl);
-  if (metaParts.length) spotDetailEl.appendChild(metaEl);
-  if (description) spotDetailEl.appendChild(descEl);
+  headerEl.appendChild(titleWrapEl);
+  headerEl.appendChild(actionsEl);
+  spotDetailEl.appendChild(headerEl);
 
-  // Routen-Buttons im Detail-Kärtchen (Google Maps & Apple Karten)
-  if (spot.lat && spot.lng) {
-    const lat = spot.lat;
-    const lng = spot.lng;
-    const encodedLabel = encodeURIComponent(name);
-    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-    const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedLabel}`;
-
-    const routesRow = document.createElement("div");
-    routesRow.className = "spot-details-routes";
-
-    const googleLink = document.createElement("a");
-    googleLink.href = googleUrl;
-    googleLink.target = "_blank";
-    googleLink.rel = "noopener noreferrer";
-    googleLink.className = "spot-details-route-link";
-    googleLink.textContent =
-      currentLang === "de"
-        ? "Route mit Google Maps"
-        : "Route with Google Maps";
-
-    const appleLink = document.createElement("a");
-    appleLink.href = appleUrl;
-    appleLink.target = "_blank";
-    appleLink.rel = "noopener noreferrer";
-    appleLink.className = "spot-details-route-link";
-    appleLink.textContent =
-      currentLang === "de"
-        ? "Route mit Apple Karten"
-        : "Route with Apple Maps";
-
-    routesRow.appendChild(googleLink);
-    routesRow.appendChild(appleLink);
-
-    spotDetailEl.appendChild(routesRow);
+  // Meta-Chips
+  if (metaParts.length) {
+    const metaEl = document.createElement("div");
+    metaEl.className = "spot-details-meta";
+    metaParts.forEach((m) => {
+      const chip = document.createElement("span");
+      chip.textContent = m;
+      metaEl.appendChild(chip);
+    });
+    spotDetailEl.appendChild(metaEl);
   }
 
-  spotDetailEl.appendChild(actionsRow);
+  // Poetry
+  if (poetry) {
+    const poetryEl = document.createElement("p");
+    poetryEl.className = "spot-details-poetry";
+    poetryEl.textContent = poetry;
+    spotDetailEl.appendChild(poetryEl);
+  }
+
+  // Beschreibung
+  if (description) {
+    const descEl = document.createElement("p");
+    descEl.className = "spot-details-description";
+    descEl.textContent = description;
+    spotDetailEl.appendChild(descEl);
+  }
+
+  // Adresse
+  if (address) {
+    const addrEl = document.createElement("p");
+    addrEl.className = "spot-details-address";
+    addrEl.textContent = address;
+    spotDetailEl.appendChild(addrEl);
+  }
+
+  // Routen-Links (Apple Karten / Google Maps)
+  if (spot.lat && spot.lng) {
+    const routesEl = document.createElement("div");
+    routesEl.className = "spot-details-routes";
+
+    const dest = `${spot.lat},${spot.lng}`;
+    const encodedName = encodeURIComponent(name);
+
+    // Apple Karten
+    const appleLink = document.createElement("a");
+    appleLink.className = "spot-details-route-link";
+    appleLink.href = `https://maps.apple.com/?ll=${dest}&q=${encodedName}`;
+    appleLink.target = "_blank";
+    appleLink.rel = "noopener noreferrer";
+    appleLink.textContent =
+      currentLang === "de" ? "In Apple Karten öffnen" : "Open in Apple Maps";
+
+    // Google Maps
+    const googleLink = document.createElement("a");
+    googleLink.className = "spot-details-route-link";
+    googleLink.href = `https://www.google.com/maps/dir/?api=1&destination=${dest}&destination_place_id=&travelmode=driving`;
+    googleLink.target = "_blank";
+    googleLink.rel = "noopener noreferrer";
+    googleLink.textContent =
+      currentLang === "de" ? "In Google Maps öffnen" : "Open in Google Maps";
+
+    routesEl.appendChild(appleLink);
+    routesEl.appendChild(googleLink);
+
+    spotDetailEl.appendChild(routesEl);
+  }
 }
 
 // ------------------------------------------------------
@@ -1185,6 +1262,10 @@ function handleCompassApply() {
   filterRadiusEl.value = String(radiusStep);
   updateRadiusTexts();
   applyFiltersAndRender();
+
+  if (tilla && typeof tilla.onCompassApplied === "function") {
+    tilla.onCompassApplied({ travelMode, radiusStep });
+  }
 }
 
 // ------------------------------------------------------
@@ -1411,6 +1492,23 @@ function init() {
   tilla = new TillaCompanion({
     getText: (key) => t(key)
   });
+
+  // NEU: Spielideen-Button unter Tilla einfügen
+  const tillaTextContainer = document.querySelector(".tilla-sidebar-text");
+  if (tillaTextContainer) {
+    gameIdeasBtnEl = document.createElement("button");
+    gameIdeasBtnEl.type = "button";
+    gameIdeasBtnEl.id = "btn-game-ideas";
+    gameIdeasBtnEl.className = "btn-ghost btn-small";
+    gameIdeasBtnEl.style.marginTop = "6px";
+    gameIdeasBtnEl.textContent =
+      currentLang === "de"
+        ? "Spielideen für unterwegs"
+        : "On-the-road game ideas";
+
+    tillaTextContainer.appendChild(gameIdeasBtnEl);
+    gameIdeasBtnEl.addEventListener("click", handleGameIdeaClick);
+  }
 
   // Events – Sprache (Toggle via Button)
   if (languageSwitcherEl) {
