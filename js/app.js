@@ -83,7 +83,11 @@ const UI_STRINGS = {
     compass_title: "Familien-Kompass",
     compass_helper:
       "Keine Lust auf lange Planung? Ich helfe euch, den Radius passend zu heute zu wählen – Alltag oder Unterwegs-Modus.",
-    compass_apply_label: "Kompass anwenden"
+    compass_apply_label: "Kompass anwenden",
+
+    // Routen-Links
+    route_apple: "In Apple Karten öffnen",
+    route_google: "In Google Maps öffnen"
   },
   en: {
     error_data_load:
@@ -149,28 +153,11 @@ const UI_STRINGS = {
     compass_title: "Family Compass",
     compass_helper:
       "Don’t feel like long planning today? I’ll help you pick a fitting radius – everyday mode or travel mode.",
-    compass_apply_label: "Apply compass"
-  }
-};
+    compass_apply_label: "Apply compass",
 
-// ------------------------------------------------------
-// Spielideen für unterwegs (Tilla / Würfel-Button)
-// ------------------------------------------------------
-const PLAY_IDEAS = {
-  de: [
-    "Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
-    "Sucht nacheinander Dinge in einer Farbe: Wer zuerst drei findet, gewinnt.",
-    "Denkt euch Tiere aus, die es nicht gibt – die anderen müssen erraten, wie sie aussehen.",
-    "Nacheinander: ‚Wohin würdest du gern mal reisen – und warum?‘ Jeder beantwortet die Frage.",
-    "Sucht Kennzeichen mit bestimmten Buchstaben und denkt euch passende Städte dazu aus."
-  ],
-  en: [
-    "I spy with my little eye – but only things outside the window.",
-    "Take turns spotting things in one colour: whoever finds three first wins.",
-    "Invent animals that don’t exist – the others guess what they look like.",
-    "Take turns: ‘Where would you like to travel one day – and why?’",
-    "Look for licence plates with certain letters and make up fitting city names."
-  ]
+    route_apple: "Open in Apple Maps",
+    route_google: "Open in Google Maps"
+  }
 };
 
 // (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert)
@@ -457,9 +444,6 @@ let compassApplyBtnEl;
 // Tilla
 let tilla = null;
 
-// Spielideen-Button
-let playIdeasBtnEl;
-
 // Filter-Body innerhalb der Filter-Section
 let filterBodyEls = [];
 
@@ -500,14 +484,6 @@ function applyStaticI18n() {
     const text = el.getAttribute(`data-${key}`);
     if (text) el.textContent = text;
   });
-}
-
-// Spielideen-Helfer
-function getRandomPlayIdea() {
-  const list = PLAY_IDEAS[currentLang] || PLAY_IDEAS.de;
-  if (!list || !list.length) return "";
-  const index = Math.floor(Math.random() * list.length);
-  return list[index];
 }
 
 // Button-Beschriftung & ARIA aktualisieren
@@ -898,18 +874,40 @@ function renderMarkers() {
     const name = getSpotName(spot);
     const subtitle = getSpotSubtitle(spot);
 
+    // Routing-Links für Popup (Google & Apple)
+    let routesHtml = "";
+    if (spot.lat && spot.lng) {
+      const lat = spot.lat;
+      const lng = spot.lng;
+      const encodedName = encodeURIComponent(name || "");
+      const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`;
+      const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+      const appleLabel =
+        currentLang === "de" ? "Apple Karten" : "Apple Maps";
+      const googleLabel =
+        currentLang === "de" ? "Google Maps" : "Google Maps";
+
+      routesHtml = `
+        <div class="popup-actions">
+          <a class="popup-link" href="${appleUrl}" target="_blank" rel="noopener noreferrer">${appleLabel}</a>
+          <a class="popup-link" href="${googleUrl}" target="_blank" rel="noopener noreferrer">${googleLabel}</a>
+        </div>
+      `;
+    }
+
     const popupHtml = `
       <div class="popup">
         <strong>${name}</strong><br/>
         <small>${subtitle || ""}</small>
+        ${routesHtml}
       </div>
     `;
 
     marker.bindPopup(popupHtml);
 
-    // NEU: Klick auf Marker öffnet das Detail-Kärtchen mit Routen-Buttons
     marker.on("click", () => {
-      showSpotDetails(spot);
+      focusSpotOnMap(spot);
     });
 
     markersLayer.addLayer(marker);
@@ -1013,29 +1011,6 @@ function focusSpotOnMap(spot) {
   showSpotDetails(spot);
 }
 
-// URL-Helfer für Routen
-function buildGoogleMapsUrl(spot) {
-  const name = getSpotName(spot);
-  const subtitle = getSpotSubtitle(spot);
-  if (spot.lat && spot.lng) {
-    return `https://www.google.com/maps/search/?api=1&query=${spot.lat},${spot.lng}`;
-  }
-  const query = encodeURIComponent(`${name} ${subtitle || ""}`.trim());
-  return `https://www.google.com/maps/search/?api=1&query=${query}`;
-}
-
-function buildAppleMapsUrl(spot) {
-  const name = getSpotName(spot);
-  const subtitle = getSpotSubtitle(spot);
-  if (spot.lat && spot.lng) {
-    return `http://maps.apple.com/?ll=${spot.lat},${spot.lng}&q=${encodeURIComponent(
-      name
-    )}`;
-  }
-  const query = encodeURIComponent(`${name} ${subtitle || ""}`.trim());
-  return `http://maps.apple.com/?q=${query}`;
-}
-
 function showSpotDetails(spot) {
   if (!spotDetailEl) return;
 
@@ -1049,8 +1024,6 @@ function showSpotDetails(spot) {
   if (spot.category) metaParts.push(getCategoryLabel(spot.category));
   if (spot.verified)
     metaParts.push(currentLang === "de" ? "verifiziert" : "verified");
-  if (Array.isArray(spot.tags) && spot.tags.length)
-    metaParts.push(spot.tags.join(", "));
   if (spot.visit_minutes) {
     metaParts.push(
       currentLang === "de"
@@ -1058,6 +1031,8 @@ function showSpotDetails(spot) {
         : `~${spot.visit_minutes} min`
     );
   }
+
+  const tags = Array.isArray(spot.tags) ? spot.tags : [];
 
   let description = "";
   if (currentLang === "de") {
@@ -1068,63 +1043,38 @@ function showSpotDetails(spot) {
       spot.summary_en || spot.poetry || spot.description || spot.text || "";
   }
 
+  // Adresse möglichst freundlich zusammenbauen
+  const addressParts = [];
+  if (spot.address) addressParts.push(spot.address);
+  if (spot.postcode) addressParts.push(spot.postcode);
+  if (spot.city) addressParts.push(spot.city);
+  if (!addressParts.length && subtitle) addressParts.push(subtitle);
+  const addressText = addressParts.join(", ");
+
   spotDetailEl.innerHTML = "";
   spotDetailEl.classList.remove("spot-details--hidden");
 
+  // Header: Titel + Aktionen
+  const headerEl = document.createElement("div");
+  headerEl.className = "spot-details-header";
+
+  const titleWrapperEl = document.createElement("div");
+
   const titleEl = document.createElement("h3");
-  titleEl.className = "spot-card-title";
+  titleEl.className = "spot-details-title";
   titleEl.textContent = name;
 
-  if (subtitle) {
+  if (subtitle && !addressText) {
     const subtitleEl = document.createElement("p");
     subtitleEl.className = "spot-card-subtitle";
     subtitleEl.textContent = subtitle;
-    spotDetailEl.appendChild(subtitleEl);
+    titleWrapperEl.appendChild(subtitleEl);
   }
 
-  spotDetailEl.appendChild(titleEl);
+  titleWrapperEl.insertBefore(titleEl, titleWrapperEl.firstChild);
 
-  if (metaParts.length) {
-    const metaEl = document.createElement("p");
-    metaEl.className = "spot-card-meta";
-    metaEl.textContent = metaParts.join(" · ");
-    spotDetailEl.appendChild(metaEl);
-  }
-
-  if (description) {
-    const descEl = document.createElement("p");
-    descEl.className = "spot-card-meta";
-    descEl.textContent = description;
-    spotDetailEl.appendChild(descEl);
-  }
-
-  // Routen-Buttons
-  const routesRow = document.createElement("div");
-  routesRow.className = "spot-details-routes";
-
-  const googleLink = document.createElement("a");
-  googleLink.href = buildGoogleMapsUrl(spot);
-  googleLink.target = "_blank";
-  googleLink.rel = "noopener";
-  googleLink.className = "spot-details-route-link";
-  googleLink.textContent =
-    currentLang === "de" ? "In Google Maps öffnen" : "Open in Google Maps";
-
-  const appleLink = document.createElement("a");
-  appleLink.href = buildAppleMapsUrl(spot);
-  appleLink.target = "_blank";
-  appleLink.rel = "noopener";
-  appleLink.className = "spot-details-route-link";
-  appleLink.textContent =
-    currentLang === "de" ? "In Apple Karten öffnen" : "Open in Apple Maps";
-
-  routesRow.appendChild(googleLink);
-  routesRow.appendChild(appleLink);
-  spotDetailEl.appendChild(routesRow);
-
-  // Actions (Favorit + Schließen)
-  const actionsRow = document.createElement("div");
-  actionsRow.className = "popup-actions";
+  const actionsEl = document.createElement("div");
+  actionsEl.className = "spot-details-actions";
 
   const favBtn = document.createElement("button");
   favBtn.type = "button";
@@ -1144,9 +1094,85 @@ function showSpotDetails(spot) {
     spotDetailEl.innerHTML = "";
   });
 
-  actionsRow.appendChild(favBtn);
-  actionsRow.appendChild(closeBtn);
-  spotDetailEl.appendChild(actionsRow);
+  actionsEl.appendChild(favBtn);
+  actionsEl.appendChild(closeBtn);
+
+  headerEl.appendChild(titleWrapperEl);
+  headerEl.appendChild(actionsEl);
+
+  // Meta-Badges
+  const metaEl = document.createElement("div");
+  metaEl.className = "spot-details-meta";
+  metaParts.forEach((p) => {
+    const span = document.createElement("span");
+    span.textContent = p;
+    metaEl.appendChild(span);
+  });
+
+  // Tags
+  const tagsEl = document.createElement("div");
+  tagsEl.className = "spot-details-tags";
+  tags.forEach((tag) => {
+    const span = document.createElement("span");
+    span.className = "badge";
+    span.textContent = tag;
+    tagsEl.appendChild(span);
+  });
+
+  // Beschreibung
+  if (description) {
+    const descEl = document.createElement("p");
+    descEl.className = "spot-details-description";
+    descEl.textContent = description;
+    spotDetailEl.appendChild(descEl);
+  }
+
+  // Adresse
+  if (addressText) {
+    const addrEl = document.createElement("p");
+    addrEl.className = "spot-details-address";
+    addrEl.textContent = addressText;
+    spotDetailEl.appendChild(addrEl);
+  }
+
+  // Routen-Buttons (Apple / Google)
+  if (spot.lat && spot.lng) {
+    const routesEl = document.createElement("div");
+    routesEl.className = "spot-details-routes";
+
+    const lat = spot.lat;
+    const lng = spot.lng;
+    const encodedName = encodeURIComponent(name || "");
+
+    const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`;
+    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+    const appleLink = document.createElement("a");
+    appleLink.href = appleUrl;
+    appleLink.target = "_blank";
+    appleLink.rel = "noopener noreferrer";
+    appleLink.className = "spot-details-route-link";
+    appleLink.textContent = t("route_apple");
+
+    const googleLink = document.createElement("a");
+    googleLink.href = googleUrl;
+    googleLink.target = "_blank";
+    googleLink.rel = "noopener noreferrer";
+    googleLink.className = "spot-details-route-link";
+    googleLink.textContent = t("route_google");
+
+    routesEl.appendChild(appleLink);
+    routesEl.appendChild(googleLink);
+
+    spotDetailEl.appendChild(routesEl);
+  }
+
+  // Jetzt Header / Meta / Tags ganz nach oben einfügen
+  spotDetailEl.insertBefore(metaEl, spotDetailEl.firstChild);
+  spotDetailEl.insertBefore(headerEl, spotDetailEl.firstChild);
+  if (tags.length) {
+    spotDetailEl.appendChild(tagsEl);
+  }
 }
 
 // ------------------------------------------------------
@@ -1210,10 +1236,6 @@ function handleCompassApply() {
   filterRadiusEl.value = String(radiusStep);
   updateRadiusTexts();
   applyFiltersAndRender();
-
-  if (tilla && typeof tilla.onCompassApplied === "function") {
-    tilla.onCompassApplied({ travelMode, radiusStep });
-  }
 }
 
 // ------------------------------------------------------
@@ -1318,6 +1340,8 @@ function switchRoute(route) {
     }
   });
 
+  // Beim Wechsel immer nach oben scrollen,
+  // damit Karte / Über-Text direkt sichtbar sind
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1416,11 +1440,6 @@ function init() {
   compassHelperEl = document.getElementById("compass-helper");
   compassApplyLabelEl = document.getElementById("compass-apply-label");
   compassApplyBtnEl = document.getElementById("compass-apply");
-
-  // 🎲 Spielideen-Button (im Tilla-Kärtchen)
-  playIdeasBtnEl =
-    document.getElementById("btn-play-ideas") ||
-    document.querySelector("[data-role='play-ideas']");
 
   // Sprache / Theme / Map
   const initialLang = getInitialLang();
@@ -1586,22 +1605,6 @@ function init() {
 
   if (compassApplyBtnEl) {
     compassApplyBtnEl.addEventListener("click", handleCompassApply);
-  }
-
-  // 🎲 Spielideen-Button: Spielidee ermitteln & an Tilla geben
-  if (playIdeasBtnEl) {
-    playIdeasBtnEl.addEventListener("click", () => {
-      const idea = getRandomPlayIdea();
-      if (!idea) return;
-      const text =
-        currentLang === "de" ? `Spielidee: ${idea}` : `Play idea: ${idea}`;
-
-      if (tilla && typeof tilla.showPlayIdea === "function") {
-        tilla.showPlayIdea(text);
-      } else {
-        showToast(text);
-      }
-    });
   }
 
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
