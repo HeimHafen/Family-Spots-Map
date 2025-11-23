@@ -529,111 +529,6 @@
                 <!-- Spotkarten werden per JS gerendert -->
               </div>
             </section>
-
-            <!-- Family Spots Plus (eingeklappt) -->
-            <details class="sidebar-section" id="plus-section">
-              <summary class="sidebar-section-header">
-                <h2 class="sidebar-section-title">Family Spots Plus</h2>
-                <button
-                  type="button"
-                  class="btn-icon sidebar-section-close"
-                  data-target="plus-section"
-                  aria-label="Family Spots Plus schließen"
-                >
-                  ×
-                </button>
-              </summary>
-
-              <div class="filter-group">
-                <p
-                  id="plus-status-text"
-                  data-i18n-de="Family Spots Plus ist nicht aktiviert."
-                  data-i18n-en="Family Spots Plus is not activated."
-                >
-                  Family Spots Plus ist nicht aktiviert.
-                </p>
-              </div>
-
-              <div class="plus-code-form">
-                <label
-                  for="plus-code-input"
-                  data-i18n-de="Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
-                  data-i18n-en="Enter partner code (e.g. from campground, municipality or sponsor):"
-                >
-                  Partner-Code eingeben (z. B. von Campingplatz, Kommune oder
-                  Sponsor):
-                </label>
-                <div class="plus-code-row">
-                  <input
-                    id="plus-code-input"
-                    class="input"
-                    type="text"
-                    autocomplete="off"
-                  />
-                  <button id="plus-code-submit" class="btn" type="button">
-                    <span
-                      data-i18n-de="Code aktivieren"
-                      data-i18n-en="Activate code"
-                    >
-                      Code aktivieren
-                    </span>
-                  </button>
-                </div>
-                <p
-                  class="plus-note"
-                  data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
-                  data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap."
-                >
-                  Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei
-                  – ganz ohne Abo-Falle.
-                </p>
-              </div>
-            </details>
-
-            <!-- Mein Tag (eingeklappt) -->
-            <details class="sidebar-section" id="daylog-section">
-              <summary class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  data-i18n-de="Mein Tag 💛"
-                  data-i18n-en="My day 💛"
-                >
-                  Mein Tag 💛
-                </h2>
-                <button
-                  type="button"
-                  class="btn-icon sidebar-section-close"
-                  data-target="daylog-section"
-                  aria-label="Tagesprotokoll schließen"
-                >
-                  ×
-                </button>
-              </summary>
-
-              <div class="filter-group">
-                <label
-                  for="daylog-text"
-                  data-i18n-de="Wie war euer Tag?"
-                  data-i18n-en="How was your day?"
-                >
-                  Wie war euer Tag?
-                </label>
-                <textarea
-                  id="daylog-text"
-                  class="input"
-                  rows="3"
-                  placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
-                ></textarea>
-                <button id="daylog-save" class="btn btn-small" type="button">
-                  <span
-                    data-i18n-de="Speichern 💾"
-                    data-i18n-en="Save 💾"
-                  >
-                    Speichern 💾
-                  </span>
-                </button>
-              </div>
-            </details>
           </aside>
 
           <!-- Map -->
@@ -645,6 +540,111 @@
               aria-live="polite"
             ></aside>
           </section>
+
+          <!-- Family Spots Plus – jetzt UNTER der Karte -->
+          <details class="sidebar-section" id="plus-section">
+            <summary class="sidebar-section-header">
+              <h2 class="sidebar-section-title">Family Spots Plus</h2>
+              <button
+                type="button"
+                class="btn-icon sidebar-section-close"
+                data-target="plus-section"
+                aria-label="Family Spots Plus schließen"
+              >
+                ×
+              </button>
+            </summary>
+
+            <div class="filter-group">
+              <p
+                id="plus-status-text"
+                data-i18n-de="Family Spots Plus ist nicht aktiviert."
+                data-i18n-en="Family Spots Plus is not activated."
+              >
+                Family Spots Plus ist nicht aktiviert.
+              </p>
+            </div>
+
+            <div class="plus-code-form">
+              <label
+                for="plus-code-input"
+                data-i18n-de="Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
+                data-i18n-en="Enter partner code (e.g. from campground, municipality or sponsor):"
+              >
+                Partner-Code eingeben (z. B. von Campingplatz, Kommune oder
+                Sponsor):
+              </label>
+              <div class="plus-code-row">
+                <input
+                  id="plus-code-input"
+                  class="input"
+                  type="text"
+                  autocomplete="off"
+                />
+                <button id="plus-code-submit" class="btn" type="button">
+                  <span
+                    data-i18n-de="Code aktivieren"
+                    data-i18n-en="Activate code"
+                  >
+                    Code aktivieren
+                  </span>
+                </button>
+              </div>
+              <p
+                class="plus-note"
+                data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
+                data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap."
+              >
+                Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei –
+                ganz ohne Abo-Falle.
+              </p>
+            </div>
+          </details>
+
+          <!-- Mein Tag – jetzt UNTER der Karte -->
+          <details class="sidebar-section" id="daylog-section">
+            <summary class="sidebar-section-header">
+              <h2
+                class="sidebar-section-title"
+                data-i18n-de="Mein Tag 💛"
+                data-i18n-en="My day 💛"
+              >
+                Mein Tag 💛
+              </h2>
+              <button
+                type="button"
+                class="btn-icon sidebar-section-close"
+                data-target="daylog-section"
+                aria-label="Tagesprotokoll schließen"
+              >
+                ×
+              </button>
+            </summary>
+
+            <div class="filter-group">
+              <label
+                for="daylog-text"
+                data-i18n-de="Wie war euer Tag?"
+                data-i18n-en="How was your day?"
+              >
+                Wie war euer Tag?
+              </label>
+              <textarea
+                id="daylog-text"
+                class="input"
+                rows="3"
+                placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
+              ></textarea>
+              <button id="daylog-save" class="btn btn-small" type="button">
+                <span
+                  data-i18n-de="Speichern 💾"
+                  data-i18n-en="Save 💾"
+                >
+                  Speichern 💾
+                </span>
+              </button>
+            </div>
+          </details>
         </section>
 
         <!-- ABOUT VIEW -->
