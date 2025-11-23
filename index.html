@@ -164,20 +164,17 @@
             <!-- Familien-Kompass -->
             <details class="sidebar-section" id="compass-section">
               <summary class="sidebar-section-header">
-                <h2
-                  class="sidebar-section-title"
-                  id="compass-label"
-                  data-i18n-de="Familien-Kompass"
-                  data-i18n-en="Family Compass"
-                >
-                  Familien-Kompass
+                <h2 class="sidebar-section-title" id="compass-label">
+                  <!-- Wird per JS gesetzt -->
                 </h2>
                 <button
-                  id="btn-toggle-compass"
-                  class="btn-ghost btn-small"
                   type="button"
+                  id="compass-toggle-btn"
+                  class="btn-ghost btn-small"
+                  data-i18n-de="Kompass anzeigen"
+                  data-i18n-en="Show compass"
                 >
-                  <span id="compass-toggle-label">Kompass anzeigen</span>
+                  Kompass anzeigen
                 </button>
               </summary>
 
@@ -198,7 +195,7 @@
             </details>
 
             <!-- Filter-Section -->
-            <section class="sidebar-section" id="filter-section">
+            <section class="sidebar-section">
               <header class="sidebar-section-header">
                 <h2
                   class="sidebar-section-title"
@@ -213,7 +210,7 @@
                   class="btn-ghost btn-small"
                   type="button"
                 >
-                  <span>Filter anzeigen</span>
+                  <span>Filter ausblenden</span>
                 </button>
               </header>
 
@@ -634,7 +631,7 @@
               </h2>
               <button
                 type="button"
-                class="btn-icon.sidebar-section-close"
+                class="btn-icon sidebar-section-close"
                 data-target="daylog-section"
                 aria-label="Tagesprotokoll schließen"
               >
