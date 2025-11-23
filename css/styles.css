@@ -184,7 +184,7 @@ a {
 
 /* Theme-Übergänge */
 body {
-  transition: background 0.4s ease, color 0.3s.ease;
+  transition: background 0.4s ease, color 0.3s ease;
 }
 
 /* =========================================
@@ -506,7 +506,7 @@ select.input:focus {
     var(--chip-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
+  transition: transform 0.06s ease-out, box-shadow 0.06s.ease-out,
     background 0.12s ease-out;
 }
 
@@ -826,12 +826,12 @@ select.input:focus {
   animation: tilla-bob 3.5s ease-in-out infinite;
 }
 
-/* Text neben Tilla */
+/* Text + Button neben Tilla */
 .tilla-sidebar-text {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 #tilla-sidebar-text {
@@ -840,22 +840,38 @@ select.input:focus {
   line-height: 1.5;
 }
 
-/* Link für weitere Spielideen unter Tilla */
-.tilla-game-link {
+/* Spielideen-Button mit Würfel-Emoji (🎲 nur über CSS) */
+#tilla-games-btn {
   align-self: flex-start;
   border: none;
-  background: transparent;
-  padding: 0;
-  font-size: 12px;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--text-soft);
+  font-family: inherit;
+  background: #ffffff;
+  color: #5b341b;
+  box-shadow:
+    0 4px 10px rgba(180, 96, 33, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.tilla-game-link:active {
-  opacity: 0.8;
+#tilla-games-btn::before {
+  content: "🎲";
+  font-size: 16px;
+  line-height: 1;
+}
+
+[data-theme="dark"] #tilla-games-btn {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow:
+    0 5px 12px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.5);
 }
 
 /* =========================================
@@ -943,7 +959,7 @@ select.input:focus {
     0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s.ease-out;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
 }
 
 .bottom-nav-item--active {
@@ -1363,7 +1379,7 @@ body.onboarding-open {
   color: var(--text-soft);
 }
 
-/* Routen-Links */
+/* Routen-Links im Detailpanel */
 .spot-details-routes {
   margin-top: 6px;
   display: flex;
