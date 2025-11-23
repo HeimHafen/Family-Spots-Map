@@ -52,7 +52,7 @@ const UI_STRINGS = {
     filter_radius_description_all:
       "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
 
-    // Tilla – Intro & Zustände
+    // Tilla – Intro & Zustände (werden per getText an Tilla übergeben)
     turtle_intro_1:
       "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
     turtle_intro_2:
@@ -83,11 +83,7 @@ const UI_STRINGS = {
     compass_title: "Familien-Kompass",
     compass_helper:
       "Keine Lust auf lange Planung? Ich helfe euch, den Radius passend zu heute zu wählen – Alltag oder Unterwegs-Modus.",
-    compass_apply_label: "Kompass anwenden",
-
-    // Routen-Buttons
-    btn_open_google: "In Google Maps öffnen",
-    btn_open_apple: "In Apple Karten öffnen"
+    compass_apply_label: "Kompass anwenden"
   },
   en: {
     error_data_load:
@@ -141,7 +137,7 @@ const UI_STRINGS = {
     turtle_everyday_mode:
       "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿",
     turtle_plus_activated:
-      "Family Spots Plus ist active – I can now show you rest areas, RV spots and campgrounds as well. ✨",
+      "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨",
 
     daylog_saved:
       "Your day moment has been saved 💾 – you can look back on it later.",
@@ -153,37 +149,9 @@ const UI_STRINGS = {
     compass_title: "Family Compass",
     compass_helper:
       "Don’t feel like long planning today? I’ll help you pick a fitting radius – everyday mode or travel mode.",
-    compass_apply_label: "Apply compass",
-
-    btn_open_google: "Open in Google Maps",
-    btn_open_apple: "Open in Apple Maps"
+    compass_apply_label: "Apply compass"
   }
 };
-
-// ------------------------------------------------------
-// Spielideen für unterwegs – einfache Pools (DE / EN)
-// ------------------------------------------------------
-const TILLA_GAMES_DE = [
-  "Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
-  "Sucht nacheinander Dinge in einer Farbe: Wer zuerst drei findet, gewinnt.",
-  "Erzählt gemeinsam eine Geschichte: Jede Person sagt nur einen Satz.",
-  "Sucht Kennzeichen mit bestimmten Buchstaben – wer zuerst ein Wort bilden kann, bekommt einen Punkt.",
-  "Tier-Raten: Eine Person denkt sich ein Tier aus, die anderen stellen Ja/Nein-Fragen.",
-  "Zählt rote Autos, gelbe Laster oder Traktoren – was seht ihr heute am meisten?",
-  "Macht eine Geräusch-Runde: Jeder im Auto imitiert kurz ein Geräusch, die anderen raten, was es ist.",
-  "Erfindet euren eigenen Familien-Superhelden und denkt euch Kräfte und Namen aus."
-];
-
-const TILLA_GAMES_EN = [
-  "I spy with my little eye – but only things you can see outside the window.",
-  "Pick a colour and find three things in that colour. First one wins.",
-  "Tell a story together: everyone adds just one sentence.",
-  "Number plate game: look for letters and try to form a word.",
-  "Animal guessing: one person thinks of an animal, the others ask yes/no questions.",
-  "Count red cars, yellow trucks or tractors – which one wins today?",
-  "Sound round: everyone makes a short sound, the others guess what it is.",
-  "Invent a family superhero and give them special powers and a name."
-];
 
 // (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert)
 const CATEGORY_LABELS = {
@@ -459,6 +427,8 @@ let plusStatusTextEl;
 let daylogTextEl;
 let daylogSaveEl;
 let toastEl;
+// NEU: Button im Tilla-Kästchen für Spielideen
+let gameIdeasBtnEl;
 
 // Kompass
 let compassLabelEl;
@@ -468,7 +438,6 @@ let compassApplyBtnEl;
 
 // Tilla
 let tilla = null;
-let tillaGamesBtnEl = null;
 
 // Filter-Body innerhalb der Filter-Section
 let filterBodyEls = [];
@@ -909,9 +878,8 @@ function renderMarkers() {
 
     marker.bindPopup(popupHtml);
 
-    // WICHTIG: Klick auf Marker öffnet unten das Detail-Panel
     marker.on("click", () => {
-      focusSpotOnMap(spot);
+      showSpotDetails(spot);
     });
 
     markersLayer.addLayer(marker);
@@ -1090,39 +1058,43 @@ function showSpotDetails(spot) {
   actionsRow.appendChild(favBtn);
   actionsRow.appendChild(closeBtn);
 
+  // Routen-Buttons (Google Maps / Apple Karten)
+  const routesRow = document.createElement("div");
+  routesRow.className = "spot-details-routes";
+
+  if (spot.lat && spot.lng) {
+    const lat = spot.lat;
+    const lng = spot.lng;
+
+    const googleLink = document.createElement("a");
+    googleLink.className = "spot-details-route-link";
+    googleLink.target = "_blank";
+    googleLink.rel = "noopener noreferrer";
+    googleLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+    googleLink.textContent =
+      currentLang === "de" ? "In Google Maps öffnen" : "Open in Google Maps";
+
+    const appleLink = document.createElement("a");
+    appleLink.className = "spot-details-route-link";
+    appleLink.target = "_blank";
+    appleLink.rel = "noopener noreferrer";
+    appleLink.href = `https://maps.apple.com/?ll=${lat},${lng}`;
+    appleLink.textContent =
+      currentLang === "de"
+        ? "In Apple Karten öffnen"
+        : "Open in Apple Maps";
+
+    routesRow.appendChild(googleLink);
+    routesRow.appendChild(appleLink);
+  }
+
   spotDetailEl.appendChild(titleEl);
   if (subtitle) spotDetailEl.appendChild(subtitleEl);
   if (metaParts.length) spotDetailEl.appendChild(metaEl);
   if (description) spotDetailEl.appendChild(descEl);
-
-  // Routen-Buttons – immer, wenn lat/lng vorhanden
-  if (spot.lat && spot.lng) {
-    const routesRow = document.createElement("div");
-    routesRow.className = "spot-details-routes";
-
-    const encodedName = encodeURIComponent(name);
-    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${spot.lat},${spot.lng}(${encodedName})`;
-    const appleUrl = `https://maps.apple.com/?ll=${spot.lat},${spot.lng}&q=${encodedName}`;
-
-    const googleLink = document.createElement("a");
-    googleLink.href = googleUrl;
-    googleLink.target = "_blank";
-    googleLink.rel = "noopener noreferrer";
-    googleLink.className = "spot-details-route-link";
-    googleLink.textContent = t("btn_open_google");
-
-    const appleLink = document.createElement("a");
-    appleLink.href = appleUrl;
-    appleLink.target = "_blank";
-    appleLink.rel = "noopener noreferrer";
-    appleLink.className = "spot-details-route-link";
-    appleLink.textContent = t("btn_open_apple");
-
-    routesRow.appendChild(googleLink);
-    routesRow.appendChild(appleLink);
+  if (routesRow.childElementCount > 0) {
     spotDetailEl.appendChild(routesRow);
   }
-
   spotDetailEl.appendChild(actionsRow);
 }
 
@@ -1273,29 +1245,6 @@ function handleLocateClick() {
 }
 
 // ------------------------------------------------------
-// Spiele-Button (🎲)
-// ------------------------------------------------------
-function pickRandomGameIdea() {
-  const pool = currentLang === "de" ? TILLA_GAMES_DE : TILLA_GAMES_EN;
-  if (!pool.length) return "";
-  const index = Math.floor(Math.random() * pool.length);
-  return pool[index];
-}
-
-function handleTillaGameClick() {
-  const idea = pickRandomGameIdea();
-  if (!idea) return;
-
-  if (tilla && typeof tilla.showGameIdea === "function") {
-    tilla.showGameIdea(idea);
-  } else {
-    // Fallback, falls Tilla aus irgendeinem Grund nicht da ist
-    const prefix = currentLang === "de" ? "Spielidee: " : "Game idea: ";
-    showToast(prefix + idea);
-  }
-}
-
-// ------------------------------------------------------
 // Navigation (Karte / Über)
 // ------------------------------------------------------
 function switchRoute(route) {
@@ -1318,6 +1267,7 @@ function switchRoute(route) {
     }
   });
 
+  // Beim Wechsel immer nach oben scrollen
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1417,8 +1367,11 @@ function init() {
   compassApplyLabelEl = document.getElementById("compass-apply-label");
   compassApplyBtnEl = document.getElementById("compass-apply");
 
-  // Tilla-Spiele-Button
-  tillaGamesBtnEl = document.getElementById("btn-tilla-games");
+  // Spielideen-Button im Tilla-Kärtchen (mehrere mögliche IDs zur Sicherheit)
+  gameIdeasBtnEl =
+    document.getElementById("tilla-game-button") ||
+    document.getElementById("btn-game-ideas") ||
+    document.getElementById("game-ideas-button");
 
   // Sprache / Theme / Map
   const initialLang = getInitialLang();
@@ -1586,8 +1539,13 @@ function init() {
     compassApplyBtnEl.addEventListener("click", handleCompassApply);
   }
 
-  if (tillaGamesBtnEl) {
-    tillaGamesBtnEl.addEventListener("click", handleTillaGameClick);
+  // NEU: Spielideen-Button -> Tilla zeigt Idee im eigenen Kasten
+  if (gameIdeasBtnEl) {
+    gameIdeasBtnEl.addEventListener("click", () => {
+      if (tilla && typeof tilla.showGameIdea === "function") {
+        tilla.showGameIdea();
+      }
+    });
   }
 
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
