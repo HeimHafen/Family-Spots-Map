@@ -6,12 +6,31 @@
 // Tilla ist kein reiner Infokasten, sondern ein kleiner, freundlicher
 // Begleiter. Sie reagiert auf Ereignisse in der App (Reise-Modus,
 // Plus-Aktivierung, Favoriten, Mein Tag, leere Ergebnisse, Kompass,
-// Spielideen) und spricht in kurzen, warmen Sätzen – auf Deutsch oder Englisch.
+// Spielideen) und spricht in kurzen, warmen Sätzen.
+//
+// Integration (in app.js):
+//
+//   import { TillaCompanion } from './tilla.js';
+//
+//   const tilla = new TillaCompanion({
+//     getText: (key) => t(key)  // optional: Überschreiben einzelner Texte möglich
+//   });
+//
+//   // Beispiele:
+//   // tilla.setTravelMode('trip');
+//   // tilla.onFavoriteAdded();
+//   // tilla.onDaylogSaved();
+//   // tilla.onNoSpotsFound();
+//   // tilla.onPlusActivated();
+//   // tilla.onCompassApplied({ travelMode, mood, radiusStep });
+//   // tilla.showGameIdea();
+//   // tilla.onLanguageChanged();
 //
 // ------------------------------------------------------
 
 // Fallback-Texte, falls getText() nichts liefert oder (noch) nicht verkabelt ist.
 // Jeder Key kann ein String ODER ein Array von Strings sein.
+// Bei Arrays wählt Tilla automatisch eine passende Variante aus.
 const FALLBACK_TEXTS = {
   de: {
     // Intro: kombiniert sich mit Alltag- oder Trip-Sätzen
@@ -57,10 +76,14 @@ const FALLBACK_TEXTS = {
       "Kompass ist gesetzt – ich schaue jetzt in einem größeren Radius nach Zwischenstopps für eure Tour. 🚐",
       "Für euren Unterwegs-Tag habe ich den Radius großzügig gestellt. Wir suchen nach guten Pausenplätzen für euch. 🚐"
     ],
-    // NEU: Einleitung für Spielideen
-    turtle_game_intro: [
-      "Spielidee für unterwegs:",
-      "Lust auf ein kleines Spiel? Dann probiert das hier:"
+    // NEU: Spielideen für unterwegs
+    turtle_game_ideas: [
+      "Spielidee: Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
+      "Spielidee: Sucht nacheinander Dinge in einer Farbe. Wer zuerst drei findet, gewinnt.",
+      "Spielidee: Jeder sagt abwechselnd ein Tier, dessen Name mit dem letzten Buchstaben des vorherigen Tieres beginnt.",
+      "Spielidee: Erfindet gemeinsam eine Geschichte. Jede Person fügt einen Satz hinzu.",
+      "Spielidee: Zählt Autos in eurer Lieblingsfarbe – schafft ihr zehn, bevor ihr am Ziel seid?",
+      "Spielidee: Überlegt euch Fantasie-Orte auf der Karte und gebt ihnen verrückte Namen."
     ]
   },
   en: {
@@ -104,9 +127,13 @@ const FALLBACK_TEXTS = {
       "Compass set – I’m now looking in a wider radius for good stopovers on your trip. 🚐",
       "For your travel day I’ve opened up the radius. We’ll look for great places to pause and recharge. 🚐"
     ],
-    turtle_game_intro: [
-      "Game idea for the road:",
-      "Want to play something together? Try this:"
+    turtle_game_ideas: [
+      "Game idea: I spy with my little eye – but only things outside the window.",
+      "Game idea: Take turns finding things in one colour. The first to spot three, wins.",
+      "Game idea: Say animal names – each new one has to start with the last letter of the previous animal.",
+      "Game idea: Tell a shared story. Everyone adds one sentence.",
+      "Game idea: Count cars in your favourite colour – can you reach ten before you arrive?",
+      "Game idea: Invent fantasy places on the map and give them funny names."
     ]
   }
 };
@@ -143,10 +170,9 @@ export class TillaCompanion {
     }
 
     // State
-    this.state = "intro"; // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots | game
+    this.state = "intro"; // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots
     this.travelMode = "everyday"; // everyday | trip | null
     this.lastInteraction = Date.now();
-    this.lastGameIdea = "";
 
     // Merkt sich, welcher Variant-Index zuletzt für einen Key genutzt wurde,
     // damit nicht permanent derselbe Satz wiederholt wird.
@@ -289,15 +315,33 @@ export class TillaCompanion {
   }
 
   /**
-   * NEU: Spielidee anzeigen, ausgelöst vom 🎲-Button.
-   * @param {string} idea
+   * NEU: Eine Spielidee anzeigen.
+   * Wenn textOverride gesetzt ist, wird dieser Text direkt genutzt,
+   * sonst würfelt Tilla aus ihrem eigenen Spielideen-Pool.
    */
-  showGameIdea(idea) {
-    if (!this.textEl || !idea) return;
+  showGameIdea(textOverride) {
+    if (!this.textEl) return;
+
     this.lastInteraction = Date.now();
-    this.lastGameIdea = idea;
-    this.state = "game";
-    this._renderState();
+
+    if (typeof textOverride === "string" && textOverride.trim()) {
+      this.textEl.textContent = textOverride;
+      return;
+    }
+
+    const lang = getCurrentLang();
+    const bundle = FALLBACK_TEXTS[lang] || FALLBACK_TEXTS.de;
+    const entry = bundle.turtle_game_ideas;
+
+    if (Array.isArray(entry) && entry.length) {
+      const text = this._pickVariant("turtle_game_ideas", entry);
+      this.textEl.textContent = text;
+    } else {
+      this.textEl.textContent =
+        lang === "de"
+          ? "Spielidee: Ich sehe was, was du nicht siehst – draußen vor dem Fenster."
+          : "Game idea: I spy with my little eye – but only things outside the window.";
+    }
   }
 
   // --------------------------------------------------
@@ -424,15 +468,8 @@ export class TillaCompanion {
       }
 
       case "no-spots": {
-        // Keine Spots im Radius
+        // Keine Spots im Radius – Einladung zu Spaziergang / Radius anpassen
         text = this._t("turtle_intro_2");
-        break;
-      }
-
-      case "game": {
-        const intro = this._t("turtle_game_intro");
-        const idea = this.lastGameIdea || "";
-        text = idea ? `${intro} ${idea}` : intro;
         break;
       }
 
