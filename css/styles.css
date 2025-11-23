@@ -433,6 +433,11 @@ body {
     0 10px 22px rgba(0, 0, 0, 0.9);
 }
 
+/* Familien-Kompass: nur ein Button (Kompass anzeigen wie Filter anzeigen) */
+#compass-apply {
+  display: none;
+}
+
 /* Allgemeine Form Controls */
 .filter-group {
   margin-top: 8px;
@@ -506,8 +511,8 @@ select.input:focus {
     var(--chip-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: transform 0.06s ease-out, box-shadow 0.06s.ease-out,
-    background 0.12s.ease-out;
+  transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
+    background 0.12s ease-out;
 }
 
 .mood-chip-emoji {
@@ -1025,7 +1030,7 @@ select.input:focus {
 }
 
 .pin-pop {
-  animation: pin-pop 0.22s ease-out;
+  animation: pin-pop 0.22s.ease-out;
 }
 
 @keyframes pin-pop {
