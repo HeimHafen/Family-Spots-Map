@@ -567,8 +567,9 @@ function setLanguage(lang, { initial = false } = {}) {
   if (compassApplyLabelEl)
     compassApplyLabelEl.textContent = t("compass_apply_label");
 
-  // Kompass-Toggle-Button
+  // Kompass-Toggle-Button + Sichtbarkeit von "Kompass anwenden"
   updateCompassButtonLabel();
+  updateCompassUI();
 
   // About-Seite DE/EN umschalten
   const aboutDe = document.getElementById("page-about-de");
@@ -1288,9 +1289,20 @@ function updateCompassButtonLabel() {
     : t("btn_show_compass");
 }
 
+// Sichtbarkeit des "Kompass anwenden"-Buttons an den Reise-Modus koppeln
+function updateCompassUI() {
+  if (!compassApplyBtnEl) return;
+  if (travelMode) {
+    compassApplyBtnEl.style.display = "inline-flex";
+  } else {
+    compassApplyBtnEl.style.display = "none";
+  }
+}
+
 function handleCompassApply() {
   if (!filterRadiusEl) return;
 
+  // Logik: Alltag = kleiner Radius, Unterwegs = großer Radius
   if (travelMode === "everyday" || !travelMode) {
     radiusStep = 1;
   } else {
@@ -1668,6 +1680,8 @@ function init() {
         }
       }
 
+      // Kompass-UI aktualisieren (Button ein/ausblenden)
+      updateCompassUI();
       applyFiltersAndRender();
     });
   });
@@ -1753,6 +1767,9 @@ function init() {
       }
     });
   });
+
+  // Startzustand des Kompass-UI (Button ausgeblendet, bis Modus gewählt)
+  updateCompassUI();
 
   switchRoute("map");
   loadSpots();
