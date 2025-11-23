@@ -1,3 +1,6 @@
+Du hast recht – bei „Family Compass“ war jetzt zweimal der Button drin. Unten ist die komplette korrigierte index.html mit nur einem Kompass-Button (rechts) und ohne „X“.
+Ich habe nur den Familien-Kompass-Block angepasst, alles andere ist unverändert zu deiner vorherigen Version.
+
 <!doctype html>
 <html lang="de" data-theme="light">
   <head>
@@ -168,13 +171,16 @@
                   <!-- Wird per JS gesetzt -->
                 </h2>
                 <button
-                  type="button"
-                  id="compass-toggle-btn"
+                  id="btn-toggle-compass"
                   class="btn-ghost btn-small"
-                  data-i18n-de="Kompass anzeigen"
-                  data-i18n-en="Show compass"
+                  type="button"
                 >
-                  Kompass anzeigen
+                  <span
+                    data-i18n-de="Kompass anzeigen"
+                    data-i18n-en="Show compass"
+                  >
+                    Kompass anzeigen
+                  </span>
                 </button>
               </summary>
 
@@ -998,3 +1004,5 @@
     <script type="module" src="./js/app.js"></script>
   </body>
 </html>
+
+Wenn du diese Version 1:1 in GitHub ersetzt, solltest du nur noch einen „Show compass / Kompass anzeigen“-Button sehen. Wenn danach irgendetwas komisch wirkt (Text wechselt nicht, klappt nicht auf etc.), schauen wir uns als Nächstes die kleine Kompass-Toggle-Logik in der app.js an.
