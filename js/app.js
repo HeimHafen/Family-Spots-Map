@@ -204,7 +204,8 @@ function getRandomPlayIdea() {
   return list[idx];
 }
 
-// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert)
+// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben weitgehend unverändert,
+// aber museum-kinder & tierpark korrigiert)
 const CATEGORY_LABELS = {
   wildpark: {
     de: "Wildpark & Safaripark",
@@ -213,6 +214,10 @@ const CATEGORY_LABELS = {
   zoo: {
     de: "Zoo & Tierpark",
     en: "Zoo & animal park"
+  },
+  tierpark: {
+    de: "Tierpark",
+    en: "Animal park"
   },
   freizeitpark: {
     de: "Freizeitpark",
@@ -242,7 +247,7 @@ const CATEGORY_LABELS = {
     de: "Skatepark",
     en: "Skate park"
   },
-  kinder_museum: {
+  "museum-kinder": {
     de: "Kinder- & Familienmuseum",
     en: "Children’s & family museum"
   },
@@ -260,7 +265,7 @@ const CATEGORY_LABELS = {
   },
   schwimmbad: {
     de: "Schwimmbad",
-    en: "Indoor pool"
+    en: "Swimming pool"
   },
   badesee: {
     de: "Badesee",
@@ -529,8 +534,8 @@ function getCategoryLabel(slug) {
 
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
-    const key = currentLang === "de" ? "i18n-de" : "i18n-en";
-    const text = el.getAttribute(`data-${key}`);
+    const keyAttr = currentLang === "de" ? "data-i18n-de" : "data-i18n-en";
+    const text = el.getAttribute(keyAttr);
     if (text) el.textContent = text;
   });
 }
@@ -571,16 +576,20 @@ function setLanguage(lang, { initial = false } = {}) {
   updateCompassButtonLabel();
   updateCompassUI();
 
-  // About-Seite DE/EN umschalten
+  // About-Seite DE/EN umschalten + aria-hidden aktualisieren
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
   if (aboutDe && aboutEn) {
     if (currentLang === "de") {
       aboutDe.classList.remove("hidden");
       aboutEn.classList.add("hidden");
+      aboutDe.setAttribute("aria-hidden", "false");
+      aboutEn.setAttribute("aria-hidden", "true");
     } else {
       aboutEn.classList.remove("hidden");
       aboutDe.classList.add("hidden");
+      aboutEn.setAttribute("aria-hidden", "false");
+      aboutDe.setAttribute("aria-hidden", "true");
     }
   }
 
@@ -622,6 +631,14 @@ function setLanguage(lang, { initial = false } = {}) {
     tilla.onLanguageChanged();
   }
 
+  // Nach Sprachwechsel Fokus für Screenreader auf den Titel setzen
+  if (!initial) {
+    const headerTitle = document.querySelector(".header-title");
+    if (headerTitle && typeof headerTitle.focus === "function") {
+      headerTitle.focus();
+    }
+  }
+
   updateLanguageSwitcherVisual();
   applyStaticI18n();
 }
@@ -632,6 +649,14 @@ function setLanguage(lang, { initial = false } = {}) {
 function getInitialTheme() {
   const stored = localStorage.getItem("fs_theme");
   if (stored === "light" || stored === "dark") return stored;
+
+  if (
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    return "dark";
+  }
+
   return "light";
 }
 
@@ -800,21 +825,16 @@ function isSpotInRadius(spot, centerLatLng, radiusKm) {
   return distanceKm <= radiusKm;
 }
 
-function applyFiltersAndRender() {
-  if (!spots.length) {
-    filteredSpots = [];
-    renderSpotList();
-    renderMarkers();
-    if (tilla && typeof tilla.onNoSpotsFound === "function") {
-      tilla.onNoSpotsFound();
-    }
-    return;
-  }
+// ------------------------------------------------------
+// Filter-Logik auslagern
+// ------------------------------------------------------
+function filterSpots(allSpots) {
+  if (!Array.isArray(allSpots) || !allSpots.length) return [];
 
   const center = map ? map.getCenter() : L.latLng(52.4, 9.7);
   const radiusKm = RADIUS_STEPS_KM[radiusStep] ?? Infinity;
 
-  filteredSpots = spots.filter((spot) => {
+  return allSpots.filter((spot) => {
     const plusOnly = !!spot.plusOnly || !!spot.plus;
     if (plusOnly && !plusActive) return false;
 
@@ -890,13 +910,19 @@ function applyFiltersAndRender() {
 
     return true;
   });
+}
+
+function applyFiltersAndRender() {
+  filteredSpots = filterSpots(spots);
 
   renderSpotList();
   renderMarkers();
 
   if (tilla) {
-    if (filteredSpots.length === 0) {
-      if (typeof tilla.onNoSpotsFound === "function") tilla.onNoSpotsFound();
+    if (!filteredSpots.length) {
+      if (typeof tilla.onNoSpotsFound === "function") {
+        tilla.onNoSpotsFound();
+      }
     } else if (typeof tilla.onSpotsFound === "function") {
       tilla.onSpotsFound();
     }
@@ -1026,10 +1052,11 @@ function renderSpotList() {
     const favBtn = document.createElement("button");
     favBtn.type = "button";
     favBtn.className = "btn-ghost btn-small";
-    favBtn.textContent = favorites.has(spotId) ? "★" : "☆";
+    const isFavInitial = favorites.has(spotId);
+    favBtn.textContent = isFavInitial ? "★" : "☆";
     favBtn.setAttribute(
       "aria-label",
-      favorites.has(spotId)
+      isFavInitial
         ? currentLang === "de"
           ? "Aus Favoriten entfernen"
           : "Remove from favourites"
@@ -1041,7 +1068,18 @@ function renderSpotList() {
     favBtn.addEventListener("click", (ev) => {
       ev.stopPropagation();
       toggleFavorite(spot);
-      favBtn.textContent = favorites.has(spotId) ? "★" : "☆";
+      const nowFav = favorites.has(spotId);
+      favBtn.textContent = nowFav ? "★" : "☆";
+      favBtn.setAttribute(
+        "aria-label",
+        nowFav
+          ? currentLang === "de"
+            ? "Aus Favoriten entfernen"
+            : "Remove from favourites"
+          : currentLang === "de"
+          ? "Zu Favoriten hinzufügen"
+          : "Add to favourites"
+      );
     });
 
     headerRow.appendChild(titleEl);
@@ -1134,9 +1172,30 @@ function showSpotDetails(spot) {
   favBtn.type = "button";
   favBtn.className = "btn-ghost btn-small";
   favBtn.textContent = isFav ? "★" : "☆";
+  favBtn.setAttribute(
+    "aria-label",
+    isFav
+      ? currentLang === "de"
+        ? "Aus Favoriten entfernen"
+        : "Remove from favourites"
+      : currentLang === "de"
+      ? "Zu Favoriten hinzufügen"
+      : "Add to favourites"
+  );
   favBtn.addEventListener("click", () => {
     toggleFavorite(spot);
-    favBtn.textContent = favorites.has(spotId) ? "★" : "☆";
+    const nowFav = favorites.has(spotId);
+    favBtn.textContent = nowFav ? "★" : "☆";
+    favBtn.setAttribute(
+      "aria-label",
+      nowFav
+        ? currentLang === "de"
+          ? "Aus Favoriten entfernen"
+          : "Remove from favourites"
+        : currentLang === "de"
+        ? "Zu Favoriten hinzufügen"
+        : "Add to favourites"
+    );
   });
 
   const closeBtn = document.createElement("button");
@@ -1264,6 +1323,9 @@ function updateRadiusTexts() {
   const value = parseInt(filterRadiusEl.value, 10);
   radiusStep = isNaN(value) ? 4 : value;
 
+  // ARIA-Value aktualisieren
+  filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
+
   if (radiusStep === 4) {
     filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label");
     filterRadiusDescriptionEl.textContent = t("filter_radius_description_all");
@@ -1292,11 +1354,7 @@ function updateCompassButtonLabel() {
 // Sichtbarkeit des "Kompass anwenden"-Buttons an den Reise-Modus koppeln
 function updateCompassUI() {
   if (!compassApplyBtnEl) return;
-  if (travelMode) {
-    compassApplyBtnEl.style.display = "inline-flex";
-  } else {
-    compassApplyBtnEl.style.display = "none";
-  }
+  compassApplyBtnEl.classList.toggle("hidden", !travelMode);
 }
 
 function handleCompassApply() {
@@ -1422,8 +1480,10 @@ function switchRoute(route) {
     const btnRoute = btn.getAttribute("data-route");
     if (btnRoute === route) {
       btn.classList.add("bottom-nav-item--active");
+      btn.setAttribute("aria-current", "page");
     } else {
       btn.classList.remove("bottom-nav-item--active");
+      btn.removeAttribute("aria-current");
     }
   });
 
@@ -1617,6 +1677,11 @@ function init() {
   }
 
   if (filterRadiusEl) {
+    // ARIA für Slider initial setzen
+    filterRadiusEl.setAttribute("aria-valuemin", filterRadiusEl.min);
+    filterRadiusEl.setAttribute("aria-valuemax", filterRadiusEl.max);
+    filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value);
+
     filterRadiusEl.addEventListener("input", () => {
       updateRadiusTexts();
       applyFiltersAndRender();
@@ -1643,37 +1708,49 @@ function init() {
     });
   }
 
+  // Mood-Chips mit aria-pressed
   document.querySelectorAll(".mood-chip").forEach((chip) => {
+    chip.setAttribute("aria-pressed", "false");
+
     chip.addEventListener("click", () => {
       const value = chip.getAttribute("data-mood");
       if (moodFilter === value) {
         moodFilter = null;
         chip.classList.remove("mood-chip--active");
+        chip.setAttribute("aria-pressed", "false");
       } else {
         moodFilter = value;
-        document
-          .querySelectorAll(".mood-chip")
-          .forEach((c) => c.classList.remove("mood-chip--active"));
+        document.querySelectorAll(".mood-chip").forEach((c) => {
+          c.classList.remove("mood-chip--active");
+          c.setAttribute("aria-pressed", "false");
+        });
         chip.classList.add("mood-chip--active");
+        chip.setAttribute("aria-pressed", "true");
       }
       applyFiltersAndRender();
     });
   });
 
+  // Travel-Chips mit aria-pressed
   document.querySelectorAll(".travel-chip").forEach((chip) => {
+    chip.setAttribute("aria-pressed", "false");
+
     chip.addEventListener("click", () => {
       const mode = chip.getAttribute("data-travel-mode") || "everyday";
 
       if (travelMode === mode) {
         travelMode = null;
         chip.classList.remove("travel-chip--active");
+        chip.setAttribute("aria-pressed", "false");
         if (tilla && typeof tilla.setTravelMode === "function") {
           tilla.setTravelMode(null);
         }
       } else {
         travelMode = mode;
         document.querySelectorAll(".travel-chip").forEach((c) => {
-          c.classList.toggle("travel-chip--active", c === chip);
+          const isActive = c === chip;
+          c.classList.toggle("travel-chip--active", isActive);
+          c.setAttribute("aria-pressed", isActive ? "true" : "false");
         });
         if (tilla && typeof tilla.setTravelMode === "function") {
           tilla.setTravelMode(mode);
