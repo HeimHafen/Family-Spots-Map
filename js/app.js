@@ -160,6 +160,28 @@ const UI_STRINGS = {
   }
 };
 
+// ------------------------------------------------------
+// Spielideen für unterwegs – Texte
+// ------------------------------------------------------
+const PLAY_IDEAS = {
+  de: [
+    "Spielidee: Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
+    "Spielidee: Sucht nacheinander Dinge in einer Farbe. Wer zuerst drei findet, gewinnt.",
+    "Spielidee: Wörter-Kette – ein Wort beginnen, das nächste muss mit dem letzten Buchstaben starten. Wie lange schafft ihr die Kette, ohne zu stocken?",
+    "Spielidee: Jeder nennt abwechselnd ein Geräusch, das er gerade hört. Wer findet nach fünf Runden noch etwas Neues?",
+    "Spielidee: Kennzeichen-Jagd – sucht Autokennzeichen mit einem bestimmten Buchstaben oder aus eurer Heimatregion.",
+    "Spielidee: Erfindet gemeinsam eine Geschichte. Jede Person darf immer nur einen Satz hinzufügen."
+  ],
+  en: [
+    "Game idea: I spy with my little eye – but only things you can see outside the window.",
+    "Game idea: Look for things in the same colour. Whoever finds three first wins.",
+    "Game idea: Word chain – start with a word, the next one has to begin with the last letter.",
+    "Game idea: Everyone names a sound they can hear. Who can still find a new one after five rounds?",
+    "Game idea: Number plate hunt – look for number plates with a certain letter or from your region.",
+    "Game idea: Create a story together. Everyone may only add one sentence at a time."
+  ]
+};
+
 // (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert)
 const CATEGORY_LABELS = {
   wildpark: {
@@ -391,10 +413,10 @@ let filteredSpots = [];
 let favorites = new Set();
 
 let plusActive = false;
-let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
-let travelMode = null; // "everyday" | "trip" | null
-let radiusStep = 4; // 0–4
-let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
+let moodFilter = null;
+let travelMode = null;
+let radiusStep = 4;
+let ageFilter = "all";
 let searchTerm = "";
 let categoryFilter = "";
 let onlyBigAdventures = false;
@@ -444,6 +466,9 @@ let compassApplyBtnEl;
 // Tilla
 let tilla = null;
 
+// Spielideen-Button(s)
+let playIdeasButtons = [];
+
 // Filter-Body innerhalb der Filter-Section
 let filterBodyEls = [];
 
@@ -486,7 +511,6 @@ function applyStaticI18n() {
   });
 }
 
-// Button-Beschriftung & ARIA aktualisieren
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
 
@@ -517,7 +541,6 @@ function setLanguage(lang, { initial = false } = {}) {
   if (compassApplyLabelEl)
     compassApplyLabelEl.textContent = t("compass_apply_label");
 
-  // About-Seite DE/EN umschalten
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
   if (aboutDe && aboutEn) {
@@ -606,6 +629,29 @@ function showToast(keyOrMessage) {
   toastTimeoutId = setTimeout(() => {
     toastEl.classList.remove("toast--visible");
   }, 3200);
+}
+
+// ------------------------------------------------------
+// Spielideen – Helper
+// ------------------------------------------------------
+function getRandomPlayIdea() {
+  const list = PLAY_IDEAS[currentLang] || PLAY_IDEAS.de;
+  if (!list || !list.length) return "";
+  const index = Math.floor(Math.random() * list.length);
+  return list[index];
+}
+
+function handlePlayIdeasClick(ev) {
+  if (ev) ev.preventDefault();
+  const idea = getRandomPlayIdea();
+  if (!idea) return;
+
+  if (tilla && typeof tilla.showPlayIdea === "function") {
+    tilla.showPlayIdea(idea); // im Tilla-Kästchen anzeigen
+  } else {
+    // Fallback, falls Tilla aus irgendeinem Grund fehlt
+    showToast(idea);
+  }
 }
 
 // ------------------------------------------------------
@@ -874,33 +920,11 @@ function renderMarkers() {
     const name = getSpotName(spot);
     const subtitle = getSpotSubtitle(spot);
 
-    // Routing-Links für Popup (Google & Apple)
-    let routesHtml = "";
-    if (spot.lat && spot.lng) {
-      const lat = spot.lat;
-      const lng = spot.lng;
-      const encodedName = encodeURIComponent(name || "");
-      const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`;
-      const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-
-      const appleLabel =
-        currentLang === "de" ? "Apple Karten" : "Apple Maps";
-      const googleLabel =
-        currentLang === "de" ? "Google Maps" : "Google Maps";
-
-      routesHtml = `
-        <div class="popup-actions">
-          <a class="popup-link" href="${appleUrl}" target="_blank" rel="noopener noreferrer">${appleLabel}</a>
-          <a class="popup-link" href="${googleUrl}" target="_blank" rel="noopener noreferrer">${googleLabel}</a>
-        </div>
-      `;
-    }
-
+    // Popup OHNE Routen-Buttons – nur Name + Ort
     const popupHtml = `
       <div class="popup">
         <strong>${name}</strong><br/>
         <small>${subtitle || ""}</small>
-        ${routesHtml}
       </div>
     `;
 
@@ -1043,7 +1067,6 @@ function showSpotDetails(spot) {
       spot.summary_en || spot.poetry || spot.description || spot.text || "";
   }
 
-  // Adresse möglichst freundlich zusammenbauen
   const addressParts = [];
   if (spot.address) addressParts.push(spot.address);
   if (spot.postcode) addressParts.push(spot.postcode);
@@ -1054,7 +1077,6 @@ function showSpotDetails(spot) {
   spotDetailEl.innerHTML = "";
   spotDetailEl.classList.remove("spot-details--hidden");
 
-  // Header: Titel + Aktionen
   const headerEl = document.createElement("div");
   headerEl.className = "spot-details-header";
 
@@ -1100,7 +1122,6 @@ function showSpotDetails(spot) {
   headerEl.appendChild(titleWrapperEl);
   headerEl.appendChild(actionsEl);
 
-  // Meta-Badges
   const metaEl = document.createElement("div");
   metaEl.className = "spot-details-meta";
   metaParts.forEach((p) => {
@@ -1109,7 +1130,6 @@ function showSpotDetails(spot) {
     metaEl.appendChild(span);
   });
 
-  // Tags
   const tagsEl = document.createElement("div");
   tagsEl.className = "spot-details-tags";
   tags.forEach((tag) => {
@@ -1119,7 +1139,6 @@ function showSpotDetails(spot) {
     tagsEl.appendChild(span);
   });
 
-  // Beschreibung
   if (description) {
     const descEl = document.createElement("p");
     descEl.className = "spot-details-description";
@@ -1127,7 +1146,6 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(descEl);
   }
 
-  // Adresse
   if (addressText) {
     const addrEl = document.createElement("p");
     addrEl.className = "spot-details-address";
@@ -1135,7 +1153,7 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(addrEl);
   }
 
-  // Routen-Buttons (Apple / Google)
+  // Routen-Buttons NUR hier im Detailpanel
   if (spot.lat && spot.lng) {
     const routesEl = document.createElement("div");
     routesEl.className = "spot-details-routes";
@@ -1167,7 +1185,6 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(routesEl);
   }
 
-  // Jetzt Header / Meta / Tags ganz nach oben einfügen
   spotDetailEl.insertBefore(metaEl, spotDetailEl.firstChild);
   spotDetailEl.insertBefore(headerEl, spotDetailEl.firstChild);
   if (tags.length) {
@@ -1236,6 +1253,10 @@ function handleCompassApply() {
   filterRadiusEl.value = String(radiusStep);
   updateRadiusTexts();
   applyFiltersAndRender();
+
+  if (tilla && typeof tilla.onCompassApplied === "function") {
+    tilla.onCompassApplied({ travelMode, radiusStep });
+  }
 }
 
 // ------------------------------------------------------
@@ -1340,8 +1361,6 @@ function switchRoute(route) {
     }
   });
 
-  // Beim Wechsel immer nach oben scrollen,
-  // damit Karte / Über-Text direkt sichtbar sind
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1441,6 +1460,13 @@ function init() {
   compassApplyLabelEl = document.getElementById("compass-apply-label");
   compassApplyBtnEl = document.getElementById("compass-apply");
 
+  // Spielideen-Button (wir unterstützen mehrere mögliche IDs,
+  // falls du ihn im HTML leicht anders benannt hast)
+  const playIds = ["play-ideas-button", "tilla-play-ideas-btn", "btn-play-ideas"];
+  playIdeasButtons = playIds
+    .map((id) => document.getElementById(id))
+    .filter((el) => !!el);
+
   // Sprache / Theme / Map
   const initialLang = getInitialLang();
   setLanguage(initialLang, { initial: true });
@@ -1450,7 +1476,6 @@ function init() {
 
   initMap();
 
-  // Map-Klick schließt unser Detail-Panel
   if (map && spotDetailEl) {
     map.on("click", () => {
       spotDetailEl.classList.add("spot-details--hidden");
@@ -1463,7 +1488,7 @@ function init() {
     getText: (key) => t(key)
   });
 
-  // Events – Sprache (Toggle via Button)
+  // Events – Sprache
   if (languageSwitcherEl) {
     languageSwitcherEl.addEventListener("click", () => {
       const nextLang = currentLang === "de" ? "en" : "de";
@@ -1606,6 +1631,11 @@ function init() {
   if (compassApplyBtnEl) {
     compassApplyBtnEl.addEventListener("click", handleCompassApply);
   }
+
+  // 🎲 Spielideen-Button(e)
+  playIdeasButtons.forEach((btn) => {
+    btn.addEventListener("click", handlePlayIdeasClick);
+  });
 
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
     const targetId = btn.getAttribute("data-target");
