@@ -440,6 +440,7 @@ let categoryFilter = "";
 let onlyBigAdventures = false;
 let onlyVerified = false;
 let onlyFavorites = false;
+// Start: Filter eingeklappt
 let filtersCollapsed = true;
 
 // DOM-Elemente
@@ -1393,10 +1394,8 @@ function switchRoute(route) {
 // ------------------------------------------------------
 // Filter-Umschalter
 // ------------------------------------------------------
-function handleToggleFilters() {
+function applyFilterCollapsedState() {
   if (!btnToggleFiltersEl || !filterBodyEls.length) return;
-
-  filtersCollapsed = !filtersCollapsed;
 
   filterBodyEls.forEach((el) => {
     el.classList.toggle("hidden", filtersCollapsed);
@@ -1407,6 +1406,11 @@ function handleToggleFilters() {
     .textContent = filtersCollapsed
       ? t("btn_show_filters")
       : t("btn_hide_filters");
+}
+
+function handleToggleFilters() {
+  filtersCollapsed = !filtersCollapsed;
+  applyFilterCollapsedState();
 }
 
 function handleToggleView() {
@@ -1635,7 +1639,6 @@ function init() {
 
   if (btnToggleFiltersEl) {
     btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
-    btnToggleFiltersEl.querySelector("span").textContent = t("btn_hide_filters");
   }
 
   if (btnToggleViewEl) {
@@ -1695,6 +1698,9 @@ function init() {
       }
     });
   });
+
+  // Startzustand: Filter eingeklappt
+  applyFilterCollapsedState();
 
   switchRoute("map");
   loadSpots();
