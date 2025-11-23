@@ -101,7 +101,7 @@
 
         <!-- Hauptzeile: Titel + Flaggen + Slogan -->
         <div class="app-header-main">
-          <h1 class="header-title">
+          <h1 class="header-title" tabindex="-1">
             <span class="header-flag" aria-hidden="true">🇩🇪</span>
             Family
             <span class="header-title-spots"> Spots </span>
@@ -134,6 +134,7 @@
                     src="assets/tilla/tilla-hero.png"
                     alt="Tilla, eure Schildkröten-Begleiterin"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div class="tilla-sidebar-text">
@@ -193,8 +194,7 @@
                 <button
                   type="button"
                   id="compass-apply"
-                  class="btn btn-small"
-                  style="display:none;"
+                  class="btn btn-small hidden"
                 >
                   <span id="compass-apply-label">
                     <!-- Wird per JS gesetzt -->
@@ -288,6 +288,7 @@
                     type="button"
                     class="mood-chip"
                     data-mood="relaxed"
+                    aria-pressed="false"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
                     <span
@@ -303,6 +304,7 @@
                     type="button"
                     class="mood-chip"
                     data-mood="action"
+                    aria-pressed="false"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
                     <span
@@ -318,6 +320,7 @@
                     type="button"
                     class="mood-chip"
                     data-mood="water"
+                    aria-pressed="false"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">💧</span>
                     <span
@@ -333,6 +336,7 @@
                     type="button"
                     class="mood-chip"
                     data-mood="animals"
+                    aria-pressed="false"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
                     <span
@@ -371,6 +375,7 @@
                     type="button"
                     class="travel-chip"
                     data-travel-mode="everyday"
+                    aria-pressed="false"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🏡</span>
                     <span
@@ -386,6 +391,7 @@
                     type="button"
                     class="travel-chip"
                     data-travel-mode="trip"
+                    aria-pressed="false"
                   >
                     <span class="mood-chip-emoji" aria-hidden="true">🚐</span>
                     <span
@@ -681,7 +687,12 @@
           aria-label="Über Family Spots Map"
         >
           <!-- Deutsch -->
-          <article id="page-about-de" class="page page-about" lang="de">
+          <article
+            id="page-about-de"
+            class="page page-about"
+            lang="de"
+            aria-hidden="false"
+          >
             <h2>Über Family Spots Map</h2>
 
             <!-- Tilla-Hero wird von js/tilla.js dynamisch hier eingefügt -->
@@ -840,6 +851,7 @@
             id="page-about-en"
             class="page page-about hidden"
             lang="en"
+            aria-hidden="true"
           >
             <h2>About Family Spots Map</h2>
 
@@ -978,7 +990,6 @@
           class="bottom-nav-item bottom-nav-item--active"
           type="button"
           data-route="map"
-          aria-current="page"
         >
           <span class="bottom-nav-icon" aria-hidden="true">🗺️</span>
           <span id="bottom-nav-map-label">Karte</span>
@@ -988,7 +999,6 @@
           class="bottom-nav-item"
           type="button"
           data-route="about"
-          aria-current="false"
         >
           <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
           <span id="bottom-nav-about-label">Über</span>
