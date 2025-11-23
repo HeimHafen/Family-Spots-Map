@@ -204,8 +204,7 @@ function getRandomPlayIdea() {
   return list[idx];
 }
 
-// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben weitgehend unverändert,
-// aber museum-kinder & tierpark korrigiert)
+// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert)
 const CATEGORY_LABELS = {
   wildpark: {
     de: "Wildpark & Safaripark",
@@ -214,10 +213,6 @@ const CATEGORY_LABELS = {
   zoo: {
     de: "Zoo & Tierpark",
     en: "Zoo & animal park"
-  },
-  tierpark: {
-    de: "Tierpark",
-    en: "Animal park"
   },
   freizeitpark: {
     de: "Freizeitpark",
@@ -247,7 +242,7 @@ const CATEGORY_LABELS = {
     de: "Skatepark",
     en: "Skate park"
   },
-  "museum-kinder": {
+  kinder_museum: {
     de: "Kinder- & Familienmuseum",
     en: "Children’s & family museum"
   },
@@ -265,7 +260,7 @@ const CATEGORY_LABELS = {
   },
   schwimmbad: {
     de: "Schwimmbad",
-    en: "Swimming pool"
+    en: "Indoor pool"
   },
   badesee: {
     de: "Badesee",
@@ -534,8 +529,8 @@ function getCategoryLabel(slug) {
 
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
-    const keyAttr = currentLang === "de" ? "data-i18n-de" : "data-i18n-en";
-    const text = el.getAttribute(keyAttr);
+    const key = currentLang === "de" ? "i18n-de" : "i18n-en";
+    const text = el.getAttribute(`data-${key}`);
     if (text) el.textContent = text;
   });
 }
@@ -576,19 +571,19 @@ function setLanguage(lang, { initial = false } = {}) {
   updateCompassButtonLabel();
   updateCompassUI();
 
-  // About-Seite DE/EN umschalten + aria-hidden aktualisieren
+  // About-Seite DE/EN umschalten + aria-hidden korrekt setzen
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
   if (aboutDe && aboutEn) {
     if (currentLang === "de") {
       aboutDe.classList.remove("hidden");
-      aboutEn.classList.add("hidden");
       aboutDe.setAttribute("aria-hidden", "false");
+      aboutEn.classList.add("hidden");
       aboutEn.setAttribute("aria-hidden", "true");
     } else {
       aboutEn.classList.remove("hidden");
-      aboutDe.classList.add("hidden");
       aboutEn.setAttribute("aria-hidden", "false");
+      aboutDe.classList.add("hidden");
       aboutDe.setAttribute("aria-hidden", "true");
     }
   }
@@ -631,16 +626,16 @@ function setLanguage(lang, { initial = false } = {}) {
     tilla.onLanguageChanged();
   }
 
-  // Nach Sprachwechsel Fokus für Screenreader auf den Titel setzen
+  updateLanguageSwitcherVisual();
+  applyStaticI18n();
+
+  // Nach Sprachwechsel Fokus auf Haupttitel setzen (Screenreader)
   if (!initial) {
     const headerTitle = document.querySelector(".header-title");
     if (headerTitle && typeof headerTitle.focus === "function") {
       headerTitle.focus();
     }
   }
-
-  updateLanguageSwitcherVisual();
-  applyStaticI18n();
 }
 
 // ------------------------------------------------------
@@ -650,6 +645,7 @@ function getInitialTheme() {
   const stored = localStorage.getItem("fs_theme");
   if (stored === "light" || stored === "dark") return stored;
 
+  // Systempräferenz respektieren, falls kein eigener Wert gesetzt ist
   if (
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -825,16 +821,21 @@ function isSpotInRadius(spot, centerLatLng, radiusKm) {
   return distanceKm <= radiusKm;
 }
 
-// ------------------------------------------------------
-// Filter-Logik auslagern
-// ------------------------------------------------------
-function filterSpots(allSpots) {
-  if (!Array.isArray(allSpots) || !allSpots.length) return [];
+function applyFiltersAndRender() {
+  if (!spots.length) {
+    filteredSpots = [];
+    renderSpotList();
+    renderMarkers();
+    if (tilla && typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
+    }
+    return;
+  }
 
   const center = map ? map.getCenter() : L.latLng(52.4, 9.7);
   const radiusKm = RADIUS_STEPS_KM[radiusStep] ?? Infinity;
 
-  return allSpots.filter((spot) => {
+  filteredSpots = spots.filter((spot) => {
     const plusOnly = !!spot.plusOnly || !!spot.plus;
     if (plusOnly && !plusActive) return false;
 
@@ -910,19 +911,13 @@ function filterSpots(allSpots) {
 
     return true;
   });
-}
-
-function applyFiltersAndRender() {
-  filteredSpots = filterSpots(spots);
 
   renderSpotList();
   renderMarkers();
 
   if (tilla) {
-    if (!filteredSpots.length) {
-      if (typeof tilla.onNoSpotsFound === "function") {
-        tilla.onNoSpotsFound();
-      }
+    if (filteredSpots.length === 0) {
+      if (typeof tilla.onNoSpotsFound === "function") tilla.onNoSpotsFound();
     } else if (typeof tilla.onSpotsFound === "function") {
       tilla.onSpotsFound();
     }
@@ -1052,11 +1047,10 @@ function renderSpotList() {
     const favBtn = document.createElement("button");
     favBtn.type = "button";
     favBtn.className = "btn-ghost btn-small";
-    const isFavInitial = favorites.has(spotId);
-    favBtn.textContent = isFavInitial ? "★" : "☆";
+    favBtn.textContent = favorites.has(spotId) ? "★" : "☆";
     favBtn.setAttribute(
       "aria-label",
-      isFavInitial
+      favorites.has(spotId)
         ? currentLang === "de"
           ? "Aus Favoriten entfernen"
           : "Remove from favourites"
@@ -1068,18 +1062,7 @@ function renderSpotList() {
     favBtn.addEventListener("click", (ev) => {
       ev.stopPropagation();
       toggleFavorite(spot);
-      const nowFav = favorites.has(spotId);
-      favBtn.textContent = nowFav ? "★" : "☆";
-      favBtn.setAttribute(
-        "aria-label",
-        nowFav
-          ? currentLang === "de"
-            ? "Aus Favoriten entfernen"
-            : "Remove from favourites"
-          : currentLang === "de"
-          ? "Zu Favoriten hinzufügen"
-          : "Add to favourites"
-      );
+      favBtn.textContent = favorites.has(spotId) ? "★" : "☆";
     });
 
     headerRow.appendChild(titleEl);
@@ -1172,30 +1155,9 @@ function showSpotDetails(spot) {
   favBtn.type = "button";
   favBtn.className = "btn-ghost btn-small";
   favBtn.textContent = isFav ? "★" : "☆";
-  favBtn.setAttribute(
-    "aria-label",
-    isFav
-      ? currentLang === "de"
-        ? "Aus Favoriten entfernen"
-        : "Remove from favourites"
-      : currentLang === "de"
-      ? "Zu Favoriten hinzufügen"
-      : "Add to favourites"
-  );
   favBtn.addEventListener("click", () => {
     toggleFavorite(spot);
-    const nowFav = favorites.has(spotId);
-    favBtn.textContent = nowFav ? "★" : "☆";
-    favBtn.setAttribute(
-      "aria-label",
-      nowFav
-        ? currentLang === "de"
-          ? "Aus Favoriten entfernen"
-          : "Remove from favourites"
-        : currentLang === "de"
-        ? "Zu Favoriten hinzufügen"
-        : "Add to favourites"
-    );
+    favBtn.textContent = favorites.has(spotId) ? "★" : "☆";
   });
 
   const closeBtn = document.createElement("button");
@@ -1323,7 +1285,7 @@ function updateRadiusTexts() {
   const value = parseInt(filterRadiusEl.value, 10);
   radiusStep = isNaN(value) ? 4 : value;
 
-  // ARIA-Value aktualisieren
+  // ARIA für Screenreader aktuell halten
   filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
 
   if (radiusStep === 4) {
@@ -1346,15 +1308,20 @@ function updateCompassButtonLabel() {
   if (!btnToggleCompassEl || !compassSectionEl) return;
   const span = btnToggleCompassEl.querySelector("span");
   if (!span) return;
-  span.textContent = compassSectionEl.open
+  const isOpen = !!compassSectionEl.open;
+  span.textContent = isOpen
     ? t("btn_hide_compass")
     : t("btn_show_compass");
+
+  // A11y: expanded-Status pflegen
+  btnToggleCompassEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
 }
 
 // Sichtbarkeit des "Kompass anwenden"-Buttons an den Reise-Modus koppeln
 function updateCompassUI() {
   if (!compassApplyBtnEl) return;
-  compassApplyBtnEl.classList.toggle("hidden", !travelMode);
+  const shouldShow = !!travelMode;
+  compassApplyBtnEl.classList.toggle("hidden", !shouldShow);
 }
 
 function handleCompassApply() {
@@ -1476,15 +1443,12 @@ function switchRoute(route) {
     viewMapEl.classList.add("view--active");
   }
 
+  // A11y: aria-current und aktive Klasse pflegen
   bottomNavButtons.forEach((btn) => {
     const btnRoute = btn.getAttribute("data-route");
-    if (btnRoute === route) {
-      btn.classList.add("bottom-nav-item--active");
-      btn.setAttribute("aria-current", "page");
-    } else {
-      btn.classList.remove("bottom-nav-item--active");
-      btn.removeAttribute("aria-current");
-    }
+    const isActive = btnRoute === route;
+    btn.classList.toggle("bottom-nav-item--active", isActive);
+    btn.setAttribute("aria-current", isActive ? "page" : "false");
   });
 
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1497,6 +1461,7 @@ function handleToggleFilters() {
   if (!btnToggleFiltersEl || !filterBodyEls.length) return;
 
   filtersCollapsed = !filtersCollapsed;
+  const isExpanded = !filtersCollapsed;
 
   filterBodyEls.forEach((el) => {
     el.classList.toggle("hidden", filtersCollapsed);
@@ -1507,6 +1472,9 @@ function handleToggleFilters() {
     .textContent = filtersCollapsed
       ? t("btn_show_filters")
       : t("btn_hide_filters");
+
+  // A11y: expanded-Status pflegen
+  btnToggleFiltersEl.setAttribute("aria-expanded", isExpanded ? "true" : "false");
 }
 
 function handleToggleView() {
@@ -1515,6 +1483,9 @@ function handleToggleView() {
   btnToggleViewEl
     .querySelector("span")
     .textContent = isHidden ? t("btn_show_list") : t("btn_only_map");
+
+  // A11y: Toggle-Button als gedrückt markieren, wenn Sidebar versteckt ist
+  btnToggleViewEl.setAttribute("aria-pressed", isHidden ? "true" : "false");
 
   if (map) {
     setTimeout(() => {
@@ -1592,8 +1563,17 @@ function init() {
   compassHelperEl = document.getElementById("compass-helper");
   compassApplyLabelEl = document.getElementById("compass-apply-label");
   compassApplyBtnEl = document.getElementById("compass-apply");
-  // vorhandenen Button aus dem HTML verwenden
   btnToggleCompassEl = document.getElementById("btn-toggle-compass");
+
+  // ARIA-Grundzustand der Filter/Kompass-Toggles
+  if (btnToggleFiltersEl && filterSectionEl && filterSectionEl.id) {
+    btnToggleFiltersEl.setAttribute("aria-controls", filterSectionEl.id);
+    btnToggleFiltersEl.setAttribute("aria-expanded", "false");
+  }
+  if (btnToggleCompassEl && compassSectionEl && compassSectionEl.id) {
+    btnToggleCompassEl.setAttribute("aria-controls", compassSectionEl.id);
+    btnToggleCompassEl.setAttribute("aria-expanded", "false");
+  }
 
   // Kompass beim Start einklappen
   if (compassSectionEl) {
@@ -1677,10 +1657,13 @@ function init() {
   }
 
   if (filterRadiusEl) {
-    // ARIA für Slider initial setzen
-    filterRadiusEl.setAttribute("aria-valuemin", filterRadiusEl.min);
-    filterRadiusEl.setAttribute("aria-valuemax", filterRadiusEl.max);
-    filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value);
+    // ARIA-Basiswerte setzen
+    filterRadiusEl.setAttribute("aria-valuemin", "0");
+    filterRadiusEl.setAttribute("aria-valuemax", "4");
+    filterRadiusEl.setAttribute(
+      "aria-valuenow",
+      filterRadiusEl.value || "4"
+    );
 
     filterRadiusEl.addEventListener("input", () => {
       updateRadiusTexts();
@@ -1708,10 +1691,7 @@ function init() {
     });
   }
 
-  // Mood-Chips mit aria-pressed
   document.querySelectorAll(".mood-chip").forEach((chip) => {
-    chip.setAttribute("aria-pressed", "false");
-
     chip.addEventListener("click", () => {
       const value = chip.getAttribute("data-mood");
       if (moodFilter === value) {
@@ -1731,10 +1711,7 @@ function init() {
     });
   });
 
-  // Travel-Chips mit aria-pressed
   document.querySelectorAll(".travel-chip").forEach((chip) => {
-    chip.setAttribute("aria-pressed", "false");
-
     chip.addEventListener("click", () => {
       const mode = chip.getAttribute("data-travel-mode") || "everyday";
 
@@ -1771,6 +1748,8 @@ function init() {
   if (btnToggleViewEl) {
     btnToggleViewEl.addEventListener("click", handleToggleView);
     btnToggleViewEl.querySelector("span").textContent = t("btn_only_map");
+    // Initialer ARIA-Zustand
+    btnToggleViewEl.setAttribute("aria-pressed", "false");
   }
 
   if (btnToggleCompassEl && compassSectionEl) {
