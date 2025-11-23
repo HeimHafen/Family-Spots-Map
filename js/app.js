@@ -10,6 +10,7 @@ import { TillaCompanion } from "./tilla.js";
 // ------------------------------------------------------
 const UI_STRINGS = {
   de: {
+    // Fehler / Status
     error_data_load:
       "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
     toast_location_ok:
@@ -17,16 +18,20 @@ const UI_STRINGS = {
     toast_location_error:
       "Euer Standort lässt sich gerade nicht bestimmen. Vielleicht ist die Freigabe gesperrt oder ihr seid offline.",
 
+    // Buttons
     btn_show_list: "Liste zeigen",
     btn_only_map: "Nur Karte",
     btn_show_filters: "Filter anzeigen",
     btn_hide_filters: "Filter ausblenden",
 
+    // Favoriten
     toast_fav_added: "Zu euren Lieblingsspots gelegt 💛",
     toast_fav_removed: "Aus den Lieblingsspots entfernt.",
 
+    // Filter allgemein
     filter_category_all: "Alle Kategorien",
 
+    // Plus-Code
     plus_code_empty: "Bitte gib zuerst einen Aktions-Code ein.",
     plus_code_unknown: "Dieser Code ist unbekannt oder nicht mehr gültig.",
     plus_code_activated:
@@ -34,6 +39,7 @@ const UI_STRINGS = {
     plus_code_failed:
       "Der Code konnte gerade nicht geprüft werden. Versuch es später noch einmal.",
 
+    // Radius
     filter_radius_max_label: "Alle Spots",
     filter_radius_description_step0:
       "Mini-Microabenteuer zu Fuß erreichbar – perfekt für eine kurze Pause.",
@@ -46,6 +52,7 @@ const UI_STRINGS = {
     filter_radius_description_all:
       "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
 
+    // Tilla – Intro & Zustände
     turtle_intro_1:
       "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
     turtle_intro_2:
@@ -63,17 +70,24 @@ const UI_STRINGS = {
     turtle_plus_activated:
       "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
 
+    // Mein Tag
     daylog_saved:
       "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern.",
 
+    // Header / Navigation (dynamisch)
     header_tagline: "Heute ist Familientag.",
     nav_map: "Karte",
     nav_about: "Über",
 
+    // Familien-Kompass
     compass_title: "Familien-Kompass",
     compass_helper:
       "Keine Lust auf lange Planung? Ich helfe euch, den Radius passend zu heute zu wählen – Alltag oder Unterwegs-Modus.",
-    compass_apply_label: "Kompass anwenden"
+    compass_apply_label: "Kompass anwenden",
+
+    // Routen-Buttons
+    btn_open_google: "In Google Maps öffnen",
+    btn_open_apple: "In Apple Karten öffnen"
   },
   en: {
     error_data_load:
@@ -127,7 +141,7 @@ const UI_STRINGS = {
     turtle_everyday_mode:
       "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿",
     turtle_plus_activated:
-      "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨",
+      "Family Spots Plus ist active – I can now show you rest areas, RV spots and campgrounds as well. ✨",
 
     daylog_saved:
       "Your day moment has been saved 💾 – you can look back on it later.",
@@ -139,27 +153,76 @@ const UI_STRINGS = {
     compass_title: "Family Compass",
     compass_helper:
       "Don’t feel like long planning today? I’ll help you pick a fitting radius – everyday mode or travel mode.",
-    compass_apply_label: "Apply compass"
+    compass_apply_label: "Apply compass",
+
+    btn_open_google: "Open in Google Maps",
+    btn_open_apple: "Open in Apple Maps"
   }
 };
 
-// Kategorie-Labels / MASTER-Categories wie gehabt
+// ------------------------------------------------------
+// Spielideen für unterwegs – einfache Pools (DE / EN)
+// ------------------------------------------------------
+const TILLA_GAMES_DE = [
+  "Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
+  "Sucht nacheinander Dinge in einer Farbe: Wer zuerst drei findet, gewinnt.",
+  "Erzählt gemeinsam eine Geschichte: Jede Person sagt nur einen Satz.",
+  "Sucht Kennzeichen mit bestimmten Buchstaben – wer zuerst ein Wort bilden kann, bekommt einen Punkt.",
+  "Tier-Raten: Eine Person denkt sich ein Tier aus, die anderen stellen Ja/Nein-Fragen.",
+  "Zählt rote Autos, gelbe Laster oder Traktoren – was seht ihr heute am meisten?",
+  "Macht eine Geräusch-Runde: Jeder im Auto imitiert kurz ein Geräusch, die anderen raten, was es ist.",
+  "Erfindet euren eigenen Familien-Superhelden und denkt euch Kräfte und Namen aus."
+];
+
+const TILLA_GAMES_EN = [
+  "I spy with my little eye – but only things you can see outside the window.",
+  "Pick a colour and find three things in that colour. First one wins.",
+  "Tell a story together: everyone adds just one sentence.",
+  "Number plate game: look for letters and try to form a word.",
+  "Animal guessing: one person thinks of an animal, the others ask yes/no questions.",
+  "Count red cars, yellow trucks or tractors – which one wins today?",
+  "Sound round: everyone makes a short sound, the others guess what it is.",
+  "Invent a family superhero and give them special powers and a name."
+];
+
+// (Kategorie-Label-Tabelle & MASTER_CATEGORY_SLUGS bleiben unverändert)
 const CATEGORY_LABELS = {
-  wildpark: { de: "Wildpark & Safaripark", en: "Wildlife & safari park" },
-  zoo: { de: "Zoo & Tierpark", en: "Zoo & animal park" },
-  freizeitpark: { de: "Freizeitpark", en: "Theme park" },
-  spielplatz: { de: "Spielplatz", en: "Playground" },
+  wildpark: {
+    de: "Wildpark & Safaripark",
+    en: "Wildlife & safari park"
+  },
+  zoo: {
+    de: "Zoo & Tierpark",
+    en: "Zoo & animal park"
+  },
+  freizeitpark: {
+    de: "Freizeitpark",
+    en: "Theme park"
+  },
+  spielplatz: {
+    de: "Spielplatz",
+    en: "Playground"
+  },
   abenteuerspielplatz: {
     de: "Abenteuerspielplatz",
     en: "Adventure playground"
   },
-  waldspielplatz: { de: "Waldspielplatz", en: "Forest playground" },
+  waldspielplatz: {
+    de: "Waldspielplatz",
+    en: "Forest playground"
+  },
   multifunktionsfeld: {
     de: "Sport- & Multifunktionsfeld",
     en: "Sports & multi-use court"
   },
-  pumptrack: { de: "Pumptrack", en: "Pump track" },
-  skatepark: { de: "Skatepark", en: "Skate park" },
+  pumptrack: {
+    de: "Pumptrack",
+    en: "Pump track"
+  },
+  skatepark: {
+    de: "Skatepark",
+    en: "Skate park"
+  },
   kinder_museum: {
     de: "Kinder- & Familienmuseum",
     en: "Children’s & family museum"
@@ -172,31 +235,70 @@ const CATEGORY_LABELS = {
     de: "Wasserspielplatz",
     en: "Water playground"
   },
-  bauernhof: { de: "Bauernhof", en: "Farm" },
-  schwimmbad: { de: "Schwimmbad", en: "Indoor pool" },
-  badesee: { de: "Badesee", en: "Swimming lake" },
-  "park-garten": { de: "Park & Garten", en: "Park & garden" },
-  picknickwiese: { de: "Picknickwiese", en: "Picnic meadow" },
+  bauernhof: {
+    de: "Bauernhof",
+    en: "Farm"
+  },
+  schwimmbad: {
+    de: "Schwimmbad",
+    en: "Indoor pool"
+  },
+  badesee: {
+    de: "Badesee",
+    en: "Swimming lake"
+  },
+  "park-garten": {
+    de: "Park & Garten",
+    en: "Park & garden"
+  },
+  picknickwiese: {
+    de: "Picknickwiese",
+    en: "Picnic meadow"
+  },
   "wanderweg-kinderwagen": {
     de: "Wanderweg mit Kinderwagen",
     en: "Trail suitable for strollers"
   },
-  "radweg-family": { de: "Familien-Radweg", en: "Family cycle route" },
+  "radweg-family": {
+    de: "Familien-Radweg",
+    en: "Family cycle route"
+  },
   bibliothek: {
     de: "Kinder- & Familienbibliothek",
     en: "Children’s & family library"
   },
-  minigolf: { de: "Minigolf", en: "Mini golf" },
-  kletterhalle: { de: "Kletterhalle", en: "Indoor climbing" },
+  minigolf: {
+    de: "Minigolf",
+    en: "Mini golf"
+  },
+  kletterhalle: {
+    de: "Kletterhalle",
+    en: "Indoor climbing"
+  },
   "kletteranlage-outdoor": {
     de: "Kletteranlage (outdoor)",
     en: "Outdoor climbing area"
   },
-  boulderpark: { de: "Boulderpark", en: "Bouldering park" },
-  trampolinpark: { de: "Trampolinpark", en: "Trampoline park" },
-  bolzplatz: { de: "Bolzplatz", en: "Kick-about pitch" },
-  bewegungspark: { de: "Bewegungspark", en: "Movement park" },
-  familiencafe: { de: "Familiencafé", en: "Family café" },
+  boulderpark: {
+    de: "Boulderpark",
+    en: "Bouldering park"
+  },
+  trampolinpark: {
+    de: "Trampolinpark",
+    en: "Trampoline park"
+  },
+  bolzplatz: {
+    de: "Bolzplatz",
+    en: "Kick-about pitch"
+  },
+  bewegungspark: {
+    de: "Bewegungspark",
+    en: "Movement park"
+  },
+  familiencafe: {
+    de: "Familiencafé",
+    en: "Family café"
+  },
   "familien-restaurant": {
     de: "Familien-Restaurant",
     en: "Family restaurant"
@@ -205,14 +307,26 @@ const CATEGORY_LABELS = {
     de: "Kinder- & Familiencafé",
     en: "Kids & family café"
   },
-  eisbahn: { de: "Eisbahn", en: "Ice rink" },
-  rodelhuegel: { de: "Rodelhügel", en: "Sledging hill" },
+  eisbahn: {
+    de: "Eisbahn",
+    en: "Ice rink"
+  },
+  rodelhuegel: {
+    de: "Rodelhügel",
+    en: "Sledging hill"
+  },
   "oeffentliche-toilette": {
     de: "Öffentliche Toilette",
     en: "Public toilet"
   },
-  wickelraum: { de: "Wickelraum", en: "Baby changing room" },
-  "familien-event": { de: "Familien-Event", en: "Family event" },
+  wickelraum: {
+    de: "Wickelraum",
+    en: "Baby changing room"
+  },
+  "familien-event": {
+    de: "Familien-Event",
+    en: "Family event"
+  },
   "rastplatz-spielplatz-dusche": {
     de: "Rastplatz mit Spielplatz & Dusche",
     en: "Rest area with playground & shower"
@@ -225,13 +339,22 @@ const CATEGORY_LABELS = {
     de: "Wohnmobil-Service-Station",
     en: "RV service station"
   },
-  "bikepacking-spot": { de: "Bikepacking-Spot", en: "Bikepacking spot" },
+  "bikepacking-spot": {
+    de: "Bikepacking-Spot",
+    en: "Bikepacking spot"
+  },
   "toddler-barfuss-motorik": {
     de: "Barfuß- & Motorikpfad (Kleinkind)",
     en: "Barefoot & motor skills trail (toddlers)"
   },
-  naturerlebnispfad: { de: "Naturerlebnispfad", en: "Nature discovery trail" },
-  walderlebnisroute: { de: "Walderlebnisroute", en: "Forest adventure route" }
+  naturerlebnispfad: {
+    de: "Naturerlebnispfad",
+    en: "Nature discovery trail"
+  },
+  walderlebnisroute: {
+    de: "Walderlebnisroute",
+    en: "Forest adventure route"
+  }
 };
 
 const MASTER_CATEGORY_SLUGS = [
@@ -281,28 +404,6 @@ const MASTER_CATEGORY_SLUGS = [
 ];
 
 // ------------------------------------------------------
-// Tilla – Spielideen für unterwegs
-// ------------------------------------------------------
-const CAR_GAMES = {
-  de: [
-    "Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
-    "Erzählt eine Geschichte, bei der jede Person immer einen Satz weiterführt.",
-    "Sucht nacheinander Dinge in einer Farbe: Wer zuerst drei findet, gewinnt.",
-    "Zählt rote Autos, gelbe LKWs oder Fahrräder – wer zuerst 20 hat, ruft »Stopp!«.",
-    "Spielt Kennzeichen-Bingo: Sammelt Buchstaben, bis ihr damit ein Wort legen könnt.",
-    "Denkt euch gemeinsam einen Fantasie-Zoo aus – jede Person erfindet ein Tier."
-  ],
-  en: [
-    "I spy with my little eye – but only things outside the car.",
-    "Tell a story together: each person adds one sentence.",
-    "Pick a colour and spot three things in that colour outside the window.",
-    "Count red cars, yellow trucks or bikes – whoever reaches 20 first wins.",
-    "Play license plate bingo: collect letters until you can build a secret word.",
-    "Invent a fantasy zoo together and everyone adds one new animal."
-  ]
-};
-
-// ------------------------------------------------------
 // Globale State-Variablen
 // ------------------------------------------------------
 let currentLang = "de";
@@ -315,10 +416,10 @@ let filteredSpots = [];
 let favorites = new Set();
 
 let plusActive = false;
-let moodFilter = null;
-let travelMode = null;
-let radiusStep = 4;
-let ageFilter = "all";
+let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
+let travelMode = null; // "everyday" | "trip" | null
+let radiusStep = 4; // 0–4
+let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
 let categoryFilter = "";
 let onlyBigAdventures = false;
@@ -326,7 +427,7 @@ let onlyVerified = false;
 let onlyFavorites = false;
 let filtersCollapsed = false;
 
-// DOM
+// DOM-Elemente
 let languageSwitcherEl;
 let themeToggleEl;
 let btnLocateEl;
@@ -411,43 +512,21 @@ function applyStaticI18n() {
   });
 }
 
-// ------------------------------------------------------
-// Tilla-Button (🎲) dynamisch erzeugen – wie früher nur via JS
-// ------------------------------------------------------
-function handleTillaGamesClick() {
-  const list = CAR_GAMES[currentLang] || CAR_GAMES.de;
-  if (!list || !list.length) return;
-  const idea = list[Math.floor(Math.random() * list.length)];
-  const prefix = currentLang === "de" ? "Spielidee: " : "Game idea: ";
-  showToast(prefix + idea);
+// Button-Beschriftung & ARIA aktualisieren
+function updateLanguageSwitcherVisual() {
+  if (!languageSwitcherEl) return;
+
+  const label = currentLang === "de" ? "DE" : "EN";
+  languageSwitcherEl.textContent = label;
+
+  languageSwitcherEl.setAttribute(
+    "aria-label",
+    currentLang === "de"
+      ? "Sprache: Deutsch (Tippen für Englisch)"
+      : "Language: English (tap for German)"
+  );
 }
 
-function ensureTillaGamesButton() {
-  const textEl = document.getElementById("tilla-sidebar-text");
-  if (!textEl) return;
-
-  let btn = document.getElementById("tilla-games-btn");
-  if (!btn) {
-    btn = document.createElement("button");
-    btn.id = "tilla-games-btn";
-    btn.type = "button";
-    btn.textContent =
-      currentLang === "de"
-        ? "Spielideen für unterwegs"
-        : "Travel games for the road";
-
-    // Button direkt unter den Text setzen
-    textEl.insertAdjacentElement("afterend", btn);
-
-    btn.addEventListener("click", handleTillaGamesClick);
-  }
-
-  tillaGamesBtnEl = btn;
-}
-
-// ------------------------------------------------------
-// Sprache setzen
-// ------------------------------------------------------
 function setLanguage(lang, { initial = false } = {}) {
   currentLang = lang === "en" ? "en" : "de";
   localStorage.setItem("fs_lang", currentLang);
@@ -464,7 +543,7 @@ function setLanguage(lang, { initial = false } = {}) {
   if (compassApplyLabelEl)
     compassApplyLabelEl.textContent = t("compass_apply_label");
 
-  // About-Seite
+  // About-Seite DE/EN umschalten
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
   if (aboutDe && aboutEn) {
@@ -511,35 +590,12 @@ function setLanguage(lang, { initial = false } = {}) {
     populateCategoryOptions();
   }
 
-  // Beschriftung des 🎲-Buttons aktualisieren
-  if (tillaGamesBtnEl) {
-    tillaGamesBtnEl.textContent =
-      currentLang === "de"
-        ? "Spielideen für unterwegs"
-        : "Travel games for the road";
-  }
-
   if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
     tilla.onLanguageChanged();
   }
 
   updateLanguageSwitcherVisual();
   applyStaticI18n();
-}
-
-// Sprache Button
-function updateLanguageSwitcherVisual() {
-  if (!languageSwitcherEl) return;
-
-  const label = currentLang === "de" ? "DE" : "EN";
-  languageSwitcherEl.textContent = label;
-
-  languageSwitcherEl.setAttribute(
-    "aria-label",
-    currentLang === "de"
-      ? "Sprache: Deutsch (Tippen für Englisch)"
-      : "Language: English (tap for German)"
-  );
 }
 
 // ------------------------------------------------------
@@ -853,6 +909,11 @@ function renderMarkers() {
 
     marker.bindPopup(popupHtml);
 
+    // WICHTIG: Klick auf Marker öffnet unten das Detail-Panel
+    marker.on("click", () => {
+      focusSpotOnMap(spot);
+    });
+
     markersLayer.addLayer(marker);
   });
 }
@@ -954,9 +1015,6 @@ function focusSpotOnMap(spot) {
   showSpotDetails(spot);
 }
 
-// ------------------------------------------------------
-// Detailpanel mit Google / Apple Maps
-// ------------------------------------------------------
 function showSpotDetails(spot) {
   if (!spotDetailEl) return;
 
@@ -1037,38 +1095,31 @@ function showSpotDetails(spot) {
   if (metaParts.length) spotDetailEl.appendChild(metaEl);
   if (description) spotDetailEl.appendChild(descEl);
 
-  // Routen-Buttons
+  // Routen-Buttons – immer, wenn lat/lng vorhanden
   if (spot.lat && spot.lng) {
     const routesRow = document.createElement("div");
     routesRow.className = "spot-details-routes";
 
-    const lat = spot.lat;
-    const lng = spot.lng;
-    const encName = encodeURIComponent(name);
+    const encodedName = encodeURIComponent(name);
+    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${spot.lat},${spot.lng}(${encodedName})`;
+    const appleUrl = `https://maps.apple.com/?ll=${spot.lat},${spot.lng}&q=${encodedName}`;
 
     const googleLink = document.createElement("a");
-    googleLink.className = "spot-details-route-link";
-    googleLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+    googleLink.href = googleUrl;
     googleLink.target = "_blank";
     googleLink.rel = "noopener noreferrer";
-    googleLink.textContent =
-      currentLang === "de"
-        ? "In Google Maps öffnen"
-        : "Open in Google Maps";
+    googleLink.className = "spot-details-route-link";
+    googleLink.textContent = t("btn_open_google");
 
     const appleLink = document.createElement("a");
-    appleLink.className = "spot-details-route-link";
-    appleLink.href = `https://maps.apple.com/?ll=${lat},${lng}&q=${encName}`;
+    appleLink.href = appleUrl;
     appleLink.target = "_blank";
     appleLink.rel = "noopener noreferrer";
-    appleLink.textContent =
-      currentLang === "de"
-        ? "In Apple Karten öffnen"
-        : "Open in Apple Maps";
+    appleLink.className = "spot-details-route-link";
+    appleLink.textContent = t("btn_open_apple");
 
     routesRow.appendChild(googleLink);
     routesRow.appendChild(appleLink);
-
     spotDetailEl.appendChild(routesRow);
   }
 
@@ -1138,7 +1189,7 @@ function handleCompassApply() {
   applyFiltersAndRender();
 
   if (tilla && typeof tilla.onCompassApplied === "function") {
-    tilla.onCompassApplied({ travelMode, mood: moodFilter, radiusStep });
+    tilla.onCompassApplied({ travelMode, radiusStep });
   }
 }
 
@@ -1222,6 +1273,29 @@ function handleLocateClick() {
 }
 
 // ------------------------------------------------------
+// Spiele-Button (🎲)
+// ------------------------------------------------------
+function pickRandomGameIdea() {
+  const pool = currentLang === "de" ? TILLA_GAMES_DE : TILLA_GAMES_EN;
+  if (!pool.length) return "";
+  const index = Math.floor(Math.random() * pool.length);
+  return pool[index];
+}
+
+function handleTillaGameClick() {
+  const idea = pickRandomGameIdea();
+  if (!idea) return;
+
+  if (tilla && typeof tilla.showGameIdea === "function") {
+    tilla.showGameIdea(idea);
+  } else {
+    // Fallback, falls Tilla aus irgendeinem Grund nicht da ist
+    const prefix = currentLang === "de" ? "Spielidee: " : "Game idea: ";
+    showToast(prefix + idea);
+  }
+}
+
+// ------------------------------------------------------
 // Navigation (Karte / Über)
 // ------------------------------------------------------
 function switchRoute(route) {
@@ -1284,7 +1358,7 @@ function handleToggleView() {
 // Initialisierung
 // ------------------------------------------------------
 function init() {
-  // DOM holen
+  // DOM
   languageSwitcherEl = document.getElementById("language-switcher");
   themeToggleEl = document.getElementById("theme-toggle");
   btnLocateEl = document.getElementById("btn-locate");
@@ -1343,25 +1417,19 @@ function init() {
   compassApplyLabelEl = document.getElementById("compass-apply-label");
   compassApplyBtnEl = document.getElementById("compass-apply");
 
-  // Tilla-Instanz
-  tilla = new TillaCompanion({
-    getText: (key) => t(key)
-  });
+  // Tilla-Spiele-Button
+  tillaGamesBtnEl = document.getElementById("btn-tilla-games");
 
-  // Sprache / Theme
+  // Sprache / Theme / Map
   const initialLang = getInitialLang();
   setLanguage(initialLang, { initial: true });
 
   const initialTheme = getInitialTheme();
   setTheme(initialTheme);
 
-  // 🎲-Button dynamisch einhängen
-  ensureTillaGamesButton();
-
-  // Map
   initMap();
 
-  // Map-Klick schließt Detail-Panel
+  // Map-Klick schließt unser Detail-Panel
   if (map && spotDetailEl) {
     map.on("click", () => {
       spotDetailEl.classList.add("spot-details--hidden");
@@ -1369,7 +1437,12 @@ function init() {
     });
   }
 
-  // Events
+  // Tilla
+  tilla = new TillaCompanion({
+    getText: (key) => t(key)
+  });
+
+  // Events – Sprache (Toggle via Button)
   if (languageSwitcherEl) {
     languageSwitcherEl.addEventListener("click", () => {
       const nextLang = currentLang === "de" ? "en" : "de";
@@ -1511,6 +1584,10 @@ function init() {
 
   if (compassApplyBtnEl) {
     compassApplyBtnEl.addEventListener("click", handleCompassApply);
+  }
+
+  if (tillaGamesBtnEl) {
+    tillaGamesBtnEl.addEventListener("click", handleTillaGameClick);
   }
 
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
