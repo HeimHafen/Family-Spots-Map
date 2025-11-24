@@ -104,17 +104,6 @@
               🌓
             </button>
 
-            <!-- NEU: Tilla Sprachmodus / Sound-Toggle -->
-            <button
-              class="btn-icon"
-              id="toggle-sound"
-              type="button"
-              aria-label="Tilla Sprachmodus"
-              title="Tilla Sprachmodus"
-            >
-              🔊
-            </button>
-
             <button
               id="btn-locate"
               class="btn-icon"
@@ -1043,15 +1032,12 @@
     </div>
 
     <!-- Tilla Companion Message (Floating) -->
-    <div class="tilla-companion" id="tilla-companion" hidden>
-      <div class="tilla-avatar">
-        <img
-          src="assets/tilla/tilla-hero.png"
-          alt="Tilla, deine Begleiterin"
-        />
-      </div>
-      <div class="tilla-message" id="tilla-message"></div>
+    <div id="tilla-companion" class="tilla-companion" hidden>
+      <span class="tilla-icon">🐢</span>
+      <span id="tilla-message" class="tilla-message">Hallo!</span>
     </div>
+
+    <button id="toggle-sound" title="Tilla Ton an/aus">🔊</button>
 
     <!-- Scripts: Leaflet + MarkerCluster -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
