@@ -38,10 +38,10 @@ body {
   --input-bg: #fff7ec;
   --input-shadow: 0 4px 9px rgba(195, 134, 74, 0.22);
 
-  /* Header: goldenes, aber softeres Orange */
-  --header-bg-top: #ffb54f;
-  --header-bg-bottom: #ff9f35;
-  --header-shadow: 0 10px 24px rgba(216, 135, 55, 0.45);
+  /* Header: goldenes, softeres Orange */
+  --header-bg-top: #ffc96f;
+  --header-bg-bottom: #ffad54;
+  --header-shadow: 0 8px 20px rgba(216, 135, 55, 0.38);
   --header-text-color: #fffdf8;
 
   /* etwas weniger Glow */
@@ -61,8 +61,8 @@ body {
   --language-pill-bg: rgba(255, 246, 231, 0.95);
   --language-pill-shadow: 0 3px 9px rgba(181, 118, 55, 0.35);
 
-  /* HELLERER Backdrop unten, kein schwarzer Schimmer mehr */
-  --bottom-nav-backdrop: rgba(255, 221, 186, 0.86);
+  /* heller, cremiger Backdrop unten */
+  --bottom-nav-backdrop: rgba(255, 228, 201, 0.88);
 
   --sidebar-bg: #050816;
   --sidebar-section-bg: rgba(255, 245, 233, 0.98);
