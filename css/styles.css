@@ -18,50 +18,55 @@ body {
 /* ---------- THEME TOKENS (LIGHT / DARK) ---------- */
 
 :root {
-  --app-bg: radial-gradient(circle at top, #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
+  /* weicher, cremiger Hintergrund wie Bild 1 */
+  --app-bg: radial-gradient(circle at top, #ffd9a3 0, #fff3e3 32%, #fce7d3 70%, #f8ddc7 100%);
   --text-color: #452213;
   --text-soft: #6f4224;
   --text-strong: #2f160b;
 
-  --card-bg: rgba(252, 235, 216, 0.98);
-  --card-shadow: 0 10px 26px rgba(163, 95, 36, 0.5);
+  /* Karten sehr hell, leicht warm */
+  --card-bg: rgba(255, 248, 239, 0.98);
+  --card-shadow: 0 10px 26px rgba(214, 151, 93, 0.35);
   --card-border: rgba(255, 255, 255, 0.9);
 
-  --chip-bg: #ffedd5;
+  /* Chips sanft, weniger Glow */
+  --chip-bg: #fff2e2;
   --chip-color: #6b4124;
-  --chip-shadow: 0 3px 8px rgba(152, 92, 45, 0.3);
+  --chip-shadow: 0 3px 8px rgba(195, 134, 74, 0.25);
 
-  --input-bg: #fff1e0;
-  --input-shadow: 0 4px 9px rgba(147, 90, 45, 0.25);
+  /* Inputs leicht aufgehellt */
+  --input-bg: #fff7ec;
+  --input-shadow: 0 4px 9px rgba(195, 134, 74, 0.22);
 
-  --header-bg-top: #ff9800;
-  --header-bg-bottom: #ffb300;
-  --header-shadow: 0 12px 30px rgba(199, 110, 21, 0.55);
-  --header-text-color: #ffffff;
+  /* Header: goldenes, aber softeres Orange */
+  --header-bg-top: #ffb54f;
+  --header-bg-bottom: #ff9f35;
+  --header-shadow: 0 10px 24px rgba(216, 135, 55, 0.45);
+  --header-text-color: #fffdf8;
 
   /* etwas weniger Glow */
-  --header-tagline-bg: rgba(255, 245, 222, 0.95);
+  --header-tagline-bg: rgba(255, 247, 231, 0.96);
   --header-tagline-color: #7c4314;
-  --header-tagline-shadow: 0 4px 12px rgba(141, 73, 15, 0.45);
+  --header-tagline-shadow: 0 3px 10px rgba(193, 120, 48, 0.35);
 
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
-    #ffe7c2 0,
-    #ffca80 40%,
-    #ffb14d 100%
+    #fff3dd 0,
+    #ffd49a 42%,
+    #ffb34f 100%
   );
-  --header-icon-shadow: 0 3px 8px rgba(156, 76, 16, 0.4);
-  --header-icon-border: rgba(255, 255, 255, 0.6);
+  --header-icon-shadow: 0 3px 8px rgba(197, 122, 52, 0.35);
+  --header-icon-border: rgba(255, 255, 255, 0.75);
 
-  --language-pill-bg: rgba(255, 243, 224, 0.94);
-  --language-pill-shadow: 0 3px 9px rgba(132, 70, 18, 0.4);
+  --language-pill-bg: rgba(255, 246, 231, 0.95);
+  --language-pill-shadow: 0 3px 9px rgba(181, 118, 55, 0.35);
 
   /* HELLERER Backdrop unten, kein schwarzer Schimmer mehr */
-  --bottom-nav-backdrop: rgba(255, 212, 170, 0.85);
+  --bottom-nav-backdrop: rgba(255, 221, 186, 0.86);
 
   --sidebar-bg: #050816;
   --sidebar-section-bg: rgba(255, 245, 233, 0.98);
-  --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
+  --sidebar-section-shadow: 0 10px 24px rgba(211, 140, 79, 0.35);
   --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
   --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
@@ -71,17 +76,17 @@ body {
 
   --toast-bg: rgba(55, 35, 21, 0.95);
 
-  --map-card-bg: #fdf4e6;
-  --map-card-shadow: 0 14px 32px rgba(148, 86, 38, 0.55);
+  --map-card-bg: #fdf5ea;
+  --map-card-shadow: 0 14px 32px rgba(191, 130, 76, 0.5);
   --map-card-border: rgba(255, 255, 255, 0.95);
 
-  --radius-circle-stroke: rgba(255, 165, 0, 0.6);
-  --radius-circle-fill: rgba(255, 193, 7, 0.17);
+  --radius-circle-stroke: rgba(255, 174, 60, 0.6);
+  --radius-circle-fill: rgba(255, 193, 95, 0.18);
 
   /* Utility-Radien & Schatten */
   --radius-pill: 999px;
-  --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
+  --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.25);
+  --shadow-strong: 0 10px 26px rgba(214, 151, 93, 0.45);
 }
 
 [data-theme="dark"] {
@@ -292,7 +297,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   color: var(--header-text-color);
 }
 
@@ -425,10 +430,10 @@ body {
   margin-top: 4px;
   padding: 10px 10px 12px;
   border-radius: 18px;
-  background: linear-gradient(145deg, #ffe4c2, #ffd2a3);
+  background: linear-gradient(145deg, #ffe9d0, #ffddbc);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.75),
-    0 6px 12px rgba(177, 104, 40, 0.4);
+    0 6px 12px rgba(177, 104, 40, 0.35);
 }
 
 [data-theme="dark"] .compass-card {
@@ -529,7 +534,7 @@ select.input:focus {
   background: linear-gradient(145deg, #ffb54f, #ff9800);
   color: #3b2313;
   box-shadow:
-    0 4px 10px rgba(245, 158, 11, 0.55),
+    0 4px 10px rgba(245, 158, 11, 0.45),
     inset 0 0 0 1px rgba(255, 255, 255, 0.85);
   transform: translateY(-1px);
 }
@@ -585,10 +590,10 @@ select.input:focus {
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
-  background: linear-gradient(135deg, #ff9800, #ffb300);
+  background: linear-gradient(135deg, #ffb54f, #ff9800);
   color: #fffdf8;
   box-shadow:
-    0 4px 10px rgba(180, 96, 33, 0.55),
+    0 4px 10px rgba(180, 96, 33, 0.45),
     inset 0 0 0 1px rgba(255, 255, 255, 0.75);
   cursor: pointer;
 }
@@ -726,7 +731,7 @@ select.input:focus {
   margin: 8px 10px 10px;
   max-height: none;
   overflow-y: visible;
-  background: rgba(255, 248, 239, 0.96);
+  background: rgba(255, 249, 242, 0.96);
   border-radius: 18px;
   box-shadow: 0 10px 24px rgba(116, 68, 33, 0.6);
   padding: 10px 12px 11px;
@@ -1245,7 +1250,7 @@ body.onboarding-open {
 .spot-list-empty {
   padding: 10px 12px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 250, 244, 0.92);
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-soft);
