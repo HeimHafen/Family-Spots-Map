@@ -7,8 +7,13 @@
 //   import { TillaCompanion } from './tilla.js';
 //
 //   const tilla = new TillaCompanion({
-//     getText: (key) => t(key)  // optional: Überschreiben einzelner Texte möglich
+//     getText: (key) => t(key)  // optional: UI-Strukturen für Texte
 //   });
+//
+// app.js kann zusätzlich (optional) aufrufen:
+//   tilla.showPlayIdea(text)
+//   tilla.showExternalMessage(text)  // z.B. für Besuchs- oder Streak-Meldungen
+//   tilla.showMessage(text)          // Alias zu showExternalMessage
 //
 // ------------------------------------------------------
 
@@ -107,6 +112,9 @@ function getCurrentLang() {
 }
 
 export class TillaCompanion {
+  /**
+   * @param {{getText?: (key: string) => string}} options
+   */
   constructor(options = {}) {
     this.getText =
       typeof options.getText === "function" ? options.getText : null;
@@ -119,13 +127,18 @@ export class TillaCompanion {
       return;
     }
 
-    this.state = "intro";
+    this.state = "intro";        // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots | play-idea | external
     this.travelMode = "everyday";
     this.lastInteraction = Date.now();
     this._lastVariantIndex = {};
+    this._manualText = null;     // für play-idea / external
 
     this._renderState();
   }
+
+  // ------------------------------------------------------
+  // Öffentliche API für app.js
+  // ------------------------------------------------------
 
   onLanguageChanged() {
     if (!this.textEl) return;
@@ -139,6 +152,7 @@ export class TillaCompanion {
       this.travelMode = null;
       this.state = "intro";
       this.lastInteraction = Date.now();
+      this._manualText = null;
       this._renderState();
       return;
     }
@@ -148,6 +162,7 @@ export class TillaCompanion {
     this.travelMode = mode;
     this.lastInteraction = Date.now();
     this.state = mode;
+    this._manualText = null;
     this._renderState();
   }
 
@@ -155,6 +170,7 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "plus";
+    this._manualText = null;
     this._renderState();
   }
 
@@ -162,6 +178,7 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "daylog";
+    this._manualText = null;
     this._renderState();
   }
 
@@ -169,6 +186,7 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "fav-added";
+    this._manualText = null;
     this._renderState();
   }
 
@@ -176,6 +194,7 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "fav-removed";
+    this._manualText = null;
     this._renderState();
   }
 
@@ -183,6 +202,7 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "no-spots";
+    this._manualText = null;
     this._renderState();
   }
 
@@ -190,6 +210,7 @@ export class TillaCompanion {
     if (!this.textEl) return;
 
     this.lastInteraction = Date.now();
+    this._manualText = null;
 
     if (this.travelMode === "trip") {
       this.state = "trip";
@@ -206,13 +227,14 @@ export class TillaCompanion {
     if (!this.textEl) return;
 
     this.lastInteraction = Date.now();
+    this._manualText = null;
 
     const mode = context.travelMode ?? this.travelMode;
     const key =
       mode === "trip" ? "turtle_compass_trip" : "turtle_compass_everyday";
 
     const text = this._t(key);
-    this.textEl.textContent = text;
+    this._setText(text);
 
     if (mode === "trip") {
       this.state = "trip";
@@ -223,15 +245,45 @@ export class TillaCompanion {
     }
   }
 
-  // Spielidee direkt anzeigen (von app.js)
+  /**
+   * Spielideen aus app.js direkt anzeigen
+   * @param {string} text
+   */
   showPlayIdea(text) {
-    if (!this.textEl) return;
+    if (!this.textEl || !text) return;
     this.lastInteraction = Date.now();
     this.state = "play-idea";
-    this.textEl.textContent = text;
+    this._manualText = text;
+    this._setText(text);
   }
 
+  /**
+   * Externe Nachricht von außen (z. B. Besuchs-Tracking, Streak)
+   * – wird NICHT von _renderState überschrieben, bis ein neues Event kommt.
+   * @param {string} text
+   */
+  showExternalMessage(text) {
+    if (!this.textEl || !text) return;
+    this.lastInteraction = Date.now();
+    this.state = "external";
+    this._manualText = text;
+    this._setText(text);
+  }
+
+  /**
+   * Alias für showExternalMessage – praktischer Kurzname
+   * @param {string} text
+   */
+  showMessage(text) {
+    this.showExternalMessage(text);
+  }
+
+  // ------------------------------------------------------
+  // Intern: Übersetzungen & Varianten
+  // ------------------------------------------------------
+
   _t(key) {
+    // 1) App-Übersetzung versuchen
     if (this.getText) {
       try {
         const value = this.getText(key);
@@ -247,6 +299,7 @@ export class TillaCompanion {
       }
     }
 
+    // 2) Eigene Fallbacks
     const lang = getCurrentLang();
     const bundle = FALLBACK_TEXTS[lang] || FALLBACK_TEXTS.de;
     const entry = bundle[key];
@@ -280,11 +333,25 @@ export class TillaCompanion {
     return variants[index];
   }
 
+  _setText(text) {
+    if (!this.textEl) return;
+    this.textEl.textContent = text;
+  }
+
+  // ------------------------------------------------------
+  // Rendering
+  // ------------------------------------------------------
+
   _renderState() {
     if (!this.textEl) return;
 
-    // Wenn eine Spielidee aktiv ist, nicht überschreiben
-    if (this.state === "play-idea") {
+    // WICHTIG:
+    // Wenn gerade eine Spielidee oder externe Message aktiv ist,
+    // soll ein "normales" Re-Render (z.B. durch Sprachwechsel) NICHT überschreiben.
+    if (this.state === "play-idea" || this.state === "external") {
+      if (this._manualText) {
+        this._setText(this._manualText);
+      }
       return;
     }
 
@@ -350,6 +417,7 @@ export class TillaCompanion {
       }
     }
 
-    this.textEl.textContent = text;
+    this._manualText = null;
+    this._setText(text);
   }
 }
