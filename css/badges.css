@@ -19,8 +19,8 @@
   padding: 2px 7px;
   font-size: 0.7rem;
   line-height: 1.2;
-  background: rgba(145, 93, 54, 0.06); /* leicht warmer Schimmer statt kühlem Grau */
-  color: #6f4224; /* passt zu var(--text-soft) */
+  background: rgba(145, 93, 54, 0.06); /* leichter warmer Schimmer */
+  color: #6f4224; /* nah an var(--text-soft) */
   border: 1px solid transparent;
   white-space: nowrap;
 }
@@ -34,7 +34,7 @@ html[data-theme="dark"] .badge {
 
 /* sehr dezente, neutrale Badges (z.B. Kategorie, Info) */
 .badge--soft {
-  background: rgba(214, 151, 93, 0.14); /* warmer beige/orange Ton */
+  background: rgba(214, 151, 93, 0.14); /* warmes Beige/Orange */
   color: #6f4224;
 }
 
@@ -62,12 +62,13 @@ html[data-theme="dark"] .badge--match {
   color: #bbf7d0;
 }
 
-/* Distanz-Badge – z. B. „4,3 km“ */
+/* Distanz-Badge – z. B. „4,3 km“
+   -> wärmerer Hintergrund, Blau nur als Akzent über Text/Rand */
 
 .badge--distance {
-  background: rgba(59, 130, 246, 0.10); /* etwas softer */
-  color: #1d4ed8;
-  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(255, 244, 232, 0.95); /* warmes Creme */
+  color: #1f4fb0;                        /* etwas weicheres Blau */
+  border-color: rgba(59, 130, 246, 0.35);
 }
 
 html[data-theme="dark"] .badge--distance {
