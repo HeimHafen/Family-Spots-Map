@@ -1,4 +1,3 @@
-
 // js/app.js
 // ======================================================
 // Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
@@ -8,6 +7,159 @@
 "use strict";
 
 import { TillaCompanion } from "./tilla.js";
+
+// ------------------------------------------------------
+// Tilla Speech & Sound-Toggle 🎙️
+// ------------------------------------------------------
+
+let tillaSoundEnabled = true;
+
+/**
+ * Aktualisiert das Icon & den Title des Sound-Buttons.
+ */
+function updateSoundButton() {
+  const btn = document.getElementById("toggle-sound");
+  if (!btn) return;
+
+  btn.textContent = tillaSoundEnabled ? "🔊" : "🔇";
+  btn.title = tillaSoundEnabled
+    ? "Tilla spricht"
+    : "Tilla spricht gerade nicht";
+}
+
+/**
+ * Lädt Sound-Einstellung aus localStorage.
+ */
+function loadTillaSoundSetting() {
+  try {
+    tillaSoundEnabled = localStorage.getItem("tillaSound") !== "off";
+  } catch {
+    tillaSoundEnabled = true;
+  }
+  updateSoundButton();
+}
+
+/**
+ * Schaltet Tilla-Sound an/aus und speichert in localStorage.
+ */
+function toggleTillaSound() {
+  tillaSoundEnabled = !tillaSoundEnabled;
+  try {
+    localStorage.setItem("tillaSound", tillaSoundEnabled ? "on" : "off");
+  } catch {
+    // ignorieren – nur Komfort
+  }
+  updateSoundButton();
+}
+
+/**
+ * Lässt Tilla sprechen (Web Speech API).
+ * Spricht nur, wenn Sound aktiviert ist.
+ * @param {string} msg
+ */
+function speakTilla(msg) {
+  if (!msg || !window.speechSynthesis || !tillaSoundEnabled) return;
+
+  const utterance = new SpeechSynthesisUtterance(msg);
+
+  // Sprache passend zur aktuellen UI-Sprache
+  const langCode =
+    typeof currentLang !== "undefined" && currentLang === "en"
+      ? "en-US"
+      : "de-DE";
+  utterance.lang = langCode;
+  utterance.pitch = 1.05;
+  utterance.rate = 1.02;
+  utterance.volume = 0.92;
+
+  const voices = speechSynthesis
+    .getVoices()
+    .filter((v) => v.lang && v.lang.toLowerCase().startsWith(langCode.slice(0, 2)));
+
+  if (voices.length > 0) {
+    utterance.voice =
+      voices.find((v) => v.name.toLowerCase().includes("female")) || voices[0];
+  }
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utterance);
+}
+
+// Stimmen einmal vorladen (Performance)
+if (typeof window !== "undefined" && window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = () => {
+    speechSynthesis.getVoices();
+  };
+}
+
+/**
+ * Versucht, eine Nachricht über Tilla anzuzeigen – fällt auf Toast zurück
+ * und löst gleichzeitig die Sprachausgabe aus.
+ * @param {string} message
+ */
+function tillaShowFloatingMessage(message) {
+  if (!message) return;
+
+  if (tilla && typeof tilla.showExternalMessage === "function") {
+    tilla.showExternalMessage(message);
+  } else if (tilla && typeof tilla.showMessage === "function") {
+    tilla.showMessage(message);
+  } else {
+    showToast(message);
+  }
+
+  speakTilla(message);
+}
+
+/**
+ * Markiert einen Spot als besucht und zeigt ggf. eine Tilla-Nachricht.
+ * @param {Spot} spot
+ */
+function handleSpotVisited(spot) {
+  const name = getSpotName(spot);
+  if (!name) return;
+
+  try {
+    const raw = localStorage.getItem("visitedSpots");
+    const visited = Array.isArray(JSON.parse(raw || "[]"))
+      ? JSON.parse(raw || "[]")
+      : [];
+
+    if (!visited.includes(name)) {
+      visited.push(name);
+      localStorage.setItem("visitedSpots", JSON.stringify(visited));
+      tillaShowFloatingMessage(`„${name}“ war ein schöner Ort, oder? 💛`);
+    }
+  } catch (err) {
+    console.warn("[Family Spots] Konnte visitedSpots nicht speichern:", err);
+  }
+}
+
+/**
+ * Prüft Tages-Streak: jeder neue Tag erhöht den Zähler,
+ * alle 3 Tage gibt es eine kleine Tilla-Feier.
+ */
+function checkTillaStreak() {
+  try {
+    const today = new Date().toDateString();
+    const last = localStorage.getItem("lastVisit");
+
+    if (last === today) return;
+
+    localStorage.setItem("lastVisit", today);
+    const countRaw = localStorage.getItem("visitCount") || "0";
+    const count = parseInt(countRaw, 10) + 1;
+    localStorage.setItem("visitCount", String(count));
+
+    if (count > 0 && count % 3 === 0) {
+      tillaShowFloatingMessage(
+        `🎉 Schon ${count} gemeinsame Tage – ich bin stolz auf euch!`
+      );
+    }
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Besuchsserie nicht speichern:", err);
+  }
+}
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
@@ -557,6 +709,7 @@ let plusStatusTextEl;
 let daylogTextEl;
 let daylogSaveEl;
 let toastEl;
+let soundToggleBtnEl; // 🔊
 
 // Kompass
 let compassSectionEl;
@@ -1508,6 +1661,7 @@ function renderSpotList() {
     card.addEventListener("click", () => {
       lastSpotTriggerEl = card;
       focusSpotOnMap(spot);
+      handleSpotVisited(spot);
     });
 
     card.addEventListener(
@@ -1515,6 +1669,7 @@ function renderSpotList() {
       activateOnEnterSpace(() => {
         lastSpotTriggerEl = card;
         focusSpotOnMap(spot);
+        handleSpotVisited(spot);
       })
     );
 
@@ -2001,6 +2156,7 @@ function init() {
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
     headerTaglineEl = document.getElementById("header-tagline");
+    soundToggleBtnEl = document.getElementById("toggle-sound");
 
     viewMapEl = document.getElementById("view-map");
     viewAboutEl = document.getElementById("view-about");
@@ -2097,7 +2253,17 @@ function init() {
     // Tilla
     tilla = new TillaCompanion({
       getText: (key) => t(key)
+      // optional könnten wir später speakTilla hier integrieren
     });
+
+    // Sound-Toggle
+    if (soundToggleBtnEl) {
+      soundToggleBtnEl.addEventListener("click", toggleTillaSound);
+    }
+    loadTillaSoundSetting();
+
+    // Tages-Streak prüfen (nachdem Tilla existiert)
+    checkTillaStreak();
 
     // Events – Sprache
     if (languageSwitcherEl) {
@@ -2307,7 +2473,7 @@ function init() {
             });
           }
         } else {
-          showToast(idea);
+          tillaShowFloatingMessage(idea);
         }
       });
     }
