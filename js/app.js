@@ -1435,23 +1435,26 @@ function handleLocateClick() {
 function switchRoute(route) {
   if (!viewMapEl || !viewAboutEl || !bottomNavButtons) return;
 
-  if (route === "about") {
-    viewMapEl.classList.remove("view--active");
-    viewAboutEl.classList.add("view--active");
-  } else {
-    viewAboutEl.classList.remove("view--active");
-    viewMapEl.classList.add("view--active");
-  }
+  const showMap = route !== "about";
 
-  // A11y: aria-current und aktive Klasse pflegen
+  // Sichtbarkeit hart über display steuern
+  viewMapEl.classList.toggle("view--active", showMap);
+  viewAboutEl.classList.toggle("view--active", !showMap);
+
+  // Fallback: zusätzlich direkt display setzen (unabhängig von CSS)
+  viewMapEl.style.display = showMap ? "block" : "none";
+  viewAboutEl.style.display = showMap ? "none" : "block";
+
+  // A11y & aktiver Button
   bottomNavButtons.forEach((btn) => {
     const btnRoute = btn.getAttribute("data-route");
-    const isActive = btnRoute === route;
+    const isActive = btnRoute === route || (showMap && btnRoute === "map");
     btn.classList.toggle("bottom-nav-item--active", isActive);
     btn.setAttribute("aria-current", isActive ? "page" : "false");
   });
 
-  // KEIN Scrollen nach oben – damit Karte / Text an Ort und Stelle bleiben
+  // Beim Wechsel an den Anfang scrollen, damit der neue View wirklich im Sichtfeld ist
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // ------------------------------------------------------
