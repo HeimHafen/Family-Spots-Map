@@ -619,60 +619,27 @@ function updateSoundButton() {
     : "Tilla spricht gerade nicht";
 }
 
-/**
- * Sprach-Ausgabe für Tilla (Sidebar & Floating Bubble).
- * Deutlich ruhiger / langsamer, versucht eine angenehmere Stimme zu wählen.
- */
 function speakTilla(msg) {
   if (!window.speechSynthesis || !tillaSoundEnabled) return;
-  if (!msg || typeof msg !== "string") return;
-
-  const isEnglish = currentLang === LANG_EN;
-  const langPrefix = isEnglish ? "en" : "de";
 
   const utterance = new SpeechSynthesisUtterance(msg);
+  utterance.lang = "de-DE";
+  utterance.pitch = 1.05;
+  utterance.rate = 1.02;
+  utterance.volume = 0.92;
 
-  // Sprache & Grund-Charakter
-  utterance.lang = isEnglish ? "en-US" : "de-DE";
-
-  // *** Hier wird sie ruhig gestellt ***
-  utterance.pitch = 0.85;  // etwas tiefer
-  utterance.rate = 0.82;   // deutlich langsamer
-  utterance.volume = 0.9;
-
-  // Stimme auswählen (wenn mehrere vorhanden sind)
-  const allVoices = window.speechSynthesis
-    .getVoices()
-    .filter(
-      (v) =>
-        v.lang &&
-        v.lang.toLowerCase().startsWith(langPrefix)
-    );
-
-  if (allVoices.length) {
-    // Versuche erst eher „ruhige“ Stimmen zu finden
-    const preferredNames = isEnglish
-      ? ["Samantha", "Serena", "Google US", "Microsoft", "Premium"]
-      : ["Markus", "Anna", "Marlene", "Petra", "Google Deutsch", "Microsoft"];
-
-    let chosen = null;
-    for (const pref of preferredNames) {
-      const match = allVoices.find((v) =>
-        v.name.toLowerCase().includes(pref.toLowerCase())
-      );
-      if (match) {
-        chosen = match;
-        break;
-      }
-    }
-
-    utterance.voice = chosen || allVoices[0];
+  const voices = speechSynthesis.getVoices().filter(
+    (v) => v.lang === "de-DE"
+  );
+  if (voices.length > 0) {
+    utterance.voice =
+      voices.find((v) => v.name.toLowerCase().includes("female")) || voices[0];
   }
 
-  // Vorherige Ausgaben abbrechen, dann neue starten
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(utterance);
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utterance);
 }
+
 /**
  * Zeigt eine Tilla-Floating-Bubble, spricht (optional) und blendet sie wieder aus.
  */
@@ -2242,10 +2209,9 @@ function init() {
       });
     }
 
-    // Tilla Sidebar-Companion (mit Sprach-Hook)
+    // Tilla Sidebar-Companion
     tilla = new TillaCompanion({
-      getText: (key) => t(key),
-      onSpeak: (msg) => speakTilla(msg)
+      getText: (key) => t(key)
     });
 
     // Events – Sprache
@@ -2282,7 +2248,7 @@ function init() {
     if (window.speechSynthesis) {
       window.speechSynthesis.onvoiceschanged = () => {
         try {
-          window.speechSynthesis.getVoices();
+          speechSynthesis.getVoices();
         } catch (e) {
           console.warn("[Tilla] Konnte Stimmen nicht vorladen:", e);
         }
@@ -2526,4 +2492,4 @@ function init() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener("
