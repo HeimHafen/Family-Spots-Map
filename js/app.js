@@ -621,8 +621,7 @@ function updateSoundButton() {
 
 /**
  * Sprach-Ausgabe für Tilla (Sidebar & Floating Bubble).
- * Versucht, eine angenehmere Stimme zu wählen und spricht langsamer & ruhiger.
- * @param {string} msg
+ * Deutlich ruhiger / langsamer, versucht eine angenehmere Stimme zu wählen.
  */
 function speakTilla(msg) {
   if (!window.speechSynthesis || !tillaSoundEnabled) return;
@@ -635,11 +634,13 @@ function speakTilla(msg) {
 
   // Sprache & Grund-Charakter
   utterance.lang = isEnglish ? "en-US" : "de-DE";
-  utterance.pitch = 1.0;   // 1.0 = normal, kein „Micky Maus“-Effekt mehr
-  utterance.rate = 0.9;    // etwas langsamer, wirkt natürlicher
+
+  // *** Hier wird sie ruhig gestellt ***
+  utterance.pitch = 0.85;  // etwas tiefer
+  utterance.rate = 0.82;   // deutlich langsamer
   utterance.volume = 0.9;
 
-  // Stimme auswählen
+  // Stimme auswählen (wenn mehrere vorhanden sind)
   const allVoices = window.speechSynthesis
     .getVoices()
     .filter(
@@ -649,10 +650,10 @@ function speakTilla(msg) {
     );
 
   if (allVoices.length) {
-    // Stimmen, die auf vielen Geräten okay klingen:
+    // Versuche erst eher „ruhige“ Stimmen zu finden
     const preferredNames = isEnglish
       ? ["Samantha", "Serena", "Google US", "Microsoft", "Premium"]
-      : ["Anna", "Marlene", "Petra", "Google Deutsch", "Microsoft", "Premium"];
+      : ["Markus", "Anna", "Marlene", "Petra", "Google Deutsch", "Microsoft"];
 
     let chosen = null;
     for (const pref of preferredNames) {
