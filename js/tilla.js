@@ -7,8 +7,7 @@
 //   import { TillaCompanion } from './tilla.js';
 //
 //   const tilla = new TillaCompanion({
-//     getText: (key) => t(key),          // optional: Überschreiben einzelner Texte
-//     onSpeak: (msg) => speakTilla(msg)  // optional: Sprach-Ausgabe einbinden
+//     getText: (key) => t(key)  // optional: Überschreiben einzelner Texte möglich
 //   });
 //
 // ------------------------------------------------------
@@ -111,8 +110,6 @@ export class TillaCompanion {
   constructor(options = {}) {
     this.getText =
       typeof options.getText === "function" ? options.getText : null;
-    this.onSpeak =
-      typeof options.onSpeak === "function" ? options.onSpeak : null;
 
     this.textEl = document.getElementById("tilla-sidebar-text");
     if (!this.textEl) {
@@ -215,7 +212,7 @@ export class TillaCompanion {
       mode === "trip" ? "turtle_compass_trip" : "turtle_compass_everyday";
 
     const text = this._t(key);
-    this._setTextAndMaybeSpeak(text);
+    this.textEl.textContent = text;
 
     if (mode === "trip") {
       this.state = "trip";
@@ -231,7 +228,7 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "play-idea";
-    this._setTextAndMaybeSpeak(text);
+    this.textEl.textContent = text;
   }
 
   _t(key) {
@@ -281,23 +278,6 @@ export class TillaCompanion {
 
     this._lastVariantIndex[key] = index;
     return variants[index];
-  }
-
-  /**
-   * Setzt den Text im Sidebar-Element und ruft optional onSpeak() auf.
-   * @param {string} text
-   */
-  _setTextAndMaybeSpeak(text) {
-    if (!this.textEl) return;
-    this.textEl.textContent = text;
-
-    if (this.onSpeak && typeof this.onSpeak === "function") {
-      try {
-        this.onSpeak(text);
-      } catch (err) {
-        console.warn("[Tilla] Fehler in onSpeak():", err);
-      }
-    }
   }
 
   _renderState() {
@@ -370,6 +350,6 @@ export class TillaCompanion {
       }
     }
 
-    this._setTextAndMaybeSpeak(text);
+    this.textEl.textContent = text;
   }
 }
