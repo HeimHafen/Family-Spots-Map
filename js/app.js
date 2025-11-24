@@ -621,24 +621,26 @@ function updateSoundButton() {
 
 /**
  * Sprach-Ausgabe für Tilla (Sidebar & Floating Bubble).
- * Nutzt die Web Speech API, falls verfügbar.
+ * Versucht, eine angenehmere Stimme zu wählen und spricht langsamer & ruhiger.
  * @param {string} msg
  */
 function speakTilla(msg) {
   if (!window.speechSynthesis || !tillaSoundEnabled) return;
   if (!msg || typeof msg !== "string") return;
 
-  const utterance = new SpeechSynthesisUtterance(msg);
-
   const isEnglish = currentLang === LANG_EN;
   const langPrefix = isEnglish ? "en" : "de";
 
-  utterance.lang = isEnglish ? "en-US" : "de-DE";
-  utterance.pitch = 1.05;
-  utterance.rate = 1.02;
-  utterance.volume = 0.92;
+  const utterance = new SpeechSynthesisUtterance(msg);
 
-  const voices = window.speechSynthesis
+  // Sprache & Grund-Charakter
+  utterance.lang = isEnglish ? "en-US" : "de-DE";
+  utterance.pitch = 1.0;   // 1.0 = normal, kein „Micky Maus“-Effekt mehr
+  utterance.rate = 0.9;    // etwas langsamer, wirkt natürlicher
+  utterance.volume = 0.9;
+
+  // Stimme auswählen
+  const allVoices = window.speechSynthesis
     .getVoices()
     .filter(
       (v) =>
@@ -646,17 +648,30 @@ function speakTilla(msg) {
         v.lang.toLowerCase().startsWith(langPrefix)
     );
 
-  if (voices.length > 0) {
-    const preferred = voices.find((v) =>
-      String(v.name || "").toLowerCase().includes("female")
-    );
-    utterance.voice = preferred || voices[0];
+  if (allVoices.length) {
+    // Stimmen, die auf vielen Geräten okay klingen:
+    const preferredNames = isEnglish
+      ? ["Samantha", "Serena", "Google US", "Microsoft", "Premium"]
+      : ["Anna", "Marlene", "Petra", "Google Deutsch", "Microsoft", "Premium"];
+
+    let chosen = null;
+    for (const pref of preferredNames) {
+      const match = allVoices.find((v) =>
+        v.name.toLowerCase().includes(pref.toLowerCase())
+      );
+      if (match) {
+        chosen = match;
+        break;
+      }
+    }
+
+    utterance.voice = chosen || allVoices[0];
   }
 
+  // Vorherige Ausgaben abbrechen, dann neue starten
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utterance);
 }
-
 /**
  * Zeigt eine Tilla-Floating-Bubble, spricht (optional) und blendet sie wieder aus.
  */
