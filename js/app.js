@@ -578,115 +578,6 @@ let filterBodyEls = [];
 let lastSpotTriggerEl = null;
 
 // ------------------------------------------------------
-// Tilla Floating-Bubble & Sound 🔊
-// ------------------------------------------------------
-let tillaMessageBoxEl;
-let tillaMessageTextEl;
-let toggleSoundBtnEl;
-let tillaSoundEnabled = true;
-
-/** Kurze Motivationssprüche für die Floating-Bubble */
-const TILLA_FLOAT_MESSAGES = [
-  "Wie schön, dass ihr heute draußen wart 💛",
-  "Kleines Abenteuer geschafft! 🎒",
-  "Ich hab euren Lieblingsplatz gespeichert! 🐢",
-  "Jede Erinnerung ist ein kleiner Schatz 💎",
-  "Wusstest du? Schon ein neuer Lieblingsort mehr auf eurer Karte! 🌍"
-];
-
-function getRandomTillaFloatMessage() {
-  return TILLA_FLOAT_MESSAGES[
-    Math.floor(Math.random() * TILLA_FLOAT_MESSAGES.length)
-  ];
-}
-
-function loadTillaSoundSetting() {
-  tillaSoundEnabled = localStorage.getItem("tillaSound") !== "off";
-  updateSoundButton();
-}
-
-function toggleTillaSound() {
-  tillaSoundEnabled = !tillaSoundEnabled;
-  localStorage.setItem("tillaSound", tillaSoundEnabled ? "on" : "off");
-  updateSoundButton();
-}
-
-function updateSoundButton() {
-  if (!toggleSoundBtnEl) return;
-  toggleSoundBtnEl.textContent = tillaSoundEnabled ? "🔊" : "🔇";
-  toggleSoundBtnEl.title = tillaSoundEnabled
-    ? "Tilla spricht"
-    : "Tilla spricht gerade nicht";
-}
-
-function speakTilla(msg) {
-  if (!window.speechSynthesis || !tillaSoundEnabled) return;
-
-  const utterance = new SpeechSynthesisUtterance(msg);
-  utterance.lang = "de-DE";
-  utterance.pitch = 1.05;
-  utterance.rate = 1.02;
-  utterance.volume = 0.92;
-
-  const voices = speechSynthesis.getVoices().filter(
-    (v) => v.lang === "de-DE"
-  );
-  if (voices.length > 0) {
-    utterance.voice =
-      voices.find((v) => v.name.toLowerCase().includes("female")) || voices[0];
-  }
-
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utterance);
-}
-
-/**
- * Zeigt eine Tilla-Floating-Bubble, spricht (optional) und blendet sie wieder aus.
- */
-function tillaShowFloatingMessage(msg = getRandomTillaFloatMessage()) {
-  if (!tillaMessageBoxEl || !tillaMessageTextEl) return;
-
-  tillaMessageTextEl.textContent = msg;
-  tillaMessageBoxEl.hidden = false;
-
-  speakTilla(msg);
-
-  window.setTimeout(() => {
-    tillaMessageBoxEl.hidden = true;
-  }, 6000);
-}
-
-// Besuch & Tages-Streak
-function onNewSpotVisited(spotName) {
-  if (!spotName) return;
-
-  const visited = JSON.parse(localStorage.getItem("visitedSpots") || "[]");
-
-  if (!visited.includes(spotName)) {
-    visited.push(spotName);
-    localStorage.setItem("visitedSpots", JSON.stringify(visited));
-    tillaShowFloatingMessage(`„${spotName}“ war ein schöner Ort, oder? 💛`);
-  }
-}
-
-function checkTillaStreak() {
-  const today = new Date().toDateString();
-  const last = localStorage.getItem("lastVisit");
-
-  if (last !== today) {
-    localStorage.setItem("lastVisit", today);
-    const count = parseInt(localStorage.getItem("visitCount") || "0", 10) + 1;
-    localStorage.setItem("visitCount", count.toString());
-
-    if (count % 3 === 0) {
-      tillaShowFloatingMessage(
-        `🎉 Schon ${count} gemeinsame Tage – ich bin stolz auf euch!`
-      );
-    }
-  }
-}
-
-// ------------------------------------------------------
 // Generische Utilities
 // ------------------------------------------------------
 
@@ -1616,7 +1507,6 @@ function renderSpotList() {
     card.addEventListener("click", () => {
       lastSpotTriggerEl = card;
       focusSpotOnMap(spot);
-      onNewSpotVisited(getSpotName(spot));
     });
 
     card.addEventListener(
@@ -1624,7 +1514,6 @@ function renderSpotList() {
       activateOnEnterSpace(() => {
         lastSpotTriggerEl = card;
         focusSpotOnMap(spot);
-        onNewSpotVisited(getSpotName(spot));
       })
     );
 
@@ -2112,11 +2001,6 @@ function init() {
     btnHelpEl = document.getElementById("btn-help");
     headerTaglineEl = document.getElementById("header-tagline");
 
-    // Tilla Floating-Bubble & Sound
-    tillaMessageBoxEl = document.getElementById("tilla-companion");
-    tillaMessageTextEl = document.getElementById("tilla-message");
-    toggleSoundBtnEl = document.getElementById("toggle-sound");
-
     viewMapEl = document.getElementById("view-map");
     viewAboutEl = document.getElementById("view-about");
 
@@ -2236,23 +2120,6 @@ function init() {
       btnHelpEl.addEventListener("click", () => {
         switchRoute("about");
       });
-    }
-
-    // Tilla Sound-Button
-    if (toggleSoundBtnEl) {
-      toggleSoundBtnEl.addEventListener("click", toggleTillaSound);
-      loadTillaSoundSetting();
-    }
-
-    // Voices einmal vorladen (damit speakTilla schneller wird)
-    if (window.speechSynthesis) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        try {
-          speechSynthesis.getVoices();
-        } catch (e) {
-          console.warn("[Tilla] Konnte Stimmen nicht vorladen:", e);
-        }
-      };
     }
 
     // Bottom-Navigation
@@ -2482,9 +2349,6 @@ function init() {
       closeSpotDetails({ returnFocus: true });
     });
 
-    // Tilla: Tages-Streak einmal beim Start prüfen
-    checkTillaStreak();
-
     switchRoute("map");
     loadSpots();
   } catch (err) {
@@ -2492,4 +2356,4 @@ function init() {
   }
 }
 
-document.addEventListener("
+document.addEventListener("DOMContentLoaded", init);
