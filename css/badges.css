@@ -1,6 +1,6 @@
 /* ==========================================================================
    Badges – kleine Labels für Stimmung, Distanz, Plus etc.
-   Ergänzt styles.css
+   Ergänzt styles.css (cremiges Family-Spots-Theme)
    ========================================================================== */
 
 .badges-row {
@@ -9,7 +9,7 @@
   gap: 4px;
 }
 
-/* Basis-Badge */
+/* Basis-Badge – leicht warm, sehr dezent */
 
 .badge {
   display: inline-flex;
@@ -19,8 +19,8 @@
   padding: 2px 7px;
   font-size: 0.7rem;
   line-height: 1.2;
-  background: rgba(15, 23, 42, 0.04);
-  color: #4b5563;
+  background: rgba(145, 93, 54, 0.06); /* leicht warmer Schimmer statt kühlem Grau */
+  color: #6f4224; /* passt zu var(--text-soft) */
   border: 1px solid transparent;
   white-space: nowrap;
 }
@@ -32,9 +32,10 @@ html[data-theme="dark"] .badge {
 
 /* Variationen nach Bedeutung */
 
+/* sehr dezente, neutrale Badges (z.B. Kategorie, Info) */
 .badge--soft {
-  background: rgba(148, 163, 184, 0.16);
-  color: #4b5563;
+  background: rgba(214, 151, 93, 0.14); /* warmer beige/orange Ton */
+  color: #6f4224;
 }
 
 html[data-theme="dark"] .badge--soft {
@@ -42,8 +43,9 @@ html[data-theme="dark"] .badge--soft {
   color: #cbd5f5;
 }
 
+/* Outline – nur Rahmen, kein Hintergrund */
 .badge--outline {
-  border-color: rgba(148, 163, 184, 0.7);
+  border-color: rgba(148, 92, 54, 0.45);
   background: transparent;
 }
 
@@ -52,7 +54,7 @@ html[data-theme="dark"] .badge--soft {
 .badge--match {
   background: rgba(34, 197, 94, 0.12);
   color: #166534;
-  border-color: rgba(34, 197, 94, 0.5);
+  border-color: rgba(34, 197, 94, 0.45);
 }
 
 html[data-theme="dark"] .badge--match {
@@ -63,9 +65,9 @@ html[data-theme="dark"] .badge--match {
 /* Distanz-Badge – z. B. „4,3 km“ */
 
 .badge--distance {
-  background: rgba(59, 130, 246, 0.12);
+  background: rgba(59, 130, 246, 0.10); /* etwas softer */
   color: #1d4ed8;
-  border-color: rgba(59, 130, 246, 0.45);
+  border-color: rgba(59, 130, 246, 0.4);
 }
 
 html[data-theme="dark"] .badge--distance {
@@ -104,7 +106,7 @@ html[data-theme="dark"] .badge--age {
 .badge--plus {
   background: rgba(250, 204, 21, 0.12);
   color: #92400e;
-  border-color: rgba(250, 204, 21, 0.7);
+  border-color: rgba(250, 204, 21, 0.65);
 }
 
 html[data-theme="dark"] .badge--plus {
@@ -112,10 +114,12 @@ html[data-theme="dark"] .badge--plus {
   color: #fef9c3;
 }
 
+/* Verifiziert / geprüft */
+
 .badge--verified {
   background: rgba(16, 185, 129, 0.12);
   color: #047857;
-  border-color: rgba(16, 185, 129, 0.5);
+  border-color: rgba(16, 185, 129, 0.48);
 }
 
 html[data-theme="dark"] .badge--verified {
@@ -123,10 +127,12 @@ html[data-theme="dark"] .badge--verified {
   color: #d1fae5;
 }
 
+/* „Großes Abenteuer“ / Big Ticket */
+
 .badge--big {
   background: rgba(147, 51, 234, 0.12);
   color: #6b21a8;
-  border-color: rgba(147, 51, 234, 0.55);
+  border-color: rgba(147, 51, 234, 0.52);
 }
 
 html[data-theme="dark"] .badge--big {
