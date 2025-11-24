@@ -1629,12 +1629,23 @@ function init() {
     });
   }
 
-  if (bottomNavButtons && bottomNavButtons.length) {
-    bottomNavButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const route = btn.getAttribute("data-route") || "map";
-        switchRoute(route);
-      });
+  // Bottom-Navigation explizit verdrahten
+  const bottomNavMapBtn = document.querySelector(
+    '.bottom-nav-item[data-route="map"]'
+  );
+  const bottomNavAboutBtn = document.querySelector(
+    '.bottom-nav-item[data-route="about"]'
+  );
+
+  if (bottomNavMapBtn) {
+    bottomNavMapBtn.addEventListener("click", () => {
+      switchRoute("map");
+    });
+  }
+
+  if (bottomNavAboutBtn) {
+    bottomNavAboutBtn.addEventListener("click", () => {
+      switchRoute("about");
     });
   }
 
