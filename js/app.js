@@ -619,25 +619,42 @@ function updateSoundButton() {
     : "Tilla spricht gerade nicht";
 }
 
+/**
+ * Sprach-Ausgabe für Tilla (Sidebar & Floating Bubble).
+ * Nutzt die Web Speech API, falls verfügbar.
+ * @param {string} msg
+ */
 function speakTilla(msg) {
   if (!window.speechSynthesis || !tillaSoundEnabled) return;
+  if (!msg || typeof msg !== "string") return;
 
   const utterance = new SpeechSynthesisUtterance(msg);
-  utterance.lang = "de-DE";
+
+  const isEnglish = currentLang === LANG_EN;
+  const langPrefix = isEnglish ? "en" : "de";
+
+  utterance.lang = isEnglish ? "en-US" : "de-DE";
   utterance.pitch = 1.05;
   utterance.rate = 1.02;
   utterance.volume = 0.92;
 
-  const voices = speechSynthesis.getVoices().filter(
-    (v) => v.lang === "de-DE"
-  );
+  const voices = window.speechSynthesis
+    .getVoices()
+    .filter(
+      (v) =>
+        v.lang &&
+        v.lang.toLowerCase().startsWith(langPrefix)
+    );
+
   if (voices.length > 0) {
-    utterance.voice =
-      voices.find((v) => v.name.toLowerCase().includes("female")) || voices[0];
+    const preferred = voices.find((v) =>
+      String(v.name || "").toLowerCase().includes("female")
+    );
+    utterance.voice = preferred || voices[0];
   }
 
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utterance);
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
 }
 
 /**
@@ -2209,9 +2226,10 @@ function init() {
       });
     }
 
-    // Tilla Sidebar-Companion
+    // Tilla Sidebar-Companion (mit Sprach-Hook)
     tilla = new TillaCompanion({
-      getText: (key) => t(key)
+      getText: (key) => t(key),
+      onSpeak: (msg) => speakTilla(msg)
     });
 
     // Events – Sprache
@@ -2248,7 +2266,7 @@ function init() {
     if (window.speechSynthesis) {
       window.speechSynthesis.onvoiceschanged = () => {
         try {
-          speechSynthesis.getVoices();
+          window.speechSynthesis.getVoices();
         } catch (e) {
           console.warn("[Tilla] Konnte Stimmen nicht vorladen:", e);
         }
