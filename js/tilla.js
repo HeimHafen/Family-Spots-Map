@@ -7,13 +7,9 @@
 //   import { TillaCompanion } from './tilla.js';
 //
 //   const tilla = new TillaCompanion({
-//     getText: (key) => t(key)  // optional: UI-Strukturen für Texte
+//     getText: (key) => t(key),          // optional: Überschreiben einzelner Texte
+//     onSpeak: (msg) => speakTilla(msg)  // optional: Sprach-Ausgabe einbinden
 //   });
-//
-// app.js kann zusätzlich (optional) aufrufen:
-//   tilla.showPlayIdea(text)
-//   tilla.showExternalMessage(text)  // z.B. für Besuchs- oder Streak-Meldungen
-//   tilla.showMessage(text)          // Alias zu showExternalMessage
 //
 // ------------------------------------------------------
 
@@ -112,12 +108,11 @@ function getCurrentLang() {
 }
 
 export class TillaCompanion {
-  /**
-   * @param {{getText?: (key: string) => string}} options
-   */
   constructor(options = {}) {
     this.getText =
       typeof options.getText === "function" ? options.getText : null;
+    this.onSpeak =
+      typeof options.onSpeak === "function" ? options.onSpeak : null;
 
     this.textEl = document.getElementById("tilla-sidebar-text");
     if (!this.textEl) {
@@ -127,18 +122,13 @@ export class TillaCompanion {
       return;
     }
 
-    this.state = "intro";        // intro | everyday | trip | plus | daylog | fav-added | fav-removed | no-spots | play-idea | external
+    this.state = "intro";
     this.travelMode = "everyday";
     this.lastInteraction = Date.now();
     this._lastVariantIndex = {};
-    this._manualText = null;     // für play-idea / external
 
     this._renderState();
   }
-
-  // ------------------------------------------------------
-  // Öffentliche API für app.js
-  // ------------------------------------------------------
 
   onLanguageChanged() {
     if (!this.textEl) return;
@@ -152,7 +142,6 @@ export class TillaCompanion {
       this.travelMode = null;
       this.state = "intro";
       this.lastInteraction = Date.now();
-      this._manualText = null;
       this._renderState();
       return;
     }
@@ -162,7 +151,6 @@ export class TillaCompanion {
     this.travelMode = mode;
     this.lastInteraction = Date.now();
     this.state = mode;
-    this._manualText = null;
     this._renderState();
   }
 
@@ -170,7 +158,6 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "plus";
-    this._manualText = null;
     this._renderState();
   }
 
@@ -178,7 +165,6 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "daylog";
-    this._manualText = null;
     this._renderState();
   }
 
@@ -186,7 +172,6 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "fav-added";
-    this._manualText = null;
     this._renderState();
   }
 
@@ -194,7 +179,6 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "fav-removed";
-    this._manualText = null;
     this._renderState();
   }
 
@@ -202,7 +186,6 @@ export class TillaCompanion {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "no-spots";
-    this._manualText = null;
     this._renderState();
   }
 
@@ -210,7 +193,6 @@ export class TillaCompanion {
     if (!this.textEl) return;
 
     this.lastInteraction = Date.now();
-    this._manualText = null;
 
     if (this.travelMode === "trip") {
       this.state = "trip";
@@ -227,14 +209,13 @@ export class TillaCompanion {
     if (!this.textEl) return;
 
     this.lastInteraction = Date.now();
-    this._manualText = null;
 
     const mode = context.travelMode ?? this.travelMode;
     const key =
       mode === "trip" ? "turtle_compass_trip" : "turtle_compass_everyday";
 
     const text = this._t(key);
-    this._setText(text);
+    this._setTextAndMaybeSpeak(text);
 
     if (mode === "trip") {
       this.state = "trip";
@@ -245,45 +226,15 @@ export class TillaCompanion {
     }
   }
 
-  /**
-   * Spielideen aus app.js direkt anzeigen
-   * @param {string} text
-   */
+  // Spielidee direkt anzeigen (von app.js)
   showPlayIdea(text) {
-    if (!this.textEl || !text) return;
+    if (!this.textEl) return;
     this.lastInteraction = Date.now();
     this.state = "play-idea";
-    this._manualText = text;
-    this._setText(text);
+    this._setTextAndMaybeSpeak(text);
   }
-
-  /**
-   * Externe Nachricht von außen (z. B. Besuchs-Tracking, Streak)
-   * – wird NICHT von _renderState überschrieben, bis ein neues Event kommt.
-   * @param {string} text
-   */
-  showExternalMessage(text) {
-    if (!this.textEl || !text) return;
-    this.lastInteraction = Date.now();
-    this.state = "external";
-    this._manualText = text;
-    this._setText(text);
-  }
-
-  /**
-   * Alias für showExternalMessage – praktischer Kurzname
-   * @param {string} text
-   */
-  showMessage(text) {
-    this.showExternalMessage(text);
-  }
-
-  // ------------------------------------------------------
-  // Intern: Übersetzungen & Varianten
-  // ------------------------------------------------------
 
   _t(key) {
-    // 1) App-Übersetzung versuchen
     if (this.getText) {
       try {
         const value = this.getText(key);
@@ -299,7 +250,6 @@ export class TillaCompanion {
       }
     }
 
-    // 2) Eigene Fallbacks
     const lang = getCurrentLang();
     const bundle = FALLBACK_TEXTS[lang] || FALLBACK_TEXTS.de;
     const entry = bundle[key];
@@ -333,25 +283,28 @@ export class TillaCompanion {
     return variants[index];
   }
 
-  _setText(text) {
+  /**
+   * Setzt den Text im Sidebar-Element und ruft optional onSpeak() auf.
+   * @param {string} text
+   */
+  _setTextAndMaybeSpeak(text) {
     if (!this.textEl) return;
     this.textEl.textContent = text;
-  }
 
-  // ------------------------------------------------------
-  // Rendering
-  // ------------------------------------------------------
+    if (this.onSpeak && typeof this.onSpeak === "function") {
+      try {
+        this.onSpeak(text);
+      } catch (err) {
+        console.warn("[Tilla] Fehler in onSpeak():", err);
+      }
+    }
+  }
 
   _renderState() {
     if (!this.textEl) return;
 
-    // WICHTIG:
-    // Wenn gerade eine Spielidee oder externe Message aktiv ist,
-    // soll ein "normales" Re-Render (z.B. durch Sprachwechsel) NICHT überschreiben.
-    if (this.state === "play-idea" || this.state === "external") {
-      if (this._manualText) {
-        this._setText(this._manualText);
-      }
+    // Wenn eine Spielidee aktiv ist, nicht überschreiben
+    if (this.state === "play-idea") {
       return;
     }
 
@@ -417,7 +370,6 @@ export class TillaCompanion {
       }
     }
 
-    this._manualText = null;
-    this._setText(text);
+    this._setTextAndMaybeSpeak(text);
   }
 }
