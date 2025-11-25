@@ -276,227 +276,188 @@ const LAST_PLAY_IDEAS_INDEX = { de: -1, en: -1 };
 // ------------------------------------------------------
 // Kategorien
 // ------------------------------------------------------
-const CATEGORY_LABELS = {
-  wildpark: {
-    de: "Wildpark & Safaripark",
-    en: "Wildlife & safari park"
-  },
-  zoo: {
-    de: "Zoo & Tierpark",
-    en: "Zoo & animal park"
-  },
-  // Ergänzt, damit MASTER_CATEGORY_SLUGS vollständig abgedeckt ist
-  tierpark: {
-    de: "Tierpark",
-    en: "Animal park"
-  },
-  freizeitpark: {
-    de: "Freizeitpark",
-    en: "Theme park"
-  },
-  spielplatz: {
-    de: "Spielplatz",
-    en: "Playground"
-  },
-  abenteuerspielplatz: {
-    de: "Abenteuerspielplatz",
-    en: "Adventure playground"
-  },
-  waldspielplatz: {
-    de: "Waldspielplatz",
-    en: "Forest playground"
-  },
-  multifunktionsfeld: {
-    de: "Sport- & Multifunktionsfeld",
-    en: "Sports & multi-use court"
-  },
-  pumptrack: {
-    de: "Pumptrack",
-    en: "Pump track"
-  },
-  skatepark: {
-    de: "Skatepark",
-    en: "Skate park"
-  },
-  "museum-kinder": {
-    de: "Kinder- & Familienmuseum",
-    en: "Children’s & family museum"
-  },
-  "indoor-spielplatz": {
-    de: "Indoor-Spielplatz",
-    en: "Indoor playground"
-  },
-  wasserspielplatz: {
-    de: "Wasserspielplatz",
-    en: "Water playground"
-  },
-  bauernhof: {
-    de: "Bauernhof",
-    en: "Farm"
-  },
-  schwimmbad: {
-    de: "Schwimmbad",
-    en: "Indoor pool"
-  },
-  badesee: {
-    de: "Badesee",
-    en: "Swimming lake"
-  },
-  "park-garten": {
-    de: "Park & Garten",
-    en: "Park & garden"
-  },
-  picknickwiese: {
-    de: "Picknickwiese",
-    en: "Picnic meadow"
-  },
-  "wanderweg-kinderwagen": {
-    de: "Wanderweg mit Kinderwagen",
-    en: "Trail suitable for strollers"
-  },
-  "radweg-family": {
-    de: "Familien-Radweg",
-    en: "Family cycle route"
-  },
-  bibliothek: {
-    de: "Kinder- & Familienbibliothek",
-    en: "Children’s & family library"
-  },
-  minigolf: {
-    de: "Minigolf",
-    en: "Mini golf"
-  },
-  kletterhalle: {
-    de: "Kletterhalle",
-    en: "Indoor climbing"
-  },
-  "kletteranlage-outdoor": {
-    de: "Kletteranlage (outdoor)",
-    en: "Outdoor climbing area"
-  },
-  boulderpark: {
-    de: "Boulderpark",
-    en: "Bouldering park"
-  },
-  trampolinpark: {
-    de: "Trampolinpark",
-    en: "Trampoline park"
-  },
-  bolzplatz: {
-    de: "Bolzplatz",
-    en: "Kick-about pitch"
-  },
-  bewegungspark: {
-    de: "Bewegungspark",
-    en: "Movement park"
-  },
-  familiencafe: {
-    de: "Familiencafé",
-    en: "Family café"
-  },
-  "familien-restaurant": {
-    de: "Familien-Restaurant",
-    en: "Family restaurant"
-  },
-  "kinder-familiencafe": {
-    de: "Kinder- & Familiencafé",
-    en: "Kids & family café"
-  },
-  eisbahn: {
-    de: "Eisbahn",
-    en: "Ice rink"
-  },
-  rodelhuegel: {
-    de: "Rodelhügel",
-    en: "Sledging hill"
-  },
-  "oeffentliche-toilette": {
-    de: "Öffentliche Toilette",
-    en: "Public toilet"
-  },
-  wickelraum: {
-    de: "Wickelraum",
-    en: "Baby changing room"
-  },
-  "familien-event": {
-    de: "Familien-Event",
-    en: "Family event"
-  },
-  "rastplatz-spielplatz-dusche": {
-    de: "Rastplatz mit Spielplatz & Dusche",
-    en: "Rest area with playground & shower"
-  },
-  "stellplatz-spielplatz-naehe-kostenlos": {
-    de: "Stellplatz (kostenlos, nahe Spielplatz)",
-    en: "Free RV pitch near playground"
-  },
-  "wohnmobil-service-station": {
-    de: "Wohnmobil-Service-Station",
-    en: "RV service station"
-  },
-  "bikepacking-spot": {
-    de: "Bikepacking-Spot",
-    en: "Bikepacking spot"
-  },
-  "toddler-barfuss-motorik": {
-    de: "Barfuß- & Motorikpfad (Kleinkind)",
-    en: "Barefoot & motor skills trail (toddlers)"
-  },
-  naturerlebnispfad: {
-    de: "Naturerlebnispfad",
-    en: "Nature discovery trail"
-  },
-  walderlebnisroute: {
-    de: "Walderlebnisroute",
-    en: "Forest adventure route"
-  }
+const CATEGORY_GROUPS = {
+  "Spiel & Bewegung": [
+    "spielplatz",
+    "abenteuerspielplatz",
+    "indoor-spielplatz",
+    "waldspielplatz",
+    "wasserspielplatz",
+    "barrierefreier-spielplatz",
+    "bewegungspark",
+    "multifunktionsfeld",
+    "bolzplatz",
+    "pumptrack",
+    "skatepark",
+    "verkehrsgarten",
+    "toddler-barfuss-motorik"
+  ],
+  "Tiere & Natur": [
+    "zoo",
+    "tierpark",
+    "wildpark",
+    "bauernhof",
+    "naturerlebnispfad",
+    "walderlebnisroute",
+    "freilichtmuseum"
+  ],
+  "Wasser & Schwimmen": [
+    "schwimmbad",
+    "badesee",
+    "strand",
+    "eisbahn",
+    "rodelhuegel"
+  ],
+  "Erlebnis & Freizeit": [
+    "freizeitpark",
+    "trampolinpark",
+    "kletterhalle",
+    "kletteranlage-outdoor",
+    "kletterwald-hochseilgarten",
+    "boulderpark",
+    "minigolf"
+  ],
+  "Wandern & Radfahren": [
+    "wanderweg-kinderwagen",
+    "radweg-family"
+  ],
+  "Essen & Trinken": [
+    "familiencafe",
+    "kinder-familiencafe",
+    "familien-restaurant"
+  ],
+  "Lernen & Kultur": [
+    "museum-kinder",
+    "kinder-museum",
+    "bibliothek"
+  ],
+  "Praktisches": [
+    "oeffentliche-toilette",
+    "wickelraum"
+  ],
+  "Events & Erlebnisse": [
+    "familien-event"
+  ],
+  "Unterwegs mit WoMo & Rad": [
+    "stellplatz-spielplatz-naehe-kostenlos",
+    "wohnmobil-service-station",
+    "rastplatz-spielplatz-dusche",
+    "bikepacking-spot",
+    "campingplatz-familien"
+  ],
+  "Entspannung & Naturorte": [
+    "park-garten",
+    "picknickwiese"
+  ]
 };
 
-const MASTER_CATEGORY_SLUGS = [
-  "spielplatz",
-  "abenteuerspielplatz",
-  "indoor-spielplatz",
-  "waldspielplatz",
-  "wasserspielplatz",
-  "zoo",
-  "wildpark",
-  "tierpark",
-  "bauernhof",
-  "schwimmbad",
-  "badesee",
-  "park-garten",
-  "picknickwiese",
-  "wanderweg-kinderwagen",
-  "radweg-family",
-  "museum-kinder",
-  "bibliothek",
-  "freizeitpark",
-  "minigolf",
-  "kletterhalle",
-  "kletteranlage-outdoor",
-  "boulderpark",
-  "trampolinpark",
-  "skatepark",
-  "pumptrack",
-  "multifunktionsfeld",
-  "bolzplatz",
-  "bewegungspark",
-  "familiencafe",
-  "familien-restaurant",
-  "kinder-familiencafe",
-  "eisbahn",
-  "rodelhuegel",
-  "oeffentliche-toilette",
-  "wickelraum",
-  "familien-event",
-  "rastplatz-spielplatz-dusche",
-  "stellplatz-spielplatz-naehe-kostenlos",
-  "wohnmobil-service-station",
-  "bikepacking-spot",
-  "toddler-barfuss-motorik",
-  "naturerlebnispfad",
-  "walderlebnisroute"
-];
+const CATEGORY_LABELS_EN = {
+  "spielplatz": "Playground",
+  "abenteuerspielplatz": "Adventure playground",
+  "indoor-spielplatz": "Indoor playground",
+  "waldspielplatz": "Forest playground",
+  "wasserspielplatz": "Water playground",
+  "barrierefreier-spielplatz": "Accessible playground",
+  "bewegungspark": "Movement park",
+  "multifunktionsfeld": "Multi-sport court",
+  "bolzplatz": "Soccer court",
+  "pumptrack": "Pumptrack",
+  "skatepark": "Skate park",
+  "verkehrsgarten": "Traffic training park",
+  "toddler-barfuss-motorik": "Toddler / barefoot / motor skills",
+  "zoo": "Zoo",
+  "tierpark": "Animal park",
+  "wildpark": "Wildlife park & safaris",
+  "bauernhof": "Farm",
+  "naturerlebnispfad": "Nature discovery trail",
+  "walderlebnisroute": "Forest experience route",
+  "freilichtmuseum": "Open-air museum",
+  "schwimmbad": "Swimming pool",
+  "badesee": "Swimming lake",
+  "strand": "Family beach",
+  "eisbahn": "Ice rink",
+  "rodelhuegel": "Sledding hill",
+  "freizeitpark": "Theme park",
+  "trampolinpark": "Trampoline park",
+  "kletterhalle": "Climbing gym",
+  "kletteranlage-outdoor": "Outdoor climbing area",
+  "kletterwald-hochseilgarten": "Rope course / climbing forest",
+  "boulderpark": "Bouldering park",
+  "minigolf": "Mini golf",
+  "wanderweg-kinderwagen": "Stroller-friendly trail",
+  "radweg-family": "Family bike route",
+  "familiencafe": "Family café",
+  "kinder-familiencafe": "Kids & family café",
+  "familien-restaurant": "Family restaurant",
+  "museum-kinder": "Museum (kids)",
+  "kinder-museum": "Children's museum",
+  "bibliothek": "Library",
+  "oeffentliche-toilette": "Public toilet",
+  "wickelraum": "Baby changing room",
+  "familien-event": "Family event",
+  "stellplatz-spielplatz-naehe-kostenlos": "Free RV spot (near playground)",
+  "wohnmobil-service-station": "RV service station",
+  "rastplatz-spielplatz-dusche": "Rest area (playground + shower)",
+  "bikepacking-spot": "Bikepacking spot",
+  "campingplatz-familien": "Family campground",
+  "park-garten": "Park / garden",
+  "picknickwiese": "Picnic meadow"
+};
+
+const CATEGORY_LABELS = {
+  "spielplatz": "Spielplatz",
+  "abenteuerspielplatz": "Abenteuerspielplatz",
+  "indoor-spielplatz": "Indoor-Spielplatz",
+  "waldspielplatz": "Waldspielplatz",
+  "wasserspielplatz": "Wasserspielplatz",
+  "barrierefreier-spielplatz": "Barrierefreier Spielplatz",
+  "bewegungspark": "Bewegungspark",
+  "multifunktionsfeld": "Multifunktionsfeld",
+  "bolzplatz": "Bolzplatz",
+  "pumptrack": "Pumptrack",
+  "skatepark": "Skatepark",
+  "verkehrsgarten": "Verkehrsgarten",
+  "toddler-barfuss-motorik": "Toddler / Barfuß / Motorik",
+  "zoo": "Zoo",
+  "tierpark": "Tierpark",
+  "wildpark": "Wildpark & Safaris",
+  "bauernhof": "Bauernhof",
+  "naturerlebnispfad": "Naturerlebnispfad",
+  "walderlebnisroute": "Walderlebnisroute",
+  "freilichtmuseum": "Freilichtmuseum",
+  "schwimmbad": "Schwimmbad",
+  "badesee": "Badesee",
+  "strand": "Familien-Strand",
+  "eisbahn": "Eisbahn",
+  "rodelhuegel": "Rodelhügel",
+  "freizeitpark": "Freizeitpark",
+  "trampolinpark": "Trampolinpark",
+  "kletterhalle": "Kletterhalle",
+  "kletteranlage-outdoor": "Kletteranlage (Outdoor)",
+  "kletterwald-hochseilgarten": "Kletterwald / Hochseilgarten",
+  "boulderpark": "Boulderpark",
+  "minigolf": "Minigolf",
+  "wanderweg-kinderwagen": "Wanderweg (kinderwagenfreundlich)",
+  "radweg-family": "Familien-Radweg",
+  "familiencafe": "Familiencafé",
+  "kinder-familiencafe": "Kinder- & Familiencafé",
+  "familien-restaurant": "Familien-Restaurant",
+  "museum-kinder": "Museum (Kinder)",
+  "kinder-museum": "Kinder-Museum",
+  "bibliothek": "Bibliothek",
+  "oeffentliche-toilette": "Öffentliche Toilette",
+  "wickelraum": "Wickelraum",
+  "familien-event": "Familien-Event",
+  "stellplatz-spielplatz-naehe-kostenlos": "Kostenloser Stellplatz (Spielplatznähe)",
+  "wohnmobil-service-station": "Wohnmobil Service-Station",
+  "rastplatz-spielplatz-dusche": "Rastplatz (Spielplatz + Dusche)",
+  "bikepacking-spot": "Bikepacking-Spot",
+  "campingplatz-familien": "Familien-Campingplatz",
+  "park-garten": "Park / Garten",
+  "picknickwiese": "Picknickwiese"
+};
+
+const MASTER_CATEGORY_SLUGS = Object.keys(CATEGORY_LABELS);
 
 // ------------------------------------------------------
 // Globale State-Variablen
@@ -652,9 +613,13 @@ function t(key) {
  */
 function getCategoryLabel(slug) {
   if (!slug) return "";
-  const entry = CATEGORY_LABELS[slug];
-  if (entry) {
-    return entry[currentLang] || entry.de || slug;
+  // zuerst neue Tabellen benutzen
+  if (currentLang === LANG_EN) {
+    if (CATEGORY_LABELS_EN[slug]) return CATEGORY_LABELS_EN[slug];
+    if (CATEGORY_LABELS[slug]) return CATEGORY_LABELS[slug];
+  } else {
+    if (CATEGORY_LABELS[slug]) return CATEGORY_LABELS[slug];
+    if (CATEGORY_LABELS_EN[slug]) return CATEGORY_LABELS_EN[slug];
   }
   return slug.replace(/_/g, " ");
 }
