@@ -43,9 +43,8 @@ let markersLayer;
 let spots = [];
 let filteredSpots = [];
 let favorites = new Set();
-let filterState = null;  // <-- NEU: zentraler Filterzustand
+let filterState = null;
 
-// Tilla
 let tilla = null;
 
 // DOM-Elemente
@@ -57,15 +56,11 @@ let spotListEl;
 let spotDetailEl;
 
 // ------------------------------------------------------
-// Sprache, Theme, Toasts (unverändert)
-// ------------------------------------------------------
-function getInitialLang() { /* ... bleibt wie gehabt ... */ }
-function setTheme(theme) { /* ... bleibt wie gehabt ... */ }
-function showToast(msg) { /* ... bleibt wie gehabt ... */ }
-function t(key) { /* ... bleibt wie gehabt ... */ }
+function getInitialLang() { /* bleibt wie gehabt */ }
+function setTheme(theme) { /* bleibt wie gehabt */ }
+function showToast(msg) { /* bleibt wie gehabt */ }
+function t(key) { /* bleibt wie gehabt */ }
 
-// ------------------------------------------------------
-// Leaflet Map Initialisierung
 // ------------------------------------------------------
 function initMap() {
   if (typeof L === "undefined") return;
@@ -78,8 +73,6 @@ function initMap() {
 }
 
 // ------------------------------------------------------
-// Spots laden (WICHTIG: jetzt mit applyFilters())
-// ------------------------------------------------------
 async function loadSpots() {
   try {
     const res = await fetch("data/spots.json", { cache: "no-cache" });
@@ -90,14 +83,12 @@ async function loadSpots() {
     }));
 
     loadFavoritesFromStorage();
-    applyNewFiltering(); // <--- ZENTRAL
+    applyNewFiltering();
   } catch (err) {
     console.error("Fehler beim Laden der Spots:", err);
   }
 }
 
-// ------------------------------------------------------
-// Neues Filtersystem anwenden  🔥
 // ------------------------------------------------------
 function applyNewFiltering() {
   if (!spots.length || !filterState) return;
@@ -118,40 +109,102 @@ function applyNewFiltering() {
 }
 
 // ------------------------------------------------------
-// Spot-Liste & Marker (UNVERÄNDERT)
-// ------------------------------------------------------
-function renderMarkers() { /* ... bleibt so wie du es schon hattest ... */ }
-function renderSpotList()   { /* ... bleibt ebenfalls fast unverändert ... */ }
-function showSpotDetails()  { /* ... bleibt komplett erhalten ... */ }
+function renderMarkers() { /* bleibt wie gehabt */ }
+function renderSpotList() { /* bleibt wie gehabt */ }
 
 // ------------------------------------------------------
-// Favoriten & Speicher (UNVERÄNDERT)
-// ------------------------------------------------------
-function loadFavoritesFromStorage() { /* ... */ }
-function saveFavoritesToStorage() { /* ... */ }
-function toggleFavorite(spot) { /* ... */ }
+function showSpotDetails(spot) {
+  if (!spot || !spotDetailEl) return;
+
+  spotDetailEl.innerHTML = "";
+
+  const titleEl = document.createElement("h2");
+  titleEl.textContent = spot.name || "Unbenannter Spot";
+  spotDetailEl.appendChild(titleEl);
+
+  const metaEl = document.createElement("p");
+  metaEl.className = "spot-meta";
+  metaEl.textContent = [spot.city, spot.address].filter(Boolean).join(", ");
+  spotDetailEl.appendChild(metaEl);
+
+  const scoreContainerEl = document.createElement("div");
+  scoreContainerEl.className = "spot-details-scores";
+
+  if (typeof spot._moodScore === "number") {
+    const el = document.createElement("span");
+    el.className = "badge badge--mood";
+    el.textContent = `Stimmung: ${spot._moodScore}`;
+    scoreContainerEl.appendChild(el);
+  }
+
+  if (typeof spot._travelScore === "number") {
+    const el = document.createElement("span");
+    el.className = "badge badge--travel";
+    el.textContent = `Reise: ${spot._travelScore}`;
+    scoreContainerEl.appendChild(el);
+  }
+
+  if (typeof spot._ageScore === "number") {
+    const el = document.createElement("span");
+    el.className = "badge badge--age";
+    el.textContent = `Alter: ${spot._ageScore}`;
+    scoreContainerEl.appendChild(el);
+  }
+
+  if (typeof spot._distanceKm === "number" && isFinite(spot._distanceKm)) {
+    const el = document.createElement("span");
+    el.className = "badge badge--distance";
+    el.textContent = `Entfernung: ~${spot._distanceKm.toFixed(1)} km`;
+    scoreContainerEl.appendChild(el);
+  }
+
+  spotDetailEl.appendChild(scoreContainerEl);
+
+  const desc = spot.poetry || spot.summary_de || spot.summary_en || "";
+  if (desc) {
+    const descEl = document.createElement("p");
+    descEl.className = "spot-description";
+    descEl.textContent = desc;
+    spotDetailEl.appendChild(descEl);
+  }
+
+  if (Array.isArray(spot.categories) && spot.categories.length) {
+    const catEl = document.createElement("div");
+    catEl.className = "spot-categories";
+    catEl.textContent = "Kategorien: " + spot.categories.join(", ");
+    spotDetailEl.appendChild(catEl);
+  }
+
+  const favBtn = document.createElement("button");
+  favBtn.className = "favorite-toggle";
+  favBtn.textContent = favorites.has(spot.id) ? "★ Favorit entfernen" : "☆ Zu Favoriten";
+  favBtn.addEventListener("click", () => {
+    toggleFavorite(spot);
+    showSpotDetails(spot);
+  });
+  spotDetailEl.appendChild(favBtn);
+}
 
 // ------------------------------------------------------
-// INIT – AB HIER passiert die Magie
+function loadFavoritesFromStorage() { /* bleibt wie gehabt */ }
+function saveFavoritesToStorage() { /* bleibt wie gehabt */ }
+function toggleFavorite(spot) { /* bleibt wie gehabt */ }
+
 // ------------------------------------------------------
 function init() {
-  // DOM Element-Referenzen
   languageSwitcherEl = document.getElementById("language-switcher");
   themeToggleEl = document.getElementById("theme-toggle");
   spotListEl = document.getElementById("spot-list");
   spotDetailEl = document.getElementById("spot-detail");
 
-  // Sprache / Theme Config
   setLanguage(getInitialLang(), { initial: true });
   setTheme(getInitialTheme());
 
-  // MAP
   initMap();
 
-  // FILTERS – **NEUES SYSTEM**
   filterState = initFilters({
     categories: Object.entries(CATEGORY_GROUPS)
-      .flatMap(([_, slugs]) => slugs) // Array aller Kategorien
+      .flatMap(([_, slugs]) => slugs)
       .map((slug) => ({
         slug,
         label: {
@@ -163,9 +216,7 @@ function init() {
     onFilterChange: () => applyNewFiltering()
   });
 
-  // SPOTS LADEN
   loadSpots();
 }
 
-// Start der App
 document.addEventListener("DOMContentLoaded", init);
