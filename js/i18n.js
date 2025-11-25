@@ -1,94 +1,61 @@
 // js/i18n.js
-// Zentraler I18N-Layer für Family Spots Map
-// - lädt data/i18n/<lang>.json
-// - stellt sowohl ES-Module-Exports als auch das globale I18N-Objekt bereit
-//   (für das bestehende app.js)
+// Zentrale I18N-Logik + globale I18N-Fassade für app.js
 
 let currentLang = "de";
 let messages = {};
-const DEFAULT_LANG = "de";
+
+const FALLBACK_LANG = "de";
 const SUPPORTED_LANGS = ["de", "en"];
 
-/**
- * Aktuelle Sprache zurückgeben.
- */
+function normalizeLang(lang) {
+  if (!lang) return FALLBACK_LANG;
+  const short = String(lang).toLowerCase().slice(0, 2);
+  return SUPPORTED_LANGS.includes(short) ? short : FALLBACK_LANG;
+}
+
 export function getLanguage() {
   return currentLang;
 }
 
 /**
- * Interne Hilfsfunktion: ermittelt sinnvolle Startsprache aus Browser.
- */
-function detectBrowserLang() {
-  if (typeof navigator === "undefined") return DEFAULT_LANG;
-  const navLang =
-    (navigator.language || navigator.userLanguage || DEFAULT_LANG)
-      .toLowerCase()
-      .slice(0, 2);
-
-  return SUPPORTED_LANGS.includes(navLang) ? navLang : DEFAULT_LANG;
-}
-
-/**
- * Lädt das JSON für eine Sprache und aktualisiert `messages`.
- * Wird von initI18n / setLanguage verwendet.
- */
-async function loadMessages(lang) {
-  const target = lang || DEFAULT_LANG;
-
-  const response = await fetch(`data/i18n/${target}.json`, {
-    cache: "no-cache"
-  });
-
-  if (!response.ok) {
-    throw new Error(`i18n load failed for ${target} (${response.status})`);
-  }
-
-  const json = await response.json();
-  messages = json || {};
-  currentLang = target;
-
-  // <html lang="…"> mitziehen
-  if (typeof document !== "undefined" && document.documentElement) {
-    document.documentElement.setAttribute("lang", currentLang);
-  }
-}
-
-/**
- * Initiales I18N-Setup (direkt aus App aufrufbar).
- * Nutzt entweder die gewünschte Sprache oder Browser-Default.
+ * Lädt die passende i18n-JSON und setzt currentLang.
  */
 export async function initI18n(lang) {
-  const target = lang || currentLang || detectBrowserLang();
+  const target = normalizeLang(lang || currentLang || FALLBACK_LANG);
   try {
-    await loadMessages(target);
-  } catch (err) {
-    console.error("[I18N] init failed:", err);
-    if (target !== DEFAULT_LANG) {
-      // Fallback auf Deutsch
-      try {
-        await loadMessages(DEFAULT_LANG);
-      } catch (err2) {
-        console.error("[I18N] fallback to de failed:", err2);
-      }
+    const res = await fetch(`data/i18n/${target}.json`, { cache: "no-cache" });
+    if (!res.ok) throw new Error("i18n load failed: " + res.status);
+    messages = await res.json();
+    currentLang = target;
+
+    // HTML lang-Attribut mitziehen
+    if (typeof document !== "undefined" && document.documentElement) {
+      document.documentElement.setAttribute("lang", target);
     }
+  } catch (err) {
+    console.error("[Family Spots] i18n error:", err);
+    if (target !== FALLBACK_LANG) {
+      // Fallback auf Deutsch
+      return initI18n(FALLBACK_LANG);
+    }
+    // Im absoluten Fehlerfall keine Messages, aber App bleibt nutzbar
+    messages = {};
   }
 }
 
 /**
- * Übersetzungsfunktion – analog zum alten I18N.t(key).
+ * Übersetzung holen.
  */
 export function t(key, fallback) {
-  if (!key) return "";
   return messages[key] ?? fallback ?? key;
 }
 
 /**
- * Wendet Übersetzungen auf DOM-Elemente mit data-i18n / data-i18n-placeholder an.
- * (Kann zusätzlich zu deinen data-i18n-de / data-i18n-en Attributen existieren.)
+ * data-i18n / data-i18n-placeholder im DOM setzen.
+ * (Falls du das später nutzen willst.)
  */
 export function applyTranslations(root = document) {
-  if (!root || typeof root.querySelectorAll !== "function") return;
+  if (!root) return;
 
   root.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
@@ -104,72 +71,57 @@ export function applyTranslations(root = document) {
 }
 
 /**
- * Optional: Zufällige Spielidee zurückgeben.
- * Erwartet im JSON z.B.:
- * {
- *   "playIdeas": ["Idee 1", "Idee 2", ...]
- * }
+ * Kleine Convenience-Init, wird von app.js über I18N.init() verwendet.
+ * Lädt einfach aktuelle Sprache und wendet ggf. data-i18n an.
+ */
+export async function init(lang) {
+  await initI18n(lang);
+  if (typeof document !== "undefined") {
+    applyTranslations(document);
+  }
+}
+
+/**
+ * Sprache wechseln – wird von app.js über I18N.setLanguage(lang) aufgerufen.
+ */
+export async function setLanguage(lang) {
+  const target = normalizeLang(lang);
+  if (target === currentLang) return;
+  await initI18n(target);
+  if (typeof document !== "undefined") {
+    applyTranslations(document);
+  }
+}
+
+/**
+ * Zufällige Spielidee aus der i18n-Datei holen.
+ * Erwartet in data/i18n/*.json z.B.:
+ * { "playIdeas": ["Idee 1", "Idee 2", ...] }
  */
 export function getRandomPlayIdea() {
-  const pool =
-    messages.playIdeas ||
-    messages.play_ideas ||
-    messages["play_ideas_de"] ||
-    null;
-
-  if (!Array.isArray(pool) || pool.length === 0) return "";
-  const idx = Math.floor(Math.random() * pool.length);
-  return String(pool[idx] ?? "");
+  const list = messages.playIdeas || messages.play_ideas;
+  if (Array.isArray(list) && list.length) {
+    const idx = Math.floor(Math.random() * list.length);
+    return list[idx];
+  }
+  return "";
 }
 
-/* ============================================================
-   Globale I18N-Fassade für bestehendes app.js
-   ============================================================ */
-
-const I18NGlobal = {
-  /**
-   * App.js ruft I18N.init() beim DOMContentLoaded auf.
-   * Wir nehmen hier Browser-Sprache oder den aktuell gesetzten Wert.
-   */
-  async init(lang) {
-    const startLang = lang || currentLang || detectBrowserLang();
-    await initI18n(startLang);
-    // Optionale DOM-Übersetzung – app.js setzt vieles selbst,
-    // aber so können data-i18n-Attribute auch genutzt werden.
-    if (typeof document !== "undefined") {
-      applyTranslations(document);
-    }
-  },
-
-  /**
-   * Sprache ändern (wird aus app.js:setLanguage aufgerufen).
-   */
-  async setLanguage(lang) {
-    const target = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
-    await initI18n(target);
-    if (typeof document !== "undefined") {
-      applyTranslations(document);
-    }
-  },
-
-  /**
-   * Übersetzung (app.js nutzt eine Wrapper-Funktion t(key) darum herum).
-   */
+/**
+ * Globale Fassade für den bestehenden Code in app.js
+ * (app.js importiert i18n.js nur wegen der Side-Effects)
+ */
+const I18N = {
+  init,
   t,
-
-  /**
-   * Aktuelle Sprache für alle, die es brauchen.
-   */
+  setLanguage,
   getLanguage,
-
-  /**
-   * Wird in app.js für den Spielideen-Button verwendet.
-   */
-  getRandomPlayIdea
+  getRandomPlayIdea,
+  applyTranslations
 };
 
-// Im Browser als globales I18N verfügbar machen,
-// damit dein existierendes app.js problemlos weiterläuft.
 if (typeof window !== "undefined") {
-  window.I18N = I18NGlobal;
+  window.I18N = I18N;
 }
+
+export default I18N;
