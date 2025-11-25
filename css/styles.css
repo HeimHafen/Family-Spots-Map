@@ -17,7 +17,7 @@
    13. Misc
    14. Onboarding Overlay
    15. Spot-List & Details Fine-Tuning
-   16. Prefers Reduced Motion
+   16. Prefers Reduced Motion & Hover
    17. Badges & Scores
    ========================================= */
 
@@ -421,7 +421,7 @@ a {
 #view-map {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px; /* mehr Luft zwischen Karte und Family Spots Plus */
 }
 
 /* Sidebar */
@@ -444,8 +444,7 @@ a {
   padding: 12px 14px 14px;
 }
 
-/* Vertikaler Abstand zwischen übereinander liegenden Karten,
-   z.B. unter der Karte bei "Family Spots Plus" & "Mein Tag" */
+/* Vertikaler Abstand zwischen übereinander liegenden Karten */
 .sidebar-section + .sidebar-section {
   margin-top: var(--space-2);
 }
@@ -474,20 +473,25 @@ a {
   color: var(--text-strong);
 }
 
+/* Close-Buttons jetzt als Text-Pills (z.B. "Schließen") */
 .sidebar-section-close {
   border: none;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
-  font-size: 18px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #7a4a2b;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
 }
 
 [data-theme="dark"] .sidebar-section-close {
   background: rgba(15, 23, 42, 0.98);
   color: #e5e7eb;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
 }
 
 /* Filter-Section eingeklappt: nur Header bleibt sichtbar */
@@ -534,7 +538,7 @@ a {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-strong);
-  margin-bottom: 4px;
+  margin-bottom: var(--space-2); /* mehr Abstand zu den Inputs */
 }
 
 .filter-group-helper {
@@ -719,8 +723,9 @@ select.input:focus {
 
 /* Tagesprotokoll – mehr Abstand von "Wie war euer Tag?" */
 #daylog-text {
-  min-height: 70px;
-  padding-top: 14px;
+  min-height: 80px;
+  margin-top: 8px;
+  padding-top: 10px;
 }
 
 /* Filter-Section, Spot-Liste */
