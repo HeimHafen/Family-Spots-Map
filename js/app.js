@@ -4,7 +4,9 @@
 // Senior-Level Refactoring (strukturierter, robuster, dokumentiert)
 // ======================================================
 
-import { i18n } from "./i18n.js";
+"use strict";
+
+import "./i18n.js"; // Modul führt sich selbst aus und setzt globales I18N
 import { TillaCompanion } from "./tilla.js";
 
 // ------------------------------------------------------
@@ -313,16 +315,11 @@ const CATEGORY_LABELS_EN = {
 };
 
 // ------------------------------------------------------
-// Sprach-Tabelle (DE / EN) – inkl. Tilla, Kompass & Toasts
+// I18N Helper
 // ------------------------------------------------------
-//
-// Die eigentlichen Texte liegen in js/i18n.js.
-// Hier nutzen wir nur eine Helper-Funktion t(key),
-// die i18n.t(key) aufruft.
-//
 
 /**
- * Liefert die aktuelle Sprache (de/en) basierend auf State / Browser.
+ * Liefert Start-Sprache aus Storage / Browser.
  */
 function getInitialLang() {
   const stored = localStorage.getItem("fs_lang");
@@ -337,28 +334,25 @@ function getInitialLang() {
 }
 
 /**
- * Übersetzungs-Funktion – Wrapper um i18n.t(...)
+ * Übersetzungs-Funktion – Wrapper um I18N.t(...)
  * @param {string} key
  * @returns {string}
  */
-function t(key) {
-  if (i18n && typeof i18n.t === "function") {
-    return i18n.t(key);
-  }
-  return key;
-}
-
-// ------------------------------------------------------
-// Spielideen für unterwegs – kommen aus i18n
-// ------------------------------------------------------
+const t = (key) =>
+  typeof I18N !== "undefined" && typeof I18N.t === "function"
+    ? I18N.t(key)
+    : key;
 
 /**
- * Liefert eine zufällige Spielidee aus i18n.
+ * Spielideen holt sich I18N ebenfalls zentral.
  * @returns {string}
  */
 function getRandomPlayIdea() {
-  if (i18n && typeof i18n.getRandomPlayIdea === "function") {
-    return i18n.getRandomPlayIdea();
+  if (
+    typeof I18N !== "undefined" &&
+    typeof I18N.getRandomPlayIdea === "function"
+  ) {
+    return I18N.getRandomPlayIdea();
   }
   return "";
 }
@@ -446,12 +440,6 @@ let lastSpotTriggerEl = null;
 // Generische Utilities
 // ------------------------------------------------------
 
-/**
- * Debounce-Helfer für Input-Handler
- * @param {Function} fn
- * @param {number} [delay=200]
- * @returns {Function}
- */
 function debounce(fn, delay = 200) {
   let timeoutId;
   return (...args) => {
@@ -460,11 +448,6 @@ function debounce(fn, delay = 200) {
   };
 }
 
-/**
- * Aktiviert eine Aktion bei Enter oder Space (für Tastaturbedienung).
- * @param {Function} handler
- * @returns {(event: KeyboardEvent) => void}
- */
 function activateOnEnterSpace(handler) {
   return (event) => {
     if (
@@ -534,7 +517,7 @@ function updatePlusStatusText() {
 
 /**
  * Setzt Sprache, aktualisiert UI & speichert in localStorage.
- * Koppelt gleichzeitig das i18n-Modul mit.
+ * Bindet gleichzeitig das I18N-Modul mit ein.
  * @param {"de"|"en"} lang
  * @param {{initial?: boolean}} [options]
  */
@@ -543,13 +526,16 @@ function setLanguage(lang, { initial = false } = {}) {
   localStorage.setItem("fs_lang", currentLang);
   document.documentElement.lang = currentLang;
 
-  // i18n mitziehen
+  // I18N-Fassade synchron halten
   try {
-    if (i18n && typeof i18n.switchLanguage === "function") {
-      i18n.switchLanguage(currentLang);
+    if (
+      typeof I18N !== "undefined" &&
+      typeof I18N.setLanguage === "function"
+    ) {
+      I18N.setLanguage(currentLang);
     }
   } catch (err) {
-    console.error("[Family Spots] i18n.switchLanguage failed:", err);
+    console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
   }
 
   if (headerTaglineEl) headerTaglineEl.textContent = t("header_tagline");
@@ -670,7 +656,9 @@ function showToast(keyOrMessage) {
   if (!toastEl) return;
 
   const message =
-    (i18n && typeof i18n.t === "function" && i18n.t(keyOrMessage)) ||
+    (typeof I18N !== "undefined" &&
+      typeof I18N.t === "function" &&
+      I18N.t(keyOrMessage)) ||
     keyOrMessage ||
     "…";
 
@@ -1883,6 +1871,7 @@ function init() {
       compassSectionEl.open = false;
     }
 
+    // Sprache / Theme / Map
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
 
@@ -2156,19 +2145,19 @@ function init() {
 }
 
 // ------------------------------------------------------
-// DOMContentLoaded – i18n zuerst laden, dann init()
+// DOMContentLoaded – I18N.init() + App-Init
 // ------------------------------------------------------
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const initialLang = getInitialLang();
-    if (i18n && typeof i18n.load === "function") {
-      await i18n.load(initialLang);
+    if (
+      typeof I18N !== "undefined" &&
+      typeof I18N.init === "function"
+    ) {
+      await I18N.init(); // Lädt automatisch Sprache & setzt DOM
     }
   } catch (err) {
-    console.error(
-      "[Family Spots] i18n.load fehlgeschlagen – starte trotzdem:",
-      err
-    );
+    console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
   }
 
   init();
