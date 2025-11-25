@@ -1,127 +1,154 @@
 // js/i18n.js
-// Zentrale I18N-Logik + globale I18N-Fassade für app.js
+// ----------------------------------------------------------
+// Zentrales I18N-Modul für Family Spots Map
+// - liefert ein globales I18N-Objekt, das app.js erwartet
+// - lädt data/i18n/de.json und data/i18n/en.json
+// - Methoden: init(), setLanguage(lang), t(key), getRandomPlayIdea()
+// ----------------------------------------------------------
 
-let currentLang = "de";
-let messages = {};
-
-const FALLBACK_LANG = "de";
 const SUPPORTED_LANGS = ["de", "en"];
+const DEFAULT_LANG = "de";
 
-function normalizeLang(lang) {
-  if (!lang) return FALLBACK_LANG;
-  const short = String(lang).toLowerCase().slice(0, 2);
-  return SUPPORTED_LANGS.includes(short) ? short : FALLBACK_LANG;
-}
-
-export function getLanguage() {
-  return currentLang;
-}
+const state = {
+  currentLang: DEFAULT_LANG,
+  /** @type {Record<string, any>} */
+  messagesByLang: {}
+};
 
 /**
- * Lädt die passende i18n-JSON und setzt currentLang.
+ * Interne Hilfsfunktion: lädt eine Sprachdatei, falls noch nicht geladen.
+ * @param {"de"|"en"} lang
  */
-export async function initI18n(lang) {
-  const target = normalizeLang(lang || currentLang || FALLBACK_LANG);
+async function loadLanguage(lang) {
+  const target = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
+
+  if (state.messagesByLang[target]) {
+    // schon geladen
+    return;
+  }
+
   try {
     const res = await fetch(`data/i18n/${target}.json`, { cache: "no-cache" });
-    if (!res.ok) throw new Error("i18n load failed: " + res.status);
-    messages = await res.json();
-    currentLang = target;
-
-    // HTML lang-Attribut mitziehen
-    if (typeof document !== "undefined" && document.documentElement) {
-      document.documentElement.setAttribute("lang", target);
+    if (!res.ok) {
+      throw new Error(`i18n: HTTP ${res.status} für Sprache ${target}`);
     }
+    const json = await res.json();
+    state.messagesByLang[target] = json || {};
   } catch (err) {
-    console.error("[Family Spots] i18n error:", err);
-    if (target !== FALLBACK_LANG) {
-      // Fallback auf Deutsch
-      return initI18n(FALLBACK_LANG);
-    }
-    // Im absoluten Fehlerfall keine Messages, aber App bleibt nutzbar
-    messages = {};
+    console.error("[I18N] Konnte Sprachdatei nicht laden:", err);
+    // Fallback: leeres Objekt, damit t() nicht crasht
+    state.messagesByLang[target] = state.messagesByLang[target] || {};
   }
 }
 
 /**
- * Übersetzung holen.
+ * Initialisierung: lädt alle unterstützten Sprachen vor.
+ * app.js ruft danach noch einmal setLanguage() mit der gewünschten
+ * Startsprache auf – d. h. die eigentliche Sprachauswahl
+ * findet im restlichen Code statt.
  */
-export function t(key, fallback) {
-  return messages[key] ?? fallback ?? key;
+async function init() {
+  await Promise.all(SUPPORTED_LANGS.map((lang) => loadLanguage(lang)));
 }
 
 /**
- * data-i18n / data-i18n-placeholder im DOM setzen.
- * (Falls du das später nutzen willst.)
+ * Setzt die aktuelle Sprache für t() & Co.
+ * @param {"de"|"en"} lang
  */
-export function applyTranslations(root = document) {
+function setLanguage(lang) {
+  const target = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
+  state.currentLang = target;
+
+  // HTML-lang-Attribut mitziehen (zusätzlich zu app.js)
+  if (typeof document !== "undefined" && document.documentElement) {
+    document.documentElement.setAttribute("lang", target);
+  }
+}
+
+/**
+ * Liefert die aktuelle Sprache.
+ * @returns {"de"|"en"}
+ */
+function getLanguage() {
+  return state.currentLang;
+}
+
+/**
+ * Übersetzung eines Keys holen.
+ * @param {string} key
+ * @param {string} [fallback]
+ * @returns {string}
+ */
+function t(key, fallback) {
+  const dict = state.messagesByLang[state.currentLang] || {};
+  const value = dict[key];
+  if (value == null) {
+    return fallback != null ? fallback : key;
+  }
+  return String(value);
+}
+
+/**
+ * Optional: wendet [data-i18n] / [data-i18n-placeholder] an.
+ * (app.js benutzt zusätzlich eigene data-i18n-de/en-Logik – das stört nicht.)
+ * @param {Document|HTMLElement} [root]
+ */
+function applyTranslations(root = document) {
   if (!root) return;
 
   root.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
+    if (!key) return;
     const value = t(key);
     if (value) el.textContent = value;
   });
 
   root.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
     const key = el.getAttribute("data-i18n-placeholder");
+    if (!key) return;
     const value = t(key);
     if (value) el.setAttribute("placeholder", value);
   });
 }
 
 /**
- * Kleine Convenience-Init, wird von app.js über I18N.init() verwendet.
- * Lädt einfach aktuelle Sprache und wendet ggf. data-i18n an.
+ * Liefert eine zufällige Spielidee auf Basis der aktuell geladenen Texte.
+ * Erwartet im i18n-JSON ein Array unter dem Key "playIdeas".
+ * @returns {string}
  */
-export async function init(lang) {
-  await initI18n(lang);
-  if (typeof document !== "undefined") {
-    applyTranslations(document);
+function getRandomPlayIdea() {
+  const dict = state.messagesByLang[state.currentLang] || {};
+  const ideas = dict.playIdeas;
+
+  if (!Array.isArray(ideas) || ideas.length === 0) {
+    return "";
   }
+
+  const idx = Math.floor(Math.random() * ideas.length);
+  const idea = ideas[idx];
+  return typeof idea === "string" ? idea : String(idea);
 }
 
-/**
- * Sprache wechseln – wird von app.js über I18N.setLanguage(lang) aufgerufen.
- */
-export async function setLanguage(lang) {
-  const target = normalizeLang(lang);
-  if (target === currentLang) return;
-  await initI18n(target);
-  if (typeof document !== "undefined") {
-    applyTranslations(document);
-  }
-}
+// ----------------------------------------------------------
+// Globales I18N-Objekt bauen & exportieren
+// ----------------------------------------------------------
 
-/**
- * Zufällige Spielidee aus der i18n-Datei holen.
- * Erwartet in data/i18n/*.json z.B.:
- * { "playIdeas": ["Idee 1", "Idee 2", ...] }
- */
-export function getRandomPlayIdea() {
-  const list = messages.playIdeas || messages.play_ideas;
-  if (Array.isArray(list) && list.length) {
-    const idx = Math.floor(Math.random() * list.length);
-    return list[idx];
-  }
-  return "";
-}
-
-/**
- * Globale Fassade für den bestehenden Code in app.js
- * (app.js importiert i18n.js nur wegen der Side-Effects)
- */
 const I18N = {
   init,
-  t,
   setLanguage,
   getLanguage,
-  getRandomPlayIdea,
-  applyTranslations
+  t,
+  applyTranslations,
+  getRandomPlayIdea
 };
 
+// als ES-Module-Default-Export (falls man es direkt importieren will)
+export default I18N;
+
+// und zusätzlich als globale Variable, wie app.js es erwartet
 if (typeof window !== "undefined") {
   window.I18N = I18N;
 }
-
-export default I18N;
+if (typeof globalThis !== "undefined") {
+  globalThis.I18N = I18N;
+}
