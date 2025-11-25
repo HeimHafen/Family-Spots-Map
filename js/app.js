@@ -4,8 +4,7 @@
 // Senior-Level Refactoring (strukturierter, robuster, dokumentiert)
 // ======================================================
 
-"use strict";
-
+import { i18n } from "./i18n.js";
 import { TillaCompanion } from "./tilla.js";
 
 // ------------------------------------------------------
@@ -316,183 +315,53 @@ const CATEGORY_LABELS_EN = {
 // ------------------------------------------------------
 // Sprach-Tabelle (DE / EN) – inkl. Tilla, Kompass & Toasts
 // ------------------------------------------------------
-const UI_STRINGS = {
-  de: {
-    // Fehler / Status
-    error_data_load:
-      "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
-    toast_location_ok:
-      "Euer Standort ist gesetzt – viel Spaß beim nächsten Abenteuer! 🌍",
-    toast_location_error:
-      "Euer Standort lässt sich gerade nicht bestimmen. Vielleicht ist die Freigabe gesperrt oder ihr seid offline.",
+//
+// Die eigentlichen Texte liegen in js/i18n.js.
+// Hier nutzen wir nur eine Helper-Funktion t(key),
+// die i18n.t(key) aufruft.
+//
 
-    // Buttons
-    btn_show_list: "Liste zeigen",
-    btn_only_map: "Nur Karte",
-    btn_show_filters: "Filter anzeigen",
-    btn_hide_filters: "Filter ausblenden",
-    btn_show_compass: "Kompass anzeigen",
-    btn_hide_compass: "Kompass ausblenden",
+/**
+ * Liefert die aktuelle Sprache (de/en) basierend auf State / Browser.
+ */
+function getInitialLang() {
+  const stored = localStorage.getItem("fs_lang");
+  if (stored === LANG_DE || stored === LANG_EN) return stored;
 
-    // Favoriten
-    toast_fav_added: "Zu euren Lieblingsspots gelegt 💛",
-    toast_fav_removed: "Aus den Lieblingsspots entfernt.",
+  const htmlLang =
+    (document.documentElement.lang || navigator.language || LANG_DE)
+      .toLowerCase()
+      .slice(0, 2);
 
-    // Filter allgemein
-    filter_category_all: "Alle Kategorien",
+  return htmlLang === LANG_EN ? LANG_EN : LANG_DE;
+}
 
-    // Plus-Code
-    plus_code_empty: "Bitte gib zuerst einen Aktions-Code ein.",
-    plus_code_unknown: "Dieser Code ist unbekannt oder nicht mehr gültig.",
-    plus_code_activated:
-      "Family Spots Plus wurde aktiviert – gute Fahrt & viel Freude auf euren Touren!",
-    plus_code_failed:
-      "Der Code konnte gerade nicht geprüft werden. Versuch es später noch einmal.",
-
-    // Radius
-    filter_radius_max_label: "Alle Spots",
-    filter_radius_description_step0:
-      "Mini-Microabenteuer zu Fuß erreichbar – perfekt für eine kurze Pause.",
-    filter_radius_description_step1:
-      "Kurze Ausflüge in Fahrrad- oder Autoentfernung – schnell dort, schnell wieder zurück.",
-    filter_radius_description_step2:
-      "Eine kleine Familientour – genau richtig für einen halben Tag voller Erlebnisse.",
-    filter_radius_description_step3:
-      "Großer Abenteuer-Radius – hier warten Ziele für ganze Tagesausflüge.",
-    filter_radius_description_all:
-      "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
-
-    // Tilla – Intro & Zustände
-    turtle_intro_1:
-      "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
-    turtle_intro_2:
-      "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein kleiner Spaziergang in eurer Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢",
-    turtle_after_daylog_save:
-      "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛",
-    turtle_after_fav_added:
-      "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer Familienkarte. ⭐",
-    turtle_after_fav_removed:
-      "Alles gut – manchmal passen Orte nur zu bestimmten Phasen. Ich helfe euch, neue zu finden. 🐢",
-    turtle_trip_mode:
-      "Ihr seid unterwegs – ich halte Ausschau nach guten Zwischenstopps für euch. 🚐",
-    turtle_everyday_mode:
-      "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿",
-    turtle_plus_activated:
-      "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
-
-    // Mein Tag
-    daylog_saved:
-      "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern.",
-
-    // Header / Navigation (dynamisch)
-    header_tagline: "Heute ist Zeit für Familie.",
-    nav_map: "Karte",
-    nav_about: "Über",
-
-    // Familien-Kompass
-    compass_title: "Familien-Kompass",
-    compass_helper:
-      "Keine Lust auf lange Planung? Ich helfe euch, den Radius passend zu heute zu wählen – Alltag oder Unterwegs-Modus.",
-    compass_apply_label: "Kompass anwenden",
-
-    // Routen-Links
-    route_apple: "In Apple Karten öffnen",
-    route_google: "In Google Maps öffnen"
-  },
-  en: {
-    error_data_load:
-      "Oops – we couldn’t load the data right now. Please try again in a moment.",
-    toast_location_ok:
-      "Your starting point is set – have fun on your next adventure!",
-    toast_location_error:
-      "We couldn’t access your location. Please check permissions or zoom into your region manually.",
-
-    btn_show_list: "Show list",
-    btn_only_map: "Map only",
-    btn_show_filters: "Show filters",
-    btn_hide_filters: "Hide filters",
-    btn_show_compass: "Show compass",
-    btn_hide_compass: "Hide compass",
-
-    toast_fav_added: "Added to your favourite places.",
-    toast_fav_removed: "Removed from your favourite places.",
-
-    filter_category_all: "All categories",
-
-    plus_code_empty: "Please enter an action code first.",
-    plus_code_unknown: "This code is unknown or no longer valid.",
-    plus_code_activated:
-      "Family Spots Plus has been activated – enjoy your trips!",
-    plus_code_failed:
-      "The code could not be verified right now. Please try again later.",
-
-    filter_radius_max_label: "All spots",
-    filter_radius_description_step0:
-      "Tiny micro adventures within walking distance – perfect for a quick break.",
-    filter_radius_description_step1:
-      "Short trips for spontaneous outings – hop in the car or on the bike and you’re there.",
-    filter_radius_description_step2:
-      "A small family tour – just right for a half day full of experiences.",
-    filter_radius_description_step3:
-      "Big adventure radius – destinations for full-day trips are waiting here.",
-    filter_radius_description_all:
-      "All spots – no radius limit. The map is all yours.",
-
-    turtle_intro_1:
-      "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!",
-    turtle_intro_2:
-      "Right now I can’t find a fitting spot. Maybe a small walk nearby is perfect today – or you widen the radius a little. 🐢",
-    turtle_after_daylog_save:
-      "Nice that you captured your day. These small notes turn into big memories later. 💛",
-    turtle_after_fav_added:
-      "You’ve saved this place – a small gem on your family map. ⭐",
-    turtle_after_fav_removed:
-      "All good – some places only fit certain phases. I’ll help you find new ones. 🐢",
-    turtle_trip_mode:
-      "You’re on the road – I’ll watch out for good stopovers for you. 🚐",
-    turtle_everyday_mode:
-      "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿",
-    turtle_plus_activated:
-      "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨",
-
-    daylog_saved:
-      "Your day moment has been saved 💾 – you can look back on it later.",
-
-    header_tagline: "Make today a family day.",
-    nav_map: "Map",
-    nav_about: "About",
-
-    compass_title: "Family Compass",
-    compass_helper:
-      "Don’t feel like long planning today? I’ll help you pick a fitting radius – everyday mode or travel mode.",
-    compass_apply_label: "Apply compass",
-
-    route_apple: "Open in Apple Maps",
-    route_google: "Open in Google Maps"
+/**
+ * Übersetzungs-Funktion – Wrapper um i18n.t(...)
+ * @param {string} key
+ * @returns {string}
+ */
+function t(key) {
+  if (i18n && typeof i18n.t === "function") {
+    return i18n.t(key);
   }
-};
+  return key;
+}
 
 // ------------------------------------------------------
-// Spielideen für unterwegs – werden in Tilla angezeigt
+// Spielideen für unterwegs – kommen aus i18n
 // ------------------------------------------------------
-const PLAY_IDEAS = {
-  de: [
-    "Spielidee: Wörter-Kette – ein Wort beginnen, das nächste muss mit dem letzten Buchstaben starten. Wie lange schafft ihr die Kette, ohne zu stocken?",
-    "Spielidee: Ich sehe was, was du nicht siehst – aber nur Dinge draußen vor dem Fenster.",
-    "Spielidee: Sucht nacheinander Dinge in einer Farbe. Wer zuerst drei findet, gewinnt.",
-    "Spielidee: Kennzeichen-Bingo – sucht Buchstaben eurer Vornamen auf den Nummernschildern. Wer seinen Namen zuerst voll hat, jubelt laut.",
-    "Spielidee: Geräusche-Raten – einer macht leise ein Geräusch (rascheln, tippen, klopfen), die anderen raten, was es war."
-  ],
-  en: [
-    "Game idea: Word chain – start with any word, the next one has to begin with the last letter. How long can you keep the chain going?",
-    "Game idea: I spy with my little eye – but only things you can see outside the window.",
-    "Game idea: Colour hunt – choose one colour, everyone looks for items in that colour. Whoever finds three first wins.",
-    "Game idea: License plate bingo – search for the letters of your names on passing plates. Who completes their name first wins.",
-    "Game idea: Sound guessing – one person quietly makes a sound (rustling, tapping, knocking), the others guess what it was."
-  ]
-};
 
-const LAST_PLAY_IDEAS_INDEX = { de: -1, en: -1 };
+/**
+ * Liefert eine zufällige Spielidee aus i18n.
+ * @returns {string}
+ */
+function getRandomPlayIdea() {
+  if (i18n && typeof i18n.getRandomPlayIdea === "function") {
+    return i18n.getRandomPlayIdea();
+  }
+  return "";
+}
 
 // ------------------------------------------------------
 // Globale State-Variablen
@@ -609,43 +478,18 @@ function activateOnEnterSpace(handler) {
   };
 }
 
-/**
- * Liefert die aktuelle Sprache-Tabelle oder DE-Fallback.
- */
-function getCurrentStrings() {
-  return UI_STRINGS[currentLang] || UI_STRINGS[LANG_DE];
+function applyStaticI18n() {
+  document.querySelectorAll("[data-i18n-de]").forEach((el) => {
+    const keyAttr = currentLang === LANG_DE ? "i18n-de" : "i18n-en";
+    const text = el.getAttribute(`data-${keyAttr}`);
+    if (text) el.textContent = text;
+  });
 }
 
 // ------------------------------------------------------
 // Utility: Sprache & Übersetzung
 // ------------------------------------------------------
 
-function getInitialLang() {
-  const stored = localStorage.getItem("fs_lang");
-  if (stored === LANG_DE || stored === LANG_EN) return stored;
-
-  const htmlLang =
-    (document.documentElement.lang || navigator.language || LANG_DE)
-      .toLowerCase()
-      .slice(0, 2);
-
-  return htmlLang === LANG_EN ? LANG_EN : LANG_DE;
-}
-
-/**
- * Übersetzungs-Funktion
- * @param {string} key
- * @returns {string}
- */
-function t(key) {
-  const table = getCurrentStrings();
-  return table[key] || key;
-}
-
-/**
- * @param {string} slug
- * @returns {string}
- */
 function getCategoryLabel(slug) {
   if (!slug) return "";
   const langMap =
@@ -658,14 +502,6 @@ function getCategoryLabel(slug) {
     fallbackMap[slug] ||
     slug.replace(/[_-]/g, " ")
   );
-}
-
-function applyStaticI18n() {
-  document.querySelectorAll("[data-i18n-de]").forEach((el) => {
-    const keyAttr = currentLang === LANG_DE ? "i18n-de" : "i18n-en";
-    const text = el.getAttribute(`data-${keyAttr}`);
-    if (text) el.textContent = text;
-  });
 }
 
 function updateLanguageSwitcherVisual() {
@@ -698,6 +534,7 @@ function updatePlusStatusText() {
 
 /**
  * Setzt Sprache, aktualisiert UI & speichert in localStorage.
+ * Koppelt gleichzeitig das i18n-Modul mit.
  * @param {"de"|"en"} lang
  * @param {{initial?: boolean}} [options]
  */
@@ -705,6 +542,15 @@ function setLanguage(lang, { initial = false } = {}) {
   currentLang = lang === LANG_EN ? LANG_EN : LANG_DE;
   localStorage.setItem("fs_lang", currentLang);
   document.documentElement.lang = currentLang;
+
+  // i18n mitziehen
+  try {
+    if (i18n && typeof i18n.switchLanguage === "function") {
+      i18n.switchLanguage(currentLang);
+    }
+  } catch (err) {
+    console.error("[Family Spots] i18n.switchLanguage failed:", err);
+  }
 
   if (headerTaglineEl) headerTaglineEl.textContent = t("header_tagline");
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
@@ -823,8 +669,10 @@ let toastTimeoutId = null;
 function showToast(keyOrMessage) {
   if (!toastEl) return;
 
-  const strings = getCurrentStrings();
-  const message = strings[keyOrMessage] || keyOrMessage || "…";
+  const message =
+    (i18n && typeof i18n.t === "function" && i18n.t(keyOrMessage)) ||
+    keyOrMessage ||
+    "…";
 
   toastEl.textContent = message;
   toastEl.classList.add("toast--visible");
@@ -947,9 +795,6 @@ function saveFavoritesToStorage() {
 // Spots – General Helpers
 // ------------------------------------------------------
 
-/**
- * @param {Spot} spot
- */
 function getSpotName(spot) {
   return (
     spot.title ||
@@ -959,9 +804,6 @@ function getSpotName(spot) {
   );
 }
 
-/**
- * @param {Spot} spot
- */
 function getSpotSubtitle(spot) {
   if (spot.city && spot.country) return `${spot.city}, ${spot.country}`;
   if (spot.city) return spot.city;
@@ -970,30 +812,18 @@ function getSpotSubtitle(spot) {
   return spot.subtitle || spot.shortDescription || "";
 }
 
-/**
- * @param {Spot} spot
- */
 function getSpotId(spot) {
   return String(spot.id || getSpotName(spot));
 }
 
-/**
- * @param {Spot} spot
- */
 function isSpotPlusOnly(spot) {
   return !!spot.plusOnly || !!spot.plus;
 }
 
-/**
- * @param {Spot} spot
- */
 function isSpotBigAdventure(spot) {
   return !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
 }
 
-/**
- * @param {Spot} spot
- */
 function isSpotVerified(spot) {
   return !!spot.verified || !!spot.isVerified;
 }
@@ -1039,10 +869,6 @@ function buildSpotSearchText(spot) {
   return text;
 }
 
-/**
- * @param {Spot} spot
- * @returns {string[]}
- */
 function getSpotAgeGroups(spot) {
   if (Array.isArray(spot._ageGroups)) return spot._ageGroups;
 
@@ -1064,10 +890,6 @@ function getSpotAgeGroups(spot) {
   return result;
 }
 
-/**
- * @param {Spot} spot
- * @returns {string[]}
- */
 function getSpotMoods(spot) {
   if (Array.isArray(spot._moods)) return spot._moods;
 
@@ -1089,10 +911,6 @@ function getSpotMoods(spot) {
   return result;
 }
 
-/**
- * @param {Spot} spot
- * @returns {string[]}
- */
 function getSpotTravelModes(spot) {
   if (Array.isArray(spot._travelModes)) return spot._travelModes;
 
@@ -1129,32 +947,6 @@ function getRouteUrlsForSpot(spot) {
     apple: `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`,
     google: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
   };
-}
-
-// ------------------------------------------------------
-// Spielideen
-// ------------------------------------------------------
-
-/**
- * Liefert eine zufällige Spielidee, ohne die letzte zu wiederholen.
- * @returns {string}
- */
-function getRandomPlayIdea() {
-  const lang = currentLang === LANG_EN ? LANG_EN : LANG_DE;
-  const list = PLAY_IDEAS[lang];
-  if (!list || !list.length) return "";
-
-  let idx;
-  if (list.length === 1) {
-    idx = 0;
-  } else {
-    const last = LAST_PLAY_IDEAS_INDEX[lang];
-    do {
-      idx = Math.floor(Math.random() * list.length);
-    } while (idx === last);
-  }
-  LAST_PLAY_IDEAS_INDEX[lang] = idx;
-  return list[idx];
 }
 
 // ------------------------------------------------------
@@ -1243,14 +1035,6 @@ function populateCategoryOptions() {
 // Radius / Geodistanz
 // ------------------------------------------------------
 
-/**
- * Prüft, ob Spot im Radius liegt. Bei fehlender Map oder ungültigem Center
- * wird kein Radius angewendet (Spot bleibt drin).
- * @param {Spot} spot
- * @param {any} centerLatLng
- * @param {number} radiusKm
- * @returns {boolean}
- */
 function isSpotInRadius(spot, centerLatLng, radiusKm) {
   if (
     !map ||
@@ -1294,11 +1078,6 @@ function updateRadiusTexts() {
 // Filterlogik (zentral)
 // ------------------------------------------------------
 
-/**
- * Prüft, ob ein Spot zur aktuellen Filterkonfiguration passt.
- * @param {Spot} spot
- * @param {{center: any, radiusKm: number}} ctx
- */
 function doesSpotMatchFilters(spot, { center, radiusKm }) {
   if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) {
     return false;
@@ -1368,9 +1147,6 @@ function doesSpotMatchFilters(spot, { center, radiusKm }) {
   return true;
 }
 
-/**
- * Führt Filterung durch & rendert Liste und Marker.
- */
 function applyFiltersAndRender() {
   if (!spots.length) {
     filteredSpots = [];
@@ -1495,7 +1271,6 @@ function renderSpotList() {
     const spotId = getSpotId(spot);
     card.dataset.spotId = spotId;
 
-    // Tastatur-fokussierbar + Button-Rolle
     card.tabIndex = 0;
     card.setAttribute("role", "button");
 
@@ -1562,11 +1337,6 @@ function renderSpotList() {
   });
 }
 
-/**
- * Synchronisiert Icon & aria-label eines Favoriten-Buttons mit dem Zustand.
- * @param {HTMLButtonElement} btn
- * @param {string} spotId
- */
 function syncFavButtonState(btn, spotId) {
   const isFav = favorites.has(spotId);
   btn.textContent = isFav ? "★" : "☆";
@@ -1760,10 +1530,6 @@ function showSpotDetails(spot) {
 // Favoriten
 // ------------------------------------------------------
 
-/**
- * Toggles Favourite-Status & triggert Nebenwirkungen (Toast, Tilla, Liste).
- * @param {Spot} spot
- */
 function toggleFavorite(spot) {
   if (!FEATURES.favorites) return;
 
@@ -1789,7 +1555,6 @@ function toggleFavorite(spot) {
     }
   }
 
-  // Liste neu aufbauen, damit Icons & Filter (nur Favoriten) stimmen
   renderSpotList();
 }
 
@@ -1822,7 +1587,6 @@ function handleCompassApply() {
   if (!FEATURES.compass) return;
   if (!filterRadiusEl) return;
 
-  // einfache Heuristik: Alltag = mittlerer Radius, Reise = großer Radius
   radiusStep = travelMode === "everyday" || !travelMode ? 1 : 3;
 
   filterRadiusEl.value = String(radiusStep);
@@ -1882,7 +1646,6 @@ function handlePlusCodeSubmit() {
     return;
   }
 
-  // TODO: Später durch echten Backend-Check ersetzen
   plusActive = true;
   try {
     localStorage.setItem(PLUS_STORAGE_KEY, "1");
@@ -2036,7 +1799,9 @@ function handleToggleView() {
 function init() {
   try {
     // DOM
-    languageSwitcherEl = document.getElementById("language-switcher");
+    languageSwitcherEl =
+      document.getElementById("language-switcher") ||
+      document.getElementById("language-toggle");
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
@@ -2100,7 +1865,6 @@ function init() {
     compassApplyBtnEl = document.getElementById("compass-apply");
     btnToggleCompassEl = document.getElementById("btn-toggle-compass");
 
-    // ARIA-Grundzustand
     if (btnToggleFiltersEl && filterSectionEl && filterSectionEl.id) {
       btnToggleFiltersEl.setAttribute("aria-controls", filterSectionEl.id);
       btnToggleFiltersEl.setAttribute("aria-expanded", "false");
@@ -2119,7 +1883,6 @@ function init() {
       compassSectionEl.open = false;
     }
 
-    // Sprache / Theme / Map
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
 
@@ -2134,12 +1897,10 @@ function init() {
       });
     }
 
-    // Tilla
     tilla = new TillaCompanion({
       getText: (key) => t(key)
     });
 
-    // Events – Sprache
     if (languageSwitcherEl) {
       languageSwitcherEl.addEventListener("click", () => {
         const nextLang = currentLang === LANG_DE ? LANG_EN : LANG_DE;
@@ -2163,7 +1924,6 @@ function init() {
       });
     }
 
-    // Bottom-Navigation
     const bottomNavMapBtn = document.querySelector(
       '.bottom-nav-item[data-route="map"]'
     );
@@ -2183,7 +1943,6 @@ function init() {
       });
     }
 
-    // Filter-Events
     if (filterSearchEl) {
       const applySearch = debounce((value) => {
         searchTerm = value.trim();
@@ -2378,7 +2137,6 @@ function init() {
     loadPlusStateFromStorage();
     loadDaylogFromStorage();
 
-    // ESC schließt Detail-Panel
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
       if (!spotDetailEl) return;
@@ -2397,4 +2155,21 @@ function init() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", init);
+// ------------------------------------------------------
+// DOMContentLoaded – i18n zuerst laden, dann init()
+// ------------------------------------------------------
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const initialLang = getInitialLang();
+    if (i18n && typeof i18n.load === "function") {
+      await i18n.load(initialLang);
+    }
+  } catch (err) {
+    console.error(
+      "[Family Spots] i18n.load fehlgeschlagen – starte trotzdem:",
+      err
+    );
+  }
+
+  init();
+});
