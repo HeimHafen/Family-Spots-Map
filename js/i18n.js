@@ -1,78 +1,147 @@
 // js/i18n.js
+// ======================================================
+// Sehr schlankes I18N-Modul für Family Spots Map
+// Lädt de/en JSON und stellt I18N.init, I18N.setLanguage, I18N.t etc.
+// ======================================================
 
-const I18N = (() => {
-  const fallbackLang = 'de';
-  const supportedLangs = ['de', 'en'];
-  let currentLang = localStorage.getItem('language') || detectLang();
-  let translations = {};
+"use strict";
 
-  function detectLang() {
-    const browserLang = navigator.language.slice(0, 2);
-    return supportedLangs.includes(browserLang) ? browserLang : fallbackLang;
-  }
+const LANG_DE = "de";
+const LANG_EN = "en";
 
-  async function loadTranslations(lang) {
-    try {
-      const response = await fetch(`data/i18n/${lang}.json`);
-      if (!response.ok) throw new Error(`Couldn't load: ${lang}`);
-      translations = await response.json();
-    } catch (error) {
-      console.warn(`[i18n] Fehler beim Laden von ${lang}.json`, error);
-      if (lang !== fallbackLang) {
-        console.log(`[i18n] Fallback auf ${fallbackLang}`);
-        return loadTranslations(fallbackLang);
-      }
+const LANGUAGE_FILES = {
+  de: "data/i18n/de.json?v=9",
+  en: "data/i18n/en.json?v=9"
+};
+
+// Optional – wenn du später Spielideen aus JSON laden willst
+const PLAY_IDEAS_FILE = "data/play-ideas.json?v=1";
+
+const state = {
+  lang: LANG_DE,
+  translations: {
+    de: {},
+    en: {}
+  },
+  playIdeas: []
+};
+
+/**
+ * Sprache normalisieren (immer nur "de" oder "en").
+ */
+function normalizeLang(lang) {
+  const lower = (lang || "").toLowerCase();
+  if (lower.startsWith("en")) return LANG_EN;
+  return LANG_DE;
+}
+
+/**
+ * Lade eine Sprachdatei und speichere sie in state.translations.
+ */
+async function loadLanguage(lang) {
+  const normalized = normalizeLang(lang);
+  const url = LANGUAGE_FILES[normalized];
+  if (!url) return;
+
+  try {
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) {
+      console.warn("[I18N] Could not load", url, "Status:", res.status);
+      return;
     }
+    const json = await res.json();
+    if (json && typeof json === "object") {
+      state.translations[normalized] = json;
+    }
+  } catch (err) {
+    console.warn("[I18N] Error loading language file:", url, err);
   }
+}
 
-  function t(key) {
-    return translations[key] || `⚠️${key}`;
+/**
+ * Optional: Spielideen laden (wenn Datei existiert).
+ * Struktur kann z.B. sein: [{ de: "...", en: "..." }, ...] oder einfache Strings.
+ */
+async function loadPlayIdeas() {
+  try {
+    const res = await fetch(PLAY_IDEAS_FILE, { cache: "no-cache" });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      state.playIdeas = data;
+    }
+  } catch (err) {
+    // Ist optional – kein harter Fehler
+    console.warn("[I18N] Could not load play ideas:", err);
   }
+}
 
-  async function setLanguage(lang) {
-    if (!supportedLangs.includes(lang)) return;
-    currentLang = lang;
-    localStorage.setItem('language', lang);
-    await loadTranslations(lang);
-    updateDOM();
+/**
+ * Initialisierung – wird aus app.js bei DOMContentLoaded aufgerufen.
+ * Lädt beide Sprachdateien vor, damit Umschalten sofort funktioniert.
+ */
+async function init() {
+  // Sprache aus localStorage / Browser ableiten
+  const stored = localStorage.getItem("fs_lang");
+  const fallback =
+    (document.documentElement.lang || navigator.language || "de").toLowerCase();
+  const initialLang = normalizeLang(stored || fallback);
+
+  await Promise.all([
+    loadLanguage("de"),
+    loadLanguage("en"),
+    loadPlayIdeas()
+  ]);
+
+  state.lang = initialLang;
+}
+
+/**
+ * Sprache setzen – app.js ruft das aus setLanguage() heraus auf.
+ */
+function setLanguage(lang) {
+  state.lang = normalizeLang(lang);
+}
+
+/**
+ * Übersetzung holen.
+ * Wenn kein Eintrag vorhanden ist, wird der Key selbst zurückgegeben.
+ */
+function t(key) {
+  const dict = state.translations[state.lang] || {};
+  if (Object.prototype.hasOwnProperty.call(dict, key)) {
+    return dict[key];
   }
+  return key;
+}
 
-  function updateDOM() {
-    // Variante 1: data-i18n-key → übersetzt aus JSON
-    document.querySelectorAll('[data-i18n-key]').forEach((el) => {
-      const key = el.getAttribute('data-i18n-key');
-      const value = t(key);
-      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-        el.placeholder = value;
-      } else {
-        el.innerHTML = value;
-      }
-    });
+/**
+ * Zufällige Spielidee – wird von app.js über getRandomPlayIdea() genutzt.
+ */
+function getRandomPlayIdea() {
+  if (!state.playIdeas || !state.playIdeas.length) return "";
 
-    // Variante 2: data-i18n-de / data-i18n-en → direkt aus HTML
-    document.querySelectorAll('[data-i18n-de], [data-i18n-en]').forEach((el) => {
-      const attr = `data-i18n-${currentLang}`;
-      const value = el.getAttribute(attr);
-      if (!value) return;
-      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-        el.placeholder = value;
-      } else {
-        el.textContent = value;
-      }
-    });
+  const items = state.playIdeas;
+  const idx = Math.floor(Math.random() * items.length);
+  const item = items[idx];
 
-    // Update <html lang="">
-    document.documentElement.setAttribute('lang', currentLang);
-  }
+  if (typeof item === "string") return item;
 
-  async function init() {
-    await setLanguage(currentLang);
-  }
+  // Objekt – erwarte Felder de/en oder text
+  const byLang = item[state.lang];
+  if (typeof byLang === "string") return byLang;
+  if (typeof item.text === "string") return item.text;
 
-  return {
-    init,
-    t,
-    setLanguage,
-    getLanguage: () => currentLang
-  };
-})();
+  return "";
+}
+
+// Globale Fassade, die app.js nutzt
+window.I18N = {
+  init,
+  setLanguage,
+  t,
+  getRandomPlayIdea
+};
+
+// Damit die Datei als ES-Modul behandelt wird
+export {};
