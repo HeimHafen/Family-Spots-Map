@@ -1,46 +1,57 @@
 // js/i18n.js
 
-let currentLang = "de";
-let messages = {};
+const I18N = (() => {
+  const fallbackLang = 'de';
+  const supportedLangs = ['de', 'en'];
+  let currentLang = localStorage.getItem('language') || detectLang();
+  let translations = {};
 
-export function getLanguage() {
-  return currentLang;
-}
+  function detectLang() {
+    const browserLang = navigator.language.slice(0, 2);
+    return supportedLangs.includes(browserLang) ? browserLang : fallbackLang;
+  }
 
-export async function initI18n(lang) {
-  const target = lang || currentLang || "de";
-  try {
-    const res = await fetch(`data/i18n/${target}.json`);
-    if (!res.ok) throw new Error("i18n load failed");
-    messages = await res.json();
-    currentLang = target;
-
-    // HTML lang-Attribut mitziehen
-    if (typeof document !== "undefined" && document.documentElement) {
-      document.documentElement.setAttribute("lang", target);
-    }
-  } catch (err) {
-    console.error(err);
-    if (target !== "de") {
-      return initI18n("de");
+  async function loadTranslations(lang) {
+    try {
+      const response = await fetch(`data/i18n/${lang}.json`);
+      if (!response.ok) throw new Error(`Couldn't load: ${lang}`);
+      translations = await response.json();
+    } catch (error) {
+      console.warn(`[i18n] Fehler beim Laden von ${lang}.json`, error);
+      if (lang !== fallbackLang) {
+        console.log(`[i18n] Fallback auf ${fallbackLang}`);
+        return loadTranslations(fallbackLang);
+      }
     }
   }
-}
 
-export function t(key, fallback) {
-  return messages[key] ?? fallback ?? key;
-}
+  function t(key) {
+    return translations[key] || `⚠️${key}`;
+  }
 
-export function applyTranslations(root = document) {
-  root.querySelectorAll("[data-i18n]").forEach((el) => {
-    const key = el.getAttribute("data-i18n");
-    const value = t(key);
-    if (value) el.textContent = value;
-  });
+  async function setLanguage(lang) {
+    if (!supportedLangs.includes(lang)) return;
+    currentLang = lang;
+    localStorage.setItem('language', lang);
+    await loadTranslations(lang);
+    updateDOM();
+  }
 
-  root.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-    const key = el.getAttribute("data-i18n-placeholder");
-    const value = t(key);
-    if (value) el.setAttribute("placeholder", value);
-  });
-}
+  function updateDOM() {
+    document.querySelectorAll('[data-i18n-key]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-key');
+      if (key) el.innerHTML = t(key);
+    });
+  }
+
+  async function init() {
+    await setLanguage(currentLang);
+  }
+
+  return {
+    init,
+    t,
+    setLanguage,
+    getLanguage: () => currentLang
+  };
+})();
