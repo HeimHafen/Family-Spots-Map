@@ -1,6 +1,7 @@
 {
   "meta_title": "Family Spots Map – Die schönste Karte für Familien-Abenteuer",
   "meta_description": "Family Spots Map ist die schönste Karte für Familien-Abenteuer.",
+  "error_data_load": "Ups – wir konnten die Daten gerade nicht laden. Bitte versuch es gleich noch einmal.",
   "btn_help_aria": "Hilfe und Infos anzeigen",
   "label_language_switcher": "Sprache wechseln",
   "btn_theme_toggle_aria": "Designmodus wechseln",
@@ -37,5 +38,5 @@
   "turtle_plus_activated": "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
   "daylog_saved": "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern.",
   "nav_map": "Karte",
-  "nav_about": "Über"
+  "nav_about": "Über Family Spots Map"
 }
