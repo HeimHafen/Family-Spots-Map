@@ -1,7 +1,7 @@
 // js/i18n.js
 // ======================================================
-// Sehr schlankes I18N-Modul für Family Spots Map
-// Lädt de/en JSON und stellt I18N.init, I18N.setLanguage, I18N.t etc.
+// Schlankes I18N-Modul für Family Spots Map
+// Lädt de/en JSON und stellt init, setLanguage, getLanguage, t, getRandomPlayIdea bereit.
 // ======================================================
 
 "use strict";
@@ -14,7 +14,7 @@ const LANGUAGE_FILES = {
   en: "data/i18n/en.json?v=9"
 };
 
-// Optional – wenn du später Spielideen aus JSON laden willst
+// Optional – Spielideen
 const PLAY_IDEAS_FILE = "data/play-ideas.json?v=1";
 
 const state = {
@@ -32,11 +32,12 @@ const state = {
 function normalizeLang(lang) {
   const lower = (lang || "").toLowerCase();
   if (lower.startsWith("en")) return LANG_EN;
+  // alles andere fällt auf "de" zurück
   return LANG_DE;
 }
 
 /**
- * Lade eine Sprachdatei und speichere sie in state.translations.
+ * Sprachdatei laden.
  */
 async function loadLanguage(lang) {
   const normalized = normalizeLang(lang);
@@ -59,8 +60,7 @@ async function loadLanguage(lang) {
 }
 
 /**
- * Optional: Spielideen laden (wenn Datei existiert).
- * Struktur kann z.B. sein: [{ de: "...", en: "..." }, ...] oder einfache Strings.
+ * Spielideen laden (optional).
  */
 async function loadPlayIdeas() {
   try {
@@ -71,17 +71,14 @@ async function loadPlayIdeas() {
       state.playIdeas = data;
     }
   } catch (err) {
-    // Ist optional – kein harter Fehler
     console.warn("[I18N] Could not load play ideas:", err);
   }
 }
 
 /**
- * Initialisierung – wird aus app.js bei DOMContentLoaded aufgerufen.
- * Lädt beide Sprachdateien vor, damit Umschalten sofort funktioniert.
+ * Initialisierung – aus app.js bei DOMContentLoaded.
  */
 async function init() {
-  // Sprache aus localStorage / Browser ableiten
   const stored = localStorage.getItem("fs_lang");
   const fallback =
     (document.documentElement.lang || navigator.language || "de").toLowerCase();
@@ -97,24 +94,23 @@ async function init() {
 }
 
 /**
- * Sprache setzen – app.js ruft das aus setLanguage() heraus auf.
+ * Sprache setzen.
  */
 function setLanguage(lang) {
   state.lang = normalizeLang(lang);
-  // Wenn du willst, zusätzlich das <html lang="...">-Attribut synchronisieren:
+  // optional: html lang synchronisieren
   // document.documentElement.lang = state.lang;
 }
 
 /**
- * Aktuelle Sprache zurückgeben – für map.js & Co.
+ * Aktuelle Sprache holen.
  */
 function getLanguage() {
   return state.lang;
 }
 
 /**
- * Übersetzung holen.
- * Wenn kein Eintrag vorhanden ist, wird der Key selbst zurückgegeben.
+ * Übersetzung holen – fällt auf Key zurück, wenn nichts gefunden.
  */
 function t(key) {
   const dict = state.translations[state.lang] || {};
@@ -125,7 +121,7 @@ function t(key) {
 }
 
 /**
- * Zufällige Spielidee – wird von app.js über getRandomPlayIdea() genutzt.
+ * Zufällige Spielidee.
  */
 function getRandomPlayIdea() {
   if (!state.playIdeas || !state.playIdeas.length) return "";
@@ -136,7 +132,6 @@ function getRandomPlayIdea() {
 
   if (typeof item === "string") return item;
 
-  // Objekt – erwarte Felder de/en oder text
   const byLang = item[state.lang];
   if (typeof byLang === "string") return byLang;
   if (typeof item.text === "string") return item.text;
@@ -144,15 +139,16 @@ function getRandomPlayIdea() {
   return "";
 }
 
-// Globale Fassade, die bestehender Code weiterhin nutzen kann
-window.I18N = {
+// Globale Fassade wie bisher (für alten Code)
+const I18N = {
   init,
   setLanguage,
   getLanguage,
   t,
   getRandomPlayIdea
 };
+window.I18N = I18N;
 
-// ES-Module-Exports für imports wie:
-// import { init, setLanguage, t, getLanguage } from "./i18n.js";
+// ES-Module-Exports – für alle Import-Varianten
 export { init, setLanguage, getLanguage, t, getRandomPlayIdea };
+export default I18N;
