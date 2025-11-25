@@ -1011,6 +1011,30 @@ select.input:focus {
    MAP MARKER – ORANGE PINS
    ========================================= */
 
+/* CLUSTER-BUBBLES im Family-Spots-Look */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background-color: rgba(255, 220, 180, 0.9);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background-color: #ffb870;
+  border-radius: 999px;
+  border: 2px solid #ffe9cc;
+  color: #8a4a00;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.marker-cluster span {
+  font-size: 13px;
+}
+
+/* einzelne Spot-Pins */
 .spot-marker {
   border-radius: var(--radius-pill);
 }
