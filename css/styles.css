@@ -386,6 +386,17 @@ body {
     inset 0 0 0 1px var(--sidebar-section-border);
 }
 
+/* Vertikaler Abstand zwischen übereinander liegenden Karten,
+   z.B. unter der Karte bei "Family Spots Plus" & "Mein Tag" */
+.sidebar-section + .sidebar-section {
+  margin-top: 8px;
+}
+
+/* In der eigentlichen Sidebar übernimmt das Flex-Gap den Abstand */
+.sidebar > .sidebar-section + .sidebar-section {
+  margin-top: 0;
+}
+
 .sidebar-section[open] {
   padding-bottom: 14px;
 }
