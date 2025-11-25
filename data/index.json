@@ -117,7 +117,6 @@
     ],
     "Lernen & Kultur": [
       "museum-kinder",
-      "kinder-museum",
       "bibliothek"
     ],
     "Praktisches": [
@@ -510,11 +509,19 @@
       }
     },
     {
-      "slug": "kinder-museum",
+      "slug": "museum-kinder",
       "icon": "",
       "label": {
         "de": "Kinder-Museum",
         "en": "Children's museum"
+      }
+    },
+    {
+      "slug": "bibliothek",
+      "icon": "",
+      "label": {
+        "de": "Kinder- & Familienbibliothek",
+        "en": "Children's & family library"
       }
     },
     {
