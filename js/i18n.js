@@ -38,10 +38,31 @@ const I18N = (() => {
   }
 
   function updateDOM() {
+    // Variante 1: data-i18n-key → übersetzt aus JSON
     document.querySelectorAll('[data-i18n-key]').forEach((el) => {
       const key = el.getAttribute('data-i18n-key');
-      if (key) el.innerHTML = t(key);
+      const value = t(key);
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = value;
+      } else {
+        el.innerHTML = value;
+      }
     });
+
+    // Variante 2: data-i18n-de / data-i18n-en → direkt aus HTML
+    document.querySelectorAll('[data-i18n-de], [data-i18n-en]').forEach((el) => {
+      const attr = `data-i18n-${currentLang}`;
+      const value = el.getAttribute(attr);
+      if (!value) return;
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = value;
+      } else {
+        el.textContent = value;
+      }
+    });
+
+    // Update <html lang="">
+    document.documentElement.setAttribute('lang', currentLang);
   }
 
   async function init() {
