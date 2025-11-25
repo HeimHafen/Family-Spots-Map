@@ -1,56 +1,40 @@
 {
-  "meta_title": "Family Spots Map – Die schönste Karte für Familien-Abenteuer",
-  "meta_description": "Family Spots Map ist die kuratierte Karte für Familien-Abenteuer – mit ausgewählten Spielplätzen, Zoos, Wildparks, Wasser-Spots, Museen und mehr.",
-  
-  "btn_help_aria": "Hilfe und Infos zu Family Spots Map anzeigen",
-  "label_language_switcher": "App-Sprache wechseln",
-  "btn_theme_toggle_aria": "Hell-/Dunkelmodus wechseln",
-  "btn_locate_aria": "Karte auf euren Standort zentrieren",
-  
-  "alt_tilla_image": "Tilla, eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer",
-  "header_tagline": "Entdeckt kleine Abenteuer für euren Familien-Alltag",
-  
-  "btn_only_map": "Nur Karte",
-  "btn_show_list": "Liste zeigen",
+  "meta_description": "Family Spots Map ist die schönste Karte für Familien-Abenteuer.",
+  "btn_help_aria": "Hilfe und Infos anzeigen",
+  "label_language_switcher": "Sprache wechseln",
+  "btn_theme_toggle_aria": "Designmodus wechseln",
+  "btn_locate_aria": "Standort zentrieren",
+  "alt_tilla_image": "Tilla die Schildkröte – eure Familienbegleiterin",
+  "header_tagline": "Entdeckt kleine Abenteuer – in eurer Nähe oder unterwegs",
+  "btn_show_compass": "Kompass anzeigen",
   "btn_show_filters": "Filter anzeigen",
   "btn_hide_filters": "Filter ausblenden",
-  
-  "nav_map": "Karte",
-  "nav_about": "Über",
-  
-  "filter_placeholder_keywords": "Ort, Spot, Stichwörter …",
-  "filter_category_all": "Alle Kategorien",
-  
-  "error_data_load": "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
+  "btn_only_map": "Nur Karte",
+  "btn_show_list": "Liste zeigen",
   "toast_location_ok": "Euer Standort ist gesetzt – viel Spaß beim nächsten Abenteuer! 🌍",
   "toast_location_error": "Euer Standort lässt sich gerade nicht bestimmen. Vielleicht ist die Freigabe gesperrt oder ihr seid offline.",
-  
   "toast_fav_added": "Zu euren Lieblingsspots gelegt 💛",
   "toast_fav_removed": "Aus den Lieblingsspots entfernt.",
-  
+  "filter_category_all": "Alle Kategorien",
   "plus_code_empty": "Bitte gib zuerst einen Aktions-Code ein.",
   "plus_code_unknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
   "plus_code_activated": "Family Spots Plus wurde aktiviert – gute Fahrt & viel Freude auf euren Touren!",
   "plus_code_failed": "Der Code konnte gerade nicht geprüft werden. Versuch es später noch einmal.",
-  
   "filter_radius_max_label": "Alle Spots",
-  "filter_radius_description_step0": "Mini-Micro-Abenteuer zu Fuß erreichbar – perfekt für eine kurze Pause.",
+  "filter_radius_description_step0": "Mini-Microabenteuer zu Fuß erreichbar – perfekt für eine kurze Pause.",
   "filter_radius_description_step1": "Kurze Ausflüge in Fahrrad- oder Autoentfernung – schnell dort, schnell wieder zurück.",
   "filter_radius_description_step2": "Eine kleine Familientour – genau richtig für einen halben Tag voller Erlebnisse.",
-  "filter_radius_description_step3": "Großer Abenteuer-Radius – hier warten Ziele für ganze Tagesausflüge auf euch.",
+  "filter_radius_description_step3": "Großer Abenteuer-Radius – hier warten Ziele für ganze Tagesausflüge.",
   "filter_radius_description_all": "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
-  
   "turtle_intro_1": "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
   "turtle_intro_2": "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein kleiner Spaziergang in eurer Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢",
   "turtle_after_daylog_save": "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛",
   "turtle_after_fav_added": "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer Familienkarte. ⭐",
   "turtle_after_fav_removed": "Alles gut – manchmal passen Orte nur zu bestimmten Phasen. Ich helfe euch, neue zu finden. 🐢",
   "turtle_trip_mode": "Ihr seid unterwegs – ich halte Ausschau nach guten Zwischenstopps für euch. 🚐",
-  "turtle_everyday_mode": "Alltag darf auch leicht sein. Lasst uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿",
+  "turtle_everyday_mode": "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿",
   "turtle_plus_activated": "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
-  
-  "daylog_label": "Wie war euer Tag?",
-  "daylog_placeholder": "Was hat euren Tag heute besonders gemacht?",
-  "daylog_save_button": "Speichern 💾",
-  "daylog_saved": "Euer Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern."
+  "daylog_saved": "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern.",
+  "nav_map": "Karte",
+  "nav_about": "Über"
 }
