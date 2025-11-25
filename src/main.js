@@ -14,7 +14,7 @@ import { getInitialLang, t } from "./app/i18n.js";
 import { initMap } from "./app/map.js";
 import { initUI } from "./app/ui.js";
 import { TillaCompanion } from "./app/tillaCompanion.js";
-// import { loadSpots } from './app/dataLoader.js'; // Beispiel-Erweiterung
+import { loadSpots } from "./app/dataLoader.js"; // <-- Wichtig: aktivieren!
 
 /**
  * Initialisiert globale App-Zustände & Features
@@ -44,8 +44,8 @@ async function initApp() {
     });
     window.tilla = tilla;
 
-    // Spots laden + Filter anwenden (falls benötigt)
-    // await loadSpots();
+    // Spots laden + Filter anwenden
+    await loadSpots();
 
     console.info("[FSM] App vollständig initialisiert 🚀");
   } catch (err) {
