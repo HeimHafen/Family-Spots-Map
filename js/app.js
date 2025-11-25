@@ -1,251 +1,16 @@
 // js/app.js
 // ======================================================
 // Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
-// Senior-Level, strukturiert & kommentiert
+// Senior-Level Refactoring (strukturierter, robuster, dokumentiert)
 // ======================================================
 
 "use strict";
 
 import { TillaCompanion } from "./tilla.js";
 
-/* ------------------------------------------------------
- *  KATEGORIEN & GRUPPEN
- *  (Slug → {de, en} + Gruppierung für das Dropdown)
- * ---------------------------------------------------- */
-
-/** Slugs in logisch gruppierten Bereichen fürs Kategorien-Dropdown */
-const CATEGORY_GROUPS = Object.freeze({
-  "Spiel & Bewegung": [
-    "spielplatz",
-    "abenteuerspielplatz",
-    "indoor-spielplatz",
-    "waldspielplatz",
-    "wasserspielplatz",
-    "barrierefreier-spielplatz",
-    "bewegungspark",
-    "multifunktionsfeld",
-    "bolzplatz",
-    "pumptrack",
-    "skatepark",
-    "verkehrsgarten",
-    "toddler-barfuss-motorik"
-  ],
-  "Tiere & Natur": [
-    "zoo",
-    "tierpark",
-    "wildpark",
-    "bauernhof",
-    "naturerlebnispfad",
-    "walderlebnisroute",
-    "freilichtmuseum"
-  ],
-  "Wasser & Schwimmen": [
-    "schwimmbad",
-    "badesee",
-    "strand",
-    "eisbahn",
-    "rodelhuegel"
-  ],
-  "Erlebnis & Freizeit": [
-    "freizeitpark",
-    "trampolinpark",
-    "kletterhalle",
-    "kletteranlage-outdoor",
-    "kletterwald-hochseilgarten",
-    "boulderpark",
-    "minigolf"
-  ],
-  "Wandern & Radfahren": ["wanderweg-kinderwagen", "radweg-family"],
-  "Essen & Trinken": [
-    "familiencafe",
-    "kinder-familiencafe",
-    "familien-restaurant"
-  ],
-  "Lernen & Kultur": ["museum-kinder", "kinder-museum", "bibliothek"],
-  "Praktisches": ["oeffentliche-toilette", "wickelraum"],
-  "Events & Erlebnisse": ["familien-event"],
-  "Unterwegs mit WoMo & Rad": [
-    "stellplatz-spielplatz-naehe-kostenlos",
-    "wohnmobil-service-station",
-    "rastplatz-spielplatz-dusche",
-    "bikepacking-spot",
-    "campingplatz-familien"
-  ],
-  "Entspannung & Naturorte": ["park-garten", "picknickwiese"]
-});
-
-/** Überschriften der Gruppen (DE/EN) */
-const CATEGORY_GROUP_LABELS = Object.freeze({
-  "Spiel & Bewegung": {
-    de: "Spiel & Bewegung",
-    en: "Play & movement"
-  },
-  "Tiere & Natur": {
-    de: "Tiere & Natur",
-    en: "Animals & nature"
-  },
-  "Wasser & Schwimmen": {
-    de: "Wasser & Schwimmen",
-    en: "Water & swimming"
-  },
-  "Erlebnis & Freizeit": {
-    de: "Erlebnis & Freizeit",
-    en: "Experiences & leisure"
-  },
-  "Wandern & Radfahren": {
-    de: "Wandern & Radfahren",
-    en: "Hiking & cycling"
-  },
-  "Essen & Trinken": {
-    de: "Essen & Trinken",
-    en: "Food & drinks"
-  },
-  "Lernen & Kultur": {
-    de: "Lernen & Kultur",
-    en: "Learning & culture"
-  },
-  Praktisches: {
-    de: "Praktisches",
-    en: "Practical"
-  },
-  "Events & Erlebnisse": {
-    de: "Events & Erlebnisse",
-    en: "Events & experiences"
-  },
-  "Unterwegs mit WoMo & Rad": {
-    de: "Unterwegs mit WoMo & Rad",
-    en: "On the road (RV & bike)"
-  },
-  "Entspannung & Naturorte": {
-    de: "Entspannung & Naturorte",
-    en: "Relax & nature spots"
-  }
-});
-
-/** Alle bekannten Kategorien – Slug → { de, en } */
-const CATEGORY_LABELS = Object.freeze({
-  spielplatz: { de: "Spielplatz", en: "Playground" },
-  abenteuerspielplatz: {
-    de: "Abenteuerspielplatz",
-    en: "Adventure playground"
-  },
-  "indoor-spielplatz": {
-    de: "Indoor-Spielplatz",
-    en: "Indoor playground"
-  },
-  waldspielplatz: { de: "Waldspielplatz", en: "Forest playground" },
-  wasserspielplatz: { de: "Wasserspielplatz", en: "Water playground" },
-  "barrierefreier-spielplatz": {
-    de: "Barrierefreier Spielplatz",
-    en: "Accessible playground"
-  },
-  bewegungspark: { de: "Bewegungspark", en: "Movement park" },
-  multifunktionsfeld: {
-    de: "Multifunktionsfeld",
-    en: "Multi-sport court"
-  },
-  bolzplatz: { de: "Bolzplatz", en: "Soccer court" },
-  pumptrack: { de: "Pumptrack", en: "Pumptrack" },
-  skatepark: { de: "Skatepark", en: "Skate park" },
-  verkehrsgarten: {
-    de: "Verkehrsgarten",
-    en: "Traffic training park"
-  },
-  "toddler-barfuss-motorik": {
-    de: "Toddler / Barfuß / Motorik",
-    en: "Toddler / barefoot / motor skills"
-  },
-
-  zoo: { de: "Zoo", en: "Zoo" },
-  wildpark: { de: "Wildpark & Safaris", en: "Wildlife park & safaris" },
-  tierpark: { de: "Tierpark", en: "Animal park" },
-  bauernhof: { de: "Bauernhof", en: "Farm" },
-  naturerlebnispfad: {
-    de: "Naturerlebnispfad",
-    en: "Nature discovery trail"
-  },
-  walderlebnisroute: {
-    de: "Walderlebnisroute",
-    en: "Forest experience route"
-  },
-  freilichtmuseum: {
-    de: "Freilichtmuseum",
-    en: "Open-air museum"
-  },
-
-  schwimmbad: { de: "Schwimmbad", en: "Swimming pool" },
-  badesee: { de: "Badesee", en: "Swimming lake" },
-  strand: { de: "Familien-Strand", en: "Family beach" },
-  eisbahn: { de: "Eisbahn", en: "Ice rink" },
-  rodelhuegel: { de: "Rodelhügel", en: "Sledding hill" },
-
-  freizeitpark: { de: "Freizeitpark", en: "Theme park" },
-  trampolinpark: { de: "Trampolinpark", en: "Trampoline park" },
-  kletterhalle: { de: "Kletterhalle", en: "Climbing gym" },
-  "kletteranlage-outdoor": {
-    de: "Kletteranlage (Outdoor)",
-    en: "Outdoor climbing area"
-  },
-  "kletterwald-hochseilgarten": {
-    de: "Kletterwald / Hochseilgarten",
-    en: "Rope course / climbing forest"
-  },
-  boulderpark: { de: "Boulderpark", en: "Bouldering park" },
-  minigolf: { de: "Minigolf", en: "Mini golf" },
-
-  "wanderweg-kinderwagen": {
-    de: "Wanderweg (kinderwagenfreundlich)",
-    en: "Stroller-friendly trail"
-  },
-  "radweg-family": { de: "Familien-Radweg", en: "Family bike route" },
-
-  familiencafe: { de: "Familiencafé", en: "Family café" },
-  "kinder-familiencafe": {
-    de: "Kinder- & Familiencafé",
-    en: "Kids & family café"
-  },
-  "familien-restaurant": {
-    de: "Familien-Restaurant",
-    en: "Family restaurant"
-  },
-
-  "museum-kinder": { de: "Museum (Kinder)", en: "Museum (kids)" },
-  "kinder-museum": { de: "Kinder-Museum", en: "Children's museum" },
-  bibliothek: { de: "Bibliothek", en: "Library" },
-
-  "oeffentliche-toilette": {
-    de: "Öffentliche Toilette",
-    en: "Public toilet"
-  },
-  wickelraum: { de: "Wickelraum", en: "Baby changing room" },
-
-  "familien-event": { de: "Familien-Event", en: "Family event" },
-
-  "rastplatz-spielplatz-dusche": {
-    de: "Rastplatz (Spielplatz + Dusche)",
-    en: "Rest area (playground + shower)"
-  },
-  "stellplatz-spielplatz-naehe-kostenlos": {
-    de: "Kostenloser Stellplatz (Spielplatznähe)",
-    en: "Free RV spot (near playground)"
-  },
-  "wohnmobil-service-station": {
-    de: "Wohnmobil Service-Station",
-    en: "RV service station"
-  },
-  "campingplatz-familien": {
-    de: "Familien-Campingplatz",
-    en: "Family campground"
-  },
-  "bikepacking-spot": { de: "Bikepacking-Spot", en: "Bikepacking spot" },
-
-  "park-garten": { de: "Park / Garten", en: "Park / garden" },
-  picknickwiese: { de: "Picknickwiese", en: "Picnic meadow" }
-});
-
-/* ------------------------------------------------------
- *  Typdefinition (nur Doku / IDE-Support)
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
+// ------------------------------------------------------
 
 /**
  * @typedef {Object} Spot
@@ -294,10 +59,9 @@ const CATEGORY_LABELS = Object.freeze({
  * @property {string[]} [_travelModes]
  */
 
-/* ------------------------------------------------------
- *  Basis-Konstanten
- * ---------------------------------------------------- */
-
+// ------------------------------------------------------
+// Konstanten
+// ------------------------------------------------------
 const DEFAULT_MAP_CENTER = [52.4, 9.7];
 const DEFAULT_MAP_ZOOM = 7;
 
@@ -313,7 +77,9 @@ const THEME_DARK = "dark";
 /** 0–4 → Radius in km, Infinity = kein Limit */
 const RADIUS_STEPS_KM = [1, 5, 15, 40, Infinity];
 
-/* Feature-Toggles – alles zentral schaltbar */
+// ------------------------------------------------------
+// Feature-Toggles – zentrale Schalter für optionale Bereiche
+// ------------------------------------------------------
 const FEATURES = Object.freeze({
   plus: true,
   moodFilter: true,
@@ -326,32 +92,264 @@ const FEATURES = Object.freeze({
   compass: true
 });
 
-/* ------------------------------------------------------
- *  Übersetzungen (UI_STRINGS)
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Kategorien & Gruppen
+// ------------------------------------------------------
+
+// Obergruppen inkl. Slugs
+const CATEGORY_GROUPS = {
+  "Spiel & Bewegung": [
+    "spielplatz",
+    "abenteuerspielplatz",
+    "indoor-spielplatz",
+    "waldspielplatz",
+    "wasserspielplatz",
+    "barrierefreier-spielplatz",
+    "bewegungspark",
+    "multifunktionsfeld",
+    "bolzplatz",
+    "pumptrack",
+    "skatepark",
+    "verkehrsgarten",
+    "toddler-barfuss-motorik"
+  ],
+  "Tiere & Natur": [
+    "zoo",
+    "tierpark",
+    "wildpark",
+    "bauernhof",
+    "naturerlebnispfad",
+    "walderlebnisroute",
+    "freilichtmuseum"
+  ],
+  "Wasser & Schwimmen": [
+    "schwimmbad",
+    "badesee",
+    "strand",
+    "eisbahn",
+    "rodelhuegel"
+  ],
+  "Erlebnis & Freizeit": [
+    "freizeitpark",
+    "trampolinpark",
+    "kletterhalle",
+    "kletteranlage-outdoor",
+    "kletterwald-hochseilgarten",
+    "boulderpark",
+    "minigolf"
+  ],
+  "Wandern & Radfahren": [
+    "wanderweg-kinderwagen",
+    "radweg-family"
+  ],
+  "Essen & Trinken": [
+    "familiencafe",
+    "kinder-familiencafe",
+    "familien-restaurant"
+  ],
+  "Lernen & Kultur": [
+    "museum-kinder",
+    "kinder-museum",
+    "bibliothek"
+  ],
+  "Praktisches": [
+    "oeffentliche-toilette",
+    "wickelraum"
+  ],
+  "Events & Erlebnisse": [
+    "familien-event"
+  ],
+  "Unterwegs mit WoMo & Rad": [
+    "stellplatz-spielplatz-naehe-kostenlos",
+    "wohnmobil-service-station",
+    "rastplatz-spielplatz-dusche",
+    "bikepacking-spot",
+    "campingplatz-familien"
+  ],
+  "Entspannung & Naturorte": [
+    "park-garten",
+    "picknickwiese"
+  ]
+};
+
+// Übersetzung der Obergruppen
+const CATEGORY_GROUP_LABELS = {
+  de: {
+    "Spiel & Bewegung": "Spiel & Bewegung",
+    "Tiere & Natur": "Tiere & Natur",
+    "Wasser & Schwimmen": "Wasser & Schwimmen",
+    "Erlebnis & Freizeit": "Erlebnis & Freizeit",
+    "Wandern & Radfahren": "Wandern & Radfahren",
+    "Essen & Trinken": "Essen & Trinken",
+    "Lernen & Kultur": "Lernen & Kultur",
+    "Praktisches": "Praktisches",
+    "Events & Erlebnisse": "Events & Erlebnisse",
+    "Unterwegs mit WoMo & Rad": "Unterwegs mit WoMo & Rad",
+    "Entspannung & Naturorte": "Entspannung & Naturorte"
+  },
+  en: {
+    "Spiel & Bewegung": "Play & movement",
+    "Tiere & Natur": "Animals & nature",
+    "Wasser & Schwimmen": "Water & swimming",
+    "Erlebnis & Freizeit": "Adventure & leisure",
+    "Wandern & Radfahren": "Hiking & cycling",
+    "Essen & Trinken": "Food & drinks",
+    "Lernen & Kultur": "Learning & culture",
+    "Praktisches": "Useful on the way",
+    "Events & Erlebnisse": "Events & experiences",
+    "Unterwegs mit WoMo & Rad": "On the road (RV & bike)",
+    "Entspannung & Naturorte": "Relax & nature"
+  }
+};
+
+// Label-Tabellen pro Sprache
+const CATEGORY_LABELS_DE = {
+  "spielplatz": "Spielplatz",
+  "abenteuerspielplatz": "Abenteuerspielplatz",
+  "indoor-spielplatz": "Indoor-Spielplatz",
+  "waldspielplatz": "Waldspielplatz",
+  "wasserspielplatz": "Wasserspielplatz",
+  "barrierefreier-spielplatz": "Barrierefreier Spielplatz",
+  "bewegungspark": "Bewegungspark",
+  "multifunktionsfeld": "Multifunktionsfeld",
+  "bolzplatz": "Bolzplatz",
+  "pumptrack": "Pumptrack",
+  "skatepark": "Skatepark",
+  "verkehrsgarten": "Verkehrsgarten",
+  "toddler-barfuss-motorik": "Toddler / Barfuß / Motorik",
+  "zoo": "Zoo",
+  "tierpark": "Tierpark",
+  "wildpark": "Wildpark & Safaris",
+  "bauernhof": "Bauernhof",
+  "naturerlebnispfad": "Naturerlebnispfad",
+  "walderlebnisroute": "Walderlebnisroute",
+  "freilichtmuseum": "Freilichtmuseum",
+  "schwimmbad": "Schwimmbad",
+  "badesee": "Badesee",
+  "strand": "Familien-Strand",
+  "eisbahn": "Eisbahn",
+  "rodelhuegel": "Rodelhügel",
+  "freizeitpark": "Freizeitpark",
+  "trampolinpark": "Trampolinpark",
+  "kletterhalle": "Kletterhalle",
+  "kletteranlage-outdoor": "Kletteranlage (Outdoor)",
+  "kletterwald-hochseilgarten": "Kletterwald / Hochseilgarten",
+  "boulderpark": "Boulderpark",
+  "minigolf": "Minigolf",
+  "wanderweg-kinderwagen": "Wanderweg (kinderwagenfreundlich)",
+  "radweg-family": "Familien-Radweg",
+  "familiencafe": "Familiencafé",
+  "kinder-familiencafe": "Kinder- & Familiencafé",
+  "familien-restaurant": "Familien-Restaurant",
+  "museum-kinder": "Museum (Kinder)",
+  "kinder-museum": "Kinder-Museum",
+  "kinder_museum": "Kinder-Museum",
+  "bibliothek": "Bibliothek",
+  "oeffentliche-toilette": "Öffentliche Toilette",
+  "wickelraum": "Wickelraum",
+  "familien-event": "Familien-Event",
+  "stellplatz-spielplatz-naehe-kostenlos":
+    "Kostenloser Stellplatz (Spielplatznähe)",
+  "wohnmobil-service-station": "Wohnmobil Service-Station",
+  "rastplatz-spielplatz-dusche": "Rastplatz (Spielplatz + Dusche)",
+  "bikepacking-spot": "Bikepacking-Spot",
+  "campingplatz-familien": "Familien-Campingplatz",
+  "park-garten": "Park / Garten",
+  "picknickwiese": "Picknickwiese"
+};
+
+const CATEGORY_LABELS_EN = {
+  "spielplatz": "Playground",
+  "abenteuerspielplatz": "Adventure playground",
+  "indoor-spielplatz": "Indoor playground",
+  "waldspielplatz": "Forest playground",
+  "wasserspielplatz": "Water playground",
+  "barrierefreier-spielplatz": "Accessible playground",
+  "bewegungspark": "Movement park",
+  "multifunktionsfeld": "Multi-sport court",
+  "bolzplatz": "Soccer court",
+  "pumptrack": "Pumptrack",
+  "skatepark": "Skate park",
+  "verkehrsgarten": "Traffic training park",
+  "toddler-barfuss-motorik": "Toddler / barefoot / motor skills",
+  "zoo": "Zoo",
+  "tierpark": "Animal park",
+  "wildpark": "Wildlife park & safaris",
+  "bauernhof": "Farm",
+  "naturerlebnispfad": "Nature discovery trail",
+  "walderlebnisroute": "Forest experience route",
+  "freilichtmuseum": "Open-air museum",
+  "schwimmbad": "Swimming pool",
+  "badesee": "Swimming lake",
+  "strand": "Family beach",
+  "eisbahn": "Ice rink",
+  "rodelhuegel": "Sledding hill",
+  "freizeitpark": "Theme park",
+  "trampolinpark": "Trampoline park",
+  "kletterhalle": "Climbing gym",
+  "kletteranlage-outdoor": "Outdoor climbing area",
+  "kletterwald-hochseilgarten": "Rope course / climbing forest",
+  "boulderpark": "Bouldering park",
+  "minigolf": "Mini golf",
+  "wanderweg-kinderwagen": "Stroller-friendly trail",
+  "radweg-family": "Family bike route",
+  "familiencafe": "Family café",
+  "kinder-familiencafe": "Kids & family café",
+  "familien-restaurant": "Family restaurant",
+  "museum-kinder": "Museum (kids)",
+  "kinder-museum": "Children's museum",
+  "kinder_museum": "Children's museum",
+  "bibliothek": "Library",
+  "oeffentliche-toilette": "Public toilet",
+  "wickelraum": "Baby changing room",
+  "familien-event": "Family event",
+  "stellplatz-spielplatz-naehe-kostenlos":
+    "Free RV spot (near playground)",
+  "wohnmobil-service-station": "RV service station",
+  "rastplatz-spielplatz-dusche": "Rest area (playground + shower)",
+  "bikepacking-spot": "Bikepacking spot",
+  "campingplatz-familien": "Family campground",
+  "park-garten": "Park / garden",
+  "picknickwiese": "Picnic meadow"
+};
+
+// ------------------------------------------------------
+// Sprach-Tabelle (DE / EN) – inkl. Tilla, Kompass & Toasts
+// ------------------------------------------------------
 const UI_STRINGS = {
   de: {
+    // Fehler / Status
     error_data_load:
       "Die Daten konnten gerade nicht geladen werden. Versuch es gleich noch einmal.",
     toast_location_ok:
       "Euer Standort ist gesetzt – viel Spaß beim nächsten Abenteuer! 🌍",
     toast_location_error:
       "Euer Standort lässt sich gerade nicht bestimmen. Vielleicht ist die Freigabe gesperrt oder ihr seid offline.",
+
+    // Buttons
     btn_show_list: "Liste zeigen",
     btn_only_map: "Nur Karte",
     btn_show_filters: "Filter anzeigen",
     btn_hide_filters: "Filter ausblenden",
     btn_show_compass: "Kompass anzeigen",
     btn_hide_compass: "Kompass ausblenden",
+
+    // Favoriten
     toast_fav_added: "Zu euren Lieblingsspots gelegt 💛",
     toast_fav_removed: "Aus den Lieblingsspots entfernt.",
+
+    // Filter allgemein
     filter_category_all: "Alle Kategorien",
+
+    // Plus-Code
     plus_code_empty: "Bitte gib zuerst einen Aktions-Code ein.",
     plus_code_unknown: "Dieser Code ist unbekannt oder nicht mehr gültig.",
     plus_code_activated:
       "Family Spots Plus wurde aktiviert – gute Fahrt & viel Freude auf euren Touren!",
     plus_code_failed:
       "Der Code konnte gerade nicht geprüft werden. Versuch es später noch einmal.",
+
+    // Radius
     filter_radius_max_label: "Alle Spots",
     filter_radius_description_step0:
       "Mini-Microabenteuer zu Fuß erreichbar – perfekt für eine kurze Pause.",
@@ -363,6 +361,8 @@ const UI_STRINGS = {
       "Großer Abenteuer-Radius – hier warten Ziele für ganze Tagesausflüge.",
     filter_radius_description_all:
       "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
+
+    // Tilla – Intro & Zustände
     turtle_intro_1:
       "Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!",
     turtle_intro_2:
@@ -379,15 +379,23 @@ const UI_STRINGS = {
       "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿",
     turtle_plus_activated:
       "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
+
+    // Mein Tag
     daylog_saved:
       "Dein Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern.",
+
+    // Header / Navigation (dynamisch)
     header_tagline: "Heute ist Zeit für Familie.",
     nav_map: "Karte",
     nav_about: "Über",
+
+    // Familien-Kompass
     compass_title: "Familien-Kompass",
     compass_helper:
       "Keine Lust auf lange Planung? Ich helfe euch, den Radius passend zu heute zu wählen – Alltag oder Unterwegs-Modus.",
     compass_apply_label: "Kompass anwenden",
+
+    // Routen-Links
     route_apple: "In Apple Karten öffnen",
     route_google: "In Google Maps öffnen"
   },
@@ -398,21 +406,26 @@ const UI_STRINGS = {
       "Your starting point is set – have fun on your next adventure!",
     toast_location_error:
       "We couldn’t access your location. Please check permissions or zoom into your region manually.",
+
     btn_show_list: "Show list",
     btn_only_map: "Map only",
     btn_show_filters: "Show filters",
     btn_hide_filters: "Hide filters",
     btn_show_compass: "Show compass",
     btn_hide_compass: "Hide compass",
+
     toast_fav_added: "Added to your favourite places.",
     toast_fav_removed: "Removed from your favourite places.",
+
     filter_category_all: "All categories",
+
     plus_code_empty: "Please enter an action code first.",
     plus_code_unknown: "This code is unknown or no longer valid.",
     plus_code_activated:
       "Family Spots Plus has been activated – enjoy your trips!",
     plus_code_failed:
       "The code could not be verified right now. Please try again later.",
+
     filter_radius_max_label: "All spots",
     filter_radius_description_step0:
       "Tiny micro adventures within walking distance – perfect for a quick break.",
@@ -424,6 +437,7 @@ const UI_STRINGS = {
       "Big adventure radius – destinations for full-day trips are waiting here.",
     filter_radius_description_all:
       "All spots – no radius limit. The map is all yours.",
+
     turtle_intro_1:
       "Hi, I’m Tilla – your turtle companion for slow & relaxed family adventures!",
     turtle_intro_2:
@@ -440,21 +454,27 @@ const UI_STRINGS = {
       "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿",
     turtle_plus_activated:
       "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨",
+
     daylog_saved:
       "Your day moment has been saved 💾 – you can look back on it later.",
+
     header_tagline: "Make today a family day.",
     nav_map: "Map",
     nav_about: "About",
+
     compass_title: "Family Compass",
     compass_helper:
       "Don’t feel like long planning today? I’ll help you pick a fitting radius – everyday mode or travel mode.",
     compass_apply_label: "Apply compass",
+
     route_apple: "Open in Apple Maps",
     route_google: "Open in Google Maps"
   }
-});
+};
 
-/* Spielideen für unterwegs */
+// ------------------------------------------------------
+// Spielideen für unterwegs – werden in Tilla angezeigt
+// ------------------------------------------------------
 const PLAY_IDEAS = {
   de: [
     "Spielidee: Wörter-Kette – ein Wort beginnen, das nächste muss mit dem letzten Buchstaben starten. Wie lange schafft ihr die Kette, ohne zu stocken?",
@@ -474,10 +494,9 @@ const PLAY_IDEAS = {
 
 const LAST_PLAY_IDEAS_INDEX = { de: -1, en: -1 };
 
-/* ------------------------------------------------------
- *  Globaler State
- * ---------------------------------------------------- */
-
+// ------------------------------------------------------
+// Globale State-Variablen
+// ------------------------------------------------------
 let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
@@ -499,9 +518,9 @@ let categoryFilter = "";
 let onlyBigAdventures = false;
 let onlyVerified = false;
 let onlyFavorites = false;
-let filtersCollapsed = true;
+let filtersCollapsed = true; // beim Start: Filter eingeklappt
 
-// DOM-Elemente (werden in init() befüllt)
+// DOM-Elemente
 let languageSwitcherEl;
 let themeToggleEl;
 let btnLocateEl;
@@ -544,6 +563,8 @@ let btnToggleCompassEl;
 
 // Tilla
 let tilla = null;
+
+// Button für Spielideen
 let playIdeasBtnEl = null;
 
 // Filter-Body innerhalb der Filter-Section
@@ -552,13 +573,16 @@ let filterBodyEls = [];
 // Fokus-Merkung für Detail-Panel
 let lastSpotTriggerEl = null;
 
-// Toast Timeout
-let toastTimeoutId = null;
+// ------------------------------------------------------
+// Generische Utilities
+// ------------------------------------------------------
 
-/* ------------------------------------------------------
- *  Kleine Utilities
- * ---------------------------------------------------- */
-
+/**
+ * Debounce-Helfer für Input-Handler
+ * @param {Function} fn
+ * @param {number} [delay=200]
+ * @returns {Function}
+ */
 function debounce(fn, delay = 200) {
   let timeoutId;
   return (...args) => {
@@ -567,6 +591,11 @@ function debounce(fn, delay = 200) {
   };
 }
 
+/**
+ * Aktiviert eine Aktion bei Enter oder Space (für Tastaturbedienung).
+ * @param {Function} handler
+ * @returns {(event: KeyboardEvent) => void}
+ */
 function activateOnEnterSpace(handler) {
   return (event) => {
     if (
@@ -580,60 +609,16 @@ function activateOnEnterSpace(handler) {
   };
 }
 
+/**
+ * Liefert die aktuelle Sprache-Tabelle oder DE-Fallback.
+ */
 function getCurrentStrings() {
   return UI_STRINGS[currentLang] || UI_STRINGS[LANG_DE];
 }
 
-function t(key) {
-  const table = getCurrentStrings();
-  return table[key] || key;
-}
-
-/** Label für eine Kategorie (Fallback: Slug → Wort mit Leerzeichen) */
-function getCategoryLabel(slug) {
-  if (!slug) return "";
-  const entry = CATEGORY_LABELS[slug];
-  if (entry) return entry[currentLang] || entry.de || slug;
-  return slug.replace(/[_-]/g, " ");
-}
-
-/** statische data-i18n-Texte updaten */
-function applyStaticI18n() {
-  document.querySelectorAll("[data-i18n-de]").forEach((el) => {
-    const attr = currentLang === LANG_DE ? "data-i18n-de" : "data-i18n-en";
-    const text = el.getAttribute(attr);
-    if (text) el.textContent = text;
-  });
-}
-
-function updateLanguageSwitcherVisual() {
-  if (!languageSwitcherEl) return;
-  const label = currentLang === LANG_DE ? "DE" : "EN";
-  languageSwitcherEl.textContent = label;
-  languageSwitcherEl.setAttribute(
-    "aria-label",
-    currentLang === LANG_DE
-      ? "Sprache: Deutsch (Tippen für Englisch)"
-      : "Language: English (tap for German)"
-  );
-}
-
-function showToast(keyOrMessage) {
-  if (!toastEl) return;
-  const strings = getCurrentStrings();
-  const message = strings[keyOrMessage] || keyOrMessage || "…";
-  toastEl.textContent = message;
-  toastEl.classList.add("toast--visible");
-  if (toastTimeoutId) clearTimeout(toastTimeoutId);
-  toastTimeoutId = window.setTimeout(
-    () => toastEl.classList.remove("toast--visible"),
-    3200
-  );
-}
-
-/* ------------------------------------------------------
- *  Sprache & Theme
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Utility: Sprache & Übersetzung
+// ------------------------------------------------------
 
 function getInitialLang() {
   const stored = localStorage.getItem("fs_lang");
@@ -647,54 +632,75 @@ function getInitialLang() {
   return htmlLang === LANG_EN ? LANG_EN : LANG_DE;
 }
 
-function getInitialTheme() {
-  const stored = localStorage.getItem("fs_theme");
-  if (stored === THEME_LIGHT || stored === THEME_DARK) return stored;
-  if (
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  ) {
-    return THEME_DARK;
-  }
-  return THEME_LIGHT;
+/**
+ * Übersetzungs-Funktion
+ * @param {string} key
+ * @returns {string}
+ */
+function t(key) {
+  const table = getCurrentStrings();
+  return table[key] || key;
 }
 
-function setTheme(theme) {
-  currentTheme = theme === THEME_DARK ? THEME_DARK : THEME_LIGHT;
-  localStorage.setItem("fs_theme", currentTheme);
-  document.documentElement.setAttribute("data-theme", currentTheme);
+/**
+ * @param {string} slug
+ * @returns {string}
+ */
+function getCategoryLabel(slug) {
+  if (!slug) return "";
+  const langMap =
+    currentLang === LANG_EN ? CATEGORY_LABELS_EN : CATEGORY_LABELS_DE;
+  const fallbackMap =
+    currentLang === LANG_EN ? CATEGORY_LABELS_DE : CATEGORY_LABELS_EN;
+
+  return (
+    langMap[slug] ||
+    fallbackMap[slug] ||
+    slug.replace(/[_-]/g, " ")
+  );
+}
+
+function applyStaticI18n() {
+  document.querySelectorAll("[data-i18n-de]").forEach((el) => {
+    const keyAttr = currentLang === LANG_DE ? "i18n-de" : "i18n-en";
+    const text = el.getAttribute(`data-${keyAttr}`);
+    if (text) el.textContent = text;
+  });
+}
+
+function updateLanguageSwitcherVisual() {
+  if (!languageSwitcherEl) return;
+
+  const label = currentLang === LANG_DE ? "DE" : "EN";
+  languageSwitcherEl.textContent = label;
+
+  languageSwitcherEl.setAttribute(
+    "aria-label",
+    currentLang === LANG_DE
+      ? "Sprache: Deutsch (Tippen für Englisch)"
+      : "Language: English (tap for German)"
+  );
 }
 
 function updatePlusStatusText() {
   if (!plusStatusTextEl) return;
+
   if (!FEATURES.plus || !plusActive) {
-    plusStatusTextEl.textContent =
-      currentLang === LANG_DE
-        ? "Family Spots Plus ist nicht aktiviert."
-        : "Family Spots Plus is not activated.";
+    plusStatusTextEl.textContent = "";
     return;
   }
+
   plusStatusTextEl.textContent =
     currentLang === LANG_DE
       ? "Family Spots Plus ist aktiv – zusätzliche Kategorien sind freigeschaltet."
       : "Family Spots Plus is active – additional categories have been unlocked.";
 }
 
-function updateCompassButtonLabel() {
-  if (!FEATURES.compass || !btnToggleCompassEl || !compassSectionEl) return;
-  const span = btnToggleCompassEl.querySelector("span");
-  if (!span) return;
-  const isOpen = !!compassSectionEl.open;
-  span.textContent = isOpen ? t("btn_hide_compass") : t("btn_show_compass");
-  btnToggleCompassEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
-}
-
-function updateCompassUI() {
-  if (!FEATURES.compass || !compassApplyBtnEl) return;
-  const shouldShow = !!travelMode;
-  compassApplyBtnEl.classList.toggle("hidden", !shouldShow);
-}
-
+/**
+ * Setzt Sprache, aktualisiert UI & speichert in localStorage.
+ * @param {"de"|"en"} lang
+ * @param {{initial?: boolean}} [options]
+ */
 function setLanguage(lang, { initial = false } = {}) {
   currentLang = lang === LANG_EN ? LANG_EN : LANG_DE;
   localStorage.setItem("fs_lang", currentLang);
@@ -761,6 +767,8 @@ function setLanguage(lang, { initial = false } = {}) {
   updateRadiusTexts();
 
   if (filterCategoryEl) {
+    const firstOption = filterCategoryEl.querySelector("option[value='']");
+    if (firstOption) firstOption.textContent = t("filter_category_all");
     populateCategoryOptions();
   }
 
@@ -771,33 +779,66 @@ function setLanguage(lang, { initial = false } = {}) {
   updateLanguageSwitcherVisual();
   applyStaticI18n();
   updatePlusStatusText();
-}
 
-/* ------------------------------------------------------
- *  Spielideen
- * ---------------------------------------------------- */
-
-function getRandomPlayIdea() {
-  const lang = currentLang === LANG_EN ? LANG_EN : LANG_DE;
-  const list = PLAY_IDEAS[lang];
-  if (!list || !list.length) return "";
-  let idx;
-  if (list.length === 1) {
-    idx = 0;
-  } else {
-    const last = LAST_PLAY_IDEAS_INDEX[lang];
-    do {
-      idx = Math.floor(Math.random() * list.length);
-    } while (idx === last);
+  if (!initial) {
+    const headerTitle = document.querySelector(".header-title");
+    if (headerTitle && typeof headerTitle.focus === "function") {
+      headerTitle.focus();
+    }
   }
-  LAST_PLAY_IDEAS_INDEX[lang] = idx;
-  return list[idx];
 }
 
-/* ------------------------------------------------------
- *  Map & Daten
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Theme
+// ------------------------------------------------------
+function getInitialTheme() {
+  const stored = localStorage.getItem("fs_theme");
+  if (stored === THEME_LIGHT || stored === THEME_DARK) return stored;
 
+  if (
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    return THEME_DARK;
+  }
+
+  return THEME_LIGHT;
+}
+
+function setTheme(theme) {
+  currentTheme = theme === THEME_DARK ? THEME_DARK : THEME_LIGHT;
+  localStorage.setItem("fs_theme", currentTheme);
+  document.documentElement.setAttribute("data-theme", currentTheme);
+}
+
+// ------------------------------------------------------
+// Toast
+// ------------------------------------------------------
+let toastTimeoutId = null;
+
+/**
+ * Zeigt einen Toast an. Akzeptiert UI-String-Key oder freie Message.
+ * @param {string} keyOrMessage
+ */
+function showToast(keyOrMessage) {
+  if (!toastEl) return;
+
+  const strings = getCurrentStrings();
+  const message = strings[keyOrMessage] || keyOrMessage || "…";
+
+  toastEl.textContent = message;
+  toastEl.classList.add("toast--visible");
+
+  if (toastTimeoutId) clearTimeout(toastTimeoutId);
+
+  toastTimeoutId = window.setTimeout(() => {
+    toastEl.classList.remove("toast--visible");
+  }, 3200);
+}
+
+// ------------------------------------------------------
+// Map / Spots – Setup
+// ------------------------------------------------------
 function initMap() {
   if (typeof L === "undefined" || typeof L.map !== "function") {
     console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
@@ -820,12 +861,18 @@ function initMap() {
   if (typeof L.markerClusterGroup === "function") {
     markersLayer = L.markerClusterGroup();
   } else {
+    console.warn(
+      "[Family Spots] markerClusterGroup nicht gefunden – nutze normale LayerGroup."
+    );
     markersLayer = L.layerGroup();
   }
 
   map.addLayer(markersLayer);
 }
 
+/**
+ * Lädt Spots aus data/spots.json, normalisiert Daten & triggert initiales Rendering.
+ */
 async function loadSpots() {
   try {
     const res = await fetch("data/spots.json", { cache: "no-cache" });
@@ -838,10 +885,12 @@ async function loadSpots() {
       /** @type {Spot} */
       const normalized = { ...spot };
 
+      // Normalisierung Koordinaten
       if (normalized.lon != null && normalized.lng == null) {
         normalized.lng = normalized.lon;
       }
 
+      // category vs categories-Fallback
       if (
         !normalized.category &&
         Array.isArray(normalized.categories) &&
@@ -850,6 +899,7 @@ async function loadSpots() {
         normalized.category = normalized.categories[0];
       }
 
+      // vorberechnete / gecachte Felder
       normalized._searchText = buildSpotSearchText(normalized);
       normalized._ageGroups = getSpotAgeGroups(normalized);
       normalized._moods = getSpotMoods(normalized);
@@ -867,12 +917,12 @@ async function loadSpots() {
   }
 }
 
-/* ------------------------------------------------------
- *  Favorites – Persistence
- * ---------------------------------------------------- */
-
+// ------------------------------------------------------
+// Favorites – Persistence
+// ------------------------------------------------------
 function loadFavoritesFromStorage() {
   if (!FEATURES.favorites) return;
+
   try {
     const stored = localStorage.getItem("fs_favorites");
     if (!stored) return;
@@ -885,17 +935,21 @@ function loadFavoritesFromStorage() {
 
 function saveFavoritesToStorage() {
   if (!FEATURES.favorites) return;
+
   try {
-    localStorage.setItem("fs_favorites", JSON.stringify([...favorites]));
+    localStorage.setItem("fs_favorites", JSON.stringify(Array.from(favorites)));
   } catch (err) {
     console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
   }
 }
 
-/* ------------------------------------------------------
- *  Spot-Helper
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Spots – General Helpers
+// ------------------------------------------------------
 
+/**
+ * @param {Spot} spot
+ */
 function getSpotName(spot) {
   return (
     spot.title ||
@@ -905,6 +959,9 @@ function getSpotName(spot) {
   );
 }
 
+/**
+ * @param {Spot} spot
+ */
 function getSpotSubtitle(spot) {
   if (spot.city && spot.country) return `${spot.city}, ${spot.country}`;
   if (spot.city) return spot.city;
@@ -913,22 +970,39 @@ function getSpotSubtitle(spot) {
   return spot.subtitle || spot.shortDescription || "";
 }
 
+/**
+ * @param {Spot} spot
+ */
 function getSpotId(spot) {
   return String(spot.id || getSpotName(spot));
 }
 
+/**
+ * @param {Spot} spot
+ */
 function isSpotPlusOnly(spot) {
   return !!spot.plusOnly || !!spot.plus;
 }
 
+/**
+ * @param {Spot} spot
+ */
 function isSpotBigAdventure(spot) {
   return !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
 }
 
+/**
+ * @param {Spot} spot
+ */
 function isSpotVerified(spot) {
   return !!spot.verified || !!spot.isVerified;
 }
 
+/**
+ * Meta-Info zu einem Spot zentral berechnen.
+ * @param {Spot} spot
+ * @returns {string[]}
+ */
 function getSpotMetaParts(spot) {
   const parts = [];
   if (spot.category) parts.push(getCategoryLabel(spot.category));
@@ -945,23 +1019,36 @@ function getSpotMetaParts(spot) {
   return parts;
 }
 
+/**
+ * Suchtext aus Spot zusammenbauen.
+ * @param {Spot} spot
+ * @returns {string}
+ */
 function buildSpotSearchText(spot) {
   if (spot._searchText) return spot._searchText;
+
   const parts = [
     getSpotName(spot),
     getSpotSubtitle(spot),
     spot.category,
     ...(Array.isArray(spot.tags) ? spot.tags : [])
   ].filter(Boolean);
+
   const text = parts.join(" ").toLowerCase();
   spot._searchText = text;
   return text;
 }
 
+/**
+ * @param {Spot} spot
+ * @returns {string[]}
+ */
 function getSpotAgeGroups(spot) {
   if (Array.isArray(spot._ageGroups)) return spot._ageGroups;
+
   const raw = spot.ageGroups || spot.age || spot.ages;
   let result = [];
+
   if (!raw) {
     result = [];
   } else if (Array.isArray(raw)) {
@@ -972,14 +1059,21 @@ function getSpotAgeGroups(spot) {
       .map((a) => a.trim())
       .filter(Boolean);
   }
+
   spot._ageGroups = result;
   return result;
 }
 
+/**
+ * @param {Spot} spot
+ * @returns {string[]}
+ */
 function getSpotMoods(spot) {
   if (Array.isArray(spot._moods)) return spot._moods;
+
   const raw = spot.moods || spot.moodTags || spot.mood;
   let result = [];
+
   if (!raw) {
     result = [];
   } else if (Array.isArray(raw)) {
@@ -990,14 +1084,21 @@ function getSpotMoods(spot) {
       .map((m) => m.trim())
       .filter(Boolean);
   }
+
   spot._moods = result;
   return result;
 }
 
+/**
+ * @param {Spot} spot
+ * @returns {string[]}
+ */
 function getSpotTravelModes(spot) {
   if (Array.isArray(spot._travelModes)) return spot._travelModes;
+
   const raw = spot.travelModes || spot.travel || spot.tripModes;
   let result = [];
+
   if (!raw) {
     result = [];
   } else if (Array.isArray(raw)) {
@@ -1008,102 +1109,148 @@ function getSpotTravelModes(spot) {
       .map((m) => m.trim())
       .filter(Boolean);
   }
+
   spot._travelModes = result;
   return result;
 }
 
+/**
+ * Routen-URLs für einen Spot berechnen.
+ * @param {Spot} spot
+ */
 function getRouteUrlsForSpot(spot) {
   if (!spot.lat || !spot.lng) return null;
+
   const { lat, lng } = spot;
   const name = getSpotName(spot);
   const encodedName = encodeURIComponent(name || "");
+
   return {
     apple: `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`,
     google: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
   };
 }
 
-/* ------------------------------------------------------
- *  Kategorien-Dropdown mit Gruppen
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Spielideen
+// ------------------------------------------------------
 
+/**
+ * Liefert eine zufällige Spielidee, ohne die letzte zu wiederholen.
+ * @returns {string}
+ */
+function getRandomPlayIdea() {
+  const lang = currentLang === LANG_EN ? LANG_EN : LANG_DE;
+  const list = PLAY_IDEAS[lang];
+  if (!list || !list.length) return "";
+
+  let idx;
+  if (list.length === 1) {
+    idx = 0;
+  } else {
+    const last = LAST_PLAY_IDEAS_INDEX[lang];
+    do {
+      idx = Math.floor(Math.random() * list.length);
+    } while (idx === last);
+  }
+  LAST_PLAY_IDEAS_INDEX[lang] = idx;
+  return list[idx];
+}
+
+// ------------------------------------------------------
+// Kategorien / Filter-Dropdown
+// ------------------------------------------------------
 function populateCategoryOptions() {
   if (!filterCategoryEl) return;
 
-  // Alle Slugs aus Labels & Spots sammeln
-  const allSlugsSet = new Set(Object.keys(CATEGORY_LABELS));
+  const firstOption =
+    filterCategoryEl.querySelector("option[value='']") ||
+    document.createElement("option");
+  firstOption.value = "";
+  firstOption.textContent = t("filter_category_all");
+
+  filterCategoryEl.innerHTML = "";
+  filterCategoryEl.appendChild(firstOption);
+
+  // 1. Kategorien aus den definierten Gruppen
+  const groupedSlugs = new Set();
+
+  Object.entries(CATEGORY_GROUPS).forEach(([groupKey, slugs]) => {
+    if (!Array.isArray(slugs) || !slugs.length) return;
+
+    const groupLabel =
+      (CATEGORY_GROUP_LABELS[currentLang] &&
+        CATEGORY_GROUP_LABELS[currentLang][groupKey]) ||
+      groupKey;
+
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = groupLabel;
+
+    slugs.forEach((slug) => {
+      if (!slug) return;
+      groupedSlugs.add(slug);
+      const opt = document.createElement("option");
+      opt.value = slug;
+      opt.textContent = getCategoryLabel(slug);
+      optgroup.appendChild(opt);
+    });
+
+    filterCategoryEl.appendChild(optgroup);
+  });
+
+  // 2. Weitere Kategorien aus den Spots, die nicht in CATEGORY_GROUPS stehen
+  const extraSet = new Set();
 
   spots.forEach((spot) => {
     if (Array.isArray(spot.categories)) {
-      spot.categories.forEach((c) => c && allSlugsSet.add(String(c)));
-    } else if (spot.category) {
-      allSlugsSet.add(String(spot.category));
+      spot.categories.forEach((c) => {
+        if (!c) return;
+        if (!groupedSlugs.has(c)) extraSet.add(c);
+      });
+    } else if (spot.category && !groupedSlugs.has(spot.category)) {
+      extraSet.add(spot.category);
     }
   });
 
-  // Select leeren
-  filterCategoryEl.innerHTML = "";
+  if (extraSet.size > 0) {
+    const extraGroup = document.createElement("optgroup");
+    extraGroup.label =
+      currentLang === LANG_DE ? "Weitere Kategorien" : "Other categories";
 
-  // "Alle Kategorien"
-  const allOpt = document.createElement("option");
-  allOpt.value = "";
-  allOpt.textContent = t("filter_category_all");
-  filterCategoryEl.appendChild(allOpt);
+    Array.from(extraSet)
+      .sort((a, b) =>
+        getCategoryLabel(a)
+          .toLowerCase()
+          .localeCompare(
+            getCategoryLabel(b).toLowerCase(),
+            currentLang === LANG_DE ? "de" : "en"
+          )
+      )
+      .forEach((slug) => {
+        const opt = document.createElement("option");
+        opt.value = slug;
+        opt.textContent = getCategoryLabel(slug);
+        extraGroup.appendChild(opt);
+      });
 
-  const usedSlugs = new Set();
-
-  // Gruppen in definierter Reihenfolge
-  Object.entries(CATEGORY_GROUPS).forEach(([groupKey, groupSlugs]) => {
-    const validSlugs = groupSlugs.filter((slug) => allSlugsSet.has(slug));
-    if (!validSlugs.length) return;
-
-    const og = document.createElement("optgroup");
-    const groupLabelEntry = CATEGORY_GROUP_LABELS[groupKey];
-    og.label =
-      groupLabelEntry?.[currentLang] || groupLabelEntry?.de || groupKey;
-
-    validSlugs.forEach((slug) => {
-      usedSlugs.add(slug);
-      const opt = document.createElement("option");
-      opt.value = slug;
-      opt.textContent = getCategoryLabel(slug);
-      og.appendChild(opt);
-    });
-
-    filterCategoryEl.appendChild(og);
-  });
-
-  // Übrige Kategorien (z. B. alte Keys oder Sonderfälle)
-  const remaining = [...allSlugsSet].filter((slug) => !usedSlugs.has(slug));
-
-  if (remaining.length) {
-    remaining.sort((a, b) => {
-      const la = getCategoryLabel(a).toLowerCase();
-      const lb = getCategoryLabel(b).toLowerCase();
-      return la.localeCompare(lb, currentLang === LANG_DE ? "de" : "en");
-    });
-
-    const og = document.createElement("optgroup");
-    og.label =
-      currentLang === LANG_DE ? "Weitere Kategorien" : "More categories";
-
-    remaining.forEach((slug) => {
-      const opt = document.createElement("option");
-      opt.value = slug;
-      opt.textContent = getCategoryLabel(slug);
-      og.appendChild(opt);
-    });
-
-    filterCategoryEl.appendChild(og);
+    filterCategoryEl.appendChild(extraGroup);
   }
 
   filterCategoryEl.value = categoryFilter || "";
 }
 
-/* ------------------------------------------------------
- *  Radius & Distanz
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Radius / Geodistanz
+// ------------------------------------------------------
 
+/**
+ * Prüft, ob Spot im Radius liegt. Bei fehlender Map oder ungültigem Center
+ * wird kein Radius angewendet (Spot bleibt drin).
+ * @param {Spot} spot
+ * @param {any} centerLatLng
+ * @param {number} radiusKm
+ * @returns {boolean}
+ */
 function isSpotInRadius(spot, centerLatLng, radiusKm) {
   if (
     !map ||
@@ -1129,6 +1276,7 @@ function updateRadiusTexts() {
 
   const value = parseInt(filterRadiusEl.value, 10);
   radiusStep = Number.isNaN(value) ? 4 : value;
+
   filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
 
   if (radiusStep === 4) {
@@ -1142,12 +1290,19 @@ function updateRadiusTexts() {
   }
 }
 
-/* ------------------------------------------------------
- *  Filterlogik
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Filterlogik (zentral)
+// ------------------------------------------------------
 
+/**
+ * Prüft, ob ein Spot zur aktuellen Filterkonfiguration passt.
+ * @param {Spot} spot
+ * @param {{center: any, radiusKm: number}} ctx
+ */
 function doesSpotMatchFilters(spot, { center, radiusKm }) {
-  if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) return false;
+  if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) {
+    return false;
+  }
 
   if (searchTerm) {
     const term = searchTerm.toLowerCase();
@@ -1158,38 +1313,54 @@ function doesSpotMatchFilters(spot, { center, radiusKm }) {
   if (categoryFilter) {
     const filterSlug = String(categoryFilter);
     const categories = [];
+
     if (Array.isArray(spot.categories)) {
       categories.push(...spot.categories.map(String));
     } else if (spot.category || spot.type) {
       categories.push(String(spot.category || spot.type));
     }
+
     if (!categories.some((c) => c === filterSlug)) return false;
   }
 
   if (ageFilter && ageFilter !== "all") {
     const ages = getSpotAgeGroups(spot);
-    if (ages.length && !ages.includes(ageFilter)) return false;
+    if (ages.length && !ages.includes(ageFilter)) {
+      return false;
+    }
   }
 
   if (FEATURES.moodFilter && moodFilter) {
     const moods = getSpotMoods(spot);
-    if (moods.length && !moods.includes(moodFilter)) return false;
+    if (moods.length && !moods.includes(moodFilter)) {
+      return false;
+    }
   }
 
   if (FEATURES.travelMode && travelMode) {
     const modes = getSpotTravelModes(spot);
-    if (modes.length && !modes.includes(travelMode)) return false;
+    if (modes.length && !modes.includes(travelMode)) {
+      return false;
+    }
   }
 
-  if (FEATURES.bigAdventureFilter && onlyBigAdventures && !isSpotBigAdventure(spot))
+  if (
+    FEATURES.bigAdventureFilter &&
+    onlyBigAdventures &&
+    !isSpotBigAdventure(spot)
+  ) {
     return false;
+  }
 
-  if (FEATURES.verifiedFilter && onlyVerified && !isSpotVerified(spot))
+  if (FEATURES.verifiedFilter && onlyVerified && !isSpotVerified(spot)) {
     return false;
+  }
 
   if (FEATURES.favorites && onlyFavorites) {
     const id = getSpotId(spot);
-    if (!favorites.has(id)) return false;
+    if (!favorites.has(id)) {
+      return false;
+    }
   }
 
   if (!isSpotInRadius(spot, center, radiusKm)) return false;
@@ -1197,23 +1368,30 @@ function doesSpotMatchFilters(spot, { center, radiusKm }) {
   return true;
 }
 
+/**
+ * Führt Filterung durch & rendert Liste und Marker.
+ */
 function applyFiltersAndRender() {
   if (!spots.length) {
     filteredSpots = [];
     renderSpotList();
     renderMarkers();
-    if (tilla?.onNoSpotsFound) tilla.onNoSpotsFound();
+
+    if (tilla && typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
+    }
     return;
   }
 
   let center = null;
-  if (map?.getCenter) {
+  if (map && typeof map.getCenter === "function") {
     center = map.getCenter();
-  } else if (typeof L !== "undefined" && L.latLng) {
+  } else if (typeof L !== "undefined" && typeof L.latLng === "function") {
     center = L.latLng(DEFAULT_MAP_CENTER[0], DEFAULT_MAP_CENTER[1]);
   }
 
   const radiusKm = RADIUS_STEPS_KM[radiusStep] ?? Infinity;
+
   filteredSpots = spots.filter((spot) =>
     doesSpotMatchFilters(spot, { center, radiusKm })
   );
@@ -1223,16 +1401,18 @@ function applyFiltersAndRender() {
 
   if (!tilla) return;
 
-  if (!filteredSpots.length && tilla.onNoSpotsFound) {
-    tilla.onNoSpotsFound();
-  } else if (filteredSpots.length && tilla.onSpotsFound) {
+  if (filteredSpots.length === 0) {
+    if (typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
+    }
+  } else if (typeof tilla.onSpotsFound === "function") {
     tilla.onSpotsFound();
   }
 }
 
-/* ------------------------------------------------------
- *  Marker & Liste
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Marker & Liste
+// ------------------------------------------------------
 
 function renderMarkers() {
   if (!markersLayer) return;
@@ -1259,9 +1439,10 @@ function renderMarkers() {
 
     const name = getSpotName(spot);
     const subtitle = getSpotSubtitle(spot);
-    const routeUrls = getRouteUrlsForSpot(spot);
 
     let routesHtml = "";
+    const routeUrls = getRouteUrlsForSpot(spot);
+
     if (routeUrls) {
       routesHtml = `
         <div class="popup-actions">
@@ -1271,18 +1452,24 @@ function renderMarkers() {
           <a class="popup-link" href="${routeUrls.google}" target="_blank" rel="noopener noreferrer">${t(
             "route_google"
           )}</a>
-        </div>`;
+        </div>
+      `;
     }
 
     const popupHtml = `
       <div class="popup">
-        <strong>${name}</strong><br />
+        <strong>${name}</strong><br/>
         <small>${subtitle || ""}</small>
         ${routesHtml}
-      </div>`;
+      </div>
+    `;
 
     marker.bindPopup(popupHtml);
-    marker.on("click", () => focusSpotOnMap(spot));
+
+    marker.on("click", () => {
+      focusSpotOnMap(spot);
+    });
+
     markersLayer.addLayer(marker);
   });
 }
@@ -1307,6 +1494,8 @@ function renderSpotList() {
     card.className = "spot-card";
     const spotId = getSpotId(spot);
     card.dataset.spotId = spotId;
+
+    // Tastatur-fokussierbar + Button-Rolle
     card.tabIndex = 0;
     card.setAttribute("role", "button");
 
@@ -1321,8 +1510,11 @@ function renderSpotList() {
 
     const metaEl = document.createElement("p");
     metaEl.className = "spot-card-meta";
+
     const metaParts = getSpotMetaParts(spot);
-    if (Array.isArray(spot.tags)) metaParts.push(spot.tags.join(", "));
+    if (Array.isArray(spot.tags)) {
+      metaParts.push(spot.tags.join(", "));
+    }
     metaEl.textContent = metaParts.join(" · ");
 
     const headerRow = document.createElement("div");
@@ -1337,12 +1529,15 @@ function renderSpotList() {
       const favBtn = document.createElement("button");
       favBtn.type = "button";
       favBtn.className = "btn-ghost btn-small";
+
       syncFavButtonState(favBtn, spotId);
+
       favBtn.addEventListener("click", (ev) => {
         ev.stopPropagation();
         toggleFavorite(spot);
         syncFavButtonState(favBtn, spotId);
       });
+
       headerRow.appendChild(favBtn);
     }
 
@@ -1367,9 +1562,29 @@ function renderSpotList() {
   });
 }
 
-/* ------------------------------------------------------
- *  Detailpanel
- * ---------------------------------------------------- */
+/**
+ * Synchronisiert Icon & aria-label eines Favoriten-Buttons mit dem Zustand.
+ * @param {HTMLButtonElement} btn
+ * @param {string} spotId
+ */
+function syncFavButtonState(btn, spotId) {
+  const isFav = favorites.has(spotId);
+  btn.textContent = isFav ? "★" : "☆";
+  btn.setAttribute(
+    "aria-label",
+    isFav
+      ? currentLang === LANG_DE
+        ? "Aus Favoriten entfernen"
+        : "Remove from favourites"
+      : currentLang === LANG_DE
+      ? "Zu Favoriten hinzufügen"
+      : "Add to favourites"
+  );
+}
+
+// ------------------------------------------------------
+// Detail-Panel
+// ------------------------------------------------------
 
 function focusSpotOnMap(spot) {
   if (!map || !spot.lat || !spot.lng) {
@@ -1381,18 +1596,33 @@ function focusSpotOnMap(spot) {
   showSpotDetails(spot);
 }
 
-function closeSpotDetails({ returnFocus = true } = {}) {
+function closeSpotDetails(options = {}) {
+  const { returnFocus = true } = options;
+
   if (!spotDetailEl) return;
+
   spotDetailEl.classList.add("spot-details--hidden");
   spotDetailEl.innerHTML = "";
-  if (returnFocus && lastSpotTriggerEl?.focus) {
+
+  if (
+    returnFocus &&
+    lastSpotTriggerEl &&
+    typeof lastSpotTriggerEl.focus === "function"
+  ) {
     lastSpotTriggerEl.focus();
   }
 }
 
+/**
+ * Rendert Detail-Panel für einen Spot.
+ * @param {Spot} spot
+ */
 function showSpotDetails(spot) {
   if (!spotDetailEl) return;
+
   const spotId = getSpotId(spot);
+  const isFav = favorites.has(spotId);
+
   const name = getSpotName(spot);
   const subtitle = getSpotSubtitle(spot);
   const metaParts = getSpotMetaParts(spot);
@@ -1421,10 +1651,10 @@ function showSpotDetails(spot) {
   headerEl.className = "spot-details-header";
 
   const titleWrapperEl = document.createElement("div");
+
   const titleEl = document.createElement("h3");
   titleEl.className = "spot-details-title";
   titleEl.textContent = name;
-  titleWrapperEl.appendChild(titleEl);
 
   if (subtitle && !addressText) {
     const subtitleEl = document.createElement("p");
@@ -1432,6 +1662,8 @@ function showSpotDetails(spot) {
     subtitleEl.textContent = subtitle;
     titleWrapperEl.appendChild(subtitleEl);
   }
+
+  titleWrapperEl.insertBefore(titleEl, titleWrapperEl.firstChild);
 
   const actionsEl = document.createElement("div");
   actionsEl.className = "spot-details-actions";
@@ -1452,9 +1684,10 @@ function showSpotDetails(spot) {
   closeBtn.type = "button";
   closeBtn.className = "btn-ghost btn-small";
   closeBtn.textContent = currentLang === LANG_DE ? "Schließen" : "Close";
-  closeBtn.addEventListener("click", () =>
-    closeSpotDetails({ returnFocus: true })
-  );
+  closeBtn.addEventListener("click", () => {
+    closeSpotDetails({ returnFocus: true });
+  });
+
   actionsEl.appendChild(closeBtn);
 
   headerEl.appendChild(titleWrapperEl);
@@ -1468,20 +1701,14 @@ function showSpotDetails(spot) {
     metaEl.appendChild(span);
   });
 
-  spotDetailEl.appendChild(headerEl);
-  spotDetailEl.appendChild(metaEl);
-
-  if (tags.length) {
-    const tagsEl = document.createElement("div");
-    tagsEl.className = "spot-details-tags";
-    tags.forEach((tag) => {
-      const span = document.createElement("span");
-      span.className = "badge";
-      span.textContent = tag;
-      tagsEl.appendChild(span);
-    });
-    spotDetailEl.appendChild(tagsEl);
-  }
+  const tagsEl = document.createElement("div");
+  tagsEl.className = "spot-details-tags";
+  tags.forEach((tag) => {
+    const span = document.createElement("span");
+    span.className = "badge";
+    span.textContent = tag;
+    tagsEl.appendChild(span);
+  });
 
   if (description) {
     const descEl = document.createElement("p");
@@ -1518,31 +1745,28 @@ function showSpotDetails(spot) {
 
     routesEl.appendChild(appleLink);
     routesEl.appendChild(googleLink);
+
     spotDetailEl.appendChild(routesEl);
+  }
+
+  spotDetailEl.insertBefore(metaEl, spotDetailEl.firstChild);
+  spotDetailEl.insertBefore(headerEl, spotDetailEl.firstChild);
+  if (tags.length) {
+    spotDetailEl.appendChild(tagsEl);
   }
 }
 
-/* ------------------------------------------------------
- *  Favoriten
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Favoriten
+// ------------------------------------------------------
 
-function syncFavButtonState(btn, spotId) {
-  const isFav = favorites.has(spotId);
-  btn.textContent = isFav ? "★" : "☆";
-  btn.setAttribute(
-    "aria-label",
-    isFav
-      ? currentLang === LANG_DE
-        ? "Aus Favoriten entfernen"
-        : "Remove from favourites"
-      : currentLang === LANG_DE
-      ? "Zu Favoriten hinzufügen"
-      : "Add to favourites"
-  );
-}
-
+/**
+ * Toggles Favourite-Status & triggert Nebenwirkungen (Toast, Tilla, Liste).
+ * @param {Spot} spot
+ */
 function toggleFavorite(spot) {
   if (!FEATURES.favorites) return;
+
   const spotId = getSpotId(spot);
   const wasFavorite = favorites.has(spotId);
 
@@ -1553,82 +1777,141 @@ function toggleFavorite(spot) {
   }
 
   saveFavoritesToStorage();
-  showToast(wasFavorite ? "toast_fav_removed" : "toast_fav_added");
+
+  const toastKey = wasFavorite ? "toast_fav_removed" : "toast_fav_added";
+  showToast(toastKey);
 
   if (tilla) {
-    const cb = wasFavorite ? tilla.onFavoriteRemoved : tilla.onFavoriteAdded;
-    if (typeof cb === "function") cb.call(tilla);
+    const callbackName = wasFavorite ? "onFavoriteRemoved" : "onFavoriteAdded";
+    const callback = tilla[callbackName];
+    if (typeof callback === "function") {
+      callback.call(tilla);
+    }
   }
 
+  // Liste neu aufbauen, damit Icons & Filter (nur Favoriten) stimmen
   renderSpotList();
 }
 
-/* ------------------------------------------------------
- *  Kompass & Plus & Mein Tag
- * ---------------------------------------------------- */
+// ------------------------------------------------------
+// Kompass
+// ------------------------------------------------------
+function updateCompassButtonLabel() {
+  if (!FEATURES.compass) return;
+  if (!btnToggleCompassEl || !compassSectionEl) return;
+  const span = btnToggleCompassEl.querySelector("span");
+  if (!span) return;
+  const isOpen = !!compassSectionEl.open;
+  span.textContent = isOpen ? t("btn_hide_compass") : t("btn_show_compass");
+  btnToggleCompassEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
+function updateCompassUI() {
+  if (!compassApplyBtnEl) return;
+
+  if (!FEATURES.compass) {
+    compassApplyBtnEl.classList.add("hidden");
+    return;
+  }
+
+  const shouldShow = !!travelMode;
+  compassApplyBtnEl.classList.toggle("hidden", !shouldShow);
+}
 
 function handleCompassApply() {
-  if (!FEATURES.compass || !filterRadiusEl) return;
+  if (!FEATURES.compass) return;
+  if (!filterRadiusEl) return;
+
+  // einfache Heuristik: Alltag = mittlerer Radius, Reise = großer Radius
   radiusStep = travelMode === "everyday" || !travelMode ? 1 : 3;
+
   filterRadiusEl.value = String(radiusStep);
   updateRadiusTexts();
   applyFiltersAndRender();
-  if (tilla?.onCompassApplied) {
+
+  if (tilla && typeof tilla.onCompassApplied === "function") {
     tilla.onCompassApplied({ travelMode, radiusStep });
   }
 }
 
 function handleToggleCompass() {
-  if (!FEATURES.compass || !compassSectionEl) return;
+  if (!FEATURES.compass) return;
+  if (!compassSectionEl) return;
   compassSectionEl.open = !compassSectionEl.open;
   updateCompassButtonLabel();
 }
 
-function loadPlusStateFromStorage({ reapplyFilters = false } = {}) {
+// ------------------------------------------------------
+// Plus-Code (mit Persistenz)
+// ------------------------------------------------------
+
+function loadPlusStateFromStorage(options = {}) {
+  const { reapplyFilters = false } = options;
+
   if (!FEATURES.plus) {
     plusActive = false;
     updatePlusStatusText();
     return;
   }
+
   try {
     plusActive = localStorage.getItem(PLUS_STORAGE_KEY) === "1";
-  } catch {
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Plus-Status nicht laden:", err);
     plusActive = false;
   }
   updatePlusStatusText();
-  if (reapplyFilters && spots.length) applyFiltersAndRender();
+
+  if (reapplyFilters && spots.length) {
+    applyFiltersAndRender();
+  }
 }
 
 function handlePlusCodeSubmit() {
-  if (!FEATURES.plus || !plusCodeInputEl || !plusStatusTextEl) return;
+  if (!FEATURES.plus) return;
+  if (!plusCodeInputEl || !plusStatusTextEl) return;
   const raw = plusCodeInputEl.value.trim();
+
   if (!raw) {
     showToast("plus_code_empty");
     return;
   }
+
   if (raw.length < 4) {
     showToast("plus_code_unknown");
     return;
   }
 
+  // TODO: Später durch echten Backend-Check ersetzen
   plusActive = true;
   try {
     localStorage.setItem(PLUS_STORAGE_KEY, "1");
-  } catch {
-    /* ignore */
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Plus-Status nicht speichern:", err);
   }
 
   showToast("plus_code_activated");
   updatePlusStatusText();
-  if (tilla?.onPlusActivated) tilla.onPlusActivated();
+
+  if (tilla && typeof tilla.onPlusActivated === "function") {
+    tilla.onPlusActivated();
+  }
+
   applyFiltersAndRender();
 }
 
+// ------------------------------------------------------
+// Mein Tag
+// ------------------------------------------------------
+
 function loadDaylogFromStorage() {
-  if (!FEATURES.daylog || !daylogTextEl) return;
+  if (!FEATURES.daylog) return;
+  if (!daylogTextEl) return;
+
   try {
     const stored = localStorage.getItem(DAYLOG_STORAGE_KEY);
     if (!stored) return;
+
     const parsed = JSON.parse(stored);
     if (parsed && typeof parsed.text === "string") {
       daylogTextEl.value = parsed.text;
@@ -1639,11 +1922,16 @@ function loadDaylogFromStorage() {
 }
 
 function handleDaylogSave() {
-  if (!FEATURES.daylog || !daylogTextEl) return;
+  if (!FEATURES.daylog) return;
+  if (!daylogTextEl) return;
   const text = daylogTextEl.value.trim();
   if (!text) return;
 
-  const payload = { text, ts: Date.now() };
+  const payload = {
+    text,
+    ts: Date.now()
+  };
+
   try {
     localStorage.setItem(DAYLOG_STORAGE_KEY, JSON.stringify(payload));
   } catch (err) {
@@ -1651,13 +1939,14 @@ function handleDaylogSave() {
   }
 
   showToast("daylog_saved");
-  if (tilla?.onDaylogSaved) tilla.onDaylogSaved();
+  if (tilla && typeof tilla.onDaylogSaved === "function") {
+    tilla.onDaylogSaved();
+  }
 }
 
-/* ------------------------------------------------------
- *  Geolocation & Navigation
- * ---------------------------------------------------- */
-
+// ------------------------------------------------------
+// Geolocation
+// ------------------------------------------------------
 function handleLocateClick() {
   if (!navigator.geolocation || !map) {
     showToast("toast_location_error");
@@ -1670,17 +1959,24 @@ function handleLocateClick() {
       map.setView([latitude, longitude], 13);
       showToast("toast_location_ok");
     },
-    () => showToast("toast_location_error"),
+    () => {
+      showToast("toast_location_error");
+    },
     { enableHighAccuracy: true, timeout: 8000 }
   );
 }
 
+// ------------------------------------------------------
+// Navigation (Karte / Über)
+// ------------------------------------------------------
 function switchRoute(route) {
   if (!viewMapEl || !viewAboutEl || !bottomNavButtons) return;
+
   const showMap = route !== "about";
 
   viewMapEl.classList.toggle("view--active", showMap);
   viewAboutEl.classList.toggle("view--active", !showMap);
+
   viewMapEl.style.display = showMap ? "block" : "none";
   viewAboutEl.style.display = showMap ? "none" : "block";
 
@@ -1694,12 +1990,12 @@ function switchRoute(route) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-/* ------------------------------------------------------
- *  Filter-Umschalter & View-Toggle
- * ---------------------------------------------------- */
-
+// ------------------------------------------------------
+// Filter-Umschalter & View-Toggle
+// ------------------------------------------------------
 function handleToggleFilters() {
   if (!btnToggleFiltersEl || !filterBodyEls.length) return;
+
   filtersCollapsed = !filtersCollapsed;
   const isExpanded = !filtersCollapsed;
 
@@ -1713,6 +2009,7 @@ function handleToggleFilters() {
       ? t("btn_show_filters")
       : t("btn_hide_filters");
   }
+
   btnToggleFiltersEl.setAttribute("aria-expanded", isExpanded ? "true" : "false");
 }
 
@@ -1720,20 +2017,25 @@ function handleToggleView() {
   if (!sidebarEl || !btnToggleViewEl) return;
   const isHidden = sidebarEl.classList.toggle("hidden");
   const span = btnToggleViewEl.querySelector("span");
-  if (span) span.textContent = isHidden ? t("btn_show_list") : t("btn_only_map");
+  if (span) {
+    span.textContent = isHidden ? t("btn_show_list") : t("btn_only_map");
+  }
+
   btnToggleViewEl.setAttribute("aria-pressed", isHidden ? "true" : "false");
+
   if (map) {
-    window.setTimeout(() => map.invalidateSize(), 300);
+    window.setTimeout(() => {
+      map.invalidateSize();
+    }, 300);
   }
 }
 
-/* ------------------------------------------------------
- *  Init
- * ---------------------------------------------------- */
-
+// ------------------------------------------------------
+// Initialisierung
+// ------------------------------------------------------
 function init() {
   try {
-    // DOM holen
+    // DOM
     languageSwitcherEl = document.getElementById("language-switcher");
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
@@ -1763,6 +2065,7 @@ function init() {
 
     btnToggleFiltersEl = document.getElementById("btn-toggle-filters");
     btnToggleViewEl = document.getElementById("btn-toggle-view");
+
     playIdeasBtnEl = document.getElementById("btn-play-idea");
 
     filterSearchEl = document.getElementById("filter-search");
@@ -1797,7 +2100,8 @@ function init() {
     compassApplyBtnEl = document.getElementById("compass-apply");
     btnToggleCompassEl = document.getElementById("btn-toggle-compass");
 
-    if (btnToggleFiltersEl && filterSectionEl?.id) {
+    // ARIA-Grundzustand
+    if (btnToggleFiltersEl && filterSectionEl && filterSectionEl.id) {
       btnToggleFiltersEl.setAttribute("aria-controls", filterSectionEl.id);
       btnToggleFiltersEl.setAttribute("aria-expanded", "false");
     }
@@ -1809,45 +2113,75 @@ function init() {
     ) {
       btnToggleCompassEl.setAttribute("aria-controls", compassSectionEl.id);
       btnToggleCompassEl.setAttribute("aria-expanded", "false");
+    }
+
+    if (compassSectionEl) {
       compassSectionEl.open = false;
     }
 
-    // Sprache & Theme initialisieren
+    // Sprache / Theme / Map
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
 
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
 
-    // Map
     initMap();
+
     if (map && spotDetailEl) {
-      map.on("click", () => closeSpotDetails({ returnFocus: true }));
+      map.on("click", () => {
+        closeSpotDetails({ returnFocus: true });
+      });
     }
 
     // Tilla
-    tilla = new TillaCompanion({ getText: (key) => t(key) });
-
-    // Events – Sprache / Theme
-    languageSwitcherEl?.addEventListener("click", () => {
-      const nextLang = currentLang === LANG_DE ? LANG_EN : LANG_DE;
-      setLanguage(nextLang);
+    tilla = new TillaCompanion({
+      getText: (key) => t(key)
     });
 
-    themeToggleEl?.addEventListener("click", () => {
-      setTheme(currentTheme === THEME_LIGHT ? THEME_DARK : THEME_LIGHT);
-    });
+    // Events – Sprache
+    if (languageSwitcherEl) {
+      languageSwitcherEl.addEventListener("click", () => {
+        const nextLang = currentLang === LANG_DE ? LANG_EN : LANG_DE;
+        setLanguage(nextLang);
+      });
+    }
 
-    btnLocateEl?.addEventListener("click", handleLocateClick);
-    btnHelpEl?.addEventListener("click", () => switchRoute("about"));
+    if (themeToggleEl) {
+      themeToggleEl.addEventListener("click", () => {
+        setTheme(currentTheme === THEME_LIGHT ? THEME_DARK : THEME_LIGHT);
+      });
+    }
 
-    // Bottom-Nav
-    document
-      .querySelector('.bottom-nav-item[data-route="map"]')
-      ?.addEventListener("click", () => switchRoute("map"));
-    document
-      .querySelector('.bottom-nav-item[data-route="about"]')
-      ?.addEventListener("click", () => switchRoute("about"));
+    if (btnLocateEl) {
+      btnLocateEl.addEventListener("click", handleLocateClick);
+    }
+
+    if (btnHelpEl) {
+      btnHelpEl.addEventListener("click", () => {
+        switchRoute("about");
+      });
+    }
+
+    // Bottom-Navigation
+    const bottomNavMapBtn = document.querySelector(
+      '.bottom-nav-item[data-route="map"]'
+    );
+    const bottomNavAboutBtn = document.querySelector(
+      '.bottom-nav-item[data-route="about"]'
+    );
+
+    if (bottomNavMapBtn) {
+      bottomNavMapBtn.addEventListener("click", () => {
+        switchRoute("map");
+      });
+    }
+
+    if (bottomNavAboutBtn) {
+      bottomNavAboutBtn.addEventListener("click", () => {
+        switchRoute("about");
+      });
+    }
 
     // Filter-Events
     if (filterSearchEl) {
@@ -1855,25 +2189,31 @@ function init() {
         searchTerm = value.trim();
         applyFiltersAndRender();
       }, 200);
-      filterSearchEl.addEventListener("input", (e) =>
-        applySearch(e.target.value)
-      );
+
+      filterSearchEl.addEventListener("input", (e) => {
+        applySearch(e.target.value);
+      });
     }
 
-    filterCategoryEl?.addEventListener("change", (e) => {
-      categoryFilter = e.target.value;
-      applyFiltersAndRender();
-    });
+    if (filterCategoryEl) {
+      filterCategoryEl.addEventListener("change", (e) => {
+        categoryFilter = e.target.value;
+        applyFiltersAndRender();
+      });
+    }
 
-    filterAgeEl?.addEventListener("change", (e) => {
-      ageFilter = e.target.value;
-      applyFiltersAndRender();
-    });
+    if (filterAgeEl) {
+      filterAgeEl.addEventListener("change", (e) => {
+        ageFilter = e.target.value;
+        applyFiltersAndRender();
+      });
+    }
 
     if (filterRadiusEl) {
       filterRadiusEl.setAttribute("aria-valuemin", "0");
       filterRadiusEl.setAttribute("aria-valuemax", "4");
       filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value || "4");
+
       filterRadiusEl.addEventListener("input", () => {
         updateRadiusTexts();
         applyFiltersAndRender();
@@ -1881,15 +2221,19 @@ function init() {
       updateRadiusTexts();
     }
 
-    filterBigEl?.addEventListener("change", (e) => {
-      onlyBigAdventures = e.target.checked;
-      applyFiltersAndRender();
-    });
+    if (filterBigEl) {
+      filterBigEl.addEventListener("change", (e) => {
+        onlyBigAdventures = e.target.checked;
+        applyFiltersAndRender();
+      });
+    }
 
-    filterVerifiedEl?.addEventListener("change", (e) => {
-      onlyVerified = e.target.checked;
-      applyFiltersAndRender();
-    });
+    if (filterVerifiedEl) {
+      filterVerifiedEl.addEventListener("change", (e) => {
+        onlyVerified = e.target.checked;
+        applyFiltersAndRender();
+      });
+    }
 
     if (FEATURES.favorites && filterFavoritesEl) {
       filterFavoritesEl.addEventListener("change", (e) => {
@@ -1909,10 +2253,11 @@ function init() {
           } else {
             moodFilter = value;
             document.querySelectorAll(".mood-chip").forEach((c) => {
-              const isActive = c === chip;
-              c.classList.toggle("mood-chip--active", isActive);
-              c.setAttribute("aria-pressed", isActive ? "true" : "false");
+              c.classList.remove("mood-chip--active");
+              c.setAttribute("aria-pressed", "false");
             });
+            chip.classList.add("mood-chip--active");
+            chip.setAttribute("aria-pressed", "true");
           }
           applyFiltersAndRender();
         });
@@ -1923,11 +2268,14 @@ function init() {
       document.querySelectorAll(".travel-chip").forEach((chip) => {
         chip.addEventListener("click", () => {
           const mode = chip.getAttribute("data-travel-mode") || "everyday";
+
           if (travelMode === mode) {
             travelMode = null;
             chip.classList.remove("travel-chip--active");
             chip.setAttribute("aria-pressed", "false");
-            tilla?.setTravelMode?.(null);
+            if (tilla && typeof tilla.setTravelMode === "function") {
+              tilla.setTravelMode(null);
+            }
           } else {
             travelMode = mode;
             document.querySelectorAll(".travel-chip").forEach((c) => {
@@ -1935,8 +2283,11 @@ function init() {
               c.classList.toggle("travel-chip--active", isActive);
               c.setAttribute("aria-pressed", isActive ? "true" : "false");
             });
-            tilla?.setTravelMode?.(mode);
+            if (tilla && typeof tilla.setTravelMode === "function") {
+              tilla.setTravelMode(mode);
+            }
           }
+
           updateCompassUI();
           applyFiltersAndRender();
         });
@@ -1962,7 +2313,9 @@ function init() {
         event.stopPropagation();
         handleToggleCompass();
       });
+
       compassSectionEl.addEventListener("toggle", updateCompassButtonLabel);
+
       updateCompassButtonLabel();
     }
 
@@ -1982,10 +2335,17 @@ function init() {
       playIdeasBtnEl.addEventListener("click", () => {
         const idea = getRandomPlayIdea();
         if (!idea) return;
-        if (tilla?.showPlayIdea) {
+
+        if (tilla && typeof tilla.showPlayIdea === "function") {
           tilla.showPlayIdea(idea);
+
           const tillaCard = document.querySelector(".tilla-sidebar-card");
-          tillaCard?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          if (tillaCard && typeof tillaCard.scrollIntoView === "function") {
+            tillaCard.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest"
+            });
+          }
         } else {
           showToast(idea);
         }
@@ -1998,13 +2358,16 @@ function init() {
       if (targetId) section = document.getElementById(targetId);
       if (!section) section = btn.closest(".sidebar-section");
       if (!section) return;
+
       btn.addEventListener("click", (e) => {
         e.preventDefault();
-        if (section.tagName.toLowerCase() === "details") {
+        const tag = section.tagName.toLowerCase();
+        if (tag === "details") {
           section.open = false;
         } else {
           section.classList.add("hidden");
         }
+
         if (section.id === "compass-section" && btnToggleCompassEl) {
           updateCompassButtonLabel();
         }
@@ -2015,11 +2378,14 @@ function init() {
     loadPlusStateFromStorage();
     loadDaylogFromStorage();
 
+    // ESC schließt Detail-Panel
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
       if (!spotDetailEl) return;
+
       const isOpen = !spotDetailEl.classList.contains("spot-details--hidden");
       if (!isOpen) return;
+
       event.preventDefault();
       closeSpotDetails({ returnFocus: true });
     });
