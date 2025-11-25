@@ -1,20 +1,31 @@
-/* iOS Safari Fix für <select> */
-select {
-  background-color: transparent;
-  color: inherit;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 1.5rem;
-  position: relative;
-  z-index: 1;
-}
-
 /* =========================================
-   FAMILY SPOTS MAP – GLOBAL STYLES (GOLD EDITION)
+   FAMILY SPOTS MAP – STYLES (GOLD EDITION)
+   -----------------------------------------
+   TABLE OF CONTENTS
+   1. Global Reset & Basics
+   2. Theme Tokens (Light / Dark)
+   3. Base Elements & Utilities
+   4. Header
+   5. Main Layout
+   6. Map View: Sidebar & Map
+   7. Tilla Sidebar
+   8. About View
+   9. Bottom Navigation
+   10. Toast
+   11. Noscript
+   12. Map Marker Styling
+   13. Misc
+   14. Onboarding Overlay
+   15. Spot-List & Details Fine-Tuning
+   16. Prefers Reduced Motion
+   17. Badges & Scores
    ========================================= */
 
-/* Reset & Basics */
+
+/* =========================================
+   1. GLOBAL RESET & BASICS
+   ========================================= */
+
 *,
 *::before,
 *::after {
@@ -27,7 +38,10 @@ body {
   padding: 0;
 }
 
-/* ---------- THEME TOKENS (LIGHT / DARK) ---------- */
+
+/* =========================================
+   2. THEME TOKENS (LIGHT / DARK)
+   ========================================= */
 
 :root {
   --app-bg: radial-gradient(circle at top, #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
@@ -155,12 +169,18 @@ body {
   --radius-circle-fill: rgba(250, 204, 21, 0.15);
 }
 
+
+/* =========================================
+   3. BASE ELEMENTS & UTILITIES
+   ========================================= */
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
   color: var(--text-color);
   background: var(--app-bg);
   -webkit-font-smoothing: antialiased;
+  transition: background 0.4s ease, color 0.3s ease;
 }
 
 /* Links */
@@ -199,13 +219,9 @@ a {
   outline-offset: 2px;
 }
 
-/* Theme-Übergänge */
-body {
-  transition: background 0.4s ease, color 0.3s ease;
-}
 
 /* =========================================
-   HEADER
+   4. HEADER
    ========================================= */
 
 .app-header {
@@ -331,8 +347,9 @@ body {
   box-shadow: var(--header-tagline-shadow);
 }
 
+
 /* =========================================
-   MAIN LAYOUT
+   5. MAIN LAYOUT
    ========================================= */
 
 .app-main {
@@ -352,8 +369,9 @@ body {
   display: block;
 }
 
+
 /* =========================================
-   MAP VIEW: SIDEBAR + MAP
+   6. MAP VIEW: SIDEBAR + MAP
    ========================================= */
 
 #view-map {
@@ -508,6 +526,18 @@ textarea.input {
   resize: vertical;
 }
 
+/* Unified <select> styling inkl. iOS Safari Fix */
+select {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
 .input:focus,
 textarea.input:focus,
 select.input:focus {
@@ -657,9 +687,10 @@ select.input:focus {
   color: var(--text-soft);
 }
 
-/* Tagesprotokoll */
+/* Tagesprotokoll – mehr Abstand von "Wie war euer Tag?" */
 #daylog-text {
   min-height: 70px;
+  padding-top: 14px;
 }
 
 /* Filter-Section, Spot-Liste */
@@ -795,8 +826,9 @@ select.input:focus {
   }
 }
 
+
 /* =========================================
-   TILLA – SIDEBAR (Map-Ansicht)
+   7. TILLA – SIDEBAR (Map-Ansicht)
    ========================================= */
 
 /* Sanftes Schaukeln + leichte Kopfneigung */
@@ -880,8 +912,9 @@ select.input:focus {
   line-height: 1.5;
 }
 
+
 /* =========================================
-   ABOUT VIEW
+   8. ABOUT VIEW
    ========================================= */
 
 .page-about {
@@ -912,8 +945,9 @@ select.input:focus {
   font-size: 15px;
 }
 
+
 /* =========================================
-   BOTTOM NAV
+   9. BOTTOM NAV
    ========================================= */
 
 .bottom-nav {
@@ -992,8 +1026,9 @@ select.input:focus {
   font-size: 18px;
 }
 
+
 /* =========================================
-   TOAST
+   10. TOAST
    ========================================= */
 
 .toast {
@@ -1018,8 +1053,9 @@ select.input:focus {
   transform: translateX(-50%) translateY(-4px);
 }
 
+
 /* =========================================
-   NOSCRIPT
+   11. NOSCRIPT
    ========================================= */
 
 .noscript-warning {
@@ -1030,8 +1066,9 @@ select.input:focus {
   font-size: 14px;
 }
 
+
 /* =========================================
-   MAP MARKER – ORANGE PINS
+   12. MAP MARKER – ORANGE PINS
    ========================================= */
 
 /* CLUSTER-BUBBLES im Family-Spots-Look – ohne Schimmer außen */
@@ -1148,8 +1185,9 @@ select.input:focus {
   fill: var(--radius-circle-fill);
 }
 
+
 /* =========================================
-   MISC
+   13. MISC
    ========================================= */
 
 hr {
@@ -1162,8 +1200,9 @@ hr {
   border-bottom-color: rgba(148, 163, 184, 0.35);
 }
 
+
 /* =========================================
-   ONBOARDING OVERLAY
+   14. ONBOARDING OVERLAY
    ========================================= */
 
 /* Scroll sperren, wenn Onboarding offen ist */
@@ -1300,8 +1339,9 @@ body.onboarding-open {
   }
 }
 
+
 /* =========================================
-   SPOT-LISTE & DETAILS – FEINTUNING
+   15. SPOT-LISTE & DETAILS – FEINTUNING
    ========================================= */
 
 /* Leerer Zustand der Liste (wenn Tilla tröstet) */
@@ -1448,8 +1488,37 @@ body.onboarding-open {
   color: #e5e7eb;
 }
 
+/* Optionaler Toggle (falls verwendet) im Ghost-Button-Stil */
+.favorite-toggle {
+  margin-top: 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #7a4a2b;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
+}
+
+.favorite-toggle:hover {
+  background-color: #fff3e0;
+}
+
+[data-theme="dark"] .favorite-toggle {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="dark"] .favorite-toggle:hover {
+  background: rgba(30, 64, 175, 0.45);
+}
+
+
 /* =========================================
-   PREFERS REDUCED MOTION
+   16. PREFERS REDUCED MOTION
    ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1468,8 +1537,9 @@ body.onboarding-open {
   }
 }
 
+
 /* =========================================
-   BADGES & SCORES
+   17. BADGES & SCORES
    ========================================= */
 
 .spot-details-scores {
@@ -1522,37 +1592,4 @@ body.onboarding-open {
 [data-theme="dark"] .badge--distance {
   background: rgba(148, 163, 184, 0.22);
   color: #e5e7eb;
-}
-
-/* Optionaler Toggle (falls verwendet) im Ghost-Button-Stil */
-.favorite-toggle {
-  margin-top: 12px;
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #7a4a2b;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
-}
-
-.favorite-toggle:hover {
-  background-color: #fff3e0;
-}
-
-[data-theme="dark"] .favorite-toggle {
-  background: rgba(15, 23, 42, 0.98);
-  color: #e5e7eb;
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
-}
-
-[data-theme="dark"] .favorite-toggle:hover {
-  background: rgba(30, 64, 175, 0.45);
-}
-
-select {
-  background-color: var(--input-bg);
-  color: var(--text-color);
 }
