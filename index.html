@@ -1,14 +1,11 @@
 <!doctype html>
-<html lang="" id="html-root" data-theme="light">
+<html lang="de" data-theme="light">
   <head>
     <meta charset="utf-8" />
-    <title data-i18n-key="meta_title">
-      Family Spots Map – Die schönste Karte für Familien-Abenteuer
-    </title>
+    <title>Family Spots Map – Die schönste Karte für Familien-Abenteuer</title>
     <meta
       name="description"
-      content=""
-      data-i18n-key="meta_description"
+      content="Family Spots Map: Die schönste Karte für Familien-Abenteuer – Spielplätze, Zoos, Wildparks, Pumptracks, familienfreundliche Spots & mehr."
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#fb8c00" />
@@ -79,17 +76,12 @@
               id="btn-help"
               class="btn-icon"
               type="button"
-              aria-label=""
-              data-i18n-key="btn_help_aria"
+              aria-label="Über Family Spots Map"
             >
               ❓
             </button>
 
-            <span
-              class="sr-only"
-              id="language-switcher-label"
-              data-i18n-key="label_language_switcher"
-            >
+            <span class="sr-only" id="language-switcher-label">
               Sprache wechseln
             </span>
             <button
@@ -107,8 +99,7 @@
               id="theme-toggle"
               class="btn-icon"
               type="button"
-              aria-label=""
-              data-i18n-key="btn_theme_toggle_aria"
+              aria-label="Theme wechseln"
             >
               🌓
             </button>
@@ -116,8 +107,7 @@
               id="btn-locate"
               class="btn-icon"
               type="button"
-              aria-label=""
-              data-i18n-key="btn_locate_aria"
+              aria-label="Eigenen Standort anzeigen"
             >
               📍
             </button>
@@ -133,12 +123,8 @@
             Map
             <span class="header-flag" aria-hidden="true">🇩🇰</span>
           </h1>
-          <p
-            class="header-tagline"
-            id="header-tagline"
-            data-i18n-key="header_tagline"
-          >
-            <!-- Wird per I18N gesetzt -->
+          <p class="header-tagline" id="header-tagline">
+            <!-- Text wird per JS gesetzt -->
           </p>
         </div>
       </header>
@@ -161,8 +147,7 @@
                 <div class="tilla-sidebar-avatar">
                   <img
                     src="assets/tilla/tilla-hero.png"
-                    alt=""
-                    data-i18n-key="alt_tilla_image"
+                    alt="Tilla, eure Schildkröten-Begleiterin"
                     loading="lazy"
                     decoding="async"
                   />
@@ -272,8 +257,7 @@
                   id="filter-search"
                   class="input"
                   type="search"
-                  placeholder=""
-                  data-i18n-key="filter_placeholder_keywords"
+                  placeholder="Place, spot, keywords …"
                   autocomplete="off"
                 />
               </div>
@@ -594,7 +578,7 @@
                   aria-pressed="false"
                   aria-controls="sidebar"
                 >
-                  <span data-i18n-key="btn_only_map">Nur Karte</span>
+                  <span>Nur Karte</span>
                 </button>
               </header>
 
@@ -695,18 +679,24 @@
             </summary>
 
             <div class="filter-group">
-              <label for="daylog-text" data-i18n-key="daylog_label">
+              <label
+                for="daylog-text"
+                data-i18n-de="Wie war euer Tag?"
+                data-i18n-en="How was your day?"
+              >
                 Wie war euer Tag?
               </label>
               <textarea
                 id="daylog-text"
                 class="input"
                 rows="3"
-                placeholder=""
-                data-i18n-key="daylog_placeholder"
+                placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
               ></textarea>
               <button id="daylog-save" class="btn btn-small" type="button">
-                <span data-i18n-key="daylog_save_button">
+                <span
+                  data-i18n-de="Speichern 💾"
+                  data-i18n-en="Save 💾"
+                >
                   Speichern 💾
                 </span>
               </button>
@@ -1022,12 +1012,7 @@
           aria-current="page"
         >
           <span class="bottom-nav-icon" aria-hidden="true">🗺️</span>
-          <span
-            id="bottom-nav-map-label"
-            data-i18n-key="nav_map"
-          >
-            Karte
-          </span>
+          <span id="bottom-nav-map-label">Karte</span>
         </button>
 
         <button
@@ -1037,12 +1022,7 @@
           aria-current="false"
         >
           <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
-          <span
-            id="bottom-nav-about-label"
-            data-i18n-key="nav_about"
-          >
-            Über
-          </span>
+          <span id="bottom-nav-about-label">Über</span>
         </button>
       </nav>
 
