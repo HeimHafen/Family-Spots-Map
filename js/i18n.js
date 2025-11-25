@@ -1,137 +1,170 @@
 // js/i18n.js
-// ----------------------------------------------------------
-// Zentrales I18N-Modul für Family Spots Map
-// - liefert ein globales I18N-Objekt, das app.js erwartet
-// - lädt data/i18n/de.json und data/i18n/en.json
-// - Methoden: init(), setLanguage(lang), t(key), getRandomPlayIdea()
-// ----------------------------------------------------------
 
+// Unterstützte Sprachen
 const SUPPORTED_LANGS = ["de", "en"];
-const DEFAULT_LANG = "de";
+const STORAGE_LANG_KEY = "fs_lang";
 
-const state = {
-  currentLang: DEFAULT_LANG,
-  /** @type {Record<string, any>} */
-  messagesByLang: {}
+let currentLang = "de";
+// messagesByLang[lang] = { key: "Übersetzung" }
+const messagesByLang = {
+  de: {},
+  en: {}
 };
 
-/**
- * Interne Hilfsfunktion: lädt eine Sprachdatei, falls noch nicht geladen.
- * @param {"de"|"en"} lang
- */
-async function loadLanguage(lang) {
-  const target = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
+// [{ de: "…", en: "…" }, …]
+let playIdeas = [];
 
-  if (state.messagesByLang[target]) {
-    // schon geladen
-    return;
+/* --------------------------------------
+ * Helpers
+ * ----------------------------------- */
+
+function normalizeLang(lang) {
+  return lang === "en" ? "en" : "de";
+}
+
+function getStoredLang() {
+  try {
+    const stored = localStorage.getItem(STORAGE_LANG_KEY);
+    if (SUPPORTED_LANGS.includes(stored)) return stored;
+  } catch (_) {}
+  return null;
+}
+
+function detectBrowserLang() {
+  if (typeof navigator === "undefined") return null;
+  const nav = (navigator.language || "").toLowerCase().slice(0, 2);
+  return SUPPORTED_LANGS.includes(nav) ? nav : null;
+}
+
+function setLangInternal(lang) {
+  currentLang = normalizeLang(lang || "de");
+  try {
+    localStorage.setItem(STORAGE_LANG_KEY, currentLang);
+  } catch (_) {}
+  if (typeof document !== "undefined" && document.documentElement) {
+    document.documentElement.setAttribute("lang", currentLang);
   }
+}
+
+/* --------------------------------------
+ * Laden von Übersetzungen & Spielideen
+ * ----------------------------------- */
+
+async function loadMessagesForLang(lang) {
+  const target = normalizeLang(lang);
+  if (Object.keys(messagesByLang[target] || {}).length > 0) return;
 
   try {
-    const res = await fetch(`data/i18n/${target}.json`, { cache: "no-cache" });
-    if (!res.ok) {
-      throw new Error(`i18n: HTTP ${res.status} für Sprache ${target}`);
-    }
+    const res = await fetch(`data/i18n/${target}.json`);
+    if (!res.ok) throw new Error(`i18n load failed: ${target}`);
     const json = await res.json();
-    state.messagesByLang[target] = json || {};
+    messagesByLang[target] = json || {};
   } catch (err) {
-    console.error("[I18N] Konnte Sprachdatei nicht laden:", err);
-    // Fallback: leeres Objekt, damit t() nicht crasht
-    state.messagesByLang[target] = state.messagesByLang[target] || {};
+    console.error("[i18n] Fehler beim Laden der Sprache", target, err);
+    messagesByLang[target] = messagesByLang[target] || {};
   }
 }
 
+async function loadPlayIdeas() {
+  if (playIdeas.length) return;
+  try {
+    const res = await fetch("data/play-ideas.json");
+    if (!res.ok) throw new Error("play-ideas load failed");
+    const json = await res.json();
+    if (Array.isArray(json)) {
+      playIdeas = json;
+    } else {
+      console.warn("[i18n] play-ideas.json ist kein Array.");
+    }
+  } catch (err) {
+    console.error("[i18n] Fehler beim Laden der Spielideen:", err);
+    playIdeas = [];
+  }
+}
+
+/* --------------------------------------
+ * Public API
+ * ----------------------------------- */
+
 /**
- * Initialisierung: lädt alle unterstützten Sprachen vor.
- * app.js ruft danach noch einmal setLanguage() mit der gewünschten
- * Startsprache auf – d. h. die eigentliche Sprachauswahl
- * findet im restlichen Code statt.
+ * Initialisiert i18n:
+ *  - lädt de/en Übersetzungen
+ *  - lädt Spielideen
+ *  - setzt Startsprache (localStorage -> Browser -> de)
  */
-async function init() {
-  await Promise.all(SUPPORTED_LANGS.map((lang) => loadLanguage(lang)));
+async function init(lang) {
+  const stored = getStoredLang();
+  const browser = detectBrowserLang();
+  const target = normalizeLang(lang || stored || browser || "de");
+
+  await Promise.all([
+    loadMessagesForLang("de"),
+    loadMessagesForLang("en"),
+    loadPlayIdeas()
+  ]);
+
+  setLangInternal(target);
+  applyTranslations(document);
 }
 
 /**
- * Setzt die aktuelle Sprache für t() & Co.
- * @param {"de"|"en"} lang
+ * Sprache wechseln (de/en)
  */
 function setLanguage(lang) {
-  const target = SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
-  state.currentLang = target;
-
-  // HTML-lang-Attribut mitziehen (zusätzlich zu app.js)
-  if (typeof document !== "undefined" && document.documentElement) {
-    document.documentElement.setAttribute("lang", target);
-  }
+  setLangInternal(lang);
+  applyTranslations(document);
 }
 
 /**
- * Liefert die aktuelle Sprache.
- * @returns {"de"|"en"}
+ * Aktuelle Sprache holen
  */
 function getLanguage() {
-  return state.currentLang;
+  return currentLang;
 }
 
 /**
- * Übersetzung eines Keys holen.
- * @param {string} key
- * @param {string} [fallback]
- * @returns {string}
+ * Übersetzungsfunktion
  */
 function t(key, fallback) {
-  const dict = state.messagesByLang[state.currentLang] || {};
-  const value = dict[key];
-  if (value == null) {
-    return fallback != null ? fallback : key;
-  }
-  return String(value);
+  const table = messagesByLang[currentLang] || {};
+  return table[key] ?? fallback ?? key;
 }
 
 /**
- * Optional: wendet [data-i18n] / [data-i18n-placeholder] an.
- * (app.js benutzt zusätzlich eigene data-i18n-de/en-Logik – das stört nicht.)
- * @param {Document|HTMLElement} [root]
+ * Texte im DOM updaten
+ *  - data-i18n  → innerText
+ *  - data-i18n-placeholder → placeholder
  */
 function applyTranslations(root = document) {
-  if (!root) return;
+  if (!root || !root.querySelectorAll) return;
 
   root.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
-    if (!key) return;
     const value = t(key);
-    if (value) el.textContent = value;
+    if (value != null) el.textContent = value;
   });
 
   root.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
     const key = el.getAttribute("data-i18n-placeholder");
-    if (!key) return;
     const value = t(key);
-    if (value) el.setAttribute("placeholder", value);
+    if (value != null) el.setAttribute("placeholder", value);
   });
 }
 
 /**
- * Liefert eine zufällige Spielidee auf Basis der aktuell geladenen Texte.
- * Erwartet im i18n-JSON ein Array unter dem Key "playIdeas".
- * @returns {string}
+ * Liefert eine zufällige Spielidee in der aktuellen Sprache
  */
 function getRandomPlayIdea() {
-  const dict = state.messagesByLang[state.currentLang] || {};
-  const ideas = dict.playIdeas;
-
-  if (!Array.isArray(ideas) || ideas.length === 0) {
-    return "";
-  }
-
-  const idx = Math.floor(Math.random() * ideas.length);
-  const idea = ideas[idx];
-  return typeof idea === "string" ? idea : String(idea);
+  if (!playIdeas.length) return "";
+  const idx = Math.floor(Math.random() * playIdeas.length);
+  const idea = playIdeas[idx];
+  if (!idea || typeof idea !== "object") return "";
+  return idea[currentLang] || idea.de || idea.en || "";
 }
 
-// ----------------------------------------------------------
-// Globales I18N-Objekt bauen & exportieren
-// ----------------------------------------------------------
+/* --------------------------------------
+ * Globales Objekt + ES-Module Export
+ * ----------------------------------- */
 
 const I18N = {
   init,
@@ -142,13 +175,20 @@ const I18N = {
   getRandomPlayIdea
 };
 
-// als ES-Module-Default-Export (falls man es direkt importieren will)
-export default I18N;
-
-// und zusätzlich als globale Variable, wie app.js es erwartet
+// Für dein aktuelles app.js (nutzt window.I18N)
 if (typeof window !== "undefined") {
   window.I18N = I18N;
 }
-if (typeof globalThis !== "undefined") {
-  globalThis.I18N = I18N;
-}
+
+// ES-Module-Exports (falls du später direkt importieren willst)
+export {
+  init as initI18n,
+  setLanguage,
+  getLanguage,
+  t,
+  applyTranslations,
+  getRandomPlayIdea,
+  I18N
+};
+
+export default I18N;
