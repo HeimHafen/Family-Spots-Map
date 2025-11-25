@@ -108,6 +108,23 @@ body {
   --radius-pill: 999px;
   --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
   --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
+
+  /* Spacing Scale (4pt-basierend) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+
+  /* Typografie Scale */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-lg: 15px;
+  --fs-xl: 18px;
+  --fs-2xl: 22px;
 }
 
 [data-theme="dark"] {
@@ -219,6 +236,37 @@ a {
   outline-offset: 2px;
 }
 
+/* Card-Basis für wiederkehrende Karten */
+.sidebar-section,
+.spot-card,
+.tilla-sidebar-card,
+.page-about,
+.spot-details {
+  background: var(--card-bg);
+  box-shadow:
+    var(--card-shadow),
+    inset 0 0 0 1px var(--card-border);
+}
+
+/* Button-Basis */
+.btn,
+.btn-ghost,
+.bottom-nav-item,
+.favorite-toggle {
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* runde Icon-/Pill-Buttons */
+.btn-icon,
+.language-switcher,
+.sidebar-section-close {
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
 
 /* =========================================
    4. HEADER
@@ -241,14 +289,14 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: var(--space-2); /* 8px */
 }
 
 .app-header-left,
 .app-header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 /* Icon-Buttons (? | Theme | Locate) */
@@ -258,7 +306,6 @@ a {
   margin: 0;
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-pill);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -267,7 +314,6 @@ a {
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
   font-size: 20px;
-  cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
     opacity 0.12s;
 }
@@ -287,7 +333,6 @@ a {
   margin: 0;
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-pill);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -295,11 +340,10 @@ a {
   box-shadow:
     var(--language-pill-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-  font-size: 14px;
+  font-size: var(--fs-sm);
   font-weight: 700;
   color: var(--text-strong); /* statt gelb jetzt dunkle Schrift */
   letter-spacing: 0.06em;
-  cursor: pointer;
 }
 
 [data-theme="dark"] .language-switcher {
@@ -313,7 +357,7 @@ a {
 
 .header-title {
   margin: 0;
-  font-size: 22px;
+  font-size: var(--fs-2xl);
   font-weight: 800;
   letter-spacing: 0.02em;
   display: inline-flex;
@@ -337,12 +381,12 @@ a {
 /* Claim-Button */
 .header-tagline {
   display: inline-block;
-  margin: 8px auto 0;
+  margin: var(--space-2) auto 0;
   padding: 8px 20px;
   background: var(--header-tagline-bg);
   color: var(--header-tagline-color);
   border-radius: var(--radius-pill);
-  font-size: 14px;
+  font-size: var(--fs-md);
   font-weight: 600;
   box-shadow: var(--header-tagline-shadow);
 }
@@ -357,7 +401,7 @@ a {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 16px 12px 96px; /* unten Platz für Bottom-Nav */
+  padding: var(--space-4) 12px 96px; /* unten Platz für Bottom-Nav */
 }
 
 /* Views (Karte / Über) */
@@ -396,18 +440,14 @@ a {
 
 /* Neumorph-Karten */
 .sidebar-section {
-  background: var(--sidebar-section-bg);
   border-radius: 24px;
   padding: 12px 14px 14px;
-  box-shadow:
-    var(--sidebar-section-shadow),
-    inset 0 0 0 1px var(--sidebar-section-border);
 }
 
 /* Vertikaler Abstand zwischen übereinander liegenden Karten,
    z.B. unter der Karte bei "Family Spots Plus" & "Mein Tag" */
 .sidebar-section + .sidebar-section {
-  margin-top: 8px;
+  margin-top: var(--space-2);
 }
 
 /* In der eigentlichen Sidebar übernimmt das Flex-Gap den Abstand */
@@ -423,13 +463,13 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-2);
   list-style: none;
 }
 
 .sidebar-section-title {
   margin: 0;
-  font-size: 18px;
+  font-size: var(--fs-xl);
   font-weight: 700;
   color: var(--text-strong);
 }
@@ -439,11 +479,9 @@ a {
   padding: 0;
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
   font-size: 18px;
-  cursor: pointer;
 }
 
 [data-theme="dark"] .sidebar-section-close {
@@ -486,12 +524,12 @@ a {
 
 /* Allgemeine Form Controls */
 .filter-group {
-  margin-top: 8px;
+  margin-top: var(--space-2);
 }
 
 .filter-group-label {
   display: block;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -501,7 +539,7 @@ a {
 
 .filter-group-helper {
   margin: 0 0 6px;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--text-soft);
 }
 
@@ -512,7 +550,7 @@ select.input {
   border-radius: var(--radius-pill);
   border: none;
   padding: 9px 13px;
-  font-size: 14px;
+  font-size: var(--fs-md);
   font-family: inherit;
   background: var(--input-bg);
   box-shadow:
@@ -551,7 +589,7 @@ select.input:focus {
 .mood-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .mood-chip,
@@ -562,7 +600,7 @@ select.input:focus {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   background: var(--chip-bg);
   color: var(--chip-color);
   box-shadow:
@@ -599,7 +637,7 @@ select.input:focus {
 .radius-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 #filter-radius {
@@ -607,14 +645,14 @@ select.input:focus {
 }
 
 .radius-max-label {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--text-strong);
 }
 
 .radius-description {
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--text-soft);
 }
 
@@ -626,41 +664,33 @@ select.input:focus {
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  gap: var(--space-2);
+  font-size: var(--fs-md);
 }
 
 /* Buttons */
 .btn {
   border: none;
-  border-radius: var(--radius-pill);
   padding: 9px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
+  font-size: var(--fs-md);
   background: linear-gradient(135deg, #ff9800, #ffb300);
   color: #fffdf8;
   box-shadow:
     0 4px 10px rgba(180, 96, 33, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.75);
-  cursor: pointer;
 }
 
 .btn-small {
   padding: 7px 14px;
-  font-size: 13px;
+  font-size: var(--fs-sm);
 }
 
 .btn-ghost {
-  border-radius: var(--radius-pill);
-  border: none;
   padding: 5px 10px;
   background: rgba(255, 255, 255, 0.88);
   color: #7a4a2b;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--fs-sm);
   box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
-  cursor: pointer;
 }
 
 [data-theme="dark"] .btn-ghost {
@@ -672,18 +702,18 @@ select.input:focus {
 /* Plus-Code-Form */
 .plus-code-form {
   margin-top: 6px;
-  font-size: 14px;
+  font-size: var(--fs-md);
 }
 
 .plus-code-row {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   margin: 6px 0;
 }
 
 .plus-note {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--text-soft);
 }
 
@@ -710,7 +740,7 @@ select.input:focus {
 }
 
 #spot-list {
-  margin-top: 8px;
+  margin-top: var(--space-2);
   max-height: 320px;
   overflow-y: auto;
   padding-right: 4px;
@@ -718,29 +748,25 @@ select.input:focus {
 
 /* Spot-Karten (Liste) */
 .spot-card {
-  background: var(--card-bg);
   border-radius: 18px;
   padding: 10px 11px 11px;
-  margin-bottom: 8px;
-  box-shadow:
-    var(--card-shadow),
-    inset 0 0 0 1px var(--card-border);
+  margin-bottom: var(--space-2);
 }
 
 .spot-card-title {
-  font-size: 15px;
+  font-size: var(--fs-md);
   font-weight: 700;
   margin: 0 0 3px;
 }
 
 .spot-card-subtitle {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   margin: 0 0 4px;
   color: var(--text-soft);
 }
 
 .spot-card-meta {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--text-soft);
 }
 
@@ -780,9 +806,7 @@ select.input:focus {
   margin: 8px 10px 10px;
   max-height: none;
   overflow-y: visible;
-  background: rgba(255, 248, 239, 0.96);
   border-radius: 18px;
-  box-shadow: 0 10px 24px rgba(116, 68, 33, 0.6);
   padding: 10px 12px 11px;
 }
 
@@ -871,13 +895,9 @@ select.input:focus {
 .tilla-sidebar-card {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   padding: 10px 12px;
   border-radius: 22px;
-  background: var(--card-bg);
-  box-shadow:
-    var(--card-shadow),
-    inset 0 0 0 1px var(--card-border);
   animation: tilla-card-in 0.45s ease-out 0.1s both;
 }
 
@@ -895,7 +915,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 80px; /* größer gemacht */
+  width: 80px;
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -908,7 +928,7 @@ select.input:focus {
 
 #tilla-sidebar-text {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--fs-md);
   line-height: 1.5;
 }
 
@@ -918,31 +938,27 @@ select.input:focus {
    ========================================= */
 
 .page-about {
-  background: var(--card-bg);
   border-radius: 26px;
   padding: 18px 16px 22px;
-  box-shadow:
-    var(--card-shadow),
-    inset 0 0 0 1px var(--card-border);
 }
 
 .page-about h2 {
   margin-top: 0;
-  margin-bottom: 16px;
-  font-size: 22px;
+  margin-bottom: var(--space-4);
+  font-size: var(--fs-2xl);
 }
 
 .page-about h3 {
-  margin-top: 18px;
-  margin-bottom: 6px;
-  font-size: 18px;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-1);
+  font-size: var(--fs-xl);
 }
 
 .page-about p {
-  margin-top: 4px;
-  margin-bottom: 8px;
+  margin-top: var(--space-1);
+  margin-bottom: var(--space-2);
   line-height: 1.5;
-  font-size: 15px;
+  font-size: var(--fs-lg);
 }
 
 
@@ -983,7 +999,6 @@ select.input:focus {
   pointer-events: auto;
   border: none;
   background: var(--bottom-nav-item-bg);
-  border-radius: var(--radius-pill);
   padding: 8px 16px;
   margin: 0 6px;
   min-width: 88px;
@@ -993,19 +1008,16 @@ select.input:focus {
   justify-content: center;
   gap: 2px;
   font-size: 12px;
-  font-weight: 600;
   color: var(--bottom-nav-item-color);
   box-shadow:
     0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
-  cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
 }
 
 .bottom-nav-item--active {
   background: var(--bottom-nav-item-active-bg);
   color: var(--bottom-nav-item-active-color);
-  font-weight: 600; /* einheitliche Schriftstärke */
 }
 
 /* Dark Mode – aktiver Nav-Pill etwas softer */
@@ -1041,7 +1053,7 @@ select.input:focus {
   color: #fff7ec;
   border-radius: var(--radius-pill);
   padding: 8px 16px;
-  font-size: 14px;
+  font-size: var(--fs-md);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
   opacity: 0;
   pointer-events: none;
@@ -1063,7 +1075,7 @@ select.input:focus {
   background: #d84315;
   color: #fff;
   text-align: center;
-  font-size: 14px;
+  font-size: var(--fs-md);
 }
 
 
@@ -1106,7 +1118,7 @@ select.input:focus {
 
 .marker-cluster span {
   display: block;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   line-height: 1;
 }
 
@@ -1154,22 +1166,22 @@ select.input:focus {
 
 /* Popup-Styles */
 .popup strong {
-  font-size: 14px;
+  font-size: var(--fs-md);
 }
 
 .popup small {
-  font-size: 13px;
+  font-size: var(--fs-sm);
 }
 
 .popup-actions {
   margin-top: 4px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .popup-link {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-weight: 600;
   padding: 4px 8px;
   border-radius: var(--radius-pill);
@@ -1193,7 +1205,7 @@ select.input:focus {
 hr {
   border: none;
   border-bottom: 1px solid rgba(193, 137, 91, 0.35);
-  margin: 16px 0;
+  margin: var(--space-4) 0;
 }
 
 [data-theme="dark"] hr {
@@ -1240,12 +1252,8 @@ body.onboarding-open {
 }
 
 .onboarding-content {
-  background: var(--card-bg);
   border-radius: 24px;
   padding: 16px 16px 14px;
-  box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.85),
-    inset 0 0 0 1px var(--card-border);
 }
 
 /* Slides */
@@ -1255,20 +1263,20 @@ body.onboarding-open {
 
 .onboarding-slide h2 {
   margin: 0 0 8px;
-  font-size: 18px;
+  font-size: var(--fs-xl);
   font-weight: 700;
   color: var(--text-strong);
 }
 
 .onboarding-slide p {
   margin: 0 0 8px;
-  font-size: 14px;
+  font-size: var(--fs-md);
   line-height: 1.5;
   color: var(--text-soft);
 }
 
 .onboarding-hint {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--text-soft);
 }
 
@@ -1276,7 +1284,7 @@ body.onboarding-open {
 .onboarding-actions {
   margin-top: 10px;
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   justify-content: flex-end;
   align-items: center;
 }
@@ -1294,7 +1302,7 @@ body.onboarding-open {
 
 /* Dots */
 .onboarding-dots {
-  margin-top: 8px;
+  margin-top: var(--space-2);
   display: flex;
   justify-content: center;
   gap: 6px;
@@ -1349,7 +1357,7 @@ body.onboarding-open {
   padding: 10px 12px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.92);
-  font-size: 14px;
+  font-size: var(--fs-md);
   line-height: 1.5;
   color: var(--text-soft);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
@@ -1363,7 +1371,7 @@ body.onboarding-open {
 /* Beschreibung & Badges in der Spot-Karte */
 .spot-card-description {
   margin: 4px 0 6px;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   line-height: 1.4;
   color: var(--text-soft);
 }
@@ -1381,7 +1389,7 @@ body.onboarding-open {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--text-soft);
 }
 
@@ -1402,13 +1410,13 @@ body.onboarding-open {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-2);
   margin-bottom: 6px;
 }
 
 .spot-details-title {
   margin: 0 0 2px;
-  font-size: 16px;
+  font-size: var(--fs-lg);
   font-weight: 700;
 }
 
@@ -1416,7 +1424,7 @@ body.onboarding-open {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--text-soft);
 }
 
@@ -1448,20 +1456,20 @@ body.onboarding-open {
 /* Beschreibung, Poetry, Adresse */
 .spot-details-description {
   margin: 4px 0 6px;
-  font-size: 14px;
+  font-size: var(--fs-md);
   line-height: 1.5;
 }
 
 .spot-details-poetry {
   margin: 0 0 6px;
-  font-size: 14px;
+  font-size: var(--fs-md);
   font-style: italic;
   color: var(--text-soft);
 }
 
 .spot-details-address {
   margin: 0 0 6px;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--text-soft);
 }
 
@@ -1470,11 +1478,11 @@ body.onboarding-open {
   margin-top: 6px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .spot-details-route-link {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   font-weight: 600;
   padding: 6px 10px;
   border-radius: var(--radius-pill);
@@ -1492,33 +1500,16 @@ body.onboarding-open {
 .favorite-toggle {
   margin-top: 12px;
   border: none;
-  border-radius: var(--radius-pill);
   padding: 6px 12px;
   background: rgba(255, 255, 255, 0.9);
   color: #7a4a2b;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--fs-md);
   box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
-}
-
-.favorite-toggle:hover {
-  background-color: #fff3e0;
-}
-
-[data-theme="dark"] .favorite-toggle {
-  background: rgba(15, 23, 42, 0.98);
-  color: #e5e7eb;
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
-}
-
-[data-theme="dark"] .favorite-toggle:hover {
-  background: rgba(30, 64, 175, 0.45);
 }
 
 
 /* =========================================
-   16. PREFERS REDUCED MOTION
+   16. PREFERS REDUCED MOTION & HOVER
    ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1537,6 +1528,17 @@ body.onboarding-open {
   }
 }
 
+/* Hover-Effekte nur auf Geräten mit Maus */
+@media (hover: hover) and (pointer: fine) {
+  .favorite-toggle:hover {
+    background-color: #fff3e0;
+  }
+
+  [data-theme="dark"] .favorite-toggle:hover {
+    background: rgba(30, 64, 175, 0.45);
+  }
+}
+
 
 /* =========================================
    17. BADGES & SCORES
@@ -1545,7 +1547,7 @@ body.onboarding-open {
 .spot-details-scores {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   margin: 12px 0;
 }
 
@@ -1554,7 +1556,7 @@ body.onboarding-open {
   display: inline-block;
   padding: 4px 9px;
   border-radius: var(--radius-pill);
-  font-size: 12px;
+  font-size: var(--fs-xs);
   line-height: 1.4;
   background: var(--chip-bg);
   color: var(--chip-color);
