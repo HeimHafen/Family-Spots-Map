@@ -1,6 +1,7 @@
 {
-  "meta_title": "Family Spots Map – The most beautiful map for family adventures.",
+  "meta_title": "Family Spots Map – The most beautiful map for family adventures",
   "meta_description": "Family Spots Map is the most beautiful map for family adventures.",
+  "error_data_load": "Oops – we couldn’t load the data right now. Please try again in a moment.",
   "btn_help_aria": "Show help and info",
   "label_language_switcher": "Switch language",
   "btn_theme_toggle_aria": "Toggle design mode",
@@ -37,5 +38,5 @@
   "turtle_plus_activated": "Family Spots Plus is active – I can now show you rest areas, RV spots and campgrounds as well. ✨",
   "daylog_saved": "Your day moment has been saved 💾 – you can look back on it later.",
   "nav_map": "Map",
-  "nav_about": "About"
+  "nav_about": "About Family Spots Map"
 }
