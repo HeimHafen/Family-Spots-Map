@@ -101,7 +101,7 @@ async function init() {
  */
 function setLanguage(lang) {
   state.lang = normalizeLang(lang);
-  // optional: hier auch documentElement.lang synchronisieren, wenn du magst
+  // Wenn du willst, zusätzlich das <html lang="...">-Attribut synchronisieren:
   // document.documentElement.lang = state.lang;
 }
 
@@ -144,7 +144,7 @@ function getRandomPlayIdea() {
   return "";
 }
 
-// Globale Fassade, die app.js nutzt
+// Globale Fassade, die bestehender Code weiterhin nutzen kann
 window.I18N = {
   init,
   setLanguage,
@@ -153,5 +153,6 @@ window.I18N = {
   getRandomPlayIdea
 };
 
-// ES-Module-Export, damit map.js import { getLanguage } ... nutzen kann
-export { getLanguage };
+// ES-Module-Exports für imports wie:
+// import { init, setLanguage, t, getLanguage } from "./i18n.js";
+export { init, setLanguage, getLanguage, t, getRandomPlayIdea };
