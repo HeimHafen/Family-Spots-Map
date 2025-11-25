@@ -101,6 +101,15 @@ async function init() {
  */
 function setLanguage(lang) {
   state.lang = normalizeLang(lang);
+  // optional: hier auch documentElement.lang synchronisieren, wenn du magst
+  // document.documentElement.lang = state.lang;
+}
+
+/**
+ * Aktuelle Sprache zurückgeben – für map.js & Co.
+ */
+function getLanguage() {
+  return state.lang;
 }
 
 /**
@@ -139,9 +148,10 @@ function getRandomPlayIdea() {
 window.I18N = {
   init,
   setLanguage,
+  getLanguage,
   t,
   getRandomPlayIdea
 };
 
-// Damit die Datei als ES-Modul behandelt wird
-export {};
+// ES-Module-Export, damit map.js import { getLanguage } ... nutzen kann
+export { getLanguage };
