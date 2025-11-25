@@ -823,7 +823,7 @@ select.input:focus {
   box-shadow:
     var(--card-shadow),
     inset 0 0 0 1px var(--card-border);
-  animation: tilla-card-in 0.45s.ease-out 0.1s both;
+  animation: tilla-card-in 0.45s ease-out 0.1s both;
 }
 
 [data-theme="dark"] .tilla-sidebar-card {
@@ -942,7 +942,7 @@ select.input:focus {
     0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s.ease-out;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
 }
 
 .bottom-nav-item--active {
@@ -987,7 +987,7 @@ select.input:focus {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s ease-out, transform 0.18s.ease-out;
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
 }
 
 .toast--visible {
@@ -1015,13 +1015,12 @@ select.input:focus {
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
-  /* Äußere Hülle durchsichtig, damit kein Rand/Schimmer bleibt */
   background: transparent;
   box-shadow: none;
   border-radius: 999px;
 }
 
-/* Innerer Kreis mit Zahl – komplett gestylt */
+/* Innerer Kreis mit Zahl – komplett gestylt & zentriert */
 .marker-cluster-small div,
 .marker-cluster-medium div,
 .marker-cluster-large div {
@@ -1032,10 +1031,9 @@ select.input:focus {
   font-weight: 600;
   font-family: inherit;
 
-  /* Fixe Größe + Centering */
   width: 34px;
   height: 34px;
-  margin: 0; /* Standard-Margins vom Plugin weg! */
+  margin: 0;
 
   display: flex;
   align-items: center;
