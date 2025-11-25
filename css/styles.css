@@ -1011,16 +1011,17 @@ select.input:focus {
    MAP MARKER – ORANGE PINS
    ========================================= */
 
-/* CLUSTER-BUBBLES im Family-Spots-Look – Zahl zentriert */
+/* CLUSTER-BUBBLES im Family-Spots-Look – ohne Schimmer außen */
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
-  background-color: rgba(255, 220, 180, 0.9);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  /* Äußere Hülle durchsichtig, damit kein Rand/Schimmer bleibt */
+  background: transparent;
+  box-shadow: none;
   border-radius: 999px;
 }
 
-/* Innerer Kreis mit Flexbox-Zentrierung */
+/* Innerer Kreis mit Zahl – komplett gestylt */
 .marker-cluster-small div,
 .marker-cluster-medium div,
 .marker-cluster-large div {
@@ -1031,14 +1032,17 @@ select.input:focus {
   font-weight: 600;
   font-family: inherit;
 
-  /* Größe & Zentrierung */
-  min-width: 34px;
-  min-height: 34px;
+  /* Fixe Größe + Centering */
+  width: 34px;
+  height: 34px;
+  margin: 0; /* Standard-Margins vom Plugin weg! */
+
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
 }
 
