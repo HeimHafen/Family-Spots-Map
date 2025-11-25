@@ -1,11 +1,14 @@
 <!doctype html>
-<html lang="de" data-theme="light">
+<html lang="" data-theme="light" id="html-root">
   <head>
     <meta charset="utf-8" />
-    <title>Family Spots Map – Die schönste Karte für Familien-Abenteuer</title>
+    <title data-i18n-key="meta_title">
+      Family Spots Map – Die schönste Karte für Familien-Abenteuer
+    </title>
     <meta
       name="description"
-      content="Family Spots Map: Die schönste Karte für Familien-Abenteuer – Spielplätze, Zoos, Wildparks, Pumptracks, familienfreundliche Spots & mehr."
+      content=""
+      data-i18n-key="meta_description"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#fb8c00" />
@@ -257,7 +260,8 @@
                   id="filter-search"
                   class="input"
                   type="search"
-                  placeholder="Place, spot, keywords …"
+                  placeholder=""
+                  data-i18n-key="filter_placeholder_keywords"
                   autocomplete="off"
                 />
               </div>
@@ -578,7 +582,7 @@
                   aria-pressed="false"
                   aria-controls="sidebar"
                 >
-                  <span>Nur Karte</span>
+                  <span data-i18n-key="btn_only_map">Nur Karte</span>
                 </button>
               </header>
 
@@ -693,10 +697,7 @@
                 placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
               ></textarea>
               <button id="daylog-save" class="btn btn-small" type="button">
-                <span
-                  data-i18n-de="Speichern 💾"
-                  data-i18n-en="Save 💾"
-                >
+                <span data-i18n-de="Speichern 💾" data-i18n-en="Save 💾">
                   Speichern 💾
                 </span>
               </button>
