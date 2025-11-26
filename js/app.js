@@ -69,6 +69,7 @@ const DEFAULT_MAP_ZOOM = 7;
 
 const PLUS_STORAGE_KEY = "fs_plus_active";
 const DAYLOG_STORAGE_KEY = "fs_daylog_last";
+const SPOTS_CACHE_KEY = "fs_spots_cache_v1";
 
 const LANG_DE = "de";
 const LANG_EN = "en";
@@ -330,7 +331,7 @@ function getRandomPlayIdea() {
 }
 
 // ------------------------------------------------------
-// Header-Tagline (fix)
+// Header-Tagline
 // ------------------------------------------------------
 
 const HEADER_TAGLINE_TEXT = {
@@ -712,47 +713,126 @@ function initMap() {
 }
 
 /**
+ * Lädt Spots aus Cache (falls vorhanden).
+ * @returns {any[]|null}
+ */
+function loadSpotsFromCache() {
+  try {
+    const stored = localStorage.getItem(SPOTS_CACHE_KEY);
+    if (!stored) return null;
+    const parsed = JSON.parse(stored);
+    if (Array.isArray(parsed)) return parsed;
+    if (parsed && Array.isArray(parsed.spots)) return parsed.spots;
+    return null;
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Spots-Cache nicht lesen:", err);
+    return null;
+  }
+}
+
+/**
+ * Zeigt eine klare Fehler-UI inkl. Retry-Button in der Spot-Liste.
+ */
+function showSpotsLoadErrorUI() {
+  if (!spotListEl) return;
+
+  spotListEl.innerHTML = "";
+
+  const msg = document.createElement("p");
+  msg.className = "filter-group-helper";
+  msg.textContent =
+    currentLang === LANG_DE
+      ? "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut."
+      : "Spots could not be loaded. Please check your connection and try again.";
+  spotListEl.appendChild(msg);
+
+  const retryBtn = document.createElement("button");
+  retryBtn.type = "button";
+  retryBtn.className = "btn btn-small";
+  retryBtn.textContent =
+    currentLang === LANG_DE ? "Erneut versuchen" : "Try again";
+
+  retryBtn.addEventListener("click", () => {
+    showToast(
+      currentLang === LANG_DE
+        ? "Lade Spots erneut …"
+        : "Reloading spots…"
+    );
+    loadSpots();
+  });
+
+  spotListEl.appendChild(retryBtn);
+}
+
+/**
  * Lädt Spots aus data/spots.json, normalisiert Daten & triggert initiales Rendering.
+ * Nutzt Cache-Fallback für Offline / Netzwerkfehler.
  */
 async function loadSpots() {
+  let raw = [];
+
   try {
     const res = await fetch("data/spots.json", { cache: "no-cache" });
     if (!res.ok) throw new Error("HTTP " + res.status);
 
     const data = await res.json();
-    const raw = Array.isArray(data) ? data : data.spots || [];
+    raw = Array.isArray(data) ? data : data.spots || [];
 
-    spots = raw.map((spot) => {
-      /** @type {Spot} */
-      const normalized = { ...spot };
-
-      if (normalized.lon != null && normalized.lng == null) {
-        normalized.lng = normalized.lon;
-      }
-
-      if (
-        !normalized.category &&
-        Array.isArray(normalized.categories) &&
-        normalized.categories.length
-      ) {
-        normalized.category = normalized.categories[0];
-      }
-
-      normalized._searchText = buildSpotSearchText(normalized);
-      normalized._ageGroups = getSpotAgeGroups(normalized);
-      normalized._moods = getSpotMoods(normalized);
-      normalized._travelModes = getSpotTravelModes(normalized);
-
-      return normalized;
-    });
-
-    loadFavoritesFromStorage();
-    populateCategoryOptions();
-    applyFiltersAndRender();
+    // Erfolgreiches Ergebnis in localStorage cachen (für Offline-Fallback)
+    try {
+      localStorage.setItem(SPOTS_CACHE_KEY, JSON.stringify(raw));
+    } catch (err) {
+      console.warn("[Family Spots] Konnte Spots-Cache nicht speichern:", err);
+    }
   } catch (err) {
     console.error("[Family Spots] Fehler beim Laden der Spots:", err);
-    showToast("error_data_load");
+
+    // Fallback: Cache aus localStorage versuchen
+    const cached = loadSpotsFromCache();
+    if (cached && cached.length) {
+      raw = cached;
+      showToast(
+        currentLang === LANG_DE
+          ? "Offline-Daten geladen."
+          : "Loaded offline data."
+      );
+    } else {
+      showToast("error_data_load");
+      showSpotsLoadErrorUI();
+      spots = [];
+      filteredSpots = [];
+      renderMarkers();
+      return;
+    }
   }
+
+  spots = raw.map((spot) => {
+    /** @type {Spot} */
+    const normalized = { ...spot };
+
+    if (normalized.lon != null && normalized.lng == null) {
+      normalized.lng = normalized.lon;
+    }
+
+    if (
+      !normalized.category &&
+      Array.isArray(normalized.categories) &&
+      normalized.categories.length
+    ) {
+      normalized.category = normalized.categories[0];
+    }
+
+    normalized._searchText = buildSpotSearchText(normalized);
+    normalized._ageGroups = getSpotAgeGroups(normalized);
+    normalized._moods = getSpotMoods(normalized);
+    normalized._travelModes = getSpotTravelModes(normalized);
+
+    return normalized;
+  });
+
+  loadFavoritesFromStorage();
+  populateCategoryOptions();
+  applyFiltersAndRender();
 }
 
 // ------------------------------------------------------
@@ -817,6 +897,30 @@ function isSpotBigAdventure(spot) {
 
 function isSpotVerified(spot) {
   return !!spot.verified || !!spot.isVerified;
+}
+
+/**
+ * Koordinaten validieren und bei Bedarf String → Zahl konvertieren.
+ * @param {Spot} spot
+ * @returns {boolean}
+ */
+function hasValidLatLng(spot) {
+  if (spot == null) return false;
+
+  let { lat, lng } = spot;
+
+  if (typeof lat === "string") lat = parseFloat(lat);
+  if (typeof lng === "string") lng = parseFloat(lng);
+
+  if (typeof lat !== "number" || typeof lng !== "number") return false;
+  if (Number.isNaN(lat) || Number.isNaN(lng)) return false;
+  if (lat < -90 || lat > 90) return false;
+  if (lng < -180 || lng > 180) return false;
+
+  // zurückschreiben, damit der Spot danach sauber ist
+  spot.lat = lat;
+  spot.lng = lng;
+  return true;
 }
 
 /**
@@ -928,7 +1032,7 @@ function getSpotTravelModes(spot) {
  * @param {Spot} spot
  */
 function getRouteUrlsForSpot(spot) {
-  if (spot.lat == null || spot.lng == null) return null;
+  if (!hasValidLatLng(spot)) return null;
 
   const { lat, lng } = spot;
   const name = getSpotName(spot);
@@ -1026,17 +1130,11 @@ function populateCategoryOptions() {
 // ------------------------------------------------------
 
 function isSpotInRadius(spot, centerLatLng, radiusKm) {
-  if (
-    !map ||
-    spot.lat == null ||
-    spot.lng == null ||
-    !isFinite(radiusKm) ||
-    !centerLatLng ||
-    typeof centerLatLng.distanceTo !== "function"
-  ) {
+  if (!map || !centerLatLng || typeof centerLatLng.distanceTo !== "function") {
     return true;
   }
-  if (radiusKm === Infinity) return true;
+  if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
+  if (!hasValidLatLng(spot)) return true;
 
   const spotLatLng = L.latLng(spot.lat, spot.lng);
   const distanceMeters = centerLatLng.distanceTo(spotLatLng);
@@ -1048,9 +1146,15 @@ function updateRadiusTexts() {
   if (!filterRadiusEl || !filterRadiusMaxLabelEl || !filterRadiusDescriptionEl)
     return;
 
-  const value = parseInt(filterRadiusEl.value, 10);
-  radiusStep = Number.isNaN(value) ? 4 : value;
+  let value = parseInt(filterRadiusEl.value, 10);
+  if (Number.isNaN(value)) {
+    value = 4;
+  }
+  // Clamping: Slider darf niemals außerhalb der definierten Schritte landen
+  value = Math.min(Math.max(value, 0), RADIUS_STEPS_KM.length - 1);
+  radiusStep = value;
 
+  filterRadiusEl.value = String(radiusStep);
   filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
 
   if (radiusStep === 4) {
@@ -1062,6 +1166,31 @@ function updateRadiusTexts() {
     const key = `filter_radius_description_step${radiusStep}`;
     filterRadiusDescriptionEl.textContent = t(key);
   }
+}
+
+/**
+ * Initialisiert den Range-Slider inkl. vollständiger ARIA-Werte.
+ */
+function initRadiusSliderA11y() {
+  if (!filterRadiusEl) return;
+
+  const min = filterRadiusEl.min || "0";
+  const max = filterRadiusEl.max || String(RADIUS_STEPS_KM.length - 1);
+
+  if (!filterRadiusEl.value) {
+    filterRadiusEl.value = max;
+  }
+
+  filterRadiusEl.setAttribute("aria-valuemin", min);
+  filterRadiusEl.setAttribute("aria-valuemax", max);
+  filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value);
+
+  filterRadiusEl.addEventListener("input", () => {
+    updateRadiusTexts();
+    applyFiltersAndRender();
+  });
+
+  updateRadiusTexts();
 }
 
 // ------------------------------------------------------
@@ -1183,7 +1312,7 @@ function renderMarkers() {
   markersLayer.clearLayers();
 
   filteredSpots.forEach((spot) => {
-    if (spot.lat == null || spot.lng == null) return;
+    if (!hasValidLatLng(spot)) return;
     if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
 
     const el = document.createElement("div");
@@ -1345,7 +1474,7 @@ function syncFavButtonState(btn, spotId) {
 // ------------------------------------------------------
 
 function focusSpotOnMap(spot) {
-  if (!map || spot.lat == null || spot.lng == null) {
+  if (!map || !hasValidLatLng(spot)) {
     showSpotDetails(spot);
     return;
   }
@@ -1747,6 +1876,18 @@ function switchRoute(route) {
     top: 0,
     behavior: prefersReducedMotion ? "auto" : "smooth"
   });
+
+  const focusTarget = showMap
+    ? document.getElementById("app-title")
+    : document.querySelector(
+        currentLang === LANG_DE
+          ? "#page-about-de h2"
+          : "#page-about-en h2"
+      );
+
+  if (focusTarget && typeof focusTarget.focus === "function") {
+    focusTarget.focus();
+  }
 }
 
 // ------------------------------------------------------
@@ -1898,6 +2039,16 @@ function init() {
       });
     }
 
+    // Map bei Fenster-Resize sauber neu berechnen
+    if (map) {
+      window.addEventListener(
+        "resize",
+        debounce(() => {
+          map.invalidateSize();
+        }, 200)
+      );
+    }
+
     tilla = new TillaCompanion({
       getText: (key) => t(key)
     });
@@ -1970,15 +2121,7 @@ function init() {
     }
 
     if (filterRadiusEl) {
-      filterRadiusEl.setAttribute("aria-valuemin", "0");
-      filterRadiusEl.setAttribute("aria-valuemax", "4");
-      filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value || "4");
-
-      filterRadiusEl.addEventListener("input", () => {
-        updateRadiusTexts();
-        applyFiltersAndRender();
-      });
-      updateRadiusTexts();
+      initRadiusSliderA11y();
     }
 
     if (filterBigEl) {
