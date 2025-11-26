@@ -1,8 +1,8 @@
 // js/app.js
 // ======================================================
-// Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
-// Senior-Level Refactoring (strukturierter, robuster, dokumentiert)
-// ======================================================
+/* Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
+   Senior-Level Refactoring (strukturierter, robuster, dokumentiert)
+   ====================================================== */
 
 "use strict";
 
@@ -358,6 +358,22 @@ function getRandomPlayIdea() {
 }
 
 // ------------------------------------------------------
+// Header-Tagline (Deutsch/Englisch fest verdrahtet)
+// ------------------------------------------------------
+
+const HEADER_TAGLINE_TEXT = {
+  de: "Heute ist Zeit für Familie.",
+  en: "Make today a family day."
+};
+
+function updateHeaderTagline(lang) {
+  const el = document.getElementById("header-tagline");
+  if (!el) return;
+  const text = HEADER_TAGLINE_TEXT[lang] || HEADER_TAGLINE_TEXT.de;
+  el.textContent = text;
+}
+
+// ------------------------------------------------------
 // Globale State-Variablen
 // ------------------------------------------------------
 let currentLang = LANG_DE;
@@ -526,6 +542,9 @@ function setLanguage(lang, { initial = false } = {}) {
   localStorage.setItem("fs_lang", currentLang);
   document.documentElement.lang = currentLang;
 
+  // Header-Tagline aktualisieren
+  updateHeaderTagline(currentLang);
+
   // I18N-Fassade synchron halten
   try {
     if (
@@ -538,7 +557,6 @@ function setLanguage(lang, { initial = false } = {}) {
     console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
   }
 
-  if (headerTaglineEl) headerTaglineEl.textContent = t("header_tagline");
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
   if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
 
