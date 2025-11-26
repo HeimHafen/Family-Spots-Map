@@ -1,7 +1,7 @@
 // service-worker.js
 
-// Version des Caches – bei Änderungen an Assets INKREMENTIEREN
-const CACHE_NAME = "family-spots-map-37";
+const CACHE_VERSION = "v38";
+const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
 const ASSETS = [
@@ -33,100 +33,83 @@ const ASSETS = [
   "assets/icons/icon-512.png"
 ];
 
-// INSTALL: App-Shell & Daten cachen (robust, auch wenn einzelne Assets fehlen)
+// Installation – App Shell cachen
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    (async () => {
-      const cache = await caches.open(CACHE_NAME);
-
-      await Promise.all(
-        ASSETS.map(async (asset) => {
-          try {
-            await cache.add(asset);
-          } catch (err) {
-            // Falls ein Asset fehlt, verhindern wir trotzdem nicht die Installation.
-            console.warn("[SW] Asset konnte nicht gecacht werden:", asset, err);
-          }
-        })
-      );
-    })()
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.all(
+        ASSETS.map((asset) =>
+          cache.add(asset).catch((err) =>
+            console.warn("[SW] Asset konnte nicht geladen werden:", asset)
+          )
+        )
+      )
+    )
   );
   self.skipWaiting();
 });
 
-// ACTIVATE: Alte Caches aufräumen
+// Aktivierung – alte Caches löschen
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    (async () => {
-      const keys = await caches.keys();
-      await Promise.all(
+    caches.keys().then((keys) =>
+      Promise.all(
         keys
           .filter((key) => key !== CACHE_NAME)
           .map((key) => caches.delete(key))
-      );
-    })()
+      )
+    )
   );
   self.clients.claim();
 });
 
-// FETCH: JSON (Daten) network-first, Rest cache-first mit Offline-Fallback
+// Fetch-Strategien: JSON = network-first / Rest = cache-first mit SWR
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const { request } = event;
+  const url = new URL(request.url);
 
-  const requestUrl = new URL(event.request.url);
+  // Nur gleiche Origin
+  if (url.origin !== location.origin) return;
 
-  // Nur gleiche Origin abfangen (GitHub Pages etc.)
-  if (requestUrl.origin !== self.location.origin) {
+  // JSON: Network First
+  if (url.pathname.endsWith(".json")) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          return caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, response.clone());
+            return response;
+          });
+        })
+        .catch(() => caches.match(request))
+    );
     return;
   }
 
+  // Navigations-Request → offline.html als Fallback
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request).catch(() => caches.match(OFFLINE_URL))
+    );
+    return;
+  }
+
+  // Andere Assets: Cache First + Background Update
   event.respondWith(
-    (async () => {
-      const isJsonRequest = requestUrl.pathname.endsWith(".json");
-
-      // Daten (index.json, spots.json, i18n etc.): network-first
-      if (isJsonRequest) {
-        try {
-          const networkResponse = await fetch(event.request);
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(event.request, networkResponse.clone());
-          return networkResponse;
-        } catch (err) {
-          console.warn("[SW] JSON-Fetch fehlgeschlagen, versuche Cache:", err);
-          const cachedJson = await caches.match(event.request);
-          if (cachedJson) {
-            return cachedJson;
+    caches.match(request).then((cached) => {
+      const fetchAndUpdate = fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, response.clone());
+            });
           }
+          return response;
+        })
+        .catch(() => null); // Silently fail
 
-          return new Response("", {
-            status: 503,
-            statusText: "Offline"
-          });
-        }
-      }
-
-      // Alle anderen Requests: cache-first
-      const cached = await caches.match(event.request);
-      if (cached) {
-        return cached;
-      }
-
-      try {
-        const response = await fetch(event.request);
-        return response;
-      } catch (err) {
-        // Offline-Fallback für Navigation
-        if (event.request.mode === "navigate") {
-          const offlinePage = await caches.match(OFFLINE_URL);
-          if (offlinePage) return offlinePage;
-        }
-
-        // Für Nicht-Navigations-Requests im Offline-Fall
-        return new Response("", {
-          status: 503,
-          statusText: "Offline"
-        });
-      }
-    })()
+      return cached || fetchAndUpdate;
+    })
   );
 });
