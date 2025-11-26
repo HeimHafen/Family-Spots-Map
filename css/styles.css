@@ -1,3 +1,7 @@
+/* =========================================
+   FAMILY SPOTS MAP – STYLES (GOLD EDITION)
+   ========================================= */
+
 /* iOS Safari Fix + Styling für <select> */
 select {
   background-color: var(--input-bg);
@@ -11,10 +15,9 @@ select {
 }
 
 /* =========================================
-   FAMILY SPOTS MAP – GLOBAL STYLES (GOLD EDITION)
+   1. GLOBAL RESET & BASICS
    ========================================= */
 
-/* Reset & Basics */
 *,
 *::before,
 *::after {
@@ -51,7 +54,6 @@ body {
   --header-shadow: 0 12px 30px rgba(199, 110, 21, 0.55);
   --header-text-color: #ffffff;
 
-  /* etwas weniger Glow */
   --header-tagline-bg: rgba(255, 245, 222, 0.95);
   --header-tagline-color: #7c4314;
   --header-tagline-shadow: 0 4px 12px rgba(141, 73, 15, 0.45);
@@ -68,7 +70,6 @@ body {
   --language-pill-bg: rgba(255, 243, 224, 0.94);
   --language-pill-shadow: 0 3px 9px rgba(132, 70, 18, 0.4);
 
-  /* HELLERER Backdrop unten, kein schwarzer Schimmer mehr */
   --bottom-nav-backdrop: rgba(255, 212, 170, 0.85);
 
   --sidebar-bg: #050816;
@@ -90,7 +91,6 @@ body {
   --radius-circle-stroke: rgba(255, 165, 0, 0.6);
   --radius-circle-fill: rgba(255, 193, 7, 0.17);
 
-  /* Utility-Radien & Schatten */
   --radius-pill: 999px;
   --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
   --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
@@ -169,12 +169,11 @@ a {
   text-decoration: none;
 }
 
-/* Utility */
+/* Utils */
 .hidden {
   display: none !important;
 }
 
-/* Screenreader-only */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -186,20 +185,18 @@ a {
   border: 0;
 }
 
-/* App-Wrapper */
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Fokus-Visibilität */
+/* Fokus-Outline */
 :focus-visible {
   outline: 2px solid #ffb54f;
   outline-offset: 2px;
 }
 
-/* Theme-Übergänge */
 body {
   transition: background 0.4s ease, color 0.3s ease;
 }
@@ -211,7 +208,7 @@ body {
 .app-header {
   position: sticky;
   top: 0;
-  z-index: 1200; /* Header klar über der Karte / Leaflet-Panes */
+  z-index: 1200;
   padding: 10px 14px 14px;
   background: linear-gradient(135deg, var(--header-bg-top), var(--header-bg-bottom));
   color: var(--header-text-color);
@@ -220,7 +217,6 @@ body {
   box-shadow: var(--header-shadow);
 }
 
-/* Top-Zeile mit ? / Sprache / Theme / Locate */
 .app-header-top {
   display: flex;
   justify-content: space-between;
@@ -235,7 +231,6 @@ body {
   gap: 8px;
 }
 
-/* Icon-Buttons (? | Theme | Locate) */
 .btn-icon {
   border: none;
   padding: 0;
@@ -264,7 +259,6 @@ body {
   opacity: 0.92;
 }
 
-/* Sprach-Umschalter als runder Button – Text schwarz/dunkel */
 .language-switcher {
   border: none;
   padding: 0;
@@ -281,16 +275,15 @@ body {
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
   font-size: 14px;
   font-weight: 700;
-  color: var(--text-strong); /* statt gelb jetzt dunkle Schrift */
+  color: var(--text-strong);
   letter-spacing: 0.06em;
   cursor: pointer;
 }
 
 [data-theme="dark"] .language-switcher {
-  color: #fef3e7; /* im Dark Mode hell lassen */
+  color: #fef3e7;
 }
 
-/* Hauptzeile mit Titel + Claim */
 .app-header-main {
   text-align: center;
 }
@@ -305,7 +298,6 @@ body {
   justify-content: center;
   gap: 6px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
-  color: var(--header-text-color);
 }
 
 .header-flag {
@@ -318,7 +310,6 @@ body {
   text-underline-offset: 3px;
 }
 
-/* Claim-Button */
 .header-tagline {
   display: inline-block;
   margin: 8px auto 0;
@@ -340,10 +331,9 @@ body {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 16px 12px 96px; /* unten Platz für Bottom-Nav */
+  padding: 16px 12px 96px;
 }
 
-/* Views (Karte / Über) */
 .view {
   display: none;
 }
@@ -353,7 +343,7 @@ body {
 }
 
 /* =========================================
-   MAP VIEW: SIDEBAR + MAP
+   MAP VIEW
    ========================================= */
 
 #view-map {
@@ -362,7 +352,6 @@ body {
   gap: 14px;
 }
 
-/* Sidebar */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -370,13 +359,13 @@ body {
   background: transparent;
 }
 
-/* Dark Mode Hintergrund unter der Map */
 [data-theme="dark"] #view-map {
   background: linear-gradient(to bottom, #020617 0, #020617 35%, #020617 100%);
   border-radius: 0 0 28px 28px;
 }
 
-/* Neumorph-Karten */
+/* Karten / Sections */
+
 .sidebar-section {
   background: var(--sidebar-section-bg);
   border-radius: 24px;
@@ -386,23 +375,22 @@ body {
     inset 0 0 0 1px var(--sidebar-section-border);
 }
 
-/* Vertikaler Abstand zwischen übereinander liegenden Karten
-   (global, z. B. Family Spots Plus & Mein Tag) */
+/* globaler Abstand übereinanderliegende Cards */
 .sidebar-section + .sidebar-section {
   margin-top: 10px;
 }
 
-/* In der eigentlichen Sidebar übernimmt das Flex-Gap den Abstand */
+/* in der Sidebar übernimmt gap den Abstand */
 .sidebar > .sidebar-section + .sidebar-section {
   margin-top: 0;
 }
 
-/* Extra Abstand zwischen Karte und den Karten darunter (Family Spots Plus / Mein Tag) */
+/* Mehr Luft zwischen Karte und Family Spots Plus */
 .map-section + .sidebar-section {
-  margin-top: 22px; /* mehr Luft zur Karte */
+  margin-top: 32px;
 }
 
-/* Extra Abstand speziell zwischen Family Spots Plus und Mein Tag */
+/* etwas mehr Luft zwischen Plus und Mein Tag */
 #plus-section + #daylog-section {
   margin-top: 14px;
 }
@@ -416,7 +404,6 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  list-style: none;
 }
 
 .sidebar-section-title {
@@ -443,7 +430,6 @@ body {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.9);
 }
 
-/* Filter-Section eingeklappt: nur Header bleibt sichtbar */
 .sidebar-section--collapsed {
   padding-bottom: 10px;
 }
@@ -452,7 +438,8 @@ body {
   display: none;
 }
 
-/* Kompass-Karte */
+/* Kompass */
+
 .compass-card {
   margin-top: 4px;
   padding: 10px 10px 12px;
@@ -470,12 +457,12 @@ body {
     0 10px 22px rgba(0, 0, 0, 0.9);
 }
 
-/* Familien-Kompass: im Header nur EIN Button anzeigen */
 #compass-section .sidebar-section-header button:not(:first-of-type) {
   display: none;
 }
 
-/* Allgemeine Form Controls */
+/* Form Controls */
+
 .filter-group {
   margin-top: 8px;
 }
@@ -526,7 +513,8 @@ select.input:focus {
     0 0 0 4px rgba(255, 171, 64, 0.6);
 }
 
-/* Mood- / Travel-Chips */
+/* Mood & Travel Chips */
+
 .mood-row {
   display: flex;
   flex-wrap: wrap;
@@ -566,7 +554,6 @@ select.input:focus {
   transform: translateY(-1px);
 }
 
-/* Dark Mode – orange Glow weiter entschärft */
 [data-theme="dark"] .mood-chip--active,
 [data-theme="dark"] .travel-chip--active {
   box-shadow:
@@ -574,7 +561,8 @@ select.input:focus {
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
-/* Radius-Slider */
+/* Radius */
+
 .radius-row {
   display: flex;
   align-items: center;
@@ -598,6 +586,7 @@ select.input:focus {
 }
 
 /* Checkboxen */
+
 .filter-group--checkbox {
   margin-top: 4px;
 }
@@ -610,6 +599,7 @@ select.input:focus {
 }
 
 /* Buttons */
+
 .btn {
   border: none;
   border-radius: var(--radius-pill);
@@ -649,6 +639,7 @@ select.input:focus {
 }
 
 /* Plus-Code-Form */
+
 .plus-code-form {
   margin-top: 6px;
   font-size: 14px;
@@ -666,7 +657,8 @@ select.input:focus {
   color: var(--text-soft);
 }
 
-/* Tagesprotokoll */
+/* Mein Tag – extra Luft zum Button */
+
 #daylog-section .filter-group label {
   display: block;
   margin-bottom: 6px;
@@ -677,17 +669,17 @@ select.input:focus {
 }
 
 #daylog-save {
-  margin-top: 14px; /* Button weiter weg vom Textfeld */
+  margin-top: 14px;
 }
 
-/* Filter-Section, Spot-Liste */
+/* Spot-Liste */
+
 .sidebar-section--grow {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
 }
 
-/* Einklappbare Spot-Liste (Klasse wird per JS gesetzt) */
 .sidebar-section--grow.spot-list-collapsed {
   padding-bottom: 10px;
 }
@@ -703,7 +695,6 @@ select.input:focus {
   padding-right: 4px;
 }
 
-/* Spot-Karten (Liste) */
 .spot-card {
   background: var(--card-bg);
   border-radius: 18px;
@@ -731,7 +722,8 @@ select.input:focus {
   color: var(--text-soft);
 }
 
-/* Map-Bereich */
+/* Map */
+
 .map-section {
   border-radius: 26px;
   overflow: hidden;
@@ -743,14 +735,12 @@ select.input:focus {
   position: relative;
 }
 
-/* MOBILE: Karte nimmt ca. 60% der Bildschirmhöhe ein */
 .map-container {
   width: 100%;
   height: 100%;
   min-height: 320px;
 }
 
-/* Hier strecken wir die Karte bewusst auf kleineren Screens */
 @media (max-width: 899px) {
   .map-section {
     min-height: 60vh;
@@ -761,7 +751,8 @@ select.input:focus {
   }
 }
 
-/* Spot-Detail Panel – MOBILE: unter der Karte, NICHT als Overlay */
+/* Spot-Details */
+
 .spot-details {
   position: static;
   margin: 8px 10px 10px;
@@ -779,14 +770,12 @@ select.input:focus {
   box-shadow: 0 16px 30px rgba(0, 0, 0, 0.9);
 }
 
-/* Auf größeren Screens: Sidebar + Map nebeneinander */
 @media (min-width: 900px) {
   #view-map {
     flex-direction: row;
     align-items: flex-start;
   }
 
-  /* Sidebar schmaler -> Karte ~70–75% Breite */
   .sidebar {
     flex: 0 0 320px;
   }
@@ -800,7 +789,6 @@ select.input:focus {
     max-height: 380px;
   }
 
-  /* DESKTOP: Detailpanel als Overlay rechts über der Karte */
   .spot-details {
     position: absolute;
     margin: 0;
@@ -814,10 +802,9 @@ select.input:focus {
 }
 
 /* =========================================
-   TILLA – SIDEBAR (Map-Ansicht)
+   TILLA SIDEBAR
    ========================================= */
 
-/* Sanftes Schaukeln + leichte Kopfneigung */
 @keyframes tilla-bob {
   0% {
     transform: scaleX(-1) translateY(0) rotate(0deg);
@@ -836,7 +823,6 @@ select.input:focus {
   }
 }
 
-/* Einblende-Animation für das ganze Kärtchen */
 @keyframes tilla-card-in {
   0% {
     opacity: 0;
@@ -853,7 +839,6 @@ select.input:focus {
   padding-bottom: 10px;
 }
 
-/* Warmes Kärtchen wie andere Karten */
 .tilla-sidebar-card {
   display: flex;
   align-items: center;
@@ -874,20 +859,18 @@ select.input:focus {
     inset 0 0 0 1px rgba(148, 163, 184, 0.45);
 }
 
-/* Avatar – Tilla schaut nach rechts und schaukelt leicht */
 .tilla-sidebar-avatar {
   flex: 0 0 auto;
 }
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 80px; /* größer gemacht */
+  width: 80px;
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
 }
 
-/* Text neben Tilla */
 .tilla-sidebar-text {
   flex: 1 1 auto;
 }
@@ -940,7 +923,7 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 60px; /* noch etwas kompakter */
+  height: 60px; /* kompakter */
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -968,15 +951,15 @@ select.input:focus {
   border: none;
   background: var(--bottom-nav-item-bg);
   border-radius: var(--radius-pill);
-  padding: 5px 12px;      /* kleineres Padding */
+  padding: 5px 12px;
   margin: 0 4px;
-  min-width: 76px;        /* schmaler */
+  min-width: 76px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1px;
-  font-size: 11px;        /* leicht kleiner */
+  font-size: 11px;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
   box-shadow:
@@ -989,10 +972,8 @@ select.input:focus {
 .bottom-nav-item--active {
   background: var(--bottom-nav-item-active-bg);
   color: var(--bottom-nav-item-active-color);
-  font-weight: 600; /* einheitliche Schriftstärke */
 }
 
-/* Dark Mode – aktiver Nav-Pill etwas softer */
 [data-theme="dark"] .bottom-nav-item--active {
   box-shadow:
     0 3px 8px rgba(0, 0, 0, 0.7),
@@ -1049,10 +1030,9 @@ select.input:focus {
 }
 
 /* =========================================
-   MAP MARKER – ORANGE PINS
+   MAP MARKER & ATTRIBUTION
    ========================================= */
 
-/* CLUSTER-BUBBLES im Family-Spots-Look – ohne Schimmer außen */
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
@@ -1061,7 +1041,6 @@ select.input:focus {
   border-radius: 999px;
 }
 
-/* Innerer Kreis mit Zahl – komplett gestylt & zentriert */
 .marker-cluster-small div,
 .marker-cluster-medium div,
 .marker-cluster-large div {
@@ -1071,16 +1050,13 @@ select.input:focus {
   color: #8a4a00;
   font-weight: 600;
   font-family: inherit;
-
   width: 34px;
   height: 34px;
   margin: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
 }
@@ -1091,7 +1067,6 @@ select.input:focus {
   line-height: 1;
 }
 
-/* einzelne Spot-Pins */
 .spot-marker {
   border-radius: var(--radius-pill);
 }
@@ -1133,7 +1108,14 @@ select.input:focus {
   }
 }
 
-/* Popup-Styles */
+/* Attribution höher, damit nichts abgeschnitten wird */
+.leaflet-control-attribution {
+  bottom: 4px !important;
+  font-size: 10px;
+}
+
+/* Popup */
+
 .popup strong {
   font-size: 14px;
 }
@@ -1159,7 +1141,6 @@ select.input:focus {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Radius-Kreis */
 .radius-circle {
   stroke: var(--radius-circle-stroke);
   stroke-width: 2;
@@ -1181,10 +1162,9 @@ hr {
 }
 
 /* =========================================
-   ONBOARDING OVERLAY
+   ONBOARDING
    ========================================= */
 
-/* Scroll sperren, wenn Onboarding offen ist */
 body.onboarding-open {
   overflow: hidden;
 }
@@ -1210,7 +1190,6 @@ body.onboarding-open {
   background: radial-gradient(circle at top, rgba(255, 243, 224, 0.8), rgba(0, 0, 0, 0.55));
 }
 
-/* Dialog-Karte in der Mitte */
 .onboarding-dialog {
   position: relative;
   max-width: 380px;
@@ -1227,7 +1206,6 @@ body.onboarding-open {
     inset 0 0 0 1px var(--card-border);
 }
 
-/* Slides */
 .onboarding-slide {
   animation: onboarding-fade-in 0.18s ease-out;
 }
@@ -1251,7 +1229,6 @@ body.onboarding-open {
   color: var(--text-soft);
 }
 
-/* Buttons unten */
 .onboarding-actions {
   margin-top: 10px;
   display: flex;
@@ -1271,7 +1248,6 @@ body.onboarding-open {
   justify-content: center;
 }
 
-/* Dots */
 .onboarding-dots {
   margin-top: 8px;
   display: flex;
@@ -1295,7 +1271,6 @@ body.onboarding-open {
   background: linear-gradient(135deg, #ff9800, #ffb300);
 }
 
-/* Einblende-Animation */
 @keyframes onboarding-fade-in {
   0% {
     opacity: 0;
@@ -1307,7 +1282,6 @@ body.onboarding-open {
   }
 }
 
-/* Größere Screens: etwas mehr Luft */
 @media (min-width: 768px) {
   .onboarding-dialog {
     max-width: 420px;
@@ -1322,7 +1296,6 @@ body.onboarding-open {
    SPOT-LISTE & DETAILS – FEINTUNING
    ========================================= */
 
-/* Leerer Zustand der Liste (wenn Tilla tröstet) */
 .spot-list-empty {
   padding: 10px 12px;
   border-radius: 16px;
@@ -1338,7 +1311,6 @@ body.onboarding-open {
   color: #e5e7eb;
 }
 
-/* Beschreibung & Badges in der Spot-Karte */
 .spot-card-description {
   margin: 4px 0 6px;
   font-size: 13px;
@@ -1353,7 +1325,6 @@ body.onboarding-open {
   margin-top: 4px;
 }
 
-/* Actions-Zeile in der Spot-Karte */
 .spot-card-actions {
   margin-top: 4px;
   display: flex;
@@ -1371,7 +1342,6 @@ body.onboarding-open {
   font-weight: 600;
 }
 
-/* Detailpanel – Struktur */
 .spot-details--hidden {
   display: none;
 }
@@ -1415,7 +1385,6 @@ body.onboarding-open {
   gap: 6px;
 }
 
-/* Tags im Detailpanel */
 .spot-details-tags {
   margin: 4px 0 6px;
   display: flex;
@@ -1423,7 +1392,6 @@ body.onboarding-open {
   gap: 4px;
 }
 
-/* Beschreibung, Poetry, Adresse */
 .spot-details-description {
   margin: 4px 0 6px;
   font-size: 14px;
@@ -1443,7 +1411,6 @@ body.onboarding-open {
   color: var(--text-soft);
 }
 
-/* Routen-Links */
 .spot-details-routes {
   margin-top: 6px;
   display: flex;
@@ -1497,7 +1464,6 @@ body.onboarding-open {
   margin: 12px 0;
 }
 
-/* Grund-Badge im Family-Spots-Look */
 .badge {
   display: inline-block;
   padding: 4px 9px;
@@ -1519,7 +1485,6 @@ body.onboarding-open {
     inset 0 0 0 1px rgba(148, 163, 184, 0.5);
 }
 
-/* leichte Farbnuancen für verschiedene Badge-Typen */
 .badge--mood {
   background: linear-gradient(135deg, #ffe0b2, #ffb74d);
 }
@@ -1542,7 +1507,6 @@ body.onboarding-open {
   color: #e5e7eb;
 }
 
-/* Optionaler Toggle (falls verwendet) im Ghost-Button-Stil */
 .favorite-toggle {
   margin-top: 12px;
   border: none;
