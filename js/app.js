@@ -520,8 +520,16 @@ function updateLanguageSwitcherVisual() {
 function updatePlusStatusText() {
   if (!plusStatusTextEl) return;
 
-  if (!FEATURES.plus || !plusActive) {
+  if (!FEATURES.plus) {
     plusStatusTextEl.textContent = "";
+    return;
+  }
+
+  if (!plusActive) {
+    plusStatusTextEl.textContent =
+      currentLang === LANG_DE
+        ? "Family Spots Plus ist nicht aktiviert."
+        : "Family Spots Plus is not activated.";
     return;
   }
 
@@ -948,7 +956,7 @@ function getSpotTravelModes(spot) {
  * @param {Spot} spot
  */
 function getRouteUrlsForSpot(spot) {
-  if (!spot.lat || !spot.lng) return null;
+  if (spot.lat == null || spot.lng == null) return null;
 
   const { lat, lng } = spot;
   const name = getSpotName(spot);
@@ -1049,8 +1057,8 @@ function populateCategoryOptions() {
 function isSpotInRadius(spot, centerLatLng, radiusKm) {
   if (
     !map ||
-    !spot.lat ||
-    !spot.lng ||
+    spot.lat == null ||
+    spot.lng == null ||
     !isFinite(radiusKm) ||
     !centerLatLng ||
     typeof centerLatLng.distanceTo !== "function"
@@ -1206,7 +1214,7 @@ function renderMarkers() {
   markersLayer.clearLayers();
 
   filteredSpots.forEach((spot) => {
-    if (!spot.lat || !spot.lng) return;
+    if (spot.lat == null || spot.lng == null) return;
     if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
 
     const el = document.createElement("div");
@@ -1368,7 +1376,7 @@ function syncFavButtonState(btn, spotId) {
 // ------------------------------------------------------
 
 function focusSpotOnMap(spot) {
-  if (!map || !spot.lat || !spot.lng) {
+  if (!map || spot.lat == null || spot.lng == null) {
     showSpotDetails(spot);
     return;
   }
@@ -1761,7 +1769,14 @@ function switchRoute(route) {
     btn.setAttribute("aria-current", isActive ? "page" : "false");
   });
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  const prefersReducedMotion =
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  window.scrollTo({
+    top: 0,
+    behavior: prefersReducedMotion ? "auto" : "smooth"
+  });
 }
 
 // ------------------------------------------------------
