@@ -1,8 +1,8 @@
 // js/app.js
 // ======================================================
-/* Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
-   Senior-Level Refactoring (strukturierter, robuster, dokumentiert)
-   ====================================================== */
+// Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
+// Senior-Level: strukturiert, robust, kommentiert
+// ======================================================
 
 "use strict";
 
@@ -63,6 +63,7 @@ import { TillaCompanion } from "./tilla.js";
 // ------------------------------------------------------
 // Konstanten
 // ------------------------------------------------------
+
 const DEFAULT_MAP_CENTER = [52.4, 9.7];
 const DEFAULT_MAP_ZOOM = 7;
 
@@ -79,8 +80,9 @@ const THEME_DARK = "dark";
 const RADIUS_STEPS_KM = [1, 5, 15, 40, Infinity];
 
 // ------------------------------------------------------
-// Feature-Toggles – zentrale Schalter für optionale Bereiche
+// Feature-Toggles
 // ------------------------------------------------------
+
 const FEATURES = Object.freeze({
   plus: true,
   moodFilter: true,
@@ -97,7 +99,6 @@ const FEATURES = Object.freeze({
 // Kategorien & Gruppen
 // ------------------------------------------------------
 
-// Obergruppen inkl. Slugs
 const CATEGORY_GROUPS = {
   "Spiel & Bewegung": [
     "spielplatz",
@@ -139,27 +140,15 @@ const CATEGORY_GROUPS = {
     "boulderpark",
     "minigolf"
   ],
-  "Wandern & Radfahren": [
-    "wanderweg-kinderwagen",
-    "radweg-family"
-  ],
+  "Wandern & Radfahren": ["wanderweg-kinderwagen", "radweg-family"],
   "Essen & Trinken": [
     "familiencafe",
     "kinder-familiencafe",
     "familien-restaurant"
   ],
-  "Lernen & Kultur": [
-    "museum-kinder",
-    "kinder-museum",
-    "bibliothek"
-  ],
-  "Praktisches": [
-    "oeffentliche-toilette",
-    "wickelraum"
-  ],
-  "Events & Erlebnisse": [
-    "familien-event"
-  ],
+  "Lernen & Kultur": ["museum-kinder", "kinder-museum", "bibliothek"],
+  "Praktisches": ["oeffentliche-toilette", "wickelraum"],
+  "Events & Erlebnisse": ["familien-event"],
   "Unterwegs mit WoMo & Rad": [
     "stellplatz-spielplatz-naehe-kostenlos",
     "wohnmobil-service-station",
@@ -167,13 +156,9 @@ const CATEGORY_GROUPS = {
     "bikepacking-spot",
     "campingplatz-familien"
   ],
-  "Entspannung & Naturorte": [
-    "park-garten",
-    "picknickwiese"
-  ]
+  "Entspannung & Naturorte": ["park-garten", "picknickwiese"]
 };
 
-// Übersetzung der Obergruppen
 const CATEGORY_GROUP_LABELS = {
   de: {
     "Spiel & Bewegung": "Spiel & Bewegung",
@@ -203,7 +188,6 @@ const CATEGORY_GROUP_LABELS = {
   }
 };
 
-// Label-Tabellen pro Sprache
 const CATEGORY_LABELS_DE = {
   "spielplatz": "Spielplatz",
   "abenteuerspielplatz": "Abenteuerspielplatz",
@@ -318,9 +302,6 @@ const CATEGORY_LABELS_EN = {
 // I18N Helper
 // ------------------------------------------------------
 
-/**
- * Liefert Start-Sprache aus Storage / Browser.
- */
 function getInitialLang() {
   const stored = localStorage.getItem("fs_lang");
   if (stored === LANG_DE || stored === LANG_EN) return stored;
@@ -333,20 +314,11 @@ function getInitialLang() {
   return htmlLang === LANG_EN ? LANG_EN : LANG_DE;
 }
 
-/**
- * Übersetzungs-Funktion – Wrapper um I18N.t(...)
- * @param {string} key
- * @returns {string}
- */
 const t = (key) =>
   typeof I18N !== "undefined" && typeof I18N.t === "function"
     ? I18N.t(key)
     : key;
 
-/**
- * Spielideen holt sich I18N ebenfalls zentral.
- * @returns {string}
- */
 function getRandomPlayIdea() {
   if (
     typeof I18N !== "undefined" &&
@@ -358,7 +330,7 @@ function getRandomPlayIdea() {
 }
 
 // ------------------------------------------------------
-// Header-Tagline (Deutsch/Englisch fest verdrahtet)
+// Header-Tagline (fix)
 // ------------------------------------------------------
 
 const HEADER_TAGLINE_TEXT = {
@@ -374,8 +346,9 @@ function updateHeaderTagline(lang) {
 }
 
 // ------------------------------------------------------
-// Globale State-Variablen
+// Globaler UI-State
 // ------------------------------------------------------
+
 let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
@@ -397,14 +370,13 @@ let categoryFilter = "";
 let onlyBigAdventures = false;
 let onlyVerified = false;
 let onlyFavorites = false;
-let filtersCollapsed = true; // beim Start: Filter eingeklappt
+let filtersCollapsed = true;
 
-// DOM-Elemente
+// DOM-Referenzen
 let languageSwitcherEl;
 let themeToggleEl;
 let btnLocateEl;
 let btnHelpEl;
-let headerTaglineEl;
 let viewMapEl;
 let viewAboutEl;
 let bottomNavButtons;
@@ -443,7 +415,7 @@ let btnToggleCompassEl;
 // Tilla
 let tilla = null;
 
-// Button für Spielideen
+// Spielideen
 let playIdeasBtnEl = null;
 
 // Filter-Body innerhalb der Filter-Section
@@ -453,7 +425,7 @@ let filterBodyEls = [];
 let lastSpotTriggerEl = null;
 
 // ------------------------------------------------------
-// Generische Utilities
+// Utilities
 // ------------------------------------------------------
 
 function debounce(fn, delay = 200) {
@@ -477,6 +449,9 @@ function activateOnEnterSpace(handler) {
   };
 }
 
+/**
+ * Wendet statische I18N-Attribute (data-i18n-de/en) auf Textknoten an.
+ */
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
     const keyAttr = currentLang === LANG_DE ? "i18n-de" : "i18n-en";
@@ -486,7 +461,7 @@ function applyStaticI18n() {
 }
 
 // ------------------------------------------------------
-// Utility: Sprache & Übersetzung
+// Sprache & Übersetzungen
 // ------------------------------------------------------
 
 function getCategoryLabel(slug) {
@@ -541,7 +516,6 @@ function updatePlusStatusText() {
 
 /**
  * Setzt Sprache, aktualisiert UI & speichert in localStorage.
- * Bindet gleichzeitig das I18N-Modul mit ein.
  * @param {"de"|"en"} lang
  * @param {{initial?: boolean}} [options]
  */
@@ -550,10 +524,8 @@ function setLanguage(lang, { initial = false } = {}) {
   localStorage.setItem("fs_lang", currentLang);
   document.documentElement.lang = currentLang;
 
-  // Header-Tagline aktualisieren
   updateHeaderTagline(currentLang);
 
-  // I18N-Fassade synchron halten
   try {
     if (
       typeof I18N !== "undefined" &&
@@ -638,7 +610,6 @@ function setLanguage(lang, { initial = false } = {}) {
   applyStaticI18n();
   updatePlusStatusText();
 
-  // NEU: Close-Buttons der Sidebar-Sektionen übersetzen
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
     btn.textContent = currentLang === LANG_DE ? "Schließen" : "Close";
   });
@@ -654,6 +625,7 @@ function setLanguage(lang, { initial = false } = {}) {
 // ------------------------------------------------------
 // Theme
 // ------------------------------------------------------
+
 function getInitialTheme() {
   const stored = localStorage.getItem("fs_theme");
   if (stored === THEME_LIGHT || stored === THEME_DARK) return stored;
@@ -677,6 +649,7 @@ function setTheme(theme) {
 // ------------------------------------------------------
 // Toast
 // ------------------------------------------------------
+
 let toastTimeoutId = null;
 
 /**
@@ -706,6 +679,7 @@ function showToast(keyOrMessage) {
 // ------------------------------------------------------
 // Map / Spots – Setup
 // ------------------------------------------------------
+
 function initMap() {
   if (typeof L === "undefined" || typeof L.map !== "function") {
     console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
@@ -752,12 +726,10 @@ async function loadSpots() {
       /** @type {Spot} */
       const normalized = { ...spot };
 
-      // Normalisierung Koordinaten
       if (normalized.lon != null && normalized.lng == null) {
         normalized.lng = normalized.lon;
       }
 
-      // category vs categories-Fallback
       if (
         !normalized.category &&
         Array.isArray(normalized.categories) &&
@@ -766,7 +738,6 @@ async function loadSpots() {
         normalized.category = normalized.categories[0];
       }
 
-      // vorberechnete / gecachte Felder
       normalized._searchText = buildSpotSearchText(normalized);
       normalized._ageGroups = getSpotAgeGroups(normalized);
       normalized._moods = getSpotMoods(normalized);
@@ -787,6 +758,7 @@ async function loadSpots() {
 // ------------------------------------------------------
 // Favorites – Persistence
 // ------------------------------------------------------
+
 function loadFavoritesFromStorage() {
   if (!FEATURES.favorites) return;
 
@@ -971,6 +943,7 @@ function getRouteUrlsForSpot(spot) {
 // ------------------------------------------------------
 // Kategorien / Filter-Dropdown
 // ------------------------------------------------------
+
 function populateCategoryOptions() {
   if (!filterCategoryEl) return;
 
@@ -983,7 +956,6 @@ function populateCategoryOptions() {
   filterCategoryEl.innerHTML = "";
   filterCategoryEl.appendChild(firstOption);
 
-  // 1. Kategorien aus den definierten Gruppen
   const groupedSlugs = new Set();
 
   Object.entries(CATEGORY_GROUPS).forEach(([groupKey, slugs]) => {
@@ -1009,7 +981,6 @@ function populateCategoryOptions() {
     filterCategoryEl.appendChild(optgroup);
   });
 
-  // 2. Weitere Kategorien aus den Spots, die nicht in CATEGORY_GROUPS stehen
   const extraSet = new Set();
 
   spots.forEach((spot) => {
@@ -1094,7 +1065,7 @@ function updateRadiusTexts() {
 }
 
 // ------------------------------------------------------
-// Filterlogik (zentral)
+// Filterlogik
 // ------------------------------------------------------
 
 function doesSpotMatchFilters(spot, { center, radiusKm }) {
@@ -1156,9 +1127,7 @@ function doesSpotMatchFilters(spot, { center, radiusKm }) {
 
   if (FEATURES.favorites && onlyFavorites) {
     const id = getSpotId(spot);
-    if (!favorites.has(id)) {
-      return false;
-    }
+    if (!favorites.has(id)) return false;
   }
 
   if (!isSpotInRadius(spot, center, radiusKm)) return false;
@@ -1410,8 +1379,6 @@ function showSpotDetails(spot) {
   if (!spotDetailEl) return;
 
   const spotId = getSpotId(spot);
-  const isFav = favorites.has(spotId);
-
   const name = getSpotName(spot);
   const subtitle = getSpotSubtitle(spot);
   const metaParts = getSpotMetaParts(spot);
@@ -1580,6 +1547,7 @@ function toggleFavorite(spot) {
 // ------------------------------------------------------
 // Kompass
 // ------------------------------------------------------
+
 function updateCompassButtonLabel() {
   if (!FEATURES.compass) return;
   if (!btnToggleCompassEl || !compassSectionEl) return;
@@ -1625,7 +1593,7 @@ function handleToggleCompass() {
 }
 
 // ------------------------------------------------------
-// Plus-Code (mit Persistenz)
+// Plus-Code
 // ------------------------------------------------------
 
 function loadPlusStateFromStorage(options = {}) {
@@ -1729,6 +1697,7 @@ function handleDaylogSave() {
 // ------------------------------------------------------
 // Geolocation
 // ------------------------------------------------------
+
 function handleLocateClick() {
   if (!navigator.geolocation || !map) {
     showToast("toast_location_error");
@@ -1751,6 +1720,7 @@ function handleLocateClick() {
 // ------------------------------------------------------
 // Navigation (Karte / Über)
 // ------------------------------------------------------
+
 function switchRoute(route) {
   if (!viewMapEl || !viewAboutEl || !bottomNavButtons) return;
 
@@ -1782,6 +1752,7 @@ function switchRoute(route) {
 // ------------------------------------------------------
 // Filter-Umschalter & View-Toggle
 // ------------------------------------------------------
+
 function handleToggleFilters() {
   if (!btnToggleFiltersEl || !filterBodyEls.length) return;
 
@@ -1799,7 +1770,10 @@ function handleToggleFilters() {
       : t("btn_hide_filters");
   }
 
-  btnToggleFiltersEl.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+  btnToggleFiltersEl.setAttribute(
+    "aria-expanded",
+    isExpanded ? "true" : "false"
+  );
 }
 
 function handleToggleView() {
@@ -1822,16 +1796,16 @@ function handleToggleView() {
 // ------------------------------------------------------
 // Initialisierung
 // ------------------------------------------------------
+
 function init() {
   try {
-    // DOM
+    // DOM-Referenzen
     languageSwitcherEl =
       document.getElementById("language-switcher") ||
       document.getElementById("language-toggle");
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
-    headerTaglineEl = document.getElementById("header-tagline");
 
     viewMapEl = document.getElementById("view-map");
     viewAboutEl = document.getElementById("view-about");
@@ -2188,11 +2162,8 @@ function init() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    if (
-      typeof I18N !== "undefined" &&
-      typeof I18N.init === "function"
-    ) {
-      await I18N.init(); // Lädt automatisch Sprache & setzt DOM
+    if (typeof I18N !== "undefined" && typeof I18N.init === "function") {
+      await I18N.init();
     }
   } catch (err) {
     console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
