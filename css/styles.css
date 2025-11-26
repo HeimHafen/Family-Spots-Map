@@ -95,14 +95,14 @@ body {
   --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
   --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
 
-  /* Map-Farb-Filter (Light) – weniger Grün, warmes Papier, sanftes Wasser */
+  /* Map-Farb-Filter (Light) – warmes Papier, weniger Grün, etwas Kontrast */
   --map-filter:
-    grayscale(0.14)
-    sepia(0.28)
-    saturate(0.94)
-    hue-rotate(-8deg)
+    grayscale(0.35)
+    sepia(0.45)
+    saturate(0.85)
+    hue-rotate(-12deg)
     brightness(1.0)
-    contrast(1.04);
+    contrast(1.05);
 }
 
 [data-theme="dark"] {
@@ -163,12 +163,12 @@ body {
   --radius-circle-stroke: rgba(250, 204, 21, 0.75);
   --radius-circle-fill: rgba(250, 204, 21, 0.15);
 
-  /* Map-Farb-Filter (Dark) – ruhiger, weniger Grün, warm */
+  /* Map-Farb-Filter (Dark) – ruhiger, entsättigt, warm */
   --map-filter:
-    grayscale(0.5)
-    sepia(0.32)
-    saturate(0.96)
-    hue-rotate(-8deg)
+    grayscale(0.6)
+    sepia(0.45)
+    saturate(0.85)
+    hue-rotate(-10deg)
     brightness(0.78)
     contrast(1.08);
 }
@@ -559,7 +559,7 @@ select.input:focus {
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
   transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
-    background 0.12s.ease-out;
+    background 0.12s ease-out;
 }
 
 .mood-chip-emoji {
@@ -757,6 +757,28 @@ select.input:focus {
   position: relative;
 }
 
+/* Goldenes Overlay, das die Karte leicht in die App einfärbt */
+.map-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top,
+      rgba(255, 215, 170, 0.40),
+      rgba(255, 240, 215, 0.16));
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+[data-theme="dark"] .map-section::before {
+  background:
+    radial-gradient(circle at top,
+      rgba(15, 23, 42, 0.85),
+      rgba(15, 23, 42, 0.3));
+  mix-blend-mode: soft-light;
+}
+
 .map-container {
   width: 100%;
   height: 100%;
@@ -801,6 +823,7 @@ select.input:focus {
 @media (min-width: 900px) {
   #view-map {
     flex-direction: row;
+    align-items: flex-start;
   }
 
   .sidebar {
