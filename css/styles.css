@@ -1,31 +1,20 @@
-/* =========================================
-   FAMILY SPOTS MAP – STYLES (GOLD EDITION)
-   -----------------------------------------
-   TABLE OF CONTENTS
-   1. Global Reset & Basics
-   2. Theme Tokens (Light / Dark)
-   3. Base Elements & Utilities
-   4. Header
-   5. Main Layout
-   6. Map View: Sidebar & Map
-   7. Tilla Sidebar
-   8. About View
-   9. Bottom Navigation
-   10. Toast
-   11. Noscript
-   12. Map Marker Styling
-   13. Misc
-   14. Onboarding Overlay
-   15. Spot-List & Details Fine-Tuning
-   16. Prefers Reduced Motion & Hover
-   17. Badges & Scores
-   ========================================= */
-
+/* iOS Safari Fix + Styling für <select> */
+select {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
 
 /* =========================================
-   1. GLOBAL RESET & BASICS
+   FAMILY SPOTS MAP – GLOBAL STYLES (GOLD EDITION)
    ========================================= */
 
+/* Reset & Basics */
 *,
 *::before,
 *::after {
@@ -38,10 +27,7 @@ body {
   padding: 0;
 }
 
-
-/* =========================================
-   2. THEME TOKENS (LIGHT / DARK)
-   ========================================= */
+/* ---------- THEME TOKENS (LIGHT / DARK) ---------- */
 
 :root {
   --app-bg: radial-gradient(circle at top, #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
@@ -108,23 +94,6 @@ body {
   --radius-pill: 999px;
   --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
   --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
-
-  /* Spacing Scale (4pt-basierend) */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-7: 32px;
-
-  /* Typografie Scale */
-  --fs-xs: 12px;
-  --fs-sm: 13px;
-  --fs-md: 14px;
-  --fs-lg: 15px;
-  --fs-xl: 18px;
-  --fs-2xl: 22px;
 }
 
 [data-theme="dark"] {
@@ -186,18 +155,12 @@ body {
   --radius-circle-fill: rgba(250, 204, 21, 0.15);
 }
 
-
-/* =========================================
-   3. BASE ELEMENTS & UTILITIES
-   ========================================= */
-
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
   color: var(--text-color);
   background: var(--app-bg);
   -webkit-font-smoothing: antialiased;
-  transition: background 0.4s ease, color 0.3s ease;
 }
 
 /* Links */
@@ -236,40 +199,13 @@ a {
   outline-offset: 2px;
 }
 
-/* Card-Basis für wiederkehrende Karten */
-.sidebar-section,
-.spot-card,
-.tilla-sidebar-card,
-.page-about,
-.spot-details {
-  background: var(--card-bg);
-  box-shadow:
-    var(--card-shadow),
-    inset 0 0 0 1px var(--card-border);
+/* Theme-Übergänge */
+body {
+  transition: background 0.4s ease, color 0.3s ease;
 }
-
-/* Button-Basis */
-.btn,
-.btn-ghost,
-.bottom-nav-item,
-.favorite-toggle {
-  border-radius: var(--radius-pill);
-  font-family: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-/* runde Icon-/Pill-Buttons */
-.btn-icon,
-.language-switcher,
-.sidebar-section-close {
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-}
-
 
 /* =========================================
-   4. HEADER
+   HEADER
    ========================================= */
 
 .app-header {
@@ -289,14 +225,14 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-2); /* 8px */
+  margin-bottom: 10px;
 }
 
 .app-header-left,
 .app-header-right {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 8px;
 }
 
 /* Icon-Buttons (? | Theme | Locate) */
@@ -306,6 +242,7 @@ a {
   margin: 0;
   width: 40px;
   height: 40px;
+  border-radius: var(--radius-pill);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -314,6 +251,7 @@ a {
     var(--header-icon-shadow),
     inset 0 0 0 1px var(--header-icon-border);
   font-size: 20px;
+  cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
     opacity 0.12s;
 }
@@ -333,6 +271,7 @@ a {
   margin: 0;
   width: 40px;
   height: 40px;
+  border-radius: var(--radius-pill);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -340,10 +279,11 @@ a {
   box-shadow:
     var(--language-pill-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-  font-size: var(--fs-sm);
+  font-size: 14px;
   font-weight: 700;
   color: var(--text-strong); /* statt gelb jetzt dunkle Schrift */
   letter-spacing: 0.06em;
+  cursor: pointer;
 }
 
 [data-theme="dark"] .language-switcher {
@@ -357,7 +297,7 @@ a {
 
 .header-title {
   margin: 0;
-  font-size: var(--fs-2xl);
+  font-size: 22px;
   font-weight: 800;
   letter-spacing: 0.02em;
   display: inline-flex;
@@ -381,19 +321,18 @@ a {
 /* Claim-Button */
 .header-tagline {
   display: inline-block;
-  margin: var(--space-2) auto 0;
+  margin: 8px auto 0;
   padding: 8px 20px;
   background: var(--header-tagline-bg);
   color: var(--header-tagline-color);
   border-radius: var(--radius-pill);
-  font-size: var(--fs-md);
+  font-size: 14px;
   font-weight: 600;
   box-shadow: var(--header-tagline-shadow);
 }
 
-
 /* =========================================
-   5. MAIN LAYOUT
+   MAIN LAYOUT
    ========================================= */
 
 .app-main {
@@ -401,7 +340,7 @@ a {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding: var(--space-4) 12px 96px; /* unten Platz für Bottom-Nav */
+  padding: 16px 12px 96px; /* unten Platz für Bottom-Nav */
 }
 
 /* Views (Karte / Über) */
@@ -413,15 +352,14 @@ a {
   display: block;
 }
 
-
 /* =========================================
-   6. MAP VIEW: SIDEBAR + MAP
+   MAP VIEW: SIDEBAR + MAP
    ========================================= */
 
 #view-map {
   display: flex;
   flex-direction: column;
-  gap: 18px; /* mehr Luft zwischen Karte und Family Spots Plus */
+  gap: 14px;
 }
 
 /* Sidebar */
@@ -440,18 +378,33 @@ a {
 
 /* Neumorph-Karten */
 .sidebar-section {
+  background: var(--sidebar-section-bg);
   border-radius: 24px;
   padding: 12px 14px 14px;
+  box-shadow:
+    var(--sidebar-section-shadow),
+    inset 0 0 0 1px var(--sidebar-section-border);
 }
 
-/* Vertikaler Abstand zwischen übereinander liegenden Karten */
+/* Vertikaler Abstand zwischen übereinander liegenden Karten
+   (global, z. B. Family Spots Plus & Mein Tag) */
 .sidebar-section + .sidebar-section {
-  margin-top: var(--space-2);
+  margin-top: 10px;
 }
 
 /* In der eigentlichen Sidebar übernimmt das Flex-Gap den Abstand */
 .sidebar > .sidebar-section + .sidebar-section {
   margin-top: 0;
+}
+
+/* Extra Abstand zwischen Karte und den Karten darunter (Family Spots Plus / Mein Tag) */
+.map-section + .sidebar-section {
+  margin-top: 22px; /* mehr Luft zur Karte */
+}
+
+/* Extra Abstand speziell zwischen Family Spots Plus und Mein Tag */
+#plus-section + #daylog-section {
+  margin-top: 14px;
 }
 
 .sidebar-section[open] {
@@ -462,36 +415,32 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: 8px;
   list-style: none;
 }
 
 .sidebar-section-title {
   margin: 0;
-  font-size: var(--fs-xl);
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-strong);
 }
 
-/* Close-Buttons jetzt als Text-Pills (z.B. "Schließen") */
 .sidebar-section-close {
   border: none;
-  padding: 5px 12px;
-  background: rgba(255, 255, 255, 0.88);
-  color: #7a4a2b;
-  font-size: var(--fs-sm);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  font-size: 14px;
   font-weight: 600;
-  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 96px;
+  cursor: pointer;
 }
 
 [data-theme="dark"] .sidebar-section-close {
   background: rgba(15, 23, 42, 0.98);
   color: #e5e7eb;
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.9);
 }
 
 /* Filter-Section eingeklappt: nur Header bleibt sichtbar */
@@ -528,22 +477,22 @@ a {
 
 /* Allgemeine Form Controls */
 .filter-group {
-  margin-top: var(--space-2);
+  margin-top: 8px;
 }
 
 .filter-group-label {
   display: block;
-  font-size: var(--fs-sm);
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-strong);
-  margin-bottom: var(--space-2); /* mehr Abstand zu den Inputs */
+  margin-bottom: 4px;
 }
 
 .filter-group-helper {
   margin: 0 0 6px;
-  font-size: var(--fs-sm);
+  font-size: 13px;
   color: var(--text-soft);
 }
 
@@ -554,7 +503,7 @@ select.input {
   border-radius: var(--radius-pill);
   border: none;
   padding: 9px 13px;
-  font-size: var(--fs-md);
+  font-size: 14px;
   font-family: inherit;
   background: var(--input-bg);
   box-shadow:
@@ -566,18 +515,6 @@ select.input {
 textarea.input {
   border-radius: 16px;
   resize: vertical;
-}
-
-/* Unified <select> styling inkl. iOS Safari Fix */
-select {
-  background-color: var(--input-bg);
-  color: var(--text-color);
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 1.5rem;
-  position: relative;
-  z-index: 1;
 }
 
 .input:focus,
@@ -593,7 +530,7 @@ select.input:focus {
 .mood-row {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: 8px;
 }
 
 .mood-chip,
@@ -604,7 +541,7 @@ select.input:focus {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: var(--fs-sm);
+  font-size: 13px;
   background: var(--chip-bg);
   color: var(--chip-color);
   box-shadow:
@@ -641,7 +578,7 @@ select.input:focus {
 .radius-row {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 8px;
 }
 
 #filter-radius {
@@ -649,14 +586,14 @@ select.input:focus {
 }
 
 .radius-max-label {
-  font-size: var(--fs-sm);
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-strong);
 }
 
 .radius-description {
   margin: 4px 0 0;
-  font-size: var(--fs-sm);
+  font-size: 13px;
   color: var(--text-soft);
 }
 
@@ -668,33 +605,41 @@ select.input:focus {
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  font-size: var(--fs-md);
+  gap: 8px;
+  font-size: 14px;
 }
 
 /* Buttons */
 .btn {
   border: none;
+  border-radius: var(--radius-pill);
   padding: 9px 16px;
-  font-size: var(--fs-md);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
   background: linear-gradient(135deg, #ff9800, #ffb300);
   color: #fffdf8;
   box-shadow:
     0 4px 10px rgba(180, 96, 33, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+  cursor: pointer;
 }
 
 .btn-small {
   padding: 7px 14px;
-  font-size: var(--fs-sm);
+  font-size: 13px;
 }
 
 .btn-ghost {
+  border-radius: var(--radius-pill);
+  border: none;
   padding: 5px 10px;
   background: rgba(255, 255, 255, 0.88);
   color: #7a4a2b;
-  font-size: var(--fs-sm);
+  font-size: 13px;
+  font-weight: 600;
   box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
+  cursor: pointer;
 }
 
 [data-theme="dark"] .btn-ghost {
@@ -706,26 +651,33 @@ select.input:focus {
 /* Plus-Code-Form */
 .plus-code-form {
   margin-top: 6px;
-  font-size: var(--fs-md);
+  font-size: 14px;
 }
 
 .plus-code-row {
   display: flex;
-  gap: var(--space-2);
+  gap: 8px;
   margin: 6px 0;
 }
 
 .plus-note {
   margin: 0;
-  font-size: var(--fs-sm);
+  font-size: 13px;
   color: var(--text-soft);
 }
 
-/* Tagesprotokoll – mehr Abstand von "Wie war euer Tag?" */
+/* Tagesprotokoll */
+#daylog-section .filter-group label {
+  display: block;
+  margin-bottom: 6px;
+}
+
 #daylog-text {
-  min-height: 80px;
-  margin-top: 8px;
-  padding-top: 10px;
+  min-height: 70px;
+}
+
+#daylog-save {
+  margin-top: 14px; /* Button weiter weg vom Textfeld */
 }
 
 /* Filter-Section, Spot-Liste */
@@ -745,7 +697,7 @@ select.input:focus {
 }
 
 #spot-list {
-  margin-top: var(--space-2);
+  margin-top: 8px;
   max-height: 320px;
   overflow-y: auto;
   padding-right: 4px;
@@ -753,25 +705,29 @@ select.input:focus {
 
 /* Spot-Karten (Liste) */
 .spot-card {
+  background: var(--card-bg);
   border-radius: 18px;
   padding: 10px 11px 11px;
-  margin-bottom: var(--space-2);
+  margin-bottom: 8px;
+  box-shadow:
+    var(--card-shadow),
+    inset 0 0 0 1px var(--card-border);
 }
 
 .spot-card-title {
-  font-size: var(--fs-md);
+  font-size: 15px;
   font-weight: 700;
   margin: 0 0 3px;
 }
 
 .spot-card-subtitle {
-  font-size: var(--fs-sm);
+  font-size: 13px;
   margin: 0 0 4px;
   color: var(--text-soft);
 }
 
 .spot-card-meta {
-  font-size: var(--fs-xs);
+  font-size: 12px;
   color: var(--text-soft);
 }
 
@@ -811,7 +767,9 @@ select.input:focus {
   margin: 8px 10px 10px;
   max-height: none;
   overflow-y: visible;
+  background: rgba(255, 248, 239, 0.96);
   border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(116, 68, 33, 0.6);
   padding: 10px 12px 11px;
 }
 
@@ -855,9 +813,8 @@ select.input:focus {
   }
 }
 
-
 /* =========================================
-   7. TILLA – SIDEBAR (Map-Ansicht)
+   TILLA – SIDEBAR (Map-Ansicht)
    ========================================= */
 
 /* Sanftes Schaukeln + leichte Kopfneigung */
@@ -900,9 +857,13 @@ select.input:focus {
 .tilla-sidebar-card {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: 12px;
   padding: 10px 12px;
   border-radius: 22px;
+  background: var(--card-bg);
+  box-shadow:
+    var(--card-shadow),
+    inset 0 0 0 1px var(--card-border);
   animation: tilla-card-in 0.45s ease-out 0.1s both;
 }
 
@@ -920,7 +881,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 80px;
+  width: 80px; /* größer gemacht */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -933,42 +894,44 @@ select.input:focus {
 
 #tilla-sidebar-text {
   margin: 0;
-  font-size: var(--fs-md);
+  font-size: 14px;
   line-height: 1.5;
 }
 
-
 /* =========================================
-   8. ABOUT VIEW
+   ABOUT VIEW
    ========================================= */
 
 .page-about {
+  background: var(--card-bg);
   border-radius: 26px;
   padding: 18px 16px 22px;
+  box-shadow:
+    var(--card-shadow),
+    inset 0 0 0 1px var(--card-border);
 }
 
 .page-about h2 {
   margin-top: 0;
-  margin-bottom: var(--space-4);
-  font-size: var(--fs-2xl);
+  margin-bottom: 16px;
+  font-size: 22px;
 }
 
 .page-about h3 {
-  margin-top: var(--space-4);
-  margin-bottom: var(--space-1);
-  font-size: var(--fs-xl);
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-size: 18px;
 }
 
 .page-about p {
-  margin-top: var(--space-1);
-  margin-bottom: var(--space-2);
+  margin-top: 4px;
+  margin-bottom: 8px;
   line-height: 1.5;
-  font-size: var(--fs-lg);
+  font-size: 15px;
 }
 
-
 /* =========================================
-   9. BOTTOM NAV
+   BOTTOM NAV
    ========================================= */
 
 .bottom-nav {
@@ -977,7 +940,7 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 70px;
+  height: 60px; /* noch etwas kompakter */
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -988,8 +951,8 @@ select.input:focus {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 10px;
-  top: 10px;
+  bottom: 6px;
+  top: 6px;
   border-radius: 22px;
   background: var(--bottom-nav-backdrop);
   filter: blur(10px);
@@ -1004,25 +967,29 @@ select.input:focus {
   pointer-events: auto;
   border: none;
   background: var(--bottom-nav-item-bg);
-  padding: 8px 16px;
-  margin: 0 6px;
-  min-width: 88px;
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;      /* kleineres Padding */
+  margin: 0 4px;
+  min-width: 76px;        /* schmaler */
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  font-size: 12px;
+  gap: 1px;
+  font-size: 11px;        /* leicht kleiner */
+  font-weight: 600;
   color: var(--bottom-nav-item-color);
   box-shadow:
     0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
 }
 
 .bottom-nav-item--active {
   background: var(--bottom-nav-item-active-bg);
   color: var(--bottom-nav-item-active-color);
+  font-weight: 600; /* einheitliche Schriftstärke */
 }
 
 /* Dark Mode – aktiver Nav-Pill etwas softer */
@@ -1043,9 +1010,8 @@ select.input:focus {
   font-size: 18px;
 }
 
-
 /* =========================================
-   10. TOAST
+   TOAST
    ========================================= */
 
 .toast {
@@ -1058,7 +1024,7 @@ select.input:focus {
   color: #fff7ec;
   border-radius: var(--radius-pill);
   padding: 8px 16px;
-  font-size: var(--fs-md);
+  font-size: 14px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
   opacity: 0;
   pointer-events: none;
@@ -1070,9 +1036,8 @@ select.input:focus {
   transform: translateX(-50%) translateY(-4px);
 }
 
-
 /* =========================================
-   11. NOSCRIPT
+   NOSCRIPT
    ========================================= */
 
 .noscript-warning {
@@ -1080,12 +1045,11 @@ select.input:focus {
   background: #d84315;
   color: #fff;
   text-align: center;
-  font-size: var(--fs-md);
+  font-size: 14px;
 }
 
-
 /* =========================================
-   12. MAP MARKER – ORANGE PINS
+   MAP MARKER – ORANGE PINS
    ========================================= */
 
 /* CLUSTER-BUBBLES im Family-Spots-Look – ohne Schimmer außen */
@@ -1123,7 +1087,7 @@ select.input:focus {
 
 .marker-cluster span {
   display: block;
-  font-size: var(--fs-sm);
+  font-size: 13px;
   line-height: 1;
 }
 
@@ -1171,22 +1135,22 @@ select.input:focus {
 
 /* Popup-Styles */
 .popup strong {
-  font-size: var(--fs-md);
+  font-size: 14px;
 }
 
 .popup small {
-  font-size: var(--fs-sm);
+  font-size: 13px;
 }
 
 .popup-actions {
   margin-top: 4px;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: 8px;
 }
 
 .popup-link {
-  font-size: var(--fs-xs);
+  font-size: 12px;
   font-weight: 600;
   padding: 4px 8px;
   border-radius: var(--radius-pill);
@@ -1202,24 +1166,22 @@ select.input:focus {
   fill: var(--radius-circle-fill);
 }
 
-
 /* =========================================
-   13. MISC
+   MISC
    ========================================= */
 
 hr {
   border: none;
   border-bottom: 1px solid rgba(193, 137, 91, 0.35);
-  margin: var(--space-4) 0;
+  margin: 16px 0;
 }
 
 [data-theme="dark"] hr {
   border-bottom-color: rgba(148, 163, 184, 0.35);
 }
 
-
 /* =========================================
-   14. ONBOARDING OVERLAY
+   ONBOARDING OVERLAY
    ========================================= */
 
 /* Scroll sperren, wenn Onboarding offen ist */
@@ -1257,8 +1219,12 @@ body.onboarding-open {
 }
 
 .onboarding-content {
+  background: var(--card-bg);
   border-radius: 24px;
   padding: 16px 16px 14px;
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px var(--card-border);
 }
 
 /* Slides */
@@ -1268,20 +1234,20 @@ body.onboarding-open {
 
 .onboarding-slide h2 {
   margin: 0 0 8px;
-  font-size: var(--fs-xl);
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-strong);
 }
 
 .onboarding-slide p {
   margin: 0 0 8px;
-  font-size: var(--fs-md);
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-soft);
 }
 
 .onboarding-hint {
-  font-size: var(--fs-sm);
+  font-size: 13px;
   color: var(--text-soft);
 }
 
@@ -1289,7 +1255,7 @@ body.onboarding-open {
 .onboarding-actions {
   margin-top: 10px;
   display: flex;
-  gap: var(--space-2);
+  gap: 8px;
   justify-content: flex-end;
   align-items: center;
 }
@@ -1307,7 +1273,7 @@ body.onboarding-open {
 
 /* Dots */
 .onboarding-dots {
-  margin-top: var(--space-2);
+  margin-top: 8px;
   display: flex;
   justify-content: center;
   gap: 6px;
@@ -1352,9 +1318,8 @@ body.onboarding-open {
   }
 }
 
-
 /* =========================================
-   15. SPOT-LISTE & DETAILS – FEINTUNING
+   SPOT-LISTE & DETAILS – FEINTUNING
    ========================================= */
 
 /* Leerer Zustand der Liste (wenn Tilla tröstet) */
@@ -1362,7 +1327,7 @@ body.onboarding-open {
   padding: 10px 12px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.92);
-  font-size: var(--fs-md);
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-soft);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
@@ -1376,7 +1341,7 @@ body.onboarding-open {
 /* Beschreibung & Badges in der Spot-Karte */
 .spot-card-description {
   margin: 4px 0 6px;
-  font-size: var(--fs-sm);
+  font-size: 13px;
   line-height: 1.4;
   color: var(--text-soft);
 }
@@ -1394,7 +1359,7 @@ body.onboarding-open {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: var(--fs-xs);
+  font-size: 12px;
   color: var(--text-soft);
 }
 
@@ -1415,13 +1380,13 @@ body.onboarding-open {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: var(--space-2);
+  gap: 8px;
   margin-bottom: 6px;
 }
 
 .spot-details-title {
   margin: 0 0 2px;
-  font-size: var(--fs-lg);
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -1429,7 +1394,7 @@ body.onboarding-open {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  font-size: var(--fs-xs);
+  font-size: 12px;
   color: var(--text-soft);
 }
 
@@ -1461,20 +1426,20 @@ body.onboarding-open {
 /* Beschreibung, Poetry, Adresse */
 .spot-details-description {
   margin: 4px 0 6px;
-  font-size: var(--fs-md);
+  font-size: 14px;
   line-height: 1.5;
 }
 
 .spot-details-poetry {
   margin: 0 0 6px;
-  font-size: var(--fs-md);
+  font-size: 14px;
   font-style: italic;
   color: var(--text-soft);
 }
 
 .spot-details-address {
   margin: 0 0 6px;
-  font-size: var(--fs-sm);
+  font-size: 13px;
   color: var(--text-soft);
 }
 
@@ -1483,11 +1448,11 @@ body.onboarding-open {
   margin-top: 6px;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: 8px;
 }
 
 .spot-details-route-link {
-  font-size: var(--fs-sm);
+  font-size: 13px;
   font-weight: 600;
   padding: 6px 10px;
   border-radius: var(--radius-pill);
@@ -1501,20 +1466,8 @@ body.onboarding-open {
   color: #e5e7eb;
 }
 
-/* Optionaler Toggle (falls verwendet) im Ghost-Button-Stil */
-.favorite-toggle {
-  margin-top: 12px;
-  border: none;
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #7a4a2b;
-  font-size: var(--fs-md);
-  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
-}
-
-
 /* =========================================
-   16. PREFERS REDUCED MOTION & HOVER
+   PREFERS REDUCED MOTION
    ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1533,26 +1486,14 @@ body.onboarding-open {
   }
 }
 
-/* Hover-Effekte nur auf Geräten mit Maus */
-@media (hover: hover) and (pointer: fine) {
-  .favorite-toggle:hover {
-    background-color: #fff3e0;
-  }
-
-  [data-theme="dark"] .favorite-toggle:hover {
-    background: rgba(30, 64, 175, 0.45);
-  }
-}
-
-
 /* =========================================
-   17. BADGES & SCORES
+   BADGES & SCORES
    ========================================= */
 
 .spot-details-scores {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: 8px;
   margin: 12px 0;
 }
 
@@ -1561,7 +1502,7 @@ body.onboarding-open {
   display: inline-block;
   padding: 4px 9px;
   border-radius: var(--radius-pill);
-  font-size: var(--fs-xs);
+  font-size: 12px;
   line-height: 1.4;
   background: var(--chip-bg);
   color: var(--chip-color);
@@ -1599,4 +1540,32 @@ body.onboarding-open {
 [data-theme="dark"] .badge--distance {
   background: rgba(148, 163, 184, 0.22);
   color: #e5e7eb;
+}
+
+/* Optionaler Toggle (falls verwendet) im Ghost-Button-Stil */
+.favorite-toggle {
+  margin-top: 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #7a4a2b;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
+}
+
+.favorite-toggle:hover {
+  background-color: #fff3e0;
+}
+
+[data-theme="dark"] .favorite-toggle {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="dark"] .favorite-toggle:hover {
+  background: rgba(30, 64, 175, 0.45);
 }
