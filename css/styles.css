@@ -1028,6 +1028,7 @@ select.input:focus {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  z-index: 1100;
 }
 
 .toast--visible {
@@ -1191,7 +1192,7 @@ body.onboarding-open {
 .onboarding-overlay {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 1300;
   display: flex;
   align-items: center;
   justify-content: center;
