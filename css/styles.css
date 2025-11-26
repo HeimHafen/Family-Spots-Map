@@ -385,12 +385,16 @@ body {
   margin-top: 0;
 }
 
-/* Mehr Luft zwischen Karte und Family Spots Plus */
+/* ABSTÄNDE:
+   Karte ↔ Family Spots Plus
+   Family Spots Plus ↔ Mein Tag
+   -> beide 14px für Monk-Symmetrie
+*/
 .map-section + .sidebar-section {
-  margin-top: 32px;
+  margin-top: 14px;
 }
 
-/* etwas mehr Luft zwischen Plus und Mein Tag */
+/* plus-section ↔ daylog-section explizit ebenfalls 14px */
 #plus-section + #daylog-section {
   margin-top: 14px;
 }
@@ -1108,9 +1112,10 @@ select.input:focus {
   }
 }
 
-/* Attribution höher, damit nichts abgeschnitten wird */
+/* Attribution – leicht nach links und etwas vom Rand weg */
 .leaflet-control-attribution {
   bottom: 4px !important;
+  right: 12px !important;
   font-size: 10px;
 }
 
@@ -1207,7 +1212,7 @@ body.onboarding-open {
 }
 
 .onboarding-slide {
-  animation: onboarding-fade-in 0.18s ease-out;
+  animation: onboarding-fade-in 0.18s.ease-out;
 }
 
 .onboarding-slide h2 {
