@@ -80,6 +80,9 @@ const THEME_DARK = "dark";
 /** 0–4 → Radius in km, Infinity = kein Limit */
 const RADIUS_STEPS_KM = [1, 5, 15, 40, Infinity];
 
+/** Maximale Marker-Anzahl für gute Performance */
+const MAX_MARKERS_RENDER = 500;
+
 // ------------------------------------------------------
 // Feature-Toggles
 // ------------------------------------------------------
@@ -360,6 +363,8 @@ let spots = [];
 /** @type {Spot[]} */
 let filteredSpots = [];
 let favorites = new Set();
+/** Toast-Entprellung für Marker-Limit */
+let hasShownMarkerLimitToast = false;
 
 let plusActive = false;
 let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
@@ -458,6 +463,18 @@ function applyStaticI18n() {
     const keyAttr = currentLang === LANG_DE ? "i18n-de" : "i18n-en";
     const text = el.getAttribute(`data-${keyAttr}`);
     if (text) el.textContent = text;
+  });
+}
+
+/**
+ * Setzt loading="lazy" für Bilder, falls vom Browser unterstützt.
+ */
+function initLazyLoadImages() {
+  if (!("loading" in HTMLImageElement.prototype)) return;
+  document.querySelectorAll("img").forEach((img) => {
+    if (!img.loading || img.loading === "auto") {
+      img.loading = "lazy";
+    }
   });
 }
 
@@ -806,29 +823,7 @@ async function loadSpots() {
     }
   }
 
-  spots = raw.map((spot) => {
-    /** @type {Spot} */
-    const normalized = { ...spot };
-
-    if (normalized.lon != null && normalized.lng == null) {
-      normalized.lng = normalized.lon;
-    }
-
-    if (
-      !normalized.category &&
-      Array.isArray(normalized.categories) &&
-      normalized.categories.length
-    ) {
-      normalized.category = normalized.categories[0];
-    }
-
-    normalized._searchText = buildSpotSearchText(normalized);
-    normalized._ageGroups = getSpotAgeGroups(normalized);
-    normalized._moods = getSpotMoods(normalized);
-    normalized._travelModes = getSpotTravelModes(normalized);
-
-    return normalized;
-  });
+  spots = raw.map(normalizeSpot);
 
   loadFavoritesFromStorage();
   populateCategoryOptions();
@@ -1025,6 +1020,35 @@ function getSpotTravelModes(spot) {
 
   spot._travelModes = result;
   return result;
+}
+
+/**
+ * Vereinheitlichte Normalisierung für alle Spots.
+ * @param {Spot} raw
+ * @returns {Spot}
+ */
+function normalizeSpot(raw) {
+  /** @type {Spot} */
+  const spot = { ...raw };
+
+  if (spot.lon != null && spot.lng == null) {
+    spot.lng = spot.lon;
+  }
+
+  if (
+    !spot.category &&
+    Array.isArray(spot.categories) &&
+    spot.categories.length
+  ) {
+    spot.category = spot.categories[0];
+  }
+
+  spot._searchText = buildSpotSearchText(spot);
+  spot._ageGroups = getSpotAgeGroups(spot);
+  spot._moods = getSpotMoods(spot);
+  spot._travelModes = getSpotTravelModes(spot);
+
+  return spot;
 }
 
 /**
@@ -1311,7 +1335,14 @@ function renderMarkers() {
   if (!markersLayer) return;
   markersLayer.clearLayers();
 
-  filteredSpots.forEach((spot) => {
+  if (!filteredSpots || !filteredSpots.length) return;
+
+  const shouldLimit = filteredSpots.length > MAX_MARKERS_RENDER;
+  const toRender = shouldLimit
+    ? filteredSpots.slice(0, MAX_MARKERS_RENDER)
+    : filteredSpots;
+
+  toRender.forEach((spot) => {
     if (!hasValidLatLng(spot)) return;
     if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
 
@@ -1365,6 +1396,20 @@ function renderMarkers() {
 
     markersLayer.addLayer(marker);
   });
+
+  if (shouldLimit) {
+    if (!hasShownMarkerLimitToast) {
+      hasShownMarkerLimitToast = true;
+      const msg =
+        currentLang === LANG_DE
+          ? `Nur die ersten ${MAX_MARKERS_RENDER} Spots auf der Karte – bitte Filter oder Zoom nutzen.`
+          : `Only the first ${MAX_MARKERS_RENDER} spots are shown on the map – please use filters or zoom in.`;
+      showToast(msg);
+    }
+  } else {
+    // Reset, falls Filter/Zoom wieder unter das Limit fallen
+    hasShownMarkerLimitToast = false;
+  }
 }
 
 function renderSpotList() {
@@ -2033,14 +2078,22 @@ function init() {
 
     initMap();
 
-    if (map && spotDetailEl) {
-      map.on("click", () => {
-        closeSpotDetails({ returnFocus: true });
-      });
-    }
-
-    // Map bei Fenster-Resize sauber neu berechnen
     if (map) {
+      if (spotDetailEl) {
+        map.on("click", () => {
+          closeSpotDetails({ returnFocus: true });
+        });
+      }
+
+      // Performance-freundliches Nachladen bei Kartenbewegung / Zoom
+      map.on(
+        "moveend zoomend",
+        debounce(() => {
+          applyFiltersAndRender();
+        }, 200)
+      );
+
+      // Map bei Fenster-Resize sauber neu berechnen
       window.addEventListener(
         "resize",
         debounce(() => {
@@ -2280,6 +2333,7 @@ function init() {
     updateCompassUI();
     loadPlusStateFromStorage();
     loadDaylogFromStorage();
+    initLazyLoadImages(); // Performance bei Bildern
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
@@ -2294,6 +2348,8 @@ function init() {
 
     switchRoute("map");
     loadSpots();
+
+    // TODO: map.js, filters.js, utils.js könnten Funktionen modularisieren
   } catch (err) {
     console.error("[Family Spots] Init-Fehler:", err);
   }
