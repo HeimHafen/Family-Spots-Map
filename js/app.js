@@ -630,6 +630,11 @@ function setLanguage(lang, { initial = false } = {}) {
   applyStaticI18n();
   updatePlusStatusText();
 
+  // NEU: Close-Buttons der Sidebar-Sektionen übersetzen
+  document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
+    btn.textContent = currentLang === LANG_DE ? "Schließen" : "Close";
+  });
+
   if (!initial) {
     const headerTitle = document.querySelector(".header-title");
     if (headerTitle && typeof headerTitle.focus === "function") {
