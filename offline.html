@@ -2,20 +2,54 @@
 <html lang="de" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <title>Offline – Family Spots Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#f7f8fb" />
+  <title>Offline – Family Spots Map</title>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+
   <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body.offline-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      text-align: center;
+      background: var(--app-bg, #ffe9c7);
+      color: var(--text-color, #452213);
+      font-family: system-ui, sans-serif;
+    }
+
+    .offline-container {
+      max-width: 480px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+  </style>
 </head>
 <body class="offline-page">
   <main class="offline-container">
-    <h1>Family Spots Map</h1>
+    <h1>📍 Family Spots Map</h1>
     <p>
-      Du bist aktuell offline. Keine Sorge – sobald du wieder Internet hast,
-      lädt die Karte automatisch nach.
+      Du bist gerade offline. Keine Sorge – sobald du wieder verbunden bist,
+      lädt die Karte automatisch.
     </p>
     <p>
-      Tipp: Viele Spots sind bereits lokal gespeichert. Öffne die Seite einmal
-      mit Internet, dann kannst du sie später als App-Symbol starten.
+      Tipp: Wenn du die Seite einmal online öffnest, kannst du sie danach als
+      App nutzen – auch ohne Internet.
     </p>
   </main>
 </body>
