@@ -4,15 +4,38 @@
 //
 // Integration (in app.js):
 //
-//   import { TillaCompanion } from './tilla.js';
+//   import { TillaCompanion } from "./tilla.js";
 //
 //   const tilla = new TillaCompanion({
-//     getText: (key) => t(key)  // optional: Überschreiben einzelner Texte möglich
+//     getText: (key) => t(key) // optional: i18n-Funktion, z. B. aus I18N.t
 //   });
+//
+// Tilla zeigt Kontexttexte in der Sidebar an:
+//  - Intro-Texte
+//  - Hinweise bei leerer Karte
+//  - Reaktionen auf Favoriten, Daylog, Plus, Kompass, Reisemodus
+//
+// Externe API (wird von app.js verwendet):
+//  - onLanguageChanged()
+//  - setTravelMode(mode)
+//  - onPlusActivated()
+//  - onDaylogSaved()
+//  - onFavoriteAdded()
+//  - onFavoriteRemoved()
+//  - onNoSpotsFound()
+//  - onSpotsFound()
+//  - onCompassApplied(context)
+//  - showPlayIdea(text)
 //
 // ------------------------------------------------------
 
-// Fallback-Texte, falls getText() nichts liefert oder (noch) nicht verkabelt ist.
+/**
+ * Fallback-Texte, falls getText() (z. B. I18N.t) nichts liefert
+ * oder (noch) nicht verkabelt ist.
+ *
+ * Struktur:
+ * FALLBACK_TEXTS[lang][key] = string | string[]
+ */
 const FALLBACK_TEXTS = {
   de: {
     turtle_intro_1: [
@@ -100,18 +123,38 @@ const FALLBACK_TEXTS = {
   }
 };
 
+/**
+ * Ermittelt die aktuelle Sprache aus dem lang-Attribut von <html>.
+ * Fällt auf "de" zurück, wenn nichts definiert ist.
+ * @returns {"de"|"en"}
+ */
 function getCurrentLang() {
   const lang = (document.documentElement.lang || "de").toLowerCase();
   if (lang.startsWith("en")) return "en";
   return "de";
 }
 
+/**
+ * TillaCompanion
+ *
+ * Steuert die Texte im Tilla-Sidebar-Widget (#tilla-sidebar-text) abhängig von
+ * App-Zuständen (Reisemodus, Filter, Plus, Favoriten, Daylog, Kompass, etc.).
+ *
+ * Optionen:
+ *  - getText(key): optionaler Übersetzer, z. B. (key) => I18N.t(key)
+ */
 export class TillaCompanion {
+  /**
+   * @param {{ getText?: (key: string) => string }} [options]
+   */
   constructor(options = {}) {
+    /** @type {(key: string) => string | null} */
     this.getText =
       typeof options.getText === "function" ? options.getText : null;
 
+    /** @type {HTMLElement | null} */
     this.textEl = document.getElementById("tilla-sidebar-text");
+
     if (!this.textEl) {
       console.warn(
         "[Tilla] Element mit ID #tilla-sidebar-text wurde nicht gefunden. Tilla bleibt still."
@@ -119,19 +162,37 @@ export class TillaCompanion {
       return;
     }
 
+    /** @type {"intro"|"everyday"|"trip"|"plus"|"daylog"|"fav-added"|"fav-removed"|"no-spots"|"play-idea"} */
     this.state = "intro";
+
+    /** @type {"everyday"|"trip"|null} */
     this.travelMode = "everyday";
+
+    /** @type {number} – Timestamp der letzten Interaktion */
     this.lastInteraction = Date.now();
+
+    /** @type {Record<string, number>} – Merkt sich letzte Textvariante pro Key */
     this._lastVariantIndex = {};
 
     this._renderState();
   }
 
+  /**
+   * Wird von außen gerufen, wenn die Sprache gewechselt wurde.
+   * Rendert den aktuellen Zustand mit neuer Sprache neu.
+   */
   onLanguageChanged() {
     if (!this.textEl) return;
     this._renderState();
   }
 
+  /**
+   * Setzt den Reisemodus:
+   *  - "everyday"  → Alltagsmodus
+   *  - "trip"      → Unterwegs / Roadtrip
+   *  - null/undef  → zurück zum Intro
+   * @param {"everyday"|"trip"|null|undefined} mode
+   */
   setTravelMode(mode) {
     if (!this.textEl) return;
 
@@ -151,6 +212,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Wird aufgerufen, wenn Plus aktiviert wurde.
+   */
   onPlusActivated() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -158,6 +222,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Wird aufgerufen, wenn der Daylog gespeichert wurde.
+   */
   onDaylogSaved() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -165,6 +232,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Wird aufgerufen, wenn ein Spot als Favorit markiert wurde.
+   */
   onFavoriteAdded() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -172,6 +242,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Wird aufgerufen, wenn ein Spot aus den Favoriten entfernt wurde.
+   */
   onFavoriteRemoved() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -179,6 +252,9 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Wird aufgerufen, wenn mit den aktuellen Filtern keine Spots gefunden werden.
+   */
   onNoSpotsFound() {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -186,6 +262,10 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Wird aufgerufen, wenn (wieder) Spots gefunden werden.
+   * Tilla wechselt dann je nach Reisemodus in "trip"/"everyday"/"intro".
+   */
   onSpotsFound() {
     if (!this.textEl) return;
 
@@ -202,6 +282,11 @@ export class TillaCompanion {
     this._renderState();
   }
 
+  /**
+   * Wird aufgerufen, wenn der Kompass angewendet wurde.
+   * Zeigt einen speziellen Kompass-Text und aktualisiert ggf. den Reisemodus.
+   * @param {{ travelMode?: "everyday"|"trip"|null, radiusStep?: number }} [context]
+   */
   onCompassApplied(context = {}) {
     if (!this.textEl) return;
 
@@ -223,7 +308,11 @@ export class TillaCompanion {
     }
   }
 
-  // Spielidee direkt anzeigen (von app.js)
+  /**
+   * Zeigt eine Spielidee direkt im Tilla-Panel an.
+   * Diese State bleibt, bis etwas anderes Tilla überschreibt.
+   * @param {string} text
+   */
   showPlayIdea(text) {
     if (!this.textEl) return;
     this.lastInteraction = Date.now();
@@ -231,7 +320,16 @@ export class TillaCompanion {
     this.textEl.textContent = text;
   }
 
+  /**
+   * Interne Übersetzungsfunktion:
+   *  1. versucht getText(key) (z. B. I18N.t)
+   *  2. nutzt Fallback-Texte aus FALLBACK_TEXTS
+   * @param {string} key
+   * @returns {string}
+   * @private
+   */
   _t(key) {
+    // i18n-Callback (I18N.t etc.)
     if (this.getText) {
       try {
         const value = this.getText(key);
@@ -247,6 +345,7 @@ export class TillaCompanion {
       }
     }
 
+    // Fallback: statische Texte
     const lang = getCurrentLang();
     const bundle = FALLBACK_TEXTS[lang] || FALLBACK_TEXTS.de;
     const entry = bundle[key];
@@ -262,6 +361,15 @@ export class TillaCompanion {
     return key;
   }
 
+  /**
+   * Wählt eine Textvariante aus einem Array so aus,
+   * dass nach Möglichkeit nicht zweimal hintereinander dieselbe Variante kommt.
+   *
+   * @param {string} key
+   * @param {string[]} variants
+   * @returns {string}
+   * @private
+   */
   _pickVariant(key, variants) {
     if (!Array.isArray(variants) || variants.length === 0) return "";
 
@@ -280,6 +388,11 @@ export class TillaCompanion {
     return variants[index];
   }
 
+  /**
+   * Rendert den aktuellen State in das Tilla-Panel.
+   * Achtung: Wenn state === "play-idea", wird nicht überschrieben.
+   * @private
+   */
   _renderState() {
     if (!this.textEl) return;
 
