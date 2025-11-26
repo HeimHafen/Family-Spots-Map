@@ -95,14 +95,14 @@ body {
   --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
   --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
 
-  /* Map-Farb-Filter (Light) – warm, aber klar lesbar und ins UI eingebettet */
+  /* Map-Farb-Filter (Light) – weniger Grün, warmes Papier, sanftes Wasser */
   --map-filter:
-    grayscale(0.08)
-    sepia(0.12)
-    saturate(1.04)
-    hue-rotate(-6deg)
-    brightness(1.01)
-    contrast(1.05);
+    grayscale(0.14)
+    sepia(0.28)
+    saturate(0.94)
+    hue-rotate(-8deg)
+    brightness(1.0)
+    contrast(1.04);
 }
 
 [data-theme="dark"] {
@@ -163,14 +163,14 @@ body {
   --radius-circle-stroke: rgba(250, 204, 21, 0.75);
   --radius-circle-fill: rgba(250, 204, 21, 0.15);
 
-  /* Map-Farb-Filter (Dark) – ruhiger, warm, kontrastreich */
+  /* Map-Farb-Filter (Dark) – ruhiger, weniger Grün, warm */
   --map-filter:
-    grayscale(0.45)
-    sepia(0.18)
-    saturate(1.05)
-    hue-rotate(-6deg)
-    brightness(0.8)
-    contrast(1.07);
+    grayscale(0.5)
+    sepia(0.32)
+    saturate(0.96)
+    hue-rotate(-8deg)
+    brightness(0.78)
+    contrast(1.08);
 }
 
 body {
@@ -559,7 +559,7 @@ select.input:focus {
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
   transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
-    background 0.12s ease-out;
+    background 0.12s.ease-out;
 }
 
 .mood-chip-emoji {
