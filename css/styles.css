@@ -169,15 +169,26 @@ body {
   color: var(--text-color);
   background: var(--app-bg);
   -webkit-font-smoothing: antialiased;
+  transition: background 0.4s ease, color 0.3s ease;
+}
+
+/* Form-Controls erben die Schrift sauber vom Body */
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
 }
 
 /* Links */
+
 a {
   color: inherit;
   text-decoration: none;
 }
 
 /* Utils */
+
 .hidden {
   display: none !important;
 }
@@ -200,13 +211,10 @@ a {
 }
 
 /* Fokus-Outline */
+
 :focus-visible {
   outline: 2px solid #ffb54f;
   outline-offset: 2px;
-}
-
-body {
-  transition: background 0.4s ease, color 0.3s ease;
 }
 
 /* =========================================
@@ -218,7 +226,11 @@ body {
   top: 0;
   z-index: 1200;
   padding: 10px 14px 14px;
-  background: linear-gradient(135deg, var(--header-bg-top), var(--header-bg-bottom));
+  background: linear-gradient(
+    135deg,
+    var(--header-bg-top),
+    var(--header-bg-bottom)
+  );
   color: var(--header-text-color);
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
@@ -368,7 +380,12 @@ body {
 }
 
 [data-theme="dark"] #view-map {
-  background: linear-gradient(to bottom, #020617 0, #020617 35%, #020617 100%);
+  background: linear-gradient(
+    to bottom,
+    #020617 0,
+    #020617 35%,
+    #020617 100%
+  );
   border-radius: 0 0 28px 28px;
 }
 
@@ -1094,7 +1111,12 @@ select.input:focus {
   width: 18px;
   height: 18px;
   border-radius: var(--radius-pill);
-  background: radial-gradient(circle at 30% 20%, #fff8e1 0, #ffb74d 40%, #f57c00 100%);
+  background: radial-gradient(
+    circle at 30% 20%,
+    #fff8e1 0,
+    #ffb74d 40%,
+    #f57c00 100%
+  );
   box-shadow:
     0 0 0 2px rgba(255, 255, 255, 0.9),
     0 6px 14px rgba(0, 0, 0, 0.55);
@@ -1106,7 +1128,11 @@ select.input:focus {
   position: absolute;
   inset: -5px;
   border-radius: inherit;
-  background: radial-gradient(circle, rgba(255, 183, 77, 0.35), transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 183, 77, 0.35),
+    transparent 60%
+  );
 }
 
 .pin-pop {
@@ -1202,12 +1228,20 @@ body.onboarding-open {
 .onboarding-backdrop {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.96));
+  background: radial-gradient(
+    circle at top,
+    rgba(15, 23, 42, 0.82),
+    rgba(15, 23, 42, 0.96)
+  );
   backdrop-filter: blur(8px);
 }
 
 [data-theme="light"] .onboarding-backdrop {
-  background: radial-gradient(circle at top, rgba(255, 243, 224, 0.8), rgba(0, 0, 0, 0.55));
+  background: radial-gradient(
+    circle at top,
+    rgba(255, 243, 224, 0.8),
+    rgba(0, 0, 0, 0.55)
+  );
 }
 
 .onboarding-dialog {
