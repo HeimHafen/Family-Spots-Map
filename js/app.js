@@ -142,7 +142,18 @@ const CATEGORY_GROUPS = {
     "kletteranlage-outdoor",
     "kletterwald-hochseilgarten",
     "boulderpark",
-    "minigolf"
+    "minigolf",
+
+    // ➕ NEU
+    "hoehle",
+    "felsenwanderung",
+    "aussichtspunkt",
+    "baumhaus",
+    "labyrinth",
+    "klangpfad",
+    "ueberdachter-spielplatz",
+    "dirtbike-track",
+    "streetball-platz"
   ],
   "Wandern & Radfahren": ["wanderweg-kinderwagen", "radweg-family"],
   "Essen & Trinken": [
@@ -160,7 +171,14 @@ const CATEGORY_GROUPS = {
     "bikepacking-spot",
     "campingplatz-familien"
   ],
-  "Entspannung & Naturorte": ["park-garten", "picknickwiese"]
+  "Entspannung & Naturorte": [
+    "park-garten",
+    "picknickwiese",
+
+    // ➕ NEU
+    "waldbaden-ort",
+    "natur-aussichtspunkt"
+  ]
 };
 
 const CATEGORY_GROUP_LABELS = {
@@ -219,6 +237,20 @@ const CATEGORY_LABELS_DE = {
   "eisbahn": "Eisbahn",
   "rodelhuegel": "Rodelhügel",
   "freizeitpark": "Freizeitpark",
+
+  // ➕ NEU
+  "hoehle": "Höhle / Felsenwanderung",
+  "felsenwanderung": "Felsenwanderung",
+  "aussichtspunkt": "Aussichtspunkt / Panorama",
+  "baumhaus": "Baumhaus / Hütte",
+  "labyrinth": "Labyrinth / Irrgarten",
+  "klangpfad": "Natur-Klangpfad",
+  "ueberdachter-spielplatz": "Überdachter Spielplatz",
+  "dirtbike-track": "Dirtbike / Jugend-Bike Track",
+  "streetball-platz": "Streetball / Basketball-Platz",
+  "waldbaden-ort": "Waldbaden / Naturruheplatz",
+  "natur-aussichtspunkt": "Natur-Aussichtspunkt",
+
   "trampolinpark": "Trampolinpark",
   "kletterhalle": "Kletterhalle",
   "kletteranlage-outdoor": "Kletteranlage (Outdoor)",
@@ -274,6 +306,20 @@ const CATEGORY_LABELS_EN = {
   "eisbahn": "Ice rink",
   "rodelhuegel": "Sledding hill",
   "freizeitpark": "Theme park",
+
+  // ➕ NEU
+  "hoehle": "Cave / rock hike",
+  "felsenwanderung": "Rock hike",
+  "aussichtspunkt": "Scenic viewpoint / panorama",
+  "baumhaus": "Treehouse / lookout hut",
+  "labyrinth": "Maze / labyrinth",
+  "klangpfad": "Nature sound trail",
+  "ueberdachter-spielplatz": "Covered playground / rain-safe playground",
+  "dirtbike-track": "Dirtbike / youth bike track",
+  "streetball-platz": "Streetball / basketball court",
+  "waldbaden-ort": "Forest bathing / nature chill spot",
+  "natur-aussichtspunkt": "Nature viewpoint",
+
   "trampolinpark": "Trampoline park",
   "kletterhalle": "Climbing gym",
   "kletteranlage-outdoor": "Outdoor climbing area",
