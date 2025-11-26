@@ -606,6 +606,22 @@
           <p>Family Spots Map ist ein wachsendes Herzensprojekt. Neue Spots, Regionen und Kategorien kommen Schritt für Schritt dazu – zuerst dort, wo wir selbst mit unseren Kindern unterwegs sind, dann gemeinsam mit Partnern und der Community.</p>
           <p>Aktuelle Karten-Version: <strong>2025-11-08</strong></p>
           <p>Wenn dir die Karte geholfen hat, einen schönen Tag mit deiner Familie zu verbringen, dann hat sie ihren Zweck erfüllt.</p>
+
+          <!-- Farben & Theme (DE) -->
+          <hr />
+          <h3>Farben &amp; Theme (experimentell)</h3>
+          <p>
+            Wenn du möchtest, kannst du die Akzentfarbe der Family Spots Map anpassen.
+            Diese Einstellung wirkt sich z. B. auf Buttons und Highlights aus.
+          </p>
+          <label for="accent-hue">Akzentfarbe wählen</label>
+          <input
+            id="accent-hue"
+            type="range"
+            min="0"
+            max="360"
+            value="32"
+            aria-label="Akzentfarbe wählen" />
         </article>
 
         <!-- Englisch -->
@@ -647,6 +663,22 @@
           <p>Family Spots Map is a growing passion project. New spots, regions and categories are added step by step — first where we travel with our own children, then together with partners and community.</p>
           <p>Current map version: <strong>2025-11-08</strong></p>
           <p>If this map helped you spend a good day with your family, then it has fulfilled its purpose.</p>
+
+          <!-- Colors & Theme (EN) -->
+          <hr />
+          <h3>Colors &amp; theme (experimental)</h3>
+          <p>
+            If you like, you can adjust the accent color of Family Spots Map.
+            This affects buttons and other highlighted elements.
+          </p>
+          <label for="accent-hue-en">Choose accent color</label>
+          <input
+            id="accent-hue-en"
+            type="range"
+            min="0"
+            max="360"
+            value="32"
+            aria-label="Choose accent color" />
         </article>
       </section>
     </main>
@@ -685,6 +717,11 @@
     </nav>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <!-- Landscape-Warnung für Mobile Landscape -->
+  <div class="landscape-warning" aria-live="polite">
+    Bitte Gerät drehen 📱🔄 – im Hochformat macht die Family Spots Map mehr Freude.
   </div>
 
   <!-- Scripts: Leaflet + MarkerCluster -->
