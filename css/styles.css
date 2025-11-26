@@ -95,14 +95,14 @@ body {
   --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
   --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
 
-  /* Map-Farb-Filter (Light) – warm, aber nicht überstrahlt */
+  /* Map-Farb-Filter (Light) – warm, aber klar lesbar und ins UI eingebettet */
   --map-filter:
-    grayscale(0.12)
-    sepia(0.16)
-    saturate(1.08)
-    hue-rotate(-9deg)
-    brightness(0.99)
-    contrast(1.03);
+    grayscale(0.08)
+    sepia(0.12)
+    saturate(1.04)
+    hue-rotate(-6deg)
+    brightness(1.01)
+    contrast(1.05);
 }
 
 [data-theme="dark"] {
@@ -163,14 +163,14 @@ body {
   --radius-circle-stroke: rgba(250, 204, 21, 0.75);
   --radius-circle-fill: rgba(250, 204, 21, 0.15);
 
-  /* Map-Farb-Filter (Dark) – ruhiger, warm, gut lesbar */
+  /* Map-Farb-Filter (Dark) – ruhiger, warm, kontrastreich */
   --map-filter:
-    grayscale(0.5)
-    sepia(0.25)
-    saturate(1)
-    hue-rotate(-8deg)
-    brightness(0.78)
-    contrast(1.06);
+    grayscale(0.45)
+    sepia(0.18)
+    saturate(1.05)
+    hue-rotate(-6deg)
+    brightness(0.8)
+    contrast(1.07);
 }
 
 body {
@@ -558,7 +558,7 @@ select.input:focus {
     var(--chip-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: transform 0.06s ease-out, box-shadow 0.06s.ease-out,
+  transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
     background 0.12s ease-out;
 }
 
