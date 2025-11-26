@@ -10,12 +10,7 @@
 //     getText: (key) => t(key) // optional: i18n-Funktion, z. B. aus I18N.t
 //   });
 //
-// Tilla zeigt Kontexttexte in der Sidebar an:
-//  - Intro-Texte
-//  - Hinweise bei leerer Karte
-//  - Reaktionen auf Favoriten, Daylog, Plus, Kompass, Reisemodus
-//
-// Externe API (wird von app.js verwendet):
+// Öffentliche API (von app.js genutzt):
 //  - onLanguageChanged()
 //  - setTravelMode(mode)
 //  - onPlusActivated()
@@ -28,6 +23,8 @@
 //  - showPlayIdea(text)
 //
 // ------------------------------------------------------
+
+"use strict";
 
 /**
  * Fallback-Texte, falls getText() (z. B. I18N.t) nichts liefert
@@ -124,15 +121,38 @@ const FALLBACK_TEXTS = {
 };
 
 /**
- * Ermittelt die aktuelle Sprache aus dem lang-Attribut von <html>.
- * Fällt auf "de" zurück, wenn nichts definiert ist.
+ * Ermittelt die aktive Sprache.
+ *  - bevorzugt I18N.getLanguage(), falls vorhanden
+ *  - fällt auf <html lang="…"> zurück
+ *  - default: "de"
  * @returns {"de"|"en"}
  */
-function getCurrentLang() {
-  const lang = (document.documentElement.lang || "de").toLowerCase();
-  if (lang.startsWith("en")) return "en";
+function getActiveLang() {
+  try {
+    if (
+      typeof window !== "undefined" &&
+      window.I18N &&
+      typeof window.I18N.getLanguage === "function"
+    ) {
+      const lang = window.I18N.getLanguage();
+      return lang === "en" ? "en" : "de";
+    }
+  } catch {
+    // Fallback auf document
+  }
+
+  if (typeof document !== "undefined" && document.documentElement) {
+    const langAttr = (document.documentElement.lang || "de").toLowerCase();
+    if (langAttr.startsWith("en")) return "en";
+  }
+
   return "de";
 }
+
+/**
+ * @typedef {"intro"|"everyday"|"trip"|"plus"|"daylog"|"fav-added"|"fav-removed"|"no-spots"|"play-idea"} TillaState
+ * @typedef {"everyday"|"trip"} TravelMode
+ */
 
 /**
  * TillaCompanion
@@ -148,12 +168,20 @@ export class TillaCompanion {
    * @param {{ getText?: (key: string) => string }} [options]
    */
   constructor(options = {}) {
-    /** @type {(key: string) => string | null} */
+    /**
+     * Optionaler Übersetzungs-Callback (z. B. I18N.t)
+     * @type {(key: string) => string | null}
+     */
     this.getText =
       typeof options.getText === "function" ? options.getText : null;
 
-    /** @type {HTMLElement | null} */
-    this.textEl = document.getElementById("tilla-sidebar-text");
+    /**
+     * Ziel-Element für Tilla-Text
+     * @type {HTMLElement | null}
+     */
+    this.textEl = typeof document !== "undefined"
+      ? document.getElementById("tilla-sidebar-text")
+      : null;
 
     if (!this.textEl) {
       console.warn(
@@ -162,16 +190,20 @@ export class TillaCompanion {
       return;
     }
 
-    /** @type {"intro"|"everyday"|"trip"|"plus"|"daylog"|"fav-added"|"fav-removed"|"no-spots"|"play-idea"} */
+    /** @type {TillaState} */
     this.state = "intro";
 
-    /** @type {"everyday"|"trip"|null} */
+    /** @type {TravelMode | null} */
     this.travelMode = "everyday";
 
     /** @type {number} – Timestamp der letzten Interaktion */
     this.lastInteraction = Date.now();
 
-    /** @type {Record<string, number>} – Merkt sich letzte Textvariante pro Key */
+    /**
+     * Merkt sich letzte Textvariante pro Key, um Wiederholungen zu vermeiden
+     * @type {Record<string, number>}
+     * @private
+     */
     this._lastVariantIndex = {};
 
     this._renderState();
@@ -191,12 +223,12 @@ export class TillaCompanion {
    *  - "everyday"  → Alltagsmodus
    *  - "trip"      → Unterwegs / Roadtrip
    *  - null/undef  → zurück zum Intro
-   * @param {"everyday"|"trip"|null|undefined} mode
+   * @param {TravelMode | null | undefined} mode
    */
   setTravelMode(mode) {
     if (!this.textEl) return;
 
-    if (mode === null || mode === undefined) {
+    if (mode == null) {
       this.travelMode = null;
       this.state = "intro";
       this.lastInteraction = Date.now();
@@ -204,7 +236,9 @@ export class TillaCompanion {
       return;
     }
 
-    if (mode !== "everyday" && mode !== "trip") return;
+    if (mode !== "everyday" && mode !== "trip") {
+      return;
+    }
 
     this.travelMode = mode;
     this.lastInteraction = Date.now();
@@ -285,7 +319,7 @@ export class TillaCompanion {
   /**
    * Wird aufgerufen, wenn der Kompass angewendet wurde.
    * Zeigt einen speziellen Kompass-Text und aktualisiert ggf. den Reisemodus.
-   * @param {{ travelMode?: "everyday"|"trip"|null, radiusStep?: number }} [context]
+   * @param {{ travelMode?: TravelMode | null, radiusStep?: number }} [context]
    */
   onCompassApplied(context = {}) {
     if (!this.textEl) return;
@@ -346,7 +380,7 @@ export class TillaCompanion {
     }
 
     // Fallback: statische Texte
-    const lang = getCurrentLang();
+    const lang = getActiveLang();
     const bundle = FALLBACK_TEXTS[lang] || FALLBACK_TEXTS.de;
     const entry = bundle[key];
 
@@ -396,7 +430,7 @@ export class TillaCompanion {
   _renderState() {
     if (!this.textEl) return;
 
-    // Wenn eine Spielidee aktiv ist, nicht überschreiben
+    // Wenn eine Spielidee aktiv ist, nicht automatisch überschreiben
     if (this.state === "play-idea") {
       return;
     }
