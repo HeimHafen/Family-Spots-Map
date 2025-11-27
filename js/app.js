@@ -95,7 +95,7 @@ const FEATURES = Object.freeze({
   verifiedFilter: true,
   favorites: true,
   daylog: true,
-  playIdeas: true, // aktuell nicht mehr in app.js benutzt, aber reserviert
+  playIdeas: true,
   compass: true
 });
 
@@ -369,6 +369,16 @@ const t = (key) =>
     ? I18N.t(key)
     : key;
 
+function getRandomPlayIdea() {
+  if (
+    typeof I18N !== "undefined" &&
+    typeof I18N.getRandomPlayIdea === "function"
+  ) {
+    return I18N.getRandomPlayIdea();
+  }
+  return "";
+}
+
 // ------------------------------------------------------
 // Header-Tagline
 // ------------------------------------------------------
@@ -456,6 +466,9 @@ let btnToggleCompassEl;
 
 // Tilla
 let tilla = null;
+
+// Spielideen
+let playIdeasBtnEl = null;
 
 // Filter-Body innerhalb der Filter-Section
 let filterBodyEls = [];
@@ -1379,6 +1392,7 @@ function renderMarkers() {
     if (!hasValidLatLng(spot)) return;
     if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
 
+    // Marker-HTML (kleiner Punkt/Pin)
     const el = document.createElement("div");
     el.className = "spot-marker";
     const inner = document.createElement("div");
@@ -1394,37 +1408,9 @@ function renderMarkers() {
 
     const marker = L.marker([spot.lat, spot.lng], { icon });
 
-    const name = getSpotName(spot);
-    const subtitle = getSpotSubtitle(spot);
-
-    let routesHtml = "";
-    const routeUrls = getRouteUrlsForSpot(spot);
-
-    if (routeUrls) {
-      routesHtml = `
-        <div class="popup-actions">
-          <a class="popup-link" href="${routeUrls.apple}" target="_blank" rel="noopener noreferrer">${t(
-            "route_apple"
-          )}</a>
-          <a class="popup-link" href="${routeUrls.google}" target="_blank" rel="noopener noreferrer">${t(
-            "route_google"
-          )}</a>
-        </div>
-      `;
-    }
-
-    const popupHtml = `
-      <div class="popup">
-        <strong>${name}</strong><br/>
-        <small>${subtitle || ""}</small>
-        ${routesHtml}
-      </div>
-    `;
-
-    marker.bindPopup(popupHtml);
-
+    // Kein Leaflet-Popup mehr – nur noch der große Info-Kasten unten
     marker.on("click", () => {
-      focusSpotOnMap(spot);
+      focusSpotOnMap(spot); // zentriert Karte + öffnet Detailpanel
     });
 
     markersLayer.addLayer(marker);
@@ -2050,6 +2036,8 @@ function init() {
     btnToggleFiltersEl = document.getElementById("btn-toggle-filters");
     btnToggleViewEl = document.getElementById("btn-toggle-view");
 
+    playIdeasBtnEl = document.getElementById("btn-play-idea");
+
     filterSearchEl = document.getElementById("filter-search");
     filterCategoryEl = document.getElementById("filter-category");
     filterAgeEl = document.getElementById("filter-age");
@@ -2316,6 +2304,27 @@ function init() {
 
     if (FEATURES.compass && compassApplyBtnEl) {
       compassApplyBtnEl.addEventListener("click", handleCompassApply);
+    }
+
+    if (FEATURES.playIdeas && playIdeasBtnEl) {
+      playIdeasBtnEl.addEventListener("click", () => {
+        const idea = getRandomPlayIdea();
+        if (!idea) return;
+
+        if (tilla && typeof tilla.showPlayIdea === "function") {
+          tilla.showPlayIdea(idea);
+
+          const tillaCard = document.querySelector(".tilla-sidebar-card");
+          if (tillaCard && typeof tillaCard.scrollIntoView === "function") {
+            tillaCard.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest"
+            });
+          }
+        } else {
+          showToast(idea);
+        }
+      });
     }
 
     document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
