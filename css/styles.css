@@ -177,6 +177,7 @@ body {
     "Segoe UI", sans-serif;
   color: var(--text-color, #452213);
   background: var(--app-bg);
+  line-height: 1.4;
   -webkit-font-smoothing: antialiased;
   transition: background 0.4s ease, color 0.3s ease;
 }
@@ -219,11 +220,30 @@ a {
   flex-direction: column;
 }
 
-/* Fokus-Outline (global, aber Titel bekommt eigene Ausnahme) */
+/* Fokus-Outline (global) */
 
 :focus-visible {
   outline: 2px solid #ffb54f;
   outline-offset: 2px;
+}
+
+/* Interaktive Elemente – sichtbarer, pill-förmiger Fokus */
+
+button:focus-visible,
+.language-switcher:focus-visible,
+.btn-icon:focus-visible,
+.btn:focus-visible,
+.btn-ghost:focus-visible,
+.mood-chip:focus-visible,
+.travel-chip:focus-visible,
+.bottom-nav-item:focus-visible,
+.input:focus-visible,
+select.input:focus-visible,
+textarea.input:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px rgba(255, 171, 64, 0.85);
 }
 
 /* =========================================
@@ -330,7 +350,7 @@ a {
 }
 
 .header-title:focus-visible {
-  /* Kein gelber Fokus-Kasten um "Family Spots Map" */
+  /* Kein Fokusrahmen um "Family Spots Map" – Fokus wird nur per JS dort gesetzt */
   outline: none;
   box-shadow: none;
 }
@@ -428,7 +448,7 @@ a {
 /* ABSTÄNDE:
    Karte ↔ Family Spots Plus
    Family Spots Plus ↔ Mein Tag
-   -> beide 14px für Monk-Symmetrie
+   -> beide 14px
 */
 .map-section + .sidebar-section {
   margin-top: 14px;
@@ -552,9 +572,6 @@ textarea.input {
 textarea.input:focus,
 select.input:focus {
   outline: none;
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.9),
-    0 0 0 4px rgba(255, 171, 64, 0.6);
 }
 
 /* Mood & Travel Chips */
@@ -919,10 +936,10 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 96px;          /* etwas größer als vorher */
+  width: 96px;
   height: auto;
   transform-origin: center bottom;
-  animation: tilla-bob 3.5s ease-in-out infinite; /* kein Spiegeln mehr – Tilla schaut nach rechts */
+  animation: tilla-bob 3.5s ease-in-out infinite;
 }
 
 .tilla-sidebar-text {
@@ -977,7 +994,7 @@ select.input:focus {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 60px; /* kompakter */
+  height: 60px;
   pointer-events: none;
   display: flex;
   align-items: center;
