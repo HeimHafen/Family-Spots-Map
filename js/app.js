@@ -1,6 +1,6 @@
 // js/app.js
 // ======================================================
-// Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
+// Family Spots Map – Hauptlogig (Map, Filter, Tilla, UI)
 // Senior-Level: strukturiert, robust, kommentiert
 // ======================================================
 
@@ -2287,8 +2287,7 @@ function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    // Kompass-Button: Click-Handler + initial verstecken, wenn Kompass geschlossen ist
-    // und beim Öffnen/Schließen Sichtbarkeit + Label aktualisieren
+    // Kompass-Button: Click-Handler + Label-Update bei Änderungen
     if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
       btnToggleCompassEl.addEventListener("click", (event) => {
         event.preventDefault();
@@ -2296,12 +2295,7 @@ function init() {
         handleToggleCompass();
       });
 
-      // initial: hidden, wenn Kompass geschlossen (ist er, da oben open=false gesetzt wurde)
-      btnToggleCompassEl.classList.toggle("hidden", !compassSectionEl.open);
-
       compassSectionEl.addEventListener("toggle", () => {
-        const isOpen = compassSectionEl.open;
-        btnToggleCompassEl.classList.toggle("hidden", !isOpen);
         updateCompassButtonLabel();
       });
 
