@@ -34,24 +34,20 @@
   <!-- Manifest für PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
 
-  <!-- Favicon / Icons (achte darauf, dass die Dateien existieren und PNGs sind) -->
+  <!-- Favicon / Icons -->
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
-  <!-- zusätzlicher generic apple-touch-icon-Link -->
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
 
-  <!-- Styles -->
-  <!-- Preload kann wegfallen, damit der Browser nicht doppelt lädt -->
-  <!-- <link rel="preload" href="css/styles.css" as="style" /> -->
-
-  <!-- Leaflet ohne SRI, damit nichts geblockt wird -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
   <link rel="stylesheet"
         href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet"
         href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+  <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/badges.css" />
 </head>
@@ -70,7 +66,7 @@
     <header class="app-header">
       <div class="app-header-top">
         <div class="app-header-left">
-          <button id="btn-help" class="btn-icon" type="button" aria-label="Über Family Spots Map">
+          <button id="btn-help" class="btn-icon" type="button" aria-label="Über Family Spots Map öffnen">
             ❓
           </button>
 
@@ -84,10 +80,10 @@
           </button>
         </div>
         <div class="app-header-right">
-          <button id="theme-toggle" class="btn-icon" type="button" aria-label="Theme wechseln">
+          <button id="theme-toggle" class="btn-icon" type="button" aria-label="Hell/Dunkel-Modus wechseln">
             🌓
           </button>
-          <button id="btn-locate" class="btn-icon" type="button" aria-label="Eigenen Standort anzeigen">
+          <button id="btn-locate" class="btn-icon" type="button" aria-label="Eigenen Standort auf der Karte anzeigen">
             📍
           </button>
         </div>
@@ -126,7 +122,6 @@
             aria-label="Tilla, eure Begleiterin">
             <div class="tilla-sidebar-card">
               <div class="tilla-sidebar-avatar">
-                <!-- PNG-Version; wenn du zusätzlich eine WebP-Datei hast, kannst du wieder ein <picture> nutzen -->
                 <img
                   src="assets/tilla/tilla-hero.png"
                   alt="Tilla, eure Schildkröten-Begleiterin"
@@ -171,14 +166,20 @@
                 aria-controls="compass-section"
                 aria-expanded="false">
                 <span
-                  data-i18n-de="Kompass anzeigen"
-                  data-i18n-en="Show compass">
-                  Kompass anzeigen
+                  data-i18n-de="Familien-Kompass öffnen"
+                  data-i18n-en="Open Family Compass">
+                  Familien-Kompass öffnen
                 </span>
               </button>
             </summary>
             <div class="compass-card">
-              <p class="filter-group-helper" id="compass-helper"><!-- per JS gesetzt --></p>
+              <p
+                class="filter-group-helper"
+                id="compass-helper"
+                data-i18n-de="1. Unten bei »Filter« Stimmung, Alter & Reise-Modus wählen. 2. Hier im Familien-Kompass anzeigen lassen, welche Spots heute gut passen."
+                data-i18n-en="1. Choose mood, age & travel mode under “Filters” below. 2. Use the Family Compass here to see which spots fit today.">
+                1. Unten bei »Filter« Stimmung, Alter & Reise-Modus wählen. 2. Hier im Familien-Kompass anzeigen lassen, welche Spots heute gut passen.
+              </p>
               <button type="button" id="compass-apply" class="btn btn-small hidden">
                 <span id="compass-apply-label"><!-- per JS gesetzt --></span>
               </button>
@@ -208,6 +209,13 @@
                 </span>
               </button>
             </header>
+
+            <p
+              class="filter-group-helper"
+              data-i18n-de="Hier wählst du, was zu euch passt – der Familien-Kompass nutzt diese Auswahl."
+              data-i18n-en="Choose what fits your family here – the Family Compass uses this selection.">
+              Hier wählst du, was zu euch passt – der Familien-Kompass nutzt diese Auswahl.
+            </p>
 
             <!-- Suche -->
             <div class="filter-group">
@@ -572,7 +580,6 @@
         <!-- Deutsch -->
         <article id="page-about-de" class="page page-about" lang="de" aria-hidden="false">
           <h2>Über Family Spots Map</h2>
-          <!-- Tilla-Hero kann optional hier noch einmal als statisches Bild eingefügt werden -->
           <p>
             Family Spots Map ist eine kuratierte Karte für Familien-Abenteuer – von Eltern für Eltern. Statt unübersichtlicher Listen oder anonymer Bewertungen findest du hier ausgewählte Spielplätze, Zoos, Wildparks, Wasser-Spots, Museen, Bewegungsparks und viele weitere Orte, die sich in der Praxis bewährt haben.
           </p>
