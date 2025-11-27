@@ -7,7 +7,7 @@
 "use strict";
 
 import "./i18n.js"; // Modul führt sich selbst aus und setzt globales I18N
-import { TillaCompanion } from "./tilla.js";
+import { TillaCompanion } from "./features/tilla.js";
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
