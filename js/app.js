@@ -1,3 +1,4 @@
+// js/app.js
 // ======================================================
 // Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
 // Senior-Level: strukturiert, robust, kommentiert
@@ -210,63 +211,63 @@ const CATEGORY_GROUP_LABELS = {
 };
 
 const CATEGORY_LABELS_DE = {
-  spielplatz: "Spielplatz",
-  abenteuerspielplatz: "Abenteuerspielplatz",
+  "spielplatz": "Spielplatz",
+  "abenteuerspielplatz": "Abenteuerspielplatz",
   "indoor-spielplatz": "Indoor-Spielplatz",
-  waldspielplatz: "Waldspielplatz",
-  wasserspielplatz: "Wasserspielplatz",
+  "waldspielplatz": "Waldspielplatz",
+  "wasserspielplatz": "Wasserspielplatz",
   "barrierefreier-spielplatz": "Barrierefreier Spielplatz",
-  bewegungspark: "Bewegungspark",
-  multifunktionsfeld: "Multifunktionsfeld",
-  bolzplatz: "Bolzplatz",
-  pumptrack: "Pumptrack",
-  skatepark: "Skatepark",
-  verkehrsgarten: "Verkehrsgarten",
+  "bewegungspark": "Bewegungspark",
+  "multifunktionsfeld": "Multifunktionsfeld",
+  "bolzplatz": "Bolzplatz",
+  "pumptrack": "Pumptrack",
+  "skatepark": "Skatepark",
+  "verkehrsgarten": "Verkehrsgarten",
   "toddler-barfuss-motorik": "Toddler / Barfuß / Motorik",
-  zoo: "Zoo",
-  tierpark: "Tierpark",
-  wildpark: "Wildpark & Safaris",
-  bauernhof: "Bauernhof",
-  naturerlebnispfad: "Naturerlebnispfad",
-  walderlebnisroute: "Walderlebnisroute",
-  freilichtmuseum: "Freilichtmuseum",
-  schwimmbad: "Schwimmbad",
-  badesee: "Badesee",
-  strand: "Familien-Strand",
-  eisbahn: "Eisbahn",
-  rodelhuegel: "Rodelhügel",
-  freizeitpark: "Freizeitpark",
+  "zoo": "Zoo",
+  "tierpark": "Tierpark",
+  "wildpark": "Wildpark & Safaris",
+  "bauernhof": "Bauernhof",
+  "naturerlebnispfad": "Naturerlebnispfad",
+  "walderlebnisroute": "Walderlebnisroute",
+  "freilichtmuseum": "Freilichtmuseum",
+  "schwimmbad": "Schwimmbad",
+  "badesee": "Badesee",
+  "strand": "Familien-Strand",
+  "eisbahn": "Eisbahn",
+  "rodelhuegel": "Rodelhügel",
+  "freizeitpark": "Freizeitpark",
 
   // ➕ NEU
-  hoehle: "Höhle / Felsenwanderung",
-  felsenwanderung: "Felsenwanderung",
-  aussichtspunkt: "Aussichtspunkt / Panorama",
-  baumhaus: "Baumhaus / Hütte",
-  labyrinth: "Labyrinth / Irrgarten",
-  klangpfad: "Natur-Klangpfad",
+  "hoehle": "Höhle / Felsenwanderung",
+  "felsenwanderung": "Felsenwanderung",
+  "aussichtspunkt": "Aussichtspunkt / Panorama",
+  "baumhaus": "Baumhaus / Hütte",
+  "labyrinth": "Labyrinth / Irrgarten",
+  "klangpfad": "Natur-Klangpfad",
   "ueberdachter-spielplatz": "Überdachter Spielplatz",
   "dirtbike-track": "Dirtbike / Jugend-Bike Track",
   "streetball-platz": "Streetball / Basketball-Platz",
   "waldbaden-ort": "Waldbaden / Naturruheplatz",
   "natur-aussichtspunkt": "Natur-Aussichtspunkt",
 
-  trampolinpark: "Trampolinpark",
-  kletterhalle: "Kletterhalle",
+  "trampolinpark": "Trampolinpark",
+  "kletterhalle": "Kletterhalle",
   "kletteranlage-outdoor": "Kletteranlage (Outdoor)",
   "kletterwald-hochseilgarten": "Kletterwald / Hochseilgarten",
-  boulderpark: "Boulderpark",
-  minigolf: "Minigolf",
+  "boulderpark": "Boulderpark",
+  "minigolf": "Minigolf",
   "wanderweg-kinderwagen": "Wanderweg (kinderwagenfreundlich)",
   "radweg-family": "Familien-Radweg",
-  familiencafe: "Familiencafé",
+  "familiencafe": "Familiencafé",
   "kinder-familiencafe": "Kinder- & Familiencafé",
   "familien-restaurant": "Familien-Restaurant",
   "museum-kinder": "Museum (Kinder)",
   "kinder-museum": "Kinder-Museum",
-  kinder_museum: "Kinder-Museum",
-  bibliothek: "Bibliothek",
+  "kinder_museum": "Kinder-Museum",
+  "bibliothek": "Bibliothek",
   "oeffentliche-toilette": "Öffentliche Toilette",
-  wickelraum: "Wickelraum",
+  "wickelraum": "Wickelraum",
   "familien-event": "Familien-Event",
   "stellplatz-spielplatz-naehe-kostenlos":
     "Kostenloser Stellplatz (Spielplatznähe)",
@@ -275,67 +276,67 @@ const CATEGORY_LABELS_DE = {
   "bikepacking-spot": "Bikepacking-Spot",
   "campingplatz-familien": "Familien-Campingplatz",
   "park-garten": "Park / Garten",
-  picknickwiese: "Picknickwiese"
+  "picknickwiese": "Picknickwiese"
 };
 
 const CATEGORY_LABELS_EN = {
-  spielplatz: "Playground",
-  abenteuerspielplatz: "Adventure playground",
+  "spielplatz": "Playground",
+  "abenteuerspielplatz": "Adventure playground",
   "indoor-spielplatz": "Indoor playground",
-  waldspielplatz: "Forest playground",
-  wasserspielplatz: "Water playground",
+  "waldspielplatz": "Forest playground",
+  "wasserspielplatz": "Water playground",
   "barrierefreier-spielplatz": "Accessible playground",
-  bewegungspark: "Movement park",
-  multifunktionsfeld: "Multi-sport court",
-  bolzplatz: "Soccer court",
-  pumptrack: "Pumptrack",
-  skatepark: "Skate park",
-  verkehrsgarten: "Traffic training park",
+  "bewegungspark": "Movement park",
+  "multifunktionsfeld": "Multi-sport court",
+  "bolzplatz": "Soccer court",
+  "pumptrack": "Pumptrack",
+  "skatepark": "Skate park",
+  "verkehrsgarten": "Traffic training park",
   "toddler-barfuss-motorik": "Toddler / barefoot / motor skills",
-  zoo: "Zoo",
-  tierpark: "Animal park",
-  wildpark: "Wildlife park & safaris",
-  bauernhof: "Farm",
-  naturerlebnispfad: "Nature discovery trail",
-  walderlebnisroute: "Forest experience route",
-  freilichtmuseum: "Open-air museum",
-  schwimmbad: "Swimming pool",
-  badesee: "Swimming lake",
-  strand: "Family beach",
-  eisbahn: "Ice rink",
-  rodelhuegel: "Sledding hill",
-  freizeitpark: "Theme park",
+  "zoo": "Zoo",
+  "tierpark": "Animal park",
+  "wildpark": "Wildlife park & safaris",
+  "bauernhof": "Farm",
+  "naturerlebnispfad": "Nature discovery trail",
+  "walderlebnisroute": "Forest experience route",
+  "freilichtmuseum": "Open-air museum",
+  "schwimmbad": "Swimming pool",
+  "badesee": "Swimming lake",
+  "strand": "Family beach",
+  "eisbahn": "Ice rink",
+  "rodelhuegel": "Sledding hill",
+  "freizeitpark": "Theme park",
 
   // ➕ NEU
-  hoehle: "Cave / rock hike",
-  felsenwanderung: "Rock hike",
-  aussichtspunkt: "Scenic viewpoint / panorama",
-  baumhaus: "Treehouse / lookout hut",
-  labyrinth: "Maze / labyrinth",
-  klangpfad: "Nature sound trail",
+  "hoehle": "Cave / rock hike",
+  "felsenwanderung": "Rock hike",
+  "aussichtspunkt": "Scenic viewpoint / panorama",
+  "baumhaus": "Treehouse / lookout hut",
+  "labyrinth": "Maze / labyrinth",
+  "klangpfad": "Nature sound trail",
   "ueberdachter-spielplatz": "Covered playground / rain-safe playground",
   "dirtbike-track": "Dirtbike / youth bike track",
   "streetball-platz": "Streetball / basketball court",
   "waldbaden-ort": "Forest bathing / nature chill spot",
   "natur-aussichtspunkt": "Nature viewpoint",
 
-  trampolinpark: "Trampoline park",
-  kletterhalle: "Climbing gym",
+  "trampolinpark": "Trampoline park",
+  "kletterhalle": "Climbing gym",
   "kletteranlage-outdoor": "Outdoor climbing area",
   "kletterwald-hochseilgarten": "Rope course / climbing forest",
-  boulderpark: "Bouldering park",
-  minigolf: "Mini golf",
+  "boulderpark": "Bouldering park",
+  "minigolf": "Mini golf",
   "wanderweg-kinderwagen": "Stroller-friendly trail",
   "radweg-family": "Family bike route",
-  familiencafe: "Family café",
+  "familiencafe": "Family café",
   "kinder-familiencafe": "Kids & family café",
   "familien-restaurant": "Family restaurant",
   "museum-kinder": "Museum (kids)",
   "kinder-museum": "Children's museum",
-  kinder_museum: "Children's museum",
-  bibliothek: "Library",
+  "kinder_museum": "Children's museum",
+  "bibliothek": "Library",
   "oeffentliche-toilette": "Public toilet",
-  wickelraum: "Baby changing room",
+  "wickelraum": "Baby changing room",
   "familien-event": "Family event",
   "stellplatz-spielplatz-naehe-kostenlos":
     "Free RV spot (near playground)",
@@ -344,7 +345,7 @@ const CATEGORY_LABELS_EN = {
   "bikepacking-spot": "Bikepacking spot",
   "campingplatz-familien": "Family campground",
   "park-garten": "Park / garden",
-  picknickwiese: "Picnic meadow"
+  "picknickwiese": "Picnic meadow"
 };
 
 // ------------------------------------------------------
@@ -376,14 +377,6 @@ function getRandomPlayIdea() {
     return I18N.getRandomPlayIdea();
   }
   return "";
-}
-
-function getShowLabel() {
-  return currentLang === LANG_DE ? "Anzeigen" : "Show";
-}
-
-function getHideLabel() {
-  return currentLang === LANG_DE ? "Ausblenden" : "Hide";
 }
 
 // ------------------------------------------------------
@@ -445,18 +438,6 @@ let sidebarEl;
 let filterSectionEl;
 let btnToggleFiltersEl;
 let btnToggleViewEl;
-
-// neue: Plus / Daylog Sections
-let plusSectionEl;
-let btnTogglePlusEl;
-let plusBodyEls = [];
-let plusCollapsed = false;
-
-let daylogSectionEl;
-let btnToggleDaylogEl;
-let daylogBodyEls = [];
-let daylogCollapsed = false;
-
 let filterSearchEl;
 let filterCategoryEl;
 let filterAgeEl;
@@ -696,21 +677,6 @@ function setLanguage(lang, { initial = false } = {}) {
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
     btn.textContent = currentLang === LANG_DE ? "Schließen" : "Close";
   });
-
-  // Plus / Mein Tag Toggle-Buttons aktualisieren
-  if (btnTogglePlusEl) {
-    const span = btnTogglePlusEl.querySelector("span");
-    if (span) {
-      span.textContent = plusCollapsed ? getShowLabel() : getHideLabel();
-    }
-  }
-
-  if (btnToggleDaylogEl) {
-    const span = btnToggleDaylogEl.querySelector("span");
-    if (span) {
-      span.textContent = daylogCollapsed ? getShowLabel() : getHideLabel();
-    }
-  }
 
   if (!initial) {
     const headerTitle = document.querySelector(".header-title");
@@ -2072,78 +2038,6 @@ function init() {
       filterBodyEls.forEach((el) => el.classList.add("hidden"));
     }
 
-    // Plus / Mein Tag Sections
-    plusSectionEl = document.getElementById("plus-section");
-    daylogSectionEl = document.getElementById("daylog-section");
-
-    if (plusSectionEl) {
-      plusBodyEls = Array.from(plusSectionEl.children).filter(
-        (el) => !el.classList.contains("sidebar-section-header")
-      );
-      btnTogglePlusEl = document.getElementById("btn-toggle-plus");
-
-      if (btnTogglePlusEl) {
-        const span = btnTogglePlusEl.querySelector("span");
-
-        const applyPlusState = () => {
-          const isExpanded = !plusCollapsed;
-          plusBodyEls.forEach((el) =>
-            el.classList.toggle("hidden", plusCollapsed)
-          );
-          if (span) {
-            span.textContent = plusCollapsed ? getShowLabel() : getHideLabel();
-          }
-          btnTogglePlusEl.setAttribute(
-            "aria-expanded",
-            isExpanded ? "true" : "false"
-          );
-        };
-
-        plusCollapsed = false;
-        applyPlusState();
-
-        btnTogglePlusEl.addEventListener("click", () => {
-          plusCollapsed = !plusCollapsed;
-          applyPlusState();
-        });
-      }
-    }
-
-    if (daylogSectionEl) {
-      daylogBodyEls = Array.from(daylogSectionEl.children).filter(
-        (el) => !el.classList.contains("sidebar-section-header")
-      );
-      btnToggleDaylogEl = document.getElementById("btn-toggle-daylog");
-
-      if (btnToggleDaylogEl) {
-        const span = btnToggleDaylogEl.querySelector("span");
-
-        const applyDaylogState = () => {
-          const isExpanded = !daylogCollapsed;
-          daylogBodyEls.forEach((el) =>
-            el.classList.toggle("hidden", daylogCollapsed)
-          );
-          if (span) {
-            span.textContent = daylogCollapsed
-              ? getShowLabel()
-              : getHideLabel();
-          }
-          btnToggleDaylogEl.setAttribute(
-            "aria-expanded",
-            isExpanded ? "true" : "false"
-          );
-        };
-
-        daylogCollapsed = false;
-        applyDaylogState();
-
-        btnToggleDaylogEl.addEventListener("click", () => {
-          daylogCollapsed = !daylogCollapsed;
-          applyDaylogState();
-        });
-      }
-    }
-
     btnToggleFiltersEl = document.getElementById("btn-toggle-filters");
     btnToggleViewEl = document.getElementById("btn-toggle-view");
 
@@ -2393,7 +2287,8 @@ function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    // Kompass-Button: Click-Handler + Label
+    // Kompass-Button: Click-Handler + initial verstecken, wenn Kompass geschlossen ist
+    // und beim Öffnen/Schließen Sichtbarkeit + Label aktualisieren
     if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
       btnToggleCompassEl.addEventListener("click", (event) => {
         event.preventDefault();
@@ -2401,7 +2296,12 @@ function init() {
         handleToggleCompass();
       });
 
+      // initial: hidden, wenn Kompass geschlossen (ist er, da oben open=false gesetzt wurde)
+      btnToggleCompassEl.classList.toggle("hidden", !compassSectionEl.open);
+
       compassSectionEl.addEventListener("toggle", () => {
+        const isOpen = compassSectionEl.open;
+        btnToggleCompassEl.classList.toggle("hidden", !isOpen);
         updateCompassButtonLabel();
       });
 
