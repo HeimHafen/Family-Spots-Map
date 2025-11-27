@@ -2287,6 +2287,8 @@ function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
+    // Kompass-Button: Click-Handler + initial verstecken, wenn Kompass geschlossen ist
+    // und beim Öffnen/Schließen Sichtbarkeit + Label aktualisieren
     if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
       btnToggleCompassEl.addEventListener("click", (event) => {
         event.preventDefault();
@@ -2294,7 +2296,14 @@ function init() {
         handleToggleCompass();
       });
 
-      compassSectionEl.addEventListener("toggle", updateCompassButtonLabel);
+      // initial: hidden, wenn Kompass geschlossen (ist er, da oben open=false gesetzt wurde)
+      btnToggleCompassEl.classList.toggle("hidden", !compassSectionEl.open);
+
+      compassSectionEl.addEventListener("toggle", () => {
+        const isOpen = compassSectionEl.open;
+        btnToggleCompassEl.classList.toggle("hidden", !isOpen);
+        updateCompassButtonLabel();
+      });
 
       updateCompassButtonLabel();
     }
