@@ -465,7 +465,7 @@ textarea.input:focus-visible {
 
 .sidebar-section-header {
   display: flex;
-  align-items: center;
+  align-items: center; /* sorgt dafür, dass Titel und Button wirklich mittig stehen */
   justify-content: space-between;
   gap: 8px;
 }
@@ -475,6 +475,37 @@ textarea.input:focus-visible {
   font-size: 18px;
   font-weight: 700;
   color: var(--text-strong);
+}
+
+/* Header-Toggle-Buttons: Kompass / Filter / Plus / Mein Tag */
+#btn-toggle-compass,
+#btn-toggle-filters,
+#btn-toggle-plus,
+#btn-toggle-daylog {
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  margin: 0; /* kein zusätzlicher Abstand nach unten → Button wirkt mittig */
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] #btn-toggle-compass,
+[data-theme="dark"] #btn-toggle-filters,
+[data-theme="dark"] #btn-toggle-plus,
+[data-theme="dark"] #btn-toggle-daylog {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
 }
 
 .sidebar-section-close {
@@ -521,6 +552,7 @@ textarea.input:focus-visible {
     0 10px 22px rgba(0, 0, 0, 0.9);
 }
 
+/* Im Kompass-Header nur der Toggle-Button, nicht zusätzlich "Schließen" */
 #compass-section .sidebar-section-header button:not(:first-of-type) {
   display: none;
 }
@@ -547,11 +579,7 @@ textarea.input:focus-visible {
   color: var(--text-soft);
 }
 
-/* NEU: Abstand für Filter-Toggle-Button & mehr Luft über Helper-Text */
-#btn-toggle-filters {
-  margin-bottom: 1rem;
-}
-
+/* Mehr Luft über dem Helper-Text nach dem Filter-Header */
 .sidebar-section-header + .filter-group-helper {
   margin-top: 1rem;
 }
@@ -823,24 +851,21 @@ select.input:focus {
 
 @media (max-width: 899px) {
   .map-section {
-    min-height: 48vh; /* wieder kompakter wie auf Bild 2 */
+    min-height: 60vh;
   }
 
   .map-container {
-    min-height: 48vh;
+    min-height: 60vh;
   }
 }
 
-/* Spot-Details – immer als Overlay im Kartenbereich */
+/* Spot-Details */
 
 .spot-details {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  margin: 0;
-  max-height: 55%;
-  overflow-y: auto;
+  position: static;
+  margin: 8px 10px 10px;
+  max-height: none;
+  overflow-y: visible;
   background: rgba(255, 248, 239, 0.96);
   border-radius: 18px;
   box-shadow: 0 10px 24px rgba(116, 68, 33, 0.6);
@@ -873,11 +898,14 @@ select.input:focus {
   }
 
   .spot-details {
+    position: absolute;
+    margin: 0;
     right: 16px;
-    left: auto;
     bottom: 16px;
+    left: auto;
     width: 320px;
     max-height: 75%;
+    overflow-y: auto;
   }
 }
 
