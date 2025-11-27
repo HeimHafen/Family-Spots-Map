@@ -821,24 +821,26 @@ select.input:focus {
   transition: filter 0.25s ease-out;
 }
 
-/* *** HIER: Mobile-Höhe der Karte wieder kleiner wie auf Bild 2 *** */
 @media (max-width: 899px) {
   .map-section {
-    min-height: 52vh;
+    min-height: 48vh; /* wieder kompakter wie auf Bild 2 */
   }
 
   .map-container {
-    min-height: 52vh;
+    min-height: 48vh;
   }
 }
 
-/* Spot-Details */
+/* Spot-Details – immer als Overlay im Kartenbereich */
 
 .spot-details {
-  position: static;
-  margin: 8px 10px 10px;
-  max-height: none;
-  overflow-y: visible;
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  margin: 0;
+  max-height: 55%;
+  overflow-y: auto;
   background: rgba(255, 248, 239, 0.96);
   border-radius: 18px;
   box-shadow: 0 10px 24px rgba(116, 68, 33, 0.6);
@@ -871,14 +873,11 @@ select.input:focus {
   }
 
   .spot-details {
-    position: absolute;
-    margin: 0;
     right: 16px;
-    bottom: 16px;
     left: auto;
+    bottom: 16px;
     width: 320px;
     max-height: 75%;
-    overflow-y: auto;
   }
 }
 
@@ -1368,7 +1367,11 @@ body.onboarding-open {
 
 .onboarding-dot--active {
   width: 18px;
-  background: linear-gradient(135deg, var(--accent), hsl(var(--accent-h, 32), 100%, 60%));
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
 }
 
 @keyframes onboarding-fade-in {
@@ -1586,15 +1589,27 @@ body.onboarding-open {
 }
 
 .badge--mood {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 70%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 70%)
+  );
 }
 
 .badge--travel {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 68%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 68%)
+  );
 }
 
 .badge--age {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 72%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 72%)
+  );
 }
 
 .badge--distance {
