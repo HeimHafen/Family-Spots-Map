@@ -547,6 +547,15 @@ textarea.input:focus-visible {
   color: var(--text-soft);
 }
 
+/* NEU: Abstand für Filter-Toggle-Button & mehr Luft über Helper-Text */
+#btn-toggle-filters {
+  margin-bottom: 1rem;
+}
+
+.sidebar-section-header + .filter-group-helper {
+  margin-top: 1rem;
+}
+
 .input,
 textarea.input,
 select.input {
