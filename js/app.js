@@ -1454,6 +1454,7 @@ function renderSpotList() {
 
     card.tabIndex = 0;
     card.setAttribute("role", "button");
+    card.setAttribute("aria-label", getSpotName(spot));
 
     const titleEl = document.createElement("h3");
     titleEl.className = "spot-card-title";
@@ -1698,8 +1699,12 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(routesEl);
   }
 
-  spotDetailEl.insertBefore(metaEl, spotDetailEl.firstChild);
+  // Header & Meta nur einfügen, wenn es auch Meta-Inhalte gibt
+  if (metaParts.length) {
+    spotDetailEl.insertBefore(metaEl, spotDetailEl.firstChild);
+  }
   spotDetailEl.insertBefore(headerEl, spotDetailEl.firstChild);
+
   if (tags.length) {
     spotDetailEl.appendChild(tagsEl);
   }
