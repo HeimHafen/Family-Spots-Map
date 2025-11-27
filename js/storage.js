@@ -1,3 +1,5 @@
+// modules/storage.js
+
 // ------------------------
 // Keys & Default-Settings
 // ------------------------
@@ -48,10 +50,6 @@ export function saveSettings(settings) {
 // Plus-Status
 // ------------------------
 
-/**
- * Liefert den vollständigen Plus-Status aus dem Storage.
- * Achtung: Wenn abgelaufen, wird direkt auf Default zurückgesetzt.
- */
 export function getPlusStatus() {
   try {
     const raw = localStorage.getItem(PLUS_KEY);
@@ -64,7 +62,6 @@ export function getPlusStatus() {
       const exp = new Date(merged.expiresAt);
       const now = new Date();
       if (isNaN(exp.getTime()) || exp <= now) {
-        // Abgelaufen oder ungültig -> zurück auf Default
         return { ...defaultPlusStatus };
       }
     }
@@ -75,10 +72,6 @@ export function getPlusStatus() {
   }
 }
 
-/**
- * Speichert einen (Teil-)Status für Plus.
- * Ergänzt default-Werte und setzt active:true.
- */
 export function savePlusStatus(status) {
   const merged = { ...defaultPlusStatus, ...status, active: true };
   try {
@@ -98,9 +91,7 @@ export function clearPlusStatus() {
   return { ...defaultPlusStatus };
 }
 
-// **Kompatibilitäts-Aliase für dein bestehendes plus.js**
-// (plus.js kann weiter { getPlusStatusFromStorage, savePlusStatusToStorage } importieren)
-
+// Alias für alte Struktur (Kompatibilität)
 export function getPlusStatusFromStorage() {
   return getPlusStatus();
 }
@@ -126,7 +117,7 @@ export function getFavorites() {
 
 function setFavorites(ids) {
   const unique = Array.from(new Set(ids)).filter(
-    (id) => typeof id === "string" && id.trim() !== "",
+    (id) => typeof id === "string" && id.trim() !== ""
   );
   try {
     localStorage.setItem(FAV_KEY, JSON.stringify(unique));
