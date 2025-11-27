@@ -1,7 +1,8 @@
-// modules/storage.js
+// js/core/storage.js
+// Persistente Speicherung von Einstellungen, Favoriten und Plus-Status
 
 // ------------------------
-// Keys & Default-Settings
+// LocalStorage Keys & Defaults
 // ------------------------
 
 const SETTINGS_KEY = "fsm.settings.v1";
@@ -24,7 +25,7 @@ const defaultPlusStatus = {
 };
 
 // ------------------------
-// Settings (Sprache/Theme)
+// Settings (Sprache & Theme)
 // ------------------------
 
 export function getSettings() {
@@ -42,7 +43,7 @@ export function saveSettings(settings) {
   try {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   } catch {
-    // ignorieren – z. B. Privacy-Mode
+    // kann z. B. im Privacy-Modus fehlschlagen – einfach ignorieren
   }
 }
 
@@ -62,7 +63,7 @@ export function getPlusStatus() {
       const exp = new Date(merged.expiresAt);
       const now = new Date();
       if (isNaN(exp.getTime()) || exp <= now) {
-        return { ...defaultPlusStatus };
+        return { ...defaultPlusStatus }; // abgelaufen
       }
     }
 
@@ -91,14 +92,9 @@ export function clearPlusStatus() {
   return { ...defaultPlusStatus };
 }
 
-// Alias für alte Struktur (Kompatibilität)
-export function getPlusStatusFromStorage() {
-  return getPlusStatus();
-}
-
-export function savePlusStatusToStorage(status) {
-  return savePlusStatus(status);
-}
+// Kompatibilitäts-Aliase für ältere Imports
+export const getPlusStatusFromStorage = getPlusStatus;
+export const savePlusStatusToStorage = savePlusStatus;
 
 // ------------------------
 // Favoriten
