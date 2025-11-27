@@ -9,18 +9,18 @@
   <meta name="theme-color" content="#fb8c00" />
   <meta name="robots" content="index,follow" />
 
-  <!-- Canonical & hreflang (URLs bei Live-Domain anpassen) -->
-  <link rel="canonical" href="https://family-spots.example.com/" />
-  <link rel="alternate" hreflang="de" href="https://family-spots.example.com/" />
-  <link rel="alternate" hreflang="en" href="https://family-spots.example.com/en/" />
+  <!-- Canonical & hreflang (für aktuelle GitHub-Pages-URL; bei eigener Domain anpassen) -->
+  <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
+  <link rel="alternate" hreflang="de" href="https://heimhafen.github.io/Family-Spots-Map/" />
+  <link rel="alternate" hreflang="en" href="https://heimhafen.github.io/Family-Spots-Map/en/" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Family Spots Map – familienfreundliche Abenteuerkarte" />
   <meta property="og:description"
         content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://family-spots.example.com/" />
-  <meta property="og:image" content="https://family-spots.example.com/assets/social/og-image.png" />
+  <meta property="og:url" content="https://heimhafen.github.io/Family-Spots-Map/" />
+  <meta property="og:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
   <meta property="og:locale" content="de_DE" />
   <meta property="og:site_name" content="Family Spots Map" />
 
@@ -29,15 +29,17 @@
   <meta name="twitter:title" content="Family Spots Map – familienfreundliche Abenteuerkarte" />
   <meta name="twitter:description"
         content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer." />
-  <meta name="twitter:image" content="https://family-spots.example.com/assets/social/og-image.png" />
+  <meta name="twitter:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
 
-  <!-- Manifest für PWA -->
+  <!-- PWA / Apple -->
   <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="format-detection" content="telephone=no" />
 
   <!-- Favicon / Icons -->
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet"
@@ -114,7 +116,7 @@
            ======================= -->
       <section id="view-map" class="view view--active" aria-label="Karte">
         <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar" id="sidebar" aria-labelledby="spots-title">
           <!-- Tilla-Begleiterin -->
           <section
             id="tilla-section"
@@ -151,7 +153,7 @@
 
           <!-- Familien-Kompass -->
           <details class="sidebar-section" id="compass-section">
-            <summary class="sidebar-section-header">
+            <summary class="sidebar-section-header" id="compass-summary">
               <h2
                 class="sidebar-section-title"
                 id="compass-label"
@@ -159,6 +161,8 @@
                 data-i18n-en="Family Compass">
                 Familien-Kompass
               </h2>
+            </summary>
+            <div class="compass-card" aria-labelledby="compass-label">
               <button
                 id="btn-toggle-compass"
                 class="btn-ghost btn-small"
@@ -171,8 +175,6 @@
                   Familien-Kompass öffnen
                 </span>
               </button>
-            </summary>
-            <div class="compass-card">
               <p
                 class="filter-group-helper"
                 id="compass-helper"
@@ -187,7 +189,7 @@
           </details>
 
           <!-- Filter -->
-          <section class="sidebar-section" id="filter-section">
+          <section class="sidebar-section" id="filter-section" aria-labelledby="filter-title">
             <header class="sidebar-section-header">
               <h2
                 class="sidebar-section-title"
@@ -201,7 +203,7 @@
                 class="btn-ghost btn-small"
                 type="button"
                 aria-controls="filter-section"
-                aria-expanded="false">
+                aria-expanded="true">
                 <span
                   data-i18n-de="Filter ausblenden"
                   data-i18n-en="Hide filters">
@@ -471,7 +473,7 @@
           </section>
 
           <!-- Spot-Liste -->
-          <section class="sidebar-section sidebar-section--grow" aria-label="Spots">
+          <section class="sidebar-section sidebar-section--grow" aria-labelledby="spots-title">
             <header class="sidebar-section-header">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
               <button
@@ -497,14 +499,14 @@
         <details class="sidebar-section" id="plus-section">
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title">Family Spots Plus</h2>
-            <button
-              type="button"
-              class="sidebar-section-close"
-              data-target="plus-section"
-              aria-label="Family Spots Plus schließen">
-              ✖️
-            </button>
           </summary>
+          <button
+            type="button"
+            class="sidebar-section-close"
+            data-target="plus-section"
+            aria-label="Family Spots Plus schließen">
+            ✖️
+          </button>
           <div class="filter-group">
             <p
               id="plus-status-text"
@@ -546,14 +548,14 @@
               data-i18n-en="My day 💛">
               Mein Tag 💛
             </h2>
-            <button
-              type="button"
-              class="sidebar-section-close"
-              data-target="daylog-section"
-              aria-label="Tagesprotokoll schließen">
-              ✖️
-            </button>
           </summary>
+          <button
+            type="button"
+            class="sidebar-section-close"
+            data-target="daylog-section"
+            aria-label="Tagesprotokoll schließen">
+            ✖️
+          </button>
           <div class="filter-group">
             <label
               for="daylog-text"
@@ -702,7 +704,7 @@
   </div>
 
   <!-- Landscape-Warnung für Mobile Landscape -->
-  <div class="landscape-warning" aria-live="polite">
+  <div class="landscape-warning" aria-live="polite" aria-hidden="true">
     Bitte Gerät drehen 📱🔄 – im Hochformat macht die Family Spots Map mehr Freude.
   </div>
 
@@ -714,6 +716,6 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
   <!-- App (ES-Modul) -->
-  <script type="module" src="./js/app.js" defer></script>
+  <script type="module" src="./js/app.js"></script>
 </body>
 </html>
