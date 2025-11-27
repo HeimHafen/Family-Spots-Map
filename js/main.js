@@ -14,7 +14,20 @@ import { getInitialLang, t } from "./app/i18n.js";
 import { initMap } from "./app/map.js";
 import { initUI } from "./app/ui.js";
 import { TillaCompanion } from "./app/tillaCompanion.js";
-import { loadSpots } from "./app/dataLoader.js"; // <-- Wichtig: aktivieren!
+import { loadSpots } from "./app/dataLoader.js";
+
+// Utils
+import {
+  $,
+  $$,
+  debounce,
+  formatVisitMinutes,
+  getGeolocation,
+  slugify,
+  distanceInKm,
+  normalizeSpot,
+  getMetaInfoForSpot
+} from "./modules/utils.js"; // <-- Hier liegt dein modularer Helfer!
 
 /**
  * Initialisiert globale App-Zustände & Features
