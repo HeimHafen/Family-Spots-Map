@@ -1,9 +1,9 @@
-// js/coach.js
+// js/features/coach.js
 // Logik für den Familien-Kompass / "Mini-Life-Coach"
 
-import { getLanguage } from "./i18n.js";
+import { getLanguage } from "../core/i18n.js";
 
-// Wichtig: identisch zu filters.js, damit Radius-Texte konsistent sind.
+// Muss mit filters.js synchron sein
 const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
 function getLanguageInfo() {
@@ -12,16 +12,13 @@ function getLanguageInfo() {
   return { lang, isDe };
 }
 
-/**
- * Baut eine menschenlesbare Beschreibung des aktuellen Radius.
- */
 function describeRadius(radiusIndex) {
   const { isDe } = getLanguageInfo();
 
-  const idx =
-    typeof radiusIndex === "number" && radiusIndex >= 0 && radiusIndex <= 4
-      ? radiusIndex
-      : 4;
+  const idx = typeof radiusIndex === "number" && radiusIndex >= 0 && radiusIndex <= 4
+    ? radiusIndex
+    : 4;
+
   const radiusKm = RADIUS_LEVELS_KM[idx];
 
   if (radiusKm == null) {
@@ -45,19 +42,12 @@ function describeRadius(radiusIndex) {
       ? "mit etwas Fahrtzeit – ideal für einen halben Tag"
       : "with a bit of travel – ideal for a half-day adventure";
   }
+
   return isDe
     ? "etwas weiter weg – ein Ausflug, der sich für einen ganzen Tag lohnt"
     : "a bit further away – a trip that’s worth a full day";
 }
 
-/**
- * Baut den Kompass-Text basierend auf Filter-Status & Ergebnis-Infos.
- *
- * @param {object} filters - aktueller Filter-State aus filters.js
- * @param {object} extras
- * @param {number} extras.filteredCount
- * @param {number} extras.favoritesCount
- */
 export function buildCompassMessage(filters, extras = {}) {
   const { isDe } = getLanguageInfo();
 
@@ -84,7 +74,7 @@ export function buildCompassMessage(filters, extras = {}) {
     !favoritesOnly;
 
   if (nothingSelected) {
-    if (favoritesCount > 0 && favoritesOnly) {
+    if (favoritesOnly && favoritesCount > 0) {
       return isDe
         ? "Zeige euch eure Lieblingsspots ohne weitere Filter. Ihr könnt Stimmung, Reise-Modus oder Radius ergänzen, um Inspiration für heute zu bekommen."
         : "Showing your favourite spots without extra filters. Add mood, travel mode or radius for inspiration for today.";
@@ -97,7 +87,6 @@ export function buildCompassMessage(filters, extras = {}) {
 
   const parts = [];
 
-  // Stimmung
   if (mood === "relaxed") {
     parts.push(
       isDe
@@ -124,7 +113,6 @@ export function buildCompassMessage(filters, extras = {}) {
     );
   }
 
-  // Reise-Modus
   if (travelMode === "everyday") {
     parts.push(
       isDe
@@ -139,7 +127,6 @@ export function buildCompassMessage(filters, extras = {}) {
     );
   }
 
-  // Alter
   if (ageGroup === "0-3") {
     parts.push(
       isDe
@@ -160,14 +147,12 @@ export function buildCompassMessage(filters, extras = {}) {
     );
   }
 
-  // Radius
   parts.push(
     isDe
       ? `Der Radius ist gerade so eingestellt: ${describeRadius(radiusIndex)}.`
       : `Your radius is set like this: ${describeRadius(radiusIndex)}.`,
   );
 
-  // Favoriten / Anzahl der Ergebnisse
   if (favoritesOnly && favoritesCount > 0) {
     parts.push(
       isDe
@@ -198,7 +183,7 @@ export function buildCompassMessage(filters, extras = {}) {
 }
 
 /**
- * Schreibt die Nachricht in den DOM (oder legt das Element bei Bedarf an).
+ * Aktualisiert den DOM mit der Compass-Nachricht.
  */
 export function updateCompassMessage(filters, extras = {}) {
   if (typeof document === "undefined") return;
