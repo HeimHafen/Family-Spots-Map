@@ -219,7 +219,7 @@ a {
   flex-direction: column;
 }
 
-/* Fokus-Outline */
+/* Fokus-Outline (global, aber Titel bekommt eigene Ausnahme) */
 
 :focus-visible {
   outline: 2px solid #ffb54f;
@@ -327,6 +327,12 @@ a {
   justify-content: center;
   gap: 6px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
+}
+
+.header-title:focus-visible {
+  /* Kein gelber Fokus-Kasten um "Family Spots Map" */
+  outline: none;
+  box-shadow: none;
 }
 
 .header-flag {
@@ -855,19 +861,19 @@ select.input:focus {
 
 @keyframes tilla-bob {
   0% {
-    transform: scaleX(-1) translateY(0) rotate(0deg);
+    transform: translateY(0) rotate(0deg);
   }
   25% {
-    transform: scaleX(-1) translateY(-2px) rotate(-2deg);
+    transform: translateY(-2px) rotate(-2deg);
   }
   50% {
-    transform: scaleX(-1) translateY(-3px) rotate(2.5deg);
+    transform: translateY(-3px) rotate(2.5deg);
   }
   75% {
-    transform: scaleX(-1) translateY(-2px) rotate(-1.5deg);
+    transform: translateY(-2px) rotate(-1.5deg);
   }
   100% {
-    transform: scaleX(-1) translateY(0) rotate(0);
+    transform: translateY(0) rotate(0);
   }
 }
 
@@ -913,10 +919,10 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 80px;
+  width: 96px;          /* etwas größer als vorher */
   height: auto;
   transform-origin: center bottom;
-  animation: tilla-bob 3.5s ease-in-out infinite;
+  animation: tilla-bob 3.5s ease-in-out infinite; /* kein Spiegeln mehr – Tilla schaut nach rechts */
 }
 
 .tilla-sidebar-text {
