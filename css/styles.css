@@ -1367,7 +1367,11 @@ body.onboarding-open {
 
 .onboarding-dot--active {
   width: 18px;
-  background: linear-gradient(135deg, var(--accent), hsl(var(--accent-h, 32), 100%, 60%));
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
 }
 
 @keyframes onboarding-fade-in {
@@ -1585,15 +1589,27 @@ body.onboarding-open {
 }
 
 .badge--mood {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 70%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 70%)
+  );
 }
 
 .badge--travel {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 68%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 68%)
+  );
 }
 
 .badge--age {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 72%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 72%)
+  );
 }
 
 .badge--distance {
