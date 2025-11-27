@@ -120,6 +120,9 @@ const FALLBACK_TEXTS = {
   }
 };
 
+// Spielideen – Quelle: data/play-ideas.json
+const PLAY_IDEAS_URL = "data/play-ideas.json";
+
 /**
  * Ermittelt die aktive Sprache.
  *  - bevorzugt I18N.getLanguage(), falls vorhanden
@@ -179,9 +182,10 @@ export class TillaCompanion {
      * Ziel-Element für Tilla-Text
      * @type {HTMLElement | null}
      */
-    this.textEl = typeof document !== "undefined"
-      ? document.getElementById("tilla-sidebar-text")
-      : null;
+    this.textEl =
+      typeof document !== "undefined"
+        ? document.getElementById("tilla-sidebar-text")
+        : null;
 
     if (!this.textEl) {
       console.warn(
@@ -205,6 +209,17 @@ export class TillaCompanion {
      * @private
      */
     this._lastVariantIndex = {};
+
+    // Spielideen
+    /** @type {Array<{id:string,texts:{de?:string,en?:string}}>|null} */
+    this.playIdeas = null;
+    /** @type {Promise<Array<any>> | null} */
+    this._playIdeasLoading = null;
+    /** @type {string | null} */
+    this._lastPlayIdeaId = null;
+
+    // Button für Spielideen verdrahten (falls vorhanden)
+    this._setupPlayIdeas();
 
     this._renderState();
   }
@@ -423,8 +438,110 @@ export class TillaCompanion {
   }
 
   /**
+   * Spielideen-JSON einmalig laden (mit Cache).
+   * @returns {Promise<Array<any>>}
+   * @private
+   */
+  _ensurePlayIdeasLoaded() {
+    if (this.playIdeas && this.playIdeas.length > 0) {
+      return Promise.resolve(this.playIdeas);
+    }
+
+    if (this._playIdeasLoading) {
+      return this._playIdeasLoading;
+    }
+
+    this._playIdeasLoading = fetch(PLAY_IDEAS_URL, { cache: "no-cache" })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          this.playIdeas = data;
+        } else {
+          console.warn("[Tilla] play-ideas.json enthält kein Array.");
+          this.playIdeas = [];
+        }
+        return this.playIdeas;
+      })
+      .catch((error) => {
+        console.error("[Tilla] Fehler beim Laden von play-ideas.json:", error);
+        this.playIdeas = [];
+        return this.playIdeas;
+      });
+
+    return this._playIdeasLoading;
+  }
+
+  /**
+   * Wählt eine zufällige Spielidee in passender Sprache.
+   * Vermeidet, nach Möglichkeit, dieselbe Idee zweimal hintereinander.
+   * @param {"de"|"en"} lang
+   * @returns {string | null}
+   * @private
+   */
+  _pickRandomPlayIdea(lang) {
+    if (!Array.isArray(this.playIdeas) || this.playIdeas.length === 0) {
+      return null;
+    }
+
+    let idea = null;
+
+    if (this.playIdeas.length === 1) {
+      idea = this.playIdeas[0];
+    } else {
+      let idx;
+      let safety = 0;
+      do {
+        idx = Math.floor(Math.random() * this.playIdeas.length);
+        idea = this.playIdeas[idx];
+        safety++;
+      } while (idea && idea.id === this._lastPlayIdeaId && safety < 5);
+    }
+
+    if (!idea) return null;
+
+    this._lastPlayIdeaId = idea.id;
+
+    const texts = idea.texts || {};
+    return texts[lang] || texts.de || texts.en || null;
+  }
+
+  /**
+   * Verdrahtet den "🎲 Spielideen"-Button, falls vorhanden.
+   * @private
+   */
+  _setupPlayIdeas() {
+    if (typeof document === "undefined" || !this.textEl) return;
+
+    const button = document.getElementById("btn-play-idea");
+    if (!button) return;
+
+    // Ideen im Hintergrund schon mal laden
+    this._ensurePlayIdeasLoaded();
+
+    button.addEventListener("click", () => {
+      this.lastInteraction = Date.now();
+      this.state = "play-idea";
+
+      this._ensurePlayIdeasLoaded().then(() => {
+        const lang = getActiveLang();
+        const ideaText = this._pickRandomPlayIdea(lang);
+        if (!ideaText) {
+          return;
+        }
+        const decorated = `🎲 ${ideaText}`;
+        this.showPlayIdea(decorated);
+      });
+    });
+  }
+
+  /**
    * Rendert den aktuellen State in das Tilla-Panel.
-   * Achtung: Wenn state === "play-idea", wird nicht überschrieben.
+   * Achtung: Wenn state === "play-idea", wird nicht automatisch überschrieben.
    * @private
    */
   _renderState() {
