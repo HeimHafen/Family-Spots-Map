@@ -161,6 +161,18 @@
                 data-i18n-en="Family Compass">
                 Familien-Kompass
               </h2>
+              <button
+                id="btn-toggle-compass"
+                class="btn-ghost btn-small"
+                type="button"
+                aria-controls="compass-section"
+                aria-expanded="false">
+                <span
+                  data-i18n-de="Kompass anzeigen"
+                  data-i18n-en="Show compass">
+                  Kompass anzeigen
+                </span>
+              </button>
             </summary>
             <div class="compass-card" aria-labelledby="compass-label">
               <p
@@ -701,7 +713,7 @@
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.js"></script>
 
   <!-- App (ES-Modul) -->
   <script type="module" src="./js/app.js"></script>
