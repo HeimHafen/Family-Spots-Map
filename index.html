@@ -68,10 +68,6 @@
     <header class="app-header">
       <div class="app-header-top">
         <div class="app-header-left">
-          <button id="btn-help" class="btn-icon" type="button" aria-label="Über Family Spots Map öffnen">
-            ❓
-          </button>
-
           <span class="sr-only" id="language-switcher-label">Sprache wechseln</span>
           <button
             id="language-switcher"
@@ -161,17 +157,69 @@
                 data-i18n-en="Family Compass">
                 Familien-Kompass
               </h2>
+              <button
+                id="btn-toggle-compass"
+                class="btn-ghost btn-small"
+                type="button"
+                aria-controls="compass-section"
+                aria-expanded="false">
+                <span
+                  data-i18n-de="Kompass anzeigen"
+                  data-i18n-en="Show compass">
+                  Kompass anzeigen
+                </span>
+              </button>
             </summary>
             <div class="compass-card" aria-labelledby="compass-label">
               <p
                 class="filter-group-helper"
                 id="compass-helper"
-                data-i18n-de="1. Unten bei »Filter« Stimmung, Alter & Reise-Modus wählen. 2. Hier im Familien-Kompass anzeigen lassen, welche Spots heute gut passen."
-                data-i18n-en="1. Choose mood, age & travel mode under “Filters” below. 2. Use the Family Compass here to see which spots fit today.">
-                1. Unten bei »Filter« Stimmung, Alter & Reise-Modus wählen. 2. Hier im Familien-Kompass anzeigen lassen, welche Spots heute gut passen.
+                data-i18n-de="Wählt, ob ihr eher Alltags-Abenteuer oder einen Ausflugstag sucht – wir passen Radius &amp; Spots für euch an."
+                data-i18n-en="Choose whether you’re looking for an everyday micro-adventure or a day trip – we’ll adjust radius and spots for you.">
+                Wählt, ob ihr eher Alltags-Abenteuer oder einen Ausflugstag sucht – wir passen Radius &amp; Spots für euch an.
+              </p>
+              <div class="compass-mode-row" role="group" aria-labelledby="compass-label">
+                <button
+                  type="button"
+                  class="compass-mode-chip"
+                  data-compass-mode="nearby"
+                  aria-pressed="false">
+                  <span class="mood-chip-emoji" aria-hidden="true">🏡</span>
+                  <span
+                    class="mood-chip-label"
+                    data-i18n-de="Alltag in der Nähe"
+                    data-i18n-en="Everyday nearby">
+                    Alltag in der Nähe
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  class="compass-mode-chip"
+                  data-compass-mode="daytrip"
+                  aria-pressed="false">
+                  <span class="mood-chip-emoji" aria-hidden="true">🗺️</span>
+                  <span
+                    class="mood-chip-label"
+                    data-i18n-de="Ausflug / Tagestour"
+                    data-i18n-en="Day trip">
+                    Ausflug / Tagestour
+                  </span>
+                </button>
+              </div>
+              <p
+                class="filter-group-helper"
+                id="compass-apply-helper"
+                data-i18n-de="Klick auf „Kompass anwenden“, dann passen wir den Umkreis automatisch an eure Wahl an."
+                data-i18n-en="Tap “Apply compass” and we’ll automatically adjust the radius to your choice.">
+                Klick auf „Kompass anwenden“, dann passen wir den Umkreis automatisch an eure Wahl an.
               </p>
               <button type="button" id="compass-apply" class="btn btn-small hidden">
-                <span id="compass-apply-label"><!-- per JS gesetzt --></span>
+                <span
+                  id="compass-apply-label"
+                  data-i18n-de="Kompass anwenden"
+                  data-i18n-en="Apply compass">
+                  Kompass anwenden
+                </span>
               </button>
             </div>
           </details>
@@ -487,6 +535,18 @@
         <details class="sidebar-section" id="plus-section">
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title">Family Spots Plus</h2>
+            <button
+              id="btn-toggle-plus"
+              class="btn-ghost btn-small"
+              type="button"
+              aria-controls="plus-section"
+              aria-expanded="false">
+              <span
+                data-i18n-de="Anzeigen"
+                data-i18n-en="Show">
+                Anzeigen
+              </span>
+            </button>
           </summary>
           <button
             type="button"
@@ -536,6 +596,18 @@
               data-i18n-en="My day 💛">
               Mein Tag 💛
             </h2>
+            <button
+              id="btn-toggle-daylog"
+              class="btn-ghost btn-small"
+              type="button"
+              aria-controls="daylog-section"
+              aria-expanded="false">
+              <span
+                data-i18n-de="Anzeigen"
+                data-i18n-en="Show">
+                Anzeigen
+              </span>
+            </button>
           </summary>
           <button
             type="button"
