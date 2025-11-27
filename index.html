@@ -117,7 +117,16 @@
           <section
             id="tilla-section"
             class="sidebar-section tilla-sidebar-section"
-            aria-label="Tilla, eure Begleiterin">
+            aria-labelledby="tilla-title">
+            <header class="sidebar-section-header">
+              <h2
+                class="sidebar-section-title"
+                id="tilla-title"
+                data-i18n-de="Familien-Begleiterin Tilla"
+                data-i18n-en="Family companion Tilla">
+                Familien-Begleiterin Tilla
+              </h2>
+            </header>
             <div class="tilla-sidebar-card">
               <div class="tilla-sidebar-avatar">
                 <img
@@ -134,7 +143,10 @@
                   Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿
                 </p>
                 <div class="tilla-sidebar-actions">
-                  <button id="btn-play-idea" type="button" class="btn-play-idea">
+                  <button
+                    id="btn-play-idea"
+                    type="button"
+                    class="btn btn-small btn-play-idea">
                     <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
                     <span
                       data-i18n-de="Spielideen für unterwegs"
@@ -350,46 +362,6 @@
                     data-i18n-de="Tier-Tag"
                     data-i18n-en="Animal day">
                     Tier-Tag
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Reise-Modus -->
-            <div class="filter-group">
-              <label
-                class="filter-group-label"
-                id="filter-travel-label"
-                data-i18n-de="Reise-Modus"
-                data-i18n-en="Travel mode">
-                Reise-Modus
-              </label>
-              <p
-                class="filter-group-helper"
-                id="filter-travel-helper"
-                data-i18n-de="Seid ihr heute im Alltag unterwegs oder auf Tour?"
-                data-i18n-en="Are you staying close to home or travelling?">
-                Seid ihr heute im Alltag unterwegs oder auf Tour?
-              </p>
-              <div class="mood-row" role="group" aria-labelledby="filter-travel-label">
-                <button type="button" class="travel-chip" data-travel-mode="everyday" aria-pressed="false">
-                  <span class="mood-chip-emoji" aria-hidden="true">🏡</span>
-                  <span
-                    class="mood-chip-label"
-                    id="travel-everyday-label"
-                    data-i18n-de="Alltag"
-                    data-i18n-en="Everyday">
-                    Alltag
-                  </span>
-                </button>
-                <button type="button" class="travel-chip" data-travel-mode="trip" aria-pressed="false">
-                  <span class="mood-chip-emoji" aria-hidden="true">🚐</span>
-                  <span
-                    class="mood-chip-label"
-                    id="travel-trip-label"
-                    data-i18n-de="Unterwegs"
-                    data-i18n-en="On the road">
-                    Unterwegs
                   </span>
                 </button>
               </div>
