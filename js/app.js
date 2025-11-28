@@ -81,6 +81,11 @@ import {
  */
 
 // ------------------------------------------------------
+// Konstanten & Feature-Toggles
+// (ausgelagert nach js/config.js)
+// ------------------------------------------------------
+
+// ------------------------------------------------------
 // I18N / Text-Helfer
 // ------------------------------------------------------
 
@@ -262,19 +267,6 @@ function initLazyLoadImages() {
       img.loading = "lazy";
     }
   });
-}
-
-/**
- * Hilfsfunktion, um schwere Aufgaben (Map, Datenladen) in Idle-Phasen zu legen.
- * Das verbessert First Paint / TBT deutlich, ohne Funktionen zu verlieren.
- * @param {Function} callback
- */
-function runIdle(callback) {
-  if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-    window.requestIdleCallback(callback, { timeout: 2000 });
-  } else {
-    window.setTimeout(callback, 0);
-  }
 }
 
 // ------------------------------------------------------
@@ -590,7 +582,9 @@ function initMap() {
   map = L.map("map", {
     center: DEFAULT_MAP_CENTER,
     zoom: DEFAULT_MAP_ZOOM,
-    zoomControl: false
+    zoomControl: false,
+    // Canvas ist für viele Marker oft performanter
+    preferCanvas: true
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -599,7 +593,13 @@ function initMap() {
   }).addTo(map);
 
   if (typeof L.markerClusterGroup === "function") {
-    markersLayer = L.markerClusterGroup();
+    // Marker werden in Chunks aufgebaut, damit der Main-Thread nicht blockiert
+    markersLayer = L.markerClusterGroup({
+      chunkedLoading: true,
+      chunkDelay: 50,
+      chunkInterval: 200,
+      maxClusterRadius: 60
+    });
   } else {
     console.warn(
       "[Family Spots] markerClusterGroup nicht gefunden – nutze normale LayerGroup."
@@ -1124,9 +1124,6 @@ function doesSpotMatchFilters(spot, { center, radiusKm }) {
     const categories = [];
 
     if (Array.isArray(spot.categories)) {
-      spot.categories.push(); // NOTE: this line remains unchanged but is harmless
-    }
-    if (Array.isArray(spot.categories)) {
       categories.push(...spot.categories.map(String));
     } else if (spot.category || spot.type) {
       categories.push(String(spot.category || spot.type));
@@ -1228,11 +1225,44 @@ function renderMarkers() {
 
   if (!filteredSpots || !filteredSpots.length) return;
 
-  const shouldLimit = filteredSpots.length > MAX_MARKERS_RENDER;
-  const toRender = shouldLimit
-    ? filteredSpots.slice(0, MAX_MARKERS_RENDER)
-    : filteredSpots;
+  // 1. Sichtbaren Kartenausschnitt ermitteln (mit kleinem Puffer)
+  let bounds = null;
+  if (map && typeof map.getBounds === "function") {
+    try {
+      bounds = map.getBounds().pad(0.25); // 25 % Puffer um den Viewport
+    } catch {
+      bounds = null;
+    }
+  }
 
+  /** @type {Spot[]} */
+  let candidates = filteredSpots;
+
+  // 2. Wenn wir Bounds haben: nur Spots im sichtbaren Bereich berücksichtigen
+  if (bounds && typeof L !== "undefined" && typeof L.latLng === "function") {
+    const inView = [];
+
+    for (const spot of filteredSpots) {
+      if (!hasValidLatLng(spot)) continue;
+      const latLng = L.latLng(spot.lat, spot.lng);
+      if (bounds.contains(latLng)) {
+        inView.push(spot);
+      }
+    }
+
+    // Fallback: wenn im aktuellen Ausschnitt gar nichts ist, nimm einfach alle
+    if (inView.length > 0) {
+      candidates = inView;
+    }
+  }
+
+  // 3. Marker-Anzahl begrenzen (für sehr viele Spots)
+  const shouldLimit = candidates.length > MAX_MARKERS_RENDER;
+  const toRender = shouldLimit
+    ? candidates.slice(0, MAX_MARKERS_RENDER)
+    : candidates;
+
+  // 4. Marker aus Kandidaten bauen (Leaflet + MarkerCluster kümmern sich um Chunks)
   toRender.forEach((spot) => {
     if (!hasValidLatLng(spot)) return;
     if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
@@ -1261,13 +1291,14 @@ function renderMarkers() {
     markersLayer.addLayer(marker);
   });
 
+  // 5. Toast für Marker-Limit
   if (shouldLimit) {
     if (!hasShownMarkerLimitToast) {
       hasShownMarkerLimitToast = true;
       const msg =
         currentLang === LANG_DE
-          ? `Nur die ersten ${MAX_MARKERS_RENDER} Spots auf der Karte – bitte Filter oder Zoom nutzen.`
-          : `Only the first ${MAX_MARKERS_RENDER} spots are shown on the map – please use filters or zoom in.`;
+          ? `Nur die ersten ${MAX_MARKERS_RENDER} Spots im aktuellen Kartenausschnitt – bitte Filter oder Zoom nutzen.`
+          : `Only the first ${MAX_MARKERS_RENDER} spots are shown in the current map view – please use filters or zoom in.`;
       showToast(msg);
     }
   } else {
@@ -1452,10 +1483,10 @@ function showSpotDetails(spot) {
   titleEl.textContent = name;
 
   if (subtitle && !addressText) {
-    const subtitleEl2 = document.createElement("p");
-    subtitleEl2.className = "spot-card-subtitle";
-    subtitleEl2.textContent = subtitle;
-    titleWrapperEl.appendChild(subtitleEl2);
+    const subtitleEl = document.createElement("p");
+    subtitleEl.className = "spot-card-subtitle";
+    subtitleEl.textContent = subtitle;
+    titleWrapperEl.appendChild(subtitleEl);
   }
 
   titleWrapperEl.insertBefore(titleEl, titleWrapperEl.firstChild);
@@ -1947,14 +1978,40 @@ function init() {
       );
     }
 
-    // Sprache / Theme
+    // Sprache / Theme / Map
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
 
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
 
-    // Tilla initialisieren (leichtgewichtiger als Map)
+    initMap();
+
+    if (map) {
+      if (spotDetailEl) {
+        map.on("click", () => {
+          closeSpotDetails({ returnFocus: true });
+        });
+      }
+
+      // Performance-freundliches Nachladen bei Kartenbewegung / Zoom
+      map.on(
+        "moveend zoomend",
+        debounce(() => {
+          applyFiltersAndRender();
+        }, 200)
+      );
+
+      // Map bei Fenster-Resize sauber neu berechnen
+      window.addEventListener(
+        "resize",
+        debounce(() => {
+          map.invalidateSize();
+        }, 200)
+      );
+    }
+
+    // Tilla initialisieren
     tilla = new TillaCompanion({
       getText: (key) => t(key)
     });
@@ -2266,39 +2323,7 @@ function init() {
     });
 
     switchRoute("map");
-
-    // Schwergewichtige Teile (Map + Spots) in Idle-Phase legen
-    const startMapAndData = () => {
-      initMap();
-
-      if (map) {
-        if (spotDetailEl) {
-          map.on("click", () => {
-            closeSpotDetails({ returnFocus: true });
-          });
-        }
-
-        // Performance-freundliches Nachladen bei Kartenbewegung / Zoom
-        map.on(
-          "moveend zoomend",
-          debounce(() => {
-            applyFiltersAndRender();
-          }, 200)
-        );
-
-        // Map bei Fenster-Resize sauber neu berechnen
-        window.addEventListener(
-          "resize",
-          debounce(() => {
-            map.invalidateSize();
-          }, 200)
-        );
-      }
-
-      loadSpots();
-    };
-
-    runIdle(startMapAndData);
+    loadSpots();
 
     // TODO: map.js, filters.js, utils.js könnten Funktionen modularisieren
   } catch (err) {
