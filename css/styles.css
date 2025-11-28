@@ -477,6 +477,7 @@ textarea.input:focus-visible {
   color: var(--text-strong);
 }
 
+/* "Schließen"-Buttons aus Plus & Mein Tag ausblenden */
 .sidebar-section-close {
   border: none;
   padding: 6px 14px;
@@ -486,6 +487,7 @@ textarea.input:focus-visible {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  display: none; /* Button optisch entfernen, Funktion bleibt über Summary-Button */
 }
 
 [data-theme="dark"] .sidebar-section-close {
@@ -545,6 +547,11 @@ textarea.input:focus-visible {
   margin: 0 0 6px;
   font-size: 13px;
   color: var(--text-soft);
+}
+
+/* Reise-Modus-Hilfetext ausblenden */
+#filter-travel-helper {
+  display: none;
 }
 
 /* NEU: Abstand für Filter-Toggle-Button & mehr Luft über Helper-Text */
@@ -919,6 +926,7 @@ select.input:focus {
   padding-bottom: 10px;
 }
 
+/* Überschrift "Familien-Begleiterin Tilla" oberhalb der Schildkröte */
 .tilla-sidebar-card {
   display: flex;
   align-items: center;
@@ -930,6 +938,24 @@ select.input:focus {
     var(--card-shadow),
     inset 0 0 0 1px var(--card-border);
   animation: tilla-card-in 0.45s ease-out 0.1s both;
+  position: relative;
+  flex-wrap: nowrap;
+}
+
+.tilla-sidebar-card::before {
+  content: "Familien-Begleiterin Tilla";
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+/* Platz schaffen, damit Überschrift nicht in den Inhalt läuft */
+.tilla-sidebar-avatar,
+.tilla-sidebar-text {
+  margin-top: 20px;
 }
 
 [data-theme="dark"] .tilla-sidebar-card {
@@ -956,9 +982,49 @@ select.input:focus {
 }
 
 #tilla-sidebar-text {
-  margin: 0;
+  margin: 0 0 10px;
   font-size: 14px;
   line-height: 1.5;
+}
+
+/* Button-Bereich für Spielideen */
+.tilla-sidebar-actions {
+  margin-top: 2px;
+}
+
+/* Button "Spielideen für unterwegs" im orangen Button-Stil */
+.btn-play-idea {
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
+  color: #fffdf8;
+  box-shadow:
+    0 4px 10px rgba(180, 96, 33, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-play-idea:active {
+  transform: translateY(1px) scale(0.97);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.tilla-play-emoji {
+  font-size: 18px;
 }
 
 /* =========================================
