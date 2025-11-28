@@ -2338,7 +2338,7 @@ function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    // Kompass-Toggle-Button – jetzt immer sichtbar
+    // Kompass-Toggle-Button – immer sichtbar, Label & aria-expanded sauber synchron
     if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
       btnToggleCompassEl.addEventListener("click", (event) => {
         event.preventDefault();
@@ -2424,7 +2424,7 @@ function init() {
       });
     }
 
-    // Close-Buttons (Plus / Daylog / ggf. weitere Sections)
+    // Close-Buttons (Plus / Daylog / Kompass / ggf. weitere Sections)
     document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
       const targetId = btn.getAttribute("data-target");
       let section = null;
@@ -2441,8 +2441,19 @@ function init() {
           section.classList.add("hidden");
         }
 
+        // Kompass-Button-Label synchron halten
         if (section.id === "compass-section" && btnToggleCompassEl) {
           updateCompassButtonLabel();
+        }
+
+        // Plus-Button-Label synchron halten
+        if (section.id === "plus-section" && btnTogglePlusEl) {
+          updateGenericSectionToggleLabel(btnTogglePlusEl, false);
+        }
+
+        // Mein-Tag-Button-Label synchron halten
+        if (section.id === "daylog-section" && btnToggleDaylogEl) {
+          updateGenericSectionToggleLabel(btnToggleDaylogEl, false);
         }
       });
     });
