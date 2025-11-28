@@ -2,12 +2,15 @@
 <html lang="de" data-theme="light">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
   <title>Family Spots Map – Die schönste Karte für Familien-Abenteuer</title>
   <meta name="description"
         content="Family Spots Map: Spielplätze, Zoos, Wildparks, familienfreundliche Spots & mehr – für unvergessliche Familienabenteuer." />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#fb8c00" />
   <meta name="robots" content="index,follow" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
 
   <!-- Canonical & hreflang (für aktuelle GitHub-Pages-URL; bei eigener Domain anpassen) -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
@@ -36,6 +39,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="format-detection" content="telephone=no" />
+
+  <!-- Performance hints -->
+  <link rel="preconnect" href="https://unpkg.com" crossorigin />
 
   <!-- Favicon / Icons -->
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
@@ -279,6 +285,7 @@
               </label>
               <input
                 id="filter-search"
+                name="search"
                 class="input"
                 type="search"
                 placeholder="Ort, Spot, Stichwort …"
@@ -297,7 +304,7 @@
                 data-i18n-en="Category">
                 Kategorie
               </label>
-              <select id="filter-category" class="input">
+              <select id="filter-category" name="category" class="input">
                 <option
                   value=""
                   data-i18n-de="Alle Kategorien"
@@ -377,7 +384,7 @@
                 data-i18n-en="Age of children">
                 Alter der Kinder
               </label>
-              <select id="filter-age" class="input">
+              <select id="filter-age" name="age" class="input">
                 <option
                   value="all"
                   id="filter-age-all"
@@ -429,6 +436,7 @@
               <div class="radius-row">
                 <input
                   id="filter-radius"
+                  name="radius"
                   type="range"
                   min="0"
                   max="4"
@@ -456,7 +464,7 @@
             <!-- Checkboxen -->
             <div class="filter-group filter-group--checkbox">
               <label class="checkbox-label" id="filter-big-label">
-                <input id="filter-big-adventures" type="checkbox" />
+                <input id="filter-big-adventures" name="big-adventures" type="checkbox" />
                 <span data-i18n-de="Nur große Abenteuer" data-i18n-en="Only big adventures">
                   Nur große Abenteuer
                 </span>
@@ -464,7 +472,7 @@
             </div>
             <div class="filter-group filter-group--checkbox">
               <label class="checkbox-label" id="filter-verified-label">
-                <input id="filter-verified" type="checkbox" />
+                <input id="filter-verified" name="verified" type="checkbox" />
                 <span data-i18n-de="Nur verifizierte Spots" data-i18n-en="Only verified spots">
                   Nur verifizierte Spots
                 </span>
@@ -472,7 +480,7 @@
             </div>
             <div class="filter-group filter-group--checkbox">
               <label class="checkbox-label" id="filter-favs-label">
-                <input id="filter-favorites" type="checkbox" />
+                <input id="filter-favorites" name="favorites" type="checkbox" />
                 <span data-i18n-de="Nur Favoriten" data-i18n-en="Only favourites">
                   Nur Favoriten
                 </span>
@@ -536,7 +544,7 @@
               Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):
             </label>
             <div class="plus-code-row">
-              <input id="plus-code-input" class="input" type="text" autocomplete="off" />
+              <input id="plus-code-input" name="plus-code" class="input" type="text" autocomplete="off" />
               <button id="plus-code-submit" class="btn" type="button">
                 <span data-i18n-de="Code aktivieren" data-i18n-en="Activate code">
                   Code aktivieren
@@ -583,6 +591,7 @@
             </label>
             <textarea
               id="daylog-text"
+              name="daylog"
               class="input"
               rows="3"
               placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"></textarea>
