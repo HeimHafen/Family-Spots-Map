@@ -481,6 +481,10 @@ let filterBodyEls = [];
 // Fokus-Merkung für Detail-Panel
 let lastSpotTriggerEl = null;
 
+// Onboarding-Hint (Kompass / Plus / Mein Tag)
+let compassPlusHintEl = null;
+const COMPASS_PLUS_HINT_KEY = "fs_hint_compass_plus_v1";
+
 // ------------------------------------------------------
 // Utilities
 // ------------------------------------------------------
@@ -598,6 +602,64 @@ function updatePlusStatusText() {
       : "Family Spots Plus is active – additional categories have been unlocked.";
 }
 
+// ------------------------------------------------------
+// Onboarding-Hint (Kompass / Plus / Mein Tag)
+// ------------------------------------------------------
+
+function getCompassPlusHintText(lang = currentLang) {
+  if (lang === LANG_EN) {
+    return "Tip: You can open and collapse Compass, Family Spots Plus and “My day” at any time using the “Show” buttons.";
+  }
+  return "Tipp: Kompass, Family Spots Plus und „Mein Tag“ kannst du jederzeit über die Buttons „Anzeigen“ öffnen und wieder einklappen.";
+}
+
+function hasSeenCompassPlusHint() {
+  try {
+    return localStorage.getItem(COMPASS_PLUS_HINT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markCompassPlusHintSeenAndRemove() {
+  try {
+    localStorage.setItem(COMPASS_PLUS_HINT_KEY, "1");
+  } catch {
+    // ignore
+  }
+  if (compassPlusHintEl && compassPlusHintEl.parentNode) {
+    compassPlusHintEl.parentNode.removeChild(compassPlusHintEl);
+  }
+  compassPlusHintEl = null;
+}
+
+function ensureCompassPlusHint() {
+  if (!sidebarEl) return;
+  if (hasSeenCompassPlusHint()) return;
+  if (!plusSectionEl && !daylogSectionEl && !compassSectionEl) return;
+
+  if (!compassPlusHintEl) {
+    const hint = document.createElement("p");
+    hint.id = "compass-plus-hint";
+    hint.className = "filter-group-helper";
+    hint.style.marginBottom = "6px";
+    hint.textContent = getCompassPlusHintText();
+
+    // Einfügen möglichst nah bei Plus/Mein Tag/Kompass – bevorzugt vor plus-section
+    let anchor =
+      plusSectionEl || daylogSectionEl || compassSectionEl || sidebarEl.firstChild;
+    if (anchor && anchor.parentNode === sidebarEl) {
+      sidebarEl.insertBefore(hint, anchor);
+    } else {
+      sidebarEl.insertBefore(hint, sidebarEl.firstChild);
+    }
+
+    compassPlusHintEl = hint;
+  } else {
+    compassPlusHintEl.textContent = getCompassPlusHintText();
+  }
+}
+
 /**
  * Setzt Sprache, aktualisiert UI & speichert in localStorage.
  * @param {"de"|"en"} lang
@@ -705,6 +767,9 @@ function setLanguage(lang, { initial = false } = {}) {
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
     btn.textContent = currentLang === LANG_DE ? "Schließen" : "Close";
   });
+
+  // Onboarding-Hint-Text ggf. aktualisieren/erzeugen
+  ensureCompassPlusHint();
 
   if (!initial) {
     const headerTitle = document.querySelector(".header-title");
@@ -1825,6 +1890,7 @@ function handleToggleCompass() {
   if (!compassSectionEl) return;
   compassSectionEl.open = !compassSectionEl.open;
   updateCompassButtonLabel();
+  markCompassPlusHintSeenAndRemove();
 }
 
 // ------------------------------------------------------
@@ -2338,7 +2404,7 @@ function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    // Kompass-Toggle-Button – immer sichtbar, Label & aria-expanded sauber synchron
+    // Kompass-Toggle-Button – Label & aria-expanded sauber synchron
     if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
       btnToggleCompassEl.addEventListener("click", (event) => {
         event.preventDefault();
@@ -2361,6 +2427,7 @@ function init() {
         const isOpen = !plusSectionEl.open;
         plusSectionEl.open = isOpen;
         updateGenericSectionToggleLabel(btnTogglePlusEl, isOpen);
+        markCompassPlusHintSeenAndRemove();
       });
 
       plusSectionEl.addEventListener("toggle", () => {
@@ -2378,6 +2445,7 @@ function init() {
         const isOpen = !daylogSectionEl.open;
         daylogSectionEl.open = isOpen;
         updateGenericSectionToggleLabel(btnToggleDaylogEl, isOpen);
+        markCompassPlusHintSeenAndRemove();
       });
 
       daylogSectionEl.addEventListener("toggle", () => {
@@ -2462,6 +2530,9 @@ function init() {
     loadPlusStateFromStorage();
     loadDaylogFromStorage();
     initLazyLoadImages(); // Performance bei Bildern
+
+    // Onboarding-Hint ggf. anzeigen
+    ensureCompassPlusHint();
 
     // ESC schließt Spot-Details
     document.addEventListener("keydown", (event) => {
