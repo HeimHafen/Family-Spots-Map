@@ -2,40 +2,50 @@
 <html lang="de">
   <head>
     <meta charset="utf-8" />
-    <title>Family Spots Map – Die schönste Zeit ist jetzt</title>
+    <title>Family Spots Map – Die schönsten Familien-Spots auf einer Karte</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <meta
       name="description"
-      content="Family Spots Map hilft dir, schöne Orte für Familienzeit zu finden – vom Spielplatz bis zum Wildpark."
+      content="Family Spots Map – Zoos, Wildparks, Spielplätze & Co. auf einer Karte. Für entspannte Familien-Abenteuer in eurer Nähe."
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#f59e0b" />
 
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="icon" type="image/png" href="assets/icon-192.png" />
-    <link rel="apple-touch-icon" href="assets/icon-192.png" />
-    <link rel="manifest" href="manifest.webmanifest" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/favicon-192.png"
+      sizes="192x192"
+    />
   </head>
+
   <body>
     <noscript>
       <div class="noscript-warning">
-        Family Spots Map benötigt JavaScript, um die Karte anzuzeigen.
+        Family Spots Map benötigt JavaScript. Bitte aktiviere JavaScript in
+        deinem Browser.
       </div>
     </noscript>
 
     <div class="app">
-      <!-- HEADER -->
-      <header class="app-header" role="banner">
+      <!-- =========================================
+           HEADER
+           ========================================= -->
+      <header class="app-header">
         <div class="app-header-top">
           <div class="app-header-left">
             <button
               id="language-switcher"
               class="language-switcher"
               type="button"
-              aria-label="Sprache: Deutsch (Tippen für Englisch)"
+              aria-label="Sprache wechseln"
             >
               DE
             </button>
           </div>
+
           <div class="app-header-right">
             <button
               id="theme-toggle"
@@ -49,7 +59,7 @@
               id="btn-locate"
               class="btn-icon"
               type="button"
-              aria-label="Aktuelle Position anzeigen"
+              aria-label="Aktuellen Standort zeigen"
             >
               📍
             </button>
@@ -57,113 +67,155 @@
               id="btn-help"
               class="btn-icon"
               type="button"
-              aria-label="Über Family Spots Map"
+              aria-label="Über Family Spots Map öffnen"
             >
               ℹ️
             </button>
           </div>
         </div>
 
-        <!-- Direkt zur Karte springen -->
-        <div class="skip-to-map-row" style="margin-bottom: 6px;">
-          <button
-            id="skip-to-map"
-            type="button"
-            class="btn-ghost"
-            style="padding-inline: 14px;"
-          >
-            Direkt zur Karte springen
-          </button>
-        </div>
-
         <div class="app-header-main">
           <h1 id="app-title" class="header-title" tabindex="-1">
-            <span class="header-flag" aria-hidden="true">🇩🇪</span>
+            <span class="header-flag">🇩🇪</span>
             <span>
-              Family <span class="header-title-spots">Spots</span> Map
+              Family
+              <span class="header-title-spots">Spots</span>
+              Map
             </span>
-            <span class="header-flag" aria-hidden="true">🇩🇰</span>
+            <span class="header-flag">🇩🇰</span>
           </h1>
+
           <p id="header-tagline" class="header-tagline">
             Heute ist Zeit für Familie.
           </p>
+
+          <!-- Direkt zur Karte springen -->
+          <div class="jump-to-map-wrapper" style="margin-top: 10px;">
+            <a
+              id="btn-jump-to-map"
+              href="#map-card"
+              class="btn btn-small"
+            >
+              Direkt zur Karte springen
+            </a>
+          </div>
         </div>
       </header>
 
-      <!-- MAIN -->
-      <main class="app-main" role="main">
-        <!-- MAP VIEW -->
-        <section id="view-map" class="view view--active" aria-label="Karte">
-          <aside class="sidebar">
-            <!-- Tilla -->
+      <!-- =========================================
+           MAIN
+           ========================================= -->
+      <main class="app-main">
+        <!-- MAP-VIEW ------------------------------------------------------ -->
+        <section
+          id="view-map"
+          class="view view--active"
+          aria-label="Kartenansicht"
+        >
+          <div class="sidebar">
+            <!-- TILLA ---------------------------------------------------- -->
             <section
               class="sidebar-section tilla-sidebar-section"
-              aria-labelledby="tilla-title"
+              aria-label="Familien-Begleiterin Tilla"
             >
               <div class="tilla-sidebar-card">
                 <div class="tilla-sidebar-avatar">
                   <img
                     src="assets/tilla-hero.png"
-                    alt="Tilla, eure kleine Schildkröte als Familien-Begleiterin"
+                    alt="Tilla, eure kleine Familien-Schildkröte"
                   />
                 </div>
                 <div class="tilla-sidebar-text">
-                  <h2 id="tilla-title" class="sidebar-section-title">
-                    Familien-Begleiterin Tilla
-                  </h2>
                   <p id="tilla-sidebar-text">
-                    Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein
-                    Lächeln zaubert. 🌿
+                    Alltag darf auch leicht sein. Lass uns schauen, was in eurer
+                    Nähe ein Lächeln zaubert. 🌿
                   </p>
                   <button
                     id="btn-play-idea"
                     type="button"
                     class="btn-play-idea"
                   >
-                    <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
+                    <span class="tilla-play-emoji">🎲</span>
                     <span>Spielideen für unterwegs</span>
                   </button>
                 </div>
               </div>
             </section>
 
-            <!-- Kompass -->
+            <!-- FAMILIEN-KOMPASS ---------------------------------------- -->
             <details
               id="compass-section"
               class="sidebar-section"
               open
-              aria-labelledby="compass-label"
             >
-              <summary class="sr-only">Familien-Kompass</summary>
-              <div class="sidebar-section-header">
-                <h2 id="compass-label" class="sidebar-section-title">
+              <summary class="sidebar-section-header">
+                <h2
+                  id="compass-label"
+                  class="sidebar-section-title"
+                >
                   Familien-Kompass
                 </h2>
-                <div class="app-header-right">
+                <button
+                  type="button"
+                  class="sidebar-section-close"
+                  data-target="compass-section"
+                >
+                  Schließen
+                </button>
+              </summary>
+
+              <p
+                id="compass-helper"
+                class="filter-group-helper"
+              >
+                Wählt, wie sich euer Tag heute anfühlen darf. Ich passe die
+                Vorschläge danach an.
+              </p>
+
+              <div class="filter-group">
+                <span class="filter-group-label">Stimmung</span>
+                <div class="mood-row">
                   <button
-                    id="btn-toggle-compass"
                     type="button"
-                    class="btn-ghost"
+                    class="mood-chip"
+                    data-mood="relaxed"
+                    aria-pressed="false"
                   >
-                    <span>Kompass anzeigen</span>
+                    <span class="mood-chip-emoji">🌿</span>
+                    <span>Entspannt</span>
                   </button>
                   <button
                     type="button"
-                    class="sidebar-section-close"
-                    data-target="compass-section"
+                    class="mood-chip"
+                    data-mood="action"
+                    aria-pressed="false"
                   >
-                    Schließen
+                    <span class="mood-chip-emoji">⛰️</span>
+                    <span>Bewegung</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="mood-chip"
+                    data-mood="water"
+                    aria-pressed="false"
+                  >
+                    <span class="mood-chip-emoji">💧</span>
+                    <span>Wasser &amp; Sand</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="mood-chip"
+                    data-mood="animals"
+                    aria-pressed="false"
+                  >
+                    <span class="mood-chip-emoji">🐾</span>
+                    <span>Tier-Tag</span>
                   </button>
                 </div>
               </div>
 
-              <p id="compass-helper" class="filter-group-helper">
-                Wählt, ob ihr eher im Alltag kurz raus wollt oder ein größeres
-                Familien-Abenteuer plant.
-              </p>
-
               <div class="filter-group">
-                <span class="filter-group-label">Stimmung der Tour</span>
+                <span class="filter-group-label">Reise-Modus</span>
                 <div class="mood-row">
                   <button
                     type="button"
@@ -171,7 +223,7 @@
                     data-travel-mode="everyday"
                     aria-pressed="false"
                   >
-                    <span aria-hidden="true">🏡</span>
+                    <span class="mood-chip-emoji">🏡</span>
                     <span>Alltag</span>
                   </button>
                   <button
@@ -180,7 +232,7 @@
                     data-travel-mode="trip"
                     aria-pressed="false"
                   >
-                    <span aria-hidden="true">🧳</span>
+                    <span class="mood-chip-emoji">🧭</span>
                     <span>Unterwegs</span>
                   </button>
                 </div>
@@ -192,94 +244,96 @@
                   type="button"
                   class="btn btn-small"
                 >
-                  <span id="compass-apply-label">
-                    Kompass anwenden
-                  </span>
+                  <span id="compass-apply-label">Kompass anwenden</span>
                 </button>
               </div>
             </details>
 
-            <!-- Filter -->
+            <!-- FILTER ---------------------------------------------------- -->
             <section
               class="sidebar-section"
-              aria-label="Filter"
+              aria-labelledby="filter-title"
             >
               <div class="sidebar-section-header">
-                <h2 id="filter-title" class="sidebar-section-title">
+                <h2
+                  id="filter-title"
+                  class="sidebar-section-title"
+                >
                   Filter
                 </h2>
                 <button
                   id="btn-toggle-filters"
                   type="button"
-                  class="btn-ghost"
+                  class="btn-ghost btn-small"
                 >
                   <span>Filter anzeigen</span>
                 </button>
               </div>
 
               <p class="filter-group-helper">
-                Feinjustierung für euren Tag – ihr könnt alle Filter jederzeit wieder
-                zurücksetzen.
+                Kompass nutzt diese Auswahl.
               </p>
 
-              <!-- Suchfeld -->
               <div class="filter-group">
-                <label class="filter-group-label" for="filter-search">
+                <label
+                  class="filter-group-label"
+                  for="filter-search"
+                >
                   Suche
                 </label>
                 <input
                   id="filter-search"
-                  name="search"
                   class="input"
                   type="search"
                   placeholder="Ort, Spot, Stichwörter …"
+                  autocapitalize="none"
                   autocomplete="off"
                 />
               </div>
 
-              <!-- Kategorie -->
               <div class="filter-group">
-                <label class="filter-group-label" for="filter-category">
+                <label
+                  class="filter-group-label"
+                  for="filter-category"
+                >
                   Kategorie
                 </label>
                 <select
                   id="filter-category"
-                  name="category"
                   class="input"
                 >
-                  <option value="">
-                    Alle Kategorien
-                  </option>
-                  <!-- weitere Optionen werden per JS ergänzt -->
+                  <option value="">Alle Kategorien</option>
                 </select>
               </div>
 
-              <!-- Alter -->
               <div class="filter-group">
-                <label class="filter-group-label" for="filter-age">
+                <label
+                  class="filter-group-label"
+                  for="filter-age"
+                >
                   Alter der Kinder
                 </label>
                 <select
                   id="filter-age"
-                  name="age"
                   class="input"
                 >
-                  <option value="all">Alle Altersgruppen</option>
+                  <option value="all">Alle Altersstufen</option>
                   <option value="0-3">0–3 Jahre</option>
                   <option value="4-9">4–9 Jahre</option>
                   <option value="10+">10+ Jahre</option>
                 </select>
               </div>
 
-              <!-- Radius -->
               <div class="filter-group">
                 <label class="filter-group-label" for="filter-radius">
-                  Radius um die Kartenmitte
+                  Micro-Abenteuer-Radius
                 </label>
+                <p class="filter-group-helper">
+                  Wie weit darf euer Abenteuer gehen?
+                </p>
                 <div class="radius-row">
                   <input
                     id="filter-radius"
-                    name="radius"
                     type="range"
                     min="0"
                     max="4"
@@ -289,194 +343,117 @@
                     id="filter-radius-max-label"
                     class="radius-max-label"
                   >
-                    Alle
+                    Alle Spots
                   </span>
                 </div>
                 <p
                   id="filter-radius-description"
                   class="radius-description"
                 >
-                  Zeigt Spots in einem passenden Umkreis.
+                  Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
                 </p>
               </div>
 
-              <!-- Checkboxen -->
               <div class="filter-group filter-group--checkbox">
-                <label class="checkbox-label" for="filter-big-adventures">
+                <label class="checkbox-label">
                   <input
                     id="filter-big-adventures"
-                    name="big-adventures"
                     type="checkbox"
                   />
-                  Große Abenteuer (Tagesausflug)
+                  <span>Nur große Abenteuer</span>
                 </label>
               </div>
 
               <div class="filter-group filter-group--checkbox">
-                <label class="checkbox-label" for="filter-verified">
+                <label class="checkbox-label">
                   <input
                     id="filter-verified"
-                    name="verified"
                     type="checkbox"
                   />
-                  Nur verifizierte Spots
+                  <span>Nur verifizierte Spots</span>
                 </label>
               </div>
 
               <div class="filter-group filter-group--checkbox">
-                <label class="checkbox-label" for="filter-favorites">
+                <label class="checkbox-label">
                   <input
                     id="filter-favorites"
-                    name="favorites"
                     type="checkbox"
                   />
-                  Nur Favoriten
+                  <span>Nur Favoriten</span>
                 </label>
-              </div>
-
-              <!-- Stimmung -->
-              <div class="filter-group">
-                <span class="filter-group-label">Stimmung</span>
-                <div class="mood-row">
-                  <button
-                    type="button"
-                    class="mood-chip"
-                    data-mood="relaxed"
-                    aria-pressed="false"
-                  >
-                    <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
-                    <span>Entspannt</span>
-                  </button>
-                  <button
-                    type="button"
-                    class="mood-chip"
-                    data-mood="action"
-                    aria-pressed="false"
-                  >
-                    <span class="mood-chip-emoji" aria-hidden="true">🚀</span>
-                    <span>Action</span>
-                  </button>
-                  <button
-                    type="button"
-                    class="mood-chip"
-                    data-mood="water"
-                    aria-pressed="false"
-                  >
-                    <span class="mood-chip-emoji" aria-hidden="true">💧</span>
-                    <span>Wasser</span>
-                  </button>
-                  <button
-                    type="button"
-                    class="mood-chip"
-                    data-mood="animals"
-                    aria-pressed="false"
-                  >
-                    <span class="mood-chip-emoji" aria-hidden="true">🦌</span>
-                    <span>Tiere</span>
-                  </button>
-                </div>
               </div>
             </section>
 
-            <!-- Family Spots Plus -->
+            <!-- FAMILY SPOTS PLUS ---------------------------------------- -->
             <details
               id="plus-section"
               class="sidebar-section"
-              aria-labelledby="plus-title"
             >
-              <summary class="sr-only">Family Spots Plus</summary>
-              <div class="sidebar-section-header">
-                <h2 id="plus-title" class="sidebar-section-title">
-                  Family Spots Plus
-                </h2>
-                <div class="app-header-right">
-                  <button
-                    id="btn-toggle-plus"
-                    type="button"
-                    class="btn-ghost"
-                  >
-                    <span>Anzeigen</span>
-                  </button>
-                  <button
-                    type="button"
-                    class="sidebar-section-close"
-                    data-target="plus-section"
-                  >
-                    Schließen
-                  </button>
-                </div>
-              </div>
+              <summary class="sidebar-section-header">
+                <h2 class="sidebar-section-title">Family Spots Plus</h2>
+                <button
+                  type="button"
+                  id="btn-toggle-plus"
+                  class="btn-ghost btn-small"
+                  aria-controls="plus-section"
+                >
+                  <span>Anzeigen</span>
+                </button>
+              </summary>
 
-              <p class="filter-group-helper">
-                Mit Family Spots Plus schaltest du zusätzliche Kategorien frei –
-                perfekt für Camper:innen, Bikepacking & Co.
-              </p>
-
-              <div class="plus-code-form">
-                <label for="plus-code-input">
+              <div class="filter-group plus-code-form">
+                <label for="plus-code-input" class="filter-group-label">
                   Plus-Code eingeben
                 </label>
                 <div class="plus-code-row">
                   <input
                     id="plus-code-input"
-                    name="plus-code"
                     class="input"
                     type="text"
                     inputmode="numeric"
-                    autocomplete="one-time-code"
-                    placeholder="Code eingeben"
+                    autocomplete="off"
                   />
                   <button
                     id="plus-code-submit"
                     type="button"
                     class="btn btn-small"
                   >
-                    Aktivieren
+                    Freischalten
                   </button>
                 </div>
-                <p id="plus-status-text" class="plus-note">
-                  Family Spots Plus ist nicht aktiviert.
-                </p>
+                <p
+                  id="plus-status-text"
+                  class="plus-note"
+                ></p>
               </div>
             </details>
 
-            <!-- Mein Tag -->
+            <!-- MEIN TAG -------------------------------------------------- -->
             <details
               id="daylog-section"
               class="sidebar-section"
-              aria-labelledby="daylog-title"
             >
-              <summary class="sr-only">Mein Tag</summary>
-              <div class="sidebar-section-header">
-                <h2 id="daylog-title" class="sidebar-section-title">
-                  Mein Tag
-                </h2>
-                <div class="app-header-right">
-                  <button
-                    id="btn-toggle-daylog"
-                    type="button"
-                    class="btn-ghost"
-                  >
-                    <span>Anzeigen</span>
-                  </button>
-                  <button
-                    type="button"
-                    class="sidebar-section-close"
-                    data-target="daylog-section"
-                  >
-                    Schließen
-                  </button>
-                </div>
-              </div>
+              <summary class="sidebar-section-header">
+                <h2 class="sidebar-section-title">Mein Tag</h2>
+                <button
+                  type="button"
+                  id="btn-toggle-daylog"
+                  class="btn-ghost btn-small"
+                  aria-controls="daylog-section"
+                >
+                  <span>Anzeigen</span>
+                </button>
+              </summary>
 
               <div class="filter-group">
-                <label for="daylog-text">
-                  Kleine Notiz für heute
+                <label for="daylog-text" class="filter-group-label">
+                  Kleine Notiz für später
                 </label>
                 <textarea
                   id="daylog-text"
-                  name="daylog"
                   class="input"
+                  rows="3"
                   placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
                 ></textarea>
                 <button
@@ -489,69 +466,80 @@
               </div>
             </details>
 
-            <!-- Spots -->
+            <!-- SPOTS-LISTE ---------------------------------------------- -->
             <section
               class="sidebar-section sidebar-section--grow"
-              aria-label="Spots"
+              aria-labelledby="spots-title"
             >
               <div class="sidebar-section-header">
-                <h2 class="sidebar-section-title">
+                <h2
+                  id="spots-title"
+                  class="sidebar-section-title"
+                >
                   Spots
                 </h2>
                 <button
                   id="btn-toggle-view"
                   type="button"
-                  class="btn-ghost"
+                  class="btn-ghost btn-small"
                 >
                   <span>Nur Karte</span>
                 </button>
               </div>
 
-              <div id="spot-list" aria-live="polite"></div>
+              <div id="spot-list"></div>
             </section>
-          </aside>
+          </div>
 
-          <!-- Map -->
-          <section class="map-section" aria-label="Karte">
+          <!-- MAP-CARD ---------------------------------------------------- -->
+          <section
+            id="map-card"
+            class="map-section"
+            aria-label="Karte mit Spots"
+          >
             <div
               id="map"
               class="map-container"
-              role="region"
+              role="application"
               aria-label="Family Spots Map"
             ></div>
 
-            <div
+            <aside
               id="spot-detail"
               class="spot-details spot-details--hidden"
               aria-live="polite"
-            ></div>
+            ></aside>
           </section>
         </section>
 
-        <!-- ABOUT VIEW -->
-        <section id="view-about" class="view" aria-label="Über Family Spots Map">
+        <!-- ABOUT-VIEW ---------------------------------------------------- -->
+        <section
+          id="view-about"
+          class="view"
+          aria-label="Über Family Spots Map"
+        >
           <article
             id="page-about-de"
             class="page-about"
           >
             <h2>Über Family Spots Map</h2>
             <p>
-              Family Spots Map ist ein kleines Herzensprojekt für Familien, die ihre
-              gemeinsame Zeit bewusst gestalten möchten. Die Karte zeigt dir Orte, an
-              denen ihr zusammen spielen, staunen oder einfach durchatmen könnt.
+              Family Spots Map sammelt familienfreundliche Orte – vom
+              Lieblings-Spielplatz bis zum großen Abenteuer-Ausflug. Die Karte
+              entsteht Stück für Stück und wächst mit jeder Familie, die einen
+              Spot teilt.
             </p>
-            <h3>Wie funktioniert das Ganze?</h3>
             <p>
-              Wähle zuerst aus, wie ihr heute unterwegs seid – eher spontan im Alltag
-              oder auf einem größeren Ausflug. Über Filter und Kategorien kannst du
-              die Spots weiter eingrenzen. Viele Einträge sind durch Familien
-              verifiziert.
+              Du kannst mitfiltern, was zu eurem Tag passt: Stimmung, Alter der
+              Kinder, Micro-Abenteuer-Radius und mehr.
             </p>
-            <h3>Datenschutz & Technik</h3>
+
+            <h3>Kontakt</h3>
             <p>
-              Die Family Spots Map speichert nur das Nötigste lokal in deinem Browser:
-              Favoriten, Plus-Status und optional euren „Mein Tag“-Text. Es werden
-              keine persönlichen Profile angelegt.
+              Fragen oder Spot-Ideen? Schreib gerne an
+              <a href="mailto:hello@familyspotsmap.de"
+                >hello@familyspotsmap.de</a
+              >.
             </p>
           </article>
 
@@ -562,50 +550,45 @@
           >
             <h2>About Family Spots Map</h2>
             <p>
-              Family Spots Map is a small passion project for families who want to be
-              intentional about their time together. The map helps you discover places
-              to play, explore or simply breathe.
+              Family Spots Map highlights family-friendly places – from nearby
+              playgrounds to full day trips. The map grows step by step with
+              every family that shares a spot.
             </p>
-            <h3>How does it work?</h3>
             <p>
-              Start by choosing how you are travelling today – a quick everyday break
-              or a bigger trip. Use the filters and categories to narrow down the
-              spots. Many entries are verified by real families.
-            </p>
-            <h3>Privacy & Tech</h3>
-            <p>
-              Family Spots Map only stores a tiny bit of data locally in your browser:
-              favourites, Plus status and your optional “My day” note. We do not build
-              personal profiles.
+              You can filter for what fits your day: mood, age of your kids,
+              distance and more.
             </p>
           </article>
         </section>
       </main>
 
-      <!-- BOTTOM NAV -->
+      <!-- =========================================
+           BOTTOM NAV
+           ========================================= -->
       <nav class="bottom-nav" aria-label="Hauptnavigation">
-        <div class="bottom-nav-background" aria-hidden="true"></div>
+        <div class="bottom-nav-background"></div>
+
         <button
           type="button"
           class="bottom-nav-item bottom-nav-item--active"
           data-route="map"
           aria-current="page"
         >
-          <span class="bottom-nav-icon" aria-hidden="true">🗺️</span>
+          <span class="bottom-nav-icon">🗺️</span>
           <span id="bottom-nav-map-label">Karte</span>
         </button>
+
         <button
           type="button"
           class="bottom-nav-item"
           data-route="about"
-          aria-current="false"
         >
-          <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
+          <span class="bottom-nav-icon">ℹ️</span>
           <span id="bottom-nav-about-label">Über Family Spots Map</span>
         </button>
       </nav>
 
-      <!-- TOAST -->
+      <!-- Toast + Landscape-Hinweis -->
       <div
         id="toast"
         class="toast"
@@ -613,9 +596,9 @@
         aria-live="polite"
       ></div>
 
-      <!-- Landscape Hinweis -->
       <div class="landscape-warning">
-        Bitte Gerät drehen – im Hochformat macht die Family Spots Map mehr Freude.
+        Bitte Gerät drehen – im Hochformat macht die Family Spots Map mehr
+        Freude.
       </div>
     </div>
 
