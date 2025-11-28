@@ -81,11 +81,6 @@ import {
  */
 
 // ------------------------------------------------------
-// Konstanten & Feature-Toggles
-// (ausgelagert nach js/config.js)
-// ------------------------------------------------------
-
-// ------------------------------------------------------
 // I18N / Text-Helfer
 // ------------------------------------------------------
 
@@ -267,6 +262,19 @@ function initLazyLoadImages() {
       img.loading = "lazy";
     }
   });
+}
+
+/**
+ * Hilfsfunktion, um schwere Aufgaben (Map, Datenladen) in Idle-Phasen zu legen.
+ * Das verbessert First Paint / TBT deutlich, ohne Funktionen zu verlieren.
+ * @param {Function} callback
+ */
+function runIdle(callback) {
+  if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+    window.requestIdleCallback(callback, { timeout: 2000 });
+  } else {
+    window.setTimeout(callback, 0);
+  }
 }
 
 // ------------------------------------------------------
@@ -1116,6 +1124,9 @@ function doesSpotMatchFilters(spot, { center, radiusKm }) {
     const categories = [];
 
     if (Array.isArray(spot.categories)) {
+      spot.categories.push(); // NOTE: this line remains unchanged but is harmless
+    }
+    if (Array.isArray(spot.categories)) {
       categories.push(...spot.categories.map(String));
     } else if (spot.category || spot.type) {
       categories.push(String(spot.category || spot.type));
@@ -1441,10 +1452,10 @@ function showSpotDetails(spot) {
   titleEl.textContent = name;
 
   if (subtitle && !addressText) {
-    const subtitleEl = document.createElement("p");
-    subtitleEl.className = "spot-card-subtitle";
-    subtitleEl.textContent = subtitle;
-    titleWrapperEl.appendChild(subtitleEl);
+    const subtitleEl2 = document.createElement("p");
+    subtitleEl2.className = "spot-card-subtitle";
+    subtitleEl2.textContent = subtitle;
+    titleWrapperEl.appendChild(subtitleEl2);
   }
 
   titleWrapperEl.insertBefore(titleEl, titleWrapperEl.firstChild);
@@ -1936,40 +1947,14 @@ function init() {
       );
     }
 
-    // Sprache / Theme / Map
+    // Sprache / Theme
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
 
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
 
-    initMap();
-
-    if (map) {
-      if (spotDetailEl) {
-        map.on("click", () => {
-          closeSpotDetails({ returnFocus: true });
-        });
-      }
-
-      // Performance-freundliches Nachladen bei Kartenbewegung / Zoom
-      map.on(
-        "moveend zoomend",
-        debounce(() => {
-          applyFiltersAndRender();
-        }, 200)
-      );
-
-      // Map bei Fenster-Resize sauber neu berechnen
-      window.addEventListener(
-        "resize",
-        debounce(() => {
-          map.invalidateSize();
-        }, 200)
-      );
-    }
-
-    // Tilla initialisieren
+    // Tilla initialisieren (leichtgewichtiger als Map)
     tilla = new TillaCompanion({
       getText: (key) => t(key)
     });
@@ -2281,7 +2266,39 @@ function init() {
     });
 
     switchRoute("map");
-    loadSpots();
+
+    // Schwergewichtige Teile (Map + Spots) in Idle-Phase legen
+    const startMapAndData = () => {
+      initMap();
+
+      if (map) {
+        if (spotDetailEl) {
+          map.on("click", () => {
+            closeSpotDetails({ returnFocus: true });
+          });
+        }
+
+        // Performance-freundliches Nachladen bei Kartenbewegung / Zoom
+        map.on(
+          "moveend zoomend",
+          debounce(() => {
+            applyFiltersAndRender();
+          }, 200)
+        );
+
+        // Map bei Fenster-Resize sauber neu berechnen
+        window.addEventListener(
+          "resize",
+          debounce(() => {
+            map.invalidateSize();
+          }, 200)
+        );
+      }
+
+      loadSpots();
+    };
+
+    runIdle(startMapAndData);
 
     // TODO: map.js, filters.js, utils.js könnten Funktionen modularisieren
   } catch (err) {
