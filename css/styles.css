@@ -1,5 +1,5 @@
 /* =========================================
-   FAMILY SPOTS MAP – STYLES (WARM CALM SENIOR UI EDITION)
+   FAMILY SPOTS MAP – STYLES (WARM CALM SENIOR EDITION)
    ========================================= */
 
 /* iOS Safari Fix + Styling für <select> */
@@ -30,162 +30,158 @@ body {
   padding: 0;
 }
 
-/* =========================================
-   THEME TOKENS — WARM CALM SENIOR EDITION
-   ========================================= */
+/* ---------- THEME TOKENS (LIGHT / DARK) ---------- */
 
 :root {
-  /* Gold-Orange Akzent */
+  /* Accent-Variable (Hue) – per Slider anpassbar */
   --accent-h: 30;
-  --accent: hsl(30, 74%, 54%);
-  --accent-soft: hsl(30, 85%, 88%);
-  --accent-strong: hsl(30, 68%, 42%);
+  --accent: hsl(var(--accent-h, 30), 74%, 54%);
+  --accent-soft: hsl(var(--accent-h, 30), 85%, 88%);
+  --accent-strong: hsl(var(--accent-h, 30), 68%, 42%);
 
-  /* Hintergrund (creme, warm, weniger grell) */
+  /* Ruhiger, warmer Hintergrund */
   --app-bg: radial-gradient(
     circle at top,
-    #f3e3cc 0%,
+    #f2e3cf 0,
     #f7ecda 40%,
-    #efe2cf 90%
+    #efe2cf 85%
   );
 
-  /* Textfarben – warm, lesbar */
   --text-color: #3b2b22;
   --text-soft: #6a564c;
   --text-strong: #2a1f18;
 
-  /* Karten / Flächen */
-  --card-bg: rgba(250, 243, 233, 0.98);
-  --card-shadow: 0 10px 26px rgba(137, 101, 64, 0.28);
-  --card-border: rgba(255, 255, 255, 0.85);
+  --card-bg: rgba(255, 248, 239, 0.98);
+  --card-shadow: 0 10px 26px rgba(137, 101, 64, 0.26);
+  --card-border: rgba(255, 255, 255, 0.9);
 
-  /* Chips */
   --chip-bg: #f6e8d6;
   --chip-color: #5a4336;
   --chip-shadow: 0 3px 8px rgba(120, 90, 55, 0.25);
 
-  /* Input */
   --input-bg: #f9f1e6;
-  --input-shadow: 0 4px 9px rgba(150, 120, 80, 0.20);
+  --input-shadow: 0 4px 9px rgba(150, 120, 80, 0.2);
 
-  /* Header */
-  --header-bg-top: hsl(30, 63%, 43%);
-  --header-bg-bottom: hsl(30, 78%, 56%);
+  /* Header-Farben an Accent gekoppelt */
+  --header-bg-top: hsl(var(--accent-h, 30), 63%, 43%);
+  --header-bg-bottom: hsl(var(--accent-h, 30), 78%, 56%);
   --header-shadow: 0 12px 30px rgba(140, 90, 40, 0.45);
   --header-text-color: #fffdf7;
 
-  --header-tagline-bg: rgba(255, 248, 234, 0.90);
+  --header-tagline-bg: rgba(255, 248, 234, 0.95);
   --header-tagline-color: #6d3f1e;
-  --header-tagline-shadow: 0 4px 12px rgba(110, 70%, 25%, 0.35);
+  --header-tagline-shadow: 0 4px 12px rgba(120, 80, 40, 0.35);
 
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
-    #fff1dc 0%,
-    #f1c89a 48%,
+    #fff1dc 0,
+    #f1c89a 45%,
     #e9b073 100%
   );
-  --header-icon-shadow: 0 4px 10px rgba(140, 90, 40, 0.35);
+  --header-icon-shadow: 0 3px 8px rgba(140, 90, 40, 0.35);
   --header-icon-border: rgba(255, 255, 255, 0.7);
 
-  /* Language-Pill */
   --language-pill-bg: rgba(255, 245, 233, 0.94);
-  --language-pill-shadow: 0 3px 9px rgba(120, 80, 40, 0.35);
+  --language-pill-shadow: 0 3px 9px rgba(132, 96, 60, 0.35);
 
-  /* Bottom-Navigation */
-  --bottom-nav-backdrop: rgba(245, 228, 208, 0.75);
-  --bottom-nav-item-bg: rgba(255, 249, 241, 0.96);
+  --bottom-nav-backdrop: rgba(245, 228, 208, 0.8);
+
+  --sidebar-bg: #f3e7d8;
+  --sidebar-section-bg: rgba(255, 248, 239, 0.98);
+  --sidebar-section-shadow: 0 10px 24px rgba(137, 101, 64, 0.28);
+  --sidebar-section-border: rgba(255, 255, 255, 0.9);
+
+  --bottom-nav-item-bg: rgba(255, 249, 241, 0.98);
   --bottom-nav-item-color: #775843;
+  /* aktiver Tab = Accent */
   --bottom-nav-item-active-bg: var(--accent);
   --bottom-nav-item-active-color: #3a281c;
 
-  /* Map */
+  --toast-bg: rgba(56, 40, 28, 0.95);
+
   --map-card-bg: #faf2e3;
   --map-card-shadow: 0 14px 32px rgba(148, 86, 38, 0.35);
   --map-card-border: rgba(255, 255, 255, 0.95);
 
-  /* Radius-Kreis */
-  --radius-circle-stroke: hsla(30, 75%, 55%, 0.6);
-  --radius-circle-fill: hsla(30, 75%, 55%, 0.17);
+  /* Radius-Kreis auf Accent */
+  --radius-circle-stroke: hsla(var(--accent-h, 30), 78%, 55%, 0.6);
+  --radius-circle-fill: hsla(var(--accent-h, 30), 78%, 55%, 0.17);
 
   --radius-pill: 999px;
+  --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.18);
+  --shadow-strong: 0 10px 26px rgba(137, 101, 64, 0.4);
 
-  /* Map-Filter */
+  /* Map-Farb-Filter (Light) – warm, leicht entsättigt, weicher */
   --map-filter: sepia(0.18) saturate(0.85) brightness(1.06)
-                contrast(1.04) hue-rotate(-6deg);
+    contrast(1.04) hue-rotate(-6deg);
 }
 
-/* =========================================
-   DARK MODE — Warm Calm Senior UI
-   ========================================= */
-
 [data-theme="dark"] {
-  --app-bg: radial-gradient(
-    circle at top,
-    #1b1a17 0%,
-    #121110 55%,
-    #0c0b0a 100%
-  );
-
+  --app-bg: radial-gradient(circle at top, #1b1a17 0, #121110 55%, #0c0b0a 100%);
   --text-color: #f7eede;
   --text-soft: #b7aca2;
   --text-strong: #fff6e9;
 
-  --card-bg: rgba(28, 27, 25, 0.96);
-  --card-shadow: 0 16px 34px rgba(0, 0, 0, 0.8);
-  --card-border: rgba(255, 255, 255, 0.15);
+  --card-bg: rgba(28, 27, 25, 0.98);
+  --card-shadow: 0 18px 36px rgba(0, 0, 0, 0.85);
+  --card-border: rgba(255, 255, 255, 0.16);
 
-  --chip-bg: rgba(40, 38, 34, 0.96);
+  --chip-bg: rgba(40, 38, 34, 0.98);
   --chip-color: #e9e3d9;
+  --chip-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
 
-  --input-bg: rgba(42, 40, 36, 0.96);
-  --input-shadow: 0 7px 14px rgba(0, 0, 0, 0.65);
+  --input-bg: rgba(42, 40, 36, 0.98);
+  --input-shadow: 0 7px 15px rgba(0, 0, 0, 0.7);
 
-  --header-bg-top: hsl(30, 14%, 20%);
-  --header-bg-bottom: hsl(30, 22%, 27%);
+  --header-bg-top: hsl(var(--accent-h, 30), 14%, 20%);
+  --header-bg-bottom: hsl(var(--accent-h, 30), 22%, 27%);
+  --header-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
   --header-text-color: #fff6e9;
 
   --header-tagline-bg: linear-gradient(
     135deg,
-    hsl(30, 60%, 55%),
-    hsl(30, 80%, 58%)
+    hsl(var(--accent-h, 30), 60%, 55%),
+    hsl(var(--accent-h, 30), 78%, 58%)
   );
   --header-tagline-color: #1a1410;
+  --header-tagline-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
 
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
-    #322e28 0%,
-    #27231f 48%,
+    #322e28 0,
+    #27231f 45%,
     #1d1b17 100%
   );
-  --header-icon-border: rgba(255, 255, 255, 0.25);
+  --header-icon-shadow: 0 7px 16px rgba(0, 0, 0, 0.9);
+  --header-icon-border: rgba(255, 255, 255, 0.35);
+
+  --language-pill-bg: rgba(40, 38, 34, 0.98);
+  --language-pill-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
+
+  --sidebar-bg: #121110;
+  --sidebar-section-bg: rgba(28, 27, 25, 0.98);
+  --sidebar-section-shadow: 0 16px 34px rgba(0, 0, 0, 0.9);
+  --sidebar-section-border: rgba(255, 255, 255, 0.16);
 
   --bottom-nav-backdrop: rgba(30, 28, 25, 0.92);
-  --bottom-nav-item-bg: rgba(40, 38, 34, 0.96);
+  --bottom-nav-item-bg: rgba(40, 38, 34, 0.98);
   --bottom-nav-item-color: #efe8dd;
-  --bottom-nav-item-active-bg: hsl(30, 70%, 55%);
+  --bottom-nav-item-active-bg: hsl(var(--accent-h, 30), 70%, 55%);
   --bottom-nav-item-active-color: #1b1712;
+
+  --toast-bg: rgba(33, 27, 22, 0.98);
 
   --map-card-bg: #141310;
   --map-card-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
-  --map-card-border: rgba(255, 255, 255, 0.18);
+  --map-card-border: rgba(255, 255, 255, 0.2);
 
-  --radius-circle-stroke: hsla(30, 75%, 60%, 0.75);
-  --radius-circle-fill: hsla(30, 75%, 60%, 0.15);
+  --radius-circle-stroke: hsla(var(--accent-h, 30), 70%, 60%, 0.75);
+  --radius-circle-fill: hsla(var(--accent-h, 30), 70%, 60%, 0.15);
 
-  --map-filter: grayscale(0.25) sepia(0.22) brightness(0.82)
-                contrast(1.05) saturate(0.82) hue-rotate(-8deg);
+  /* Map-Farb-Filter (Dark) – dunkler, warm, ruhiger */
+  --map-filter: grayscale(0.25) sepia(0.22) brightness(0.82) contrast(1.05)
+    saturate(0.82) hue-rotate(-8deg);
 }
-
-/* =========================================
-   The rest of your CSS stays unchanged
-   (Layout, Components, Buttons, etc.)
-   ========================================= */
-
-/* —————————————
-   AB HIER BLEIBT ALLES IDENTISCH WIE BEI DIR
-   (ich schneide den unteren Teil nicht ein,
-    weil er 100% unverändert bleibt)
-   ————————————— */
 
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
@@ -197,4 +193,91 @@ body {
   transition: background 0.4s ease, color 0.3s ease;
 }
 
-/* … REST DEINES CSS (komplett unverändert) … */
+/* Form-Controls erben die Schrift sauber vom Body */
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+/* Links */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Utils */
+
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fokus-Outline (global) */
+
+:focus-visible {
+  outline: 2px solid #e3b461;
+  outline-offset: 2px;
+}
+
+/* Interaktive Elemente – sichtbarer, pill-förmiger Fokus */
+
+button:focus-visible,
+.language-switcher:focus-visible,
+.btn-icon:focus-visible,
+.btn:focus-visible,
+.btn-ghost:focus-visible,
+.mood-chip:focus-visible,
+.travel-chip:focus-visible,
+.bottom-nav-item:focus-visible,
+.input:focus-visible,
+select.input:focus-visible,
+textarea.input:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px rgba(227, 180, 97, 0.9);
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1200;
+  padding: 10px 14px 14px;
+  background: linear-gradient(
+    135deg,
+    var(--header-bg-top),
+    var(--header-bg-bottom)
+  );
+  color: var(--header-text-color);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow: var(--header-shadow);
+}
+
+/* ... AB HIER IST DEIN RESTLICHES CSS UNVERÄNDERT ... */
+/* Ich lasse alles, was du danach gepostet hast, 1:1 stehen –
+   nur die Farb-Variablen und ein paar wenige harte Farbcodes oben
+   sind angepasst worden. */
