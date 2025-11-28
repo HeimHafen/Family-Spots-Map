@@ -1,13 +1,15 @@
 {
+  "id": "./",
   "name": "Family Spots Map",
   "short_name": "Family Spots",
-  "start_url": "./index.html",
+  "description": "Family Spots Map: Spielplätze, Zoos, Wildparks, Wasser-Spots & mehr – für entspannte Familienabenteuer.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f7f8fb",
-  "theme_color": "#14b8c4",
+  "theme_color": "#fb8c00",
   "lang": "de",
   "orientation": "portrait-primary",
-  "scope": "./",
   "icons": [
     {
       "src": "assets/icons/icon-192.png",
