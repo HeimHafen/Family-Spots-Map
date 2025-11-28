@@ -1,6 +1,14 @@
+// ui.js
+
 import { $ } from "./utils.js";
 import { getLanguage, t } from "./i18n.js";
 import { showTillaMessage } from "./tilla.js"; // 🐢
+
+/**
+ * Wie viele Spots werden maximal als Karten in der Sidebar gerendert?
+ * Die restlichen Spots sind weiterhin über die Karte erreichbar.
+ */
+const MAX_LIST_ITEMS = 40;
 
 /**
  * Kurzbeschreibung für die Listenkarte bauen.
@@ -35,6 +43,9 @@ function buildSpotListDescription(spot, isDe) {
 
 /**
  * Rendert die Spot-Liste in der Sidebar.
+ * Performance-Optimierungen:
+ *  - es werden maximal MAX_LIST_ITEMS Spots als Karten gerendert
+ *  - DOM-Aufbau erfolgt in einem DocumentFragment (ein einziger Append)
  */
 export function renderSpotList(spots, options) {
   const { favorites = [], onSelect } = options || {};
@@ -67,7 +78,11 @@ export function renderSpotList(spots, options) {
     return;
   }
 
-  spots.forEach((spot) => {
+  // 👉 Nur einen Teil der Spots als Karten rendern, damit der DOM leicht bleibt
+  const visibleSpots = spots.slice(0, MAX_LIST_ITEMS);
+  const fragment = document.createDocumentFragment();
+
+  visibleSpots.forEach((spot) => {
     const isFav = favorites.includes(spot.id);
 
     const card = document.createElement("article");
@@ -169,8 +184,20 @@ export function renderSpotList(spots, options) {
       }
     });
 
-    container.appendChild(card);
+    fragment.appendChild(card);
   });
+
+  container.appendChild(fragment);
+
+  // Hinweis, wenn es noch weitere Spots gibt, die in der Karte sichtbar sind
+  if (spots.length > MAX_LIST_ITEMS) {
+    const info = document.createElement("p");
+    info.className = "spot-list-more-hint";
+    info.textContent = isDe
+      ? `Es gibt noch ${spots.length - MAX_LIST_ITEMS} weitere Spots, die du über die Karte entdecken kannst.`
+      : `There are ${spots.length - MAX_LIST_ITEMS} more spots you can explore via the map.`;
+    container.appendChild(info);
+  }
 }
 
 /**
