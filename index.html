@@ -1,56 +1,65 @@
 <!doctype html>
-<html lang="de" dir="ltr" data-theme="light">
+<html lang="de" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
 
   <title>Family Spots Map – Die schönste Karte für Familien-Abenteuer</title>
   <meta
     name="description"
-    content="Family Spots Map: Spielplätze, Zoos, Wildparks, familienfreundliche Spots & mehr – für unvergessliche Familienabenteuer." />
-  <meta name="robots" content="index,follow" />
+    content="Family Spots Map: Spielplätze, Zoos, Wildparks, familienfreundliche Spots & mehr – für unvergessliche Familienabenteuer."
+  />
   <meta name="theme-color" content="#fb8c00" />
+  <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
-
-  <!-- PWA / App-Integration -->
-  <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="application-name" content="Family Spots Map" />
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <!-- von Chrome empfohlene Ergänzung -->
+
+  <!-- Empfohlen von Chrome (zusätzlich zu apple-mobile-web-app-capable) -->
   <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- PWA / Apple -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="format-detection" content="telephone=no" />
 
-  <!-- Canonical & hreflang (bei eigener Domain anpassen) -->
+  <!-- Canonical & hreflang (für aktuelle GitHub-Pages-URL; bei eigener Domain anpassen) -->
   <link
     rel="canonical"
-    href="https://heimhafen.github.io/Family-Spots-Map/" />
+    href="https://heimhafen.github.io/Family-Spots-Map/"
+  />
   <link
     rel="alternate"
     hreflang="de"
-    href="https://heimhafen.github.io/Family-Spots-Map/" />
+    href="https://heimhafen.github.io/Family-Spots-Map/"
+  />
   <link
     rel="alternate"
     hreflang="en"
-    href="https://heimhafen.github.io/Family-Spots-Map/en/" />
+    href="https://heimhafen.github.io/Family-Spots-Map/en/"
+  />
 
   <!-- Open Graph -->
   <meta
     property="og:title"
-    content="Family Spots Map – familienfreundliche Abenteuerkarte" />
+    content="Family Spots Map – familienfreundliche Abenteuerkarte"
+  />
   <meta
     property="og:description"
-    content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer." />
+    content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer."
+  />
   <meta property="og:type" content="website" />
   <meta
     property="og:url"
-    content="https://heimhafen.github.io/Family-Spots-Map/" />
+    content="https://heimhafen.github.io/Family-Spots-Map/"
+  />
   <meta
     property="og:image"
-    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
+    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
+  />
   <meta property="og:locale" content="de_DE" />
   <meta property="og:site_name" content="Family Spots Map" />
 
@@ -58,47 +67,56 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content="Family Spots Map – familienfreundliche Abenteuerkarte" />
+    content="Family Spots Map – familienfreundliche Abenteuerkarte"
+  />
   <meta
     name="twitter:description"
-    content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer." />
+    content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer."
+  />
   <meta
     name="twitter:image"
-    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
+    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
+  />
 
   <!-- Performance hints -->
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
-  <link rel="dns-prefetch" href="https://unpkg.com" />
-  <link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
+  <!-- Schon mal eine der OSM-Tile-Domains vorwärmen -->
+  <link rel="preconnect" href="https://a.tile.openstreetmap.org" crossorigin />
 
   <!-- Favicon / Icons -->
   <link
     rel="icon"
     type="image/png"
     sizes="192x192"
-    href="assets/icons/icon-192.png" />
+    href="assets/icons/icon-192.png"
+  />
   <link
     rel="apple-touch-icon"
     sizes="180x180"
-    href="assets/icons/apple-touch-icon.png" />
+    href="assets/icons/apple-touch-icon.png"
+  />
 
   <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
   <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+  />
   <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+  />
 
   <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/badges.css" />
 </head>
 <body>
-  <a href="#view-map" class="skip-link">Direkt zur Karte springen</a>
+  <!-- Skip-Link für Screenreader & Tastatur -->
+  <a href="#map" class="skip-link">Direkt zur Karte springen</a>
 
   <noscript>
     <div class="noscript-warning">
@@ -115,14 +133,15 @@
     <header class="app-header">
       <div class="app-header-top">
         <div class="app-header-left">
-          <span class="sr-only" id="language-switcher-label">
-            Sprache wechseln
-          </span>
+          <span class="sr-only" id="language-switcher-label"
+            >Sprache wechseln</span
+          >
           <button
             id="language-switcher"
             class="language-switcher"
             type="button"
-            aria-labelledby="language-switcher language-switcher-label">
+            aria-labelledby="language-switcher language-switcher-label"
+          >
             DE
           </button>
         </div>
@@ -131,14 +150,16 @@
             id="theme-toggle"
             class="btn-icon"
             type="button"
-            aria-label="Hell/Dunkel-Modus wechseln">
+            aria-label="Hell/Dunkel-Modus wechseln"
+          >
             🌓
           </button>
           <button
             id="btn-locate"
             class="btn-icon"
             type="button"
-            aria-label="Eigenen Standort auf der Karte anzeigen">
+            aria-label="Eigenen Standort auf der Karte anzeigen"
+          >
             📍
           </button>
         </div>
@@ -154,7 +175,8 @@
           class="header-tagline"
           id="header-tagline"
           data-i18n-de="Heute ist Zeit für Familie."
-          data-i18n-en="Make today a family day.">
+          data-i18n-en="Make today a family day."
+        >
           Heute ist Zeit für Familie.
         </p>
       </div>
@@ -163,7 +185,7 @@
     <!-- =========================================
          MAIN
          ========================================= -->
-    <main class="app-main" role="main">
+    <main class="app-main">
       <!-- =======================
            MAP VIEW
            ======================= -->
@@ -174,13 +196,15 @@
           <section
             id="tilla-section"
             class="sidebar-section tilla-sidebar-section"
-            aria-labelledby="tilla-title">
+            aria-labelledby="tilla-title"
+          >
             <header class="sidebar-section-header">
               <h2
                 class="sidebar-section-title"
                 id="tilla-title"
                 data-i18n-de="Familien-Begleiterin Tilla"
-                data-i18n-en="Family companion Tilla">
+                data-i18n-en="Family companion Tilla"
+              >
                 Familien-Begleiterin Tilla
               </h2>
             </header>
@@ -190,24 +214,29 @@
                   src="assets/tilla/tilla-hero.png"
                   alt="Tilla, eure Schildkröten-Begleiterin"
                   loading="lazy"
-                  decoding="async" />
+                  decoding="async"
+                />
               </div>
               <div class="tilla-sidebar-text">
                 <p
                   id="tilla-sidebar-text"
                   data-i18n-de="Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿"
-                  data-i18n-en="Everyday life can feel light too. Let’s see what nearby place might make you smile. 🌿">
-                  Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿
+                  data-i18n-en="Everyday life can feel light too. Let’s see what nearby place might make you smile. 🌿"
+                >
+                  Alltag darf auch leicht sein. Lass uns schauen, was in eurer
+                  Nähe ein Lächeln zaubert. 🌿
                 </p>
                 <div class="tilla-sidebar-actions">
                   <button
                     id="btn-play-idea"
                     type="button"
-                    class="btn btn-small btn-play-idea">
+                    class="btn btn-small btn-play-idea"
+                  >
                     <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
                     <span
                       data-i18n-de="Spielideen für unterwegs"
-                      data-i18n-en="Play ideas on the go">
+                      data-i18n-en="Play ideas on the go"
+                    >
                       Spielideen für unterwegs
                     </span>
                   </button>
@@ -223,14 +252,16 @@
                 class="sidebar-section-title"
                 id="compass-label"
                 data-i18n-de="Familien-Kompass"
-                data-i18n-en="Family Compass">
+                data-i18n-en="Family Compass"
+              >
                 Familien-Kompass
               </h2>
               <!-- kein interaktives Element mehr im summary -->
               <span id="btn-toggle-compass" class="btn-ghost btn-small">
                 <span
                   data-i18n-de="Kompass anzeigen"
-                  data-i18n-en="Show compass">
+                  data-i18n-en="Show compass"
+                >
                   Kompass anzeigen
                 </span>
               </span>
@@ -240,23 +271,28 @@
                 class="filter-group-helper"
                 id="compass-helper"
                 data-i18n-de="Wählt, ob ihr eher Alltags-Abenteuer oder einen Ausflugstag sucht – wir passen Radius &amp; Spots für euch an."
-                data-i18n-en="Choose whether you’re looking for an everyday micro-adventure or a day trip – we’ll adjust radius and spots for you.">
-                Wählt, ob ihr eher Alltags-Abenteuer oder einen Ausflugstag sucht – wir passen Radius &amp; Spots für euch an.
+                data-i18n-en="Choose whether you’re looking for an everyday micro-adventure or a day trip – we’ll adjust radius and spots for you."
+              >
+                Wählt, ob ihr eher Alltags-Abenteuer oder einen Ausflugstag
+                sucht – wir passen Radius &amp; Spots für euch an.
               </p>
               <div
                 class="compass-mode-row"
                 role="group"
-                aria-labelledby="compass-label">
+                aria-labelledby="compass-label"
+              >
                 <button
                   type="button"
                   class="compass-mode-chip travel-chip"
                   data-travel-mode="everyday"
-                  aria-pressed="false">
+                  aria-pressed="false"
+                >
                   <span class="mood-chip-emoji" aria-hidden="true">🏡</span>
                   <span
                     class="mood-chip-label"
                     data-i18n-de="Alltag in der Nähe"
-                    data-i18n-en="Everyday nearby">
+                    data-i18n-en="Everyday nearby"
+                  >
                     Alltag in der Nähe
                   </span>
                 </button>
@@ -264,12 +300,14 @@
                   type="button"
                   class="compass-mode-chip travel-chip"
                   data-travel-mode="trip"
-                  aria-pressed="false">
+                  aria-pressed="false"
+                >
                   <span class="mood-chip-emoji" aria-hidden="true">🗺️</span>
                   <span
                     class="mood-chip-label"
                     data-i18n-de="Ausflug / Tagestour"
-                    data-i18n-en="Day trip">
+                    data-i18n-en="Day trip"
+                  >
                     Ausflug / Tagestour
                   </span>
                 </button>
@@ -278,17 +316,17 @@
                 class="filter-group-helper"
                 id="compass-apply-helper"
                 data-i18n-de="Klick auf „Kompass anwenden“, dann passen wir den Umkreis automatisch an eure Wahl an."
-                data-i18n-en="Tap “Apply compass” and we’ll automatically adjust the radius to your choice.">
-                Klick auf „Kompass anwenden“, dann passen wir den Umkreis automatisch an eure Wahl an.
+                data-i18n-en="Tap “Apply compass” and we’ll automatically adjust the radius to your choice."
+              >
+                Klick auf „Kompass anwenden“, dann passen wir den Umkreis
+                automatisch an eure Wahl an.
               </p>
-              <button
-                type="button"
-                id="compass-apply"
-                class="btn btn-small hidden">
+              <button type="button" id="compass-apply" class="btn btn-small hidden">
                 <span
                   id="compass-apply-label"
                   data-i18n-de="Kompass anwenden"
-                  data-i18n-en="Apply compass">
+                  data-i18n-en="Apply compass"
+                >
                   Kompass anwenden
                 </span>
               </button>
@@ -299,13 +337,15 @@
           <section
             class="sidebar-section"
             id="filter-section"
-            aria-labelledby="filter-title">
+            aria-labelledby="filter-title"
+          >
             <header class="sidebar-section-header">
               <h2
                 class="sidebar-section-title"
                 id="filter-title"
                 data-i18n-de="Filter"
-                data-i18n-en="Filters">
+                data-i18n-en="Filters"
+              >
                 Filter
               </h2>
               <button
@@ -313,10 +353,12 @@
                 class="btn-ghost btn-small"
                 type="button"
                 aria-controls="filter-section"
-                aria-expanded="false">
+                aria-expanded="false"
+              >
                 <span
                   data-i18n-de="Filter anzeigen"
-                  data-i18n-en="Show filters">
+                  data-i18n-en="Show filters"
+                >
                   Filter anzeigen
                 </span>
               </button>
@@ -325,7 +367,8 @@
             <p
               class="filter-group-helper"
               data-i18n-de="Hier wählst du, was zu euch passt – der Familien-Kompass nutzt diese Auswahl."
-              data-i18n-en="Choose what fits your family here – the Family Compass uses this selection.">
+              data-i18n-en="Choose what fits your family here – the Family Compass uses this selection."
+            >
               Hier wählst du, was zu euch passt – der Familien-Kompass nutzt
               diese Auswahl.
             </p>
@@ -337,7 +380,8 @@
                 for="filter-search"
                 id="filter-search-label"
                 data-i18n-de="Suche"
-                data-i18n-en="Search">
+                data-i18n-en="Search"
+              >
                 Suche
               </label>
               <input
@@ -348,7 +392,8 @@
                 placeholder="Ort, Spot, Stichwort …"
                 autocomplete="off"
                 data-i18n-de="Ort, Spot, Stichwort …"
-                data-i18n-en="Place, spot, keywords …" />
+                data-i18n-en="Place, spot, keywords …"
+              />
             </div>
 
             <!-- Kategorie -->
@@ -358,14 +403,16 @@
                 for="filter-category"
                 id="filter-category-label"
                 data-i18n-de="Kategorie"
-                data-i18n-en="Category">
+                data-i18n-en="Category"
+              >
                 Kategorie
               </label>
               <select id="filter-category" name="category" class="input">
                 <option
                   value=""
                   data-i18n-de="Alle Kategorien"
-                  data-i18n-en="All categories">
+                  data-i18n-en="All categories"
+                >
                   Alle Kategorien
                 </option>
               </select>
@@ -377,31 +424,36 @@
                 class="filter-group-label"
                 id="filter-mood-label"
                 data-i18n-de="Stimmung"
-                data-i18n-en="Mood">
+                data-i18n-en="Mood"
+              >
                 Stimmung
               </label>
               <p
                 class="filter-group-helper"
                 id="filter-mood-helper"
                 data-i18n-de="Wonach fühlt es sich heute an?"
-                data-i18n-en="What does today feel like?">
+                data-i18n-en="What does today feel like?"
+              >
                 Wonach fühlt es sich heute an?
               </p>
               <div
                 class="mood-row"
                 role="group"
-                aria-labelledby="filter-mood-label">
+                aria-labelledby="filter-mood-label"
+              >
                 <button
                   type="button"
                   class="mood-chip"
                   data-mood="relaxed"
-                  aria-pressed="false">
+                  aria-pressed="false"
+                >
                   <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
                   <span
                     class="mood-chip-label"
                     id="mood-relaxed-label"
                     data-i18n-de="Entspannt"
-                    data-i18n-en="Relaxed">
+                    data-i18n-en="Relaxed"
+                  >
                     Entspannt
                   </span>
                 </button>
@@ -409,13 +461,15 @@
                   type="button"
                   class="mood-chip"
                   data-mood="action"
-                  aria-pressed="false">
+                  aria-pressed="false"
+                >
                   <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
                   <span
                     class="mood-chip-label"
                     id="mood-action-label"
                     data-i18n-de="Bewegung"
-                    data-i18n-en="Active">
+                    data-i18n-en="Active"
+                  >
                     Bewegung
                   </span>
                 </button>
@@ -423,13 +477,15 @@
                   type="button"
                   class="mood-chip"
                   data-mood="water"
-                  aria-pressed="false">
+                  aria-pressed="false"
+                >
                   <span class="mood-chip-emoji" aria-hidden="true">💧</span>
                   <span
                     class="mood-chip-label"
                     id="mood-water-label"
                     data-i18n-de="Wasser &amp; Sand"
-                    data-i18n-en="Water &amp; sand">
+                    data-i18n-en="Water &amp; sand"
+                  >
                     Wasser &amp; Sand
                   </span>
                 </button>
@@ -437,13 +493,15 @@
                   type="button"
                   class="mood-chip"
                   data-mood="animals"
-                  aria-pressed="false">
+                  aria-pressed="false"
+                >
                   <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
                   <span
                     class="mood-chip-label"
                     id="mood-animals-label"
                     data-i18n-de="Tier-Tag"
-                    data-i18n-en="Animal day">
+                    data-i18n-en="Animal day"
+                  >
                     Tier-Tag
                   </span>
                 </button>
@@ -457,7 +515,8 @@
                 for="filter-age"
                 id="filter-age-label"
                 data-i18n-de="Alter der Kinder"
-                data-i18n-en="Age of children">
+                data-i18n-en="Age of children"
+              >
                 Alter der Kinder
               </label>
               <select id="filter-age" name="age" class="input">
@@ -465,28 +524,32 @@
                   value="all"
                   id="filter-age-all"
                   data-i18n-de="Alle Altersstufen"
-                  data-i18n-en="All age groups">
+                  data-i18n-en="All age groups"
+                >
                   Alle Altersstufen
                 </option>
                 <option
                   value="0-3"
                   id="filter-age-0-3"
                   data-i18n-de="0–3 Jahre"
-                  data-i18n-en="0–3 years">
+                  data-i18n-en="0–3 years"
+                >
                   0–3 Jahre
                 </option>
                 <option
                   value="4-9"
                   id="filter-age-4-9"
                   data-i18n-de="4–9 Jahre"
-                  data-i18n-en="4–9 years">
+                  data-i18n-en="4–9 years"
+                >
                   4–9 Jahre
                 </option>
                 <option
                   value="10+"
                   id="filter-age-10-plus"
                   data-i18n-de="10+ Jahre"
-                  data-i18n-en="10+ years">
+                  data-i18n-en="10+ years"
+                >
                   10+ Jahre
                 </option>
               </select>
@@ -499,14 +562,16 @@
                 for="filter-radius"
                 id="filter-radius-label"
                 data-i18n-de="Micro-Abenteuer-Radius"
-                data-i18n-en="Micro-adventure radius">
+                data-i18n-en="Micro-adventure radius"
+              >
                 Micro-Abenteuer-Radius
               </label>
               <p
                 class="filter-group-helper"
                 id="filter-radius-helper"
                 data-i18n-de="Wie weit darf euer Abenteuer gehen?"
-                data-i18n-en="How far may your adventure go today?">
+                data-i18n-en="How far may your adventure go today?"
+              >
                 Wie weit darf euer Abenteuer heute gehen?
               </p>
               <div class="radius-row">
@@ -518,12 +583,14 @@
                   max="4"
                   step="1"
                   value="4"
-                  aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description" />
+                  aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description"
+                />
                 <span
                   id="filter-radius-max-label"
                   class="radius-max-label"
                   data-i18n-de="Alle Spots"
-                  data-i18n-en="All spots">
+                  data-i18n-en="All spots"
+                >
                   Alle Spots
                 </span>
               </div>
@@ -531,7 +598,8 @@
                 id="filter-radius-description"
                 class="radius-description"
                 data-i18n-de="Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
-                data-i18n-en="All spots – no radius limit. The map is all yours.">
+                data-i18n-en="All spots – no radius limit. The map is all yours."
+              >
                 Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
               </p>
             </div>
@@ -542,36 +610,34 @@
                 <input
                   id="filter-big-adventures"
                   name="big-adventures"
-                  type="checkbox" />
+                  type="checkbox"
+                />
                 <span
                   data-i18n-de="Nur große Abenteuer"
-                  data-i18n-en="Only big adventures">
+                  data-i18n-en="Only big adventures"
+                >
                   Nur große Abenteuer
                 </span>
               </label>
             </div>
             <div class="filter-group filter-group--checkbox">
               <label class="checkbox-label" id="filter-verified-label">
-                <input
-                  id="filter-verified"
-                  name="verified"
-                  type="checkbox" />
+                <input id="filter-verified" name="verified" type="checkbox" />
                 <span
                   data-i18n-de="Nur verifizierte Spots"
-                  data-i18n-en="Only verified spots">
+                  data-i18n-en="Only verified spots"
+                >
                   Nur verifizierte Spots
                 </span>
               </label>
             </div>
             <div class="filter-group filter-group--checkbox">
               <label class="checkbox-label" id="filter-favs-label">
-                <input
-                  id="filter-favorites"
-                  name="favorites"
-                  type="checkbox" />
+                <input id="filter-favorites" name="favorites" type="checkbox" />
                 <span
                   data-i18n-de="Nur Favoriten"
-                  data-i18n-en="Only favourites">
+                  data-i18n-en="Only favourites"
+                >
                   Nur Favoriten
                 </span>
               </label>
@@ -581,7 +647,8 @@
           <!-- Spot-Liste -->
           <section
             class="sidebar-section sidebar-section--grow"
-            aria-labelledby="spots-title">
+            aria-labelledby="spots-title"
+          >
             <header class="sidebar-section-header">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
               <button
@@ -589,10 +656,11 @@
                 class="btn-ghost btn-small"
                 type="button"
                 aria-pressed="false"
-                aria-controls="sidebar">
-                <span data-i18n-de="Nur Karte" data-i18n-en="Map only">
-                  Nur Karte
-                </span>
+                aria-controls="sidebar"
+              >
+                <span data-i18n-de="Nur Karte" data-i18n-en="Map only"
+                  >Nur Karte</span
+                >
               </button>
             </header>
             <div id="spot-list" class="spot-list"><!-- Karten via JS --></div>
@@ -605,7 +673,8 @@
           <aside
             id="spot-detail"
             class="spot-details spot-details--hidden"
-            aria-live="polite"></aside>
+            aria-live="polite"
+          ></aside>
         </section>
 
         <!-- Family Spots Plus -->
@@ -614,16 +683,15 @@
             <h2 class="sidebar-section-title">Family Spots Plus</h2>
             <!-- kein Button mehr im summary -->
             <span id="btn-toggle-plus" class="btn-ghost btn-small">
-              <span data-i18n-de="Anzeigen" data-i18n-en="Show">
-                Anzeigen
-              </span>
+              <span data-i18n-de="Anzeigen" data-i18n-en="Show">Anzeigen</span>
             </span>
           </summary>
           <div class="filter-group">
             <p
               id="plus-status-text"
               data-i18n-de="Family Spots Plus ist nicht aktiviert."
-              data-i18n-en="Family Spots Plus is not activated.">
+              data-i18n-en="Family Spots Plus is not activated."
+            >
               Family Spots Plus ist nicht aktiviert.
             </p>
           </div>
@@ -631,7 +699,8 @@
             <label
               for="plus-code-input"
               data-i18n-de="Partner-Code eingeben (z. B. von Campingplatz oder Sponsor):"
-              data-i18n-en="Enter partner code (e.g. from campground or sponsor):">
+              data-i18n-en="Enter partner code (e.g. from campground or sponsor):"
+            >
               Partner-Code eingeben (z. B. von Campingplatz, Kommune oder
               Sponsor):
             </label>
@@ -641,11 +710,13 @@
                 name="plus-code"
                 class="input"
                 type="text"
-                autocomplete="off" />
+                autocomplete="off"
+              />
               <button id="plus-code-submit" class="btn" type="button">
                 <span
                   data-i18n-de="Code aktivieren"
-                  data-i18n-en="Activate code">
+                  data-i18n-en="Activate code"
+                >
                   Code aktivieren
                 </span>
               </button>
@@ -653,7 +724,8 @@
             <p
               class="plus-note"
               data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
-              data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap.">
+              data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap."
+            >
               Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei –
               ganz ohne Abo-Falle.
             </p>
@@ -666,21 +738,21 @@
             <h2
               class="sidebar-section-title"
               data-i18n-de="Mein Tag 💛"
-              data-i18n-en="My day 💛">
+              data-i18n-en="My day 💛"
+            >
               Mein Tag 💛
             </h2>
             <!-- kein Button mehr im summary -->
             <span id="btn-toggle-daylog" class="btn-ghost btn-small">
-              <span data-i18n-de="Anzeigen" data-i18n-en="Show">
-                Anzeigen
-              </span>
+              <span data-i18n-de="Anzeigen" data-i18n-en="Show">Anzeigen</span>
             </span>
           </summary>
           <div class="filter-group">
             <label
               for="daylog-text"
               data-i18n-de="Wie war euer Tag?"
-              data-i18n-en="How was your day?">
+              data-i18n-en="How was your day?"
+            >
               Wie war euer Tag?
             </label>
             <textarea
@@ -688,11 +760,12 @@
               name="daylog"
               class="input"
               rows="3"
-              placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"></textarea>
+              placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
+            ></textarea>
             <button id="daylog-save" class="btn btn-small" type="button">
-              <span data-i18n-de="Speichern 💾" data-i18n-en="Save 💾">
-                Speichern 💾
-              </span>
+              <span data-i18n-de="Speichern 💾" data-i18n-en="Save 💾"
+                >Speichern 💾</span
+              >
             </button>
           </div>
         </details>
@@ -701,21 +774,19 @@
       <!-- =========================================
            ABOUT VIEW
            ========================================= -->
-      <section
-        id="view-about"
-        class="view"
-        aria-label="Über Family Spots Map">
+      <section id="view-about" class="view" aria-label="Über Family Spots Map">
         <!-- Deutsch -->
         <article
           id="page-about-de"
           class="page page-about"
           lang="de"
-          aria-hidden="false">
+          aria-hidden="false"
+        >
           <h2>Über Family Spots Map</h2>
           <p>
             Family Spots Map ist eine kuratierte Karte für Familien-Abenteuer –
-            von Eltern für Eltern. Statt unübersichtlicher Listen oder
-            anonymer Bewertungen findest du hier ausgewählte Spielplätze, Zoos,
+            von Eltern für Eltern. Statt unübersichtlicher Listen oder anonymer
+            Bewertungen findest du hier ausgewählte Spielplätze, Zoos,
             Wildparks, Wasser-Spots, Museen, Bewegungsparks und viele weitere
             Orte, die sich in der Praxis bewährt haben.
           </p>
@@ -730,10 +801,10 @@
             schöne Stunden.
           </p>
           <p>
-            <strong>
-              Tilla, unsere kleine Schildkröte, erinnert uns daran, wie kostbar
-              gemeinsame Zeit ist.
-            </strong>
+            <strong
+              >Tilla, unsere kleine Schildkröte, erinnert uns daran, wie kostbar
+              gemeinsame Zeit ist.</strong
+            >
             Sie steht dafür, das Tempo rauszunehmen, innezuhalten und einen
             guten Ort für ein paar schöne Stunden als Familie zu finden.
           </p>
@@ -765,11 +836,11 @@
             bewusst ausgewählt und laufend gepflegt.
           </p>
           <p>
-            <strong>Verifizierte Spots</strong> tragen ein entsprechendes
-            Label. Das bedeutet z. B.: Der Ort wurde persönlich besucht oder
-            ausführlich recherchiert, Lage, Kategorie und Eckdaten wurden
-            geprüft, besondere Hinweise (z. B. Eintritt, Saison, Parken) sind —
-            soweit möglich — ergänzt.
+            <strong>Verifizierte Spots</strong> tragen ein entsprechendes Label.
+            Das bedeutet z. B.: Der Ort wurde persönlich besucht oder ausführlich
+            recherchiert, Lage, Kategorie und Eckdaten wurden geprüft,
+            besondere Hinweise (z. B. Eintritt, Saison, Parken) sind — soweit
+            möglich — ergänzt.
           </p>
           <p>
             Trotzdem können sich Bedingungen vor Ort ändern – prüft deshalb
@@ -778,11 +849,12 @@
           <hr />
           <h3>Family Spots Plus – mehr für Camping, WoMo &amp; Abenteuer</h3>
           <p>
-            Neben den Basis-Kategorien gibt es mit <strong>Family Spots Plus</strong>
-            zusätzliche Spezial-Kategorien, z. B.: Rastplätze mit Spielplatz
-            &amp; Dusche, kostenlose Stellplätze in Spielplatznähe,
-            Wohnmobil-Service-Stationen, familienfreundliche Campingplätze,
-            Bikepacking-Spots und besondere Abenteuer-Routen.
+            Neben den Basis-Kategorien gibt es mit
+            <strong>Family Spots Plus</strong> zusätzliche Spezial-Kategorien,
+            z. B.: Rastplätze mit Spielplatz &amp; Dusche, kostenlose
+            Stellplätze in Spielplatznähe, Wohnmobil-Service-Stationen,
+            familienfreundliche Campingplätze, Bikepacking-Spots und besondere
+            Abenteuer-Routen.
           </p>
           <p>
             Plus wird über zeitlich begrenzte <strong>Aktions-Codes</strong>
@@ -815,8 +887,8 @@
             <li>Alter und Fähigkeiten deiner Kinder.</li>
           </ul>
           <p>
-            Die Nutzung erfolgt auf eigene Verantwortung – ihr kennt eure
-            Kinder und eure Situation am besten.
+            Die Nutzung erfolgt auf eigene Verantwortung – ihr kennt eure Kinder
+            und eure Situation am besten.
           </p>
           <hr />
           <h3>Projektstatus &amp; Version</h3>
@@ -838,14 +910,15 @@
           id="page-about-en"
           class="page page-about hidden"
           lang="en"
-          aria-hidden="true">
+          aria-hidden="true"
+        >
           <h2>About Family Spots Map</h2>
           <p>
-            Family Spots Map is a curated map for family adventures – by
-            parents for parents. Instead of endless lists or anonymous
-            ratings, you’ll find selected playgrounds, zoos, wildlife parks,
-            water spots, museums, movement parks and many more places that
-            proved themselves in real life with kids.
+            Family Spots Map is a curated map for family adventures – by parents
+            for parents. Instead of endless lists or anonymous ratings, you’ll
+            find selected playgrounds, zoos, wildlife parks, water spots,
+            museums, movement parks and many more places that proved themselves
+            in real life with kids.
           </p>
           <p>
             The focus: quality, safety and real experiences with children – not
@@ -853,22 +926,23 @@
           </p>
           <p>
             Family Spots Map is created from the perspective of a young family
-            travelling with kids themselves – often with little time,
-            sometimes tired, but always looking for a good place to spend a few
-            happy hours together.
+            travelling with kids themselves – often with little time, sometimes
+            tired, but always looking for a good place to spend a few happy
+            hours together.
           </p>
           <p>
-            <strong>
-              Tilla, our little turtle, reminds us how precious shared time is.
-            </strong>
+            <strong
+              >Tilla, our little turtle, reminds us how precious shared time
+              is.</strong
+            >
             She stands for slowing down, taking a breath and finding a good
             place for a few calm family hours.
           </p>
           <hr />
           <h3>How Family Spots Map works</h3>
           <p>
-            <strong>Map &amp; filters:</strong> Zoom into your region and
-            filter by category (e.g. playground, wildlife park, pumptrack) or
+            <strong>Map &amp; filters:</strong> Zoom into your region and filter
+            by category (e.g. playground, wildlife park, pumptrack) or
             keywords.
           </p>
           <p>
@@ -881,8 +955,8 @@
             star and keep them handy on the go – even offline.
           </p>
           <p>
-            <strong>Offline basics:</strong> Important data is stored locally
-            so you can rediscover your spots even with poor reception.
+            <strong>Offline basics:</strong> Important data is stored locally so
+            you can rediscover your spots even with poor reception.
           </p>
           <hr />
           <h3>Curated &amp; verified – our quality promise</h3>
@@ -891,11 +965,10 @@
             spot is chosen consciously and kept up to date.
           </p>
           <p>
-            <strong>Verified spots</strong> carry an label. That usually
-            means: The place has been personally visited or researched in
-            detail, location, category and key facts have been checked, and
-            special notes (e.g. entry fee, season, parking) are added where
-            possible.
+            <strong>Verified spots</strong> carry an label. That usually means:
+            The place has been personally visited or researched in detail,
+            location, category and key facts have been checked, and special
+            notes (e.g. entry fee, season, parking) are added where possible.
           </p>
           <p>
             Still, conditions may change — so please always check local
@@ -906,9 +979,9 @@
           <p>
             Besides the core categories, <strong>Family Spots Plus</strong>
             offers additional specialty categories, such as rest areas with
-            playground &amp; shower, free overnight RV spots near
-            playgrounds, RV service stations, family-friendly campgrounds,
-            bikepacking spots and special adventure routes.
+            playground &amp; shower, free overnight RV spots near playgrounds,
+            RV service stations, family-friendly campgrounds, bikepacking spots
+            and special adventure routes.
           </p>
           <p>
             Plus is activated via time-limited <strong>promo codes</strong> —
@@ -917,9 +990,9 @@
           <hr />
           <h3>Usage, responsibility &amp; safety</h3>
           <p>
-            Family Spots Map provides information to the best of our
-            knowledge, but cannot guarantee completeness, safety or compliance
-            with local regulations.
+            Family Spots Map provides information to the best of our knowledge,
+            but cannot guarantee completeness, safety or compliance with local
+            regulations.
           </p>
           <p>On site, please always pay attention to:</p>
           <ul>
@@ -929,7 +1002,7 @@
           </ul>
           <p>
             Use of the app is at your own responsibility — you know your
-            children’s needs and your situation best.
+            children and your situation best.
           </p>
           <hr />
           <h3>Project status &amp; version</h3>
@@ -956,12 +1029,14 @@
         class="bottom-nav-item bottom-nav-item--active"
         type="button"
         data-route="map"
-        aria-current="page">
+        aria-current="page"
+      >
         <span class="bottom-nav-icon" aria-hidden="true">🗺️</span>
         <span
           id="bottom-nav-map-label"
           data-i18n-de="Karte"
-          data-i18n-en="Map">
+          data-i18n-en="Map"
+        >
           Karte
         </span>
       </button>
@@ -969,12 +1044,14 @@
         class="bottom-nav-item"
         type="button"
         data-route="about"
-        aria-current="false">
+        aria-current="false"
+      >
         <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
         <span
           id="bottom-nav-about-label"
           data-i18n-de="Über Family Spots Map"
-          data-i18n-en="About Family Spots Map">
+          data-i18n-en="About Family Spots Map"
+        >
           Über Family Spots Map
         </span>
       </button>
@@ -994,10 +1071,12 @@
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin="anonymous"
-    defer></script>
+    defer
+  ></script>
   <script
     src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
-    defer></script>
+    defer
+  ></script>
 
   <!-- App (ES-Modul) -->
   <script type="module" src="./js/app.js"></script>
@@ -1005,11 +1084,14 @@
   <!-- Service Worker Registrierung -->
   <script>
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
+      window.addEventListener("load", function () {
         navigator.serviceWorker
           .register("service-worker.js")
-          .catch((error) => {
-            console.warn("[ServiceWorker] Registrierung fehlgeschlagen:", error);
+          .catch(function (error) {
+            console.warn(
+              "[ServiceWorker] Registrierung fehlgeschlagen:",
+              error
+            );
           });
       });
     }
