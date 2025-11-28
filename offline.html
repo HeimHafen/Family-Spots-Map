@@ -2,16 +2,23 @@
 <html lang="de" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="robots" content="noindex" />
   <meta name="theme-color" content="#f7f8fb" />
+  <meta name="color-scheme" content="light dark" />
+
   <title>Offline – Family Spots Map</title>
 
+  <!-- Manifest & Icons (optional, aber schadet nicht) -->
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" type="image/png" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
 
+  <!-- Haupt-Styles der App -->
   <link rel="stylesheet" href="css/styles.css" />
+
   <style>
     body.offline-page {
       display: flex;
@@ -22,11 +29,16 @@
       text-align: center;
       background: var(--app-bg, #ffe9c7);
       color: var(--text-color, #452213);
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     .offline-container {
       max-width: 480px;
+    }
+
+    .offline-logo {
+      font-size: 32px;
+      margin-bottom: 8px;
     }
 
     h1 {
@@ -37,19 +49,21 @@
     p {
       font-size: 16px;
       margin-bottom: 12px;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body class="offline-page">
-  <main class="offline-container">
-    <h1>📍 Family Spots Map</h1>
+  <main class="offline-container" aria-labelledby="offline-title">
+    <div class="offline-logo" aria-hidden="true">📍</div>
+    <h1 id="offline-title">Family Spots Map</h1>
     <p>
       Du bist gerade offline. Keine Sorge – sobald du wieder verbunden bist,
       lädt die Karte automatisch.
     </p>
     <p>
       Tipp: Wenn du die Seite einmal online öffnest, kannst du sie danach als
-      App nutzen – auch ohne Internet.
+      App vom Home-Bildschirm starten – auch mit schwachem Empfang.
     </p>
   </main>
 </body>
