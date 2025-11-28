@@ -159,7 +159,7 @@
             </div>
           </section>
 
-          <!-- Familien-Kompass (überarbeitet) -->
+          <!-- Familien-Kompass -->
           <details class="sidebar-section" id="compass-section">
             <summary class="sidebar-section-header" id="compass-summary">
               <h2
@@ -193,8 +193,8 @@
               <div class="compass-mode-row" role="group" aria-labelledby="compass-label">
                 <button
                   type="button"
-                  class="compass-mode-chip"
-                  data-compass-mode="nearby"
+                  class="compass-mode-chip travel-chip"
+                  data-travel-mode="everyday"
                   aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">🏡</span>
                   <span
@@ -206,8 +206,8 @@
                 </button>
                 <button
                   type="button"
-                  class="compass-mode-chip"
-                  data-compass-mode="daytrip"
+                  class="compass-mode-chip travel-chip"
+                  data-travel-mode="trip"
                   aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">🗺️</span>
                   <span
@@ -251,11 +251,11 @@
                 class="btn-ghost btn-small"
                 type="button"
                 aria-controls="filter-section"
-                aria-expanded="true">
+                aria-expanded="false">
                 <span
-                  data-i18n-de="Filter ausblenden"
-                  data-i18n-en="Hide filters">
-                  Filter ausblenden
+                  data-i18n-de="Filter anzeigen"
+                  data-i18n-en="Show filters">
+                  Filter anzeigen
                 </span>
               </button>
             </header>
@@ -520,13 +520,6 @@
               </span>
             </button>
           </summary>
-          <button
-            type="button"
-            class="sidebar-section-close"
-            data-target="plus-section"
-            aria-label="Family Spots Plus schließen">
-            ✖️
-          </button>
           <div class="filter-group">
             <p
               id="plus-status-text"
@@ -552,9 +545,9 @@
             </div>
             <p
               class="plus-note"
-              data-i18n-de="Family Spots Plus schaltet zusätzliche Filter & Spots frei – ganz ohne Abo-Falle."
-              data-i18n-en="Family Spots Plus unlocks additional filters & spots – with no subscription trap.">
-              Family Spots Plus schaltet zusätzliche Filter & Spots frei – ganz ohne Abo-Falle.
+              data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
+              data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap.">
+              Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle.
             </p>
           </div>
         </details>
@@ -581,13 +574,6 @@
               </span>
             </button>
           </summary>
-          <button
-            type="button"
-            class="sidebar-section-close"
-            data-target="daylog-section"
-            aria-label="Tagesprotokoll schließen">
-            ✖️
-          </button>
           <div class="filter-group">
             <label
               for="daylog-text"
