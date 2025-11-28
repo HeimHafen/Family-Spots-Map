@@ -234,6 +234,7 @@ button:focus-visible,
 .btn-icon:focus-visible,
 .btn:focus-visible,
 .btn-ghost:focus-visible,
+.btn-play-idea:focus-visible,
 .mood-chip:focus-visible,
 .travel-chip:focus-visible,
 .bottom-nav-item:focus-visible,
@@ -463,6 +464,14 @@ textarea.input:focus-visible {
   padding-bottom: 14px;
 }
 
+/* Details-Standard-Marker ausblenden (wir haben eigenes Header-Layout) */
+details.sidebar-section > summary {
+  list-style: none;
+}
+details.sidebar-section > summary::-webkit-details-marker {
+  display: none;
+}
+
 .sidebar-section-header {
   display: flex;
   align-items: center;
@@ -477,7 +486,6 @@ textarea.input:focus-visible {
   color: var(--text-strong);
 }
 
-/* "Schließen"-Buttons aus Plus & Mein Tag ausblenden */
 .sidebar-section-close {
   border: none;
   padding: 6px 14px;
@@ -487,7 +495,12 @@ textarea.input:focus-visible {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  display: none; /* Button optisch entfernen, Funktion bleibt über Summary-Button */
+}
+
+/* Wunsch: "Schließen"-Buttons in Plus & Mein Tag entfernen */
+#plus-section .sidebar-section-close,
+#daylog-section .sidebar-section-close {
+  display: none;
 }
 
 [data-theme="dark"] .sidebar-section-close {
@@ -549,7 +562,7 @@ textarea.input:focus-visible {
   color: var(--text-soft);
 }
 
-/* Reise-Modus-Hilfetext ausblenden */
+/* Wunsch: erklärenden Text beim Reise-Modus ausblenden */
 #filter-travel-helper {
   display: none;
 }
@@ -675,9 +688,12 @@ select.input:focus {
   font-size: 14px;
 }
 
-/* Buttons */
+/* =========================================
+   BUTTONS (GLOBAL & TILLA)
+   ========================================= */
 
-.btn {
+.btn,
+.btn-play-idea {
   border: none;
   border-radius: var(--radius-pill);
   padding: 9px 16px;
@@ -694,6 +710,20 @@ select.input:focus {
     0 4px 10px rgba(180, 96, 33, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.75);
   cursor: pointer;
+}
+
+/* Spezielles Layout für Tilla-Button: Emoji + Text, leicht breiter */
+.btn-play-idea {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-inline: 18px;
+  white-space: nowrap;
+}
+
+.tilla-play-emoji {
+  font-size: 18px;
 }
 
 .btn-small {
@@ -921,12 +951,17 @@ select.input:focus {
   }
 }
 
+/* Section selbst bekommt wie Kompass/Filter den Card-Look;
+   die eigentliche Karte liegt als "Card in Card" leicht vertieft */
 .tilla-sidebar-section {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
-/* Überschrift "Familien-Begleiterin Tilla" oberhalb der Schildkröte */
+.tilla-sidebar-section .sidebar-section-header {
+  margin-bottom: 8px;
+}
+
 .tilla-sidebar-card {
   display: flex;
   align-items: center;
@@ -938,24 +973,6 @@ select.input:focus {
     var(--card-shadow),
     inset 0 0 0 1px var(--card-border);
   animation: tilla-card-in 0.45s ease-out 0.1s both;
-  position: relative;
-  flex-wrap: nowrap;
-}
-
-.tilla-sidebar-card::before {
-  content: "Familien-Begleiterin Tilla";
-  position: absolute;
-  left: 12px;
-  top: 8px;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-strong);
-}
-
-/* Platz schaffen, damit Überschrift nicht in den Inhalt läuft */
-.tilla-sidebar-avatar,
-.tilla-sidebar-text {
-  margin-top: 20px;
 }
 
 [data-theme="dark"] .tilla-sidebar-card {
@@ -985,46 +1002,6 @@ select.input:focus {
   margin: 0 0 10px;
   font-size: 14px;
   line-height: 1.5;
-}
-
-/* Button-Bereich für Spielideen */
-.tilla-sidebar-actions {
-  margin-top: 2px;
-}
-
-/* Button "Spielideen für unterwegs" im orangen Button-Stil */
-.btn-play-idea {
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(
-    135deg,
-    var(--accent),
-    hsl(var(--accent-h, 32), 100%, 60%)
-  );
-  color: #fffdf8;
-  box-shadow:
-    0 4px 10px rgba(180, 96, 33, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.75);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.btn-play-idea:active {
-  transform: translateY(1px) scale(0.97);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
-}
-
-.tilla-play-emoji {
-  font-size: 18px;
 }
 
 /* =========================================
@@ -1433,7 +1410,11 @@ body.onboarding-open {
 
 .onboarding-dot--active {
   width: 18px;
-  background: linear-gradient(135deg, var(--accent), hsl(var(--accent-h, 32), 100%, 60%));
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
 }
 
 @keyframes onboarding-fade-in {
@@ -1651,15 +1632,27 @@ body.onboarding-open {
 }
 
 .badge--mood {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 70%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 70%)
+  );
 }
 
 .badge--travel {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 68%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 68%)
+  );
 }
 
 .badge--age {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 72%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 72%)
+  );
 }
 
 .badge--distance {
