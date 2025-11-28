@@ -378,6 +378,67 @@ textarea.input:focus-visible {
 }
 
 /* =========================================
+   SKIP TO MAP BUTTON
+   ========================================= */
+
+#skip-to-map.skip-to-map {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding: 0.6rem 1.2rem;
+  margin: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+
+  font: inherit;
+  font-weight: 500;
+  color: #8a4b1e;
+
+  cursor: pointer;
+
+  position: sticky;
+  top: 0;
+  z-index: 40;
+
+  backdrop-filter: blur(8px);
+}
+
+/* etwas Luft zum Header darunter */
+.skip-to-map {
+  margin-bottom: 0.35rem;
+}
+
+.skip-to-map__label {
+  white-space: nowrap;
+}
+
+.skip-to-map__icon {
+  font-size: 0.9em;
+  transform: translateY(1px);
+}
+
+.skip-to-map:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.skip-to-map:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+.skip-to-map:focus-visible {
+  outline: 2px solid #ffb34a;
+  outline-offset: 3px;
+}
+
+/* =========================================
    MAIN LAYOUT
    ========================================= */
 
