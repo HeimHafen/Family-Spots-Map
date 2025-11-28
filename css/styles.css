@@ -236,7 +236,6 @@ button:focus-visible,
 .btn-ghost:focus-visible,
 .mood-chip:focus-visible,
 .travel-chip:focus-visible,
-.compass-mode-chip:focus-visible,
 .bottom-nav-item:focus-visible,
 .input:focus-visible,
 select.input:focus-visible,
@@ -503,7 +502,7 @@ textarea.input:focus-visible {
   display: none;
 }
 
-/* Kompass */
+/* Kompass-Karte */
 
 .compass-card {
   margin-top: 4px;
@@ -520,10 +519,6 @@ textarea.input:focus-visible {
   box-shadow:
     inset 0 0 0 1px rgba(148, 163, 184, 0.4),
     0 10px 22px rgba(0, 0, 0, 0.9);
-}
-
-#compass-section .sidebar-section-header button:not(:first-of-type) {
-  display: none;
 }
 
 /* Form Controls */
@@ -548,7 +543,7 @@ textarea.input:focus-visible {
   color: var(--text-soft);
 }
 
-/* NEU: Abstand für Filter-Toggle-Button & mehr Luft über Helper-Text */
+/* Abstand für Filter-Toggle-Button & mehr Luft über Helper-Text */
 #btn-toggle-filters {
   margin-bottom: 1rem;
 }
@@ -584,10 +579,9 @@ select.input:focus {
   outline: none;
 }
 
-/* Mood, Travel & Compass Chips */
+/* Mood & Travel Chips */
 
-.mood-row,
-.compass-mode-row {
+.mood-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -619,8 +613,7 @@ select.input:focus {
 
 .mood-chip--active,
 .travel-chip--active,
-.compass-mode-chip--active,
-.compass-mode-chip[aria-pressed="true"] {
+.compass-mode-chip--active {
   background: linear-gradient(145deg, var(--accent-soft), var(--accent));
   color: #3b2313;
   box-shadow:
@@ -631,8 +624,7 @@ select.input:focus {
 
 [data-theme="dark"] .mood-chip--active,
 [data-theme="dark"] .travel-chip--active,
-[data-theme="dark"] .compass-mode-chip--active,
-[data-theme="dark"] .compass-mode-chip[aria-pressed="true"] {
+[data-theme="dark"] .compass-mode-chip--active {
   box-shadow:
     0 4px 10px rgba(245, 158, 11, 0.45),
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
@@ -717,6 +709,37 @@ select.input:focus {
   background: rgba(15, 23, 42, 0.98);
   color: #e5e7eb;
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
+}
+
+/* Spezielle Tilla-Button-Variante – schmaler, wie die anderen Pills */
+
+.btn-play-idea {
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
+  color: #fffdf8;
+  box-shadow:
+    0 4px 10px rgba(180, 96, 33, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  white-space: nowrap;
+}
+
+.tilla-play-emoji {
+  font-size: 18px;
 }
 
 /* Plus-Code-Form */
@@ -928,7 +951,7 @@ select.input:focus {
 
 .tilla-sidebar-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   padding: 10px 12px;
   border-radius: 22px;
@@ -952,8 +975,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 112px;          /* etwas größer als vorher */
-  max-width: 36vw;       /* auf sehr kleinen Screens nicht zu groß */
+  width: 110px; /* etwas größer als vorher */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
