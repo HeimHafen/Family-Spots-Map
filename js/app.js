@@ -447,6 +447,13 @@ let filterVerifiedEl;
 let filterFavoritesEl;
 let spotListEl;
 let spotDetailEl;
+
+// Plus & Mein Tag – Sections + Toggle-Buttons
+let plusSectionEl;
+let btnTogglePlusEl;
+let daylogSectionEl;
+let btnToggleDaylogEl;
+
 let plusCodeInputEl;
 let plusCodeSubmitEl;
 let plusStatusTextEl;
@@ -556,6 +563,19 @@ function updateLanguageSwitcherVisual() {
   );
 }
 
+/**
+ * Label für generische „Anzeigen/Ausblenden“-Buttons (Plus, Mein Tag)
+ */
+function updateGenericSectionToggleLabel(btn, isOpen) {
+  if (!btn) return;
+  const target = btn.querySelector("span") || btn;
+  const isDe = currentLang === LANG_DE;
+  const showLabel = isDe ? "Anzeigen" : "Show";
+  const hideLabel = isDe ? "Ausblenden" : "Hide";
+  target.textContent = isOpen ? hideLabel : showLabel;
+  btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
 function updatePlusStatusText() {
   if (!plusStatusTextEl) return;
 
@@ -642,6 +662,14 @@ function setLanguage(lang, { initial = false } = {}) {
     if (span) {
       span.textContent = sidebarHidden ? t("btn_show_list") : t("btn_only_map");
     }
+  }
+
+  // Plus / Mein Tag – Show/Hide Buttons neu labeln
+  if (plusSectionEl && btnTogglePlusEl) {
+    updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
+  }
+  if (daylogSectionEl && btnToggleDaylogEl) {
+    updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
   }
 
   if (filterSearchEl) {
@@ -1757,8 +1785,7 @@ function toggleFavorite(spot) {
 function updateCompassButtonLabel() {
   if (!FEATURES.compass) return;
   if (!btnToggleCompassEl || !compassSectionEl) return;
-  const span = btnToggleCompassEl.querySelector("span");
-  if (!span) return;
+  const span = btnToggleCompassEl.querySelector("span") || btnToggleCompassEl;
   const isOpen = !!compassSectionEl.open;
   span.textContent = isOpen ? t("btn_hide_compass") : t("btn_show_compass");
   btnToggleCompassEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
@@ -2068,6 +2095,12 @@ function init() {
     spotListEl = document.getElementById("spot-list");
     spotDetailEl = document.getElementById("spot-detail");
 
+    // Plus / Mein Tag Sections + Toggle-Buttons
+    plusSectionEl = document.getElementById("plus-section");
+    btnTogglePlusEl = document.getElementById("btn-toggle-plus");
+    daylogSectionEl = document.getElementById("daylog-section");
+    btnToggleDaylogEl = document.getElementById("btn-toggle-daylog");
+
     plusCodeInputEl = document.getElementById("plus-code-input");
     plusCodeSubmitEl = document.getElementById("plus-code-submit");
     plusStatusTextEl = document.getElementById("plus-status-text");
@@ -2089,6 +2122,7 @@ function init() {
       btnToggleFiltersEl.setAttribute("aria-controls", filterSectionEl.id);
       btnToggleFiltersEl.setAttribute("aria-expanded", "false");
     }
+
     if (
       FEATURES.compass &&
       btnToggleCompassEl &&
@@ -2096,11 +2130,10 @@ function init() {
       compassSectionEl.id
     ) {
       btnToggleCompassEl.setAttribute("aria-controls", compassSectionEl.id);
-      btnToggleCompassEl.setAttribute("aria-expanded", "false");
-    }
-
-    if (compassSectionEl) {
-      compassSectionEl.open = false;
+      btnToggleCompassEl.setAttribute(
+        "aria-expanded",
+        compassSectionEl.open ? "true" : "false"
+      );
     }
 
     // Sprache / Theme / Map
@@ -2305,7 +2338,7 @@ function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    // Kompass-Toggle
+    // Kompass-Toggle-Button – jetzt immer sichtbar
     if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
       btnToggleCompassEl.addEventListener("click", (event) => {
         event.preventDefault();
@@ -2313,16 +2346,48 @@ function init() {
         handleToggleCompass();
       });
 
-      // initial: hidden, wenn Kompass geschlossen (ist er, da oben open=false gesetzt wurde)
-      btnToggleCompassEl.classList.toggle("hidden", !compassSectionEl.open);
-
       compassSectionEl.addEventListener("toggle", () => {
-        const isOpen = compassSectionEl.open;
-        btnToggleCompassEl.classList.toggle("hidden", !isOpen);
         updateCompassButtonLabel();
       });
 
       updateCompassButtonLabel();
+    }
+
+    // Plus-Section Toggle („Anzeigen / Ausblenden“)
+    if (plusSectionEl && btnTogglePlusEl) {
+      btnTogglePlusEl.setAttribute("aria-controls", plusSectionEl.id);
+      btnTogglePlusEl.addEventListener("click", (event) => {
+        event.preventDefault();
+        const isOpen = !plusSectionEl.open;
+        plusSectionEl.open = isOpen;
+        updateGenericSectionToggleLabel(btnTogglePlusEl, isOpen);
+      });
+
+      plusSectionEl.addEventListener("toggle", () => {
+        updateGenericSectionToggleLabel(btnTogglePlusEl, plusSectionEl.open);
+      });
+
+      updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
+    }
+
+    // Mein Tag – Toggle („Anzeigen / Ausblenden“)
+    if (daylogSectionEl && btnToggleDaylogEl) {
+      btnToggleDaylogEl.setAttribute("aria-controls", daylogSectionEl.id);
+      btnToggleDaylogEl.addEventListener("click", (event) => {
+        event.preventDefault();
+        const isOpen = !daylogSectionEl.open;
+        daylogSectionEl.open = isOpen;
+        updateGenericSectionToggleLabel(btnToggleDaylogEl, isOpen);
+      });
+
+      daylogSectionEl.addEventListener("toggle", () => {
+        updateGenericSectionToggleLabel(
+          btnToggleDaylogEl,
+          daylogSectionEl.open
+        );
+      });
+
+      updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
     }
 
     if (FEATURES.plus && plusCodeSubmitEl) {
