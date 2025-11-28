@@ -81,11 +81,6 @@ import {
  */
 
 // ------------------------------------------------------
-// Konstanten & Feature-Toggles
-// (ausgelagert nach js/config.js)
-// ------------------------------------------------------
-
-// ------------------------------------------------------
 // I18N / Text-Helfer
 // ------------------------------------------------------
 
@@ -135,6 +130,7 @@ let currentTheme = THEME_LIGHT;
 // Map / Daten
 let map;
 let markersLayer;
+let mapInitialized = false; // ⬅️ neu: Lazy-Init-Flag
 /** @type {Spot[]} */
 let spots = [];
 /** @type {Spot[]} */
@@ -572,6 +568,8 @@ function showToast(keyOrMessage) {
 // ------------------------------------------------------
 
 function initMap() {
+  if (mapInitialized) return;
+
   if (typeof L === "undefined" || typeof L.map !== "function") {
     console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
     map = null;
@@ -608,6 +606,73 @@ function initMap() {
   }
 
   map.addLayer(markersLayer);
+
+  mapInitialized = true;
+
+  // Map-Events erst hier registrieren (damit sie nur einmal existieren)
+  if (spotDetailEl) {
+    map.on("click", () => {
+      closeSpotDetails({ returnFocus: true });
+    });
+  }
+
+  // Performance-freundliches Nachladen bei Kartenbewegung / Zoom
+  map.on(
+    "moveend zoomend",
+    debounce(() => {
+      applyFiltersAndRender();
+    }, 200)
+  );
+
+  // Map bei Fenster-Resize sauber neu berechnen
+  window.addEventListener(
+    "resize",
+    debounce(() => {
+      if (map) map.invalidateSize();
+    }, 200)
+  );
+}
+
+/**
+ * Stellt sicher, dass die Karte initialisiert ist.
+ * Wird von Lazy-Loader, „Nur Karte“, Fokus auf Spot, Locate-Button etc. benutzt.
+ */
+function ensureMapInitialized() {
+  if (!mapInitialized) {
+    initMap();
+    if (mapInitialized) {
+      // Wenn Spots bereits da sind, direkt Marker rendern
+      applyFiltersAndRender();
+    }
+  }
+}
+
+/**
+ * Lazy-Initialisierung via IntersectionObserver:
+ * Karte wird erst gebaut, wenn der User in die Nähe scrollt.
+ */
+function setupMapLazyInit() {
+  const mapEl = document.getElementById("map");
+  if (!mapEl) return;
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const isVisible = entries.some((e) => e.isIntersecting);
+        if (!isVisible) return;
+        ensureMapInitialized();
+        observer.disconnect();
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(mapEl);
+  } else {
+    // Fallback: nach kurzer Zeit initialisieren
+    window.setTimeout(() => {
+      ensureMapInitialized();
+    }, 1000);
+  }
 }
 
 /**
@@ -1415,10 +1480,20 @@ function syncFavButtonState(btn, spotId) {
 // ------------------------------------------------------
 
 function focusSpotOnMap(spot) {
-  if (!map || !hasValidLatLng(spot)) {
+  if (!hasValidLatLng(spot)) {
     showSpotDetails(spot);
     return;
   }
+
+  // Map bei Bedarf lazy initialisieren
+  ensureMapInitialized();
+
+  if (!map) {
+    // Fallback: nur Details ohne Karten-Zoom
+    showSpotDetails(spot);
+    return;
+  }
+
   const zoom = Math.max(map.getZoom ? map.getZoom() : DEFAULT_MAP_ZOOM, 13);
   map.setView([spot.lat, spot.lng], zoom);
   showSpotDetails(spot);
@@ -1776,7 +1851,15 @@ function handleDaylogSave() {
 // ------------------------------------------------------
 
 function handleLocateClick() {
-  if (!navigator.geolocation || !map) {
+  if (!navigator.geolocation) {
+    showToast("toast_location_error");
+    return;
+  }
+
+  // Map bei Bedarf initialisieren
+  ensureMapInitialized();
+
+  if (!map) {
     showToast("toast_location_error");
     return;
   }
@@ -1978,38 +2061,12 @@ function init() {
       );
     }
 
-    // Sprache / Theme / Map
+    // Sprache / Theme
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
 
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
-
-    initMap();
-
-    if (map) {
-      if (spotDetailEl) {
-        map.on("click", () => {
-          closeSpotDetails({ returnFocus: true });
-        });
-      }
-
-      // Performance-freundliches Nachladen bei Kartenbewegung / Zoom
-      map.on(
-        "moveend zoomend",
-        debounce(() => {
-          applyFiltersAndRender();
-        }, 200)
-      );
-
-      // Map bei Fenster-Resize sauber neu berechnen
-      window.addEventListener(
-        "resize",
-        debounce(() => {
-          map.invalidateSize();
-        }, 200)
-      );
-    }
 
     // Tilla initialisieren
     tilla = new TillaCompanion({
@@ -2321,6 +2378,9 @@ function init() {
       event.preventDefault();
       closeSpotDetails({ returnFocus: true });
     });
+
+    // Map lazy initialisieren, wenn sie in Sicht kommt
+    setupMapLazyInit();
 
     switchRoute("map");
     loadSpots();
