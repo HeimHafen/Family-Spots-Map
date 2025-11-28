@@ -711,13 +711,13 @@ select.input:focus {
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
 }
 
-/* Spezielle Tilla-Button-Variante – schmaler, wie die anderen Pills */
+/* Spezielle Tilla-Button-Variante – etwas schlanker */
 
 .btn-play-idea {
   border: none;
   border-radius: var(--radius-pill);
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 6px 12px;
+  font-size: 13px;
   font-weight: 600;
   font-family: inherit;
   background: linear-gradient(
@@ -733,9 +733,17 @@ select.input:focus {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
-  white-space: nowrap;
+  gap: 6px;
+  margin-top: 8px;
+  max-width: 100%;
+  white-space: normal; /* darf umbrechen, damit der Button auf Mobile nicht zu breit wird */
+}
+
+@media (max-width: 480px) {
+  .btn-play-idea {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
 }
 
 .tilla-play-emoji {
