@@ -1,7 +1,7 @@
 // js/app.js
 // ======================================================
 // Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
-// Senior-Level: strukturiert, robust, kommentiert
+// Ziel: Klar strukturiert, robust und gut wartbar
 // ======================================================
 
 "use strict";
@@ -61,7 +61,7 @@ import { TillaCompanion } from "./features/tilla.js";
  */
 
 // ------------------------------------------------------
-// Konstanten
+// Konstanten & Feature-Toggles
 // ------------------------------------------------------
 
 const DEFAULT_MAP_CENTER = [52.4, 9.7];
@@ -83,10 +83,7 @@ const RADIUS_STEPS_KM = [1, 5, 15, 40, Infinity];
 /** Maximale Marker-Anzahl für gute Performance */
 const MAX_MARKERS_RENDER = 500;
 
-// ------------------------------------------------------
-// Feature-Toggles
-// ------------------------------------------------------
-
+/** Feature-Flags zentral, damit man Funktionen gezielt deaktivieren kann */
 const FEATURES = Object.freeze({
   plus: true,
   moodFilter: true,
@@ -211,63 +208,63 @@ const CATEGORY_GROUP_LABELS = {
 };
 
 const CATEGORY_LABELS_DE = {
-  "spielplatz": "Spielplatz",
-  "abenteuerspielplatz": "Abenteuerspielplatz",
+  spielplatz: "Spielplatz",
+  abenteuerspielplatz: "Abenteuerspielplatz",
   "indoor-spielplatz": "Indoor-Spielplatz",
-  "waldspielplatz": "Waldspielplatz",
-  "wasserspielplatz": "Wasserspielplatz",
+  waldspielplatz: "Waldspielplatz",
+  wasserspielplatz: "Wasserspielplatz",
   "barrierefreier-spielplatz": "Barrierefreier Spielplatz",
-  "bewegungspark": "Bewegungspark",
-  "multifunktionsfeld": "Multifunktionsfeld",
-  "bolzplatz": "Bolzplatz",
-  "pumptrack": "Pumptrack",
-  "skatepark": "Skatepark",
-  "verkehrsgarten": "Verkehrsgarten",
+  bewegungspark: "Bewegungspark",
+  multifunktionsfeld: "Multifunktionsfeld",
+  bolzplatz: "Bolzplatz",
+  pumptrack: "Pumptrack",
+  skatepark: "Skatepark",
+  verkehrsgarten: "Verkehrsgarten",
   "toddler-barfuss-motorik": "Toddler / Barfuß / Motorik",
-  "zoo": "Zoo",
-  "tierpark": "Tierpark",
-  "wildpark": "Wildpark & Safaris",
-  "bauernhof": "Bauernhof",
-  "naturerlebnispfad": "Naturerlebnispfad",
-  "walderlebnisroute": "Walderlebnisroute",
-  "freilichtmuseum": "Freilichtmuseum",
-  "schwimmbad": "Schwimmbad",
-  "badesee": "Badesee",
-  "strand": "Familien-Strand",
-  "eisbahn": "Eisbahn",
-  "rodelhuegel": "Rodelhügel",
-  "freizeitpark": "Freizeitpark",
+  zoo: "Zoo",
+  tierpark: "Tierpark",
+  wildpark: "Wildpark & Safaris",
+  bauernhof: "Bauernhof",
+  naturerlebnispfad: "Naturerlebnispfad",
+  walderlebnisroute: "Walderlebnisroute",
+  freilichtmuseum: "Freilichtmuseum",
+  schwimmbad: "Schwimmbad",
+  badesee: "Badesee",
+  strand: "Familien-Strand",
+  eisbahn: "Eisbahn",
+  rodelhuegel: "Rodelhügel",
+  freizeitpark: "Freizeitpark",
 
   // ➕ NEU
-  "hoehle": "Höhle / Felsenwanderung",
-  "felsenwanderung": "Felsenwanderung",
-  "aussichtspunkt": "Aussichtspunkt / Panorama",
-  "baumhaus": "Baumhaus / Hütte",
-  "labyrinth": "Labyrinth / Irrgarten",
-  "klangpfad": "Natur-Klangpfad",
+  hoehle: "Höhle / Felsenwanderung",
+  felsenwanderung: "Felsenwanderung",
+  aussichtspunkt: "Aussichtspunkt / Panorama",
+  baumhaus: "Baumhaus / Hütte",
+  labyrinth: "Labyrinth / Irrgarten",
+  klangpfad: "Natur-Klangpfad",
   "ueberdachter-spielplatz": "Überdachter Spielplatz",
   "dirtbike-track": "Dirtbike / Jugend-Bike Track",
   "streetball-platz": "Streetball / Basketball-Platz",
   "waldbaden-ort": "Waldbaden / Naturruheplatz",
   "natur-aussichtspunkt": "Natur-Aussichtspunkt",
 
-  "trampolinpark": "Trampolinpark",
-  "kletterhalle": "Kletterhalle",
+  trampolinpark: "Trampolinpark",
+  kletterhalle: "Kletterhalle",
   "kletteranlage-outdoor": "Kletteranlage (Outdoor)",
   "kletterwald-hochseilgarten": "Kletterwald / Hochseilgarten",
-  "boulderpark": "Boulderpark",
-  "minigolf": "Minigolf",
+  boulderpark: "Boulderpark",
+  minigolf: "Minigolf",
   "wanderweg-kinderwagen": "Wanderweg (kinderwagenfreundlich)",
   "radweg-family": "Familien-Radweg",
-  "familiencafe": "Familiencafé",
+  familiencafe: "Familiencafé",
   "kinder-familiencafe": "Kinder- & Familiencafé",
   "familien-restaurant": "Familien-Restaurant",
   "museum-kinder": "Museum (Kinder)",
   "kinder-museum": "Kinder-Museum",
-  "kinder_museum": "Kinder-Museum",
-  "bibliothek": "Bibliothek",
+  kinder_museum: "Kinder-Museum",
+  bibliothek: "Bibliothek",
   "oeffentliche-toilette": "Öffentliche Toilette",
-  "wickelraum": "Wickelraum",
+  wickelraum: "Wickelraum",
   "familien-event": "Familien-Event",
   "stellplatz-spielplatz-naehe-kostenlos":
     "Kostenloser Stellplatz (Spielplatznähe)",
@@ -276,67 +273,67 @@ const CATEGORY_LABELS_DE = {
   "bikepacking-spot": "Bikepacking-Spot",
   "campingplatz-familien": "Familien-Campingplatz",
   "park-garten": "Park / Garten",
-  "picknickwiese": "Picknickwiese"
+  picknickwiese: "Picknickwiese"
 };
 
 const CATEGORY_LABELS_EN = {
-  "spielplatz": "Playground",
-  "abenteuerspielplatz": "Adventure playground",
+  spielplatz: "Playground",
+  abenteuerspielplatz: "Adventure playground",
   "indoor-spielplatz": "Indoor playground",
-  "waldspielplatz": "Forest playground",
-  "wasserspielplatz": "Water playground",
+  waldspielplatz: "Forest playground",
+  wasserspielplatz: "Water playground",
   "barrierefreier-spielplatz": "Accessible playground",
-  "bewegungspark": "Movement park",
-  "multifunktionsfeld": "Multi-sport court",
-  "bolzplatz": "Soccer court",
-  "pumptrack": "Pumptrack",
-  "skatepark": "Skate park",
-  "verkehrsgarten": "Traffic training park",
+  bewegungspark: "Movement park",
+  multifunktionsfeld: "Multi-sport court",
+  bolzplatz: "Soccer court",
+  pumptrack: "Pumptrack",
+  skatepark: "Skate park",
+  verkehrsgarten: "Traffic training park",
   "toddler-barfuss-motorik": "Toddler / barefoot / motor skills",
-  "zoo": "Zoo",
-  "tierpark": "Animal park",
-  "wildpark": "Wildlife park & safaris",
-  "bauernhof": "Farm",
-  "naturerlebnispfad": "Nature discovery trail",
-  "walderlebnisroute": "Forest experience route",
-  "freilichtmuseum": "Open-air museum",
-  "schwimmbad": "Swimming pool",
-  "badesee": "Swimming lake",
-  "strand": "Family beach",
-  "eisbahn": "Ice rink",
-  "rodelhuegel": "Sledding hill",
-  "freizeitpark": "Theme park",
+  zoo: "Zoo",
+  tierpark: "Animal park",
+  wildpark: "Wildlife park & safaris",
+  bauernhof: "Farm",
+  naturerlebnispfad: "Nature discovery trail",
+  walderlebnisroute: "Forest experience route",
+  freilichtmuseum: "Open-air museum",
+  schwimmbad: "Swimming pool",
+  badesee: "Swimming lake",
+  strand: "Family beach",
+  eisbahn: "Ice rink",
+  rodelhuegel: "Sledding hill",
+  freizeitpark: "Theme park",
 
   // ➕ NEU
-  "hoehle": "Cave / rock hike",
-  "felsenwanderung": "Rock hike",
-  "aussichtspunkt": "Scenic viewpoint / panorama",
-  "baumhaus": "Treehouse / lookout hut",
-  "labyrinth": "Maze / labyrinth",
-  "klangpfad": "Nature sound trail",
+  hoehle: "Cave / rock hike",
+  felsenwanderung: "Rock hike",
+  aussichtspunkt: "Scenic viewpoint / panorama",
+  baumhaus: "Treehouse / lookout hut",
+  labyrinth: "Maze / labyrinth",
+  klangpfad: "Nature sound trail",
   "ueberdachter-spielplatz": "Covered playground / rain-safe playground",
   "dirtbike-track": "Dirtbike / youth bike track",
   "streetball-platz": "Streetball / basketball court",
   "waldbaden-ort": "Forest bathing / nature chill spot",
   "natur-aussichtspunkt": "Nature viewpoint",
 
-  "trampolinpark": "Trampoline park",
-  "kletterhalle": "Climbing gym",
+  trampolinpark: "Trampoline park",
+  kletterhalle: "Climbing gym",
   "kletteranlage-outdoor": "Outdoor climbing area",
   "kletterwald-hochseilgarten": "Rope course / climbing forest",
-  "boulderpark": "Bouldering park",
-  "minigolf": "Mini golf",
+  boulderpark: "Bouldering park",
+  minigolf: "Mini golf",
   "wanderweg-kinderwagen": "Stroller-friendly trail",
   "radweg-family": "Family bike route",
-  "familiencafe": "Family café",
+  familiencafe: "Family café",
   "kinder-familiencafe": "Kids & family café",
   "familien-restaurant": "Family restaurant",
   "museum-kinder": "Museum (kids)",
   "kinder-museum": "Children's museum",
-  "kinder_museum": "Children's museum",
-  "bibliothek": "Library",
+  kinder_museum: "Children's museum",
+  bibliothek: "Library",
   "oeffentliche-toilette": "Public toilet",
-  "wickelraum": "Baby changing room",
+  wickelraum: "Baby changing room",
   "familien-event": "Family event",
   "stellplatz-spielplatz-naehe-kostenlos":
     "Free RV spot (near playground)",
@@ -345,13 +342,36 @@ const CATEGORY_LABELS_EN = {
   "bikepacking-spot": "Bikepacking spot",
   "campingplatz-familien": "Family campground",
   "park-garten": "Park / garden",
-  "picknickwiese": "Picnic meadow"
+  picknickwiese: "Picnic meadow"
 };
 
 // ------------------------------------------------------
-// I18N Helper
+// I18N / Text-Helfer
 // ------------------------------------------------------
 
+const HEADER_TAGLINE_TEXT = {
+  de: "Heute ist Zeit für Familie.",
+  en: "Make today a family day."
+};
+
+/** Übersetzungs-Helper (fällt zur Not auf Key zurück) */
+const t = (key) =>
+  typeof I18N !== "undefined" && typeof I18N.t === "function"
+    ? I18N.t(key)
+    : key;
+
+/** Spielideen aus I18N abholen */
+function getRandomPlayIdea() {
+  if (
+    typeof I18N !== "undefined" &&
+    typeof I18N.getRandomPlayIdea === "function"
+  ) {
+    return I18N.getRandomPlayIdea();
+  }
+  return "";
+}
+
+/** Sprache aus LocalStorage / Browser ableiten */
 function getInitialLang() {
   const stored = localStorage.getItem("fs_lang");
   if (stored === LANG_DE || stored === LANG_EN) return stored;
@@ -364,35 +384,10 @@ function getInitialLang() {
   return htmlLang === LANG_EN ? LANG_EN : LANG_DE;
 }
 
-const t = (key) =>
-  typeof I18N !== "undefined" && typeof I18N.t === "function"
-    ? I18N.t(key)
-    : key;
-
-function getRandomPlayIdea() {
-  if (
-    typeof I18N !== "undefined" &&
-    typeof I18N.getRandomPlayIdea === "function"
-  ) {
-    return I18N.getRandomPlayIdea();
-  }
-  return "";
-}
-
-// ------------------------------------------------------
-// Header-Tagline
-// ------------------------------------------------------
-
-const HEADER_TAGLINE_TEXT = {
-  de: "Heute ist Zeit für Familie.",
-  en: "Make today a family day."
-};
-
 function updateHeaderTagline(lang) {
   const el = document.getElementById("header-tagline");
   if (!el) return;
-  const text = HEADER_TAGLINE_TEXT[lang] || HEADER_TAGLINE_TEXT.de;
-  el.textContent = text;
+  el.textContent = HEADER_TAGLINE_TEXT[lang] || HEADER_TAGLINE_TEXT.de;
 }
 
 // ------------------------------------------------------
@@ -402,6 +397,7 @@ function updateHeaderTagline(lang) {
 let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
+// Map / Daten
 let map;
 let markersLayer;
 /** @type {Spot[]} */
@@ -409,15 +405,16 @@ let spots = [];
 /** @type {Spot[]} */
 let filteredSpots = [];
 let favorites = new Set();
+
 /** Toast-Entprellung für Marker-Limit */
 let hasShownMarkerLimitToast = false;
 
+// Filter-States
 let plusActive = false;
-let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
-let travelMode = null; // "everyday" | "trip" | null
-let compassMode = null; // "nearby" | "daytrip" | null
-let radiusStep = 4; // 0–4
-let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
+let moodFilter = null;       // "relaxed" | "action" | "water" | "animals" | null
+let travelMode = null;       // "everyday" | "trip" | null
+let radiusStep = 4;          // 0–4
+let ageFilter = "all";       // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
 let categoryFilter = "";
 let onlyBigAdventures = false;
@@ -456,10 +453,6 @@ let plusStatusTextEl;
 let daylogTextEl;
 let daylogSaveEl;
 let toastEl;
-let plusSectionEl;
-let btnTogglePlusEl;
-let daylogSectionEl;
-let btnToggleDaylogEl;
 
 // Kompass
 let compassSectionEl;
@@ -485,6 +478,11 @@ let lastSpotTriggerEl = null;
 // Utilities
 // ------------------------------------------------------
 
+/**
+ * Einfache Debounce-Hilfsfunktion
+ * @param {Function} fn
+ * @param {number} [delay]
+ */
 function debounce(fn, delay = 200) {
   let timeoutId;
   return (...args) => {
@@ -493,6 +491,7 @@ function debounce(fn, delay = 200) {
   };
 }
 
+/** Keyboard-Helper für Enter/Space-Aktivierung */
 function activateOnEnterSpace(handler) {
   return (event) => {
     if (
@@ -506,9 +505,7 @@ function activateOnEnterSpace(handler) {
   };
 }
 
-/**
- * Wendet statische I18N-Attribute (data-i18n-de/en) auf Textknoten an.
- */
+/** Wendet statische I18N-Attribute (data-i18n-de/en) auf Textknoten an. */
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
     const keyAttr = currentLang === LANG_DE ? "i18n-de" : "i18n-en";
@@ -517,9 +514,7 @@ function applyStaticI18n() {
   });
 }
 
-/**
- * Setzt loading="lazy" für Bilder, falls vom Browser unterstützt.
- */
+/** Setzt loading="lazy" für Bilder, falls vom Browser unterstützt. */
 function initLazyLoadImages() {
   if (!("loading" in HTMLImageElement.prototype)) return;
   document.querySelectorAll("img").forEach((img) => {
@@ -621,8 +616,6 @@ function setLanguage(lang, { initial = false } = {}) {
 
   updateCompassButtonLabel();
   updateCompassUI();
-  updatePlusToggleButtonLabel();
-  updateDaylogToggleButtonLabel();
 
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
@@ -1162,6 +1155,7 @@ function populateCategoryOptions() {
     filterCategoryEl.appendChild(optgroup);
   });
 
+  // „Weitere Kategorien“ aus den Daten heraus sammeln
   const extraSet = new Set();
 
   spots.forEach((spot) => {
@@ -1274,6 +1268,11 @@ function initRadiusSliderA11y() {
 // Filterlogik
 // ------------------------------------------------------
 
+/**
+ * Prüft, ob ein Spot alle aktiven Filter erfüllt.
+ * @param {Spot} spot
+ * @param {{center: any, radiusKm: number}} context
+ */
 function doesSpotMatchFilters(spot, { center, radiusKm }) {
   if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) {
     return false;
@@ -1341,6 +1340,7 @@ function doesSpotMatchFilters(spot, { center, radiusKm }) {
   return true;
 }
 
+/** Filter anwenden und sowohl Liste als auch Marker aktualisieren. */
 function applyFiltersAndRender() {
   if (!spots.length) {
     filteredSpots = [];
@@ -1667,6 +1667,7 @@ function showSpotDetails(spot) {
     tagsEl.appendChild(span);
   });
 
+  // Beschreibung / Adresse / Routen
   if (description) {
     const descEl = document.createElement("p");
     descEl.className = "spot-details-description";
@@ -1706,7 +1707,7 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(routesEl);
   }
 
-  // Header & Meta nur einfügen, wenn es auch Meta-Inhalte gibt
+  // Header & Meta nach oben setzen
   if (metaParts.length) {
     spotDetailEl.insertBefore(metaEl, spotDetailEl.firstChild);
   }
@@ -1753,35 +1754,6 @@ function toggleFavorite(spot) {
 // Kompass
 // ------------------------------------------------------
 
-// Plus- & Mein-Tag-Toggle-Buttons (anzeigen/ausblenden)
-function updatePlusToggleButtonLabel() {
-  if (!FEATURES.plus) return;
-  if (!btnTogglePlusEl || !plusSectionEl) return;
-  const span = btnTogglePlusEl.querySelector("span");
-  if (!span) return;
-  const isOpen = !!plusSectionEl.open;
-  if (currentLang === LANG_DE) {
-    span.textContent = isOpen ? "Ausblenden" : "Anzeigen";
-  } else {
-    span.textContent = isOpen ? "Hide" : "Show";
-  }
-  btnTogglePlusEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
-}
-
-function updateDaylogToggleButtonLabel() {
-  if (!FEATURES.daylog) return;
-  if (!btnToggleDaylogEl || !daylogSectionEl) return;
-  const span = btnToggleDaylogEl.querySelector("span");
-  if (!span) return;
-  const isOpen = !!daylogSectionEl.open;
-  if (currentLang === LANG_DE) {
-    span.textContent = isOpen ? "Ausblenden" : "Anzeigen";
-  } else {
-    span.textContent = isOpen ? "Hide" : "Show";
-  }
-  btnToggleDaylogEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
-}
-
 function updateCompassButtonLabel() {
   if (!FEATURES.compass) return;
   if (!btnToggleCompassEl || !compassSectionEl) return;
@@ -1800,7 +1772,7 @@ function updateCompassUI() {
     return;
   }
 
-  const shouldShow = !!compassMode;
+  const shouldShow = !!travelMode;
   compassApplyBtnEl.classList.toggle("hidden", !shouldShow);
 }
 
@@ -1808,16 +1780,16 @@ function handleCompassApply() {
   if (!FEATURES.compass) return;
   if (!filterRadiusEl) return;
 
-  const mode = compassMode || "nearby";
-  radiusStep = mode === "nearby" ? 1 : 3;
+  // Travel-Mode übersetzt auf Radius-Stufe:
+  // Alltag = kleiner Radius, Unterwegs = größer
+  radiusStep = travelMode === "everyday" || !travelMode ? 1 : 3;
 
   filterRadiusEl.value = String(radiusStep);
   updateRadiusTexts();
   applyFiltersAndRender();
 
   if (tilla && typeof tilla.onCompassApplied === "function") {
-    const appliedTravelMode = mode === "nearby" ? "everyday" : "trip";
-    tilla.onCompassApplied({ travelMode: appliedTravelMode, radiusStep });
+    tilla.onCompassApplied({ travelMode, radiusStep });
   }
 }
 
@@ -2047,7 +2019,7 @@ function handleToggleView() {
 
 function init() {
   try {
-    // DOM-Referenzen
+    // DOM-Referenzen einsammeln
     languageSwitcherEl =
       document.getElementById("language-switcher") ||
       document.getElementById("language-toggle");
@@ -2099,13 +2071,9 @@ function init() {
     plusCodeInputEl = document.getElementById("plus-code-input");
     plusCodeSubmitEl = document.getElementById("plus-code-submit");
     plusStatusTextEl = document.getElementById("plus-status-text");
-    plusSectionEl = document.getElementById("plus-section");
-    btnTogglePlusEl = document.getElementById("btn-toggle-plus");
 
     daylogTextEl = document.getElementById("daylog-text");
     daylogSaveEl = document.getElementById("daylog-save");
-    daylogSectionEl = document.getElementById("daylog-section");
-    btnToggleDaylogEl = document.getElementById("btn-toggle-daylog");
 
     toastEl = document.getElementById("toast");
 
@@ -2129,19 +2097,6 @@ function init() {
     ) {
       btnToggleCompassEl.setAttribute("aria-controls", compassSectionEl.id);
       btnToggleCompassEl.setAttribute("aria-expanded", "false");
-    }
-    if (FEATURES.plus && btnTogglePlusEl && plusSectionEl && plusSectionEl.id) {
-      btnTogglePlusEl.setAttribute("aria-controls", plusSectionEl.id);
-      btnTogglePlusEl.setAttribute("aria-expanded", "false");
-    }
-    if (
-      FEATURES.daylog &&
-      btnToggleDaylogEl &&
-      daylogSectionEl &&
-      daylogSectionEl.id
-    ) {
-      btnToggleDaylogEl.setAttribute("aria-controls", daylogSectionEl.id);
-      btnToggleDaylogEl.setAttribute("aria-expanded", "false");
     }
 
     if (compassSectionEl) {
@@ -2181,10 +2136,12 @@ function init() {
       );
     }
 
+    // Tilla initialisieren
     tilla = new TillaCompanion({
       getText: (key) => t(key)
     });
 
+    // Language-Switcher
     if (languageSwitcherEl) {
       languageSwitcherEl.addEventListener("click", () => {
         const nextLang = currentLang === LANG_DE ? LANG_EN : LANG_DE;
@@ -2192,6 +2149,7 @@ function init() {
       });
     }
 
+    // Theme-Toggle
     if (themeToggleEl) {
       themeToggleEl.addEventListener("click", () => {
         setTheme(currentTheme === THEME_LIGHT ? THEME_DARK : THEME_LIGHT);
@@ -2227,6 +2185,7 @@ function init() {
       });
     }
 
+    // Filter-Events
     if (filterSearchEl) {
       const applySearch = debounce((value) => {
         searchTerm = value.trim();
@@ -2277,6 +2236,7 @@ function init() {
       });
     }
 
+    // Stimmung
     if (FEATURES.moodFilter) {
       document.querySelectorAll(".mood-chip").forEach((chip) => {
         chip.addEventListener("click", () => {
@@ -2299,6 +2259,7 @@ function init() {
       });
     }
 
+    // Reise-Modus
     if (FEATURES.travelMode) {
       document.querySelectorAll(".travel-chip").forEach((chip) => {
         chip.addEventListener("click", () => {
@@ -2328,36 +2289,15 @@ function init() {
         });
       });
     }
-    if (FEATURES.compass) {
-      const compassModeChips = document.querySelectorAll(".compass-mode-chip");
-      compassModeChips.forEach((chip) => {
-        chip.addEventListener("click", () => {
-          const mode = chip.getAttribute("data-compass-mode") || "nearby";
 
-          if (compassMode === mode) {
-            compassMode = null;
-            chip.classList.remove("compass-mode-chip--active");
-            chip.setAttribute("aria-pressed", "false");
-          } else {
-            compassMode = mode;
-            compassModeChips.forEach((c) => {
-              const isActive = c === chip;
-              c.classList.toggle("compass-mode-chip--active", isActive);
-              c.setAttribute("aria-pressed", isActive ? "true" : "false");
-            });
-          }
-
-          updateCompassUI();
-        });
-      });
-    }
-
+    // Filter auf-/zuklappen
     if (btnToggleFiltersEl) {
       btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
       const span = btnToggleFiltersEl.querySelector("span");
       if (span) span.textContent = t("btn_show_filters");
     }
 
+    // „Nur Karte“ / Liste umschalten
     if (btnToggleViewEl) {
       btnToggleViewEl.addEventListener("click", handleToggleView);
       const span = btnToggleViewEl.querySelector("span");
@@ -2365,38 +2305,7 @@ function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    if (FEATURES.plus && btnTogglePlusEl && plusSectionEl) {
-      btnTogglePlusEl.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        plusSectionEl.open = !plusSectionEl.open;
-        updatePlusToggleButtonLabel();
-      });
-
-      plusSectionEl.addEventListener("toggle", () => {
-        updatePlusToggleButtonLabel();
-      });
-
-      updatePlusToggleButtonLabel();
-    }
-
-    if (FEATURES.daylog && btnToggleDaylogEl && daylogSectionEl) {
-      btnToggleDaylogEl.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        daylogSectionEl.open = !daylogSectionEl.open;
-        updateDaylogToggleButtonLabel();
-      });
-
-      daylogSectionEl.addEventListener("toggle", () => {
-        updateDaylogToggleButtonLabel();
-      });
-
-      updateDaylogToggleButtonLabel();
-    }
-
-    // Kompass-Button: Click-Handler, der das Details-Element öffnet/schließt
-    // und beim Öffnen/Schließen das Label aktualisiert
+    // Kompass-Toggle
     if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
       btnToggleCompassEl.addEventListener("click", (event) => {
         event.preventDefault();
@@ -2404,7 +2313,12 @@ function init() {
         handleToggleCompass();
       });
 
+      // initial: hidden, wenn Kompass geschlossen (ist er, da oben open=false gesetzt wurde)
+      btnToggleCompassEl.classList.toggle("hidden", !compassSectionEl.open);
+
       compassSectionEl.addEventListener("toggle", () => {
+        const isOpen = compassSectionEl.open;
+        btnToggleCompassEl.classList.toggle("hidden", !isOpen);
         updateCompassButtonLabel();
       });
 
@@ -2423,6 +2337,7 @@ function init() {
       compassApplyBtnEl.addEventListener("click", handleCompassApply);
     }
 
+    // Spielideen
     if (FEATURES.playIdeas && playIdeasBtnEl) {
       playIdeasBtnEl.addEventListener("click", () => {
         const idea = getRandomPlayIdea();
@@ -2444,6 +2359,7 @@ function init() {
       });
     }
 
+    // Close-Buttons (Plus / Daylog / ggf. weitere Sections)
     document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
       const targetId = btn.getAttribute("data-target");
       let section = null;
@@ -2471,6 +2387,7 @@ function init() {
     loadDaylogFromStorage();
     initLazyLoadImages(); // Performance bei Bildern
 
+    // ESC schließt Spot-Details
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
       if (!spotDetailEl) return;
