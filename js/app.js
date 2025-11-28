@@ -81,6 +81,11 @@ import {
  */
 
 // ------------------------------------------------------
+// Konstanten & Feature-Toggles
+// (ausgelagert nach js/config.js)
+// ------------------------------------------------------
+
+// ------------------------------------------------------
 // I18N / Text-Helfer
 // ------------------------------------------------------
 
@@ -153,7 +158,6 @@ let onlyFavorites = false;
 let filtersCollapsed = true;
 
 // DOM-Referenzen
-let skipToMapBtnEl;           // ⬅️ NEU: Button "Direkt zur Karte springen"
 let languageSwitcherEl;
 let themeToggleEl;
 let btnLocateEl;
@@ -578,9 +582,7 @@ function initMap() {
   map = L.map("map", {
     center: DEFAULT_MAP_CENTER,
     zoom: DEFAULT_MAP_ZOOM,
-    zoomControl: false,
-    // Canvas ist für viele Marker oft performanter
-    preferCanvas: true
+    zoomControl: false
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -589,13 +591,7 @@ function initMap() {
   }).addTo(map);
 
   if (typeof L.markerClusterGroup === "function") {
-    // Marker werden in Chunks aufgebaut, damit der Main-Thread nicht blockiert
-    markersLayer = L.markerClusterGroup({
-      chunkedLoading: true,
-      chunkDelay: 50,
-      chunkInterval: 200,
-      maxClusterRadius: 60
-    });
+    markersLayer = L.markerClusterGroup();
   } else {
     console.warn(
       "[Family Spots] markerClusterGroup nicht gefunden – nutze normale LayerGroup."
@@ -1221,44 +1217,11 @@ function renderMarkers() {
 
   if (!filteredSpots || !filteredSpots.length) return;
 
-  // 1. Sichtbaren Kartenausschnitt ermitteln (mit kleinem Puffer)
-  let bounds = null;
-  if (map && typeof map.getBounds === "function") {
-    try {
-      bounds = map.getBounds().pad(0.25); // 25 % Puffer um den Viewport
-    } catch {
-      bounds = null;
-    }
-  }
-
-  /** @type {Spot[]} */
-  let candidates = filteredSpots;
-
-  // 2. Wenn wir Bounds haben: nur Spots im sichtbaren Bereich berücksichtigen
-  if (bounds && typeof L !== "undefined" && typeof L.latLng === "function") {
-    const inView = [];
-
-    for (const spot of filteredSpots) {
-      if (!hasValidLatLng(spot)) continue;
-      const latLng = L.latLng(spot.lat, spot.lng);
-      if (bounds.contains(latLng)) {
-        inView.push(spot);
-      }
-    }
-
-    // Fallback: wenn im aktuellen Ausschnitt gar nichts ist, nimm einfach alle
-    if (inView.length > 0) {
-      candidates = inView;
-    }
-  }
-
-  // 3. Marker-Anzahl begrenzen (für sehr viele Spots)
-  const shouldLimit = candidates.length > MAX_MARKERS_RENDER;
+  const shouldLimit = filteredSpots.length > MAX_MARKERS_RENDER;
   const toRender = shouldLimit
-    ? candidates.slice(0, MAX_MARKERS_RENDER)
-    : candidates;
+    ? filteredSpots.slice(0, MAX_MARKERS_RENDER)
+    : filteredSpots;
 
-  // 4. Marker aus Kandidaten bauen (Leaflet + MarkerCluster kümmern sich um Chunks)
   toRender.forEach((spot) => {
     if (!hasValidLatLng(spot)) return;
     if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
@@ -1287,14 +1250,13 @@ function renderMarkers() {
     markersLayer.addLayer(marker);
   });
 
-  // 5. Toast für Marker-Limit
   if (shouldLimit) {
     if (!hasShownMarkerLimitToast) {
       hasShownMarkerLimitToast = true;
       const msg =
         currentLang === LANG_DE
-          ? `Nur die ersten ${MAX_MARKERS_RENDER} Spots im aktuellen Kartenausschnitt – bitte Filter oder Zoom nutzen.`
-          : `Only the first ${MAX_MARKERS_RENDER} spots are shown in the current map view – please use filters or zoom in.`;
+          ? `Nur die ersten ${MAX_MARKERS_RENDER} Spots auf der Karte – bitte Filter oder Zoom nutzen.`
+          : `Only the first ${MAX_MARKERS_RENDER} spots are shown on the map – please use filters or zoom in.`;
       showToast(msg);
     }
   } else {
@@ -1885,8 +1847,6 @@ function handleToggleView() {
 function init() {
   try {
     // DOM-Referenzen einsammeln
-    skipToMapBtnEl = document.getElementById("skip-to-map");   // ⬅️ NEU
-
     languageSwitcherEl =
       document.getElementById("language-switcher") ||
       document.getElementById("language-toggle");
@@ -2056,45 +2016,6 @@ function init() {
       bottomNavAboutBtn.addEventListener("click", () => {
         switchRoute("about");
       });
-    }
-
-    // ⬇️ NEU: Skip-to-Map Button
-    if (skipToMapBtnEl) {
-      const activateSkipToMap = () => {
-        // Sicherstellen, dass die Karten-Ansicht aktiv ist
-        switchRoute("map");
-
-        // Scroll zum Karten-Bereich – leicht verzögert, damit das Layout steht
-        window.setTimeout(() => {
-          const mapSection =
-            document.querySelector(".map-section") ||
-            document.getElementById("map") ||
-            document.getElementById("view-map");
-
-          if (!mapSection) return;
-
-          const prefersReducedMotion =
-            window.matchMedia &&
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-          mapSection.scrollIntoView({
-            behavior: prefersReducedMotion ? "auto" : "smooth",
-            block: "start"
-          });
-        }, 60);
-      };
-
-      skipToMapBtnEl.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        activateSkipToMap();
-      });
-
-      skipToMapBtnEl.addEventListener(
-        "keydown",
-        activateOnEnterSpace(() => {
-          activateSkipToMap();
-        })
-      );
     }
 
     // Filter-Events
