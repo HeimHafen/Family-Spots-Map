@@ -175,12 +175,10 @@
                 data-i18n-en="Family Compass">
                 Familien-Kompass
               </h2>
-              <!-- optisch wie Button, jetzt aber per role & tabindex tastaturbedienbar -->
+              <!-- kein interaktives Element mehr im summary -->
               <span
                 id="btn-toggle-compass"
-                class="btn-ghost btn-small"
-                role="button"
-                tabindex="0">
+                class="btn-ghost btn-small">
                 <span
                   data-i18n-de="Kompass anzeigen"
                   data-i18n-en="Show compass">
@@ -514,12 +512,10 @@
         <details class="sidebar-section" id="plus-section">
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title">Family Spots Plus</h2>
-            <!-- optisch wie Button, jetzt aber per role & tabindex tastaturbedienbar -->
+            <!-- kein Button mehr im summary -->
             <span
               id="btn-toggle-plus"
-              class="btn-ghost btn-small"
-              role="button"
-              tabindex="0">
+              class="btn-ghost btn-small">
               <span
                 data-i18n-de="Anzeigen"
                 data-i18n-en="Show">
@@ -568,12 +564,10 @@
               data-i18n-en="My day 💛">
               Mein Tag 💛
             </h2>
-            <!-- optisch wie Button, jetzt aber per role & tabindex tastaturbedienbar -->
+            <!-- kein Button mehr im summary -->
             <span
               id="btn-toggle-daylog"
-              class="btn-ghost btn-small"
-              role="button"
-              tabindex="0">
+              class="btn-ghost btn-small">
               <span
                 data-i18n-de="Anzeigen"
                 data-i18n-en="Show">
@@ -730,7 +724,7 @@
   </div>
 
   <!-- Landscape-Warnung für Mobile Landscape -->
-  <div class="landscape-warning" aria-live="polite">
+  <div class="landscape-warning" aria-live="polite" aria-hidden="true">
     Bitte Gerät drehen 📱🔄 – im Hochformat macht die Family Spots Map mehr Freude.
   </div>
 
