@@ -175,18 +175,16 @@
                 data-i18n-en="Family Compass">
                 Familien-Kompass
               </h2>
-              <button
+              <!-- kein interaktives Element mehr im summary -->
+              <span
                 id="btn-toggle-compass"
-                class="btn-ghost btn-small"
-                type="button"
-                aria-controls="compass-section"
-                aria-expanded="false">
+                class="btn-ghost btn-small">
                 <span
                   data-i18n-de="Kompass anzeigen"
                   data-i18n-en="Show compass">
                   Kompass anzeigen
                 </span>
-              </button>
+              </span>
             </summary>
             <div class="compass-card" aria-labelledby="compass-label">
               <p
@@ -442,8 +440,7 @@
                   max="4"
                   step="1"
                   value="4"
-                  aria-label="Micro-Abenteuer-Radius"
-                  aria-describedby="filter-radius-helper filter-radius-description" />
+                  aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description" />
                 <span
                   id="filter-radius-max-label"
                   class="radius-max-label"
@@ -515,18 +512,16 @@
         <details class="sidebar-section" id="plus-section">
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title">Family Spots Plus</h2>
-            <button
+            <!-- kein Button mehr im summary -->
+            <span
               id="btn-toggle-plus"
-              class="btn-ghost btn-small"
-              type="button"
-              aria-controls="plus-section"
-              aria-expanded="false">
+              class="btn-ghost btn-small">
               <span
                 data-i18n-de="Anzeigen"
                 data-i18n-en="Show">
                 Anzeigen
               </span>
-            </button>
+            </span>
           </summary>
           <div class="filter-group">
             <p
@@ -569,18 +564,16 @@
               data-i18n-en="My day 💛">
               Mein Tag 💛
             </h2>
-            <button
+            <!-- kein Button mehr im summary -->
+            <span
               id="btn-toggle-daylog"
-              class="btn-ghost btn-small"
-              type="button"
-              aria-controls="daylog-section"
-              aria-expanded="false">
+              class="btn-ghost btn-small">
               <span
                 data-i18n-de="Anzeigen"
                 data-i18n-en="Show">
                 Anzeigen
               </span>
-            </button>
+            </span>
           </summary>
           <div class="filter-group">
             <label
