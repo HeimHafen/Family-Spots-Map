@@ -1,18 +1,13 @@
 {
-  "id": "./",
   "name": "Family Spots Map",
   "short_name": "Family Spots",
-  "description": "Family Spots Map: Spielplätze, Zoos, Wildparks, Wasser-Spots & mehr – für entspannte Familienabenteuer.",
-  "start_url": "./?source=pwa",
-  "scope": "./",
+  "start_url": "./index.html",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
-  "background_color": "#f3f5f7",
-  "theme_color": "#f3f5f7",
-  "dir": "ltr",
-  "lang": "de-DE",
+  "background_color": "#f7f8fb",
+  "theme_color": "#14b8c4",
+  "lang": "de",
   "orientation": "portrait-primary",
-  "categories": ["travel", "navigation", "kids", "family"],
+  "scope": "./",
   "icons": [
     {
       "src": "assets/icons/icon-192.png",
@@ -37,6 +32,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "assets/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
