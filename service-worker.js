@@ -1,6 +1,6 @@
 // service-worker.js
 
-const CACHE_VERSION = "6";
+const CACHE_VERSION = "7";
 const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
