@@ -67,11 +67,14 @@
     </div>
   </noscript>
 
+  <!-- Skip-Link für Screenreader & Tastatur -->
+  <a href="#app-main" class="skip-link">Direkt zum Inhalt springen</a>
+
   <div class="app">
     <!-- =========================================
          HEADER
          ========================================= -->
-    <header class="app-header">
+    <header class="app-header" role="banner">
       <div class="app-header-top">
         <div class="app-header-left">
           <span class="sr-only" id="language-switcher-label">Sprache wechseln</span>
@@ -79,7 +82,9 @@
             id="language-switcher"
             class="language-switcher"
             type="button"
-            aria-labelledby="language-switcher language-switcher-label">
+            aria-labelledby="language-switcher language-switcher-label"
+            aria-pressed="true"
+            data-lang="de">
             DE
           </button>
         </div>
@@ -112,7 +117,7 @@
     <!-- =========================================
          MAIN
          ========================================= -->
-    <main class="app-main">
+    <main class="app-main" id="app-main" role="main">
       <!-- =======================
            MAP VIEW
            ======================= -->
