@@ -1,7 +1,7 @@
 // service-worker.js
 
 // Version hochzählen, wenn du etwas am SW änderst
-const CACHE_VERSION = "21";
+const CACHE_VERSION = "22";
 const CACHE_NAME = `family-spots-map-v${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
