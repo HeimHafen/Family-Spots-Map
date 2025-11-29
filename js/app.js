@@ -143,7 +143,7 @@ let hasShownMarkerLimitToast = false;
 let plusActive = false;
 let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
 let travelMode = null; // "everyday" | "trip" | null
-let radiusStep = RADIUS_STEPS_KM.length - 1; // Standard: größter Schritt
+let radiusStep = 4; // 0–4
 let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
 let categoryFilter = "";
@@ -275,8 +275,11 @@ function getCategoryLabel(slug) {
   const fallbackMap =
     currentLang === LANG_EN ? CATEGORY_LABELS_DE : CATEGORY_LABELS_EN;
 
-  const raw = langMap[slug] || fallbackMap[slug] || slug;
-  return raw.replace(/[_-]/g, " ").trim();
+  return (
+    langMap[slug] ||
+    fallbackMap[slug] ||
+    slug.replace(/[_-]/g, " ")
+  );
 }
 
 function updateLanguageSwitcherVisual() {
@@ -621,7 +624,7 @@ function showSpotsLoadErrorUI() {
   spotListEl.innerHTML = "";
 
   const msg = document.createElement("p");
-  msg.className = "filter-group-helper";
+  msg.className = "spot-list-empty";
   msg.textContent =
     currentLang === LANG_DE
       ? "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut."
@@ -1037,20 +1040,17 @@ function updateRadiusTexts() {
     return;
 
   let value = parseInt(filterRadiusEl.value, 10);
-  const lastIndex = RADIUS_STEPS_KM.length - 1;
-
   if (Number.isNaN(value)) {
-    value = lastIndex;
+    value = 4;
   }
-
   // Clamping: Slider darf niemals außerhalb der definierten Schritte landen
-  value = Math.min(Math.max(value, 0), lastIndex);
+  value = Math.min(Math.max(value, 0), RADIUS_STEPS_KM.length - 1);
   radiusStep = value;
 
   filterRadiusEl.value = String(radiusStep);
   filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
 
-  if (radiusStep === lastIndex) {
+  if (radiusStep === 4) {
     filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label");
     filterRadiusDescriptionEl.textContent = t("filter_radius_description_all");
   } else {
@@ -1068,8 +1068,7 @@ function initRadiusSliderA11y() {
   if (!filterRadiusEl) return;
 
   const min = filterRadiusEl.min || "0";
-  const max =
-    filterRadiusEl.max || String(RADIUS_STEPS_KM.length - 1);
+  const max = filterRadiusEl.max || String(RADIUS_STEPS_KM.length - 1);
 
   if (!filterRadiusEl.value) {
     filterRadiusEl.value = max;
@@ -1267,7 +1266,7 @@ function renderSpotList() {
 
   if (!filteredSpots.length) {
     const msg = document.createElement("p");
-    msg.className = "filter-group-helper";
+    msg.className = "spot-list-empty";
     msg.textContent =
       currentLang === LANG_DE
         ? "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus."
@@ -1609,8 +1608,7 @@ function handleCompassApply() {
 
   // Travel-Mode übersetzt auf Radius-Stufe:
   // Alltag = kleiner Radius, Unterwegs = größer
-  radiusStep =
-    travelMode === "everyday" || !travelMode ? 1 : 3;
+  radiusStep = travelMode === "everyday" || !travelMode ? 1 : 3;
 
   filterRadiusEl.value = String(radiusStep);
   updateRadiusTexts();
@@ -1954,13 +1952,13 @@ function init() {
         });
       }
 
-      const handleMapChanged = debounce(() => {
-        applyFiltersAndRender();
-      }, 200);
-
       // Performance-freundliches Nachladen bei Kartenbewegung / Zoom
-      map.on("moveend", handleMapChanged);
-      map.on("zoomend", handleMapChanged);
+      map.on(
+        "moveend zoomend",
+        debounce(() => {
+          applyFiltersAndRender();
+        }, 200)
+      );
 
       // Map bei Fenster-Resize sauber neu berechnen
       window.addEventListener(
