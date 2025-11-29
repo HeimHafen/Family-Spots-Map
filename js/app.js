@@ -81,11 +81,6 @@ import {
  */
 
 // ------------------------------------------------------
-// Konstanten & Feature-Toggles
-// (ausgelagert nach js/config.js)
-// ------------------------------------------------------
-
-// ------------------------------------------------------
 // I18N / Text-Helfer
 // ------------------------------------------------------
 
@@ -1431,6 +1426,7 @@ function showSpotDetails(spot) {
   spotDetailEl.innerHTML = "";
   spotDetailEl.classList.remove("spot-details--hidden");
 
+  // Header mit Titel, optionalem Subtitle und Actions
   const headerEl = document.createElement("div");
   headerEl.className = "spot-details-header";
 
@@ -1439,6 +1435,7 @@ function showSpotDetails(spot) {
   const titleEl = document.createElement("h3");
   titleEl.className = "spot-details-title";
   titleEl.textContent = name;
+  titleWrapperEl.appendChild(titleEl);
 
   if (subtitle && !addressText) {
     const subtitleEl = document.createElement("p");
@@ -1446,8 +1443,6 @@ function showSpotDetails(spot) {
     subtitleEl.textContent = subtitle;
     titleWrapperEl.appendChild(subtitleEl);
   }
-
-  titleWrapperEl.insertBefore(titleEl, titleWrapperEl.firstChild);
 
   const actionsEl = document.createElement("div");
   actionsEl.className = "spot-details-actions";
@@ -1471,12 +1466,12 @@ function showSpotDetails(spot) {
   closeBtn.addEventListener("click", () => {
     closeSpotDetails({ returnFocus: true });
   });
-
   actionsEl.appendChild(closeBtn);
 
   headerEl.appendChild(titleWrapperEl);
   headerEl.appendChild(actionsEl);
 
+  // Meta-Badges
   const metaEl = document.createElement("div");
   metaEl.className = "spot-details-meta";
   metaParts.forEach((p) => {
@@ -1485,6 +1480,7 @@ function showSpotDetails(spot) {
     metaEl.appendChild(span);
   });
 
+  // Tags
   const tagsEl = document.createElement("div");
   tagsEl.className = "spot-details-tags";
   tags.forEach((tag) => {
@@ -1494,7 +1490,12 @@ function showSpotDetails(spot) {
     tagsEl.appendChild(span);
   });
 
-  // Beschreibung / Adresse / Routen
+  // Zusammenbauen in logischer Reihenfolge
+  spotDetailEl.appendChild(headerEl);
+  if (metaParts.length) {
+    spotDetailEl.appendChild(metaEl);
+  }
+
   if (description) {
     const descEl = document.createElement("p");
     descEl.className = "spot-details-description";
@@ -1534,14 +1535,13 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(routesEl);
   }
 
-  // Header & Meta nach oben setzen
-  if (metaParts.length) {
-    spotDetailEl.insertBefore(metaEl, spotDetailEl.firstChild);
-  }
-  spotDetailEl.insertBefore(headerEl, spotDetailEl.firstChild);
-
   if (tags.length) {
     spotDetailEl.appendChild(tagsEl);
+  }
+
+  // Scroll-Position zurücksetzen, falls Panel bereits gescrollt war
+  if (typeof spotDetailEl.scrollTop === "number") {
+    spotDetailEl.scrollTop = 0;
   }
 }
 
@@ -2138,13 +2138,19 @@ function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    // Kompass-Toggle-Button – Label & aria-expanded sauber synchron
+    // Kompass-Toggle-Button – Label & aria-expanded sauber synchron + Keyboard
     if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
-      btnToggleCompassEl.addEventListener("click", (event) => {
+      const toggleCompassHandler = (event) => {
         event.preventDefault();
         event.stopPropagation();
         handleToggleCompass();
-      });
+      };
+
+      btnToggleCompassEl.addEventListener("click", toggleCompassHandler);
+      btnToggleCompassEl.addEventListener(
+        "keydown",
+        activateOnEnterSpace(toggleCompassHandler)
+      );
 
       compassSectionEl.addEventListener("toggle", () => {
         updateCompassButtonLabel();
@@ -2153,16 +2159,23 @@ function init() {
       updateCompassButtonLabel();
     }
 
-    // Plus-Section Toggle („Anzeigen / Ausblenden“)
+    // Plus-Section Toggle („Anzeigen / Ausblenden“) + Keyboard
     if (plusSectionEl && btnTogglePlusEl) {
       btnTogglePlusEl.setAttribute("aria-controls", plusSectionEl.id);
-      btnTogglePlusEl.addEventListener("click", (event) => {
+
+      const togglePlusHandler = (event) => {
         event.preventDefault();
         const isOpen = !plusSectionEl.open;
         plusSectionEl.open = isOpen;
         updateGenericSectionToggleLabel(btnTogglePlusEl, isOpen);
         markCompassPlusHintSeenAndRemove();
-      });
+      };
+
+      btnTogglePlusEl.addEventListener("click", togglePlusHandler);
+      btnTogglePlusEl.addEventListener(
+        "keydown",
+        activateOnEnterSpace(togglePlusHandler)
+      );
 
       plusSectionEl.addEventListener("toggle", () => {
         updateGenericSectionToggleLabel(btnTogglePlusEl, plusSectionEl.open);
@@ -2171,16 +2184,23 @@ function init() {
       updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
     }
 
-    // Mein Tag – Toggle („Anzeigen / Ausblenden“)
+    // Mein Tag – Toggle („Anzeigen / Ausblenden“) + Keyboard
     if (daylogSectionEl && btnToggleDaylogEl) {
       btnToggleDaylogEl.setAttribute("aria-controls", daylogSectionEl.id);
-      btnToggleDaylogEl.addEventListener("click", (event) => {
+
+      const toggleDaylogHandler = (event) => {
         event.preventDefault();
         const isOpen = !daylogSectionEl.open;
         daylogSectionEl.open = isOpen;
         updateGenericSectionToggleLabel(btnToggleDaylogEl, isOpen);
         markCompassPlusHintSeenAndRemove();
-      });
+      };
+
+      btnToggleDaylogEl.addEventListener("click", toggleDaylogHandler);
+      btnToggleDaylogEl.addEventListener(
+        "keydown",
+        activateOnEnterSpace(toggleDaylogHandler)
+      );
 
       daylogSectionEl.addEventListener("toggle", () => {
         updateGenericSectionToggleLabel(
@@ -2303,3 +2323,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   init();
+});
