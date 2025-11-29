@@ -74,19 +74,48 @@
     <header class="app-header">
       <div class="app-header-top">
         <div class="app-header-left">
-          <span class="sr-only" id="language-switcher-label">Sprache wechseln</span>
+          <span
+            class="sr-only"
+            id="language-switcher-label"
+            data-i18n-de="Sprache wechseln"
+            data-i18n-en="Change language">
+            Sprache wechseln
+          </span>
           <button
             id="language-switcher"
             class="language-switcher"
-            type="button">
+            type="button"
+            aria-labelledby="language-switcher-label">
             DE
           </button>
         </div>
         <div class="app-header-right">
-          <button id="theme-toggle" class="btn-icon" type="button" aria-label="Hell/Dunkel-Modus wechseln">
+          <span
+            class="sr-only"
+            id="theme-toggle-label"
+            data-i18n-de="Designmodus wechseln"
+            data-i18n-en="Switch color theme">
+            Designmodus wechseln
+          </span>
+          <button
+            id="theme-toggle"
+            class="btn-icon"
+            type="button"
+            aria-labelledby="theme-toggle-label">
             🌓
           </button>
-          <button id="btn-locate" class="btn-icon" type="button" aria-label="Eigenen Standort auf der Karte anzeigen">
+          <span
+            class="sr-only"
+            id="btn-locate-label"
+            data-i18n-de="Eigenen Standort auf der Karte anzeigen"
+            data-i18n-en="Center map on your location">
+            Eigenen Standort auf der Karte anzeigen
+          </span>
+          <button
+            id="btn-locate"
+            class="btn-icon"
+            type="button"
+            aria-labelledby="btn-locate-label">
             📍
           </button>
         </div>
@@ -136,7 +165,7 @@
               <div class="tilla-sidebar-avatar">
                 <img
                   src="assets/tilla/tilla-hero.png"
-                  alt="Tilla, eure Schildkröten-Begleiterin"
+                  alt="Tilla die Schildkröte – eure Familienbegleiterin"
                   loading="lazy"
                   decoding="async" />
               </div>
