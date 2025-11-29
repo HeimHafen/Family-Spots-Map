@@ -1,14 +1,16 @@
 {
   "meta_title": "Family Spots Map – The most beautiful map for family adventures",
   "meta_description": "Family Spots Map is the most beautiful map for family adventures.",
+
   "error_data_load": "Oops – we couldn’t load the data just now. Please try again in a moment.",
+
   "btn_help_aria": "Show help and information",
   "label_language_switcher": "Change language",
-  "btn_theme_toggle_aria": "Toggle theme mode",
-  "btn_locate_aria": "Center on your location",
+  "btn_theme_toggle_aria": "Switch color theme",
+  "btn_locate_aria": "Center on my location",
   "alt_tilla_image": "Tilla the turtle – your family companion",
 
-  "header_tagline": "Discover small adventures – close to home or on the road",
+  "header_tagline": "Discover small adventures – nearby or on the way",
 
   "btn_show_compass": "Show compass",
   "btn_hide_compass": "Hide compass",
@@ -23,36 +25,36 @@
   "btn_show_list": "Show list",
 
   "toast_location_ok": "Your location is set – enjoy your next adventure! 🌍",
-  "toast_location_error": "We can’t determine your location right now. Location access may be blocked or you’re offline.",
-  "toast_fav_added": "Added to your favourite spots 💛",
+  "toast_location_error": "We can’t access your location right now. Location might be blocked or you’re offline.",
+  "toast_fav_added": "Saved to your favourite spots 💛",
   "toast_fav_removed": "Removed from your favourite spots.",
 
   "filter_category_all": "All categories",
 
-  "plus_code_empty": "Please enter an action code first.",
+  "plus_code_empty": "Please enter an activation code first.",
   "plus_code_unknown": "This code is unknown or no longer valid.",
-  "plus_code_activated": "Family Spots Plus has been activated – have a great trip and enjoy your tours!",
-  "plus_code_failed": "The code couldn’t be checked just now. Please try again later.",
+  "plus_code_activated": "Family Spots Plus has been activated – have a safe trip & lots of fun on your tours!",
+  "plus_code_failed": "The code couldn’t be checked right now. Please try again later.",
 
   "filter_radius_max_label": "All spots",
   "filter_radius_description_step0": "Mini micro-adventures within walking distance – perfect for a short break.",
-  "filter_radius_description_step1": "Short trips by bike or car – easy to reach and easy to get back home.",
-  "filter_radius_description_step2": "A small family outing – just right for a half day full of experiences.",
-  "filter_radius_description_step3": "Big adventure radius – here you’ll find destinations for full day trips.",
+  "filter_radius_description_step1": "Short trips by bike or car – easy to get there and back.",
+  "filter_radius_description_step2": "A small family outing – just right for half a day of experiences.",
+  "filter_radius_description_step3": "Big adventure radius – great for full-day trips.",
   "filter_radius_description_all": "All spots – no radius limit. The map is all yours.",
 
   "turtle_intro_1": "Hi, I’m Tilla – your turtle companion for relaxed family adventures!",
-  "turtle_intro_2": "Right now I can’t find a fitting spot. Maybe a little walk nearby is perfect today – or you turn the radius up a bit. 🐢",
-  "turtle_after_daylog_save": "So nice that you’re capturing your day. These little notes become big memories later. 💛",
+  "turtle_intro_2": "Right now I can’t find a matching spot. Maybe a short walk nearby fits today – or you increase the adventure radius a bit. 🐢",
+  "turtle_after_daylog_save": "Nice that you’re capturing your day. These small notes become big memories later. 💛",
   "turtle_after_fav_added": "You’re saving this place – a little gem on your family map. ⭐",
-  "turtle_after_fav_removed": "All good – some places only fit certain phases. I’ll help you discover new ones. 🐢",
-  "turtle_trip_mode": "You’re on the road – I’ll keep an eye out for good stopovers for you. 🚐",
-  "turtle_everyday_mode": "Everyday life can be light too. Let’s see what nearby can bring a smile today. 🌿",
-  "turtle_plus_activated": "Family Spots Plus is active – now I can also discover rest areas, RV spots and campgrounds for you. ✨",
-  "turtle_compass_everyday": "I’ve set the radius to match your everyday mood – we’ll stay close to home. 🌿",
-  "turtle_compass_trip": "Compass set – I’m now looking in a wider radius for good stopovers on your trip. 🚐",
+  "turtle_after_fav_removed": "That’s okay – some places fit only in certain phases. I’ll help you find new ones. 🐢",
+  "turtle_trip_mode": "You’re on the road – I’ll keep an eye out for good stopovers. 🚐",
+  "turtle_everyday_mode": "Everyday life can feel light too. Let’s see what nearby place might make you smile. 🌿",
+  "turtle_plus_activated": "Family Spots Plus is active – I can now discover service areas, RV spots and campgrounds for you. ✨",
+  "turtle_compass_everyday": "I’ve set the radius to your everyday mood – we’ll stay close to home. 🌿",
+  "turtle_compass_trip": "Compass set – I’m now looking in a wider radius for good stops on your route. 🚐",
 
-  "daylog_saved": "Your daily moment is saved 💾 – you can look back on it later.",
+  "daylog_saved": "Your day’s moment has been saved 💾 – you can look back on it later.",
 
   "nav_map": "Map",
   "nav_about": "About Family Spots Map",
