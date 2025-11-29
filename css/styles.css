@@ -1,5 +1,5 @@
 /* =========================================
-   FAMILY SPOTS MAP – STYLES (CALM GREEN REFINED)
+   FAMILY SPOTS MAP – STYLES (CALM GREEN MEGA)
    ========================================= */
 
 /* iOS Safari Fix + Styling für <select> */
@@ -354,6 +354,7 @@ textarea.input:focus-visible {
 }
 
 .header-title:focus-visible {
+  /* Kein Fokusrahmen um "Family Spots Map" – Fokus wird nur per JS dort gesetzt */
   outline: none;
   box-shadow: none;
 }
@@ -438,10 +439,12 @@ textarea.input:focus-visible {
     inset 0 0 0 1px var(--sidebar-section-border);
 }
 
+/* globaler Abstand übereinanderliegende Cards */
 .sidebar-section + .sidebar-section {
   margin-top: 10px;
 }
 
+/* in der Sidebar übernimmt gap den Abstand */
 .sidebar > .sidebar-section + .sidebar-section {
   margin-top: 0;
 }
@@ -455,6 +458,7 @@ textarea.input:focus-visible {
   margin-top: 14px;
 }
 
+/* plus-section ↔ daylog-section explizit ebenfalls 14px */
 #plus-section + #daylog-section {
   margin-top: 14px;
 }
@@ -543,6 +547,7 @@ textarea.input:focus-visible {
   color: var(--text-soft);
 }
 
+/* Abstand für Filter-Toggle-Button & mehr Luft über Helper-Text */
 #btn-toggle-filters {
   margin-bottom: 1rem;
 }
@@ -735,7 +740,7 @@ select.input:focus {
   gap: 6px;
   margin-top: 8px;
   max-width: 100%;
-  white-space: normal;
+  white-space: normal; /* darf umbrechen, damit der Button auf Mobile nicht zu breit wird */
 }
 
 @media (max-width: 480px) {
@@ -962,7 +967,9 @@ select.input:focus {
   gap: 12px;
   padding: 10px 12px;
   border-radius: 22px;
-  background: var(--card-bg);
+  background:
+    radial-gradient(circle at top left, rgba(230, 244, 236, 0.95) 0, transparent 55%),
+    var(--card-bg);
   box-shadow:
     var(--card-shadow),
     inset 0 0 0 1px var(--card-border);
@@ -982,7 +989,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 110px;
+  width: 110px; /* etwas größer als vorher */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
