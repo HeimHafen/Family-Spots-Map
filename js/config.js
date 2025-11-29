@@ -240,7 +240,7 @@ export const CATEGORY_LABELS_DE = {
 
 export const CATEGORY_LABELS_EN = {
   spielplatz: "Playground",
-  abenteuersspielplatz: "Adventure playground",
+  abenteuerspielplatz: "Adventure playground",
   "indoor-spielplatz": "Indoor playground",
   waldspielplatz: "Forest playground",
   wasserspielplatz: "Water playground",
