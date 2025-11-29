@@ -81,6 +81,11 @@ import {
  */
 
 // ------------------------------------------------------
+// Konstanten & Feature-Toggles
+// (ausgelagert nach js/config.js)
+// ------------------------------------------------------
+
+// ------------------------------------------------------
 // I18N / Text-Helfer
 // ------------------------------------------------------
 
@@ -787,37 +792,23 @@ function hasValidLatLng(spot) {
 }
 
 /**
- * Meta-Info zu einem Spot zentral berechnen (für Badges).
+ * Meta-Info zu einem Spot zentral berechnen.
  * @param {Spot} spot
- * @returns {{type: "category"|"verified"|"time", label: string}[]}
+ * @returns {string[]}
  */
 function getSpotMetaParts(spot) {
   const parts = [];
-
-  if (spot.category) {
-    parts.push({
-      type: "category",
-      label: getCategoryLabel(spot.category)
-    });
-  }
-
+  if (spot.category) parts.push(getCategoryLabel(spot.category));
   if (isSpotVerified(spot)) {
-    parts.push({
-      type: "verified",
-      label: currentLang === LANG_DE ? "Verifiziert" : "Verified"
-    });
+    parts.push(currentLang === LANG_DE ? "verifiziert" : "verified");
   }
-
   if (spot.visit_minutes) {
-    parts.push({
-      type: "time",
-      label:
-        currentLang === LANG_DE
-          ? `~${spot.visit_minutes} Min.`
-          : `~${spot.visit_minutes} min`
-    });
+    parts.push(
+      currentLang === LANG_DE
+        ? `~${spot.visit_minutes} Min.`
+        : `~${spot.visit_minutes} min`
+    );
   }
-
   return parts;
 }
 
@@ -1308,18 +1299,27 @@ function renderSpotList() {
     subtitleEl.className = "spot-card-subtitle";
     subtitleEl.textContent = subtitleText;
 
+    const metaEl = document.createElement("p");
+    metaEl.className = "spot-card-meta";
+
+    const metaParts = getSpotMetaParts(spot);
+    if (Array.isArray(spot.tags)) {
+      metaParts.push(spot.tags.join(", "));
+    }
+    metaEl.textContent = metaParts.join(" · ");
+
     const headerRow = document.createElement("div");
-    headerRow.className = "spot-card-header";
+    headerRow.style.display = "flex";
+    headerRow.style.alignItems = "center";
+    headerRow.style.justifyContent = "space-between";
+    headerRow.style.gap = "8px";
+
     headerRow.appendChild(titleEl);
 
     if (FEATURES.favorites) {
       const favBtn = document.createElement("button");
       favBtn.type = "button";
-      favBtn.className = "spot-card-favorite";
-
-      const iconSpan = document.createElement("span");
-      iconSpan.className = "spot-card-fav-icon";
-      favBtn.appendChild(iconSpan);
+      favBtn.className = "btn-ghost btn-small";
 
       syncFavButtonState(favBtn, spotId);
 
@@ -1334,43 +1334,7 @@ function renderSpotList() {
 
     card.appendChild(headerRow);
     if (subtitleText) card.appendChild(subtitleEl);
-
-    const metaParts = getSpotMetaParts(spot);
-
-    // Badges-Zeile: Kategorie + Verifiziert + Tags
-    const badgesEl = document.createElement("div");
-    badgesEl.className = "spot-card-badges";
-
-    metaParts.forEach((part) => {
-      if (part.type === "category" || part.type === "verified") {
-        const span = document.createElement("span");
-        span.className = `badge badge--${part.type}`;
-        span.textContent = part.label;
-        badgesEl.appendChild(span);
-      }
-    });
-
-    if (Array.isArray(spot.tags)) {
-      spot.tags.forEach((tag) => {
-        const span = document.createElement("span");
-        span.className = "badge badge--tag";
-        span.textContent = tag;
-        badgesEl.appendChild(span);
-      });
-    }
-
-    if (badgesEl.children.length > 0) {
-      card.appendChild(badgesEl);
-    }
-
-    // Zeitbedarf als kleine Meta-Zeile
-    const timePart = metaParts.find((p) => p.type === "time");
-    if (timePart) {
-      const metaEl = document.createElement("p");
-      metaEl.className = "spot-card-meta";
-      metaEl.textContent = timePart.label;
-      card.appendChild(metaEl);
-    }
+    if (metaParts.length) card.appendChild(metaEl);
 
     card.addEventListener("click", () => {
       lastSpotTriggerEl = card;
@@ -1391,15 +1355,7 @@ function renderSpotList() {
 
 function syncFavButtonState(btn, spotId) {
   const isFav = favorites.has(spotId);
-
-  const icon = btn.querySelector(".spot-card-fav-icon");
-  if (icon) {
-    icon.textContent = isFav ? "★" : "☆";
-  } else {
-    btn.textContent = isFav ? "★" : "☆";
-  }
-
-  btn.setAttribute("aria-pressed", isFav ? "true" : "false");
+  btn.textContent = isFav ? "★" : "☆";
   btn.setAttribute(
     "aria-label",
     isFav
@@ -1475,7 +1431,6 @@ function showSpotDetails(spot) {
   spotDetailEl.innerHTML = "";
   spotDetailEl.classList.remove("spot-details--hidden");
 
-  // Header
   const headerEl = document.createElement("div");
   headerEl.className = "spot-details-header";
 
@@ -1484,7 +1439,6 @@ function showSpotDetails(spot) {
   const titleEl = document.createElement("h3");
   titleEl.className = "spot-details-title";
   titleEl.textContent = name;
-  titleWrapperEl.appendChild(titleEl);
 
   if (subtitle && !addressText) {
     const subtitleEl = document.createElement("p");
@@ -1493,13 +1447,15 @@ function showSpotDetails(spot) {
     titleWrapperEl.appendChild(subtitleEl);
   }
 
+  titleWrapperEl.insertBefore(titleEl, titleWrapperEl.firstChild);
+
   const actionsEl = document.createElement("div");
   actionsEl.className = "spot-details-actions";
 
   if (FEATURES.favorites) {
     const favBtn = document.createElement("button");
     favBtn.type = "button";
-    favBtn.className = "favorite-toggle";
+    favBtn.className = "btn-ghost btn-small";
     syncFavButtonState(favBtn, spotId);
     favBtn.addEventListener("click", () => {
       toggleFavorite(spot);
@@ -1521,52 +1477,41 @@ function showSpotDetails(spot) {
   headerEl.appendChild(titleWrapperEl);
   headerEl.appendChild(actionsEl);
 
-  // Meta-Badges
   const metaEl = document.createElement("div");
   metaEl.className = "spot-details-meta";
-
-  metaParts.forEach((part) => {
+  metaParts.forEach((p) => {
     const span = document.createElement("span");
-    let cls = "badge";
-    if (part.type === "category") cls += " badge--category";
-    else if (part.type === "verified") cls += " badge--verified";
-    else if (part.type === "time") cls += " badge--time";
-    span.className = cls;
-    span.textContent = part.label;
+    span.textContent = p;
     metaEl.appendChild(span);
   });
 
-  // Tag-Badges
   const tagsEl = document.createElement("div");
   tagsEl.className = "spot-details-tags";
   tags.forEach((tag) => {
     const span = document.createElement("span");
-    span.className = "badge badge--tag";
+    span.className = "badge";
     span.textContent = tag;
     tagsEl.appendChild(span);
   });
 
   // Beschreibung / Adresse / Routen
-  const descEl =
-    description && (() => {
-      const p = document.createElement("p");
-      p.className = "spot-details-description";
-      p.textContent = description;
-      return p;
-    })();
+  if (description) {
+    const descEl = document.createElement("p");
+    descEl.className = "spot-details-description";
+    descEl.textContent = description;
+    spotDetailEl.appendChild(descEl);
+  }
 
-  const addrEl =
-    addressText && (() => {
-      const p = document.createElement("p");
-      p.className = "spot-details-address";
-      p.textContent = addressText;
-      return p;
-    })();
+  if (addressText) {
+    const addrEl = document.createElement("p");
+    addrEl.className = "spot-details-address";
+    addrEl.textContent = addressText;
+    spotDetailEl.appendChild(addrEl);
+  }
 
   const routeUrls = getRouteUrlsForSpot(spot);
-  let routesEl = null;
   if (routeUrls) {
-    routesEl = document.createElement("div");
+    const routesEl = document.createElement("div");
     routesEl.className = "spot-details-routes";
 
     const appleLink = document.createElement("a");
@@ -1585,22 +1530,19 @@ function showSpotDetails(spot) {
 
     routesEl.appendChild(appleLink);
     routesEl.appendChild(googleLink);
+
+    spotDetailEl.appendChild(routesEl);
   }
 
-  // Zusammenbauen in definierter Reihenfolge
-  spotDetailEl.appendChild(headerEl);
-
+  // Header & Meta nach oben setzen
   if (metaParts.length) {
-    spotDetailEl.appendChild(metaEl);
+    spotDetailEl.insertBefore(metaEl, spotDetailEl.firstChild);
   }
+  spotDetailEl.insertBefore(headerEl, spotDetailEl.firstChild);
 
   if (tags.length) {
     spotDetailEl.appendChild(tagsEl);
   }
-
-  if (descEl) spotDetailEl.appendChild(descEl);
-  if (addrEl) spotDetailEl.appendChild(addrEl);
-  if (routesEl) spotDetailEl.appendChild(routesEl);
 }
 
 // ------------------------------------------------------
@@ -2361,4 +2303,3 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   init();
-});
