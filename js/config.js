@@ -32,10 +32,7 @@ export const THEME_DARK = "dark";
 // Radius / Marker-Limit
 // ------------------------------------------------------
 
-/**
- * Slider-Stufen für den Micro-Abenteuer-Radius.
- * Index 0–3 = fester Radius in km, 4 = Infinity (kein Limit).
- */
+/** 0–4 → Radius in km, Infinity = kein Limit */
 export const RADIUS_STEPS_KM = [1, 5, 15, 40, Infinity];
 
 /** Maximale Marker-Anzahl für gute Performance */
@@ -186,7 +183,6 @@ export const CATEGORY_LABELS_DE = {
   skatepark: "Skatepark",
   verkehrsgarten: "Verkehrsgarten",
   "toddler-barfuss-motorik": "Toddler / Barfuß / Motorik",
-
   zoo: "Zoo",
   tierpark: "Tierpark",
   wildpark: "Wildpark & Safaris",
@@ -194,22 +190,14 @@ export const CATEGORY_LABELS_DE = {
   naturerlebnispfad: "Naturerlebnispfad",
   walderlebnisroute: "Walderlebnisroute",
   freilichtmuseum: "Freilichtmuseum",
-
   schwimmbad: "Schwimmbad",
   badesee: "Badesee",
   strand: "Familien-Strand",
   eisbahn: "Eisbahn",
   rodelhuegel: "Rodelhügel",
-
   freizeitpark: "Freizeitpark",
-  trampolinpark: "Trampolinpark",
-  kletterhalle: "Kletterhalle",
-  "kletteranlage-outdoor": "Kletteranlage (Outdoor)",
-  "kletterwald-hochseilgarten": "Kletterwald / Hochseilgarten",
-  boulderpark: "Boulderpark",
-  minigolf: "Minigolf",
 
-  // ➕ NEU Erlebnis & Natur
+  // ➕ NEU
   hoehle: "Höhle / Felsenwanderung",
   felsenwanderung: "Felsenwanderung",
   aussichtspunkt: "Aussichtspunkt / Panorama",
@@ -222,37 +210,37 @@ export const CATEGORY_LABELS_DE = {
   "waldbaden-ort": "Waldbaden / Naturruheplatz",
   "natur-aussichtspunkt": "Natur-Aussichtspunkt",
 
+  trampolinpark: "Trampolinpark",
+  kletterhalle: "Kletterhalle",
+  "kletteranlage-outdoor": "Kletteranlage (Outdoor)",
+  "kletterwald-hochseilgarten": "Kletterwald / Hochseilgarten",
+  boulderpark: "Boulderpark",
+  minigolf: "Minigolf",
   "wanderweg-kinderwagen": "Wanderweg (kinderwagenfreundlich)",
   "radweg-family": "Familien-Radweg",
-
   familiencafe: "Familiencafé",
   "kinder-familiencafe": "Kinder- & Familiencafé",
   "familien-restaurant": "Familien-Restaurant",
-
   "museum-kinder": "Museum (Kinder)",
   "kinder-museum": "Kinder-Museum",
   kinder_museum: "Kinder-Museum",
   bibliothek: "Bibliothek",
-
   "oeffentliche-toilette": "Öffentliche Toilette",
   wickelraum: "Wickelraum",
-
   "familien-event": "Familien-Event",
-
   "stellplatz-spielplatz-naehe-kostenlos":
     "Kostenloser Stellplatz (Spielplatznähe)",
   "wohnmobil-service-station": "Wohnmobil Service-Station",
   "rastplatz-spielplatz-dusche": "Rastplatz (Spielplatz + Dusche)",
   "bikepacking-spot": "Bikepacking-Spot",
   "campingplatz-familien": "Familien-Campingplatz",
-
   "park-garten": "Park / Garten",
   picknickwiese: "Picknickwiese"
 };
 
 export const CATEGORY_LABELS_EN = {
   spielplatz: "Playground",
-  abenteuerspielplatz: "Adventure playground",
+  abenteuersspielplatz: "Adventure playground",
   "indoor-spielplatz": "Indoor playground",
   waldspielplatz: "Forest playground",
   wasserspielplatz: "Water playground",
@@ -264,7 +252,6 @@ export const CATEGORY_LABELS_EN = {
   skatepark: "Skate park",
   verkehrsgarten: "Traffic training park",
   "toddler-barfuss-motorik": "Toddler / barefoot / motor skills",
-
   zoo: "Zoo",
   tierpark: "Animal park",
   wildpark: "Wildlife park & safaris",
@@ -272,22 +259,14 @@ export const CATEGORY_LABELS_EN = {
   naturerlebnispfad: "Nature discovery trail",
   walderlebnisroute: "Forest experience route",
   freilichtmuseum: "Open-air museum",
-
   schwimmbad: "Swimming pool",
   badesee: "Swimming lake",
   strand: "Family beach",
   eisbahn: "Ice rink",
   rodelhuegel: "Sledding hill",
-
   freizeitpark: "Theme park",
-  trampolinpark: "Trampoline park",
-  kletterhalle: "Climbing gym",
-  "kletteranlage-outdoor": "Outdoor climbing area",
-  "kletterwald-hochseilgarten": "Rope course / climbing forest",
-  boulderpark: "Bouldering park",
-  minigolf: "Mini golf",
 
-  // ➕ NEU Erlebnis & Natur
+  // ➕ NEU
   hoehle: "Cave / rock hike",
   felsenwanderung: "Rock hike",
   aussichtspunkt: "Scenic viewpoint / panorama",
@@ -300,30 +279,30 @@ export const CATEGORY_LABELS_EN = {
   "waldbaden-ort": "Forest bathing / nature chill spot",
   "natur-aussichtspunkt": "Nature viewpoint",
 
+  trampolinpark: "Trampoline park",
+  kletterhalle: "Climbing gym",
+  "kletteranlage-outdoor": "Outdoor climbing area",
+  "kletterwald-hochseilgarten": "Rope course / climbing forest",
+  boulderpark: "Bouldering park",
+  minigolf: "Mini golf",
   "wanderweg-kinderwagen": "Stroller-friendly trail",
   "radweg-family": "Family bike route",
-
   familiencafe: "Family café",
   "kinder-familiencafe": "Kids & family café",
   "familien-restaurant": "Family restaurant",
-
   "museum-kinder": "Museum (kids)",
   "kinder-museum": "Children's museum",
   kinder_museum: "Children's museum",
   bibliothek: "Library",
-
   "oeffentliche-toilette": "Public toilet",
   wickelraum: "Baby changing room",
-
   "familien-event": "Family event",
-
   "stellplatz-spielplatz-naehe-kostenlos":
     "Free RV spot (near playground)",
   "wohnmobil-service-station": "RV service station",
   "rastplatz-spielplatz-dusche": "Rest area (playground + shower)",
   "bikepacking-spot": "Bikepacking spot",
   "campingplatz-familien": "Family campground",
-
   "park-garten": "Park / garden",
   picknickwiese: "Picnic meadow"
 };
