@@ -591,6 +591,12 @@ select.input:focus {
   gap: 8px;
 }
 
+.compass-mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .mood-chip,
 .travel-chip,
 .compass-mode-chip {
@@ -1003,6 +1009,10 @@ select.input:focus {
   margin: 0;
   font-size: 14px;
   line-height: 1.5;
+}
+
+.tilla-sidebar-actions {
+  margin-top: 8px;
 }
 
 /* =========================================
@@ -1691,6 +1701,72 @@ body.onboarding-open {
 
 [data-theme="dark"] .favorite-toggle:hover {
   background: rgba(30, 64, 175, 0.45);
+}
+
+/* Spot-Card – Header & Lieblingsstern */
+
+.spot-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.spot-card-favorite {
+  border: none;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 4px 10px rgba(148, 163, 184, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-theme="dark"] .spot-card-favorite {
+  background: rgba(15, 23, 42, 0.98);
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.5);
+}
+
+.spot-card-favorite[aria-pressed="true"] .spot-card-fav-icon {
+  color: #f59e0b;
+}
+
+.spot-card-badges .badge {
+  font-size: 11px;
+  padding: 3px 8px;
+}
+
+.badge--category {
+  font-weight: 600;
+}
+
+.badge--verified {
+  font-weight: 600;
+}
+
+.badge--verified::before {
+  content: "✓ ";
+}
+
+.spot-card-badges .badge--time,
+.spot-card-badges .badge--tag {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-soft);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+}
+
+[data-theme="dark"] .spot-card-badges .badge--time,
+[data-theme="dark"] .spot-card-badges .badge--tag {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
 }
 
 /* =========================================
