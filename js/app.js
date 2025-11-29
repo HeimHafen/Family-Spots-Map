@@ -101,10 +101,22 @@ function getRandomPlayIdea() {
   return "";
 }
 
-/** Sprache aus LocalStorage / Browser ableiten */
+/** Sprache aus LocalStorage / Browser / I18N ableiten */
 function getInitialLang() {
-  const stored = localStorage.getItem("fs_lang");
-  if (stored === LANG_DE || stored === LANG_EN) return stored;
+  try {
+    const stored = localStorage.getItem("fs_lang");
+    if (stored === LANG_DE || stored === LANG_EN) return stored;
+  } catch {
+    // ignore
+  }
+
+  if (
+    typeof I18N !== "undefined" &&
+    typeof I18N.getLanguage === "function"
+  ) {
+    const fromI18n = I18N.getLanguage();
+    if (fromI18n === LANG_DE || fromI18n === LANG_EN) return fromI18n;
+  }
 
   const htmlLang =
     (document.documentElement.lang || navigator.language || LANG_DE)
@@ -114,10 +126,25 @@ function getInitialLang() {
   return htmlLang === LANG_EN ? LANG_EN : LANG_DE;
 }
 
+/**
+ * Header-Tagline: bevorzugt aus i18n ("header_tagline"),
+ * sonst aus statischem HEADER_TAGLINE_TEXT.
+ */
 function updateHeaderTagline(lang) {
   const el = document.getElementById("header-tagline");
   if (!el) return;
-  el.textContent = HEADER_TAGLINE_TEXT[lang] || HEADER_TAGLINE_TEXT.de;
+
+  let text =
+    HEADER_TAGLINE_TEXT[lang] ||
+    HEADER_TAGLINE_TEXT.de ||
+    el.textContent ||
+    "";
+
+  if (typeof I18N !== "undefined" && typeof I18N.t === "function") {
+    text = I18N.t("header_tagline", text) || text;
+  }
+
+  el.textContent = text;
 }
 
 // ------------------------------------------------------
@@ -264,6 +291,58 @@ function initLazyLoadImages() {
   });
 }
 
+/**
+ * Meta-Title, Meta-Description, ARIA-Labels & Tilla-Alt aus i18n setzen.
+ * Wird bei jedem Sprachwechsel aufgerufen.
+ */
+function updateMetaAndA11yFromI18n() {
+  if (typeof I18N === "undefined" || typeof I18N.t !== "function") return;
+
+  // Meta-Title & Description
+  const metaTitle = I18N.t("meta_title", document.title || "");
+  if (metaTitle) {
+    document.title = metaTitle;
+  }
+
+  const metaDescEl = document.querySelector('meta[name="description"]');
+  if (metaDescEl) {
+    const currentDesc = metaDescEl.getAttribute("content") || "";
+    metaDescEl.setAttribute(
+      "content",
+      I18N.t("meta_description", currentDesc)
+    );
+  }
+
+  // ARIA-Labels
+  if (themeToggleEl) {
+    const fallback = themeToggleEl.getAttribute("aria-label") || "";
+    themeToggleEl.setAttribute(
+      "aria-label",
+      I18N.t("btn_theme_toggle_aria", fallback)
+    );
+  }
+
+  if (btnLocateEl) {
+    const fallback = btnLocateEl.getAttribute("aria-label") || "";
+    btnLocateEl.setAttribute(
+      "aria-label",
+      I18N.t("btn_locate_aria", fallback)
+    );
+  }
+
+  if (btnHelpEl) {
+    const fallback = btnHelpEl.getAttribute("aria-label") || "";
+    btnHelpEl.setAttribute("aria-label", I18N.t("btn_help_aria", fallback));
+  }
+
+  // Tilla-Alt-Text
+  const tillaImg = document.querySelector("#tilla-section img");
+  if (tillaImg) {
+    const fallback = tillaImg.alt || "";
+    tillaImg.alt = I18N.t("alt_tilla_image", fallback);
+  }
+}
+
 // ------------------------------------------------------
 // Sprache & Übersetzungen
 // ------------------------------------------------------
@@ -396,11 +475,16 @@ function ensureCompassPlusHint() {
  */
 function setLanguage(lang, { initial = false } = {}) {
   currentLang = lang === LANG_EN ? LANG_EN : LANG_DE;
-  localStorage.setItem("fs_lang", currentLang);
+
+  try {
+    localStorage.setItem("fs_lang", currentLang);
+  } catch {
+    // ignore
+  }
+
   document.documentElement.lang = currentLang;
 
-  updateHeaderTagline(currentLang);
-
+  // i18n-Layer informieren
   try {
     if (
       typeof I18N !== "undefined" &&
@@ -411,6 +495,12 @@ function setLanguage(lang, { initial = false } = {}) {
   } catch (err) {
     console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
   }
+
+  // Meta, ARIA & Tilla-Alt aktualisieren
+  updateMetaAndA11yFromI18n();
+
+  // Header-Tagline (mit Fallback auf config)
+  updateHeaderTagline(currentLang);
 
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
   if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
@@ -624,7 +714,7 @@ function showSpotsLoadErrorUI() {
   spotListEl.innerHTML = "";
 
   const msg = document.createElement("p");
-  msg.className = "spot-list-empty";
+  msg.className = "filter-group-helper";
   msg.textContent =
     currentLang === LANG_DE
       ? "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut."
@@ -1266,7 +1356,7 @@ function renderSpotList() {
 
   if (!filteredSpots.length) {
     const msg = document.createElement("p");
-    msg.className = "spot-list-empty";
+    msg.className = "filter-group-helper";
     msg.textContent =
       currentLang === LANG_DE
         ? "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus."
