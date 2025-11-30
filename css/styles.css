@@ -579,7 +579,7 @@ select.input:focus {
   outline: none;
 }
 
-/* Mood & Travel Chips */
+/* Mood & Travel & Tag Chips */
 
 .mood-row {
   display: flex;
@@ -589,7 +589,8 @@ select.input:focus {
 
 .mood-chip,
 .travel-chip,
-.compass-mode-chip {
+.compass-mode-chip,
+.tag-filter-chip {
   border: none;
   border-radius: var(--radius-pill);
   padding: 6px 10px 7px;
@@ -613,7 +614,8 @@ select.input:focus {
 
 .mood-chip--active,
 .travel-chip--active,
-.compass-mode-chip--active {
+.compass-mode-chip--active,
+.tag-filter-chip--active {
   background: linear-gradient(145deg, var(--accent-soft), var(--accent));
   color: #3b2313;
   box-shadow:
@@ -624,63 +626,26 @@ select.input:focus {
 
 [data-theme="dark"] .mood-chip--active,
 [data-theme="dark"] .travel-chip--active,
-[data-theme="dark"] .compass-mode-chip--active {
+[data-theme="dark"] .compass-mode-chip--active,
+[data-theme="dark"] .tag-filter-chip--active {
+  background: linear-gradient(
+    145deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
+  color: #111827;
   box-shadow:
     0 4px 10px rgba(245, 158, 11, 0.45),
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
-/* =========================================
-   SCHNELLFILTER (TAG FILTER CHIPS)
-   ========================================= */
-
-.tag-filter-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.btn-chip {
-  font-family: inherit;
-}
-
-/* Grundzustand: leichte, helle Pills – optisch unter Mood-Chips einsortiert */
-.tag-filter-chip {
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 6px 10px 7px;
-  font-size: 13px;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--text-soft);
-  box-shadow:
-    0 3px 8px rgba(165, 100, 53, 0.2),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
-    background 0.12s ease-out, color 0.12s ease-out;
-}
-
-[data-theme="dark"] .tag-filter-chip {
-  background: rgba(15, 23, 42, 0.96);
-  color: #e5e7eb;
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.75),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.6);
-}
-
-/* Aktiver Chip: wie kleiner Action-Button */
-.tag-filter-chip--active {
-  background: linear-gradient(145deg, var(--accent-soft), var(--accent));
-  color: #3b2313;
-  box-shadow:
-    0 4px 10px rgba(245, 158, 11, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
-  transform: translateY(-1px);
-}
-
-[data-theme="dark"] .tag-filter-chip--active {
-  color: #1f2933;
+/* kleines Tap-Feedback beim Drücken */
+.mood-chip:active,
+.travel-chip:active,
+.compass-mode-chip:active,
+.tag-filter-chip:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Radius */
@@ -789,7 +754,7 @@ select.input:focus {
   gap: 6px;
   margin-top: 8px;
   max-width: 100%;
-  white-space: normal;
+  white-space: normal; /* darf umbrechen, damit der Button auf Mobile nicht zu breit wird */
 }
 
 @media (max-width: 480px) {
@@ -1036,7 +1001,7 @@ select.input:focus {
 
 .tilla-sidebar-avatar img {
   display: block;
-  width: 110px;
+  width: 110px; /* etwas größer als vorher */
   height: auto;
   transform-origin: center bottom;
   animation: tilla-bob 3.5s ease-in-out infinite;
@@ -1458,7 +1423,11 @@ body.onboarding-open {
 
 .onboarding-dot--active {
   width: 18px;
-  background: linear-gradient(135deg, var(--accent), hsl(var(--accent-h, 32), 100%, 60%));
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
 }
 
 @keyframes onboarding-fade-in {
@@ -1676,15 +1645,27 @@ body.onboarding-open {
 }
 
 .badge--mood {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 70%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 70%)
+  );
 }
 
 .badge--travel {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 68%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 68%)
+  );
 }
 
 .badge--age {
-  background: linear-gradient(135deg, var(--accent-soft), hsl(var(--accent-h, 32), 90%, 72%));
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    hsl(var(--accent-h, 32), 90%, 72%)
+  );
 }
 
 .badge--distance {
