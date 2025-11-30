@@ -320,26 +320,6 @@
                 data-i18n-en="Place, spot, keywords …" />
             </div>
 
-            <!-- Kategorie -->
-            <div class="filter-group">
-              <label
-                class="filter-group-label"
-                for="filter-category"
-                id="filter-category-label"
-                data-i18n-de="Kategorie"
-                data-i18n-en="Category">
-                Kategorie
-              </label>
-              <select id="filter-category" name="category" class="input">
-                <option
-                  value=""
-                  data-i18n-de="Alle Kategorien"
-                  data-i18n-en="All categories">
-                  Alle Kategorien
-                </option>
-              </select>
-            </div>
-
             <!-- Stimmung -->
             <div class="filter-group">
               <label
@@ -398,6 +378,51 @@
                   </span>
                 </button>
               </div>
+            </div>
+
+            <!-- Tag-Schnellfilter (NEU für FILTERS / CATEGORY_TAGS) -->
+            <div class="filter-group" id="filter-tags-group">
+              <label
+                class="filter-group-label"
+                id="filter-tags-label"
+                data-i18n-de="Schnellfilter"
+                data-i18n-en="Quick filters">
+                Schnellfilter
+              </label>
+              <p
+                class="filter-group-helper"
+                id="filter-tags-helper"
+                data-i18n-de="Einmal tippen für typische Wünsche wie „mit Wasser“, „ruhig“, „Action“ oder „Naturpfad“."
+                data-i18n-en="Tap once for common wishes like “with water”, “calm”, “action” or “nature trail”.">
+                Einmal tippen für typische Wünsche wie „mit Wasser“, „ruhig“, „Action“ oder „Naturpfad“.
+              </p>
+              <div
+                id="filter-tags"
+                class="tag-filter-row"
+                role="group"
+                aria-labelledby="filter-tags-label">
+                <!-- Chips werden dynamisch von app.js (FILTERS) eingefügt -->
+              </div>
+            </div>
+
+            <!-- Kategorie -->
+            <div class="filter-group">
+              <label
+                class="filter-group-label"
+                for="filter-category"
+                id="filter-category-label"
+                data-i18n-de="Kategorie"
+                data-i18n-en="Category">
+                Kategorie
+              </label>
+              <select id="filter-category" name="category" class="input">
+                <option
+                  value=""
+                  data-i18n-de="Alle Kategorien"
+                  data-i18n-en="All categories">
+                  Alle Kategorien
+                </option>
+              </select>
             </div>
 
             <!-- Alter -->
