@@ -2,33 +2,26 @@
 <html lang="de" data-theme="light">
 <head>
   <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <title>Family Spots Map – Die schönste Karte für Familien-Abenteuer</title>
-  <meta
-    name="description"
-    content="Family Spots Map: Spielplätze, Zoos, Wildparks, familienfreundliche Spots & mehr – für unvergessliche Familienabenteuer."
-  />
+  <meta name="description"
+        content="Family Spots Map ist die schönste Karte für Familien-Abenteuer." />
   <meta name="theme-color" content="#fb8c00" />
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
 
-  <!-- Canonical & hreflang (GitHub Pages; bei eigener Domain anpassen) -->
-  <link
-    rel="canonical"
-    href="https://heimhafen.github.io/Family-Spots-Map/"
-  />
-  <link
-    rel="alternate"
-    hreflang="de"
-    href="https://heimhafen.github.io/Family-Spots-Map/"
-  />
+  <!-- Canonical & hreflang (bei eigener Domain anpassen) -->
+  <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
+  <link rel="alternate" hreflang="de" href="https://heimhafen.github.io/Family-Spots-Map/" />
+  <link rel="alternate" hreflang="en" href="https://heimhafen.github.io/Family-Spots-Map/en" />
 
-  <!-- Leaflet -->
+  <!-- Favicon / App Icon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="img/favicon-192.png" />
+  <link rel="apple-touch-icon" href="img/favicon-192.png" />
+
+  <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -44,804 +37,496 @@
     href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
   />
 
-  <!-- App CSS -->
+  <!-- Deine App styles -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
+
 <body>
-  <noscript>
-    <div class="noscript-warning">
-      Family Spots Map benötigt JavaScript, um die Karte und die Spots anzuzeigen.
+<div class="app-shell">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="app-header-top">
+      <div class="app-header-side app-header-side--left">
+        <!-- Hilfe (öffnet Über-Seite) -->
+        <button id="btn-help" type="button" class="icon-circle" aria-label="Über Family Spots Map">
+          <span aria-hidden="true">?</span>
+        </button>
+        <!-- Standort -->
+        <button id="btn-locate" type="button" class="icon-circle" aria-label="Standort zentrieren">
+          <span aria-hidden="true">📍</span>
+        </button>
+      </div>
+
+      <div class="app-header-side app-header-side--right">
+        <!-- Theme -->
+        <button id="theme-toggle" type="button" class="icon-circle" aria-label="Designmodus wechseln">
+          <span aria-hidden="true">🌙</span>
+        </button>
+        <!-- Sprache -->
+        <button id="language-switcher" type="button" class="icon-circle" aria-label="Sprache wechseln">
+          DE
+        </button>
+      </div>
     </div>
-  </noscript>
 
-  <div class="app">
-    <!-- =========================================
-         HEADER
-         ========================================= -->
-    <header class="app-header">
-      <div class="app-header-top">
-        <div class="app-header-left">
-          <button
-            id="btn-help"
-            type="button"
-            class="btn-icon"
-            aria-label="Hilfe und Infos anzeigen"
-          >
-            <span aria-hidden="true">❓</span>
-          </button>
+    <div class="app-header-main">
+      <h1 id="app-title" class="header-title" tabindex="-1">
+        🇩🇪 Family <span class="header-title-highlight">Spots</span> Map 🇩🇰
+      </h1>
+      <p id="header-tagline" class="header-tagline">
+        Heute ist Zeit für Familie.
+      </p>
+    </div>
+  </header>
 
-          <button
-            id="btn-locate"
-            type="button"
-            class="btn-icon"
-            aria-label="Standort zentrieren"
-          >
-            <span aria-hidden="true">📍</span>
-          </button>
-        </div>
+  <main class="app-main">
 
-        <div class="app-header-right">
-          <button
-            id="theme-toggle"
-            type="button"
-            class="btn-icon"
-            aria-label="Designmodus wechseln"
-          >
-            <span aria-hidden="true">🌙</span>
-          </button>
+    <!-- MAP VIEW -->
+    <section id="view-map" class="view view--active" aria-label="Familienkarte">
+      <div class="layout">
 
-          <button
-            id="language-switcher"
-            type="button"
-            class="language-switcher"
-            aria-label="Sprache wechseln"
-          >
-            DE
-          </button>
-        </div>
-      </div>
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
 
-      <div class="app-header-main">
-        <h1
-          id="app-title"
-          class="header-title"
-          tabindex="-1"
-        >
-          <span class="header-flag" aria-hidden="true">🐢</span>
-          <span>Family <span class="header-title-spots">Spots</span> Map</span>
-        </h1>
-        <p
-          id="header-tagline"
-          class="header-tagline"
-          data-i18n="header_tagline"
-        >
-          Entdeckt kleine Abenteuer – in eurer Nähe oder unterwegs
-        </p>
-      </div>
-    </header>
-
-    <!-- =========================================
-         MAIN
-         ========================================= -->
-    <main class="app-main">
-      <!-- ============ MAP VIEW ============ -->
-      <section
-        id="view-map"
-        class="view view--active"
-        aria-label="Karte mit Familien-Spots"
-      >
-        <div class="sidebar">
-          <!-- Kompass -->
-          <details
-            id="compass-section"
-            class="sidebar-section"
-          >
-            <div class="sidebar-section-header">
-              <h2
-                id="compass-label"
-                class="sidebar-section-title"
-              >
-                Familien-Kompass
-              </h2>
-
-              <div class="app-header-right">
-                <button
-                  id="btn-toggle-compass"
-                  type="button"
-                  class="btn-ghost btn-small"
-                  aria-expanded="false"
-                >
-                  <span>Kompass anzeigen</span>
-                </button>
-
-                <button
-                  type="button"
-                  class="sidebar-section-close"
-                  data-target="compass-section"
-                >
-                  Schließen
-                </button>
-              </div>
+          <!-- Tilla-Karte -->
+          <section id="tilla-section" class="sidebar-section tilla-sidebar-card">
+            <div class="tilla-media">
+              <img src="img/tilla.png"
+                   alt="Tilla die Schildkröte – eure Familienbegleiterin" />
             </div>
-
-            <p
-              id="compass-helper"
-              class="filter-group-helper"
-            >
-              Wählt aus, wie ihr heute unterwegs seid – ich passe Radius und
-              Spots für euch an.
-            </p>
-
-            <div class="filter-group">
-              <p class="filter-group-label">Wie seid ihr heute unterwegs?</p>
-              <div class="mood-row">
-                <button
-                  type="button"
-                  class="travel-chip"
-                  data-travel-mode="everyday"
-                  aria-pressed="false"
-                >
-                  <span class="mood-chip-emoji" aria-hidden="true">🏡</span>
-                  <span>
-                    Alltag
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  class="travel-chip"
-                  data-travel-mode="trip"
-                  aria-pressed="false"
-                >
-                  <span class="mood-chip-emoji" aria-hidden="true">🚐</span>
-                  <span>
-                    Unterwegs / Reise
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            <div class="filter-group">
-              <button
-                id="compass-apply"
-                type="button"
-                class="btn btn-small hidden"
-              >
-                <span id="compass-apply-label">
-                  Kompass anwenden
-                </span>
+            <div class="tilla-content">
+              <h2 class="sidebar-section-title">Familien-Begleiterin Tilla</h2>
+              <p>
+                Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte
+                Familien-Abenteuer! Alltag darf auch leicht sein. Lass uns schauen,
+                was in eurer Nähe ein Lächeln zaubert. 🌿
+              </p>
+              <button id="btn-play-idea" type="button" class="btn btn-full">
+                Eine Spielidee für uns, Tilla!
               </button>
+            </div>
+          </section>
+
+          <!-- Familien-Kompass -->
+          <details id="compass-section" class="sidebar-section" open>
+            <summary class="sidebar-section-header">
+              <div>
+                <h2 id="compass-label" class="sidebar-section-title">
+                  Familien-Kompass
+                </h2>
+                <p id="compass-helper" class="filter-group-helper">
+                  Wählt aus, wie ihr heute unterwegs seid – ich passe Radius und Spots für euch an.
+                </p>
+              </div>
+              <div class="sidebar-section-header-actions">
+                <button id="btn-toggle-compass"
+                        type="button"
+                        class="btn-ghost"
+                        aria-expanded="true"
+                        aria-controls="compass-section">
+                  <span>Kompass ausblenden</span>
+                </button>
+                <button type="button"
+                        class="btn-ghost sidebar-section-close"
+                        data-target="compass-section">
+                  ×
+                </button>
+              </div>
+            </summary>
+
+            <div class="sidebar-section-body">
+              <div class="filter-group">
+                <h3 class="filter-group-title">Wie seid ihr unterwegs?</h3>
+                <div class="chip-row">
+                  <button type="button"
+                          class="btn-chip travel-chip"
+                          data-travel-mode="everyday">
+                    Alltag / Zuhause
+                  </button>
+                  <button type="button"
+                          class="btn-chip travel-chip"
+                          data-travel-mode="trip">
+                    Unterwegs / Tour
+                  </button>
+                </div>
+                <button id="compass-apply" type="button" class="btn btn-small">
+                  <span id="compass-apply-label">Kompass anwenden</span>
+                </button>
+              </div>
             </div>
           </details>
 
           <!-- Family Spots Plus -->
-          <details
-            id="plus-section"
-            class="sidebar-section"
-          >
-            <div class="sidebar-section-header">
-              <h2 class="sidebar-section-title">Family Spots Plus</h2>
-
-              <div class="app-header-right">
-                <button
-                  id="btn-toggle-plus"
-                  type="button"
-                  class="btn-ghost btn-small"
-                  aria-expanded="false"
-                >
+          <details id="plus-section" class="sidebar-section">
+            <summary class="sidebar-section-header">
+              <div>
+                <h2 class="sidebar-section-title">Family Spots Plus</h2>
+                <p class="filter-group-helper">
+                  Zusätzliche Plus-Kategorien wie Stellplätze &amp; Camping für eure Touren.
+                </p>
+              </div>
+              <div class="sidebar-section-header-actions">
+                <button id="btn-toggle-plus"
+                        type="button"
+                        class="btn-ghost"
+                        aria-controls="plus-section">
                   <span>Anzeigen</span>
                 </button>
-
-                <button
-                  type="button"
-                  class="sidebar-section-close"
-                  data-target="plus-section"
-                >
-                  Schließen
+                <button type="button"
+                        class="btn-ghost sidebar-section-close"
+                        data-target="plus-section">
+                  ×
                 </button>
               </div>
-            </div>
+            </summary>
 
-            <p class="filter-group-helper">
-              <strong>Family Spots Map</strong> ist als Abo für
-              <strong>19,90&nbsp;€/Jahr</strong> geplant – für alle, die die App
-              nutzen möchten.
-            </p>
-            <p class="filter-group-helper">
-              Zusätzlich gibt es <strong>Plus-Kategorien</strong>:
-              ausgewählte Extra-Kategorien (z.&nbsp;B. Stellplätze, Camping,
-              Unterwegs-Spots), die als Add-on etwa
-              <strong>2,99&nbsp;€/Jahr</strong> kosten.
-            </p>
-            <p class="filter-group-helper">
-              Kurz gesagt:
-            </p>
-            <ul
-              class="filter-group-helper"
-              style="margin-top:4px; padding-left:18px;"
-            >
-              <li>
-                <strong>App-Abo:</strong> 19,90&nbsp;€/Jahr
-              </li>
-              <li>
-                <strong>Plus-Kategorien:</strong> + 2,99&nbsp;€/Jahr
-              </li>
-            </ul>
-            <p class="filter-group-helper">
-              In dieser Testphase kannst du Plus-Kategorien mit einem
-              Einladungs- oder Aktionscode aktivieren – echte In-App-Käufe
-              folgen später.
-            </p>
-
-            <div class="plus-code-form">
-              <label
-                for="plus-code-input"
-                class="filter-group-label"
-              >
-                Aktions- oder Einladungscode
-              </label>
-              <p class="plus-note">
-                Wenn du einen Code erhalten hast, kannst du Plus-Kategorien für
-                die Testphase freischalten.
-              </p>
-
-              <div class="plus-code-row">
-                <input
-                  id="plus-code-input"
-                  class="input"
-                  type="text"
-                  inputmode="text"
-                  autocomplete="off"
-                  placeholder="Code eingeben …"
-                />
-                <button
-                  id="plus-code-submit"
-                  type="button"
-                  class="btn btn-small"
-                >
-                  Aktivieren
-                </button>
+            <div class="sidebar-section-body">
+              <div class="filter-group">
+                <p id="plus-status-text" class="filter-group-helper">
+                  Family Spots Plus ist nicht aktiviert.
+                </p>
+                <div class="plus-code-row">
+                  <input id="plus-code-input"
+                         type="text"
+                         inputmode="text"
+                         autocomplete="off"
+                         placeholder="Aktivierungscode eingeben" />
+                  <button id="plus-code-submit" type="button" class="btn btn-small">
+                    Aktivieren
+                  </button>
+                </div>
               </div>
-
-              <p
-                id="plus-status-text"
-                class="plus-note"
-              >
-                Family Spots Plus ist nicht aktiviert.
-              </p>
             </div>
           </details>
 
           <!-- Mein Tag -->
-          <details
-            id="daylog-section"
-            class="sidebar-section"
-          >
-            <div class="sidebar-section-header">
-              <h2 class="sidebar-section-title">Mein Tag</h2>
-
-              <div class="app-header-right">
-                <button
-                  id="btn-toggle-daylog"
-                  type="button"
-                  class="btn-ghost btn-small"
-                  aria-expanded="false"
-                >
+          <details id="daylog-section" class="sidebar-section">
+            <summary class="sidebar-section-header">
+              <div>
+                <h2 class="sidebar-section-title">Mein Tag</h2>
+                <p class="filter-group-helper">
+                  Halte einen kleinen Moment von heute fest – für später.
+                </p>
+              </div>
+              <div class="sidebar-section-header-actions">
+                <button id="btn-toggle-daylog"
+                        type="button"
+                        class="btn-ghost"
+                        aria-controls="daylog-section">
                   <span>Anzeigen</span>
                 </button>
+                <button type="button"
+                        class="btn-ghost sidebar-section-close"
+                        data-target="daylog-section">
+                  ×
+                </button>
+              </div>
+            </summary>
 
-                <button
-                  type="button"
-                  class="sidebar-section-close"
-                  data-target="daylog-section"
-                >
-                  Schließen
+            <div class="sidebar-section-body">
+              <div class="filter-group">
+                <textarea id="daylog-text"
+                          rows="3"
+                          placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"></textarea>
+                <button id="daylog-save" type="button" class="btn btn-small">
+                  Speichern
                 </button>
               </div>
             </div>
-
-            <div class="filter-group">
-              <label for="daylog-text">
-                Kleiner Moment von heute
-              </label>
-              <textarea
-                id="daylog-text"
-                class="input"
-                rows="3"
-                placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
-              ></textarea>
-
-              <button
-                id="daylog-save"
-                type="button"
-                class="btn btn-small"
-              >
-                Speichern
-              </button>
-            </div>
           </details>
 
-          <!-- Filter-Section -->
-          <section class="sidebar-section">
+          <!-- Filter -->
+          <section id="filters-section" class="sidebar-section">
             <div class="sidebar-section-header">
-              <h2
-                id="filter-title"
-                class="sidebar-section-title"
-              >
-                Spots filtern
-              </h2>
-
-              <div class="app-header-right">
-                <button
-                  id="btn-toggle-filters"
-                  type="button"
-                  class="btn-ghost btn-small"
-                  aria-expanded="false"
-                >
+              <div>
+                <h2 id="filter-title" class="sidebar-section-title">
+                  Spots filtern
+                </h2>
+                <p class="filter-group-helper">
+                  Stimmung, Alter, Kategorien &amp; Radius einstellen.
+                </p>
+              </div>
+              <div class="sidebar-section-header-actions">
+                <button id="btn-toggle-filters"
+                        type="button"
+                        class="btn-ghost"
+                        aria-expanded="false">
                   <span>Filter anzeigen</span>
                 </button>
               </div>
             </div>
 
-            <p class="filter-group-helper">
-              Nutzt Suche, Kategorien, Alter &amp; Radius, um schnell passende
-              Spots zu finden.
-            </p>
+            <div class="sidebar-section-body">
 
-            <div class="filter-group hidden">
-              <label
-                for="filter-search"
-                class="filter-group-label"
-              >
-                Suche
-              </label>
-              <input
-                id="filter-search"
-                class="input"
-                type="search"
-                autocomplete="off"
-                placeholder="Ort, Spot, Stichwörter …"
-              />
-            </div>
-
-            <div class="filter-group hidden">
-              <label
-                for="filter-category"
-                class="filter-group-label"
-              >
-                Kategorien
-              </label>
-              <select
-                id="filter-category"
-                class="input"
-              >
-                <option value="">
-                  Alle Kategorien
-                </option>
-              </select>
-            </div>
-
-            <div class="filter-group hidden">
-              <label
-                for="filter-age"
-                class="filter-group-label"
-              >
-                Alter der Kinder
-              </label>
-              <select
-                id="filter-age"
-                class="input"
-              >
-                <option value="all">Alle Altersgruppen</option>
-                <option value="0-3">0–3 Jahre</option>
-                <option value="4-9">4–9 Jahre</option>
-                <option value="10+">10+ Jahre</option>
-              </select>
-            </div>
-
-            <div class="filter-group hidden">
-              <label
-                for="filter-radius"
-                class="filter-group-label"
-              >
-                Radius
-              </label>
-              <div class="radius-row">
-                <input
-                  id="filter-radius"
-                  type="range"
-                  min="0"
-                  max="4"
-                  step="1"
-                  value="4"
-                />
-                <span
-                  id="filter-radius-max-label"
-                  class="radius-max-label"
-                >
-                  Alle Spots
-                </span>
-              </div>
-              <p
-                id="filter-radius-description"
-                class="radius-description"
-              >
-                Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
-              </p>
-            </div>
-
-            <div class="filter-group hidden">
-              <span class="filter-group-label">
-                Stimmung heute
-              </span>
-              <div class="mood-row">
-                <button
-                  type="button"
-                  class="mood-chip"
-                  data-mood="relaxed"
-                  aria-pressed="false"
-                >
-                  <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
-                  <span>Entspannt</span>
-                </button>
-                <button
-                  type="button"
-                  class="mood-chip"
-                  data-mood="action"
-                  aria-pressed="false"
-                >
-                  <span class="mood-chip-emoji" aria-hidden="true">🤸‍♀️</span>
-                  <span>Action</span>
-                </button>
-                <button
-                  type="button"
-                  class="mood-chip"
-                  data-mood="water"
-                  aria-pressed="false"
-                >
-                  <span class="mood-chip-emoji" aria-hidden="true">💧</span>
-                  <span>Wasser</span>
-                </button>
-                <button
-                  type="button"
-                  class="mood-chip"
-                  data-mood="animals"
-                  aria-pressed="false"
-                >
-                  <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
-                  <span>Tiere</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="filter-group hidden">
-              <span class="filter-group-label">
-                Zusätzliche Filter
-              </span>
-
-              <div class="filter-group--checkbox">
-                <label class="checkbox-label">
-                  <input
-                    id="filter-big-adventures"
-                    type="checkbox"
-                  />
-                  <span>
-                    Nur große Abenteuer-Ausflüge
-                  </span>
-                </label>
+              <!-- Stimmung -->
+              <div class="filter-group">
+                <h3 class="filter-group-title">Stimmung</h3>
+                <p class="filter-group-helper">Wonach fühlt es sich heute an?</p>
+                <div class="chip-row">
+                  <button type="button"
+                          class="btn-chip mood-chip"
+                          data-mood="relaxed">
+                    Entspannt
+                  </button>
+                  <button type="button"
+                          class="btn-chip mood-chip"
+                          data-mood="movement">
+                    Bewegung
+                  </button>
+                  <button type="button"
+                          class="btn-chip mood-chip"
+                          data-mood="water">
+                    Wasser &amp; Sand
+                  </button>
+                  <button type="button"
+                          class="btn-chip mood-chip"
+                          data-mood="animals">
+                    Tier-Tag
+                  </button>
+                </div>
               </div>
 
-              <div class="filter-group--checkbox">
-                <label class="checkbox-label">
-                  <input
-                    id="filter-verified"
-                    type="checkbox"
-                  />
-                  <span>
-                    Nur verifizierte Spots
-                  </span>
-                </label>
-              </div>
-
-              <div class="filter-group--checkbox">
-                <label class="checkbox-label">
-                  <input
-                    id="filter-favorites"
-                    type="checkbox"
-                  />
-                  <span>
-                    Nur Lieblingsspots anzeigen
-                  </span>
-                </label>
-              </div>
-            </div>
-
-            <div class="filter-group hidden">
-              <span class="filter-group-label">
-                Themenfilter
-              </span>
-              <div
-                id="filter-tags"
-                class="mood-row"
-              >
-                <!-- Tag-Filter-Chips werden von JS gerendert -->
-              </div>
-            </div>
-          </section>
-
-          <!-- Tilla-Sidebar -->
-          <section
-            id="tilla-section"
-            class="sidebar-section tilla-sidebar-section"
-          >
-            <div class="tilla-sidebar-card">
-              <div class="tilla-sidebar-avatar">
-                <img
-                  src="img/tilla.png"
-                  alt="Tilla die Schildkröte – eure Familienbegleiterin"
-                  width="110"
-                  height="110"
-                />
-              </div>
-              <div class="tilla-sidebar-text">
-                <p id="tilla-sidebar-text">
-                  Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für entspannte Familien-Abenteuer!
+              <!-- Schnellfilter (Tag-Chips aus JS) -->
+              <div class="filter-group">
+                <h3 class="filter-group-title">Schnellfilter</h3>
+                <p class="filter-group-helper">
+                  Einmal tippen für typische Wünsche wie „mit Wasser“, „ruhig“ oder „Naturpfad“.
                 </p>
-                <button
-                  id="btn-play-idea"
-                  type="button"
-                  class="btn-play-idea"
-                >
-                  <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
-                  <span>Eine Spielidee für uns, Tilla!</span>
-                </button>
+                <div id="filter-tags" class="chip-row"></div>
+              </div>
+
+              <!-- Kategorie -->
+              <div class="filter-group">
+                <h3 class="filter-group-title">Kategorie</h3>
+                <select id="filter-category">
+                  <option value="">Alle Kategorien</option>
+                </select>
+              </div>
+
+              <!-- Alter -->
+              <div class="filter-group">
+                <h3 class="filter-group-title">Alter der Kinder</h3>
+                <select id="filter-age">
+                  <option value="all">Alle Altersstufen</option>
+                  <option value="0-3">0–3 Jahre</option>
+                  <option value="4-9">4–9 Jahre</option>
+                  <option value="10+">10+ Jahre</option>
+                </select>
+              </div>
+
+              <!-- Radius -->
+              <div class="filter-group">
+                <h3 class="filter-group-title">Micro-Abenteuer-Radius</h3>
+                <p class="filter-group-helper">
+                  Wie weit dürfen eure nächsten Abenteuer entfernt sein?
+                </p>
+                <div class="radius-row">
+                  <input id="filter-radius"
+                         type="range"
+                         min="0"
+                         max="4"
+                         step="1"
+                         value="4" />
+                  <span id="filter-radius-max-label">Alle Spots</span>
+                </div>
+                <p id="filter-radius-description" class="filter-group-helper">
+                  Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
+                </p>
+              </div>
+
+              <!-- Checkboxen -->
+              <div class="filter-group filter-group--inline">
+                <label>
+                  <input id="filter-big-adventures" type="checkbox" />
+                  Nur große Abenteuer (Tagesausflug)
+                </label>
+                <label>
+                  <input id="filter-verified" type="checkbox" />
+                  Nur verifizierte Spots
+                </label>
+                <label>
+                  <input id="filter-favorites" type="checkbox" />
+                  Nur Favoriten
+                </label>
+              </div>
+
+              <!-- Suche -->
+              <div class="filter-group">
+                <h3 class="filter-group-title">Suche</h3>
+                <input id="filter-search"
+                       type="search"
+                       placeholder="Ort, Spot, Stichwörter …" />
               </div>
             </div>
           </section>
 
           <!-- Spot-Liste -->
-          <section class="sidebar-section sidebar-section--grow">
+          <section class="sidebar-section">
             <div class="sidebar-section-header">
-              <h2 class="sidebar-section-title">
-                Spots in deiner Nähe
-              </h2>
-              <button
-                id="btn-toggle-view"
-                type="button"
-                class="btn-ghost btn-small"
-                aria-pressed="false"
-              >
-                <span>Nur Karte</span>
-              </button>
+              <h2 class="sidebar-section-title">Spots in deiner Nähe</h2>
+              <div class="sidebar-section-header-actions">
+                <button id="btn-toggle-view"
+                        type="button"
+                        class="btn-ghost"
+                        aria-pressed="false">
+                  <span>Nur Karte</span>
+                </button>
+              </div>
             </div>
-
-            <div id="spot-list">
-              <!-- Spot-Karten werden von JS gerendert -->
-            </div>
+            <div id="spot-list" class="sidebar-section-body"></div>
           </section>
-        </div>
 
-        <!-- Map Section -->
-        <section class="map-section">
-          <div
-            id="map"
-            class="map-container"
-            aria-label="Interaktive Karte mit Spots"
-          ></div>
+        </aside>
 
-          <aside
-            id="spot-detail"
-            class="spot-details spot-details--hidden"
-            aria-live="polite"
-          >
-            <!-- Spot-Details werden per JS gerendert -->
-          </aside>
+        <!-- MAP -->
+        <section class="map-wrapper" aria-label="Karte">
+          <div id="map"></div>
+          <div id="spot-detail" class="spot-details spot-details--hidden"></div>
         </section>
-      </section>
 
-      <!-- ============ ABOUT VIEW ============ -->
-      <section
-        id="view-about"
-        class="view"
-        aria-label="Über Family Spots Map"
-      >
-        <article class="page-about">
-          <!-- Deutsch -->
-          <div
-            id="page-about-de"
-            lang="de"
-          >
-            <h2>Über Family Spots Map</h2>
-            <p>
-              Family Spots Map ist eine liebevoll kuratierte Karte für
-              Familien-Abenteuer: Spielplätze, Wildparks, Museen, Wasser-Spots,
-              Stellplätze, Camping &amp; mehr – mit Fokus auf Qualität statt
-              Masse.
-            </p>
+      </div>
+    </section>
 
-            <h3>Idee hinter der Karte</h3>
-            <p>
-              Als Eltern weiß man, wie wertvoll gute Orte sind: ein Spielplatz
-              mit Schatten, ein Wildpark mit Herz, ein Café mit Spielecke, ein
-              Stellplatz mit Spielplatz nebenan. Die Karte soll genau solche
-              Orte sichtbar machen.
-            </p>
+    <!-- ABOUT VIEW -->
+    <section id="view-about" class="view" aria-label="Über Family Spots Map" hidden>
+      <div class="about-wrapper">
 
-            <p>
-              Die Spots werden nach und nach erweitert, überprüft und neu
-              sortiert. Ziel ist eine Karte, der Familien vertrauen können – ob
-              im Alltag oder auf großer Reise.
-            </p>
+        <!-- Deutsch -->
+        <section id="page-about-de">
+          <h1>Über Family Spots Map</h1>
 
-            <h3>Family Spots Plus &amp; Plus-Kategorien</h3>
-            <p>
-              Grundsätzlich ist Family Spots Map als
-              <strong>Jahresabo für 19,90&nbsp;€/Jahr</strong> gedacht – für
-              alle, die die App nutzen möchten.
-            </p>
-            <p>
-              Zusätzlich gibt es <strong>Plus-Kategorien</strong>:
-              ausgewählte Extra-Kategorien (z.&nbsp;B. Stellplätze,
-              familienfreundliche Campingplätze, besondere Unterwegs-Spots), die
-              als Add-on etwa <strong>2,99&nbsp;€/Jahr</strong> kosten.
-            </p>
-            <ul>
-              <li>App-Abo: 19,90&nbsp;€/Jahr</li>
-              <li>Plus-Kategorien: + 2,99&nbsp;€/Jahr</li>
-            </ul>
-            <p>
-              In der jetzigen Testphase werden Plus-Kategorien über Codes
-              freigeschaltet. Später erfolgt die Aktivierung ganz normal über
-              In-App-Käufe im Store.
-            </p>
-            <p>
-              Preise und genaue Struktur können sich bis zum offiziellen Start
-              noch leicht ändern – das Ziel bleibt ein faires Modell für
-              Familien und das Projekt.
-            </p>
+          <p>
+            Family Spots Map ist eine liebevoll kuratierte Karte für Familien-Abenteuer:
+            Spielplätze, Wildparks, Museen, Wasser-Spots, Stellplätze, Camping &amp; mehr –
+            mit Fokus auf Qualität statt Masse.
+          </p>
 
-            <h3>Datenschutz &amp; Offline-Nutzung</h3>
-            <p>
-              Die Spots werden lokal auf deinem Gerät gespeichert, damit du sie
-              auch mit schlechter Verbindung nutzen kannst. Persönliche Daten
-              wie „Mein Tag“ bleiben ebenfalls auf deinem Gerät.
-            </p>
+          <h2>Idee hinter der Karte</h2>
+          <p>
+            Als Eltern weiß man, wie wertvoll gute Orte sind: ein Spielplatz mit Schatten,
+            ein Wildpark mit Herz, ein Café mit Spielecke, ein Stellplatz mit Spielplatz nebenan.
+            Die Karte soll genau solche Orte sichtbar machen.
+          </p>
+          <p>
+            <strong>Tilla, unsere kleine Schildkröte, erinnert uns daran, wie kostbar gemeinsame Zeit ist.</strong>
+            Sie steht dafür, das Tempo rauszunehmen, innezuhalten und einen guten Ort für ein paar schöne
+            Stunden als Familie zu finden.
+          </p>
 
-            <p>
-              Standortfreigabe ist optional und wird nur zur Anzeige deiner
-              Position auf der Karte genutzt.
-            </p>
-          </div>
+          <h2>Family Spots Map – Jahresabo</h2>
+          <p>
+            Family Spots Map kostet <strong>19,90&nbsp;€ pro Jahr</strong>.
+            Damit nutzt ihr die App, alle Basis-Kategorien und zukünftige Erweiterungen
+            der Karte – ohne versteckte Extras.
+          </p>
 
-          <!-- Englisch -->
-          <div
-            id="page-about-en"
-            class="hidden"
-            lang="en"
-            aria-hidden="true"
-          >
-            <h2>About Family Spots Map</h2>
-            <p>
-              Family Spots Map is a lovingly curated map for family adventures:
-              playgrounds, wildlife parks, museums, water spots, RV places,
-              campgrounds &amp; more – with a focus on quality over quantity.
-            </p>
+          <h2>Family Spots Plus &amp; Plus-Kategorien</h2>
+          <p>
+            Zusätzlich könnt ihr <strong>Family Spots Plus</strong> buchen:
+            ausgewählte <strong>Plus-Kategorien</strong> wie z.&nbsp;B. Stellplätze,
+            Camping-Spots oder besondere Unterwegs-Spots auf Reisen.
+          </p>
+          <p>
+            Family Spots Plus kostet <strong>2,99&nbsp;€ pro Jahr</strong> und ergänzt euer
+            Abo – die Plus-Kategorien kommen also <strong>oben drauf</strong> zu den
+            19,90&nbsp;€ pro Jahr für die App.
+          </p>
 
-            <h3>The idea behind it</h3>
-            <p>
-              As parents you know how valuable good places are: a shaded
-              playground, an animal park with heart, a café with a kids’ area, a
-              stopover with a playground next door. This map aims to put exactly
-              those places on your radar.
-            </p>
+          <h2>Unabhängig &amp; werbefrei gedacht</h2>
+          <p>
+            Die Karte soll langfristig unabhängig und werbefrei bleiben. Das jährliche Abo
+            hilft, laufende Kosten für Server, Kartenmaterial und die Pflege der Spots zu decken –
+            und Tilla immer wieder neue Lieblingsorte für euch entdecken zu lassen.
+          </p>
+        </section>
 
-            <p>
-              Spots are added step by step, checked and reshuffled. The goal is
-              a map that families can trust – for everyday life and for longer
-              trips.
-            </p>
+        <!-- Englisch -->
+        <section id="page-about-en" class="hidden" aria-hidden="true">
+          <h1>About Family Spots Map</h1>
 
-            <h3>Family Spots Plus &amp; Plus categories</h3>
-            <p>
-              The app itself is planned as a
-              <strong>yearly subscription for €19.90/year</strong> – this is
-              what gives you access to Family Spots Map.
-            </p>
-            <p>
-              On top of that there are <strong>Plus categories</strong>:
-              selected extra categories (e.g. RV spots, family-friendly
-              campgrounds, special road-trip places) as an add-on for about
-              <strong>€2.99/year</strong>.
-            </p>
-            <ul>
-              <li>App subscription: €19.90/year</li>
-              <li>Plus categories: + €2.99/year</li>
-            </ul>
-            <p>
-              In the current test phase Plus categories are unlocked via codes.
-              Later this will be handled via regular in-app purchases in the
-              store.
-            </p>
-            <p>
-              Prices and details may still change slightly before the official
-              launch – the goal is a fair model for families and for the
-              project.
-            </p>
+          <p>
+            Family Spots Map is a lovingly curated map for family adventures:
+            playgrounds, wildlife parks, museums, water spots, RV stops, campgrounds &amp; more –
+            with a focus on quality over quantity.
+          </p>
 
-            <h3>Privacy &amp; offline use</h3>
-            <p>
-              Spots are cached on your device so you can still use the map with
-              poor reception. Personal notes like “My day” also stay on your
-              device.
-            </p>
+          <h2>The idea behind the map</h2>
+          <p>
+            As parents you know how valuable good places are: a playground with shade,
+            a wildlife park with heart, a café with a play corner, an RV spot right next
+            to a playground. The map is meant to make exactly these places visible.
+          </p>
+          <p>
+            <strong>Tilla, our little turtle, is a reminder of how precious shared time is.</strong>
+            She stands for slowing down, pausing for a moment and finding a good place
+            for a few beautiful family hours.
+          </p>
 
-            <p>
-              Location access is optional and only used to show your position on
-              the map.
-            </p>
-          </div>
-        </article>
-      </section>
-    </main>
+          <h2>Family Spots Map – yearly subscription</h2>
+          <p>
+            Family Spots Map costs <strong>€19.90 per year</strong>.
+            This includes the app, all base categories and future improvements –
+            with no hidden extras.
+          </p>
 
-    <!-- =========================================
-         BOTTOM NAV
-         ========================================= -->
-    <nav
-      class="bottom-nav"
-      aria-label="Hauptnavigation"
-    >
-      <div class="bottom-nav-background"></div>
+          <h2>Family Spots Plus &amp; Plus categories</h2>
+          <p>
+            You can optionally add <strong>Family Spots Plus</strong>:
+            selected <strong>Plus categories</strong> such as RV stops,
+            campgrounds or special on-the-road spots for your trips.
+          </p>
+          <p>
+            Family Spots Plus costs <strong>€2.99 per year</strong> and is added
+            on top of the main subscription – the Plus categories are an
+            <strong>add-on</strong> to the €19.90 per year.
+          </p>
 
-      <button
-        type="button"
-        class="bottom-nav-item bottom-nav-item--active"
-        data-route="map"
-        aria-current="page"
-      >
-        <span class="bottom-nav-icon" aria-hidden="true">🗺️</span>
-        <span id="bottom-nav-map-label">
-          Karte
-        </span>
-      </button>
+          <h2>Independent &amp; ad-free by design</h2>
+          <p>
+            The goal is to keep the map independent and free of ads in the long run.
+            The yearly subscription helps cover ongoing costs for servers, map data
+            and maintaining the spots – and lets Tilla keep discovering new favourite
+            places for your family.
+          </p>
+        </section>
+      </div>
+    </section>
 
-      <button
-        type="button"
-        class="bottom-nav-item"
-        data-route="about"
-        aria-current="false"
-      >
-        <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
-        <span id="bottom-nav-about-label">
-          Über Family Spots Map
-        </span>
-      </button>
-    </nav>
+  </main>
 
-    <!-- Toast -->
-    <div
-      id="toast"
-      class="toast"
-      role="status"
-      aria-live="polite"
-    ></div>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" aria-label="Hauptnavigation">
+    <button class="bottom-nav-item bottom-nav-item--active"
+            type="button"
+            data-route="map"
+            aria-current="page">
+      <span class="bottom-nav-item-icon" aria-hidden="true">🗺️</span>
+      <span id="bottom-nav-map-label">Karte</span>
+    </button>
+    <button class="bottom-nav-item"
+            type="button"
+            data-route="about"
+            aria-current="false">
+      <span class="bottom-nav-item-icon" aria-hidden="true">ℹ️</span>
+      <span id="bottom-nav-about-label">Über Family Spots Map</span>
+    </button>
+  </nav>
 
-    <!-- Landscape-Hinweis -->
-    <div class="landscape-warning">
-      Am besten funktioniert die App im Hochformat. Dreh dein Gerät, wenn du
-      mehr von der Karte sehen möchtest.
-    </div>
-  </div>
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+</div>
 
-  <!-- App JS -->
-  <script type="module" src="js/app.js"></script>
+<!-- Leaflet JS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin="">
+</script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+<!-- App-Logik -->
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
