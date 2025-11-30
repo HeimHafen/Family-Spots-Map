@@ -937,7 +937,7 @@ function getSpotTags(spot) {
   if (spot.category) catSlugs.push(String(spot.category));
   if (Array.isArray(spot.categories)) {
     spot.categories.forEach((c) => {
-      if (c) catSlugs.push(String(c));
+      if (c) catSlugs.add(String(c));
     });
   }
 
@@ -1261,10 +1261,6 @@ function getActiveFilterTags() {
 /**
  * Rendert die Tag-Filter-Chips in den Container #filter-tags (falls vorhanden).
  * Nutzt FILTERS aus config.js.
- *
- * Die Buttons bekommen bewusst sowohl die Klassen `quick-filter-chip`
- * (altes Styling) als auch `tag-filter-chip` (neue Logik),
- * damit Optik & Funktion zusammenpassen.
  */
 function renderTagFilterChips() {
   if (!tagFilterContainerEl) return;
@@ -1280,15 +1276,11 @@ function renderTagFilterChips() {
 
     const btn = document.createElement("button");
     btn.type = "button";
-    // beide Klassen, damit existierendes CSS für quick-filter greift
-    btn.className = "quick-filter-chip tag-filter-chip btn-chip";
+    btn.className = "tag-filter-chip btn-chip";
     btn.dataset.filterId = filter.id;
-    // optionales data-Attribut zur Kompatibilität mit älterem Markup
-    btn.dataset.quickId = filter.id;
 
     const isActive = activeTagFilters.has(filter.id);
     if (isActive) {
-      btn.classList.add("quick-filter-chip--active");
       btn.classList.add("tag-filter-chip--active");
       btn.setAttribute("aria-pressed", "true");
     } else {
