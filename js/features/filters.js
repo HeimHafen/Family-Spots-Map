@@ -1,527 +1,397 @@
 // js/features/filters.js
+// ------------------------------------------------------
+// Zentrale Spot-/Filter-Helfer – ohne DOM/Map-Abhängigkeiten
+// ------------------------------------------------------
 
-import { $, debounce } from "../utils/utils.js";
-import { getLanguage, t } from "../i18n.js";
-import { updateRadiusCircle } from "./map.js";
+"use strict";
 
-const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
+import {
+  CATEGORY_TAGS,
+  FILTERS,
+  FEATURES
+} from "../config.js";
 
-const MOOD_CATEGORY_MAP = {
-  relaxed: [
-    "spielplatz",
-    "waldspielplatz",
-    "park-garten",
-    "badesee",
-    "wanderweg-kinderwagen",
-    "radweg-family"
-  ],
-  action: [
-    "abenteuerspielplatz",
-    "freizeitpark",
-    "pumptrack",
-    "skatepark",
-    "multifunktionsfeld",
-    "bewegungspark",
-    "kletterhalle",
-    "kletteranlage-outdoor",
-    "boulderpark",
-    "trampolinpark"
-  ],
-  water: ["abenteuerspielplatz", "wasserspielplatz", "badesee", "schwimmbad"],
-  animals: ["zoo", "wildpark", "tierpark", "bauernhof"]
-};
+/**
+ * @typedef {Object} Spot
+ * @property {number} [lat]
+ * @property {number} [lng]
+ * @property {number} [lon]
+ * @property {string|number} [id]
+ * @property {string} [title]
+ * @property {string} [name]
+ * @property {string} [spotName]
+ * @property {string} [city]
+ * @property {string} [town]
+ * @property {string} [country]
+ * @property {string} [category]
+ * @property {string[]} [categories]
+ * @property {string[]} [tags]
+ * @property {string} [subtitle]
+ * @property {string} [shortDescription]
+ * @property {string} [summary_de]
+ * @property {string} [summary_en]
+ * @property {string} [poetry]
+ * @property {string} [description]
+ * @property {string} [text]
+ * @property {string} [address]
+ * @property {string} [postcode]
+ * @property {number} [visit_minutes]
+ * @property {boolean} [plusOnly]
+ * @property {boolean} [plus]
+ * @property {boolean} [bigAdventure]
+ * @property {boolean} [isBigAdventure]
+ * @property {boolean} [longTrip]
+ * @property {boolean} [verified]
+ * @property {boolean} [isVerified]
+ * @property {string[]|string} [ageGroups]
+ * @property {string[]|string} [age]
+ * @property {string[]|string} [ages]
+ * @property {string[]|string} [moods]
+ * @property {string[]|string} [moodTags]
+ * @property {string[]|string} [mood]
+ * @property {string[]|string} [travelModes]
+ * @property {string[]|string} [travel]
+ * @property {string[]|string} [tripModes]
+ * @property {string} [_searchText]
+ * @property {string[]} [_ageGroups]
+ * @property {string[]} [_moods]
+ * @property {string[]} [_travelModes]
+ * @property {string[]} [_tagsMerged]
+ */
 
-const MOOD_KEYWORDS = {
-  relaxed: ["ruhig", "entspannt", "schatten", "wiese", "park", "wald"],
-  action: [
-    "abenteuer",
-    "klettern",
-    "trampolin",
-    "seil",
-    "rutschen",
-    "bike",
-    "pumptrack",
-    "skate",
-    "sport",
-    "action"
-  ],
-  water: [
-    "wasser",
-    "see",
-    "strand",
-    "fluss",
-    "bach",
-    "nass",
-    "planschen",
-    "wasserspiel"
-  ],
-  animals: [
-    "zoo",
-    "tierpark",
-    "wildpark",
-    "tiere",
-    "safari",
-    "giraffe",
-    "bauernhof"
-  ]
-};
+// ------------------------------------------------------
+// Basis-Helfer für Spots
+// ------------------------------------------------------
 
-const TRAVEL_CATS_EVERYDAY = new Set([
-  "spielplatz",
-  "abenteuerspielplatz",
-  "waldspielplatz",
-  "indoor-spielplatz",
-  "wasserspielplatz",
-  "park-garten",
-  "picknickwiese",
-  "badesee",
-  "toddler-barfuss-motorik",
-  "bewegungspark",
-  "multifunktionsfeld",
-  "bolzplatz",
-  "verkehrsgarten"
-]);
-
-const TRAVEL_CATS_TRIP = new Set([
-  "rastplatz-spielplatz-dusche",
-  "stellplatz-spielplatz-naehe-kostenlos",
-  "wohnmobil-service-station",
-  "campingplatz-familien",
-  "bikepacking-spot",
-  "freizeitpark",
-  "zoo",
-  "wildpark",
-  "tierpark",
-  "strand",
-  "badesee"
-]);
-
-const AGE_CATS_TODDLER = new Set([
-  "toddler-barfuss-motorik",
-  "spielplatz",
-  "indoor-spielplatz",
-  "waldspielplatz",
-  "wasserspielplatz",
-  "verkehrsgarten"
-]);
-
-const AGE_CATS_ACTION = new Set([
-  "pumptrack",
-  "skatepark",
-  "boulderpark",
-  "kletteranlage-outdoor",
-  "kletterhalle",
-  "freizeitpark"
-]);
-
-function buildCategoryOptions(categorySelect, categories) {
-  const langRaw = getLanguage() || "de";
-  const baseLang = langRaw.split("-")[0];
-  const currentValue = categorySelect.value || "";
-
-  categorySelect.innerHTML = "";
-
-  const allOpt = document.createElement("option");
-  allOpt.value = "";
-  allOpt.textContent = t(
-    "filter_category_all",
-    baseLang === "de" ? "Alle Kategorien" : "All categories"
+export function getSpotName(spot) {
+  if (!spot) return "Spot";
+  return (
+    spot.title ||
+    spot.name ||
+    spot.spotName ||
+    (spot.id ? String(spot.id) : "Spot")
   );
-  categorySelect.appendChild(allOpt);
-
-  categories.forEach((c) => {
-    const opt = document.createElement("option");
-    const slug = typeof c === "string" ? c : c.slug;
-    const labelObj = typeof c === "string" ? null : c.label;
-
-    let label = slug;
-    if (labelObj && typeof labelObj === "object") {
-      label =
-        labelObj[baseLang] ||
-        labelObj[langRaw] ||
-        labelObj.de ||
-        label;
-    }
-
-    opt.value = slug;
-    opt.textContent = label;
-    categorySelect.appendChild(opt);
-  });
-
-  categorySelect.value = currentValue;
 }
 
-function distanceInKm(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const toRad = (v) => (v * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+export function getSpotSubtitle(spot) {
+  if (!spot) return "";
+  if (spot.city && spot.country) return `${spot.city}, ${spot.country}`;
+  if (spot.city) return spot.city;
+  if (spot.town && spot.country) return `${spot.town}, ${spot.country}`;
+  if (spot.address) return spot.address;
+  return spot.subtitle || spot.shortDescription || "";
 }
 
-function getMoodScore(spot, mood) {
-  if (!mood) return 0;
-
-  const categories = Array.isArray(spot.categories) ? spot.categories : [];
-  const tags = Array.isArray(spot.tags) ? spot.tags : [];
-
-  const moodCats = MOOD_CATEGORY_MAP[mood] || [];
-  const moodKeywords = MOOD_KEYWORDS[mood] || [];
-
-  let score = 0;
-
-  for (const c of categories) {
-    if (moodCats.includes(c)) {
-      score += 2;
-    }
-  }
-
-  const lowerTags = tags.map((t) => String(t).toLowerCase());
-  const textParts = [
-    spot.poetry,
-    spot.summary_de,
-    spot.summary_en,
-    spot.visitLabel_de,
-    spot.visitLabel_en
-  ]
-    .filter(Boolean)
-    .map((s) => String(s).toLowerCase());
-
-  const allText = lowerTags.join(" ") + " " + textParts.join(" ");
-
-  for (const kw of moodKeywords) {
-    if (allText.includes(kw)) {
-      score += 1;
-    }
-  }
-
-  return score;
+export function getSpotId(spot) {
+  return String(spot.id || getSpotName(spot));
 }
 
-function getAgeScore(spot, ageGroup) {
-  if (!ageGroup || ageGroup === "all") return 0;
-  const categories = Array.isArray(spot.categories) ? spot.categories : [];
-  let score = 0;
-
-  const hasToddler = categories.some((c) => AGE_CATS_TODDLER.has(c));
-  const hasAction = categories.some((c) => AGE_CATS_ACTION.has(c));
-
-  if (ageGroup === "0‑3") {
-    if (hasToddler) score += 2;
-    if (hasAction) score -= 2;
-  } else if (ageGroup === "4‑9") {
-    if (hasToddler) score += 1;
-    if (hasAction) score += 1;
-  } else if (ageGroup === "10+") {
-    if (hasAction) score += 2;
-    if (hasToddler) score -= 1;
-  }
-
-  return score;
+export function isSpotPlusOnly(spot) {
+  return !!spot.plusOnly || !!spot.plus;
 }
 
-function getTravelScore(spot, travelMode) {
-  if (!travelMode) return 0;
-
-  const categories = Array.isArray(spot.categories) ? spot.categories : [];
-  let score = 0;
-
-  const hasEveryday = categories.some((c) => TRAVEL_CATS_EVERYDAY.has(c));
-  const hasTrip = categories.some((c) => TRAVEL_CATS_TRIP.has(c));
-
-  if (travelMode === "trip") {
-    if (spot.plus_only) score += 2;
-    if (hasTrip) score += 2;
-  } else if (travelMode === "everyday") {
-    if (spot.plus_only) score -= 1;
-    if (hasEveryday) score += 1;
-  }
-  return score;
+export function isSpotBigAdventure(spot) {
+  return !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
 }
 
-function isBigAdventure(spot) {
-  const categories = Array.isArray(spot.categories) ? spot.categories : [];
-  const bigCats = new Set(["freizeitpark", "zoo", "wildpark", "tierpark"]);
-
-  for (const c of categories) {
-    if (bigCats.has(c)) return true;
-  }
-
-  const visitMinutes = Number(spot.visitMinutes ?? spot.visit_minutes);
-  if (!Number.isNaN(visitMinutes) && visitMinutes >= 240) {
-    return true;
-  }
-
-  const tags = Array.isArray(spot.tags) ? spot.tags : [];
-  const lowerTags = tags.map((t) => String(t).toLowerCase());
-  for (const t of lowerTags) {
-    if (t.includes("ganzer tag") || t.includes("riesig") || t.includes("groß")) {
-      return true;
-    }
-  }
-
-  return false;
+export function isSpotVerified(spot) {
+  return !!spot.verified || !!spot.isVerified;
 }
 
-function updateRadiusUI(index) {
-  const slider = $("#filter-radius");
-  const descEl = $("#filter-radius-description");
-  const maxLabelEl = $("#filter-radius-max-label");
+// ------------------------------------------------------
+// Normalisierte Felder (Age/Mood/Travel/Tags/Search-Text)
+// ------------------------------------------------------
 
-  if (slider && String(slider.value) !== String(index)) {
-    slider.value = String(index);
+export function getSpotAgeGroups(spot) {
+  if (!spot) return [];
+  if (Array.isArray(spot._ageGroups)) return spot._ageGroups;
+
+  const raw = spot.ageGroups || spot.age || spot.ages;
+  let result = [];
+
+  if (!raw) {
+    result = [];
+  } else if (Array.isArray(raw)) {
+    result = raw;
+  } else if (typeof raw === "string") {
+    result = raw
+      .split(",")
+      .map((a) => a.trim())
+      .filter(Boolean);
   }
 
-  const radiusKm = RADIUS_LEVELS_KM[index] ?? null;
-
-  if (maxLabelEl) {
-    maxLabelEl.textContent = t("filter_radius_max_label", "Alle Spots");
-  }
-
-  if (!descEl) return;
-
-  let key;
-  switch (index) {
-    case 0:
-      key = "filter_radius_description_step0";
-      break;
-    case 1:
-      key = "filter_radius_description_step1";
-      break;
-    case 2:
-      key = "filter_radius_description_step2";
-      break;
-    case 3:
-      key = "filter_radius_description_step3";
-      break;
-    default:
-      key = "filter_radius_description_all";
-  }
-
-  const lang = getLanguage();
-  const isGerman = !lang || lang.startsWith("de");
-
-  const fallback = radiusKm == null
-    ? (isGerman ? "Alle Spots – ohne Radiusbegrenzung." : "All spots – no radius limit.")
-    : (isGerman ? `Im Umkreis von ca. ${radiusKm} km ab Kartenmitte.` : `Within ~${radiusKm} km from map center.`);
-
-  descEl.textContent = t(key, fallback);
+  spot._ageGroups = result;
+  return result;
 }
 
-export function initFilters({ categories, favoritesProvider, onFilterChange }) {
-  const state = {
-    query: "",
-    category: "",
-    verifiedOnly: false,
-    favoritesOnly: false,
-    bigOnly: false,
-    favorites: favoritesProvider(),
-    mood: null,
-    radiusIndex: 4,
-    travelMode: null,
-    ageGroup: "all"
-  };
+export function getSpotMoods(spot) {
+  if (!spot) return [];
+  if (Array.isArray(spot._moods)) return spot._moods;
 
-  const searchInput = $("#filter-search");
-  const categorySelect = $("#filter-category");
-  const verifiedCheckbox = $("#filter-verified");
-  const favsCheckbox = $("#filter-favorites");
-  const bigCheckbox = $("#filter-big-adventures");
-  const radiusSlider = $("#filter-radius");
-  const moodButtons = Array.from(document.querySelectorAll(".mood-chip"));
-  const travelButtons = Array.from(document.querySelectorAll(".travel-chip"));
-  const ageSelect = $("#filter-age");
+  const raw = spot.moods || spot.moodTags || spot.mood;
+  let result = [];
 
-  if (categorySelect) buildCategoryOptions(categorySelect, categories);
-
-  updateRadiusUI(state.radiusIndex);
-
-  const notify = () => onFilterChange({ ...state });
-
-  if (searchInput) {
-    searchInput.addEventListener(
-      "input",
-      debounce((e) => {
-        state.query = e.target.value || "";
-        notify();
-      }, 200)
-    );
+  if (!raw) {
+    result = [];
+  } else if (Array.isArray(raw)) {
+    result = raw;
+  } else if (typeof raw === "string") {
+    result = raw
+      .split(",")
+      .map((m) => m.trim())
+      .filter(Boolean);
   }
 
-  if (categorySelect) {
-    categorySelect.addEventListener("change", (e) => {
-      state.category = e.target.value || "";
-      notify();
+  spot._moods = result;
+  return result;
+}
+
+export function getSpotTravelModes(spot) {
+  if (!spot) return [];
+  if (Array.isArray(spot._travelModes)) return spot._travelModes;
+
+  const raw = spot.travelModes || spot.travel || spot.tripModes;
+  let result = [];
+
+  if (!raw) {
+    result = [];
+  } else if (Array.isArray(raw)) {
+    result = raw;
+  } else if (typeof raw === "string") {
+    result = raw
+      .split(",")
+      .map((m) => m.trim())
+      .filter(Boolean);
+  }
+
+  spot._travelModes = result;
+  return result;
+}
+
+/**
+ * Kombiniert Tags aus Spot-Daten + Kategorie-Tags (CATEGORY_TAGS).
+ */
+export function getSpotTags(spot) {
+  if (!spot) return [];
+  if (Array.isArray(spot._tagsMerged)) return spot._tagsMerged;
+
+  const tagSet = new Set();
+
+  // Originale Spot-Tags
+  if (Array.isArray(spot.tags)) {
+    spot.tags.forEach((tag) => {
+      if (tag) tagSet.add(String(tag));
     });
   }
 
-  if (verifiedCheckbox) {
-    verifiedCheckbox.addEventListener("change", (e) => {
-      state.verifiedOnly = !!e.target.checked;
-      notify();
+  // Kategorien einsammeln
+  const catSlugs = new Set();
+  if (spot.category) catSlugs.add(String(spot.category));
+  if (Array.isArray(spot.categories)) {
+    spot.categories.forEach((c) => {
+      if (c) catSlugs.add(String(c));
     });
   }
 
-  if (favsCheckbox) {
-    favsCheckbox.addEventListener("change", (e) => {
-      state.favoritesOnly = !!e.target.checked;
-      state.favorites = favoritesProvider();
-      notify();
-    });
-  }
-
-  if (bigCheckbox) {
-    bigCheckbox.addEventListener("change", (e) => {
-      state.bigOnly = !!e.target.checked;
-      notify();
-    });
-  }
-
-  if (radiusSlider) {
-    radiusSlider.addEventListener("input", (e) => {
-      const idx = parseInt(e.target.value, 10);
-      if (!Number.isNaN(idx)) {
-        state.radiusIndex = idx;
-        updateRadiusUI(idx);
-        notify();
-      }
-    });
-  }
-
-  if (moodButtons.length) {
-    moodButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const mood = btn.dataset.mood || null;
-        state.mood = state.mood === mood ? null : mood;
-        moodButtons.forEach((b) => b.classList.toggle("mood-chip--active", b.dataset.mood === state.mood));
-        notify();
+  // Kategorie-Tags aus config
+  catSlugs.forEach((slug) => {
+    const catTags = CATEGORY_TAGS[slug];
+    if (Array.isArray(catTags)) {
+      catTags.forEach((tag) => {
+        if (tag) tagSet.add(String(tag));
       });
-    });
-  }
-
-  if (travelButtons.length) {
-    travelButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const mode = btn.dataset.travelMode || null;
-        state.travelMode = state.travelMode === mode ? null : mode;
-        travelButtons.forEach((b) => b.classList.toggle("travel-chip--active", b.dataset.travelMode === state.travelMode));
-
-        const event = new CustomEvent("fsm:travelModeChanged", { detail: { mode: state.travelMode } });
-        document.dispatchEvent(event);
-
-        notify();
-      });
-    });
-  }
-
-  if (ageSelect) {
-    ageSelect.value = state.ageGroup;
-    ageSelect.addEventListener("change", (e) => {
-      state.ageGroup = e.target.value || "all";
-      notify();
-    });
-  }
-
-  return state;
-}
-
-export function refreshCategorySelect(categories) {
-  const categorySelect = $("#filter-category");
-  if (!categorySelect) return;
-  buildCategoryOptions(categorySelect, categories);
-}
-
-export function applyFilters(spots, state) {
-  const query = (state.query || "").trim().toLowerCase();
-  const category = state.category || "";
-  const favoritesSet = new Set(state.favorites || []);
-  const verifiedOnly = !!state.verifiedOnly;
-  const favoritesOnly = !!state.favoritesOnly;
-  const bigOnly = !!state.bigOnly;
-  const mood = state.mood || null;
-  const travelMode = state.travelMode || null;
-  const ageGroup = state.ageGroup || "all";
-
-  const center = state.mapCenter;
-  const centerLat = center?.lat ?? (typeof center?.lat === "function" ? center.lat() : null);
-  const centerLng = center?.lng ?? (typeof center?.lng === "function" ? center.lng() : null);
-
-  const radiusIndex = (typeof state.radiusIndex === "number" ? state.radiusIndex : 4);
-  const radiusKm = RADIUS_LEVELS_KM[radiusIndex] ?? null;
-
-  if (radiusKm != null && centerLat != null && centerLng != null) {
-    updateRadiusCircle({ lat: centerLat, lng: centerLng }, radiusKm);
-  } else {
-    updateRadiusCircle(null, null);
-  }
-
-  const results = [];
-
-  for (const spot of spots) {
-    if (!spot) continue;
-    const cats = Array.isArray(spot.categories) ? spot.categories : [];
-
-    if (category && !cats.includes(category)) continue;
-    if (verifiedOnly && !spot.verified) continue;
-    if (favoritesOnly && !favoritesSet.has(spot.id)) continue;
-    if (bigOnly && !isBigAdventure(spot)) continue;
-
-    if (query) {
-      const parts = [
-        spot.name,
-        spot.city,
-        spot.address,
-        spot.poetry,
-        ...(spot.tags || []),
-        ...(spot.usps || []),
-        ...(spot.categories || [])
-      ]
-        .filter(Boolean)
-        .map((x) => String(x).toLowerCase());
-
-      if (!parts.join(" ").includes(query)) continue;
     }
-
-    let distanceKm = null;
-    if (radiusKm != null && centerLat != null && centerLng != null && spot.location) {
-      distanceKm = distanceInKm(centerLat, centerLng, spot.location.lat, spot.location.lng);
-      if (distanceKm > radiusKm) continue;
-    }
-
-    const moodScore = getMoodScore(spot, mood);
-    if (mood && moodScore <= 0) continue;
-    const travelScore = getTravelScore(spot, travelMode);
-    const ageScore = getAgeScore(spot, ageGroup);
-
-    results.push({ spot, moodScore, travelScore, ageScore, distanceKm });
-  }
-
-  results.sort((a, b) => {
-    const scoreA = (a.moodScore || 0) * 10 + (a.travelScore || 0) * 3 + (a.ageScore || 0);
-    const scoreB = (b.moodScore || 0) * 10 + (b.travelScore || 0) * 3 + (b.ageScore || 0);
-    if (scoreA !== scoreB) return scoreB - scoreA;
-
-    const dA = a.distanceKm != null ? a.distanceKm : Infinity;
-    const dB = b.distanceKm != null ? b.distanceKm : Infinity;
-    if (dA !== dB) return dA - dB;
-
-    const nameA = a.spot.name || "";
-    const nameB = b.spot.name || "";
-    return nameA.localeCompare(nameB, "de");
   });
 
-  return results.map((r) => {
-    r.spot._moodScore = r.moodScore;
-    r.spot._distanceKm = r.distanceKm;
-    r.spot._travelScore = r.travelScore;
-    r.spot._ageScore = r.ageScore;
-    return r.spot;
+  const merged = Array.from(tagSet);
+  spot._tagsMerged = merged;
+  return merged;
+}
+
+/**
+ * Suchtext für Volltextsuche.
+ */
+export function buildSpotSearchText(spot) {
+  if (!spot) return "";
+  if (spot._searchText) return spot._searchText;
+
+  const parts = [
+    getSpotName(spot),
+    getSpotSubtitle(spot),
+    spot.category,
+    ...getSpotTags(spot)
+  ].filter(Boolean);
+
+  const text = parts.join(" ").toLowerCase();
+  spot._searchText = text;
+  return text;
+}
+
+/**
+ * Vereinheitlichte Normalisierung für alle Spots.
+ * (Koordinaten, Kategorie, vorberechnete Felder)
+ */
+export function normalizeSpot(raw) {
+  /** @type {Spot} */
+  const spot = { ...raw };
+
+  if (spot.lon != null && spot.lng == null) {
+    spot.lng = spot.lon;
+  }
+
+  if (
+    !spot.category &&
+    Array.isArray(spot.categories) &&
+    spot.categories.length
+  ) {
+    spot.category = spot.categories[0];
+  }
+
+  buildSpotSearchText(spot);
+  getSpotAgeGroups(spot);
+  getSpotMoods(spot);
+  getSpotTravelModes(spot);
+
+  return spot;
+}
+
+// ------------------------------------------------------
+// Tag-Filter & Haupt-Filterfunktion
+// ------------------------------------------------------
+
+/**
+ * Aggregiert alle Tags aus den aktuell aktiven Filter-IDs.
+ * @param {Set<string>} activeFilterIds
+ * @returns {string[]}
+ */
+export function getActiveFilterTags(activeFilterIds) {
+  if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) return [];
+  if (!activeFilterIds || !activeFilterIds.size) return [];
+
+  const tagSet = new Set();
+  FILTERS.forEach((filter) => {
+    if (!filter || !filter.id || !Array.isArray(filter.tags)) return;
+    if (!activeFilterIds.has(filter.id)) return;
+    filter.tags.forEach((tag) => {
+      if (tag) tagSet.add(String(tag));
+    });
   });
+
+  return Array.from(tagSet);
+}
+
+/**
+ * Prüft, ob ein Spot alle *nicht-geografischen* Filter erfüllt.
+ * (Radius/Map wird in app.js zusätzlich geprüft.)
+ *
+ * @param {Spot} spot
+ * @param {{
+ *   searchTerm?: string,
+ *   categoryFilter?: string,
+ *   ageFilter?: string,
+ *   moodFilter?: string|null,
+ *   travelMode?: string|null,
+ *   onlyBigAdventures?: boolean,
+ *   onlyVerified?: boolean,
+ *   onlyFavorites?: boolean,
+ *   favoritesSet?: Set<string>,
+ *   plusActive?: boolean,
+ *   activeTagFilterIds?: Set<string>
+ * }} options
+ * @returns {boolean}
+ */
+export function doesSpotMatchFilters(spot, options) {
+  const {
+    searchTerm = "",
+    categoryFilter = "",
+    ageFilter = "all",
+    moodFilter = null,
+    travelMode = null,
+    onlyBigAdventures = false,
+    onlyVerified = false,
+    onlyFavorites = false,
+    favoritesSet,
+    plusActive = false,
+    activeTagFilterIds
+  } = options || {};
+
+  if (!spot) return false;
+
+  // Plus-Gate
+  if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) {
+    return false;
+  }
+
+  // Volltextsuche
+  if (searchTerm) {
+    const term = String(searchTerm).toLowerCase();
+    const haystack = buildSpotSearchText(spot);
+    if (!haystack.includes(term)) return false;
+  }
+
+  // Kategorie
+  if (categoryFilter) {
+    const filterSlug = String(categoryFilter);
+    const categories = [];
+
+    if (Array.isArray(spot.categories)) {
+      categories.push(...spot.categories.map(String));
+    } else if (spot.category || spot.type) {
+      categories.push(String(spot.category || spot.type));
+    }
+
+    if (!categories.some((c) => c === filterSlug)) return false;
+  }
+
+  // Altersgruppen
+  if (ageFilter && ageFilter !== "all") {
+    const ages = getSpotAgeGroups(spot);
+    if (ages.length && !ages.includes(ageFilter)) {
+      return false;
+    }
+  }
+
+  // Stimmung
+  if (FEATURES.moodFilter && moodFilter) {
+    const moods = getSpotMoods(spot);
+    if (moods.length && !moods.includes(moodFilter)) {
+      return false;
+    }
+  }
+
+  // Reise-Modus
+  if (FEATURES.travelMode && travelMode) {
+    const modes = getSpotTravelModes(spot);
+    if (modes.length && !modes.includes(travelMode)) {
+      return false;
+    }
+  }
+
+  // Große Abenteuer
+  if (FEATURES.bigAdventureFilter && onlyBigAdventures && !isSpotBigAdventure(spot)) {
+    return false;
+  }
+
+  // Verifiziert
+  if (FEATURES.verifiedFilter && onlyVerified && !isSpotVerified(spot)) {
+    return false;
+  }
+
+  // Favoriten
+  if (FEATURES.favorites && onlyFavorites) {
+    const id = getSpotId(spot);
+    if (!favoritesSet || !favoritesSet.has(id)) return false;
+  }
+
+  // Tag-Filter (FILTERS): OR-Logik – Spot muss mind. einen der aktiven Tags haben
+  if (activeTagFilterIds && activeTagFilterIds.size) {
+    const activeTags = getActiveFilterTags(activeTagFilterIds);
+    if (activeTags.length) {
+      const spotTags = getSpotTags(spot);
+      const hasAny = activeTags.some((tag) => spotTags.includes(tag));
+      if (!hasAny) return false;
+    }
+  }
+
+  return true;
 }
