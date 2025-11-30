@@ -60,25 +60,5 @@
   "nav_about": "About Family Spots Map",
 
   "route_apple": "Open in Apple Maps",
-  "route_google": "Open in Google Maps",
-
-  "subscription_family_plus_label": "Family Spots Plus",
-  "subscription_family_plus_badge": "Plus",
-
-  "subscription_required_title": "Family Spots Plus required",
-  "subscription_required_text": "This spot is part of Family Spots Plus. Unlock Plus to see all details and use all Plus categories.",
-  "subscription_required_button": "Unlock Family Spots Plus",
-
-  "subscription_teaser_short": "More adventures for families – all Plus categories in one yearly membership.",
-  "subscription_price_hint": "Family Spots Plus is designed as a yearly subscription (for example 19.90 €/year).",
-
-  "addon_required_title": "Add-on required",
-  "addon_required_text": "This spot is part of an additional add-on. Activate the add-on to see all details and matching spots.",
-  "addon_required_button": "View add-ons",
-
-  "addon_water_label": "Water & swimming – add-on",
-  "addon_rv_label": "RV & vanlife – add-on",
-  "addon_outdoor_label": "Outdoor & overnight – add-on",
-
-  "addon_price_hint": "Add-ons can be unlocked separately per year (for example 2.99 €/year)."
+  "route_google": "Open in Google Maps"
 }
