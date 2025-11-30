@@ -11,7 +11,6 @@
       name="description"
       content="Family Spots Map – liebevoll kuratierte Karte für Familien-Abenteuer."
     />
-
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="icon" href="img/icon-192.png" />
     <meta name="theme-color" content="#f7901e" />
@@ -19,84 +18,80 @@
 
   <body>
     <div id="app" class="app-root">
-      <!-- HEADER -------------------------------------------------------- -->
+      <!-- HEADER ======================================================= -->
       <header class="app-header">
+        <!-- Obere runde Buttons – so wie früher: ? / Pin / Mond / DE -->
+        <button
+          id="btn-help"
+          class="header-icon-button"
+          aria-label="Über Family Spots Map"
+        >
+          ?
+        </button>
+
+        <button
+          id="btn-locate"
+          class="header-icon-button"
+          aria-label="Spots in meiner Nähe anzeigen"
+        >
+          📍
+        </button>
+
+        <button
+          id="theme-toggle"
+          class="header-icon-button"
+          aria-label="Design umschalten"
+        >
+          🌙
+        </button>
+
+        <button
+          id="language-switcher"
+          class="header-icon-button"
+          aria-label="Sprache wählen"
+        >
+          DE
+        </button>
+
+        <!-- Titel + Untertitel in der Mitte -->
         <div class="app-header-inner">
-          <!-- Links: Hilfe + Standort -->
-          <div class="header-icon-row header-icon-row--left">
-            <button
-              id="btn-help"
-              class="header-icon-button"
-              aria-label="Über Family Spots Map"
-            >
-              ?
-            </button>
-            <button
-              id="btn-locate"
-              class="header-icon-button"
-              aria-label="Spots in meiner Nähe anzeigen"
-            >
-              📍
-            </button>
-          </div>
-
-          <!-- Titel + Tagline -->
-          <div class="header-title-wrap">
-            <h1 class="header-title" tabindex="-1">
-              🇩🇪 Family <span>Spots Map</span> 🇩🇰
-            </h1>
-            <p
-              id="header-tagline"
-              class="header-tagline"
-              data-i18n-de="Entdeckt kleine Abenteuer – in eurer Nähe oder unterwegs"
-              data-i18n-en="Discover little adventures – near you or on the road"
-            >
-              Entdeckt kleine Abenteuer – in eurer Nähe oder unterwegs
-            </p>
-          </div>
-
-          <!-- Rechts: Theme + Sprache -->
-          <div class="header-icon-row header-icon-row--right">
-            <button
-              id="theme-toggle"
-              class="header-icon-button"
-              aria-label="Design umschalten"
-            >
-              🌙
-            </button>
-            <button
-              id="language-switcher"
-              class="header-icon-button"
-              aria-label="Sprache wählen"
-            >
-              DE
-            </button>
-          </div>
+          <h1 class="header-title" tabindex="-1">
+            🇩🇪 Family <span>Spots Map</span> 🇩🇰
+          </h1>
+          <p
+            id="header-tagline"
+            class="header-tagline"
+            data-i18n-de="Entdeckt kleine Abenteuer – in eurer Nähe oder unterwegs"
+            data-i18n-en="Discover little adventures – near you or on the road"
+          >
+            Entdeckt kleine Abenteuer – in eurer Nähe oder unterwegs
+          </p>
         </div>
       </header>
 
-      <!-- MAIN ---------------------------------------------------------- -->
+      <!-- MAIN ========================================================= -->
       <main class="app-main">
-        <!-- MAP-VIEW ---------------------------------------------------- -->
+        <!-- MAP VIEW ---------------------------------------------------- -->
         <div id="view-map" class="view view--active" aria-label="Karte">
           <div class="layout-main">
             <!-- SIDEBAR ------------------------------------------------- -->
             <aside class="sidebar">
-              <!-- TILLA ------------------------------------------------ -->
+              <!-- TILLA ================================================= -->
               <section
                 id="tilla-section"
                 class="sidebar-section tilla-section"
                 aria-labelledby="tilla-title"
               >
-                <div class="tilla-sidebar-card">
-                  <div class="tilla-avatar">
+                <div class="tilla-card">
+                  <div class="tilla-card-image">
+                    <!-- WICHTIG: Pfad an dein echtes Bild anpassen, falls nötig -->
                     <img
                       src="img/tilla.png"
                       alt="Tilla, unsere kleine Schildkröte"
                       loading="lazy"
                     />
                   </div>
-                  <div class="tilla-content">
+                  <div class="tilla-card-content">
                     <h2 id="tilla-title">Familien-Begleiterin Tilla</h2>
                     <p>
                       Hallo, ich bin Tilla – eure Schildkröten-Begleiterin für
@@ -115,7 +110,7 @@
                     </p>
                     <button
                       id="btn-play-idea"
-                      class="btn btn-primary tilla-playidea-btn"
+                      class="btn btn-primary"
                       type="button"
                     >
                       Eine Spielidee für uns, Tilla!
@@ -124,10 +119,10 @@
                 </div>
               </section>
 
-              <!-- KOMPASS-TOGGLE -------------------------------------- -->
+              <!-- FAMILIEN-KOMPASS – TOGGLE-KARTE ---------------------- -->
               <section
                 class="sidebar-section sidebar-section--compact"
-                aria-label="Kompass öffnen oder schließen"
+                aria-label="Familien-Kompass"
               >
                 <div class="sidebar-section-header">
                   <h2>Familien-Kompass</h2>
@@ -141,7 +136,7 @@
                 </div>
               </section>
 
-              <!-- KOMPASS-INHALT (DETAILS) ---------------------------- -->
+              <!-- FAMILIEN-KOMPASS – INHALT ---------------------------- -->
               <details
                 id="compass-section"
                 class="sidebar-section"
@@ -158,11 +153,7 @@
                 </summary>
 
                 <div class="sidebar-section-body">
-                  <h3
-                    class="sidebar-subtitle"
-                    data-i18n-de="Wie seid ihr unterwegs?"
-                    data-i18n-en="How are you travelling today?"
-                  >
+                  <h3 class="sidebar-subtitle">
                     Wie seid ihr unterwegs?
                   </h3>
 
@@ -205,10 +196,10 @@
                 </div>
               </details>
 
-              <!-- PLUS-TOGGLE ----------------------------------------- -->
+              <!-- FAMILY SPOTS PLUS – TOGGLE --------------------------- -->
               <section
                 class="sidebar-section sidebar-section--compact"
-                aria-label="Family Spots Plus ein- oder ausblenden"
+                aria-label="Family Spots Plus"
               >
                 <div class="sidebar-section-header">
                   <h2>Family Spots Plus</h2>
@@ -222,7 +213,7 @@
                 </div>
               </section>
 
-              <!-- PLUS-INHALT (DETAILS) ------------------------------- -->
+              <!-- FAMILY SPOTS PLUS – INHALT --------------------------- -->
               <details
                 id="plus-section"
                 class="sidebar-section"
@@ -246,20 +237,19 @@
                   <p>
                     Family Spots Map ist als kleines Jahresabo für
                     <strong>19,90&nbsp;€/Jahr</strong> gedacht – für alle, die
-                    die App gerne nutzen und die Karte unterstützen möchten. Die
-                    zusätzlichen Plus-Kategorien (z. B. Stellplätze, Camping)
-                    kosten <strong>2,99&nbsp;€/Jahr</strong> extra.
+                    die App gerne nutzen und die Karte unterstützen möchten.
+                    Die zusätzlichen Plus-Kategorien (z. B. Stellplätze,
+                    Camping) kosten <strong>2,99&nbsp;€/Jahr</strong> extra.
                   </p>
 
                   <label for="plus-code-input"><strong>Plus-Code eingeben:</strong></label>
                   <input
                     id="plus-code-input"
                     type="text"
-                    placeholder="z.B. PLUS2025"
                     class="input"
+                    placeholder="z.B. PLUS2025"
                     autocomplete="off"
                   />
-
                   <button
                     id="plus-code-submit"
                     class="btn btn-primary"
@@ -280,10 +270,10 @@
                 </div>
               </details>
 
-              <!-- MEIN TAG-TOGGLE ------------------------------------- -->
+              <!-- MEIN TAG – TOGGLE ------------------------------------ -->
               <section
                 class="sidebar-section sidebar-section--compact"
-                aria-label="Mein Tag öffnen oder schließen"
+                aria-label="Mein Tag"
               >
                 <div class="sidebar-section-header">
                   <h2>Mein Tag</h2>
@@ -297,7 +287,7 @@
                 </div>
               </section>
 
-              <!-- MEIN TAG-INHALT (DETAILS) -------------------------- -->
+              <!-- MEIN TAG – INHALT ------------------------------------ -->
               <details
                 id="daylog-section"
                 class="sidebar-section"
@@ -319,7 +309,6 @@
                     rows="3"
                     placeholder="Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
                   ></textarea>
-
                   <button
                     id="daylog-save"
                     class="btn btn-primary"
@@ -340,7 +329,7 @@
                 </div>
               </details>
 
-              <!-- FILTER ---------------------------------------------- -->
+              <!-- FILTER ------------------------------------------------ -->
               <section class="sidebar-section" aria-label="Spots filtern">
                 <div class="sidebar-section-header">
                   <div>
@@ -358,7 +347,7 @@
                   </button>
                 </div>
 
-                <!-- ab hier werden die Elemente per JS ein-/ausgeblendet -->
+                <!-- Suchfeld -->
                 <div class="sidebar-section-body filter-group">
                   <label for="filter-search"><strong>Suche</strong></label>
                   <input
@@ -370,14 +359,15 @@
                   />
                 </div>
 
+                <!-- Kategorie -->
                 <div class="sidebar-section-body filter-group">
                   <label for="filter-category"><strong>Kategorie</strong></label>
                   <select id="filter-category" class="input">
                     <option value="">Alle Kategorien</option>
-                    <!-- weitere Optionen werden per JS befüllt -->
                   </select>
                 </div>
 
+                <!-- Alter -->
                 <div class="sidebar-section-body filter-group">
                   <label for="filter-age"><strong>Alter</strong></label>
                   <select id="filter-age" class="input">
@@ -388,7 +378,7 @@
                   </select>
                 </div>
 
-                <!-- Stimmung (Mood-Chips) -->
+                <!-- Stimmung -->
                 <div class="sidebar-section-body filter-group">
                   <p><strong>Stimmung</strong></p>
                   <div class="chip-row">
@@ -427,7 +417,7 @@
                   </div>
                 </div>
 
-                <!-- Tag-Filter (Konfiguration aus FILTERS in config.js) -->
+                <!-- Tag-Filter (aus config.js) -->
                 <div class="sidebar-section-body filter-group">
                   <p><strong>Besondere Wünsche</strong></p>
                   <div id="filter-tags" class="tag-filter-row"></div>
@@ -435,10 +425,10 @@
 
                 <!-- Radius -->
                 <div class="sidebar-section-body filter-group">
-                  <label for="filter-radius"
-                    ><strong>Radius</strong>:
-                    <span id="filter-radius-max-label">Alle</span></label
-                  >
+                  <label for="filter-radius">
+                    <strong>Radius</strong>:
+                    <span id="filter-radius-max-label">Alle</span>
+                  </label>
                   <input
                     id="filter-radius"
                     type="range"
@@ -454,21 +444,16 @@
                   </p>
                 </div>
 
-                <!-- Weitere Schalter -->
+                <!-- weitere Filter-Checkboxen -->
                 <div class="sidebar-section-body filter-group filter-group--toggles">
                   <label class="toggle">
-                    <input
-                      id="filter-big-adventures"
-                      type="checkbox"
-                    />
+                    <input id="filter-big-adventures" type="checkbox" />
                     <span>Nur große Abenteuer / längere Ausflüge</span>
                   </label>
-
                   <label class="toggle">
                     <input id="filter-verified" type="checkbox" />
                     <span>Nur verifizierte Spots</span>
                   </label>
-
                   <label class="toggle">
                     <input id="filter-favorites" type="checkbox" />
                     <span>Nur Favoriten</span>
@@ -476,15 +461,10 @@
                 </div>
               </section>
 
-              <!-- SPOT-LISTE ------------------------------------------ -->
+              <!-- SPOT-LISTE -------------------------------------------- -->
               <section class="sidebar-section" aria-label="Spots in deiner Nähe">
                 <div class="sidebar-section-header">
-                  <h2
-                    data-i18n-de="Spots in deiner Nähe"
-                    data-i18n-en="Spots near you"
-                  >
-                    Spots in deiner Nähe
-                  </h2>
+                  <h2>Spots in deiner Nähe</h2>
                   <button
                     id="btn-toggle-view"
                     class="btn btn-secondary"
@@ -493,12 +473,11 @@
                     <span>Nur Karte</span>
                   </button>
                 </div>
-
                 <div id="spot-list" class="spot-list"></div>
               </section>
             </aside>
 
-            <!-- MAP --------------------------------------------------- -->
+            <!-- MAP ----------------------------------------------------- -->
             <section class="map-section" aria-label="Karte">
               <div id="map" class="map"></div>
               <div
@@ -509,15 +488,15 @@
           </div>
         </div>
 
-        <!-- ABOUT-VIEW ------------------------------------------------- -->
+        <!-- ABOUT VIEW -------------------------------------------------- -->
         <div
           id="view-about"
           class="view"
           aria-label="Über Family Spots Map"
-          style="display: none"
+          style="display:none"
         >
           <div class="about-wrapper">
-            <!-- Deutsch -->
+            <!-- DEUTSCH -->
             <section id="page-about-de">
               <h2>Über Family Spots Map</h2>
               <p>
@@ -597,14 +576,14 @@
               </p>
             </section>
 
-            <!-- Englisch -->
+            <!-- ENGLISCH -->
             <section id="page-about-en" class="hidden" aria-hidden="true">
               <h2>About Family Spots Map</h2>
               <p>
-                Family Spots Map is a lovingly curated map for family
-                adventures: playgrounds, wildlife parks, museums, water spots,
-                camper van spots, camping &amp; more – with a focus on quality
-                over quantity.
+                Family Spots Map is a lovingly curated map for family adventures:
+                playgrounds, wildlife parks, museums, water spots, camper van
+                spots, camping &amp; more – with a focus on quality over
+                quantity.
               </p>
 
               <h3>The idea behind the map</h3>
@@ -678,31 +657,31 @@
         </div>
       </main>
 
-      <!-- BOTTOM NAV --------------------------------------------------- -->
+      <!-- BOTTOM NAV =================================================== -->
       <nav class="bottom-nav" aria-label="Hauptnavigation">
         <button
           class="bottom-nav-item bottom-nav-item--active"
           type="button"
           data-route="map"
         >
-          <span class="bottom-nav-label" id="bottom-nav-map-label">Karte</span>
+          <span id="bottom-nav-map-label" class="bottom-nav-label">Karte</span>
         </button>
         <button
           class="bottom-nav-item"
           type="button"
           data-route="about"
         >
-          <span class="bottom-nav-label" id="bottom-nav-about-label"
-            >Über Family Spots Map</span
-          >
+          <span id="bottom-nav-about-label" class="bottom-nav-label">
+            Über Family Spots Map
+          </span>
         </button>
       </nav>
 
-      <!-- TOAST -------------------------------------------------------- -->
+      <!-- TOAST ======================================================== -->
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </div>
 
-    <!-- SCRIPTS -------------------------------------------------------- -->
+    <!-- SCRIPTS ======================================================== -->
     <script type="module" src="js/app.js"></script>
   </body>
 </html>
