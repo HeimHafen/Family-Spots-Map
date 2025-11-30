@@ -933,8 +933,12 @@ function getSpotTags(spot) {
   }
 
   // 2. Kategorien einsammeln (category + categories[])
-  const catSlugs = [];
-  if (spot.category) catSlugs.push(String(spot.category));
+  const catSlugs = new Set();
+
+  if (spot.category) {
+    catSlugs.add(String(spot.category));
+  }
+
   if (Array.isArray(spot.categories)) {
     spot.categories.forEach((c) => {
       if (c) catSlugs.add(String(c));
