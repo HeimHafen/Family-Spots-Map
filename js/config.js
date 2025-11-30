@@ -797,3 +797,184 @@ export const HEADER_TAGLINE_TEXT = {
 
 // Onboarding-Hint (Kompass / Plus / Mein Tag)
 export const COMPASS_PLUS_HINT_KEY = "fs_hint_compass_plus_v1";
+
+// ------------------------------------------------------
+// Abos & Add-ons (Subscription-Modell)
+// ------------------------------------------------------
+
+/**
+ * Basis-Abos (z. B. 19,90 €/Jahr)
+ * – aktuell 1 Abo: "Family Spots Plus"
+ */
+export const SUBSCRIPTIONS = Object.freeze({
+  family_plus: {
+    id: "family_plus",
+    type: "subscription",
+    pricePerYear: 19.9,
+    currency: "EUR",
+    label: {
+      de: "Family Spots Plus",
+      en: "Family Spots Plus"
+    },
+    shortLabel: {
+      de: "Plus",
+      en: "Plus"
+    },
+    description: {
+      de: "Schaltet zusätzliche Spots, Kategorien und Komfort-Funktionen für Familien frei.",
+      en: "Unlocks additional spots, categories and comfort features for families."
+    },
+    benefits: [
+      {
+        id: "more_spots",
+        label: {
+          de: "Mehr sorgfältig kuratierte Spots & Regionen",
+          en: "More carefully curated spots & regions"
+        }
+      },
+      {
+        id: "special_categories",
+        label: {
+          de: "Spezielle Kategorien wie WoMo-Spots, Bikepacking & Routen",
+          en: "Special categories such as RV spots, bikepacking & routes"
+        }
+      },
+      {
+        id: "support_project",
+        label: {
+          de: "Unterstützt die Weiterentwicklung von Family Spots Map",
+          en: "Supports the ongoing development of Family Spots Map"
+        }
+      }
+    ]
+  }
+});
+
+/**
+ * Add-ons (z. B. 2,99 €/Jahr) – an ein Basis-Abo gebunden.
+ */
+export const ADDONS = Object.freeze({
+  addon_water: {
+    id: "addon_water",
+    type: "addon",
+    requiresSubscriptionId: "family_plus",
+    pricePerYear: 2.99,
+    currency: "EUR",
+    label: {
+      de: "Wasser & Baden Add-on",
+      en: "Water & swimming add-on"
+    },
+    description: {
+      de: "Besondere Wasser-Spots, Badeseen & familienfreundliche Badeplätze.",
+      en: "Special water spots, swimming lakes and family-friendly bathing places."
+    },
+    categories: [
+      "badesee",
+      "strand",
+      "wasserspielplatz",
+      "schwimmbad"
+    ]
+  },
+
+  addon_rv: {
+    id: "addon_rv",
+    type: "addon",
+    requiresSubscriptionId: "family_plus",
+    pricePerYear: 2.99,
+    currency: "EUR",
+    label: {
+      de: "WoMo & Vanlife Add-on",
+      en: "RV & vanlife add-on"
+    },
+    description: {
+      de: "Extra-Spots für Reisen mit Wohnmobil, Camper & Rad.",
+      en: "Extra spots for travelling with RV, camper and bike."
+    },
+    categories: [
+      "stellplatz-spielplatz-naehe-kostenlos",
+      "wohnmobil-service-station",
+      "rastplatz-spielplatz-dusche",
+      "bikepacking-spot",
+      "campingplatz-familien"
+    ]
+  }
+});
+
+/**
+ * Zugriffsregeln pro Kategorie:
+ *
+ *  - level: "free" | "subscription" | "addon"
+ *  - subscriptionId: wenn "subscription" oder "addon"
+ *  - addonId: wenn level === "addon"
+ *
+ * Default ist "free", falls Kategorie hier nicht eingetragen ist.
+ */
+export const CATEGORY_ACCESS = Object.freeze({
+  defaultLevel: "free",
+  perCategory: {
+    // ---------- Nur mit Basis-Abo (Family Spots Plus) ----------
+    freizeitpark: {
+      level: "subscription",
+      subscriptionId: "family_plus"
+    },
+    trampolinpark: {
+      level: "subscription",
+      subscriptionId: "family_plus"
+    },
+    "kletterwald-hochseilgarten": {
+      level: "subscription",
+      subscriptionId: "family_plus"
+    },
+
+    // ---------- Add-on: Wasser & Baden ----------
+    badesee: {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_water"
+    },
+    strand: {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_water"
+    },
+    wasserspielplatz: {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_water"
+    },
+    schwimmbad: {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_water"
+    },
+
+    // ---------- Add-on: WoMo & Vanlife ----------
+    "stellplatz-spielplatz-naehe-kostenlos": {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_rv"
+    },
+    "wohnmobil-service-station": {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_rv"
+    },
+    "rastplatz-spielplatz-dusche": {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_rv"
+    },
+    "bikepacking-spot": {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_rv"
+    },
+    "campingplatz-familien": {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_rv"
+    }
+
+    // ➕ weitere Kategorien kannst du hier jederzeit ergänzen
+  }
+});
