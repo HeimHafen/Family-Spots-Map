@@ -1,7 +1,7 @@
 // js/app.js
 // ======================================================
-// Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
-// Ziel: Klar strukturiert, robust und gut wartbar
+// Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
+// Map- und Filterlogik ist in map.js / filters.js ausgelagert.
 // ======================================================
 
 "use strict";
@@ -27,18 +27,28 @@ import {
   CATEGORY_LABELS_EN,
   HEADER_TAGLINE_TEXT,
   COMPASS_PLUS_HINT_KEY,
+  CATEGORY_TAGS,
   FILTERS,
   CATEGORY_ACCESS
 } from "./config.js";
 
+// *** NEU: ausgelagerte Filter- und Map-Funktionen importieren ***
 import {
+  normalizeSpot,
+  filterSpots,
   getSpotName,
   getSpotSubtitle,
   getSpotId,
-  getSpotTags,
-  normalizeSpot,
-  doesSpotMatchFilters
-} from "./features/filters.js";
+  getSpotMetaParts
+} from "./filters.js";
+
+import {
+  ensureMarkerClusterPlugin,
+  initMap,
+  renderMarkers,
+  getRouteUrlsForSpot,
+  hasValidLatLng
+} from "./map.js";
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
@@ -167,8 +177,10 @@ let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
 // Map / Daten
-let map;
-let markersLayer;
+/** @type {L.Map|null} */
+let map = null;
+/** @type {L.LayerGroup|null} */
+let markersLayer = null;
 /** @type {Spot[]} */
 let spots = [];
 /** @type {Spot[]} */
@@ -716,109 +728,8 @@ function showToast(keyOrMessage) {
 }
 
 // ------------------------------------------------------
-// Map / Spots – Setup
+// Spots – Cache / Laden
 // ------------------------------------------------------
-
-let markerClusterPluginPromise = null;
-
-/**
- * Stellt sicher, dass Leaflet.markercluster geladen ist, bevor die Map
- * initialisiert wird. Falls das Plugin bereits vorhanden ist, passiert nichts.
- * So erscheinen die Spots wieder als Cluster, die beim Zoomen „aufpoppen“.
- */
-function ensureMarkerClusterPlugin() {
-  if (typeof L === "undefined") {
-    // Leaflet noch nicht verfügbar – dann können wir hier nichts laden.
-    return Promise.resolve();
-  }
-
-  if (typeof L.markerClusterGroup === "function") {
-    // Plugin ist schon eingebunden (z.B. über index.html)
-    return Promise.resolve();
-  }
-
-  if (markerClusterPluginPromise) {
-    return markerClusterPluginPromise;
-  }
-
-  markerClusterPluginPromise = new Promise((resolve) => {
-    try {
-      // CSS für Markercluster nur einmal einhängen
-      const existingCss = document.querySelector(
-        'link[data-fsm-markercluster="css"]'
-      );
-      if (!existingCss) {
-        const baseUrl =
-          "https://unpkg.com/leaflet.markercluster@1.5.3/dist/";
-        const css1 = document.createElement("link");
-        css1.rel = "stylesheet";
-        css1.href = baseUrl + "MarkerCluster.css";
-        css1.setAttribute("data-fsm-markercluster", "css");
-        document.head.appendChild(css1);
-
-        const css2 = document.createElement("link");
-        css2.rel = "stylesheet";
-        css2.href = baseUrl + "MarkerCluster.Default.css";
-        css2.setAttribute("data-fsm-markercluster", "css");
-        document.head.appendChild(css2);
-      }
-
-      const script = document.createElement("script");
-      script.src =
-        "https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js";
-      script.async = true;
-      script.onload = () => {
-        resolve();
-      };
-      script.onerror = () => {
-        console.warn(
-          "[Family Spots] Konnte Leaflet.markercluster nicht laden – es werden normale Marker genutzt."
-        );
-        resolve();
-      };
-      document.head.appendChild(script);
-    } catch (err) {
-      console.warn(
-        "[Family Spots] Fehler beim Laden von Leaflet.markercluster:",
-        err
-      );
-      resolve();
-    }
-  });
-
-  return markerClusterPluginPromise;
-}
-
-function initMap() {
-  if (typeof L === "undefined" || typeof L.map !== "function") {
-    console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
-    map = null;
-    markersLayer = null;
-    return;
-  }
-
-  map = L.map("map", {
-    center: DEFAULT_MAP_CENTER,
-    zoom: DEFAULT_MAP_ZOOM,
-    zoomControl: false
-  });
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 18,
-    attribution: "© OpenStreetMap-Mitwirkende"
-  }).addTo(map);
-
-  if (typeof L.markerClusterGroup === "function") {
-    markersLayer = L.markerClusterGroup();
-  } else {
-    console.warn(
-      "[Family Spots] markerClusterGroup nicht gefunden – nutze normale LayerGroup."
-    );
-    markersLayer = L.layerGroup();
-  }
-
-  map.addLayer(markersLayer);
-}
 
 /**
  * Lädt Spots aus Cache (falls vorhanden).
@@ -909,11 +820,25 @@ async function loadSpots() {
       showSpotsLoadErrorUI();
       spots = [];
       filteredSpots = [];
-      renderMarkers();
+      // Marker leeren
+      if (map && markersLayer) {
+        renderMarkers({
+          map,
+          markersLayer,
+          spots: [],
+          maxMarkers: MAX_MARKERS_RENDER,
+          currentLang,
+          showToast,
+          hasShownMarkerLimitToast,
+          focusSpotOnMap,
+          hasValidLatLng
+        });
+      }
       return;
     }
   }
 
+  // Spots über filters.js normalisieren
   spots = raw.map(normalizeSpot);
 
   loadFavoritesFromStorage();
@@ -952,75 +877,6 @@ function saveFavoritesToStorage() {
   } catch (err) {
     console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
   }
-}
-
-// ------------------------------------------------------
-// Spots – General Helpers
-// ------------------------------------------------------
-
-/**
- * Koordinaten validieren und bei Bedarf String → Zahl konvertieren.
- * @param {Spot} spot
- * @returns {boolean}
- */
-function hasValidLatLng(spot) {
-  if (spot == null) return false;
-
-  let { lat, lng } = spot;
-
-  if (typeof lat === "string") lat = parseFloat(lat);
-  if (typeof lng === "string") lng = parseFloat(lng);
-
-  if (typeof lat !== "number" || typeof lng !== "number") return false;
-  if (Number.isNaN(lat) || Number.isNaN(lng)) return false;
-  if (lat < -90 || lat > 90) return false;
-  if (lng < -180 || lng > 180) return false;
-
-  // zurückschreiben, damit der Spot danach sauber ist
-  spot.lat = lat;
-  spot.lng = lng;
-  return true;
-}
-
-/**
- * Meta-Info zu einem Spot zentral berechnen.
- * @param {Spot} spot
- * @returns {string[]}
- */
-function getSpotMetaParts(spot) {
-  const parts = [];
-  if (spot.category) parts.push(getCategoryLabel(spot.category));
-
-  const isVerified = !!spot.verified || !!spot.isVerified;
-  if (isVerified) {
-    parts.push(currentLang === LANG_DE ? "verifiziert" : "verified");
-  }
-
-  if (spot.visit_minutes) {
-    parts.push(
-      currentLang === LANG_DE
-        ? `~${spot.visit_minutes} Min.`
-        : `~${spot.visit_minutes} min`
-    );
-  }
-  return parts;
-}
-
-/**
- * Routen-URLs für einen Spot berechnen.
- * @param {Spot} spot
- */
-function getRouteUrlsForSpot(spot) {
-  if (!hasValidLatLng(spot)) return null;
-
-  const { lat, lng } = spot;
-  const name = getSpotName(spot);
-  const encodedName = encodeURIComponent(name || "");
-
-  return {
-    apple: `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`,
-    google: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
-  };
 }
 
 // ------------------------------------------------------
@@ -1109,19 +965,6 @@ function populateCategoryOptions() {
 // Radius / Geodistanz
 // ------------------------------------------------------
 
-function isSpotInRadius(spot, centerLatLng, radiusKm) {
-  if (!map || !centerLatLng || typeof centerLatLng.distanceTo !== "function") {
-    return true;
-  }
-  if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
-  if (!hasValidLatLng(spot)) return true;
-
-  const spotLatLng = L.latLng(spot.lat, spot.lng);
-  const distanceMeters = centerLatLng.distanceTo(spotLatLng);
-  const distanceKm = distanceMeters / 1000;
-  return distanceKm <= radiusKm;
-}
-
 function updateRadiusTexts() {
   if (!filterRadiusEl || !filterRadiusMaxLabelEl || !filterRadiusDescriptionEl)
     return;
@@ -1174,8 +1017,12 @@ function initRadiusSliderA11y() {
 }
 
 // ------------------------------------------------------
-// Tag-Filter-Helfer (nur UI; Logik ist in features/filters.js)
+// Tag-Filter-Helfer (State → Tags)
 // ------------------------------------------------------
+
+function getActiveFilterTagIds() {
+  return Array.from(activeTagFilters);
+}
 
 /**
  * Rendert die Tag-Filter-Chips in den Container #filter-tags (falls vorhanden).
@@ -1228,7 +1075,7 @@ function renderTagFilterChips() {
 }
 
 // ------------------------------------------------------
-// Filterlogik
+// Filterlogik (nutzt filterSpots() aus filters.js)
 // ------------------------------------------------------
 
 /** Filter anwenden und sowohl Liste als auch Marker aktualisieren. */
@@ -1236,7 +1083,20 @@ function applyFiltersAndRender() {
   if (!spots.length) {
     filteredSpots = [];
     renderSpotList();
-    renderMarkers();
+
+    if (map && markersLayer) {
+      hasShownMarkerLimitToast = renderMarkers({
+        map,
+        markersLayer,
+        spots: [],
+        maxMarkers: MAX_MARKERS_RENDER,
+        currentLang,
+        showToast,
+        hasShownMarkerLimitToast,
+        focusSpotOnMap,
+        hasValidLatLng
+      });
+    }
 
     if (tilla && typeof tilla.onNoSpotsFound === "function") {
       tilla.onNoSpotsFound();
@@ -1253,28 +1113,39 @@ function applyFiltersAndRender() {
 
   const radiusKm = RADIUS_STEPS_KM[radiusStep] ?? Infinity;
 
-  filteredSpots = spots.filter((spot) => {
-    const matchesFilters = doesSpotMatchFilters(spot, {
-      searchTerm,
-      categoryFilter,
-      ageFilter,
-      moodFilter,
-      travelMode,
-      onlyBigAdventures,
-      onlyVerified,
-      onlyFavorites,
-      favoritesSet: favorites,
-      plusActive,
-      activeTagFilterIds: activeTagFilters
-    });
-
-    if (!matchesFilters) return false;
-
-    return isSpotInRadius(spot, center, radiusKm);
+  // Filterzustand an filters.js übergeben
+  filteredSpots = filterSpots(spots, {
+    plusActive,
+    searchTerm,
+    categoryFilter,
+    ageFilter,
+    moodFilter,
+    travelMode,
+    onlyBigAdventures,
+    onlyVerified,
+    onlyFavorites,
+    favorites,
+    activeFilterIds: getActiveFilterTagIds(),
+    center,
+    radiusKm,
+    currentLang
   });
 
   renderSpotList();
-  renderMarkers();
+
+  if (map && markersLayer) {
+    hasShownMarkerLimitToast = renderMarkers({
+      map,
+      markersLayer,
+      spots: filteredSpots,
+      maxMarkers: MAX_MARKERS_RENDER,
+      currentLang,
+      showToast,
+      hasShownMarkerLimitToast,
+      focusSpotOnMap,
+      hasValidLatLng
+    });
+  }
 
   if (!tilla) return;
 
@@ -1288,62 +1159,8 @@ function applyFiltersAndRender() {
 }
 
 // ------------------------------------------------------
-// Marker & Liste
+// Marker & Liste (Marker-Rendering kommt aus map.js, Liste bleibt hier)
 // ------------------------------------------------------
-
-function renderMarkers() {
-  if (!markersLayer) return;
-  markersLayer.clearLayers();
-
-  if (!filteredSpots || !filteredSpots.length) return;
-
-  const shouldLimit = filteredSpots.length > MAX_MARKERS_RENDER;
-  const toRender = shouldLimit
-    ? filteredSpots.slice(0, MAX_MARKERS_RENDER)
-    : filteredSpots;
-
-  toRender.forEach((spot) => {
-    if (!hasValidLatLng(spot)) return;
-    if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
-
-    // Marker-HTML (kleiner Punkt/Pin)
-    const el = document.createElement("div");
-    el.className = "spot-marker";
-    const inner = document.createElement("div");
-    inner.className = "spot-marker-inner pin-pop";
-    el.appendChild(inner);
-
-    const icon = L.divIcon({
-      html: el,
-      className: "",
-      iconSize: [24, 24],
-      iconAnchor: [12, 12]
-    });
-
-    const marker = L.marker([spot.lat, spot.lng], { icon });
-
-    // Kein Leaflet-Popup mehr – nur noch der große Info-Kasten unten
-    marker.on("click", () => {
-      focusSpotOnMap(spot); // zentriert Karte + öffnet Detailpanel
-    });
-
-    markersLayer.addLayer(marker);
-  });
-
-  if (shouldLimit) {
-    if (!hasShownMarkerLimitToast) {
-      hasShownMarkerLimitToast = true;
-      const msg =
-        currentLang === LANG_DE
-          ? `Nur die ersten ${MAX_MARKERS_RENDER} Spots auf der Karte – bitte Filter oder Zoom nutzen.`
-          : `Only the first ${MAX_MARKERS_RENDER} spots are shown on the map – please use filters or zoom in.`;
-      showToast(msg);
-    }
-  } else {
-    // Reset, falls Filter/Zoom wieder unter das Limit fallen
-    hasShownMarkerLimitToast = false;
-  }
-}
 
 function renderSpotList() {
   if (!spotListEl) return;
@@ -1382,7 +1199,7 @@ function renderSpotList() {
     const metaEl = document.createElement("p");
     metaEl.className = "spot-card-meta";
 
-    const metaParts = getSpotMetaParts(spot);
+    const metaParts = getSpotMetaParts(spot, currentLang);
     if (Array.isArray(spot.tags)) {
       metaParts.push(spot.tags.join(", "));
     }
@@ -1489,7 +1306,7 @@ function showSpotDetails(spot) {
   const spotId = getSpotId(spot);
   const name = getSpotName(spot);
   const subtitle = getSpotSubtitle(spot);
-  const metaParts = getSpotMetaParts(spot);
+  const metaParts = getSpotMetaParts(spot, currentLang);
   const tags = Array.isArray(spot.tags) ? spot.tags : [];
 
   let description = "";
@@ -1565,7 +1382,7 @@ function showSpotDetails(spot) {
     metaEl.appendChild(span);
   });
 
-  // Tags (nur originale Spot-Tags, nicht die technischen Kategorie-Tags)
+  // Tags (nur originale Spot-Tags)
   const tagsEl = document.createElement("div");
   tagsEl.className = "spot-details-tags";
   tags.forEach((tag) => {
@@ -2029,11 +1846,15 @@ async function init() {
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
 
-    // WICHTIG: Markercluster-Plugin laden, bevor die Map gebaut wird,
-    // damit die Spots wieder als Cluster erscheinen und beim Zoomen „aufpoppen“.
+    // Markercluster-Plugin laden, bevor die Map gebaut wird
     await ensureMarkerClusterPlugin();
 
-    initMap();
+    const mapResult = initMap({
+      center: DEFAULT_MAP_CENTER,
+      zoom: DEFAULT_MAP_ZOOM
+    });
+    map = mapResult.map;
+    markersLayer = mapResult.markersLayer;
 
     if (map) {
       if (spotDetailEl) {
@@ -2392,8 +2213,6 @@ async function init() {
 
     switchRoute("map");
     loadSpots();
-
-    // TODO: map.js, filters.js, utils.js könnten Funktionen modularisieren
   } catch (err) {
     console.error("[Family Spots] Init-Fehler:", err);
   }
