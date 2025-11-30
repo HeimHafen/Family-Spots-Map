@@ -1,33 +1,20 @@
 // js/features/map.js
-// ----------------------------------------------
-// Leaflet-Map-Kapselung (Initialisierung & Marker)
-// ----------------------------------------------
+// ======================================================
+// Leaflet-Map + Marker-Cluster für Family Spots
+// Kapselt die komplette Kartenlogik
+// ======================================================
 
 "use strict";
 
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "../config.js";
 
-/**
- * @typedef {Object} Spot
- * @property {number} [lat]
- * @property {number} [lng]
- */
-
-// interne Referenzen
-let map = null;
+let mapInstance = null;
 let markersLayer = null;
 let markerClusterPluginPromise = null;
 
 /**
- * Liefert die aktuelle Leaflet-Map (oder null, wenn nicht initialisiert).
- */
-export function getMap() {
-  return map;
-}
-
-/**
  * Stellt sicher, dass Leaflet.markercluster geladen ist, bevor die Map
- * initialisiert wird.
+ * initialisiert wird. Falls das Plugin bereits vorhanden ist, passiert nichts.
  */
 export function ensureMarkerClusterPlugin() {
   if (typeof L === "undefined") {
@@ -93,18 +80,18 @@ export function ensureMarkerClusterPlugin() {
 }
 
 /**
- * Initialisiert die Leaflet-Map und den Marker-Layer.
- * @returns {any} die Map-Instanz oder null
+ * Initialisiert die Leaflet-Karte im Element #map.
+ * Nutzt DEFAULT_MAP_CENTER / DEFAULT_MAP_ZOOM aus config.js.
  */
 export function initMap() {
   if (typeof L === "undefined" || typeof L.map !== "function") {
     console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
-    map = null;
+    mapInstance = null;
     markersLayer = null;
-    return null;
+    return;
   }
 
-  map = L.map("map", {
+  mapInstance = L.map("map", {
     center: DEFAULT_MAP_CENTER,
     zoom: DEFAULT_MAP_ZOOM,
     zoomControl: false
@@ -113,7 +100,7 @@ export function initMap() {
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 18,
     attribution: "© OpenStreetMap-Mitwirkende"
-  }).addTo(map);
+  }).addTo(mapInstance);
 
   if (typeof L.markerClusterGroup === "function") {
     markersLayer = L.markerClusterGroup();
@@ -124,27 +111,48 @@ export function initMap() {
     markersLayer = L.layerGroup();
   }
 
-  map.addLayer(markersLayer);
-  return map;
+  mapInstance.addLayer(markersLayer);
 }
 
 /**
- * Marker neu rendern.
- * Erwartet bereits gefilterte Spots – Limit & Toast macht app.js.
- *
- * @param {Spot[]} spots
- * @param {{ onSpotClick?: (spot: Spot) => void, hasValidLatLng: (spot: Spot) => boolean }} options
+ * Liefert die aktuelle Leaflet-Map-Instanz (oder null).
  */
-export function renderMarkers(spots, { onSpotClick, hasValidLatLng }) {
+export function getMap() {
+  return mapInstance;
+}
+
+/**
+ * Optional, falls du später mal direkt an den Layer willst.
+ */
+export function getMarkersLayer() {
+  return markersLayer;
+}
+
+/**
+ * Rendert Marker für eine Spot-Liste auf der Karte.
+ * - löscht vorher alle Marker
+ * - erzeugt Marker-Cluster (falls Plugin geladen)
+ *
+ * @param {Array<Object>} spots
+ * @param {{
+ *   onSpotClick?: (spot: any) => void,
+ *   hasValidLatLng?: (spot: any) => boolean
+ * }} [options]
+ */
+export function renderMarkers(spots, options = {}) {
+  const { onSpotClick, hasValidLatLng } = options;
+
   if (!markersLayer) return;
   markersLayer.clearLayers();
 
-  if (!spots || !spots.length) return;
-  if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
+  if (!Array.isArray(spots) || !spots.length) return;
 
   spots.forEach((spot) => {
-    if (!hasValidLatLng(spot)) return;
+    if (typeof hasValidLatLng === "function" && !hasValidLatLng(spot)) return;
 
+    if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
+
+    // Marker-HTML (kleiner Punkt/Pin)
     const el = document.createElement("div");
     el.className = "spot-marker";
     const inner = document.createElement("div");
@@ -160,8 +168,11 @@ export function renderMarkers(spots, { onSpotClick, hasValidLatLng }) {
 
     const marker = L.marker([spot.lat, spot.lng], { icon });
 
+    // Kein Popup – die App zeigt das große Detailpanel, darum Callback nach außen
     if (typeof onSpotClick === "function") {
-      marker.on("click", () => onSpotClick(spot));
+      marker.on("click", () => {
+        onSpotClick(spot);
+      });
     }
 
     markersLayer.addLayer(marker);
