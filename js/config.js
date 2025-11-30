@@ -84,8 +84,7 @@ export const CATEGORY_GROUPS = {
     "wildpark",
     "bauernhof",
     "naturerlebnispfad",
-    "walderlebnisroute",
-    "freilichtmuseum"
+    "walderlebnisroute"
   ],
   "Wasser & Schwimmen": [
     "schwimmbad",
@@ -102,6 +101,7 @@ export const CATEGORY_GROUPS = {
     "kletterwald-hochseilgarten",
     "boulderpark",
     "minigolf",
+    "familien-event",
 
     // ➕ NEU
     "hoehle",
@@ -120,9 +120,13 @@ export const CATEGORY_GROUPS = {
     "kinder-familiencafe",
     "familien-restaurant"
   ],
-  "Lernen & Kultur": ["museum-kinder", "kinder-museum", "bibliothek"],
+  "Lernen & Kultur": [
+    "museum-kinder",
+    "kinder-museum",
+    "freilichtmuseum",
+    "bibliothek"
+  ],
   "Praktisches": ["oeffentliche-toilette", "wickelraum"],
-  "Events & Erlebnisse": ["familien-event"],
   "Unterwegs mit WoMo & Rad": [
     "stellplatz-spielplatz-naehe-kostenlos",
     "wohnmobil-service-station",
@@ -150,7 +154,6 @@ export const CATEGORY_GROUP_LABELS = {
     "Essen & Trinken": "Essen & Trinken",
     "Lernen & Kultur": "Lernen & Kultur",
     "Praktisches": "Praktisches",
-    "Events & Erlebnisse": "Events & Erlebnisse",
     "Unterwegs mit WoMo & Rad": "Unterwegs mit WoMo & Rad",
     "Entspannung & Naturorte": "Entspannung & Naturorte"
   },
@@ -163,7 +166,6 @@ export const CATEGORY_GROUP_LABELS = {
     "Essen & Trinken": "Food & drinks",
     "Lernen & Kultur": "Learning & culture",
     "Praktisches": "Useful on the way",
-    "Events & Erlebnisse": "Events & experiences",
     "Unterwegs mit WoMo & Rad": "On the road (RV & bike)",
     "Entspannung & Naturorte": "Relax & nature"
   }
@@ -230,8 +232,8 @@ export const CATEGORY_LABELS_DE = {
   "familien-event": "Familien-Event",
   "stellplatz-spielplatz-naehe-kostenlos":
     "Kostenloser Stellplatz (Spielplatznähe)",
-  "wohnmobil-service-station": "Wohnmobil Service-Station",
-  "rastplatz-spielplatz-dusche": "Rastplatz (Spielplatz + Dusche)",
+  "wohnmobil-service-station": "Wohnmobil-Service-Station",
+  "rastplatz-spielplatz-dusche": "Rastplatz (Spielplatz & Dusche)",
   "bikepacking-spot": "Bikepacking-Spot",
   "campingplatz-familien": "Familien-Campingplatz",
   "park-garten": "Park / Garten",
@@ -245,9 +247,9 @@ export const CATEGORY_LABELS_EN = {
   waldspielplatz: "Forest playground",
   wasserspielplatz: "Water playground",
   "barrierefreier-spielplatz": "Accessible playground",
-  bewegungspark: "Movement park",
+  bewegungspark: "Activity park",
   multifunktionsfeld: "Multi-sport court",
-  bolzplatz: "Soccer court",
+  bolzplatz: "Soccer pitch",
   pumptrack: "Pumptrack",
   skatepark: "Skate park",
   verkehrsgarten: "Traffic training park",
@@ -300,12 +302,489 @@ export const CATEGORY_LABELS_EN = {
   "stellplatz-spielplatz-naehe-kostenlos":
     "Free RV spot (near playground)",
   "wohnmobil-service-station": "RV service station",
-  "rastplatz-spielplatz-dusche": "Rest area (playground + shower)",
+  "rastplatz-spielplatz-dusche": "Rest area (playground & shower)",
   "bikepacking-spot": "Bikepacking spot",
   "campingplatz-familien": "Family campground",
   "park-garten": "Park / garden",
   picknickwiese: "Picnic meadow"
 };
+
+// ------------------------------------------------------
+// Kategorie-Tags (für Filter-Logik)
+// ------------------------------------------------------
+
+export const CATEGORY_TAGS = {
+  spielplatz: ["playground", "outdoor", "all-ages", "family-friendly"],
+  abenteuerspielplatz: [
+    "playground",
+    "adventure",
+    "outdoor",
+    "older-kids",
+    "family-friendly"
+  ],
+  "indoor-spielplatz": [
+    "playground",
+    "indoor",
+    "bad-weather",
+    "younger-kids",
+    "family-friendly"
+  ],
+  waldspielplatz: [
+    "playground",
+    "outdoor",
+    "forest",
+    "nature",
+    "family-friendly"
+  ],
+  wasserspielplatz: [
+    "playground",
+    "water",
+    "outdoor",
+    "summer",
+    "family-friendly"
+  ],
+  "barrierefreier-spielplatz": [
+    "playground",
+    "accessible",
+    "wheelchair",
+    "outdoor",
+    "family-friendly"
+  ],
+  bewegungspark: [
+    "playground",
+    "sport",
+    "fitness",
+    "outdoor",
+    "family-friendly"
+  ],
+  multifunktionsfeld: ["sport", "ball-sports", "outdoor", "family-friendly"],
+  bolzplatz: ["sport", "soccer", "outdoor", "family-friendly"],
+  pumptrack: ["sport", "bike", "pumptrack", "outdoor", "family-friendly"],
+  skatepark: ["sport", "skate", "bikes", "outdoor", "teen-friendly"],
+  verkehrsgarten: [
+    "playground",
+    "traffic-training",
+    "bikes",
+    "learning",
+    "outdoor",
+    "family-friendly"
+  ],
+  "toddler-barfuss-motorik": [
+    "playground",
+    "toddler-friendly",
+    "sensory",
+    "barefoot",
+    "family-friendly"
+  ],
+
+  zoo: [
+    "animals",
+    "zoo",
+    "full-day",
+    "paid",
+    "stroller-friendly",
+    "family-friendly"
+  ],
+  tierpark: ["animals", "petting-zoo", "outdoor", "family-friendly"],
+  wildpark: ["animals", "wildlife", "nature", "outdoor", "family-friendly"],
+  bauernhof: [
+    "animals",
+    "farm",
+    "petting-zoo",
+    "nature",
+    "outdoor",
+    "family-friendly"
+  ],
+  naturerlebnispfad: [
+    "hiking",
+    "learning",
+    "nature",
+    "outdoor",
+    "kids-friendly",
+    "family-friendly"
+  ],
+  walderlebnisroute: [
+    "hiking",
+    "forest",
+    "nature",
+    "learning",
+    "outdoor",
+    "family-friendly"
+  ],
+
+  freilichtmuseum: [
+    "museum",
+    "outdoor",
+    "history",
+    "culture",
+    "learning",
+    "family-friendly"
+  ],
+
+  schwimmbad: [
+    "water",
+    "swimming",
+    "sport",
+    "indoor-or-outdoor",
+    "family-friendly"
+  ],
+  badesee: [
+    "water",
+    "swimming",
+    "lake",
+    "outdoor",
+    "summer",
+    "nature",
+    "family-friendly"
+  ],
+  strand: [
+    "water",
+    "beach",
+    "outdoor",
+    "summer",
+    "family-friendly"
+  ],
+  eisbahn: [
+    "ice-skating",
+    "winter",
+    "sport",
+    "seasonal",
+    "family-friendly"
+  ],
+  rodelhuegel: [
+    "sledding",
+    "winter",
+    "snow",
+    "outdoor",
+    "family-friendly"
+  ],
+
+  freizeitpark: [
+    "theme-park",
+    "rides",
+    "full-day",
+    "paid",
+    "family-friendly"
+  ],
+  trampolinpark: [
+    "trampoline",
+    "sport",
+    "indoor",
+    "bad-weather",
+    "family-friendly"
+  ],
+  kletterhalle: [
+    "climbing",
+    "indoor",
+    "sport",
+    "bad-weather",
+    "family-friendly"
+  ],
+  "kletteranlage-outdoor": [
+    "climbing",
+    "outdoor",
+    "sport",
+    "family-friendly"
+  ],
+  "kletterwald-hochseilgarten": [
+    "climbing",
+    "rope-course",
+    "adventure",
+    "outdoor",
+    "family-friendly"
+  ],
+  boulderpark: ["climbing", "bouldering", "sport", "family-friendly"],
+  minigolf: ["sport", "mini-golf", "game", "family-friendly"],
+
+  hoehle: [
+    "hiking",
+    "adventure",
+    "nature",
+    "outdoor",
+    "older-kids",
+    "family-friendly"
+  ],
+  felsenwanderung: [
+    "hiking",
+    "adventure",
+    "nature",
+    "outdoor",
+    "family-friendly"
+  ],
+  aussichtspunkt: [
+    "nature",
+    "viewpoint",
+    "outdoor",
+    "relax",
+    "family-friendly"
+  ],
+  baumhaus: [
+    "playground",
+    "viewpoint",
+    "adventure",
+    "outdoor",
+    "family-friendly"
+  ],
+  labyrinth: ["game", "maze", "adventure", "family-friendly"],
+  klangpfad: [
+    "nature",
+    "learning",
+    "sensory",
+    "outdoor",
+    "family-friendly"
+  ],
+  "ueberdachter-spielplatz": [
+    "playground",
+    "outdoor",
+    "covered",
+    "rain-safe",
+    "family-friendly"
+  ],
+  "dirtbike-track": [
+    "sport",
+    "bike",
+    "dirtbike",
+    "outdoor",
+    "teen-friendly"
+  ],
+  "streetball-platz": [
+    "sport",
+    "basketball",
+    "streetball",
+    "outdoor",
+    "teen-friendly"
+  ],
+  "waldbaden-ort": [
+    "nature",
+    "forest",
+    "relax",
+    "quiet",
+    "outdoor",
+    "family-friendly"
+  ],
+  "natur-aussichtspunkt": [
+    "nature",
+    "viewpoint",
+    "outdoor",
+    "family-friendly"
+  ],
+
+  "wanderweg-kinderwagen": [
+    "hiking",
+    "stroller-friendly",
+    "outdoor",
+    "nature",
+    "family-friendly"
+  ],
+  "radweg-family": [
+    "cycling",
+    "family-route",
+    "outdoor",
+    "family-friendly"
+  ],
+
+  familiencafe: ["food", "cafe", "indoor", "family-friendly"],
+  "kinder-familiencafe": [
+    "food",
+    "cafe",
+    "indoor",
+    "kids-area",
+    "family-friendly"
+  ],
+  "familien-restaurant": ["food", "restaurant", "indoor", "family-friendly"],
+
+  "museum-kinder": [
+    "museum",
+    "indoor",
+    "learning",
+    "kids-friendly",
+    "bad-weather",
+    "family-friendly"
+  ],
+  "kinder-museum": [
+    "museum",
+    "indoor",
+    "learning",
+    "kids-friendly",
+    "bad-weather",
+    "family-friendly"
+  ],
+  bibliothek: [
+    "library",
+    "indoor",
+    "quiet",
+    "books",
+    "learning",
+    "bad-weather",
+    "family-friendly"
+  ],
+
+  "oeffentliche-toilette": ["infrastructure", "toilet"],
+  wickelraum: ["infrastructure", "baby-changing", "indoor"],
+
+  "familien-event": ["event", "temporary", "family-friendly"],
+
+  "stellplatz-spielplatz-naehe-kostenlos": [
+    "rv",
+    "free",
+    "playground-nearby",
+    "overnight",
+    "infrastructure",
+    "travel"
+  ],
+  "wohnmobil-service-station": [
+    "rv",
+    "service",
+    "dump-station",
+    "water",
+    "infrastructure",
+    "travel"
+  ],
+  "rastplatz-spielplatz-dusche": [
+    "rest-area",
+    "highway",
+    "playground",
+    "toilet",
+    "shower",
+    "infrastructure",
+    "travel",
+    "family-friendly"
+  ],
+  "bikepacking-spot": [
+    "bikepacking",
+    "overnight",
+    "minimal-infrastructure",
+    "nature",
+    "outdoor",
+    "travel"
+  ],
+  "campingplatz-familien": [
+    "camping",
+    "overnight",
+    "nature",
+    "travel",
+    "family-friendly"
+  ],
+
+  "park-garten": [
+    "park",
+    "nature",
+    "relax",
+    "outdoor",
+    "picnic-possible",
+    "family-friendly"
+  ],
+  picknickwiese: [
+    "picnic",
+    "nature",
+    "relax",
+    "outdoor",
+    "family-friendly"
+  ]
+};
+
+// ------------------------------------------------------
+// Filter-Chips (Mapping Filter → Tags)
+// ------------------------------------------------------
+
+export const FILTERS = [
+  {
+    id: "bad-weather",
+    tags: ["indoor", "bad-weather"],
+    label: {
+      de: "Schlechtwetter",
+      en: "Bad weather"
+    }
+  },
+  {
+    id: "toddlers",
+    tags: ["toddler-friendly", "younger-kids", "sensory", "barefoot"],
+    label: {
+      de: "Kleinkinder",
+      en: "Toddlers"
+    }
+  },
+  {
+    id: "older-kids-teens",
+    tags: ["older-kids", "teen-friendly", "skate", "pumptrack", "climbing", "bouldering"],
+    label: {
+      de: "Größere Kinder & Teens",
+      en: "Older kids & teens"
+    }
+  },
+  {
+    id: "accessible",
+    tags: ["accessible", "wheelchair"],
+    label: {
+      de: "Barrierefrei",
+      en: "Accessible"
+    }
+  },
+  {
+    id: "stroller-friendly",
+    tags: ["stroller-friendly"],
+    label: {
+      de: "Kinderwagen-tauglich",
+      en: "Stroller-friendly"
+    }
+  },
+  {
+    id: "animals",
+    tags: ["animals", "zoo", "wildlife", "petting-zoo", "farm"],
+    label: {
+      de: "Tiere",
+      en: "Animals"
+    }
+  },
+  {
+    id: "water-fun",
+    tags: ["water", "swimming", "lake", "beach"],
+    label: {
+      de: "Wasser & Baden",
+      en: "Water & swimming"
+    }
+  },
+  {
+    id: "winter-fun",
+    tags: ["winter", "snow", "ice-skating", "sledding"],
+    label: {
+      de: "Winter & Schnee",
+      en: "Winter & snow"
+    }
+  },
+  {
+    id: "rv-vanlife",
+    tags: ["rv", "rest-area", "dump-station", "service", "travel"],
+    label: {
+      de: "WoMo & Vanlife",
+      en: "RV & vanlife"
+    }
+  },
+  {
+    id: "overnight-outdoor",
+    tags: ["camping", "bikepacking", "overnight"],
+    label: {
+      de: "Mit Übernachtung",
+      en: "With overnight stay"
+    }
+  },
+  {
+    id: "full-day",
+    tags: ["full-day", "theme-park"],
+    label: {
+      de: "Ganztages-Ausflug",
+      en: "Full-day trip"
+    }
+  },
+  {
+    id: "low-budget",
+    tags: ["free"],
+    label: {
+      de: "Günstig / kostenlos",
+      en: "Low budget / free"
+    }
+  }
+];
 
 // ------------------------------------------------------
 // Texte & Onboarding-Keys
