@@ -1,6 +1,79 @@
 {
   "spots": [
     {
+      "id": "vejby_klit_free_rv_spot",
+      "title": "Kostenloser WoMo-Stellplatz Vejlby Klit (Strandnähe)",
+      "lat": 56.56618,
+      "lon": 8.13031,
+      "country": "DK",
+      "city": "Vejlby Klit",
+      "categories": [
+        "stellplatz-spielplatz-naehe-kostenlos"
+      ],
+      "visit_minutes": 720,
+      "verified": true,
+      "poetry": "Meeresrauschen, Dünenwind – eine Nacht auf Sanduhr-Zeit.",
+      "tags": [
+        "kostenloser Stellplatz",
+        "Toiletten",
+        "Müllcontainer",
+        "Picknicktisch",
+        "50 m bis zum Strand",
+        "zwei Spielplätze in der Nähe",
+        "familienfreundlich",
+        "Wohnmobil"
+      ],
+      "summary_de": "Kostenloser Wohnmobil-Stellplatz in Vejlby Klit mit Toiletten, Müllcontainern, Picknicktisch und nur etwa 50 m bis zum Strand. Zwei Spielplätze sind fußläufig erreichbar (ca. 10–15 Minuten).",
+      "summary_en": "Free motorhome parking in Vejlby Klit with toilets, waste containers, picnic table and only about 50 m to the beach. Two playgrounds are within walking distance (around 10–15 minutes)."
+    },
+    {
+      "id": "vejby_klit_playground_neerlandiavej",
+      "title": "Spielplatz Neerlandiavej",
+      "lat": 56.57259,
+      "lon": 8.14088,
+      "country": "DK",
+      "city": "Vejlby Klit",
+      "categories": [
+        "spielplatz"
+      ],
+      "visit_minutes": 60,
+      "verified": true,
+      "poetry": "Zwischen Ferienhäusern und Dünensand klettern die Nachmittage vorbei.",
+      "tags": [
+        "Spielplatz",
+        "Strandnähe",
+        "Fußweg vom Stellplatz",
+        "ruhig",
+        "familienfreundlich"
+      ],
+      "summary_de": "Kleiner Quartiers-Spielplatz in Vejlby Klit, von Ferienhäusern umgeben und zu Fuß vom Stellplatz erreichbar (ca. 10–15 Minuten). Ideal für eine kurze Runde toben nach Strand oder Abendessen.",
+      "summary_en": "Small neighbourhood playground in Vejlby Klit, surrounded by holiday homes and within a 10–15 minute walk from the RV spot. Good for a quick play stop after the beach or dinner."
+    },
+    {
+      "id": "vejby_klit_playground_barendsvej",
+      "title": "Spielplatz Barendsvej",
+      "lat": 56.57418,
+      "lon": 8.14255,
+      "country": "DK",
+      "city": "Vejlby Klit",
+      "categories": [
+        "spielplatz"
+      ],
+      "visit_minutes": 60,
+      "verified": true,
+      "poetry": "Zwei Schaukeln, viel Himmel – Ferienlachen zwischen Dünenstraßen.",
+      "tags": [
+        "Spielplatz",
+        "Strandnähe",
+        "Fußweg vom Stellplatz",
+        "ruhig",
+        "familienfreundlich"
+      ],
+      "summary_de": "Spielplatz in einer ruhigen Ferienhaussiedlung von Vejlby Klit – zu Fuß vom Stellplatz erreichbar und gut für eine kleine Spielrunde zwischendurch.",
+      "summary_en": "Playground in a quiet holiday home area of Vejlby Klit – within walking distance from the RV spot and ideal for a short play break."
+    },
+
+    {
       "id": "serengeti_hodenhagen",
       "title": "Serengeti-Park Hodenhagen",
       "lat": 52.7618,
@@ -2132,99 +2205,6 @@
       ],
       "summary_de": "Am Hafen rollt die See im Beton – Wellen aus Schwung.",
       "summary_en": "Skatepark Lemvig (Havnen 10B) is a skate park in Lemvig with areas and ramps for boards, scooters and BMX."
-    }
-  ]
-}
-
-    {
-      "id": "skatepark_lemvig_havnen",
-      "title": "Skatepark Lemvig (Havnen 10B)",
-      "lat": 56.55338,
-      "lon": 8.30903,
-      "country": "DK",
-      "city": "Lemvig",
-      "categories": [
-        "skatepark"
-      ],
-      "visit_minutes": 90,
-      "verified": true,
-      "address": "Havnen 10B, 7620 Lemvig, Danmark",
-      "poetry": "Am Hafen rollt die See im Beton – Wellen aus Schwung.",
-      "tags": [
-        "Bowl",
-        "Harbour"
-      ],
-      "summary_de": "Am Hafen rollt die See im Beton – Wellen aus Schwung.",
-      "summary_en": "Skatepark Lemvig (Havnen 10B) is a skate park in Lemvig with areas and ramps for boards, scooters and BMX."
-    },
-    {
-      "id": "stellplatz_vejlby_klit_405",
-      "title": "WoMo-Stellplatz Vejlby Klit",
-      "lat": 56.56618,
-      "lon": 8.13031,
-      "country": "DK",
-      "city": "Vejlby Klit (Harboøre)",
-      "categories": [
-        "stellplatz-spielplatz-naehe-kostenlos"
-      ],
-      "visit_minutes": 1440,
-      "verified": true,
-      "poetry": "Dünenwind, freie Nacht – der Strand nur ein paar Schritte weit.",
-      "tags": [
-        "kostenloser Stellplatz",
-        "Strandnähe",
-        "Toiletten",
-        "Müllcontainer",
-        "Picknicktisch",
-        "Spielplätze fußläufig"
-      ],
-      "summary_de": "Kostenloser Wohnmobil-Stellplatz in Vejlby Klit: nur wenige Meter bis zum Strand, mit Toiletten, Müllcontainern und Picknicktisch – zwei Spielplätze sind gut zu Fuß erreichbar.",
-      "summary_en": "Free RV stopover in Vejlby Klit: only a short walk to the beach, with toilets, waste containers and a picnic table – two playgrounds are within easy walking distance.",
-      "address": "Vejlby Klit 405, 7673 Harboøre, Danmark"
-    },
-    {
-      "id": "spielplatz_neerlandiavej_vejby",
-      "title": "Spielplatz Neerlandiavej",
-      "lat": 56.57259,
-      "lon": 8.14088,
-      "country": "DK",
-      "city": "Vejlby Klit (Harboøre)",
-      "categories": [
-        "spielplatz"
-      ],
-      "visit_minutes": 120,
-      "verified": true,
-      "poetry": "Zwischen Ferienhäusern stehen Rutschen im Dünensand.",
-      "tags": [
-        "Ferienhausgebiet",
-        "Strandnähe",
-        "familienfreundlich"
-      ],
-      "summary_de": "Kleiner Spielplatz im Ferienhausgebiet von Vejlby Klit mit klassischen Spielgeräten und kurzer Distanz zum Strand.",
-      "summary_en": "Small playground in the holiday home area of Vejlby Klit with classic play equipment and a short walk to the beach.",
-      "address": "Neerlandiavej 112, 7673 Harboøre, Danmark"
-    },
-    {
-      "id": "spielplatz_barendsvej_vejby",
-      "title": "Spielplatz Barendsvej",
-      "lat": 56.57418,
-      "lon": 8.14255,
-      "country": "DK",
-      "city": "Vejlby Klit (Harboøre)",
-      "categories": [
-        "spielplatz"
-      ],
-      "visit_minutes": 120,
-      "verified": true,
-      "poetry": "Wind im Gras, Sand im Schuh – ein Stopp für lange Nachmittage.",
-      "tags": [
-        "Ferienhausgebiet",
-        "ruhig",
-        "familienfreundlich"
-      ],
-      "summary_de": "Ruhiger Spielplatz zwischen Ferienhäusern in Vejlby Klit – ideal für eine Spielpause auf dem Weg zum Strand oder zurück.",
-      "summary_en": "Quiet playground between holiday homes in Vejlby Klit – a nice play stop on the way to or from the beach.",
-      "address": "Barendsvej 39, 7673 Harboøre, Danmark"
     }
   ]
 }
