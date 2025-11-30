@@ -61,7 +61,7 @@
 </head>
 <body>
   <noscript>
-    <div class="noscript-warning">
+    <div class="noscript-warning" role="alert">
       Family Spots Map benötigt JavaScript, um korrekt zu funktionieren.
       Bitte JavaScript im Browser aktivieren, um die interaktive Karte und Filter nutzen zu können.
     </div>
@@ -140,7 +140,7 @@
     <!-- =========================================
          MAIN
          ========================================= -->
-    <main class="app-main">
+    <main class="app-main" role="main" aria-labelledby="app-title">
       <!-- =======================
            MAP VIEW
            ======================= -->
@@ -762,7 +762,7 @@
           <p>On site, please always pay attention to:</p>
           <ul>
             <li>signage and local rules,</li>
-            <li>nature protection, lifeguards and weather,</li>
+          <li>nature protection, lifeguards and weather,</li>
             <li>your children’s age and abilities.</li>
           </ul>
           <p>Use of the app is at your own responsibility — you know your children and your situation best.</p>
@@ -784,7 +784,8 @@
         class="bottom-nav-item bottom-nav-item--active"
         type="button"
         data-route="map"
-        aria-current="page">
+        aria-current="page"
+        aria-controls="view-map">
         <span class="bottom-nav-icon" aria-hidden="true">🗺️</span>
         <span
           id="bottom-nav-map-label"
@@ -797,7 +798,8 @@
         class="bottom-nav-item"
         type="button"
         data-route="about"
-        aria-current="false">
+        aria-current="false"
+        aria-controls="view-about">
         <span class="bottom-nav-icon" aria-hidden="true">ℹ️</span>
         <span
           id="bottom-nav-about-label"
