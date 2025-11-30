@@ -26,7 +26,9 @@ import {
   CATEGORY_LABELS_DE,
   CATEGORY_LABELS_EN,
   HEADER_TAGLINE_TEXT,
-  COMPASS_PLUS_HINT_KEY
+  COMPASS_PLUS_HINT_KEY,
+  CATEGORY_TAGS,
+  FILTERS
 } from "./config.js";
 
 // ------------------------------------------------------
@@ -78,6 +80,7 @@ import {
  * @property {string[]} [_ageGroups]
  * @property {string[]} [_moods]
  * @property {string[]} [_travelModes]
+ * @property {string[]} [_tagsMerged]
  */
 
 // ------------------------------------------------------
@@ -178,6 +181,8 @@ let onlyBigAdventures = false;
 let onlyVerified = false;
 let onlyFavorites = false;
 let filtersCollapsed = true;
+/** Aktive Tag-Filter (IDs aus FILTERS) */
+let activeTagFilters = new Set();
 
 // DOM-Referenzen
 let languageSwitcherEl;
@@ -204,6 +209,7 @@ let filterVerifiedEl;
 let filterFavoritesEl;
 let spotListEl;
 let spotDetailEl;
+let tagFilterContainerEl; // Container für Tag-Filter-Chips
 
 // Plus & Mein Tag – Sections + Toggle-Buttons
 let plusSectionEl;
@@ -575,6 +581,11 @@ function setLanguage(lang, { initial = false } = {}) {
     populateCategoryOptions();
   }
 
+  // Tag-Filter-Chips (Labels je Sprache)
+  if (tagFilterContainerEl) {
+    renderTagFilterChips();
+  }
+
   if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
     tilla.onLanguageChanged();
   }
@@ -785,6 +796,12 @@ async function loadSpots() {
 
   loadFavoritesFromStorage();
   populateCategoryOptions();
+
+  // Tag-Filter-Chips (erst nach Spots laden, falls man später mal dynamisch will)
+  if (tagFilterContainerEl) {
+    renderTagFilterChips();
+  }
+
   applyFiltersAndRender();
 }
 
@@ -898,6 +915,48 @@ function getSpotMetaParts(spot) {
 }
 
 /**
+ * Kombiniert Tags aus den Rohdaten mit Kategorie-basierten Tags (CATEGORY_TAGS).
+ * Ergebnis wird gecached in spot._tagsMerged.
+ * @param {Spot} spot
+ * @returns {string[]}
+ */
+function getSpotTags(spot) {
+  if (Array.isArray(spot._tagsMerged)) return spot._tagsMerged;
+
+  const tagSet = new Set();
+
+  // 1. Tags aus den Rohdaten (falls vorhanden)
+  if (Array.isArray(spot.tags)) {
+    spot.tags.forEach((tag) => {
+      if (tag) tagSet.add(String(tag));
+    });
+  }
+
+  // 2. Kategorien einsammeln (category + categories[])
+  const catSlugs = [];
+  if (spot.category) catSlugs.push(String(spot.category));
+  if (Array.isArray(spot.categories)) {
+    spot.categories.forEach((c) => {
+      if (c) catSlugs.push(String(c));
+    });
+  }
+
+  // 3. Kategorie-Tags aus CATEGORY_TAGS hinzumischen
+  catSlugs.forEach((slug) => {
+    const catTags = CATEGORY_TAGS[slug];
+    if (Array.isArray(catTags)) {
+      catTags.forEach((tag) => {
+        if (tag) tagSet.add(String(tag));
+      });
+    }
+  });
+
+  const merged = Array.from(tagSet);
+  spot._tagsMerged = merged;
+  return merged;
+}
+
+/**
  * Suchtext aus Spot zusammenbauen.
  * @param {Spot} spot
  * @returns {string}
@@ -909,7 +968,7 @@ function buildSpotSearchText(spot) {
     getSpotName(spot),
     getSpotSubtitle(spot),
     spot.category,
-    ...(Array.isArray(spot.tags) ? spot.tags : [])
+    ...getSpotTags(spot)
   ].filter(Boolean);
 
   const text = parts.join(" ").toLowerCase();
@@ -1177,6 +1236,79 @@ function initRadiusSliderA11y() {
 }
 
 // ------------------------------------------------------
+// Tag-Filter-Helfer
+// ------------------------------------------------------
+
+/**
+ * Aggregiert alle Tags aus den aktuell aktiven Filter-Chips.
+ * @returns {string[]}
+ */
+function getActiveFilterTags() {
+  if (!FILTERS || !Array.isArray(FILTERS) || !activeTagFilters.size) {
+    return [];
+  }
+  const tagSet = new Set();
+  FILTERS.forEach((filter) => {
+    if (!filter || !filter.id || !Array.isArray(filter.tags)) return;
+    if (!activeTagFilters.has(filter.id)) return;
+    filter.tags.forEach((tag) => {
+      if (tag) tagSet.add(String(tag));
+    });
+  });
+  return Array.from(tagSet);
+}
+
+/**
+ * Rendert die Tag-Filter-Chips in den Container #filter-tags (falls vorhanden).
+ * Nutzt FILTERS aus config.js.
+ */
+function renderTagFilterChips() {
+  if (!tagFilterContainerEl) return;
+  if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) {
+    tagFilterContainerEl.innerHTML = "";
+    return;
+  }
+
+  tagFilterContainerEl.innerHTML = "";
+
+  FILTERS.forEach((filter) => {
+    if (!filter || !filter.id) return;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "tag-filter-chip btn-chip";
+    btn.dataset.filterId = filter.id;
+
+    const isActive = activeTagFilters.has(filter.id);
+    if (isActive) {
+      btn.classList.add("tag-filter-chip--active");
+      btn.setAttribute("aria-pressed", "true");
+    } else {
+      btn.setAttribute("aria-pressed", "false");
+    }
+
+    const label =
+      (filter.label && (filter.label[currentLang] || filter.label.de)) ||
+      filter.id;
+    btn.textContent = label;
+
+    btn.addEventListener("click", () => {
+      const currentlyActive = activeTagFilters.has(filter.id);
+      if (currentlyActive) {
+        activeTagFilters.delete(filter.id);
+      } else {
+        activeTagFilters.add(filter.id);
+      }
+      // UI-State anpassen
+      renderTagFilterChips();
+      applyFiltersAndRender();
+    });
+
+    tagFilterContainerEl.appendChild(btn);
+  });
+}
+
+// ------------------------------------------------------
 // Filterlogik
 // ------------------------------------------------------
 
@@ -1245,6 +1377,16 @@ function doesSpotMatchFilters(spot, { center, radiusKm }) {
   if (FEATURES.favorites && onlyFavorites) {
     const id = getSpotId(spot);
     if (!favorites.has(id)) return false;
+  }
+
+  // Tag-Filter (FILTERS): OR-Logik – Spot muss mind. einen der aktiven Filter-Tags haben
+  if (activeTagFilters.size) {
+    const activeTags = getActiveFilterTags();
+    if (activeTags.length) {
+      const spotTags = getSpotTags(spot);
+      const hasAny = activeTags.some((tag) => spotTags.includes(tag));
+      if (!hasAny) return false;
+    }
   }
 
   if (!isSpotInRadius(spot, center, radiusKm)) return false;
@@ -1570,7 +1712,7 @@ function showSpotDetails(spot) {
     metaEl.appendChild(span);
   });
 
-  // Tags
+  // Tags (nur originale Spot-Tags, nicht die technischen Kategorie-Tags)
   const tagsEl = document.createElement("div");
   tagsEl.className = "spot-details-tags";
   tags.forEach((tag) => {
@@ -1981,6 +2123,7 @@ function init() {
     filterBigEl = document.getElementById("filter-big-adventures");
     filterVerifiedEl = document.getElementById("filter-verified");
     filterFavoritesEl = document.getElementById("filter-favorites");
+    tagFilterContainerEl = document.getElementById("filter-tags");
 
     spotListEl = document.getElementById("spot-list");
     spotDetailEl = document.getElementById("spot-detail");
