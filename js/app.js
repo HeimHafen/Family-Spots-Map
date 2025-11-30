@@ -711,6 +711,76 @@ function showToast(keyOrMessage) {
 // Map / Spots – Setup
 // ------------------------------------------------------
 
+let markerClusterPluginPromise = null;
+
+/**
+ * Stellt sicher, dass Leaflet.markercluster geladen ist, bevor die Map
+ * initialisiert wird. Falls das Plugin bereits vorhanden ist, passiert nichts.
+ * So erscheinen die Spots wieder als Cluster, die beim Zoomen „aufpoppen“.
+ */
+function ensureMarkerClusterPlugin() {
+  if (typeof L === "undefined") {
+    // Leaflet noch nicht verfügbar – dann können wir hier nichts laden.
+    return Promise.resolve();
+  }
+
+  if (typeof L.markerClusterGroup === "function") {
+    // Plugin ist schon eingebunden (z.B. über index.html)
+    return Promise.resolve();
+  }
+
+  if (markerClusterPluginPromise) {
+    return markerClusterPluginPromise;
+  }
+
+  markerClusterPluginPromise = new Promise((resolve) => {
+    try {
+      // CSS für Markercluster nur einmal einhängen
+      const existingCss = document.querySelector(
+        'link[data-fsm-markercluster="css"]'
+      );
+      if (!existingCss) {
+        const baseUrl =
+          "https://unpkg.com/leaflet.markercluster@1.5.3/dist/";
+        const css1 = document.createElement("link");
+        css1.rel = "stylesheet";
+        css1.href = baseUrl + "MarkerCluster.css";
+        css1.setAttribute("data-fsm-markercluster", "css");
+        document.head.appendChild(css1);
+
+        const css2 = document.createElement("link");
+        css2.rel = "stylesheet";
+        css2.href = baseUrl + "MarkerCluster.Default.css";
+        css2.setAttribute("data-fsm-markercluster", "css");
+        document.head.appendChild(css2);
+      }
+
+      const script = document.createElement("script");
+      script.src =
+        "https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js";
+      script.async = true;
+      script.onload = () => {
+        resolve();
+      };
+      script.onerror = () => {
+        console.warn(
+          "[Family Spots] Konnte Leaflet.markercluster nicht laden – es werden normale Marker genutzt."
+        );
+        resolve();
+      };
+      document.head.appendChild(script);
+    } catch (err) {
+      console.warn(
+        "[Family Spots] Fehler beim Laden von Leaflet.markercluster:",
+        err
+      );
+      resolve();
+    }
+  });
+
+  return markerClusterPluginPromise;
+}
+
 function initMap() {
   if (typeof L === "undefined" || typeof L.map !== "function") {
     console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
@@ -1718,10 +1788,10 @@ function showSpotDetails(spot) {
   titleWrapperEl.appendChild(titleEl);
 
   if (subtitle && !addressText) {
-    const subtitleEl = document.createElement("p");
-    subtitleEl.className = "spot-card-subtitle";
-    subtitleEl.textContent = subtitle;
-    titleWrapperEl.appendChild(subtitleEl);
+    const subtitleEl2 = document.createElement("p");
+    subtitleEl2.className = "spot-card-subtitle";
+    subtitleEl2.textContent = subtitle;
+    titleWrapperEl.appendChild(subtitleEl2);
   }
 
   const actionsEl = document.createElement("div");
@@ -2124,7 +2194,7 @@ function handleToggleView() {
 // Initialisierung
 // ------------------------------------------------------
 
-function init() {
+async function init() {
   try {
     // DOM-Referenzen einsammeln
     languageSwitcherEl =
@@ -2223,6 +2293,10 @@ function init() {
 
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
+
+    // WICHTIG: Markercluster-Plugin laden, bevor die Map gebaut wird,
+    // damit die Spots wieder als Cluster erscheinen und beim Zoomen „aufpoppen“.
+    await ensureMarkerClusterPlugin();
 
     initMap();
 
@@ -2603,5 +2677,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
   }
 
-  init();
+  await init();
 });
