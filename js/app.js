@@ -405,15 +405,15 @@ function updatePlusStatusText() {
   if (!plusActive) {
     plusStatusTextEl.textContent =
       currentLang === LANG_DE
-        ? "Family Spots Plus ist nicht aktiviert."
-        : "Family Spots Plus is not activated.";
+        ? "Family Spots Plus ist nicht aktiviert. App-Abo: 19,90 €/Jahr, Plus-Kategorien: + 2,99 €/Jahr."
+        : "Family Spots Plus is not activated. App subscription: €19.90/year, Plus categories: + €2.99/year.";
     return;
   }
 
   plusStatusTextEl.textContent =
     currentLang === LANG_DE
-      ? "Family Spots Plus ist aktiv – zusätzliche Kategorien sind freigeschaltet."
-      : "Family Spots Plus is active – additional categories have been unlocked.";
+      ? "Family Spots Plus ist aktiv – Plus-Kategorien (2,99 €/Jahr) sind zusätzlich zu deinem App-Abo (19,90 €/Jahr) freigeschaltet."
+      : "Family Spots Plus is active – Plus categories (€2.99/year) are unlocked on top of your app subscription (€19.90/year).";
 }
 
 // ------------------------------------------------------
