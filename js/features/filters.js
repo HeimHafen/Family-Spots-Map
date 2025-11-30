@@ -1,199 +1,111 @@
-// js/features/filters.js
-// ------------------------------------------------------
-// Zentrale Spot-/Filter-Helfer – ohne DOM/Map-Abhängigkeiten
-// ------------------------------------------------------
+// js/filters.js
+// ======================================================
+// Filter- & Spot-Helfer für Family Spots
+// (ohne direkten Zugriff auf DOM oder globale State-Variablen)
+// ======================================================
 
 "use strict";
 
-import {
-  CATEGORY_TAGS,
-  FILTERS,
-  FEATURES
-} from "../config.js";
+import { RADIUS_STEPS_KM, CATEGORY_TAGS, FILTERS } from "./config.js";
 
 /**
- * @typedef {Object} Spot
- * @property {number} [lat]
- * @property {number} [lng]
- * @property {number} [lon]
- * @property {string|number} [id]
- * @property {string} [title]
- * @property {string} [name]
- * @property {string} [spotName]
- * @property {string} [city]
- * @property {string} [town]
- * @property {string} [country]
- * @property {string} [category]
- * @property {string[]} [categories]
- * @property {string[]} [tags]
- * @property {string} [subtitle]
- * @property {string} [shortDescription]
- * @property {string} [summary_de]
- * @property {string} [summary_en]
- * @property {string} [poetry]
- * @property {string} [description]
- * @property {string} [text]
- * @property {string} [address]
- * @property {string} [postcode]
- * @property {number} [visit_minutes]
- * @property {boolean} [plusOnly]
- * @property {boolean} [plus]
- * @property {boolean} [bigAdventure]
- * @property {boolean} [isBigAdventure]
- * @property {boolean} [longTrip]
- * @property {boolean} [verified]
- * @property {boolean} [isVerified]
- * @property {string[]|string} [ageGroups]
- * @property {string[]|string} [age]
- * @property {string[]|string} [ages]
- * @property {string[]|string} [moods]
- * @property {string[]|string} [moodTags]
- * @property {string[]|string} [mood]
- * @property {string[]|string} [travelModes]
- * @property {string[]|string} [travel]
- * @property {string[]|string} [tripModes]
- * @property {string} [_searchText]
- * @property {string[]} [_ageGroups]
- * @property {string[]} [_moods]
- * @property {string[]} [_travelModes]
- * @property {string[]} [_tagsMerged]
+ * Hilfsfunktion: String/Array-Feld in ein String-Array normalisieren.
+ * @param {string[]|string|undefined|null} raw
+ * @returns {string[]}
  */
-
-// ------------------------------------------------------
-// Basis-Helfer für Spots
-// ------------------------------------------------------
-
-export function getSpotName(spot) {
-  if (!spot) return "Spot";
-  return (
-    spot.title ||
-    spot.name ||
-    spot.spotName ||
-    (spot.id ? String(spot.id) : "Spot")
-  );
+function normalizeArrayField(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw)) {
+    return raw
+      .map((v) => (v == null ? "" : String(v).trim()))
+      .filter(Boolean);
+  }
+  if (typeof raw === "string") {
+    return raw
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean);
+  }
+  return [];
 }
 
-export function getSpotSubtitle(spot) {
-  if (!spot) return "";
-  if (spot.city && spot.country) return `${spot.city}, ${spot.country}`;
-  if (spot.city) return spot.city;
-  if (spot.town && spot.country) return `${spot.town}, ${spot.country}`;
-  if (spot.address) return spot.address;
-  return spot.subtitle || spot.shortDescription || "";
-}
-
-export function getSpotId(spot) {
-  return String(spot.id || getSpotName(spot));
-}
-
-export function isSpotPlusOnly(spot) {
-  return !!spot.plusOnly || !!spot.plus;
-}
-
-export function isSpotBigAdventure(spot) {
-  return !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
-}
-
-export function isSpotVerified(spot) {
-  return !!spot.verified || !!spot.isVerified;
-}
-
-// ------------------------------------------------------
-// Normalisierte Felder (Age/Mood/Travel/Tags/Search-Text)
-// ------------------------------------------------------
-
+/**
+ * Altersgruppen normalisieren und cachen.
+ * @param {import("./app.js").Spot} spot
+ * @returns {string[]}
+ */
 export function getSpotAgeGroups(spot) {
-  if (!spot) return [];
   if (Array.isArray(spot._ageGroups)) return spot._ageGroups;
 
   const raw = spot.ageGroups || spot.age || spot.ages;
-  let result = [];
-
-  if (!raw) {
-    result = [];
-  } else if (Array.isArray(raw)) {
-    result = raw;
-  } else if (typeof raw === "string") {
-    result = raw
-      .split(",")
-      .map((a) => a.trim())
-      .filter(Boolean);
-  }
+  const result = normalizeArrayField(raw);
 
   spot._ageGroups = result;
   return result;
 }
 
+/**
+ * Stimmungen normalisieren und cachen.
+ * @param {import("./app.js").Spot} spot
+ * @returns {string[]}
+ */
 export function getSpotMoods(spot) {
-  if (!spot) return [];
   if (Array.isArray(spot._moods)) return spot._moods;
 
   const raw = spot.moods || spot.moodTags || spot.mood;
-  let result = [];
-
-  if (!raw) {
-    result = [];
-  } else if (Array.isArray(raw)) {
-    result = raw;
-  } else if (typeof raw === "string") {
-    result = raw
-      .split(",")
-      .map((m) => m.trim())
-      .filter(Boolean);
-  }
+  const result = normalizeArrayField(raw);
 
   spot._moods = result;
   return result;
 }
 
+/**
+ * Reise-Modi normalisieren und cachen.
+ * @param {import("./app.js").Spot} spot
+ * @returns {string[]}
+ */
 export function getSpotTravelModes(spot) {
-  if (!spot) return [];
   if (Array.isArray(spot._travelModes)) return spot._travelModes;
 
   const raw = spot.travelModes || spot.travel || spot.tripModes;
-  let result = [];
-
-  if (!raw) {
-    result = [];
-  } else if (Array.isArray(raw)) {
-    result = raw;
-  } else if (typeof raw === "string") {
-    result = raw
-      .split(",")
-      .map((m) => m.trim())
-      .filter(Boolean);
-  }
+  const result = normalizeArrayField(raw);
 
   spot._travelModes = result;
   return result;
 }
 
 /**
- * Kombiniert Tags aus Spot-Daten + Kategorie-Tags (CATEGORY_TAGS).
+ * Kombiniert Tags aus den Rohdaten mit Kategorie-basierten Tags (CATEGORY_TAGS).
+ * Ergebnis wird gecached in spot._tagsMerged.
+ * @param {import("./app.js").Spot} spot
+ * @returns {string[]}
  */
 export function getSpotTags(spot) {
-  if (!spot) return [];
   if (Array.isArray(spot._tagsMerged)) return spot._tagsMerged;
 
   const tagSet = new Set();
 
-  // Originale Spot-Tags
+  // 1. Tags aus den Rohdaten (falls vorhanden)
   if (Array.isArray(spot.tags)) {
     spot.tags.forEach((tag) => {
       if (tag) tagSet.add(String(tag));
     });
   }
 
-  // Kategorien einsammeln
+  // 2. Kategorien einsammeln (category + categories[])
   const catSlugs = new Set();
-  if (spot.category) catSlugs.add(String(spot.category));
+
+  if (spot.category) {
+    catSlugs.add(String(spot.category));
+  }
+
   if (Array.isArray(spot.categories)) {
     spot.categories.forEach((c) => {
       if (c) catSlugs.add(String(c));
     });
   }
 
-  // Kategorie-Tags aus config
+  // 3. Kategorie-Tags aus CATEGORY_TAGS hinzumischen
   catSlugs.forEach((slug) => {
     const catTags = CATEGORY_TAGS[slug];
     if (Array.isArray(catTags)) {
@@ -209,16 +121,32 @@ export function getSpotTags(spot) {
 }
 
 /**
- * Suchtext für Volltextsuche.
+ * Suchtext aus Spot zusammenbauen und cachen.
+ * Optional können Name/Subtitle-Funktionen übergeben werden (aus app.js),
+ * damit der gleiche Text wie in der UI verwendet wird.
+ *
+ * @param {import("./app.js").Spot} spot
+ * @param {(spot:any) => string} [getSpotName]
+ * @param {(spot:any) => string} [getSpotSubtitle]
+ * @returns {string}
  */
-export function buildSpotSearchText(spot) {
-  if (!spot) return "";
+export function buildSpotSearchText(spot, getSpotName, getSpotSubtitle) {
   if (spot._searchText) return spot._searchText;
 
+  const name =
+    typeof getSpotName === "function"
+      ? getSpotName(spot)
+      : spot.title || spot.name || spot.spotName || "";
+  const subtitle =
+    typeof getSpotSubtitle === "function"
+      ? getSpotSubtitle(spot)
+      : spot.subtitle || spot.shortDescription || "";
+
   const parts = [
-    getSpotName(spot),
-    getSpotSubtitle(spot),
+    name,
+    subtitle,
     spot.category,
+    ...(Array.isArray(spot.tags) ? spot.tags : []),
     ...getSpotTags(spot)
   ].filter(Boolean);
 
@@ -228,50 +156,128 @@ export function buildSpotSearchText(spot) {
 }
 
 /**
- * Vereinheitlichte Normalisierung für alle Spots.
- * (Koordinaten, Kategorie, vorberechnete Felder)
+ * Liefert zu einer Radius-Stufe den Radius in km,
+ * oder Infinity, falls kein Limit.
+ * @param {number} radiusStep
+ * @returns {number}
  */
-export function normalizeSpot(raw) {
-  /** @type {Spot} */
-  const spot = { ...raw };
-
-  if (spot.lon != null && spot.lng == null) {
-    spot.lng = spot.lon;
-  }
-
-  if (
-    !spot.category &&
-    Array.isArray(spot.categories) &&
-    spot.categories.length
-  ) {
-    spot.category = spot.categories[0];
-  }
-
-  buildSpotSearchText(spot);
-  getSpotAgeGroups(spot);
-  getSpotMoods(spot);
-  getSpotTravelModes(spot);
-
-  return spot;
+export function getRadiusKm(radiusStep) {
+  let idx = Number.isInteger(radiusStep) ? radiusStep : RADIUS_STEPS_KM.length - 1;
+  if (idx < 0) idx = 0;
+  if (idx >= RADIUS_STEPS_KM.length) idx = RADIUS_STEPS_KM.length - 1;
+  const km = RADIUS_STEPS_KM[idx];
+  return typeof km === "number" ? km : Infinity;
 }
 
-// ------------------------------------------------------
-// Tag-Filter & Haupt-Filterfunktion
-// ------------------------------------------------------
+/**
+ * Slider-A11y initialisieren und Änderungen per Callback nach außen melden.
+ *
+ * @param {HTMLInputElement} rangeEl
+ * @param {(newStep:number) => void} onChange
+ * @returns {number} initialer radiusStep
+ */
+export function initRadiusSliderA11y(rangeEl, onChange) {
+  if (!rangeEl) return RADIUS_STEPS_KM.length - 1;
+
+  const min = 0;
+  const max = RADIUS_STEPS_KM.length - 1;
+
+  let currentStep = parseInt(rangeEl.value, 10);
+  if (Number.isNaN(currentStep)) currentStep = max;
+
+  if (currentStep < min) currentStep = min;
+  if (currentStep > max) currentStep = max;
+
+  rangeEl.min = String(min);
+  rangeEl.max = String(max);
+  rangeEl.value = String(currentStep);
+
+  rangeEl.setAttribute("aria-valuemin", String(min));
+  rangeEl.setAttribute("aria-valuemax", String(max));
+  rangeEl.setAttribute("aria-valuenow", String(currentStep));
+
+  rangeEl.addEventListener("input", () => {
+    let step = parseInt(rangeEl.value, 10);
+    if (Number.isNaN(step)) step = max;
+    if (step < min) step = min;
+    if (step > max) step = max;
+
+    rangeEl.value = String(step);
+    rangeEl.setAttribute("aria-valuenow", String(step));
+
+    if (typeof onChange === "function") {
+      onChange(step);
+    }
+  });
+
+  return currentStep;
+}
 
 /**
- * Aggregiert alle Tags aus den aktuell aktiven Filter-IDs.
- * @param {Set<string>} activeFilterIds
+ * Aktualisiert die Radius-Texte (Label + Beschreibung) anhand radiusStep.
+ *
+ * @param {Object} params
+ * @param {HTMLInputElement} params.filterRadiusEl
+ * @param {HTMLElement} params.filterRadiusMaxLabelEl
+ * @param {HTMLElement} params.filterRadiusDescriptionEl
+ * @param {number} params.radiusStep
+ * @param {(key:string) => string} params.t  Übersetzungsfunktion
+ */
+export function updateRadiusTexts({
+  filterRadiusEl,
+  filterRadiusMaxLabelEl,
+  filterRadiusDescriptionEl,
+  radiusStep,
+  t
+}) {
+  if (!filterRadiusEl || !filterRadiusMaxLabelEl || !filterRadiusDescriptionEl)
+    return;
+
+  const min = 0;
+  const max = RADIUS_STEPS_KM.length - 1;
+
+  let step = Number.isInteger(radiusStep) ? radiusStep : max;
+  if (step < min) step = min;
+  if (step > max) step = max;
+
+  filterRadiusEl.value = String(step);
+  filterRadiusEl.setAttribute("aria-valuenow", String(step));
+
+  if (step === max) {
+    filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label");
+    filterRadiusDescriptionEl.textContent = t("filter_radius_description_all");
+  } else {
+    const km = RADIUS_STEPS_KM[step];
+    filterRadiusMaxLabelEl.textContent = `${km} km`;
+    const key = `filter_radius_description_step${step}`;
+    filterRadiusDescriptionEl.textContent = t(key);
+  }
+}
+
+/**
+ * OR-Liste aller Tags, die durch aktive Tag-Filter (FILTERS + activeTagFilters) gemeint sind.
+ *
+ * @param {Set<string>} activeTagFilters
  * @returns {string[]}
  */
-export function getActiveFilterTags(activeFilterIds) {
-  if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) return [];
-  if (!activeFilterIds || !activeFilterIds.size) return [];
+function getActiveFilterTags(activeTagFilters) {
+  if (
+    !activeTagFilters ||
+    !(activeTagFilters instanceof Set) ||
+    !activeTagFilters.size
+  ) {
+    return [];
+  }
+
+  if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) {
+    return [];
+  }
 
   const tagSet = new Set();
+
   FILTERS.forEach((filter) => {
     if (!filter || !filter.id || !Array.isArray(filter.tags)) return;
-    if (!activeFilterIds.has(filter.id)) return;
+    if (!activeTagFilters.has(filter.id)) return;
     filter.tags.forEach((tag) => {
       if (tag) tagSet.add(String(tag));
     });
@@ -281,51 +287,104 @@ export function getActiveFilterTags(activeFilterIds) {
 }
 
 /**
- * Prüft, ob ein Spot alle *nicht-geografischen* Filter erfüllt.
- * (Radius/Map wird in app.js zusätzlich geprüft.)
+ * Distanz-Check für einen Spot.
  *
- * @param {Spot} spot
- * @param {{
- *   searchTerm?: string,
- *   categoryFilter?: string,
- *   ageFilter?: string,
- *   moodFilter?: string|null,
- *   travelMode?: string|null,
- *   onlyBigAdventures?: boolean,
- *   onlyVerified?: boolean,
- *   onlyFavorites?: boolean,
- *   favoritesSet?: Set<string>,
- *   plusActive?: boolean,
- *   activeTagFilterIds?: Set<string>
- * }} options
+ * @param {import("./app.js").Spot} spot
+ * @param {any} centerLatLng    Leaflet LatLng
+ * @param {number} radiusKm
+ * @param {(spot:any) => boolean} hasValidLatLng
+ * @param {any} L               Leaflet-Objekt (für L.latLng)
  * @returns {boolean}
  */
-export function doesSpotMatchFilters(spot, options) {
+function isSpotInRadius(spot, centerLatLng, radiusKm, hasValidLatLng, L) {
+  if (!L || !centerLatLng || typeof centerLatLng.distanceTo !== "function") {
+    return true;
+  }
+  if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
+  if (!hasValidLatLng(spot)) return true;
+
+  const spotLatLng = L.latLng(spot.lat, spot.lng);
+  const distanceMeters = centerLatLng.distanceTo(spotLatLng);
+  const distanceKm = distanceMeters / 1000;
+  return distanceKm <= radiusKm;
+}
+
+/**
+ * Prüft, ob ein Spot alle aktiven Filter erfüllt.
+ *
+ * @param {import("./app.js").Spot} spot
+ * @param {Object} filterState
+ * @param {boolean} filterState.plusActive
+ * @param {string} filterState.searchTerm
+ * @param {string} filterState.categoryFilter
+ * @param {string} filterState.ageFilter
+ * @param {string|null} filterState.moodFilter
+ * @param {string|null} filterState.travelMode
+ * @param {boolean} filterState.onlyBigAdventures
+ * @param {boolean} filterState.onlyVerified
+ * @param {boolean} filterState.onlyFavorites
+ * @param {Set<string>} filterState.activeTagFilters
+ * @param {Object} filterState.FEATURES
+ * @param {Object} helpers
+ * @param {any} helpers.centerLatLng
+ * @param {number} helpers.radiusKm
+ * @param {(spot:any) => boolean} helpers.hasValidLatLng
+ * @param {(spot:any) => boolean} helpers.isSpotPlusOnly
+ * @param {(spot:any) => boolean} helpers.isSpotBigAdventure
+ * @param {(spot:any) => boolean} helpers.isSpotVerified
+ * @param {Set<string>} helpers.favorites
+ * @param {(spot:any) => string} helpers.getSearchTextForSpot
+ * @param {any} helpers.L
+ *
+ * @returns {boolean}
+ */
+export function doesSpotMatchFilters(
+  spot,
+  filterState,
+  {
+    centerLatLng,
+    radiusKm,
+    hasValidLatLng,
+    isSpotPlusOnly,
+    isSpotBigAdventure,
+    isSpotVerified,
+    favorites,
+    getSearchTextForSpot,
+    L
+  }
+) {
   const {
-    searchTerm = "",
-    categoryFilter = "",
-    ageFilter = "all",
-    moodFilter = null,
-    travelMode = null,
-    onlyBigAdventures = false,
-    onlyVerified = false,
-    onlyFavorites = false,
-    favoritesSet,
-    plusActive = false,
-    activeTagFilterIds
-  } = options || {};
+    plusActive,
+    searchTerm,
+    categoryFilter,
+    ageFilter,
+    moodFilter,
+    travelMode,
+    onlyBigAdventures,
+    onlyVerified,
+    onlyFavorites,
+    activeTagFilters,
+    FEATURES
+  } = filterState;
 
-  if (!spot) return false;
-
-  // Plus-Gate
-  if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) {
+  // Plus-Filter
+  if (FEATURES.plus && isSpotPlusOnly && isSpotPlusOnly(spot) && !plusActive) {
     return false;
   }
 
-  // Volltextsuche
+  // Volltext-Suche
   if (searchTerm) {
-    const term = String(searchTerm).toLowerCase();
-    const haystack = buildSpotSearchText(spot);
+    const term = searchTerm.toLowerCase();
+    let haystack = "";
+
+    if (typeof getSearchTextForSpot === "function") {
+      haystack = getSearchTextForSpot(spot) || "";
+    } else if (typeof spot._searchText === "string") {
+      haystack = spot._searchText;
+    } else {
+      haystack = buildSpotSearchText(spot);
+    }
+
     if (!haystack.includes(term)) return false;
   }
 
@@ -343,7 +402,7 @@ export function doesSpotMatchFilters(spot, options) {
     if (!categories.some((c) => c === filterSlug)) return false;
   }
 
-  // Altersgruppen
+  // Alter
   if (ageFilter && ageFilter !== "all") {
     const ages = getSpotAgeGroups(spot);
     if (ages.length && !ages.includes(ageFilter)) {
@@ -359,7 +418,7 @@ export function doesSpotMatchFilters(spot, options) {
     }
   }
 
-  // Reise-Modus
+  // Travel-Mode
   if (FEATURES.travelMode && travelMode) {
     const modes = getSpotTravelModes(spot);
     if (modes.length && !modes.includes(travelMode)) {
@@ -368,29 +427,55 @@ export function doesSpotMatchFilters(spot, options) {
   }
 
   // Große Abenteuer
-  if (FEATURES.bigAdventureFilter && onlyBigAdventures && !isSpotBigAdventure(spot)) {
+  if (
+    FEATURES.bigAdventureFilter &&
+    onlyBigAdventures &&
+    isSpotBigAdventure &&
+    !isSpotBigAdventure(spot)
+  ) {
     return false;
   }
 
   // Verifiziert
-  if (FEATURES.verifiedFilter && onlyVerified && !isSpotVerified(spot)) {
+  if (
+    FEATURES.verifiedFilter &&
+    onlyVerified &&
+    isSpotVerified &&
+    !isSpotVerified(spot)
+  ) {
     return false;
   }
 
-  // Favoriten
+  // Nur Favoriten
   if (FEATURES.favorites && onlyFavorites) {
-    const id = getSpotId(spot);
-    if (!favoritesSet || !favoritesSet.has(id)) return false;
+    const id =
+      spot.id != null
+        ? String(spot.id)
+        : String(spot.title || spot.name || spot.spotName || "Spot");
+    if (!favorites || !(favorites instanceof Set) || !favorites.has(id)) {
+      return false;
+    }
   }
 
-  // Tag-Filter (FILTERS): OR-Logik – Spot muss mind. einen der aktiven Tags haben
-  if (activeTagFilterIds && activeTagFilterIds.size) {
-    const activeTags = getActiveFilterTags(activeTagFilterIds);
-    if (activeTags.length) {
-      const spotTags = getSpotTags(spot);
-      const hasAny = activeTags.some((tag) => spotTags.includes(tag));
-      if (!hasAny) return false;
-    }
+  // Tag-Filter (FILTERS): OR-Logik – Spot muss mind. einen der aktiven Filter-Tags haben
+  const activeTags = getActiveFilterTags(activeTagFilters);
+  if (activeTags.length) {
+    const spotTags = getSpotTags(spot);
+    const hasAny = activeTags.some((tag) => spotTags.includes(tag));
+    if (!hasAny) return false;
+  }
+
+  // Radius
+  if (
+    !isSpotInRadius(
+      spot,
+      centerLatLng,
+      radiusKm,
+      hasValidLatLng,
+      L
+    )
+  ) {
+    return false;
   }
 
   return true;
