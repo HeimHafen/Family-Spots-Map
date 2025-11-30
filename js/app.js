@@ -28,7 +28,8 @@ import {
   HEADER_TAGLINE_TEXT,
   COMPASS_PLUS_HINT_KEY,
   CATEGORY_TAGS,
-  FILTERS
+  FILTERS,
+  CATEGORY_ACCESS
 } from "./config.js";
 
 // ------------------------------------------------------
@@ -365,6 +366,49 @@ function getCategoryLabel(slug) {
     fallbackMap[slug] ||
     slug.replace(/[_-]/g, " ")
   );
+}
+
+/**
+ * Liefert das Kategorien-Label inkl. Hinweis auf Plus / Add-ons.
+ * Basis-Kategorien bleiben unverändert.
+ */
+function getCategoryLabelWithAccess(slug) {
+  const base = getCategoryLabel(slug);
+  if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) return base;
+
+  const access = CATEGORY_ACCESS.perCategory[slug];
+  if (!access) {
+    // nicht speziell geregelt → Basis
+    return base;
+  }
+
+  // Abo (Family Spots Plus)
+  if (access.level === "subscription") {
+    const suffix = currentLang === LANG_DE ? " · Plus" : " · Plus";
+    return base + suffix;
+  }
+
+  // Add-ons unterscheiden (Wasser / WoMo / generisch)
+  if (access.level === "addon") {
+    let suffix;
+    if (access.addonId === "addon_water") {
+      suffix =
+        currentLang === LANG_DE
+          ? " · Wasser-Add-on (Plus)"
+          : " · water add-on (Plus)";
+    } else if (access.addonId === "addon_rv") {
+      suffix =
+        currentLang === LANG_DE
+          ? " · WoMo-Add-on (Plus)"
+          : " · RV add-on (Plus)";
+    } else {
+      suffix =
+        currentLang === LANG_DE ? " · Add-on (Plus)" : " · add-on (Plus)";
+    }
+    return base + suffix;
+  }
+
+  return base;
 }
 
 function updateLanguageSwitcherVisual() {
@@ -1123,7 +1167,7 @@ function populateCategoryOptions() {
       groupedSlugs.add(slug);
       const opt = document.createElement("option");
       opt.value = slug;
-      opt.textContent = getCategoryLabel(slug);
+      opt.textContent = getCategoryLabelWithAccess(slug);
       optgroup.appendChild(opt);
     });
 
@@ -1161,7 +1205,7 @@ function populateCategoryOptions() {
       .forEach((slug) => {
         const opt = document.createElement("option");
         opt.value = slug;
-        opt.textContent = getCategoryLabel(slug);
+        opt.textContent = getCategoryLabelWithAccess(slug);
         extraGroup.appendChild(opt);
       });
 
