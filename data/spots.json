@@ -72,6 +72,30 @@
       "summary_de": "Spielplatz in einer ruhigen Ferienhaussiedlung von Vejlby Klit – zu Fuß vom Stellplatz erreichbar und gut für eine kleine Spielrunde zwischendurch.",
       "summary_en": "Playground in a quiet holiday home area of Vejlby Klit – within walking distance from the RV spot and ideal for a short play break."
     },
+    {
+      "id": "bovbjerg_fyr_aussichtspunkt",
+      "title": "Bovbjerg Fyr – Leuchtturm & Steilküste",
+      "lat": 56.51362,
+      "lon": 8.11834,
+      "country": "DK",
+      "city": "Ferring (Lemvig)",
+      "categories": [
+        "natur-aussichtspunkt"
+      ],
+      "visit_minutes": 90,
+      "verified": true,
+      "poetry": "Roter Turm über der Steilküste – die Nordsee atmet tief.",
+      "tags": [
+        "Leuchtturm",
+        "Steilküste",
+        "Nordsee",
+        "Aussicht",
+        "Spaziergang",
+        "Picknick"
+      ],
+      "summary_de": "Bovbjerg Fyr ist ein markanter, roter Leuchtturm hoch oben auf der Steilküste westlich von Lemvig. Von hier schaut ihr weit über die Nordsee, die vorgelagerte Strandlinie und das hügelige Hinterland. Rund um den Turm gibt es Wiesen zum Sitzen oder Picknicken, kleine Wege führen an der Kante entlang, und bei klarer Sicht wirkt der Horizont fast endlos. Über Treppen gelangt ihr hinunter zum Naturstrand – perfekt für eine kurze Erkundungstour am Wasser (für Kinderwagen und sehr kleine Kinder ist der Abstieg eher nichts). Ob als Stop auf der Wohnmobiltour oder als kleines Ausflugsziel vom Ferienhaus aus: Der Spot fühlt sich wie ein echter „Nordsee-Postkartenmoment“ an.",
+      "summary_en": "Bovbjerg Fyr is a striking red lighthouse perched on the cliffs west of Lemvig. From up here you have wide views over the North Sea, the long natural beach below and the rolling landscape behind you. Meadows around the lighthouse invite you to sit down or have a picnic, and small paths run along the edge of the cliffs. Stairways lead down to the natural beach – great for a short walk by the water (not ideal for strollers or very small children). Whether you come by motorhome or from a nearby holiday home, this spot feels like a real North Sea postcard moment."
+    },
 
     {
       "id": "serengeti_hodenhagen",
