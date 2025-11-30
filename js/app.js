@@ -27,17 +27,18 @@ import {
   CATEGORY_LABELS_EN,
   HEADER_TAGLINE_TEXT,
   COMPASS_PLUS_HINT_KEY,
-  CATEGORY_TAGS,
   FILTERS,
   CATEGORY_ACCESS
 } from "./config.js";
 
 import {
-  ensureMarkerClusterPlugin,
-  initMap as initLeafletMap,
-  getMap,
-  renderMarkers as renderMapMarkers
-} from "./features/map.js";
+  getSpotName,
+  getSpotSubtitle,
+  getSpotId,
+  getSpotTags,
+  normalizeSpot,
+  doesSpotMatchFilters
+} from "./features/filters.js";
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
@@ -166,6 +167,8 @@ let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
 // Map / Daten
+let map;
+let markersLayer;
 /** @type {Spot[]} */
 let spots = [];
 /** @type {Spot[]} */
@@ -713,8 +716,109 @@ function showToast(keyOrMessage) {
 }
 
 // ------------------------------------------------------
-// Spots – Laden & Cache
+// Map / Spots – Setup
 // ------------------------------------------------------
+
+let markerClusterPluginPromise = null;
+
+/**
+ * Stellt sicher, dass Leaflet.markercluster geladen ist, bevor die Map
+ * initialisiert wird. Falls das Plugin bereits vorhanden ist, passiert nichts.
+ * So erscheinen die Spots wieder als Cluster, die beim Zoomen „aufpoppen“.
+ */
+function ensureMarkerClusterPlugin() {
+  if (typeof L === "undefined") {
+    // Leaflet noch nicht verfügbar – dann können wir hier nichts laden.
+    return Promise.resolve();
+  }
+
+  if (typeof L.markerClusterGroup === "function") {
+    // Plugin ist schon eingebunden (z.B. über index.html)
+    return Promise.resolve();
+  }
+
+  if (markerClusterPluginPromise) {
+    return markerClusterPluginPromise;
+  }
+
+  markerClusterPluginPromise = new Promise((resolve) => {
+    try {
+      // CSS für Markercluster nur einmal einhängen
+      const existingCss = document.querySelector(
+        'link[data-fsm-markercluster="css"]'
+      );
+      if (!existingCss) {
+        const baseUrl =
+          "https://unpkg.com/leaflet.markercluster@1.5.3/dist/";
+        const css1 = document.createElement("link");
+        css1.rel = "stylesheet";
+        css1.href = baseUrl + "MarkerCluster.css";
+        css1.setAttribute("data-fsm-markercluster", "css");
+        document.head.appendChild(css1);
+
+        const css2 = document.createElement("link");
+        css2.rel = "stylesheet";
+        css2.href = baseUrl + "MarkerCluster.Default.css";
+        css2.setAttribute("data-fsm-markercluster", "css");
+        document.head.appendChild(css2);
+      }
+
+      const script = document.createElement("script");
+      script.src =
+        "https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js";
+      script.async = true;
+      script.onload = () => {
+        resolve();
+      };
+      script.onerror = () => {
+        console.warn(
+          "[Family Spots] Konnte Leaflet.markercluster nicht laden – es werden normale Marker genutzt."
+        );
+        resolve();
+      };
+      document.head.appendChild(script);
+    } catch (err) {
+      console.warn(
+        "[Family Spots] Fehler beim Laden von Leaflet.markercluster:",
+        err
+      );
+      resolve();
+    }
+  });
+
+  return markerClusterPluginPromise;
+}
+
+function initMap() {
+  if (typeof L === "undefined" || typeof L.map !== "function") {
+    console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
+    map = null;
+    markersLayer = null;
+    return;
+  }
+
+  map = L.map("map", {
+    center: DEFAULT_MAP_CENTER,
+    zoom: DEFAULT_MAP_ZOOM,
+    zoomControl: false
+  });
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18,
+    attribution: "© OpenStreetMap-Mitwirkende"
+  }).addTo(map);
+
+  if (typeof L.markerClusterGroup === "function") {
+    markersLayer = L.markerClusterGroup();
+  } else {
+    console.warn(
+      "[Family Spots] markerClusterGroup nicht gefunden – nutze normale LayerGroup."
+    );
+    markersLayer = L.layerGroup();
+  }
+
+  map.addLayer(markersLayer);
+}
 
 /**
  * Lädt Spots aus Cache (falls vorhanden).
@@ -805,7 +909,7 @@ async function loadSpots() {
       showSpotsLoadErrorUI();
       spots = [];
       filteredSpots = [];
-      updateMapMarkers();
+      renderMarkers();
       return;
     }
   }
@@ -854,39 +958,6 @@ function saveFavoritesToStorage() {
 // Spots – General Helpers
 // ------------------------------------------------------
 
-function getSpotName(spot) {
-  return (
-    spot.title ||
-    spot.name ||
-    spot.spotName ||
-    (spot.id ? String(spot.id) : "Spot")
-  );
-}
-
-function getSpotSubtitle(spot) {
-  if (spot.city && spot.country) return `${spot.city}, ${spot.country}`;
-  if (spot.city) return spot.city;
-  if (spot.town && spot.country) return `${spot.town}, ${spot.country}`;
-  if (spot.address) return spot.address;
-  return spot.subtitle || spot.shortDescription || "";
-}
-
-function getSpotId(spot) {
-  return String(spot.id || getSpotName(spot));
-}
-
-function isSpotPlusOnly(spot) {
-  return !!spot.plusOnly || !!spot.plus;
-}
-
-function isSpotBigAdventure(spot) {
-  return !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
-}
-
-function isSpotVerified(spot) {
-  return !!spot.verified || !!spot.isVerified;
-}
-
 /**
  * Koordinaten validieren und bei Bedarf String → Zahl konvertieren.
  * @param {Spot} spot
@@ -919,9 +990,12 @@ function hasValidLatLng(spot) {
 function getSpotMetaParts(spot) {
   const parts = [];
   if (spot.category) parts.push(getCategoryLabel(spot.category));
-  if (isSpotVerified(spot)) {
+
+  const isVerified = !!spot.verified || !!spot.isVerified;
+  if (isVerified) {
     parts.push(currentLang === LANG_DE ? "verifiziert" : "verified");
   }
+
   if (spot.visit_minutes) {
     parts.push(
       currentLang === LANG_DE
@@ -930,164 +1004,6 @@ function getSpotMetaParts(spot) {
     );
   }
   return parts;
-}
-
-/**
- * Kombiniert Tags aus den Rohdaten mit Kategorie-basierten Tags (CATEGORY_TAGS).
- * Ergebnis wird gecached in spot._tagsMerged.
- * @param {Spot} spot
- * @returns {string[]}
- */
-function getSpotTags(spot) {
-  if (Array.isArray(spot._tagsMerged)) return spot._tagsMerged;
-
-  const tagSet = new Set();
-
-  // 1. Tags aus den Rohdaten (falls vorhanden)
-  if (Array.isArray(spot.tags)) {
-    spot.tags.forEach((tag) => {
-      if (tag) tagSet.add(String(tag));
-    });
-  }
-
-  // 2. Kategorien einsammeln (category + categories[])
-  const catSlugs = new Set();
-
-  if (spot.category) {
-    catSlugs.add(String(spot.category));
-  }
-
-  if (Array.isArray(spot.categories)) {
-    spot.categories.forEach((c) => {
-      if (c) catSlugs.add(String(c));
-    });
-  }
-
-  // 3. Kategorie-Tags aus CATEGORY_TAGS hinzumischen
-  catSlugs.forEach((slug) => {
-    const catTags = CATEGORY_TAGS[slug];
-    if (Array.isArray(catTags)) {
-      catTags.forEach((tag) => {
-        if (tag) tagSet.add(String(tag));
-      });
-    }
-  });
-
-  const merged = Array.from(tagSet);
-  spot._tagsMerged = merged;
-  return merged;
-}
-
-/**
- * Suchtext aus Spot zusammenbauen.
- * @param {Spot} spot
- * @returns {string}
- */
-function buildSpotSearchText(spot) {
-  if (spot._searchText) return spot._searchText;
-
-  const parts = [
-    getSpotName(spot),
-    getSpotSubtitle(spot),
-    spot.category,
-    ...getSpotTags(spot)
-  ].filter(Boolean);
-
-  const text = parts.join(" ").toLowerCase();
-  spot._searchText = text;
-  return text;
-}
-
-function getSpotAgeGroups(spot) {
-  if (Array.isArray(spot._ageGroups)) return spot._ageGroups;
-
-  const raw = spot.ageGroups || spot.age || spot.ages;
-  let result = [];
-
-  if (!raw) {
-    result = [];
-  } else if (Array.isArray(raw)) {
-    result = raw;
-  } else if (typeof raw === "string") {
-    result = raw
-      .split(",")
-      .map((a) => a.trim())
-      .filter(Boolean);
-  }
-
-  spot._ageGroups = result;
-  return result;
-}
-
-function getSpotMoods(spot) {
-  if (Array.isArray(spot._moods)) return spot._moods;
-
-  const raw = spot.moods || spot.moodTags || spot.mood;
-  let result = [];
-
-  if (!raw) {
-    result = [];
-  } else if (Array.isArray(raw)) {
-    result = raw;
-  } else if (typeof raw === "string") {
-    result = raw
-      .split(",")
-      .map((m) => m.trim())
-      .filter(Boolean);
-  }
-
-  spot._moods = result;
-  return result;
-}
-
-function getSpotTravelModes(spot) {
-  if (Array.isArray(spot._travelModes)) return spot._travelModes;
-
-  const raw = spot.travelModes || spot.travel || spot.tripModes;
-  let result = [];
-
-  if (!raw) {
-    result = [];
-  } else if (Array.isArray(raw)) {
-    result = raw;
-  } else if (typeof raw === "string") {
-    result = raw
-      .split(",")
-      .map((m) => m.trim())
-      .filter(Boolean);
-  }
-
-  spot._travelModes = result;
-  return result;
-}
-
-/**
- * Vereinheitlichte Normalisierung für alle Spots.
- * @param {Spot} raw
- * @returns {Spot}
- */
-function normalizeSpot(raw) {
-  /** @type {Spot} */
-  const spot = { ...raw };
-
-  if (spot.lon != null && spot.lng == null) {
-    spot.lng = spot.lon;
-  }
-
-  if (
-    !spot.category &&
-    Array.isArray(spot.categories) &&
-    spot.categories.length
-  ) {
-    spot.category = spot.categories[0];
-  }
-
-  spot._searchText = buildSpotSearchText(spot);
-  spot._ageGroups = getSpotAgeGroups(spot);
-  spot._moods = getSpotMoods(spot);
-  spot._travelModes = getSpotTravelModes(spot);
-
-  return spot;
 }
 
 /**
@@ -1194,7 +1110,7 @@ function populateCategoryOptions() {
 // ------------------------------------------------------
 
 function isSpotInRadius(spot, centerLatLng, radiusKm) {
-  if (!centerLatLng || typeof centerLatLng.distanceTo !== "function") {
+  if (!map || !centerLatLng || typeof centerLatLng.distanceTo !== "function") {
     return true;
   }
   if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
@@ -1258,27 +1174,8 @@ function initRadiusSliderA11y() {
 }
 
 // ------------------------------------------------------
-// Tag-Filter-Helfer
+// Tag-Filter-Helfer (nur UI; Logik ist in features/filters.js)
 // ------------------------------------------------------
-
-/**
- * Aggregiert alle Tags aus den aktuell aktiven Filter-Chips.
- * @returns {string[]}
- */
-function getActiveFilterTags() {
-  if (!FILTERS || !Array.isArray(FILTERS) || !activeTagFilters.size) {
-    return [];
-  }
-  const tagSet = new Set();
-  FILTERS.forEach((filter) => {
-    if (!filter || !filter.id || !Array.isArray(filter.tags)) return;
-    if (!activeTagFilters.has(filter.id)) return;
-    filter.tags.forEach((tag) => {
-      if (tag) tagSet.add(String(tag));
-    });
-  });
-  return Array.from(tagSet);
-}
 
 /**
  * Rendert die Tag-Filter-Chips in den Container #filter-tags (falls vorhanden).
@@ -1334,94 +1231,12 @@ function renderTagFilterChips() {
 // Filterlogik
 // ------------------------------------------------------
 
-/**
- * Prüft, ob ein Spot alle aktiven Filter erfüllt.
- * @param {Spot} spot
- * @param {{center: any, radiusKm: number}} context
- */
-function doesSpotMatchFilters(spot, { center, radiusKm }) {
-  if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) {
-    return false;
-  }
-
-  if (searchTerm) {
-    const term = searchTerm.toLowerCase();
-    const haystack = buildSpotSearchText(spot);
-    if (!haystack.includes(term)) return false;
-  }
-
-  if (categoryFilter) {
-    const filterSlug = String(categoryFilter);
-    const categories = [];
-
-    if (Array.isArray(spot.categories)) {
-      categories.push(...spot.categories.map(String));
-    } else if (spot.category || spot.type) {
-      categories.push(String(spot.category || spot.type));
-    }
-
-    if (!categories.some((c) => c === filterSlug)) return false;
-  }
-
-  if (ageFilter && ageFilter !== "all") {
-    const ages = getSpotAgeGroups(spot);
-    if (ages.length && !ages.includes(ageFilter)) {
-      return false;
-    }
-  }
-
-  if (FEATURES.moodFilter && moodFilter) {
-    const moods = getSpotMoods(spot);
-    if (moods.length && !moods.includes(moodFilter)) {
-      return false;
-    }
-  }
-
-  if (FEATURES.travelMode && travelMode) {
-    const modes = getSpotTravelModes(spot);
-    if (modes.length && !modes.includes(travelMode)) {
-      return false;
-    }
-  }
-
-  if (
-    FEATURES.bigAdventureFilter &&
-    onlyBigAdventures &&
-    !isSpotBigAdventure(spot)
-  ) {
-    return false;
-  }
-
-  if (FEATURES.verifiedFilter && onlyVerified && !isSpotVerified(spot)) {
-    return false;
-  }
-
-  if (FEATURES.favorites && onlyFavorites) {
-    const id = getSpotId(spot);
-    if (!favorites.has(id)) return false;
-  }
-
-  // Tag-Filter (FILTERS): OR-Logik – Spot muss mind. einen der aktiven Filter-Tags haben
-  if (activeTagFilters.size) {
-    const activeTags = getActiveFilterTags();
-    if (activeTags.length) {
-      const spotTags = getSpotTags(spot);
-      const hasAny = activeTags.some((tag) => spotTags.includes(tag));
-      if (!hasAny) return false;
-    }
-  }
-
-  if (!isSpotInRadius(spot, center, radiusKm)) return false;
-
-  return true;
-}
-
 /** Filter anwenden und sowohl Liste als auch Marker aktualisieren. */
 function applyFiltersAndRender() {
   if (!spots.length) {
     filteredSpots = [];
     renderSpotList();
-    updateMapMarkers();
+    renderMarkers();
 
     if (tilla && typeof tilla.onNoSpotsFound === "function") {
       tilla.onNoSpotsFound();
@@ -1430,7 +1245,6 @@ function applyFiltersAndRender() {
   }
 
   let center = null;
-  const map = getMap();
   if (map && typeof map.getCenter === "function") {
     center = map.getCenter();
   } else if (typeof L !== "undefined" && typeof L.latLng === "function") {
@@ -1439,12 +1253,28 @@ function applyFiltersAndRender() {
 
   const radiusKm = RADIUS_STEPS_KM[radiusStep] ?? Infinity;
 
-  filteredSpots = spots.filter((spot) =>
-    doesSpotMatchFilters(spot, { center, radiusKm })
-  );
+  filteredSpots = spots.filter((spot) => {
+    const matchesFilters = doesSpotMatchFilters(spot, {
+      searchTerm,
+      categoryFilter,
+      ageFilter,
+      moodFilter,
+      travelMode,
+      onlyBigAdventures,
+      onlyVerified,
+      onlyFavorites,
+      favoritesSet: favorites,
+      plusActive,
+      activeTagFilterIds: activeTagFilters
+    });
+
+    if (!matchesFilters) return false;
+
+    return isSpotInRadius(spot, center, radiusKm);
+  });
 
   renderSpotList();
-  updateMapMarkers();
+  renderMarkers();
 
   if (!tilla) return;
 
@@ -1461,19 +1291,43 @@ function applyFiltersAndRender() {
 // Marker & Liste
 // ------------------------------------------------------
 
-function updateMapMarkers() {
-  const mapSpots = filteredSpots || [];
+function renderMarkers() {
+  if (!markersLayer) return;
+  markersLayer.clearLayers();
 
-  const shouldLimit = mapSpots.length > MAX_MARKERS_RENDER;
+  if (!filteredSpots || !filteredSpots.length) return;
+
+  const shouldLimit = filteredSpots.length > MAX_MARKERS_RENDER;
   const toRender = shouldLimit
-    ? mapSpots.slice(0, MAX_MARKERS_RENDER)
-    : mapSpots;
+    ? filteredSpots.slice(0, MAX_MARKERS_RENDER)
+    : filteredSpots;
 
-  renderMapMarkers(toRender, {
-    onSpotClick: (spot) => {
-      focusSpotOnMap(spot);
-    },
-    hasValidLatLng
+  toRender.forEach((spot) => {
+    if (!hasValidLatLng(spot)) return;
+    if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
+
+    // Marker-HTML (kleiner Punkt/Pin)
+    const el = document.createElement("div");
+    el.className = "spot-marker";
+    const inner = document.createElement("div");
+    inner.className = "spot-marker-inner pin-pop";
+    el.appendChild(inner);
+
+    const icon = L.divIcon({
+      html: el,
+      className: "",
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+
+    const marker = L.marker([spot.lat, spot.lng], { icon });
+
+    // Kein Leaflet-Popup mehr – nur noch der große Info-Kasten unten
+    marker.on("click", () => {
+      focusSpotOnMap(spot); // zentriert Karte + öffnet Detailpanel
+    });
+
+    markersLayer.addLayer(marker);
   });
 
   if (shouldLimit) {
@@ -1599,7 +1453,6 @@ function syncFavButtonState(btn, spotId) {
 // ------------------------------------------------------
 
 function focusSpotOnMap(spot) {
-  const map = getMap();
   if (!map || !hasValidLatLng(spot)) {
     showSpotDetails(spot);
     return;
@@ -1966,7 +1819,6 @@ function handleDaylogSave() {
 // ------------------------------------------------------
 
 function handleLocateClick() {
-  const map = getMap();
   if (!navigator.geolocation || !map) {
     showToast("toast_location_error");
     return;
@@ -2066,7 +1918,6 @@ function handleToggleView() {
 
   btnToggleViewEl.setAttribute("aria-pressed", isHidden ? "true" : "false");
 
-  const map = getMap();
   if (map) {
     window.setTimeout(() => {
       map.invalidateSize();
@@ -2178,10 +2029,11 @@ async function init() {
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
 
-    // Markercluster-Plugin laden, dann Map initialisieren
+    // WICHTIG: Markercluster-Plugin laden, bevor die Map gebaut wird,
+    // damit die Spots wieder als Cluster erscheinen und beim Zoomen „aufpoppen“.
     await ensureMarkerClusterPlugin();
-    initLeafletMap();
-    const map = getMap();
+
+    initMap();
 
     if (map) {
       if (spotDetailEl) {
@@ -2541,7 +2393,7 @@ async function init() {
     switchRoute("map");
     loadSpots();
 
-    // TODO: filters.js, utils.js könnten Funktionen modularisieren
+    // TODO: map.js, filters.js, utils.js könnten Funktionen modularisieren
   } catch (err) {
     console.error("[Family Spots] Init-Fehler:", err);
   }
