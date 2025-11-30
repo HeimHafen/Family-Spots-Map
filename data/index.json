@@ -73,13 +73,13 @@
       "waldspielplatz",
       "wasserspielplatz",
       "barrierefreier-spielplatz",
+      "toddler-barfuss-motorik",
       "bewegungspark",
       "multifunktionsfeld",
       "bolzplatz",
-      "pumptrack",
       "skatepark",
-      "verkehrsgarten",
-      "toddler-barfuss-motorik"
+      "pumptrack",
+      "verkehrsgarten"
     ],
     "Tiere & Natur": [
       "zoo",
@@ -87,8 +87,7 @@
       "wildpark",
       "bauernhof",
       "naturerlebnispfad",
-      "walderlebnisroute",
-      "freilichtmuseum"
+      "walderlebnisroute"
     ],
     "Wasser & Schwimmen": [
       "schwimmbad",
@@ -104,7 +103,8 @@
       "kletteranlage-outdoor",
       "kletterwald-hochseilgarten",
       "boulderpark",
-      "minigolf"
+      "minigolf",
+      "familien-event"
     ],
     "Wandern & Radfahren": [
       "wanderweg-kinderwagen",
@@ -117,14 +117,12 @@
     ],
     "Lernen & Kultur": [
       "museum-kinder",
+      "freilichtmuseum",
       "bibliothek"
     ],
     "Praktisches": [
       "oeffentliche-toilette",
       "wickelraum"
-    ],
-    "Events & Erlebnisse": [
-      "familien-event"
     ],
     "Unterwegs mit WoMo & Rad": [
       "stellplatz-spielplatz-naehe-kostenlos",
@@ -146,7 +144,13 @@
       "label": {
         "de": "Spielplatz",
         "en": "Playground"
-      }
+      },
+      "tags": [
+        "playground",
+        "outdoor",
+        "all-ages",
+        "family-friendly"
+      ]
     },
     {
       "slug": "abenteuerspielplatz",
@@ -154,7 +158,14 @@
       "label": {
         "de": "Abenteuerspielplatz",
         "en": "Adventure playground"
-      }
+      },
+      "tags": [
+        "playground",
+        "adventure",
+        "outdoor",
+        "older-kids",
+        "family-friendly"
+      ]
     },
     {
       "slug": "indoor-spielplatz",
@@ -162,7 +173,14 @@
       "label": {
         "de": "Indoor-Spielplatz",
         "en": "Indoor playground"
-      }
+      },
+      "tags": [
+        "playground",
+        "indoor",
+        "bad-weather",
+        "younger-kids",
+        "family-friendly"
+      ]
     },
     {
       "slug": "waldspielplatz",
@@ -170,7 +188,14 @@
       "label": {
         "de": "Waldspielplatz",
         "en": "Forest playground"
-      }
+      },
+      "tags": [
+        "playground",
+        "outdoor",
+        "forest",
+        "nature",
+        "family-friendly"
+      ]
     },
     {
       "slug": "wasserspielplatz",
@@ -178,7 +203,14 @@
       "label": {
         "de": "Wasserspielplatz",
         "en": "Water playground"
-      }
+      },
+      "tags": [
+        "playground",
+        "water",
+        "outdoor",
+        "summer",
+        "family-friendly"
+      ]
     },
     {
       "slug": "zoo",
@@ -186,7 +218,15 @@
       "label": {
         "de": "Zoo",
         "en": "Zoo"
-      }
+      },
+      "tags": [
+        "animals",
+        "zoo",
+        "full-day",
+        "paid",
+        "stroller-friendly",
+        "family-friendly"
+      ]
     },
     {
       "slug": "wildpark",
@@ -194,7 +234,14 @@
       "label": {
         "de": "Wildpark & Safaris",
         "en": "Wildlife park & safaris"
-      }
+      },
+      "tags": [
+        "animals",
+        "wildlife",
+        "nature",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "tierpark",
@@ -202,7 +249,13 @@
       "label": {
         "de": "Tierpark",
         "en": "Animal park"
-      }
+      },
+      "tags": [
+        "animals",
+        "petting-zoo",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "bauernhof",
@@ -210,7 +263,15 @@
       "label": {
         "de": "Bauernhof",
         "en": "Farm"
-      }
+      },
+      "tags": [
+        "animals",
+        "farm",
+        "petting-zoo",
+        "nature",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "schwimmbad",
@@ -218,7 +279,14 @@
       "label": {
         "de": "Schwimmbad",
         "en": "Swimming pool"
-      }
+      },
+      "tags": [
+        "water",
+        "swimming",
+        "sport",
+        "indoor-or-outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "badesee",
@@ -226,7 +294,16 @@
       "label": {
         "de": "Badesee",
         "en": "Swimming lake"
-      }
+      },
+      "tags": [
+        "water",
+        "swimming",
+        "lake",
+        "outdoor",
+        "summer",
+        "nature",
+        "family-friendly"
+      ]
     },
     {
       "slug": "strand",
@@ -234,7 +311,14 @@
       "label": {
         "de": "Familien-Strand",
         "en": "Family beach"
-      }
+      },
+      "tags": [
+        "water",
+        "beach",
+        "outdoor",
+        "summer",
+        "family-friendly"
+      ]
     },
     {
       "slug": "park-garten",
@@ -242,7 +326,15 @@
       "label": {
         "de": "Park / Garten",
         "en": "Park / garden"
-      }
+      },
+      "tags": [
+        "park",
+        "nature",
+        "relax",
+        "outdoor",
+        "picnic-possible",
+        "family-friendly"
+      ]
     },
     {
       "slug": "picknickwiese",
@@ -250,7 +342,14 @@
       "label": {
         "de": "Picknickwiese",
         "en": "Picnic meadow"
-      }
+      },
+      "tags": [
+        "picnic",
+        "nature",
+        "relax",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "wanderweg-kinderwagen",
@@ -258,7 +357,14 @@
       "label": {
         "de": "Wanderweg (kinderwagenfreundlich)",
         "en": "Stroller-friendly trail"
-      }
+      },
+      "tags": [
+        "hiking",
+        "stroller-friendly",
+        "outdoor",
+        "nature",
+        "family-friendly"
+      ]
     },
     {
       "slug": "radweg-family",
@@ -266,7 +372,13 @@
       "label": {
         "de": "Familien-Radweg",
         "en": "Family bike route"
-      }
+      },
+      "tags": [
+        "cycling",
+        "family-route",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "naturerlebnispfad",
@@ -274,15 +386,31 @@
       "label": {
         "de": "Naturerlebnispfad",
         "en": "Nature discovery trail"
-      }
+      },
+      "tags": [
+        "hiking",
+        "learning",
+        "nature",
+        "outdoor",
+        "kids-friendly",
+        "family-friendly"
+      ]
     },
     {
       "slug": "walderlebnisroute",
       "icon": "",
       "label": {
         "de": "Walderlebnisroute",
-        "en": "Forest experience route"
-      }
+        "en": "Forest adventure trail"
+      },
+      "tags": [
+        "hiking",
+        "forest",
+        "nature",
+        "learning",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "freizeitpark",
@@ -290,7 +418,14 @@
       "label": {
         "de": "Freizeitpark",
         "en": "Theme park"
-      }
+      },
+      "tags": [
+        "theme-park",
+        "rides",
+        "full-day",
+        "paid",
+        "family-friendly"
+      ]
     },
     {
       "slug": "minigolf",
@@ -298,7 +433,13 @@
       "label": {
         "de": "Minigolf",
         "en": "Mini golf"
-      }
+      },
+      "tags": [
+        "sport",
+        "mini-golf",
+        "game",
+        "family-friendly"
+      ]
     },
     {
       "slug": "kletterhalle",
@@ -306,7 +447,14 @@
       "label": {
         "de": "Kletterhalle",
         "en": "Climbing gym"
-      }
+      },
+      "tags": [
+        "climbing",
+        "indoor",
+        "sport",
+        "bad-weather",
+        "family-friendly"
+      ]
     },
     {
       "slug": "kletteranlage-outdoor",
@@ -314,7 +462,13 @@
       "label": {
         "de": "Kletteranlage (Outdoor)",
         "en": "Outdoor climbing area"
-      }
+      },
+      "tags": [
+        "climbing",
+        "outdoor",
+        "sport",
+        "family-friendly"
+      ]
     },
     {
       "slug": "kletterwald-hochseilgarten",
@@ -322,7 +476,14 @@
       "label": {
         "de": "Kletterwald / Hochseilgarten",
         "en": "Rope course / climbing forest"
-      }
+      },
+      "tags": [
+        "climbing",
+        "rope-course",
+        "adventure",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "boulderpark",
@@ -330,7 +491,13 @@
       "label": {
         "de": "Boulderpark",
         "en": "Bouldering park"
-      }
+      },
+      "tags": [
+        "climbing",
+        "bouldering",
+        "sport",
+        "family-friendly"
+      ]
     },
     {
       "slug": "trampolinpark",
@@ -338,7 +505,14 @@
       "label": {
         "de": "Trampolinpark",
         "en": "Trampoline park"
-      }
+      },
+      "tags": [
+        "trampoline",
+        "sport",
+        "indoor",
+        "bad-weather",
+        "family-friendly"
+      ]
     },
     {
       "slug": "skatepark",
@@ -346,7 +520,14 @@
       "label": {
         "de": "Skatepark",
         "en": "Skate park"
-      }
+      },
+      "tags": [
+        "skate",
+        "bikes",
+        "outdoor",
+        "teen-friendly",
+        "sport"
+      ]
     },
     {
       "slug": "pumptrack",
@@ -354,7 +535,14 @@
       "label": {
         "de": "Pumptrack",
         "en": "Pumptrack"
-      }
+      },
+      "tags": [
+        "bike",
+        "pumptrack",
+        "outdoor",
+        "sport",
+        "family-friendly"
+      ]
     },
     {
       "slug": "multifunktionsfeld",
@@ -362,23 +550,42 @@
       "label": {
         "de": "Multifunktionsfeld",
         "en": "Multi-sport court"
-      }
+      },
+      "tags": [
+        "sport",
+        "ball-sports",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "bolzplatz",
       "icon": "",
       "label": {
         "de": "Bolzplatz",
-        "en": "Soccer court"
-      }
+        "en": "Soccer pitch"
+      },
+      "tags": [
+        "sport",
+        "soccer",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "bewegungspark",
       "icon": "",
       "label": {
         "de": "Bewegungspark",
-        "en": "Movement park"
-      }
+        "en": "Activity park"
+      },
+      "tags": [
+        "sport",
+        "fitness",
+        "playground",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "familiencafe",
@@ -386,7 +593,13 @@
       "label": {
         "de": "Familiencafé",
         "en": "Family café"
-      }
+      },
+      "tags": [
+        "food",
+        "cafe",
+        "indoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "kinder-familiencafe",
@@ -394,7 +607,14 @@
       "label": {
         "de": "Kinder- & Familiencafé",
         "en": "Kids & family café"
-      }
+      },
+      "tags": [
+        "food",
+        "cafe",
+        "indoor",
+        "kids-area",
+        "family-friendly"
+      ]
     },
     {
       "slug": "familien-restaurant",
@@ -402,7 +622,13 @@
       "label": {
         "de": "Familien-Restaurant",
         "en": "Family restaurant"
-      }
+      },
+      "tags": [
+        "food",
+        "restaurant",
+        "indoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "eisbahn",
@@ -410,7 +636,14 @@
       "label": {
         "de": "Eisbahn",
         "en": "Ice rink"
-      }
+      },
+      "tags": [
+        "ice-skating",
+        "winter",
+        "sport",
+        "seasonal",
+        "family-friendly"
+      ]
     },
     {
       "slug": "rodelhuegel",
@@ -418,7 +651,14 @@
       "label": {
         "de": "Rodelhügel",
         "en": "Sledding hill"
-      }
+      },
+      "tags": [
+        "sledding",
+        "winter",
+        "snow",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "oeffentliche-toilette",
@@ -426,7 +666,11 @@
       "label": {
         "de": "Öffentliche Toilette",
         "en": "Public toilet"
-      }
+      },
+      "tags": [
+        "infrastructure",
+        "toilet"
+      ]
     },
     {
       "slug": "wickelraum",
@@ -434,7 +678,12 @@
       "label": {
         "de": "Wickelraum",
         "en": "Baby changing room"
-      }
+      },
+      "tags": [
+        "infrastructure",
+        "baby-changing",
+        "indoor"
+      ]
     },
     {
       "slug": "familien-event",
@@ -442,15 +691,30 @@
       "label": {
         "de": "Familien-Event",
         "en": "Family event"
-      }
+      },
+      "tags": [
+        "event",
+        "temporary",
+        "family-friendly"
+      ]
     },
     {
       "slug": "rastplatz-spielplatz-dusche",
       "icon": "",
       "label": {
-        "de": "Rastplatz (Spielplatz + Dusche)",
-        "en": "Rest area (playground + shower)"
-      }
+        "de": "Rastplatz (Spielplatz & Dusche)",
+        "en": "Rest area (playground & shower)"
+      },
+      "tags": [
+        "rest-area",
+        "highway",
+        "playground",
+        "toilet",
+        "shower",
+        "infrastructure",
+        "travel",
+        "family-friendly"
+      ]
     },
     {
       "slug": "stellplatz-spielplatz-naehe-kostenlos",
@@ -458,15 +722,32 @@
       "label": {
         "de": "Kostenloser Stellplatz (Spielplatznähe)",
         "en": "Free RV spot (near playground)"
-      }
+      },
+      "tags": [
+        "rv",
+        "free",
+        "playground-nearby",
+        "overnight",
+        "infrastructure",
+        "travel",
+        "family-friendly"
+      ]
     },
     {
       "slug": "wohnmobil-service-station",
       "icon": "",
       "label": {
-        "de": "Wohnmobil Service-Station",
+        "de": "Wohnmobil-Service-Station",
         "en": "RV service station"
-      }
+      },
+      "tags": [
+        "rv",
+        "service",
+        "dump-station",
+        "water",
+        "infrastructure",
+        "travel"
+      ]
     },
     {
       "slug": "campingplatz-familien",
@@ -474,7 +755,14 @@
       "label": {
         "de": "Familien-Campingplatz",
         "en": "Family campground"
-      }
+      },
+      "tags": [
+        "camping",
+        "overnight",
+        "nature",
+        "travel",
+        "family-friendly"
+      ]
     },
     {
       "slug": "bikepacking-spot",
@@ -482,15 +770,30 @@
       "label": {
         "de": "Bikepacking-Spot",
         "en": "Bikepacking spot"
-      }
+      },
+      "tags": [
+        "bikepacking",
+        "overnight",
+        "minimal-infrastructure",
+        "nature",
+        "outdoor",
+        "travel"
+      ]
     },
     {
       "slug": "toddler-barfuss-motorik",
       "icon": "",
       "label": {
-        "de": "Toddler / Barfuß / Motorik",
-        "en": "Toddler / barefoot / motor skills"
-      }
+        "de": "Toddler / Barfuß / Motorikbereich",
+        "en": "Toddler / barefoot / motor skills area"
+      },
+      "tags": [
+        "playground",
+        "toddler-friendly",
+        "sensory",
+        "barefoot",
+        "family-friendly"
+      ]
     },
     {
       "slug": "verkehrsgarten",
@@ -498,7 +801,15 @@
       "label": {
         "de": "Verkehrsgarten",
         "en": "Traffic training park"
-      }
+      },
+      "tags": [
+        "playground",
+        "traffic-training",
+        "bikes",
+        "learning",
+        "outdoor",
+        "family-friendly"
+      ]
     },
     {
       "slug": "freilichtmuseum",
@@ -506,7 +817,15 @@
       "label": {
         "de": "Freilichtmuseum",
         "en": "Open-air museum"
-      }
+      },
+      "tags": [
+        "museum",
+        "outdoor",
+        "history",
+        "culture",
+        "learning",
+        "family-friendly"
+      ]
     },
     {
       "slug": "museum-kinder",
@@ -514,7 +833,15 @@
       "label": {
         "de": "Kinder-Museum",
         "en": "Children's museum"
-      }
+      },
+      "tags": [
+        "museum",
+        "indoor",
+        "learning",
+        "kids-friendly",
+        "bad-weather",
+        "family-friendly"
+      ]
     },
     {
       "slug": "bibliothek",
@@ -522,7 +849,16 @@
       "label": {
         "de": "Kinder- & Familienbibliothek",
         "en": "Children's & family library"
-      }
+      },
+      "tags": [
+        "library",
+        "indoor",
+        "quiet",
+        "books",
+        "learning",
+        "bad-weather",
+        "family-friendly"
+      ]
     },
     {
       "slug": "barrierefreier-spielplatz",
@@ -530,7 +866,14 @@
       "label": {
         "de": "Barrierefreier Spielplatz",
         "en": "Accessible playground"
-      }
+      },
+      "tags": [
+        "playground",
+        "accessible",
+        "wheelchair",
+        "outdoor",
+        "family-friendly"
+      ]
     }
   ]
 }
