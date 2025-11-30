@@ -58,5 +58,27 @@
   "nav_about": "Über Family Spots Map",
 
   "route_apple": "In Apple Karten öffnen",
-  "route_google": "In Google Maps öffnen"
+  "route_google": "In Google Maps öffnen",
+
+  /* -------- NEU: Abo / Add-ons / Bezahlinhalte -------- */
+
+  "subscription_family_plus_label": "Family Spots Plus",
+  "subscription_family_plus_badge": "Plus",
+
+  "subscription_required_title": "Family Spots Plus erforderlich",
+  "subscription_required_text": "Dieser Spot gehört zu Family Spots Plus. Schalte Plus frei, um alle Details und alle Plus-Kategorien nutzen zu können.",
+  "subscription_required_button": "Family Spots Plus freischalten",
+
+  "subscription_teaser_short": "Mehr Abenteuer für Familien – alle Plus-Kategorien in einer Jahresmitgliedschaft.",
+  "subscription_price_hint": "Family Spots Plus ist als Jahresabo gedacht (z. B. 19,90 €/Jahr).",
+
+  "addon_required_title": "Add-on erforderlich",
+  "addon_required_text": "Dieser Spot gehört zu einem zusätzlichen Add-on. Aktiviere das Add-on, um alle Details und passenden Spots zu sehen.",
+  "addon_required_button": "Add-ons ansehen",
+
+  "addon_water_label": "Wasser & Baden – Add-on",
+  "addon_rv_label": "WoMo & Vanlife – Add-on",
+  "addon_outdoor_label": "Outdoor & Übernachtung – Add-on",
+
+  "addon_price_hint": "Add-ons können separat pro Jahr freigeschaltet werden (z. B. 2,99 €/Jahr)."
 }
