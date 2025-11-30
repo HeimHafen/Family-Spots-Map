@@ -1,210 +1,169 @@
-/* global L */
+// js/features/map.js
+// ----------------------------------------------
+// Leaflet-Map-Kapselung (Initialisierung & Marker)
+// ----------------------------------------------
 
-import { getLanguage } from "../i18n.js";
+"use strict";
 
+import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "../config.js";
+
+/**
+ * @typedef {Object} Spot
+ * @property {number} [lat]
+ * @property {number} [lng]
+ */
+
+// interne Referenzen
 let map = null;
-let markerLayer = null;
-let onMarkerSelectCallback = null;
-const markersById = new Map();
-let radiusCircle = null;
-let currentMarkerRunId = 0;
+let markersLayer = null;
+let markerClusterPluginPromise = null;
 
-const spotMarkerIcon = L.divIcon({
-  className: "spot-marker",
-  html: '<div class="spot-marker-inner"></div>',
-  iconSize: [24, 24],
-  iconAnchor: [12, 12],
-  popupAnchor: [0, -12]
-});
-
-function getCurrentLanguage() {
-  try {
-    const langFromI18n = typeof getLanguage === "function" && getLanguage();
-    if (langFromI18n) return langFromI18n;
-  } catch {}
-  if (document?.documentElement?.lang) return document.documentElement.lang;
-  if (navigator?.language) return navigator.language;
-  return "de";
-}
-
-function escapeHtml(str) {
-  if (!str) return "";
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function getSpotPopupSummary(spot) {
-  const lang = getCurrentLanguage();
-  const isEn = lang.toLowerCase().indexOf("en") === 0;
-
-  const poetry = (spot.poetry || "").trim();
-  const summaryPrimary = (isEn ? spot.summary_en : spot.summary_de) || "";
-  const summarySecondary = (isEn ? spot.summary_de : spot.summary_en) || "";
-  const visitLabel = (isEn ? spot.visitLabel_en : spot.visitLabel_de) || "";
-
-  let text = poetry || summaryPrimary || visitLabel || summarySecondary;
-
-  return text.length > 260 ? text.slice(0, 259) + "…" : text;
-}
-
-export function initMap(options) {
-  const { center, zoom, onMarkerSelect } = options;
-
-  onMarkerSelectCallback = onMarkerSelect || null;
-
-  map = L.map("map", {
-    center: [center.lat, center.lng],
-    zoom,
-    zoomControl: true,
-    preferCanvas: false
-  });
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "© OpenStreetMap-Mitwirkende",
-    updateWhenIdle: true,
-    keepBuffer: 2
-  }).addTo(map);
-
-  setTimeout(() => map.invalidateSize(), 0);
-
-  map.on("resize", () => map.invalidateSize());
-}
-
+/**
+ * Liefert die aktuelle Leaflet-Map (oder null, wenn nicht initialisiert).
+ */
 export function getMap() {
   return map;
 }
 
-function ensureMarkerLayer() {
-  if (!map) return null;
-
-  if (!markerLayer) {
-    markerLayer = typeof L.markerClusterGroup === "function"
-      ? L.markerClusterGroup({
-          showCoverageOnHover: false,
-          removeOutsideVisibleBounds: true,
-          spiderfyOnEveryZoom: false,
-          spiderfyOnMaxZoom: true,
-          spiderLegPolylineOptions: { weight: 0, opacity: 0 },
-          maxClusterRadius: 60,
-          chunkedLoading: true
-        })
-      : L.layerGroup();
-
-    markerLayer.addTo(map);
+/**
+ * Stellt sicher, dass Leaflet.markercluster geladen ist, bevor die Map
+ * initialisiert wird.
+ */
+export function ensureMarkerClusterPlugin() {
+  if (typeof L === "undefined") {
+    // Leaflet noch nicht verfügbar – dann können wir hier nichts laden.
+    return Promise.resolve();
   }
 
-  return markerLayer;
+  if (typeof L.markerClusterGroup === "function") {
+    // Plugin ist schon eingebunden (z.B. über index.html)
+    return Promise.resolve();
+  }
+
+  if (markerClusterPluginPromise) {
+    return markerClusterPluginPromise;
+  }
+
+  markerClusterPluginPromise = new Promise((resolve) => {
+    try {
+      // CSS für Markercluster nur einmal einhängen
+      const existingCss = document.querySelector(
+        'link[data-fsm-markercluster="css"]'
+      );
+      if (!existingCss) {
+        const baseUrl =
+          "https://unpkg.com/leaflet.markercluster@1.5.3/dist/";
+        const css1 = document.createElement("link");
+        css1.rel = "stylesheet";
+        css1.href = baseUrl + "MarkerCluster.css";
+        css1.setAttribute("data-fsm-markercluster", "css");
+        document.head.appendChild(css1);
+
+        const css2 = document.createElement("link");
+        css2.rel = "stylesheet";
+        css2.href = baseUrl + "MarkerCluster.Default.css";
+        css2.setAttribute("data-fsm-markercluster", "css");
+        document.head.appendChild(css2);
+      }
+
+      const script = document.createElement("script");
+      script.src =
+        "https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js";
+      script.async = true;
+      script.onload = () => {
+        resolve();
+      };
+      script.onerror = () => {
+        console.warn(
+          "[Family Spots] Konnte Leaflet.markercluster nicht laden – es werden normale Marker genutzt."
+        );
+        resolve();
+      };
+      document.head.appendChild(script);
+    } catch (err) {
+      console.warn(
+        "[Family Spots] Fehler beim Laden von Leaflet.markercluster:",
+        err
+      );
+      resolve();
+    }
+  });
+
+  return markerClusterPluginPromise;
 }
 
-export function setSpotsOnMap(spots) {
-  if (!map) return;
+/**
+ * Initialisiert die Leaflet-Map und den Marker-Layer.
+ * @returns {any} die Map-Instanz oder null
+ */
+export function initMap() {
+  if (typeof L === "undefined" || typeof L.map !== "function") {
+    console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
+    map = null;
+    markersLayer = null;
+    return null;
+  }
 
-  const layer = ensureMarkerLayer();
-  if (!layer) return;
+  map = L.map("map", {
+    center: DEFAULT_MAP_CENTER,
+    zoom: DEFAULT_MAP_ZOOM,
+    zoomControl: false
+  });
 
-  const runId = ++currentMarkerRunId;
-  layer.clearLayers();
-  markersById.clear();
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18,
+    attribution: "© OpenStreetMap-Mitwirkende"
+  }).addTo(map);
 
-  const lang = getCurrentLanguage();
-  const isEn = lang.toLowerCase().indexOf("en") === 0;
-  const googleLabel = isEn ? "Route (Google Maps)" : "Route (Google Maps)";
-  const appleLabel = isEn ? "Route (Apple Maps)" : "Route (Apple Karten)";
-
-  const markerQueue = [];
-
-  (spots || []).forEach((spot) => {
-    if (!spot?.location) return;
-
-    const { lat, lng } = spot.location;
-    if (lat == null || lng == null) return;
-
-    const marker = L.marker([lat, lng], { icon: spotMarkerIcon });
-    const summary = getSpotPopupSummary(spot);
-
-    const encodedName = encodeURIComponent(
-      (spot.name || spot.title || "") + (spot.city ? " " + spot.city : "")
+  if (typeof L.markerClusterGroup === "function") {
+    markersLayer = L.markerClusterGroup();
+  } else {
+    console.warn(
+      "[Family Spots] markerClusterGroup nicht gefunden – nutze normale LayerGroup."
     );
-
-    const googleMapsUrl =
-      "https://www.google.com/maps/dir/?api=1&destination=" +
-      encodeURIComponent(lat + "," + lng) +
-      (encodedName ? "&destination_place_id=&query=" + encodedName : "");
-
-    const appleMapsUrl =
-      "https://maps.apple.com/?daddr=" + encodeURIComponent(lat + "," + lng);
-
-    const popupHtml = `
-      <div class="popup">
-        <strong>${escapeHtml(spot.name || spot.title || "")}</strong>
-        ${spot.city ? "<br>" + escapeHtml(spot.city) : ""}
-        ${summary ? "<br><small>" + escapeHtml(summary) + "</small>" : ""}
-        <div class="popup-actions">
-          <a class="popup-link" href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(googleLabel)}</a>
-          <a class="popup-link" href="${appleMapsUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(appleLabel)}</a>
-        </div>
-      </div>`;
-
-    marker.bindPopup(popupHtml);
-
-    marker.on("click", () => {
-      if (onMarkerSelectCallback) onMarkerSelectCallback(spot.id);
-    });
-
-    marker.on("add", () => {
-      const el = marker.getElement();
-      if (!el || el.classList.contains("marker-cluster")) return;
-      el.classList.add("pin-pop");
-      setTimeout(() => el.classList.remove("pin-pop"), 260);
-    });
-
-    markerQueue.push({ spot, marker });
-  });
-
-  let delay = 0;
-  const step = 18;
-
-  markerQueue.forEach(({ spot, marker }) => {
-    setTimeout(() => {
-      if (runId !== currentMarkerRunId) return;
-      layer.addLayer(marker);
-      markersById.set(spot.id, marker);
-    }, delay);
-    delay += step;
-  });
-}
-
-export function focusOnSpot(spot) {
-  if (!map || !spot?.location) return;
-
-  const { lat, lng } = spot.location;
-  if (lat == null || lng == null) return;
-
-  map.setView([lat, lng], 15, { animate: true });
-
-  const marker = markersById.get(spot.id);
-  if (marker?.openPopup) marker.openPopup();
-}
-
-export function updateRadiusCircle(origin, radiusKm) {
-  if (!map) return;
-
-  if (radiusCircle) {
-    map.removeLayer(radiusCircle);
-    radiusCircle = null;
+    markersLayer = L.layerGroup();
   }
 
-  if (!origin || !radiusKm || radiusKm <= 0) return;
+  map.addLayer(markersLayer);
+  return map;
+}
 
-  radiusCircle = L.circle([origin.lat, origin.lng], {
-    radius: radiusKm * 1000,
-    className: "radius-circle"
+/**
+ * Marker neu rendern.
+ * Erwartet bereits gefilterte Spots – Limit & Toast macht app.js.
+ *
+ * @param {Spot[]} spots
+ * @param {{ onSpotClick?: (spot: Spot) => void, hasValidLatLng: (spot: Spot) => boolean }} options
+ */
+export function renderMarkers(spots, { onSpotClick, hasValidLatLng }) {
+  if (!markersLayer) return;
+  markersLayer.clearLayers();
+
+  if (!spots || !spots.length) return;
+  if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
+
+  spots.forEach((spot) => {
+    if (!hasValidLatLng(spot)) return;
+
+    const el = document.createElement("div");
+    el.className = "spot-marker";
+    const inner = document.createElement("div");
+    inner.className = "spot-marker-inner pin-pop";
+    el.appendChild(inner);
+
+    const icon = L.divIcon({
+      html: el,
+      className: "",
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+
+    const marker = L.marker([spot.lat, spot.lng], { icon });
+
+    if (typeof onSpotClick === "function") {
+      marker.on("click", () => onSpotClick(spot));
+    }
+
+    markersLayer.addLayer(marker);
   });
-
-  radiusCircle.addTo(map);
 }
