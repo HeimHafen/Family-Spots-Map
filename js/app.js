@@ -2,6 +2,7 @@
 // ======================================================
 // Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
 // Map- und Filterlogik ist in map.js / filters.js ausgelagert.
+// Daten & Plus-Logik sind in data.js / features/plus.js ausgelagert.
 // ======================================================
 
 "use strict";
@@ -11,9 +12,7 @@ import { TillaCompanion } from "./features/tilla.js";
 import {
   DEFAULT_MAP_CENTER,
   DEFAULT_MAP_ZOOM,
-  PLUS_STORAGE_KEY,
   DAYLOG_STORAGE_KEY,
-  SPOTS_CACHE_KEY,
   LANG_DE,
   LANG_EN,
   THEME_LIGHT,
@@ -49,6 +48,13 @@ import {
 import { initRouter } from "./router.js";
 import { getInitialTheme, applyTheme } from "./theme.js";
 import { initToast, showToast } from "./toast.js";
+import { loadData } from "./data.js";
+import {
+  getPlusStatus,
+  isPlusActive,
+  formatPlusStatus,
+  redeemPartnerCode
+} from "./features/plus.js";
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
@@ -441,7 +447,7 @@ function updateGenericSectionToggleLabel(btn, isOpen) {
   btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
 }
 
-function updatePlusStatusText() {
+function updatePlusStatusText(status) {
   if (!plusStatusTextEl) return;
 
   if (!FEATURES.plus) {
@@ -449,18 +455,8 @@ function updatePlusStatusText() {
     return;
   }
 
-  if (!plusActive) {
-    plusStatusTextEl.textContent =
-      currentLang === LANG_DE
-        ? "Family Spots Plus ist nicht aktiviert. App-Abo: 19,90 €/Jahr, Plus-Kategorien: + 2,99 €/Jahr."
-        : "Family Spots Plus is not activated. App subscription: €19.90/year, Plus categories: + €2.99/year.";
-    return;
-  }
-
-  plusStatusTextEl.textContent =
-    currentLang === LANG_DE
-      ? "Family Spots Plus ist aktiv – Plus-Kategorien (2,99 €/Jahr) sind zusätzlich zu deinem App-Abo (19,90 €/Jahr) freigeschaltet."
-      : "Family Spots Plus is active – Plus categories (€2.99/year) are unlocked on top of your app subscription (€19.90/year).";
+  const s = status || getPlusStatus();
+  plusStatusTextEl.textContent = formatPlusStatus(s);
 }
 
 // ------------------------------------------------------
@@ -647,26 +643,8 @@ function setLanguage(lang, { initial = false } = {}) {
 }
 
 // ------------------------------------------------------
-// Theme (ausgelagert in theme.js, hier nur State-Update)
+// Spots – Laden (über data.js)
 // ------------------------------------------------------
-
-// ------------------------------------------------------
-// Spots – Cache / Laden
-// ------------------------------------------------------
-
-function loadSpotsFromCache() {
-  try {
-    const stored = localStorage.getItem(SPOTS_CACHE_KEY);
-    if (!stored) return null;
-    const parsed = JSON.parse(stored);
-    if (Array.isArray(parsed)) return parsed;
-    if (parsed && Array.isArray(parsed.spots)) return parsed.spots;
-    return null;
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Spots-Cache nicht lesen:", err);
-    return null;
-  }
-}
 
 function showSpotsLoadErrorUI() {
   if (!spotListEl) return;
@@ -700,63 +678,53 @@ function showSpotsLoadErrorUI() {
 }
 
 async function loadSpots() {
-  let raw = [];
-
   try {
-    const res = await fetch("data/spots.json", { cache: "no-cache" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
+    const result = await loadData();
+    const rawSpots = Array.isArray(result.spots) ? result.spots : [];
 
-    const data = await res.json();
-    raw = Array.isArray(data) ? data : data.spots || [];
+    spots = rawSpots.map(normalizeSpot);
 
-    try {
-      localStorage.setItem(SPOTS_CACHE_KEY, JSON.stringify(raw));
-    } catch (err) {
-      console.warn("[Family Spots] Konnte Spots-Cache nicht speichern:", err);
+    loadFavoritesFromStorage();
+    populateCategoryOptions();
+
+    if (tagFilterContainerEl) {
+      renderTagFilterChips();
     }
-  } catch (err) {
-    console.error("[Family Spots] Fehler beim Laden der Spots:", err);
 
-    const cached = loadSpotsFromCache();
-    if (cached && cached.length) {
-      raw = cached;
+    if (result.fromCache) {
       showToast(
         currentLang === LANG_DE
           ? "Offline-Daten geladen."
           : "Loaded offline data."
       );
-    } else {
-      showToast("error_data_load");
-      showSpotsLoadErrorUI();
-      spots = [];
-      filteredSpots = [];
+    }
 
-      if (map && markersLayer) {
-        hasShownMarkerLimitToast = renderMarkers({
-          map,
-          markersLayer,
-          spots: [],
-          maxMarkers: MAX_MARKERS_RENDER,
-          currentLang,
-          showToast,
-          hasShownMarkerLimitToast,
-          focusSpotOnMap
-        });
-      }
-      return;
+    applyFiltersAndRender();
+  } catch (err) {
+    console.error("[Family Spots] Fehler beim Laden der Spots:", err);
+
+    showToast("error_data_load");
+    showSpotsLoadErrorUI();
+    spots = [];
+    filteredSpots = [];
+
+    if (map && markersLayer) {
+      hasShownMarkerLimitToast = renderMarkers({
+        map,
+        markersLayer,
+        spots: [],
+        maxMarkers: MAX_MARKERS_RENDER,
+        currentLang,
+        showToast,
+        hasShownMarkerLimitToast,
+        focusSpotOnMap
+      });
+    }
+
+    if (tilla && typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
     }
   }
-
-  spots = raw.map(normalizeSpot);
-
-  loadFavoritesFromStorage();
-  populateCategoryOptions();
-
-  if (tagFilterContainerEl) {
-    renderTagFilterChips();
-  }
-
-  applyFiltersAndRender();
 }
 
 // ------------------------------------------------------
@@ -1456,47 +1424,49 @@ function loadPlusStateFromStorage(options = {}) {
 
   if (!FEATURES.plus) {
     plusActive = false;
-    updatePlusStatusText();
+    updatePlusStatusText({ active: false, plan: null, validUntil: null });
     return;
   }
 
   try {
-    plusActive = localStorage.getItem(PLUS_STORAGE_KEY) === "1";
+    const status = getPlusStatus();
+    plusActive = !!status.active;
+    updatePlusStatusText(status);
   } catch (err) {
     console.warn("[Family Spots] Konnte Plus-Status nicht laden:", err);
     plusActive = false;
+    updatePlusStatusText({ active: false, plan: null, validUntil: null });
   }
-  updatePlusStatusText();
 
   if (reapplyFilters && spots.length) {
     applyFiltersAndRender();
   }
 }
 
-function handlePlusCodeSubmit() {
+async function handlePlusCodeSubmit() {
   if (!FEATURES.plus) return;
   if (!plusCodeInputEl || !plusStatusTextEl) return;
+
   const raw = plusCodeInputEl.value.trim();
 
-  if (!raw) {
-    showToast("plus_code_empty");
+  const result = await redeemPartnerCode(raw);
+
+  if (!result.ok) {
+    if (result.reason === "empty") {
+      showToast("plus_code_empty");
+    } else if (result.reason === "invalid_days") {
+      showToast("plus_code_unknown");
+    } else {
+      showToast("plus_code_unknown");
+    }
     return;
   }
 
-  if (raw.length < 4) {
-    showToast("plus_code_unknown");
-    return;
-  }
-
-  plusActive = true;
-  try {
-    localStorage.setItem(PLUS_STORAGE_KEY, "1");
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Plus-Status nicht speichern:", err);
-  }
+  const status = result.status || getPlusStatus();
+  plusActive = !!status.active;
+  updatePlusStatusText(status);
 
   showToast("plus_code_activated");
-  updatePlusStatusText();
 
   if (tilla && typeof tilla.onPlusActivated === "function") {
     tilla.onPlusActivated();
@@ -1912,6 +1882,7 @@ async function init() {
     }
 
     if (plusSectionEl && btnTogglePlusEl) {
+      plusSectionEl.id = plusSectionEl.id || "plus-section";
       btnTogglePlusEl.setAttribute("aria-controls", plusSectionEl.id);
 
       const togglePlusHandler = (event) => {
@@ -1936,6 +1907,7 @@ async function init() {
     }
 
     if (daylogSectionEl && btnToggleDaylogEl) {
+      daylogSectionEl.id = daylogSectionEl.id || "daylog-section";
       btnToggleDaylogEl.setAttribute("aria-controls", daylogSectionEl.id);
 
       const toggleDaylogHandler = (event) => {
@@ -1963,7 +1935,9 @@ async function init() {
     }
 
     if (FEATURES.plus && plusCodeSubmitEl) {
-      plusCodeSubmitEl.addEventListener("click", handlePlusCodeSubmit);
+      plusCodeSubmitEl.addEventListener("click", () => {
+        handlePlusCodeSubmit();
+      });
     }
 
     if (FEATURES.daylog && daylogSaveEl) {
