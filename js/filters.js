@@ -6,7 +6,7 @@
 
 "use strict";
 
-import { CATEGORY_TAGS, FILTERS, FEATURES } from "./config.js";
+import { CATEGORY_TAGS, FILTERS, FEATURES, CATEGORY_ACCESS } from "./config.js";
 
 /**
  * @typedef {import("./app.js").Spot} Spot
@@ -194,11 +194,36 @@ export function normalizeSpot(raw) {
 }
 
 // ------------------------------------------------------
-// Filterlogik (nur Daten, kein DOM / Leaflet)
+// Plus-/Add-on-Logik (nur Daten)
 // ------------------------------------------------------
 
-function isSpotPlusOnly(spot) {
-  return !!spot.plusOnly || !!spot.plus;
+function getSpotCategorySlugs(spot) {
+  const slugs = new Set();
+  if (spot.category) slugs.add(String(spot.category));
+  if (Array.isArray(spot.categories)) {
+    spot.categories.forEach((c) => {
+      if (c) slugs.add(String(c));
+    });
+  }
+  return Array.from(slugs);
+}
+
+function isCategoryRestricted(slug) {
+  if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) return false;
+  const rule = CATEGORY_ACCESS.perCategory[slug];
+  if (!rule) return false;
+
+  const level = rule.level || CATEGORY_ACCESS.defaultLevel || "free";
+  return level !== "free"; // "subscription" oder "addon" → Plus nötig
+}
+
+function isSpotPlusRestricted(spot) {
+  // 1. Alte Flags auf Spots (falls du irgendwo plusOnly gesetzt hast)
+  if (spot.plusOnly || spot.plus) return true;
+
+  // 2. Kategorie-Regeln aus CATEGORY_ACCESS
+  const slugs = getSpotCategorySlugs(spot);
+  return slugs.some(isCategoryRestricted);
 }
 
 function isSpotBigAdventure(spot) {
@@ -275,8 +300,10 @@ function doesSpotMatchBaseFilters(
     favorites
   }
 ) {
-  // Plus-Filter
-  if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) {
+  // Plus / Add-ons:
+  // Wenn Spot in einer kostenpflichtigen Kategorie liegt
+  // und Plus nicht aktiv ist → Spot ausblenden.
+  if (FEATURES.plus && !plusActive && isSpotPlusRestricted(spot)) {
     return false;
   }
 
