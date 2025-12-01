@@ -1,64 +1,68 @@
 // js/router.js
 // ===========================================
 // Einfacher Router für Map-View / About-View
-// (keine Abhängigkeit von App-State)
+// (Navigation unten + optionaler Hilfe-Button)
 // ===========================================
 
 "use strict";
 
 /**
- * Initialisiert das Routing zwischen Karten- und About-Ansicht.
+ * Initialisiert das Routing zwischen Karten-Ansicht und About-Seite.
  *
  * @param {Object} opts
  * @param {HTMLElement} opts.viewMapEl
  * @param {HTMLElement} opts.viewAboutEl
  * @param {NodeListOf<HTMLElement>|HTMLElement[]} opts.bottomNavButtons
- * @param {HTMLElement} [opts.bottomNavMapLabelEl]
- * @param {HTMLElement} [opts.bottomNavAboutLabelEl]
- * @param {() => ("de"|"en")} opts.getCurrentLang  Funktion, die aktuelle Sprache zurückgibt
+ * @param {HTMLElement} [opts.btnHelpEl]
+ * @param {() => ("de"|"en")} opts.getCurrentLang  Funktion, die aktuelle Sprache liefert
  */
 export function initRouter({
   viewMapEl,
   viewAboutEl,
   bottomNavButtons,
-  bottomNavMapLabelEl,   // aktuell nur für spätere Erweiterungen – kann auch ungenutzt sein
-  bottomNavAboutLabelEl, // "
+  btnHelpEl,
   getCurrentLang
 }) {
-  if (!viewMapEl || !viewAboutEl) {
-    console.warn("[Family Spots] Router: view elements missing");
-  }
-
   const buttons = Array.from(bottomNavButtons || []);
+
+  function getLang() {
+    try {
+      if (typeof getCurrentLang === "function") {
+        const lang = getCurrentLang();
+        return lang === "en" ? "en" : "de";
+      }
+    } catch {
+      // ignore
+    }
+    return "de";
+  }
 
   /**
    * Route wechseln: "map" oder "about"
-   * – entspricht der alten switchRoute-Funktion aus app.js
    */
   function switchRoute(route) {
-    const currentLang =
-      typeof getCurrentLang === "function" ? getCurrentLang() : "de";
-
+    const lang = getLang();
     const showMap = route !== "about";
 
-    // Sichtbarkeit der Views
+    // Views ein/ausblenden
     if (viewMapEl && viewAboutEl) {
       viewMapEl.classList.toggle("view--active", showMap);
       viewAboutEl.classList.toggle("view--active", !showMap);
 
+      // zusätzlich direktes display, falls CSS nicht reicht
       viewMapEl.style.display = showMap ? "block" : "none";
       viewAboutEl.style.display = showMap ? "none" : "block";
     }
 
-    // Bottom-Navigation
+    // Bottom-Navigation aktualisieren
     buttons.forEach((btn) => {
       const btnRoute = btn.getAttribute("data-route");
-      const isActive = btnRoute === route || (showMap && btnRoute === "map");
+      const isActive = btnRoute === (showMap ? "map" : "about");
       btn.classList.toggle("bottom-nav-item--active", isActive);
       btn.setAttribute("aria-current", isActive ? "page" : "false");
     });
 
-    // Nach oben scrollen (mit Rücksicht auf prefers-reduced-motion)
+    // nach oben scrollen (mit Rücksicht auf prefers-reduced-motion)
     const prefersReducedMotion =
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -74,26 +78,47 @@ export function initRouter({
       focusTarget = document.getElementById("app-title");
     } else {
       focusTarget =
-        currentLang === "de"
+        lang === "de"
           ? document.querySelector("#page-about-de h2")
           : document.querySelector("#page-about-en h2");
     }
 
     if (focusTarget && typeof focusTarget.focus === "function") {
-      focusTarget.focus();
+      // kleiner Timeout, damit DOM-Änderungen durch sind
+      setTimeout(() => focusTarget.focus(), 50);
     }
   }
 
-  /**
-   * Aktuelle Route zurückgeben ("map" / "about")
-   */
-  function getCurrentRoute() {
-    if (!viewMapEl || !viewAboutEl) return "map";
-    return viewAboutEl.classList.contains("view--active") ? "about" : "map";
+  // Bottom-Nav Buttons anbinden
+  buttons.forEach((btn) => {
+    const route = btn.getAttribute("data-route");
+    if (!route) return;
+    btn.addEventListener("click", () => {
+      switchRoute(route);
+    });
+  });
+
+  // Hilfe-Button (falls vorhanden) auf About routen
+  if (btnHelpEl) {
+    btnHelpEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      switchRoute("about");
+    });
   }
 
+  // Initialen Zustand aus DOM ableiten
+  let initialRoute = "map";
+  if (
+    viewAboutEl &&
+    viewAboutEl.classList.contains("view--active")
+  ) {
+    initialRoute = "about";
+  }
+  switchRoute(initialRoute);
+
+  // Rückgabe ist optional – app.js nutzt sie aktuell nicht,
+  // kann aber später hilfreich sein.
   return {
-    switchRoute,
-    getCurrentRoute
+    switchRoute
   };
 }
