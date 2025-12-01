@@ -1,7 +1,7 @@
 // js/app.js
 // ======================================================
-// Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
-// Map- und Filterlogik ist in map.js / filters.js ausgelagert.
+// Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
+// Ziel: Klar strukturiert, robust und gut wartbar
 // ======================================================
 
 "use strict";
@@ -27,19 +27,16 @@ import {
   CATEGORY_LABELS_EN,
   HEADER_TAGLINE_TEXT,
   COMPASS_PLUS_HINT_KEY,
-  CATEGORY_TAGS,
   FILTERS,
   CATEGORY_ACCESS
 } from "./config.js";
 
-// *** NEU: ausgelagerte Filter- und Map-Funktionen importieren ***
 import {
   normalizeSpot,
   filterSpots,
   getSpotName,
   getSpotSubtitle,
-  getSpotId,
-  getSpotMetaParts
+  getSpotId
 } from "./filters.js";
 
 import {
@@ -177,10 +174,8 @@ let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
 // Map / Daten
-/** @type {L.Map|null} */
-let map = null;
-/** @type {L.LayerGroup|null} */
-let markersLayer = null;
+let map;
+let markersLayer;
 /** @type {Spot[]} */
 let spots = [];
 /** @type {Spot[]} */
@@ -728,7 +723,7 @@ function showToast(keyOrMessage) {
 }
 
 // ------------------------------------------------------
-// Spots – Cache / Laden
+// Map / Spots – Setup
 // ------------------------------------------------------
 
 /**
@@ -820,9 +815,9 @@ async function loadSpots() {
       showSpotsLoadErrorUI();
       spots = [];
       filteredSpots = [];
-      // Marker leeren
+
       if (map && markersLayer) {
-        renderMarkers({
+        hasShownMarkerLimitToast = renderMarkers({
           map,
           markersLayer,
           spots: [],
@@ -838,7 +833,6 @@ async function loadSpots() {
     }
   }
 
-  // Spots über filters.js normalisieren
   spots = raw.map(normalizeSpot);
 
   loadFavoritesFromStorage();
@@ -877,6 +871,35 @@ function saveFavoritesToStorage() {
   } catch (err) {
     console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
   }
+}
+
+// ------------------------------------------------------
+// Spots – General Helpers (UI-spezifisch)
+// ------------------------------------------------------
+
+/**
+ * Meta-Info zu einem Spot zentral berechnen.
+ * @param {Spot} spot
+ * @returns {string[]}
+ */
+function getSpotMetaParts(spot) {
+  const parts = [];
+  if (spot.category) parts.push(getCategoryLabel(spot.category));
+
+  const isVerified =
+    !!spot.verified || !!spot.isVerified;
+
+  if (isVerified) {
+    parts.push(currentLang === LANG_DE ? "verifiziert" : "verified");
+  }
+  if (spot.visit_minutes) {
+    parts.push(
+      currentLang === LANG_DE
+        ? `~${spot.visit_minutes} Min.`
+        : `~${spot.visit_minutes} min`
+    );
+  }
+  return parts;
 }
 
 // ------------------------------------------------------
@@ -962,7 +985,7 @@ function populateCategoryOptions() {
 }
 
 // ------------------------------------------------------
-// Radius / Geodistanz
+// Radius / Geodistanz (UI)
 // ------------------------------------------------------
 
 function updateRadiusTexts() {
@@ -971,16 +994,18 @@ function updateRadiusTexts() {
 
   let value = parseInt(filterRadiusEl.value, 10);
   if (Number.isNaN(value)) {
-    value = 4;
+    value = RADIUS_STEPS_KM.length - 1;
   }
-  // Clamping: Slider darf niemals außerhalb der definierten Schritte landen
+  // Clamping
   value = Math.min(Math.max(value, 0), RADIUS_STEPS_KM.length - 1);
   radiusStep = value;
 
   filterRadiusEl.value = String(radiusStep);
   filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
 
-  if (radiusStep === 4) {
+  const maxIndex = RADIUS_STEPS_KM.length - 1;
+
+  if (radiusStep === maxIndex) {
     filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label");
     filterRadiusDescriptionEl.textContent = t("filter_radius_description_all");
   } else {
@@ -997,15 +1022,18 @@ function updateRadiusTexts() {
 function initRadiusSliderA11y() {
   if (!filterRadiusEl) return;
 
-  const min = filterRadiusEl.min || "0";
-  const max = filterRadiusEl.max || String(RADIUS_STEPS_KM.length - 1);
+  const min = 0;
+  const max = RADIUS_STEPS_KM.length - 1;
 
   if (!filterRadiusEl.value) {
-    filterRadiusEl.value = max;
+    filterRadiusEl.value = String(max);
   }
 
-  filterRadiusEl.setAttribute("aria-valuemin", min);
-  filterRadiusEl.setAttribute("aria-valuemax", max);
+  filterRadiusEl.min = String(min);
+  filterRadiusEl.max = String(max);
+
+  filterRadiusEl.setAttribute("aria-valuemin", String(min));
+  filterRadiusEl.setAttribute("aria-valuemax", String(max));
   filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value);
 
   filterRadiusEl.addEventListener("input", () => {
@@ -1017,12 +1045,8 @@ function initRadiusSliderA11y() {
 }
 
 // ------------------------------------------------------
-// Tag-Filter-Helfer (State → Tags)
+// Tag-Filter-Helfer (UI)
 // ------------------------------------------------------
-
-function getActiveFilterTagIds() {
-  return Array.from(activeTagFilters);
-}
 
 /**
  * Rendert die Tag-Filter-Chips in den Container #filter-tags (falls vorhanden).
@@ -1075,7 +1099,7 @@ function renderTagFilterChips() {
 }
 
 // ------------------------------------------------------
-// Filterlogik (nutzt filterSpots() aus filters.js)
+// Filterlogik (nutzt filters.js)
 // ------------------------------------------------------
 
 /** Filter anwenden und sowohl Liste als auch Marker aktualisieren. */
@@ -1111,9 +1135,11 @@ function applyFiltersAndRender() {
     center = L.latLng(DEFAULT_MAP_CENTER[0], DEFAULT_MAP_CENTER[1]);
   }
 
-  const radiusKm = RADIUS_STEPS_KM[radiusStep] ?? Infinity;
+  const radiusKm =
+    RADIUS_STEPS_KM[radiusStep] != null
+      ? RADIUS_STEPS_KM[radiusStep]
+      : Infinity;
 
-  // Filterzustand an filters.js übergeben
   filteredSpots = filterSpots(spots, {
     plusActive,
     searchTerm,
@@ -1125,10 +1151,9 @@ function applyFiltersAndRender() {
     onlyVerified,
     onlyFavorites,
     favorites,
-    activeFilterIds: getActiveFilterTagIds(),
+    activeFilterIds: Array.from(activeTagFilters),
     center,
-    radiusKm,
-    currentLang
+    radiusKm
   });
 
   renderSpotList();
@@ -1159,7 +1184,7 @@ function applyFiltersAndRender() {
 }
 
 // ------------------------------------------------------
-// Marker & Liste (Marker-Rendering kommt aus map.js, Liste bleibt hier)
+// Marker & Liste
 // ------------------------------------------------------
 
 function renderSpotList() {
@@ -1199,7 +1224,7 @@ function renderSpotList() {
     const metaEl = document.createElement("p");
     metaEl.className = "spot-card-meta";
 
-    const metaParts = getSpotMetaParts(spot, currentLang);
+    const metaParts = getSpotMetaParts(spot);
     if (Array.isArray(spot.tags)) {
       metaParts.push(spot.tags.join(", "));
     }
@@ -1306,7 +1331,7 @@ function showSpotDetails(spot) {
   const spotId = getSpotId(spot);
   const name = getSpotName(spot);
   const subtitle = getSpotSubtitle(spot);
-  const metaParts = getSpotMetaParts(spot, currentLang);
+  const metaParts = getSpotMetaParts(spot);
   const tags = Array.isArray(spot.tags) ? spot.tags : [];
 
   let description = "";
@@ -1340,10 +1365,10 @@ function showSpotDetails(spot) {
   titleWrapperEl.appendChild(titleEl);
 
   if (subtitle && !addressText) {
-    const subtitleEl2 = document.createElement("p");
-    subtitleEl2.className = "spot-card-subtitle";
-    subtitleEl2.textContent = subtitle;
-    titleWrapperEl.appendChild(subtitleEl2);
+    const subtitleEl = document.createElement("p");
+    subtitleEl.className = "spot-card-subtitle";
+    subtitleEl.textContent = subtitle;
+    titleWrapperEl.appendChild(subtitleEl);
   }
 
   const actionsEl = document.createElement("div");
@@ -1382,7 +1407,7 @@ function showSpotDetails(spot) {
     metaEl.appendChild(span);
   });
 
-  // Tags (nur originale Spot-Tags)
+  // Tags (nur originale Spot-Tags, nicht die technischen Kategorie-Tags)
   const tagsEl = document.createElement("div");
   tagsEl.className = "spot-details-tags";
   tags.forEach((tag) => {
@@ -1839,16 +1864,15 @@ async function init() {
       );
     }
 
-    // Sprache / Theme / Map
+    // Sprache / Theme
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
 
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
 
-    // Markercluster-Plugin laden, bevor die Map gebaut wird
+    // Map (mit Markercluster-Hook)
     await ensureMarkerClusterPlugin();
-
     const mapResult = initMap({
       center: DEFAULT_MAP_CENTER,
       zoom: DEFAULT_MAP_ZOOM
