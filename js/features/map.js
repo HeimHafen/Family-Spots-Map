@@ -1,107 +1,58 @@
-// js/features/map.js
+// js/map.js
 // ======================================================
-// Leaflet-Map + Marker-Cluster für Family Spots
-// Kapselt die komplette Kartenlogik
+// Map- und Marker-Helfer für Family Spots
+// (ohne direkten Zugriff auf UI / Filter-State)
 // ======================================================
 
 "use strict";
 
-import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "../config.js";
-
-let mapInstance = null;
-let markersLayer = null;
-let markerClusterPluginPromise = null;
+import {
+  DEFAULT_MAP_CENTER,
+  DEFAULT_MAP_ZOOM,
+  MAX_MARKERS_RENDER
+} from "./config.js";
 
 /**
- * Stellt sicher, dass Leaflet.markercluster geladen ist, bevor die Map
- * initialisiert wird. Falls das Plugin bereits vorhanden ist, passiert nichts.
+ * @typedef {import("./app.js").Spot} Spot
  */
-export function ensureMarkerClusterPlugin() {
+
+/**
+ * Stellt sicher, dass das Markercluster-Plugin geladen ist.
+ * In dieser Variante wird angenommen, dass es – falls verwendet –
+ * bereits per <script> eingebunden wurde. Die Funktion bleibt
+ * als Hook für zukünftige Erweiterungen bestehen.
+ */
+export async function ensureMarkerClusterPlugin() {
   if (typeof L === "undefined") {
-    // Leaflet noch nicht verfügbar – dann können wir hier nichts laden.
-    return Promise.resolve();
+    console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
   }
-
-  if (typeof L.markerClusterGroup === "function") {
-    // Plugin ist schon eingebunden (z.B. über index.html)
-    return Promise.resolve();
-  }
-
-  if (markerClusterPluginPromise) {
-    return markerClusterPluginPromise;
-  }
-
-  markerClusterPluginPromise = new Promise((resolve) => {
-    try {
-      // CSS für Markercluster nur einmal einhängen
-      const existingCss = document.querySelector(
-        'link[data-fsm-markercluster="css"]'
-      );
-      if (!existingCss) {
-        const baseUrl =
-          "https://unpkg.com/leaflet.markercluster@1.5.3/dist/";
-        const css1 = document.createElement("link");
-        css1.rel = "stylesheet";
-        css1.href = baseUrl + "MarkerCluster.css";
-        css1.setAttribute("data-fsm-markercluster", "css");
-        document.head.appendChild(css1);
-
-        const css2 = document.createElement("link");
-        css2.rel = "stylesheet";
-        css2.href = baseUrl + "MarkerCluster.Default.css";
-        css2.setAttribute("data-fsm-markercluster", "css");
-        document.head.appendChild(css2);
-      }
-
-      const script = document.createElement("script");
-      script.src =
-        "https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js";
-      script.async = true;
-      script.onload = () => {
-        resolve();
-      };
-      script.onerror = () => {
-        console.warn(
-          "[Family Spots] Konnte Leaflet.markercluster nicht laden – es werden normale Marker genutzt."
-        );
-        resolve();
-      };
-      document.head.appendChild(script);
-    } catch (err) {
-      console.warn(
-        "[Family Spots] Fehler beim Laden von Leaflet.markercluster:",
-        err
-      );
-      resolve();
-    }
-  });
-
-  return markerClusterPluginPromise;
 }
 
 /**
- * Initialisiert die Leaflet-Karte im Element #map.
- * Nutzt DEFAULT_MAP_CENTER / DEFAULT_MAP_ZOOM aus config.js.
+ * Initialisiert die Leaflet-Karte und gibt Map + Marker-Layer zurück.
+ * @param {{center?: [number,number], zoom?: number}} [options]
  */
-export function initMap() {
+export function initMap({
+  center = DEFAULT_MAP_CENTER,
+  zoom = DEFAULT_MAP_ZOOM
+} = {}) {
   if (typeof L === "undefined" || typeof L.map !== "function") {
     console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
-    mapInstance = null;
-    markersLayer = null;
-    return;
+    return { map: null, markersLayer: null };
   }
 
-  mapInstance = L.map("map", {
-    center: DEFAULT_MAP_CENTER,
-    zoom: DEFAULT_MAP_ZOOM,
+  const map = L.map("map", {
+    center,
+    zoom,
     zoomControl: false
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 18,
     attribution: "© OpenStreetMap-Mitwirkende"
-  }).addTo(mapInstance);
+  }).addTo(map);
 
+  let markersLayer;
   if (typeof L.markerClusterGroup === "function") {
     markersLayer = L.markerClusterGroup();
   } else {
@@ -111,48 +62,106 @@ export function initMap() {
     markersLayer = L.layerGroup();
   }
 
-  mapInstance.addLayer(markersLayer);
+  map.addLayer(markersLayer);
+
+  return { map, markersLayer };
 }
 
 /**
- * Liefert die aktuelle Leaflet-Map-Instanz (oder null).
+ * Koordinaten validieren und bei Bedarf String → Zahl konvertieren.
+ * @param {Spot} spot
+ * @returns {boolean}
  */
-export function getMap() {
-  return mapInstance;
+export function hasValidLatLng(spot) {
+  if (spot == null) return false;
+
+  let { lat, lng, lon } = spot;
+
+  if (lng == null && lon != null) {
+    lng = lon;
+  }
+
+  if (typeof lat === "string") lat = parseFloat(lat);
+  if (typeof lng === "string") lng = parseFloat(lng);
+
+  if (typeof lat !== "number" || typeof lng !== "number") return false;
+  if (Number.isNaN(lat) || Number.isNaN(lng)) return false;
+  if (lat < -90 || lat > 90) return false;
+  if (lng < -180 || lng > 180) return false;
+
+  spot.lat = lat;
+  spot.lng = lng;
+  return true;
 }
 
 /**
- * Optional, falls du später mal direkt an den Layer willst.
+ * Routen-URLs für einen Spot berechnen (Apple/Google Maps).
+ * @param {Spot} spot
  */
-export function getMarkersLayer() {
-  return markersLayer;
+export function getRouteUrlsForSpot(spot) {
+  if (!hasValidLatLng(spot)) return null;
+
+  const { lat, lng } = spot;
+  const name =
+    spot.title ||
+    spot.name ||
+    spot.spotName ||
+    (spot.id ? String(spot.id) : "Spot");
+  const encodedName = encodeURIComponent(name || "");
+
+  return {
+    apple: `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`,
+    google: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
+  };
 }
 
 /**
- * Rendert Marker für eine Spot-Liste auf der Karte.
- * - löscht vorher alle Marker
- * - erzeugt Marker-Cluster (falls Plugin geladen)
+ * Rendert Marker für die übergebenen Spots.
+ * Gibt zurück, ob der Marker-Limit-Toast bereits gezeigt wurde.
  *
- * @param {Array<Object>} spots
- * @param {{
- *   onSpotClick?: (spot: any) => void,
- *   hasValidLatLng?: (spot: any) => boolean
- * }} [options]
+ * @param {Object} params
+ * @param {any} params.map
+ * @param {any} params.markersLayer
+ * @param {Spot[]} params.spots
+ * @param {number} [params.maxMarkers]
+ * @param {string} [params.currentLang]
+ * @param {(msg:string) => void} params.showToast
+ * @param {boolean} [params.hasShownMarkerLimitToast]
+ * @param {(spot:Spot) => void} params.focusSpotOnMap
+ * @param {(spot:Spot) => boolean} [params.hasValidLatLngFn]
+ * @returns {boolean}
  */
-export function renderMarkers(spots, options = {}) {
-  const { onSpotClick, hasValidLatLng } = options;
+export function renderMarkers({
+  map,
+  markersLayer,
+  spots,
+  maxMarkers = MAX_MARKERS_RENDER,
+  currentLang = "de",
+  showToast,
+  hasShownMarkerLimitToast = false,
+  focusSpotOnMap,
+  hasValidLatLngFn = hasValidLatLng
+}) {
+  if (!markersLayer) return hasShownMarkerLimitToast;
 
-  if (!markersLayer) return;
   markersLayer.clearLayers();
 
-  if (!Array.isArray(spots) || !spots.length) return;
+  if (!Array.isArray(spots) || !spots.length) {
+    // Wenn keine Spots, Marker-Limit-Toast zurücksetzen
+    return false;
+  }
 
-  spots.forEach((spot) => {
-    if (typeof hasValidLatLng === "function" && !hasValidLatLng(spot)) return;
+  if (typeof L === "undefined" || typeof L.divIcon !== "function") {
+    console.error("[Family Spots] Leaflet (L) ist nicht vollständig verfügbar.");
+    return hasShownMarkerLimitToast;
+  }
 
-    if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
+  const shouldLimit = spots.length > maxMarkers;
+  const toRender = shouldLimit ? spots.slice(0, maxMarkers) : spots;
 
-    // Marker-HTML (kleiner Punkt/Pin)
+  toRender.forEach((spot) => {
+    if (!hasValidLatLngFn(spot)) return;
+
     const el = document.createElement("div");
     el.className = "spot-marker";
     const inner = document.createElement("div");
@@ -168,13 +177,28 @@ export function renderMarkers(spots, options = {}) {
 
     const marker = L.marker([spot.lat, spot.lng], { icon });
 
-    // Kein Popup – die App zeigt das große Detailpanel, darum Callback nach außen
-    if (typeof onSpotClick === "function") {
-      marker.on("click", () => {
-        onSpotClick(spot);
-      });
-    }
+    marker.on("click", () => {
+      if (typeof focusSpotOnMap === "function") {
+        focusSpotOnMap(spot);
+      }
+    });
 
     markersLayer.addLayer(marker);
   });
+
+  if (shouldLimit) {
+    if (!hasShownMarkerLimitToast && typeof showToast === "function") {
+      const msg =
+        currentLang === "de"
+          ? `Nur die ersten ${maxMarkers} Spots auf der Karte – bitte Filter oder Zoom nutzen.`
+          : `Only the first ${maxMarkers} spots are shown on the map – please use filters or zoom in.`;
+      showToast(msg);
+      hasShownMarkerLimitToast = true;
+    }
+  } else {
+    // Reset, falls Filter/Zoom wieder unter das Limit fallen
+    hasShownMarkerLimitToast = false;
+  }
+
+  return hasShownMarkerLimitToast;
 }
