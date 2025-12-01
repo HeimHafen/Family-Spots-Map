@@ -1,108 +1,136 @@
-// js/data/dataLoader.js
-// Lädt und verarbeitet die Spot-Daten der App
+// js/data.js
+// ---------------------------------------
+// Zentrale Daten-Schicht:
+//  - lädt Index & Spots (über data/dataLoader.js)
+//  - optional Offline-Fallback über LocalStorage
+//  - verwaltet Favoriten
+// ---------------------------------------
 
-let appData = {
-  index: null,
-  spots: [],
-};
+"use strict";
 
-export async function loadAppData() {
-  if (appData.index && appData.spots.length > 0) return appData;
+import { SPOTS_CACHE_KEY } from "./config.js";
+import {
+  loadAppData as loadAppDataInternal,
+  getSpots as getSpotsInternal,
+  getIndex as getIndexInternal,
+  getAppData as getAppDataInternal,
+  getCategories as getCategoriesInternal,
+  findSpotById as findSpotByIdInternal
+} from "./data/dataLoader.js";
 
-  const [indexRes, spotsRes] = await Promise.all([
-    fetch("data/index.json"),
-    fetch("data/spots.json"),
-  ]);
+const FAVORITES_STORAGE_KEY = "fs_favorites";
 
-  if (!indexRes.ok) throw new Error("Konnte data/index.json nicht laden");
-  if (!spotsRes.ok) throw new Error("Konnte data/spots.json nicht laden");
+/**
+ * Lädt App-Daten (Index + Spots).
+ * Versucht zuerst Netz, optional Fallback auf LocalStorage.
+ *
+ * @param {{ onOfflineFallback?: () => void }} [options]
+ * @returns {Promise<ReturnType<typeof getAppDataInternal>>}
+ */
+export async function loadData(options = {}) {
+  const { onOfflineFallback } = options;
 
-  const indexJson = await indexRes.json();
-  const spotsJson = await spotsRes.json();
+  try {
+    const data = await loadAppDataInternal();
 
-  const rawSpots = Array.isArray(spotsJson.spots) ? spotsJson.spots : [];
+    // Gesamtes App-Data-Objekt cachen (Index + Spots)
+    try {
+      localStorage.setItem(SPOTS_CACHE_KEY, JSON.stringify(data));
+    } catch (err) {
+      console.warn("[Family Spots] Konnte Daten-Cache nicht speichern:", err);
+    }
 
-  const normalizedSpots = rawSpots
-    .filter((raw) => raw?.id)
-    .map((raw) => {
-      const lat = Number(raw.lat ?? raw.latitude ?? raw.location?.lat ?? NaN);
-      const lng = Number(
-        raw.lon ??
-          raw.lng ??
-          raw.longitude ??
-          raw.location?.lng ??
-          NaN
-      );
-      const location =
-        !isNaN(lat) && !isNaN(lng) ? { lat, lng } : null;
+    return data;
+  } catch (err) {
+    console.error("[Family Spots] Fehler beim Laden der Daten:", err);
 
-      return {
-        id: String(raw.id),
-        name: raw.name || raw.title || "",
-        title: raw.title || raw.name || "",
-        city: raw.city || "",
-        country: raw.country || "",
-        categories: Array.isArray(raw.categories) ? [...raw.categories] : [],
-        tags: Array.isArray(raw.tags) ? [...raw.tags] : [],
-        verified: !!raw.verified,
-        visit_minutes: Number(
-          raw.visit_minutes ?? raw.visitMinutes ?? NaN
-        ) || null,
-        poetry: raw.poetry || "",
-        address: raw.address || "",
-        summary_de: raw.summary_de || "",
-        summary_en: raw.summary_en || "",
-        visitLabel_de: raw.visitLabel_de || "",
-        visitLabel_en: raw.visitLabel_en || "",
-        plus_only: !!raw.plus_only,
-        usps: Array.isArray(raw.usps) ? [...raw.usps] : [],
-        location,
-        raw,
-      };
-    });
+    // Offline-Fallback versuchen
+    let parsed = null;
+    try {
+      const stored = localStorage.getItem(SPOTS_CACHE_KEY);
+      if (stored) {
+        parsed = JSON.parse(stored);
+      }
+    } catch (err2) {
+      console.warn("[Family Spots] Konnte Daten-Cache nicht lesen:", err2);
+    }
 
-  appData = {
-    index: {
-      defaultLocation: indexJson.defaultLocation ?? { lat: 52.0, lng: 10.0 },
-      defaultZoom: indexJson.defaultZoom ?? 6,
-      ...indexJson,
-    },
-    spots: normalizedSpots,
-  };
+    if (!parsed || !Array.isArray(parsed.spots)) {
+      // Kein benutzbarer Cache → Fehler weiterwerfen
+      throw err;
+    }
 
-  return appData;
+    // dataLoader-AppData referenz aktualisieren,
+    // damit getSpots()/getIndex() etc. konsistent sind.
+    const appDataRef = getAppDataInternal();
+    appDataRef.index = parsed.index || null;
+    appDataRef.spots = parsed.spots || [];
+
+    if (typeof onOfflineFallback === "function") {
+      onOfflineFallback();
+    }
+
+    return appDataRef;
+  }
 }
 
+// ---------------------------------------
+// Getter – re-export aus dataLoader
+// ---------------------------------------
+
 export function getSpots() {
-  return appData.spots;
+  return getSpotsInternal();
 }
 
 export function getIndex() {
-  return appData.index || null;
+  return getIndexInternal();
 }
 
+/** Direkte Momentaufnahme des AppData-Objekts. */
 export function getAppData() {
-  return appData;
+  return getAppDataInternal();
 }
 
 export function getCategories() {
-  if (Array.isArray(appData.index?.categories)) {
-    return appData.index.categories.slice();
-  }
-
-  const set = new Set();
-  for (const spot of appData.spots) {
-    for (const c of spot.categories || []) {
-      if (c) set.add(String(c));
-    }
-  }
-
-  return Array.from(set).sort().map((slug) => ({
-    slug,
-    label: { de: slug, en: slug },
-  }));
+  return getCategoriesInternal();
 }
 
 export function findSpotById(id) {
-  return appData.spots.find((s) => s.id === id) || null;
+  return findSpotByIdInternal(id);
+}
+
+// ---------------------------------------
+// Favoriten
+// ---------------------------------------
+
+/**
+ * Favoriten aus LocalStorage laden.
+ * @returns {Set<string>}
+ */
+export function loadFavorites() {
+  try {
+    const stored = localStorage.getItem(FAVORITES_STORAGE_KEY);
+    if (!stored) return new Set();
+
+    const arr = JSON.parse(stored);
+    if (!Array.isArray(arr)) return new Set();
+
+    return new Set(arr.map((v) => String(v)));
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Favoriten nicht laden:", err);
+    return new Set();
+  }
+}
+
+/**
+ * Favoriten im LocalStorage speichern.
+ * @param {Set<string>} favorites
+ */
+export function saveFavorites(favorites) {
+  try {
+    const arr = Array.from(favorites || []).map((v) => String(v));
+    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(arr));
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
+  }
 }
