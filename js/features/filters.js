@@ -6,7 +6,11 @@
 
 "use strict";
 
-import { RADIUS_STEPS_KM, CATEGORY_TAGS, FILTERS } from "./config.js";
+import { CATEGORY_TAGS, FILTERS, FEATURES } from "./config.js";
+
+/**
+ * @typedef {import("./app.js").Spot} Spot
+ */
 
 /**
  * Hilfsfunktion: String/Array-Feld in ein String-Array normalisieren.
@@ -31,7 +35,7 @@ function normalizeArrayField(raw) {
 
 /**
  * Altersgruppen normalisieren und cachen.
- * @param {import("./app.js").Spot} spot
+ * @param {Spot} spot
  * @returns {string[]}
  */
 export function getSpotAgeGroups(spot) {
@@ -46,7 +50,7 @@ export function getSpotAgeGroups(spot) {
 
 /**
  * Stimmungen normalisieren und cachen.
- * @param {import("./app.js").Spot} spot
+ * @param {Spot} spot
  * @returns {string[]}
  */
 export function getSpotMoods(spot) {
@@ -61,7 +65,7 @@ export function getSpotMoods(spot) {
 
 /**
  * Reise-Modi normalisieren und cachen.
- * @param {import("./app.js").Spot} spot
+ * @param {Spot} spot
  * @returns {string[]}
  */
 export function getSpotTravelModes(spot) {
@@ -77,7 +81,7 @@ export function getSpotTravelModes(spot) {
 /**
  * Kombiniert Tags aus den Rohdaten mit Kategorie-basierten Tags (CATEGORY_TAGS).
  * Ergebnis wird gecached in spot._tagsMerged.
- * @param {import("./app.js").Spot} spot
+ * @param {Spot} spot
  * @returns {string[]}
  */
 export function getSpotTags(spot) {
@@ -121,30 +125,52 @@ export function getSpotTags(spot) {
 }
 
 /**
- * Suchtext aus Spot zusammenbauen und cachen.
- * Optional können Name/Subtitle-Funktionen übergeben werden (aus app.js),
- * damit der gleiche Text wie in der UI verwendet wird.
- *
- * @param {import("./app.js").Spot} spot
- * @param {(spot:any) => string} [getSpotName]
- * @param {(spot:any) => string} [getSpotSubtitle]
+ * Name eines Spots (für UI & Suche).
+ * @param {Spot} spot
  * @returns {string}
  */
-export function buildSpotSearchText(spot, getSpotName, getSpotSubtitle) {
+export function getSpotName(spot) {
+  return (
+    spot.title ||
+    spot.name ||
+    spot.spotName ||
+    (spot.id ? String(spot.id) : "Spot")
+  );
+}
+
+/**
+ * Subtitle eines Spots (für UI & Suche).
+ * @param {Spot} spot
+ * @returns {string}
+ */
+export function getSpotSubtitle(spot) {
+  if (spot.city && spot.country) return `${spot.city}, ${spot.country}`;
+  if (spot.city) return spot.city;
+  if (spot.town && spot.country) return `${spot.town}, ${spot.country}`;
+  if (spot.address) return spot.address;
+  return spot.subtitle || spot.shortDescription || "";
+}
+
+/**
+ * String-ID eines Spots.
+ * @param {Spot} spot
+ * @returns {string}
+ */
+export function getSpotId(spot) {
+  return String(spot.id || getSpotName(spot));
+}
+
+/**
+ * Suchtext aus Spot zusammenbauen und cachen.
+ * @param {Spot} spot
+ * @returns {string}
+ */
+export function buildSpotSearchText(spot) {
   if (spot._searchText) return spot._searchText;
 
-  const name =
-    typeof getSpotName === "function"
-      ? getSpotName(spot)
-      : spot.title || spot.name || spot.spotName || "";
-  const subtitle =
-    typeof getSpotSubtitle === "function"
-      ? getSpotSubtitle(spot)
-      : spot.subtitle || spot.shortDescription || "";
-
   const parts = [
-    name,
-    subtitle,
+    getSpotName(spot),
+    getSpotSubtitle(spot),
     spot.category,
     ...(Array.isArray(spot.tags) ? spot.tags : []),
     ...getSpotTags(spot)
@@ -156,115 +182,48 @@ export function buildSpotSearchText(spot, getSpotName, getSpotSubtitle) {
 }
 
 /**
- * Liefert zu einer Radius-Stufe den Radius in km,
- * oder Infinity, falls kein Limit.
- * @param {number} radiusStep
- * @returns {number}
+ * Vereinheitlichte Normalisierung für alle Spots.
+ * @param {Spot} raw
+ * @returns {Spot}
  */
-export function getRadiusKm(radiusStep) {
-  let idx = Number.isInteger(radiusStep) ? radiusStep : RADIUS_STEPS_KM.length - 1;
-  if (idx < 0) idx = 0;
-  if (idx >= RADIUS_STEPS_KM.length) idx = RADIUS_STEPS_KM.length - 1;
-  const km = RADIUS_STEPS_KM[idx];
-  return typeof km === "number" ? km : Infinity;
-}
+export function normalizeSpot(raw) {
+  /** @type {Spot} */
+  const spot = { ...raw };
 
-/**
- * Slider-A11y initialisieren und Änderungen per Callback nach außen melden.
- *
- * @param {HTMLInputElement} rangeEl
- * @param {(newStep:number) => void} onChange
- * @returns {number} initialer radiusStep
- */
-export function initRadiusSliderA11y(rangeEl, onChange) {
-  if (!rangeEl) return RADIUS_STEPS_KM.length - 1;
-
-  const min = 0;
-  const max = RADIUS_STEPS_KM.length - 1;
-
-  let currentStep = parseInt(rangeEl.value, 10);
-  if (Number.isNaN(currentStep)) currentStep = max;
-
-  if (currentStep < min) currentStep = min;
-  if (currentStep > max) currentStep = max;
-
-  rangeEl.min = String(min);
-  rangeEl.max = String(max);
-  rangeEl.value = String(currentStep);
-
-  rangeEl.setAttribute("aria-valuemin", String(min));
-  rangeEl.setAttribute("aria-valuemax", String(max));
-  rangeEl.setAttribute("aria-valuenow", String(currentStep));
-
-  rangeEl.addEventListener("input", () => {
-    let step = parseInt(rangeEl.value, 10);
-    if (Number.isNaN(step)) step = max;
-    if (step < min) step = min;
-    if (step > max) step = max;
-
-    rangeEl.value = String(step);
-    rangeEl.setAttribute("aria-valuenow", String(step));
-
-    if (typeof onChange === "function") {
-      onChange(step);
-    }
-  });
-
-  return currentStep;
-}
-
-/**
- * Aktualisiert die Radius-Texte (Label + Beschreibung) anhand radiusStep.
- *
- * @param {Object} params
- * @param {HTMLInputElement} params.filterRadiusEl
- * @param {HTMLElement} params.filterRadiusMaxLabelEl
- * @param {HTMLElement} params.filterRadiusDescriptionEl
- * @param {number} params.radiusStep
- * @param {(key:string) => string} params.t  Übersetzungsfunktion
- */
-export function updateRadiusTexts({
-  filterRadiusEl,
-  filterRadiusMaxLabelEl,
-  filterRadiusDescriptionEl,
-  radiusStep,
-  t
-}) {
-  if (!filterRadiusEl || !filterRadiusMaxLabelEl || !filterRadiusDescriptionEl)
-    return;
-
-  const min = 0;
-  const max = RADIUS_STEPS_KM.length - 1;
-
-  let step = Number.isInteger(radiusStep) ? radiusStep : max;
-  if (step < min) step = min;
-  if (step > max) step = max;
-
-  filterRadiusEl.value = String(step);
-  filterRadiusEl.setAttribute("aria-valuenow", String(step));
-
-  if (step === max) {
-    filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label");
-    filterRadiusDescriptionEl.textContent = t("filter_radius_description_all");
-  } else {
-    const km = RADIUS_STEPS_KM[step];
-    filterRadiusMaxLabelEl.textContent = `${km} km`;
-    const key = `filter_radius_description_step${step}`;
-    filterRadiusDescriptionEl.textContent = t(key);
+  // lon → lng
+  if (spot.lon != null && spot.lng == null) {
+    spot.lng = spot.lon;
   }
+
+  // Hauptkategorie aus categories[]
+  if (
+    !spot.category &&
+    Array.isArray(spot.categories) &&
+    spot.categories.length
+  ) {
+    spot.category = spot.categories[0];
+  }
+
+  // Suchtext & Caches vorberechnen
+  spot._searchText = buildSpotSearchText(spot);
+  spot._ageGroups = getSpotAgeGroups(spot);
+  spot._moods = getSpotMoods(spot);
+  spot._travelModes = getSpotTravelModes(spot);
+
+  return spot;
 }
 
 /**
- * OR-Liste aller Tags, die durch aktive Tag-Filter (FILTERS + activeTagFilters) gemeint sind.
+ * OR-Liste aller Tags, die durch aktive Tag-Filter (FILTERS + activeFilterIds) gemeint sind.
  *
- * @param {Set<string>} activeTagFilters
+ * @param {string[]} activeFilterIds
  * @returns {string[]}
  */
-function getActiveFilterTags(activeTagFilters) {
+function getActiveFilterTags(activeFilterIds) {
   if (
-    !activeTagFilters ||
-    !(activeTagFilters instanceof Set) ||
-    !activeTagFilters.size
+    !activeFilterIds ||
+    !Array.isArray(activeFilterIds) ||
+    !activeFilterIds.length
   ) {
     return [];
   }
@@ -273,11 +232,12 @@ function getActiveFilterTags(activeTagFilters) {
     return [];
   }
 
+  const idsSet = new Set(activeFilterIds);
   const tagSet = new Set();
 
   FILTERS.forEach((filter) => {
     if (!filter || !filter.id || !Array.isArray(filter.tags)) return;
-    if (!activeTagFilters.has(filter.id)) return;
+    if (!idsSet.has(filter.id)) return;
     filter.tags.forEach((tag) => {
       if (tag) tagSet.add(String(tag));
     });
@@ -286,24 +246,41 @@ function getActiveFilterTags(activeTagFilters) {
   return Array.from(tagSet);
 }
 
+function isSpotPlusOnly(spot) {
+  return !!spot.plusOnly || !!spot.plus;
+}
+
+function isSpotBigAdventure(spot) {
+  return !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
+}
+
+function isSpotVerified(spot) {
+  return !!spot.verified || !!spot.isVerified;
+}
+
 /**
  * Distanz-Check für einen Spot.
  *
- * @param {import("./app.js").Spot} spot
+ * @param {Spot} spot
  * @param {any} centerLatLng    Leaflet LatLng
  * @param {number} radiusKm
- * @param {(spot:any) => boolean} hasValidLatLng
- * @param {any} L               Leaflet-Objekt (für L.latLng)
  * @returns {boolean}
  */
-function isSpotInRadius(spot, centerLatLng, radiusKm, hasValidLatLng, L) {
-  if (!L || !centerLatLng || typeof centerLatLng.distanceTo !== "function") {
+function isSpotInRadius(spot, centerLatLng, radiusKm) {
+  if (!centerLatLng || typeof centerLatLng.distanceTo !== "function") {
     return true;
   }
   if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
-  if (!hasValidLatLng(spot)) return true;
 
-  const spotLatLng = L.latLng(spot.lat, spot.lng);
+  const lat =
+    typeof spot.lat === "number" ? spot.lat : spot.lat != null ? +spot.lat : null;
+  const lng =
+    typeof spot.lng === "number" ? spot.lng : spot.lng != null ? +spot.lng : null;
+
+  if (lat == null || lng == null) return true;
+  if (typeof L === "undefined" || typeof L.latLng !== "function") return true;
+
+  const spotLatLng = L.latLng(lat, lng);
   const distanceMeters = centerLatLng.distanceTo(spotLatLng);
   const distanceKm = distanceMeters / 1000;
   return distanceKm <= radiusKm;
@@ -312,7 +289,7 @@ function isSpotInRadius(spot, centerLatLng, radiusKm, hasValidLatLng, L) {
 /**
  * Prüft, ob ein Spot alle aktiven Filter erfüllt.
  *
- * @param {import("./app.js").Spot} spot
+ * @param {Spot} spot
  * @param {Object} filterState
  * @param {boolean} filterState.plusActive
  * @param {string} filterState.searchTerm
@@ -323,37 +300,17 @@ function isSpotInRadius(spot, centerLatLng, radiusKm, hasValidLatLng, L) {
  * @param {boolean} filterState.onlyBigAdventures
  * @param {boolean} filterState.onlyVerified
  * @param {boolean} filterState.onlyFavorites
- * @param {Set<string>} filterState.activeTagFilters
- * @param {Object} filterState.FEATURES
- * @param {Object} helpers
- * @param {any} helpers.centerLatLng
- * @param {number} helpers.radiusKm
- * @param {(spot:any) => boolean} helpers.hasValidLatLng
- * @param {(spot:any) => boolean} helpers.isSpotPlusOnly
- * @param {(spot:any) => boolean} helpers.isSpotBigAdventure
- * @param {(spot:any) => boolean} helpers.isSpotVerified
- * @param {Set<string>} helpers.favorites
- * @param {(spot:any) => string} helpers.getSearchTextForSpot
- * @param {any} helpers.L
+ * @param {Set<string>} filterState.favorites
+ * @param {string[]} filterState.activeFilterIds
+ * @param {Object} context
+ * @param {any} context.centerLatLng
+ * @param {number} context.radiusKm
  *
  * @returns {boolean}
  */
-export function doesSpotMatchFilters(
+function doesSpotMatchFilters(
   spot,
-  filterState,
   {
-    centerLatLng,
-    radiusKm,
-    hasValidLatLng,
-    isSpotPlusOnly,
-    isSpotBigAdventure,
-    isSpotVerified,
-    favorites,
-    getSearchTextForSpot,
-    L
-  }
-) {
-  const {
     plusActive,
     searchTerm,
     categoryFilter,
@@ -363,28 +320,20 @@ export function doesSpotMatchFilters(
     onlyBigAdventures,
     onlyVerified,
     onlyFavorites,
-    activeTagFilters,
-    FEATURES
-  } = filterState;
-
+    favorites,
+    activeFilterIds,
+  },
+  { centerLatLng, radiusKm }
+) {
   // Plus-Filter
-  if (FEATURES.plus && isSpotPlusOnly && isSpotPlusOnly(spot) && !plusActive) {
+  if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) {
     return false;
   }
 
   // Volltext-Suche
   if (searchTerm) {
     const term = searchTerm.toLowerCase();
-    let haystack = "";
-
-    if (typeof getSearchTextForSpot === "function") {
-      haystack = getSearchTextForSpot(spot) || "";
-    } else if (typeof spot._searchText === "string") {
-      haystack = spot._searchText;
-    } else {
-      haystack = buildSpotSearchText(spot);
-    }
-
+    const haystack = buildSpotSearchText(spot);
     if (!haystack.includes(term)) return false;
   }
 
@@ -430,35 +379,26 @@ export function doesSpotMatchFilters(
   if (
     FEATURES.bigAdventureFilter &&
     onlyBigAdventures &&
-    isSpotBigAdventure &&
     !isSpotBigAdventure(spot)
   ) {
     return false;
   }
 
   // Verifiziert
-  if (
-    FEATURES.verifiedFilter &&
-    onlyVerified &&
-    isSpotVerified &&
-    !isSpotVerified(spot)
-  ) {
+  if (FEATURES.verifiedFilter && onlyVerified && !isSpotVerified(spot)) {
     return false;
   }
 
   // Nur Favoriten
   if (FEATURES.favorites && onlyFavorites) {
-    const id =
-      spot.id != null
-        ? String(spot.id)
-        : String(spot.title || spot.name || spot.spotName || "Spot");
+    const id = getSpotId(spot);
     if (!favorites || !(favorites instanceof Set) || !favorites.has(id)) {
       return false;
     }
   }
 
   // Tag-Filter (FILTERS): OR-Logik – Spot muss mind. einen der aktiven Filter-Tags haben
-  const activeTags = getActiveFilterTags(activeTagFilters);
+  const activeTags = getActiveFilterTags(activeFilterIds);
   if (activeTags.length) {
     const spotTags = getSpotTags(spot);
     const hasAny = activeTags.some((tag) => spotTags.includes(tag));
@@ -466,17 +406,74 @@ export function doesSpotMatchFilters(
   }
 
   // Radius
-  if (
-    !isSpotInRadius(
-      spot,
-      centerLatLng,
-      radiusKm,
-      hasValidLatLng,
-      L
-    )
-  ) {
+  if (!isSpotInRadius(spot, centerLatLng, radiusKm)) {
     return false;
   }
 
   return true;
+}
+
+/**
+ * Filtert eine Spot-Liste anhand der übergebenen Filter-Parameter.
+ *
+ * @param {Spot[]} spots
+ * @param {Object} options
+ * @param {boolean} options.plusActive
+ * @param {string} options.searchTerm
+ * @param {string} options.categoryFilter
+ * @param {string} options.ageFilter
+ * @param {string|null} options.moodFilter
+ * @param {string|null} options.travelMode
+ * @param {boolean} options.onlyBigAdventures
+ * @param {boolean} options.onlyVerified
+ * @param {boolean} options.onlyFavorites
+ * @param {Set<string>} options.favorites
+ * @param {string[]} options.activeFilterIds
+ * @param {any} options.center
+ * @param {number} options.radiusKm
+ *
+ * @returns {Spot[]}
+ */
+export function filterSpots(
+  spots,
+  {
+    plusActive = false,
+    searchTerm = "",
+    categoryFilter = "",
+    ageFilter = "all",
+    moodFilter = null,
+    travelMode = null,
+    onlyBigAdventures = false,
+    onlyVerified = false,
+    onlyFavorites = false,
+    favorites = new Set(),
+    activeFilterIds = [],
+    center = null,
+    radiusKm = Infinity
+  } = {}
+) {
+  if (!Array.isArray(spots) || !spots.length) return [];
+
+  const filterState = {
+    plusActive,
+    searchTerm,
+    categoryFilter,
+    ageFilter,
+    moodFilter,
+    travelMode,
+    onlyBigAdventures,
+    onlyVerified,
+    onlyFavorites,
+    favorites,
+    activeFilterIds
+  };
+
+  const context = {
+    centerLatLng: center,
+    radiusKm
+  };
+
+  return spots.filter((spot) =>
+    doesSpotMatchFilters(spot, filterState, context)
+  );
 }
