@@ -1,7 +1,7 @@
 // js/filters.js
 // ======================================================
 // Filter- & Spot-Helfer für Family Spots
-// (ohne direkten Zugriff auf DOM oder globale State-Variablen)
+// (ohne direkten Zugriff auf DOM oder globale UI-States)
 // ======================================================
 
 "use strict";
@@ -33,17 +33,40 @@ function normalizeArrayField(raw) {
   return [];
 }
 
+// ------------------------------------------------------
+// Spot-Helfer (nur Daten, kein DOM)
+// ------------------------------------------------------
+
+export function getSpotName(spot) {
+  return (
+    spot.title ||
+    spot.name ||
+    spot.spotName ||
+    (spot.id ? String(spot.id) : "Spot")
+  );
+}
+
+export function getSpotSubtitle(spot) {
+  if (spot.city && spot.country) return `${spot.city}, ${spot.country}`;
+  if (spot.city) return spot.city;
+  if (spot.town && spot.country) return `${spot.town}, ${spot.country}`;
+  if (spot.address) return spot.address;
+  return spot.subtitle || spot.shortDescription || "";
+}
+
+export function getSpotId(spot) {
+  return String(spot.id || getSpotName(spot));
+}
+
 /**
  * Altersgruppen normalisieren und cachen.
  * @param {Spot} spot
  * @returns {string[]}
  */
-export function getSpotAgeGroups(spot) {
+function getSpotAgeGroups(spot) {
   if (Array.isArray(spot._ageGroups)) return spot._ageGroups;
-
   const raw = spot.ageGroups || spot.age || spot.ages;
   const result = normalizeArrayField(raw);
-
   spot._ageGroups = result;
   return result;
 }
@@ -53,12 +76,10 @@ export function getSpotAgeGroups(spot) {
  * @param {Spot} spot
  * @returns {string[]}
  */
-export function getSpotMoods(spot) {
+function getSpotMoods(spot) {
   if (Array.isArray(spot._moods)) return spot._moods;
-
   const raw = spot.moods || spot.moodTags || spot.mood;
   const result = normalizeArrayField(raw);
-
   spot._moods = result;
   return result;
 }
@@ -68,12 +89,10 @@ export function getSpotMoods(spot) {
  * @param {Spot} spot
  * @returns {string[]}
  */
-export function getSpotTravelModes(spot) {
+function getSpotTravelModes(spot) {
   if (Array.isArray(spot._travelModes)) return spot._travelModes;
-
   const raw = spot.travelModes || spot.travel || spot.tripModes;
   const result = normalizeArrayField(raw);
-
   spot._travelModes = result;
   return result;
 }
@@ -84,7 +103,7 @@ export function getSpotTravelModes(spot) {
  * @param {Spot} spot
  * @returns {string[]}
  */
-export function getSpotTags(spot) {
+function getSpotTags(spot) {
   if (Array.isArray(spot._tagsMerged)) return spot._tagsMerged;
 
   const tagSet = new Set();
@@ -125,47 +144,11 @@ export function getSpotTags(spot) {
 }
 
 /**
- * Name eines Spots (für UI & Suche).
- * @param {Spot} spot
- * @returns {string}
- */
-export function getSpotName(spot) {
-  return (
-    spot.title ||
-    spot.name ||
-    spot.spotName ||
-    (spot.id ? String(spot.id) : "Spot")
-  );
-}
-
-/**
- * Subtitle eines Spots (für UI & Suche).
- * @param {Spot} spot
- * @returns {string}
- */
-export function getSpotSubtitle(spot) {
-  if (spot.city && spot.country) return `${spot.city}, ${spot.country}`;
-  if (spot.city) return spot.city;
-  if (spot.town && spot.country) return `${spot.town}, ${spot.country}`;
-  if (spot.address) return spot.address;
-  return spot.subtitle || spot.shortDescription || "";
-}
-
-/**
- * String-ID eines Spots.
- * @param {Spot} spot
- * @returns {string}
- */
-export function getSpotId(spot) {
-  return String(spot.id || getSpotName(spot));
-}
-
-/**
  * Suchtext aus Spot zusammenbauen und cachen.
  * @param {Spot} spot
  * @returns {string}
  */
-export function buildSpotSearchText(spot) {
+function buildSpotSearchText(spot) {
   if (spot._searchText) return spot._searchText;
 
   const parts = [
@@ -190,12 +173,10 @@ export function normalizeSpot(raw) {
   /** @type {Spot} */
   const spot = { ...raw };
 
-  // lon → lng
   if (spot.lon != null && spot.lng == null) {
     spot.lng = spot.lon;
   }
 
-  // Hauptkategorie aus categories[]
   if (
     !spot.category &&
     Array.isArray(spot.categories) &&
@@ -204,7 +185,6 @@ export function normalizeSpot(raw) {
     spot.category = spot.categories[0];
   }
 
-  // Suchtext & Caches vorberechnen
   spot._searchText = buildSpotSearchText(spot);
   spot._ageGroups = getSpotAgeGroups(spot);
   spot._moods = getSpotMoods(spot);
@@ -213,38 +193,9 @@ export function normalizeSpot(raw) {
   return spot;
 }
 
-/**
- * OR-Liste aller Tags, die durch aktive Tag-Filter (FILTERS + activeFilterIds) gemeint sind.
- *
- * @param {string[]} activeFilterIds
- * @returns {string[]}
- */
-function getActiveFilterTags(activeFilterIds) {
-  if (
-    !activeFilterIds ||
-    !Array.isArray(activeFilterIds) ||
-    !activeFilterIds.length
-  ) {
-    return [];
-  }
-
-  if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) {
-    return [];
-  }
-
-  const idsSet = new Set(activeFilterIds);
-  const tagSet = new Set();
-
-  FILTERS.forEach((filter) => {
-    if (!filter || !filter.id || !Array.isArray(filter.tags)) return;
-    if (!idsSet.has(filter.id)) return;
-    filter.tags.forEach((tag) => {
-      if (tag) tagSet.add(String(tag));
-    });
-  });
-
-  return Array.from(tagSet);
-}
+// ------------------------------------------------------
+// Filterlogik (nur Daten, kein DOM / Leaflet)
+// ------------------------------------------------------
 
 function isSpotPlusOnly(spot) {
   return !!spot.plusOnly || !!spot.plus;
@@ -259,35 +210,39 @@ function isSpotVerified(spot) {
 }
 
 /**
- * Distanz-Check für einen Spot.
+ * OR-Liste aller Tags, die durch aktive Tag-Filter (FILTERS + activeTagFilters) gemeint sind.
  *
- * @param {Spot} spot
- * @param {any} centerLatLng    Leaflet LatLng
- * @param {number} radiusKm
- * @returns {boolean}
+ * @param {Set<string>} activeTagFilters
+ * @returns {string[]}
  */
-function isSpotInRadius(spot, centerLatLng, radiusKm) {
-  if (!centerLatLng || typeof centerLatLng.distanceTo !== "function") {
-    return true;
+function getActiveFilterTags(activeTagFilters) {
+  if (
+    !activeTagFilters ||
+    !(activeTagFilters instanceof Set) ||
+    !activeTagFilters.size
+  ) {
+    return [];
   }
-  if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
 
-  const lat =
-    typeof spot.lat === "number" ? spot.lat : spot.lat != null ? +spot.lat : null;
-  const lng =
-    typeof spot.lng === "number" ? spot.lng : spot.lng != null ? +spot.lng : null;
+  if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) {
+    return [];
+  }
 
-  if (lat == null || lng == null) return true;
-  if (typeof L === "undefined" || typeof L.latLng !== "function") return true;
+  const tagSet = new Set();
 
-  const spotLatLng = L.latLng(lat, lng);
-  const distanceMeters = centerLatLng.distanceTo(spotLatLng);
-  const distanceKm = distanceMeters / 1000;
-  return distanceKm <= radiusKm;
+  FILTERS.forEach((filter) => {
+    if (!filter || !filter.id || !Array.isArray(filter.tags)) return;
+    if (!activeTagFilters.has(filter.id)) return;
+    filter.tags.forEach((tag) => {
+      if (tag) tagSet.add(String(tag));
+    });
+  });
+
+  return Array.from(tagSet);
 }
 
 /**
- * Prüft, ob ein Spot alle aktiven Filter erfüllt.
+ * Prüft, ob ein Spot alle (nicht-geo) Filter erfüllt.
  *
  * @param {Spot} spot
  * @param {Object} filterState
@@ -300,15 +255,11 @@ function isSpotInRadius(spot, centerLatLng, radiusKm) {
  * @param {boolean} filterState.onlyBigAdventures
  * @param {boolean} filterState.onlyVerified
  * @param {boolean} filterState.onlyFavorites
+ * @param {Set<string>} filterState.activeTagFilters
  * @param {Set<string>} filterState.favorites
- * @param {string[]} filterState.activeFilterIds
- * @param {Object} context
- * @param {any} context.centerLatLng
- * @param {number} context.radiusKm
- *
  * @returns {boolean}
  */
-function doesSpotMatchFilters(
+function doesSpotMatchBaseFilters(
   spot,
   {
     plusActive,
@@ -320,10 +271,9 @@ function doesSpotMatchFilters(
     onlyBigAdventures,
     onlyVerified,
     onlyFavorites,
-    favorites,
-    activeFilterIds,
-  },
-  { centerLatLng, radiusKm }
+    activeTagFilters,
+    favorites
+  }
 ) {
   // Plus-Filter
   if (FEATURES.plus && isSpotPlusOnly(spot) && !plusActive) {
@@ -376,11 +326,7 @@ function doesSpotMatchFilters(
   }
 
   // Große Abenteuer
-  if (
-    FEATURES.bigAdventureFilter &&
-    onlyBigAdventures &&
-    !isSpotBigAdventure(spot)
-  ) {
+  if (FEATURES.bigAdventureFilter && onlyBigAdventures && !isSpotBigAdventure(spot)) {
     return false;
   }
 
@@ -391,70 +337,36 @@ function doesSpotMatchFilters(
 
   // Nur Favoriten
   if (FEATURES.favorites && onlyFavorites) {
-    const id = getSpotId(spot);
+    const id =
+      spot.id != null
+        ? String(spot.id)
+        : String(spot.title || spot.name || spot.spotName || "Spot");
     if (!favorites || !(favorites instanceof Set) || !favorites.has(id)) {
       return false;
     }
   }
 
   // Tag-Filter (FILTERS): OR-Logik – Spot muss mind. einen der aktiven Filter-Tags haben
-  const activeTags = getActiveFilterTags(activeFilterIds);
+  const activeTags = getActiveFilterTags(activeTagFilters);
   if (activeTags.length) {
     const spotTags = getSpotTags(spot);
     const hasAny = activeTags.some((tag) => spotTags.includes(tag));
     if (!hasAny) return false;
   }
 
-  // Radius
-  if (!isSpotInRadius(spot, centerLatLng, radiusKm)) {
-    return false;
-  }
-
   return true;
 }
 
 /**
- * Filtert eine Spot-Liste anhand der übergebenen Filter-Parameter.
+ * Wendet alle (nicht-geo) Filter auf die Spots an.
  *
  * @param {Spot[]} spots
- * @param {Object} options
- * @param {boolean} options.plusActive
- * @param {string} options.searchTerm
- * @param {string} options.categoryFilter
- * @param {string} options.ageFilter
- * @param {string|null} options.moodFilter
- * @param {string|null} options.travelMode
- * @param {boolean} options.onlyBigAdventures
- * @param {boolean} options.onlyVerified
- * @param {boolean} options.onlyFavorites
- * @param {Set<string>} options.favorites
- * @param {string[]} options.activeFilterIds
- * @param {any} options.center
- * @param {number} options.radiusKm
- *
+ * @param {Object} filterState siehe doesSpotMatchBaseFilters
  * @returns {Spot[]}
  */
 export function filterSpots(
   spots,
   {
-    plusActive = false,
-    searchTerm = "",
-    categoryFilter = "",
-    ageFilter = "all",
-    moodFilter = null,
-    travelMode = null,
-    onlyBigAdventures = false,
-    onlyVerified = false,
-    onlyFavorites = false,
-    favorites = new Set(),
-    activeFilterIds = [],
-    center = null,
-    radiusKm = Infinity
-  } = {}
-) {
-  if (!Array.isArray(spots) || !spots.length) return [];
-
-  const filterState = {
     plusActive,
     searchTerm,
     categoryFilter,
@@ -466,14 +378,24 @@ export function filterSpots(
     onlyFavorites,
     favorites,
     activeFilterIds
-  };
-
-  const context = {
-    centerLatLng: center,
-    radiusKm
-  };
+  }
+) {
+  const activeTagFilters =
+    activeFilterIds instanceof Set ? activeFilterIds : new Set(activeFilterIds || []);
 
   return spots.filter((spot) =>
-    doesSpotMatchFilters(spot, filterState, context)
+    doesSpotMatchBaseFilters(spot, {
+      plusActive,
+      searchTerm,
+      categoryFilter,
+      ageFilter,
+      moodFilter,
+      travelMode,
+      onlyBigAdventures,
+      onlyVerified,
+      onlyFavorites,
+      activeTagFilters,
+      favorites
+    })
   );
 }
