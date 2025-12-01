@@ -1,7 +1,7 @@
 // js/app.js
 // ======================================================
-// Family Spots Map – Hauptlogik (Map, Filter, Tilla, UI)
-// Ziel: Klar strukturiert, robust und gut wartbar
+// Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
+// Map- und Filterlogik ist in map.js / filters.js ausgelagert.
 // ======================================================
 
 "use strict";
@@ -40,7 +40,6 @@ import {
 } from "./filters.js";
 
 import {
-  ensureMarkerClusterPlugin,
   initMap,
   renderMarkers,
   getRouteUrlsForSpot,
@@ -174,8 +173,10 @@ let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
 // Map / Daten
-let map;
-let markersLayer;
+/** @type {any} */
+let map = null;
+/** @type {any} */
+let markersLayer = null;
 /** @type {Spot[]} */
 let spots = [];
 /** @type {Spot[]} */
@@ -267,11 +268,6 @@ let compassPlusHintEl = null;
 // Utilities
 // ------------------------------------------------------
 
-/**
- * Einfache Debounce-Hilfsfunktion
- * @param {Function} fn
- * @param {number} [delay]
- */
 function debounce(fn, delay = 200) {
   let timeoutId;
   return (...args) => {
@@ -280,7 +276,6 @@ function debounce(fn, delay = 200) {
   };
 }
 
-/** Keyboard-Helper für Enter/Space-Aktivierung */
 function activateOnEnterSpace(handler) {
   return (event) => {
     if (
@@ -294,7 +289,6 @@ function activateOnEnterSpace(handler) {
   };
 }
 
-/** Wendet statische I18N-Attribute (data-i18n-de/en) auf Textknoten an. */
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
     const keyAttr = currentLang === LANG_DE ? "i18n-de" : "i18n-en";
@@ -303,7 +297,6 @@ function applyStaticI18n() {
   });
 }
 
-/** Setzt loading="lazy" für Bilder, falls vom Browser unterstützt. */
 function initLazyLoadImages() {
   if (!("loading" in HTMLImageElement.prototype)) return;
   document.querySelectorAll("img").forEach((img) => {
@@ -320,7 +313,6 @@ function initLazyLoadImages() {
 function updateMetaAndA11yFromI18n() {
   if (typeof I18N === "undefined" || typeof I18N.t !== "function") return;
 
-  // Meta-Title & Description
   const metaTitle = I18N.t("meta_title", document.title || "");
   if (metaTitle) {
     document.title = metaTitle;
@@ -335,7 +327,6 @@ function updateMetaAndA11yFromI18n() {
     );
   }
 
-  // ARIA-Labels
   if (themeToggleEl) {
     const fallback = themeToggleEl.getAttribute("aria-label") || "";
     themeToggleEl.setAttribute(
@@ -357,7 +348,6 @@ function updateMetaAndA11yFromI18n() {
     btnHelpEl.setAttribute("aria-label", I18N.t("btn_help_aria", fallback));
   }
 
-  // Tilla-Alt-Text
   const tillaImg = document.querySelector("#tilla-section img");
   if (tillaImg) {
     const fallback = tillaImg.alt || "";
@@ -393,17 +383,14 @@ function getCategoryLabelWithAccess(slug) {
 
   const access = CATEGORY_ACCESS.perCategory[slug];
   if (!access) {
-    // nicht speziell geregelt → Basis
     return base;
   }
 
-  // Abo (Family Spots Plus)
   if (access.level === "subscription") {
     const suffix = currentLang === LANG_DE ? " · Plus" : " · Plus";
     return base + suffix;
   }
 
-  // Add-ons unterscheiden (Wasser / WoMo / generisch)
   if (access.level === "addon") {
     let suffix;
     if (access.addonId === "addon_water") {
@@ -440,9 +427,6 @@ function updateLanguageSwitcherVisual() {
   );
 }
 
-/**
- * Label für generische „Anzeigen/Ausblenden“-Buttons (Plus, Mein Tag)
- */
 function updateGenericSectionToggleLabel(btn, isOpen) {
   if (!btn) return;
   const target = btn.querySelector("span") || btn;
@@ -518,7 +502,6 @@ function ensureCompassPlusHint() {
     hint.style.marginBottom = "6px";
     hint.textContent = getCompassPlusHintText();
 
-    // Einfügen möglichst nah bei Plus/Mein Tag/Kompass – bevorzugt vor plus-section
     let anchor =
       plusSectionEl || daylogSectionEl || compassSectionEl || sidebarEl.firstChild;
     if (anchor && anchor.parentNode === sidebarEl) {
@@ -535,8 +518,6 @@ function ensureCompassPlusHint() {
 
 /**
  * Setzt Sprache, aktualisiert UI & speichert in localStorage.
- * @param {"de"|"en"} lang
- * @param {{initial?: boolean}} [options]
  */
 function setLanguage(lang, { initial = false } = {}) {
   currentLang = lang === LANG_EN ? LANG_EN : LANG_DE;
@@ -549,7 +530,6 @@ function setLanguage(lang, { initial = false } = {}) {
 
   document.documentElement.lang = currentLang;
 
-  // i18n-Layer informieren
   try {
     if (
       typeof I18N !== "undefined" &&
@@ -561,10 +541,7 @@ function setLanguage(lang, { initial = false } = {}) {
     console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
   }
 
-  // Meta, ARIA & Tilla-Alt aktualisieren
   updateMetaAndA11yFromI18n();
-
-  // Header-Tagline (mit Fallback auf config)
   updateHeaderTagline(currentLang);
 
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
@@ -610,7 +587,6 @@ function setLanguage(lang, { initial = false } = {}) {
     }
   }
 
-  // Plus / Mein Tag – Show/Hide Buttons neu labeln
   if (plusSectionEl && btnTogglePlusEl) {
     updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
   }
@@ -640,7 +616,6 @@ function setLanguage(lang, { initial = false } = {}) {
     populateCategoryOptions();
   }
 
-  // Tag-Filter-Chips (Labels je Sprache)
   if (tagFilterContainerEl) {
     renderTagFilterChips();
   }
@@ -657,7 +632,6 @@ function setLanguage(lang, { initial = false } = {}) {
     btn.textContent = currentLang === LANG_DE ? "Schließen" : "Close";
   });
 
-  // Onboarding-Hint-Text ggf. aktualisieren/erzeugen
   ensureCompassPlusHint();
 
   if (!initial) {
@@ -698,10 +672,6 @@ function setTheme(theme) {
 
 let toastTimeoutId = null;
 
-/**
- * Zeigt einen Toast an. Akzeptiert UI-String-Key oder freie Message.
- * @param {string} keyOrMessage
- */
 function showToast(keyOrMessage) {
   if (!toastEl) return;
 
@@ -723,13 +693,9 @@ function showToast(keyOrMessage) {
 }
 
 // ------------------------------------------------------
-// Map / Spots – Setup
+// Spots – Cache / Laden
 // ------------------------------------------------------
 
-/**
- * Lädt Spots aus Cache (falls vorhanden).
- * @returns {any[]|null}
- */
 function loadSpotsFromCache() {
   try {
     const stored = localStorage.getItem(SPOTS_CACHE_KEY);
@@ -744,9 +710,6 @@ function loadSpotsFromCache() {
   }
 }
 
-/**
- * Zeigt eine klare Fehler-UI inkl. Retry-Button in der Spot-Liste.
- */
 function showSpotsLoadErrorUI() {
   if (!spotListEl) return;
 
@@ -778,10 +741,6 @@ function showSpotsLoadErrorUI() {
   spotListEl.appendChild(retryBtn);
 }
 
-/**
- * Lädt Spots aus data/spots.json, normalisiert Daten & triggert initiales Rendering.
- * Nutzt Cache-Fallback für Offline / Netzwerkfehler.
- */
 async function loadSpots() {
   let raw = [];
 
@@ -792,7 +751,6 @@ async function loadSpots() {
     const data = await res.json();
     raw = Array.isArray(data) ? data : data.spots || [];
 
-    // Erfolgreiches Ergebnis in localStorage cachen (für Offline-Fallback)
     try {
       localStorage.setItem(SPOTS_CACHE_KEY, JSON.stringify(raw));
     } catch (err) {
@@ -801,7 +759,6 @@ async function loadSpots() {
   } catch (err) {
     console.error("[Family Spots] Fehler beim Laden der Spots:", err);
 
-    // Fallback: Cache aus localStorage versuchen
     const cached = loadSpotsFromCache();
     if (cached && cached.length) {
       raw = cached;
@@ -825,8 +782,7 @@ async function loadSpots() {
           currentLang,
           showToast,
           hasShownMarkerLimitToast,
-          focusSpotOnMap,
-          hasValidLatLng
+          focusSpotOnMap
         });
       }
       return;
@@ -838,7 +794,6 @@ async function loadSpots() {
   loadFavoritesFromStorage();
   populateCategoryOptions();
 
-  // Tag-Filter-Chips (erst nach Spots laden, falls man später mal dynamisch will)
   if (tagFilterContainerEl) {
     renderTagFilterChips();
   }
@@ -871,35 +826,6 @@ function saveFavoritesToStorage() {
   } catch (err) {
     console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
   }
-}
-
-// ------------------------------------------------------
-// Spots – General Helpers (UI-spezifisch)
-// ------------------------------------------------------
-
-/**
- * Meta-Info zu einem Spot zentral berechnen.
- * @param {Spot} spot
- * @returns {string[]}
- */
-function getSpotMetaParts(spot) {
-  const parts = [];
-  if (spot.category) parts.push(getCategoryLabel(spot.category));
-
-  const isVerified =
-    !!spot.verified || !!spot.isVerified;
-
-  if (isVerified) {
-    parts.push(currentLang === LANG_DE ? "verifiziert" : "verified");
-  }
-  if (spot.visit_minutes) {
-    parts.push(
-      currentLang === LANG_DE
-        ? `~${spot.visit_minutes} Min.`
-        : `~${spot.visit_minutes} min`
-    );
-  }
-  return parts;
 }
 
 // ------------------------------------------------------
@@ -943,7 +869,6 @@ function populateCategoryOptions() {
     filterCategoryEl.appendChild(optgroup);
   });
 
-  // „Weitere Kategorien“ aus den Daten heraus sammeln
   const extraSet = new Set();
 
   spots.forEach((spot) => {
@@ -985,7 +910,7 @@ function populateCategoryOptions() {
 }
 
 // ------------------------------------------------------
-// Radius / Geodistanz (UI)
+// Radius / Geodistanz
 // ------------------------------------------------------
 
 function updateRadiusTexts() {
@@ -994,18 +919,15 @@ function updateRadiusTexts() {
 
   let value = parseInt(filterRadiusEl.value, 10);
   if (Number.isNaN(value)) {
-    value = RADIUS_STEPS_KM.length - 1;
+    value = 4;
   }
-  // Clamping
   value = Math.min(Math.max(value, 0), RADIUS_STEPS_KM.length - 1);
   radiusStep = value;
 
   filterRadiusEl.value = String(radiusStep);
   filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
 
-  const maxIndex = RADIUS_STEPS_KM.length - 1;
-
-  if (radiusStep === maxIndex) {
+  if (radiusStep === RADIUS_STEPS_KM.length - 1) {
     filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label");
     filterRadiusDescriptionEl.textContent = t("filter_radius_description_all");
   } else {
@@ -1016,24 +938,18 @@ function updateRadiusTexts() {
   }
 }
 
-/**
- * Initialisiert den Range-Slider inkl. vollständiger ARIA-Werte.
- */
 function initRadiusSliderA11y() {
   if (!filterRadiusEl) return;
 
-  const min = 0;
-  const max = RADIUS_STEPS_KM.length - 1;
+  const min = filterRadiusEl.min || "0";
+  const max = filterRadiusEl.max || String(RADIUS_STEPS_KM.length - 1);
 
   if (!filterRadiusEl.value) {
-    filterRadiusEl.value = String(max);
+    filterRadiusEl.value = max;
   }
 
-  filterRadiusEl.min = String(min);
-  filterRadiusEl.max = String(max);
-
-  filterRadiusEl.setAttribute("aria-valuemin", String(min));
-  filterRadiusEl.setAttribute("aria-valuemax", String(max));
+  filterRadiusEl.setAttribute("aria-valuemin", min);
+  filterRadiusEl.setAttribute("aria-valuemax", max);
   filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value);
 
   filterRadiusEl.addEventListener("input", () => {
@@ -1044,14 +960,28 @@ function initRadiusSliderA11y() {
   updateRadiusTexts();
 }
 
+/**
+ * Distanz-Check für einen Spot relativ zu centerLatLng / radiusKm.
+ */
+function isSpotInRadius(spot, centerLatLng, radiusKm) {
+  if (!centerLatLng || typeof centerLatLng.distanceTo !== "function") {
+    return true;
+  }
+  if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
+  if (!hasValidLatLng(spot)) return true;
+
+  if (typeof L === "undefined" || typeof L.latLng !== "function") return true;
+
+  const spotLatLng = L.latLng(spot.lat, spot.lng);
+  const distanceMeters = centerLatLng.distanceTo(spotLatLng);
+  const distanceKm = distanceMeters / 1000;
+  return distanceKm <= radiusKm;
+}
+
 // ------------------------------------------------------
-// Tag-Filter-Helfer (UI)
+// Tag-Filter-Chips (UI)
 // ------------------------------------------------------
 
-/**
- * Rendert die Tag-Filter-Chips in den Container #filter-tags (falls vorhanden).
- * Nutzt FILTERS aus config.js.
- */
 function renderTagFilterChips() {
   if (!tagFilterContainerEl) return;
   if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) {
@@ -1089,7 +1019,6 @@ function renderTagFilterChips() {
       } else {
         activeTagFilters.add(filter.id);
       }
-      // UI-State anpassen
       renderTagFilterChips();
       applyFiltersAndRender();
     });
@@ -1099,10 +1028,9 @@ function renderTagFilterChips() {
 }
 
 // ------------------------------------------------------
-// Filterlogik (nutzt filters.js)
+// Filterlogik (verwendet filterSpots aus filters.js)
 // ------------------------------------------------------
 
-/** Filter anwenden und sowohl Liste als auch Marker aktualisieren. */
 function applyFiltersAndRender() {
   if (!spots.length) {
     filteredSpots = [];
@@ -1117,8 +1045,7 @@ function applyFiltersAndRender() {
         currentLang,
         showToast,
         hasShownMarkerLimitToast,
-        focusSpotOnMap,
-        hasValidLatLng
+        focusSpotOnMap
       });
     }
 
@@ -1128,19 +1055,7 @@ function applyFiltersAndRender() {
     return;
   }
 
-  let center = null;
-  if (map && typeof map.getCenter === "function") {
-    center = map.getCenter();
-  } else if (typeof L !== "undefined" && typeof L.latLng === "function") {
-    center = L.latLng(DEFAULT_MAP_CENTER[0], DEFAULT_MAP_CENTER[1]);
-  }
-
-  const radiusKm =
-    RADIUS_STEPS_KM[radiusStep] != null
-      ? RADIUS_STEPS_KM[radiusStep]
-      : Infinity;
-
-  filteredSpots = filterSpots(spots, {
+  const nonGeoFiltered = filterSpots(spots, {
     plusActive,
     searchTerm,
     categoryFilter,
@@ -1151,10 +1066,22 @@ function applyFiltersAndRender() {
     onlyVerified,
     onlyFavorites,
     favorites,
-    activeFilterIds: Array.from(activeTagFilters),
-    center,
-    radiusKm
+    activeFilterIds: activeTagFilters
   });
+
+  let center = null;
+  if (map && typeof map.getCenter === "function") {
+    center = map.getCenter();
+  } else if (typeof L !== "undefined" && typeof L.latLng === "function") {
+    center = L.latLng(DEFAULT_MAP_CENTER[0], DEFAULT_MAP_CENTER[1]);
+  }
+
+  const radiusKm =
+    RADIUS_STEPS_KM[radiusStep] ?? RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ?? Infinity;
+
+  filteredSpots = center
+    ? nonGeoFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
+    : nonGeoFiltered;
 
   renderSpotList();
 
@@ -1167,8 +1094,7 @@ function applyFiltersAndRender() {
       currentLang,
       showToast,
       hasShownMarkerLimitToast,
-      focusSpotOnMap,
-      hasValidLatLng
+      focusSpotOnMap
     });
   }
 
@@ -1184,8 +1110,28 @@ function applyFiltersAndRender() {
 }
 
 // ------------------------------------------------------
-// Marker & Liste
+// Marker-Liste & Meta
 // ------------------------------------------------------
+
+function isSpotVerified(spot) {
+  return !!spot.verified || !!spot.isVerified;
+}
+
+function getSpotMetaParts(spot) {
+  const parts = [];
+  if (spot.category) parts.push(getCategoryLabel(spot.category));
+  if (isSpotVerified(spot)) {
+    parts.push(currentLang === LANG_DE ? "verifiziert" : "verified");
+  }
+  if (spot.visit_minutes) {
+    parts.push(
+      currentLang === LANG_DE
+        ? `~${spot.visit_minutes} Min.`
+        : `~${spot.visit_minutes} min`
+    );
+  }
+  return parts;
+}
 
 function renderSpotList() {
   if (!spotListEl) return;
@@ -1321,10 +1267,6 @@ function closeSpotDetails(options = {}) {
   }
 }
 
-/**
- * Rendert Detail-Panel für einen Spot.
- * @param {Spot} spot
- */
 function showSpotDetails(spot) {
   if (!spotDetailEl) return;
 
@@ -1353,7 +1295,6 @@ function showSpotDetails(spot) {
   spotDetailEl.innerHTML = "";
   spotDetailEl.classList.remove("spot-details--hidden");
 
-  // Header mit Titel, optionalem Subtitle und Actions
   const headerEl = document.createElement("div");
   headerEl.className = "spot-details-header";
 
@@ -1398,7 +1339,6 @@ function showSpotDetails(spot) {
   headerEl.appendChild(titleWrapperEl);
   headerEl.appendChild(actionsEl);
 
-  // Meta-Badges
   const metaEl = document.createElement("div");
   metaEl.className = "spot-details-meta";
   metaParts.forEach((p) => {
@@ -1407,7 +1347,6 @@ function showSpotDetails(spot) {
     metaEl.appendChild(span);
   });
 
-  // Tags (nur originale Spot-Tags, nicht die technischen Kategorie-Tags)
   const tagsEl = document.createElement("div");
   tagsEl.className = "spot-details-tags";
   tags.forEach((tag) => {
@@ -1417,7 +1356,6 @@ function showSpotDetails(spot) {
     tagsEl.appendChild(span);
   });
 
-  // Zusammenbauen in logischer Reihenfolge
   spotDetailEl.appendChild(headerEl);
   if (metaParts.length) {
     spotDetailEl.appendChild(metaEl);
@@ -1466,7 +1404,6 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(tagsEl);
   }
 
-  // Scroll-Position zurücksetzen, falls Panel bereits gescrollt war
   if (typeof spotDetailEl.scrollTop === "number") {
     spotDetailEl.scrollTop = 0;
   }
@@ -1533,8 +1470,6 @@ function handleCompassApply() {
   if (!FEATURES.compass) return;
   if (!filterRadiusEl) return;
 
-  // Travel-Mode übersetzt auf Radius-Stufe:
-  // Alltag = kleiner Radius, Unterwegs = größer
   radiusStep = travelMode === "everyday" || !travelMode ? 1 : 3;
 
   filterRadiusEl.value = String(radiusStep);
@@ -1555,7 +1490,7 @@ function handleToggleCompass() {
 }
 
 // ------------------------------------------------------
-// Plus-Code
+// Plus & Mein Tag
 // ------------------------------------------------------
 
 function loadPlusStateFromStorage(options = {}) {
@@ -1612,10 +1547,6 @@ function handlePlusCodeSubmit() {
   applyFiltersAndRender();
 }
 
-// ------------------------------------------------------
-// Mein Tag
-// ------------------------------------------------------
-
 function loadDaylogFromStorage() {
   if (!FEATURES.daylog) return;
   if (!daylogTextEl) return;
@@ -1657,7 +1588,7 @@ function handleDaylogSave() {
 }
 
 // ------------------------------------------------------
-// Geolocation
+// Geolocation & Navigation
 // ------------------------------------------------------
 
 function handleLocateClick() {
@@ -1678,10 +1609,6 @@ function handleLocateClick() {
     { enableHighAccuracy: true, timeout: 8000 }
   );
 }
-
-// ------------------------------------------------------
-// Navigation (Karte / Über)
-// ------------------------------------------------------
 
 function switchRoute(route) {
   if (!viewMapEl || !viewAboutEl || !bottomNavButtons) return;
@@ -1773,7 +1700,6 @@ function handleToggleView() {
 
 async function init() {
   try {
-    // DOM-Referenzen einsammeln
     languageSwitcherEl =
       document.getElementById("language-switcher") ||
       document.getElementById("language-toggle");
@@ -1823,7 +1749,6 @@ async function init() {
     spotListEl = document.getElementById("spot-list");
     spotDetailEl = document.getElementById("spot-detail");
 
-    // Plus / Mein Tag Sections + Toggle-Buttons
     plusSectionEl = document.getElementById("plus-section");
     btnTogglePlusEl = document.getElementById("btn-toggle-plus");
     daylogSectionEl = document.getElementById("daylog-section");
@@ -1838,7 +1763,6 @@ async function init() {
 
     toastEl = document.getElementById("toast");
 
-    // Kompass
     compassSectionEl = document.getElementById("compass-section");
     compassLabelEl = document.getElementById("compass-label");
     compassHelperEl = document.getElementById("compass-helper");
@@ -1864,15 +1788,12 @@ async function init() {
       );
     }
 
-    // Sprache / Theme
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
 
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
 
-    // Map (mit Markercluster-Hook)
-    await ensureMarkerClusterPlugin();
     const mapResult = initMap({
       center: DEFAULT_MAP_CENTER,
       zoom: DEFAULT_MAP_ZOOM
@@ -1887,7 +1808,6 @@ async function init() {
         });
       }
 
-      // Performance-freundliches Nachladen bei Kartenbewegung / Zoom
       map.on(
         "moveend zoomend",
         debounce(() => {
@@ -1895,7 +1815,6 @@ async function init() {
         }, 200)
       );
 
-      // Map bei Fenster-Resize sauber neu berechnen
       window.addEventListener(
         "resize",
         debounce(() => {
@@ -1904,12 +1823,10 @@ async function init() {
       );
     }
 
-    // Tilla initialisieren
     tilla = new TillaCompanion({
       getText: (key) => t(key)
     });
 
-    // Language-Switcher
     if (languageSwitcherEl) {
       languageSwitcherEl.addEventListener("click", () => {
         const nextLang = currentLang === LANG_DE ? LANG_EN : LANG_DE;
@@ -1917,7 +1834,6 @@ async function init() {
       });
     }
 
-    // Theme-Toggle
     if (themeToggleEl) {
       themeToggleEl.addEventListener("click", () => {
         setTheme(currentTheme === THEME_LIGHT ? THEME_DARK : THEME_LIGHT);
@@ -1953,7 +1869,6 @@ async function init() {
       });
     }
 
-    // Filter-Events
     if (filterSearchEl) {
       const applySearch = debounce((value) => {
         searchTerm = value.trim();
@@ -2004,7 +1919,6 @@ async function init() {
       });
     }
 
-    // Stimmung
     if (FEATURES.moodFilter) {
       document.querySelectorAll(".mood-chip").forEach((chip) => {
         chip.addEventListener("click", () => {
@@ -2027,7 +1941,6 @@ async function init() {
       });
     }
 
-    // Reise-Modus
     if (FEATURES.travelMode) {
       document.querySelectorAll(".travel-chip").forEach((chip) => {
         chip.addEventListener("click", () => {
@@ -2058,14 +1971,12 @@ async function init() {
       });
     }
 
-    // Filter auf-/zuklappen
     if (btnToggleFiltersEl) {
       btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
       const span = btnToggleFiltersEl.querySelector("span");
       if (span) span.textContent = t("btn_show_filters");
     }
 
-    // „Nur Karte“ / Liste umschalten
     if (btnToggleViewEl) {
       btnToggleViewEl.addEventListener("click", handleToggleView);
       const span = btnToggleViewEl.querySelector("span");
@@ -2073,7 +1984,6 @@ async function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    // Kompass-Toggle-Button – Label & aria-expanded sauber synchron + Keyboard
     if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
       const toggleCompassHandler = (event) => {
         event.preventDefault();
@@ -2094,7 +2004,6 @@ async function init() {
       updateCompassButtonLabel();
     }
 
-    // Plus-Section Toggle („Anzeigen / Ausblenden“) + Keyboard
     if (plusSectionEl && btnTogglePlusEl) {
       btnTogglePlusEl.setAttribute("aria-controls", plusSectionEl.id);
 
@@ -2119,7 +2028,6 @@ async function init() {
       updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
     }
 
-    // Mein Tag – Toggle („Anzeigen / Ausblenden“) + Keyboard
     if (daylogSectionEl && btnToggleDaylogEl) {
       btnToggleDaylogEl.setAttribute("aria-controls", daylogSectionEl.id);
 
@@ -2159,7 +2067,6 @@ async function init() {
       compassApplyBtnEl.addEventListener("click", handleCompassApply);
     }
 
-    // Spielideen
     if (FEATURES.playIdeas && playIdeasBtnEl) {
       playIdeasBtnEl.addEventListener("click", () => {
         const idea = getRandomPlayIdea();
@@ -2181,7 +2088,6 @@ async function init() {
       });
     }
 
-    // Close-Buttons (Plus / Daylog / Kompass / ggf. weitere Sections)
     document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
       const targetId = btn.getAttribute("data-target");
       let section = null;
@@ -2198,17 +2104,14 @@ async function init() {
           section.classList.add("hidden");
         }
 
-        // Kompass-Button-Label synchron halten
         if (section.id === "compass-section" && btnToggleCompassEl) {
           updateCompassButtonLabel();
         }
 
-        // Plus-Button-Label synchron halten
         if (section.id === "plus-section" && btnTogglePlusEl) {
           updateGenericSectionToggleLabel(btnTogglePlusEl, false);
         }
 
-        // Mein-Tag-Button-Label synchron halten
         if (section.id === "daylog-section" && btnToggleDaylogEl) {
           updateGenericSectionToggleLabel(btnToggleDaylogEl, false);
         }
@@ -2218,12 +2121,9 @@ async function init() {
     updateCompassUI();
     loadPlusStateFromStorage();
     loadDaylogFromStorage();
-    initLazyLoadImages(); // Performance bei Bildern
-
-    // Onboarding-Hint ggf. anzeigen
+    initLazyLoadImages();
     ensureCompassPlusHint();
 
-    // ESC schließt Spot-Details
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
       if (!spotDetailEl) return;
