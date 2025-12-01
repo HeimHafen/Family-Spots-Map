@@ -5,13 +5,32 @@
 
 "use strict";
 
-import {
-  getPlusStatus as getPlusStatusFromStorage,
-  savePlusStatus as savePlusStatusToStorage
-} from "../storage.js";
 import { t } from "../i18n.js";
 
 const PARTNERS_URL = "data/partners.json";
+
+// eigener Key für den Plus-Status im localStorage
+const PLUS_STATUS_KEY = "fs_plus_status";
+
+// --- interne Storage-Helfer (ersetzen ../storage.js) ------------------------
+
+function getPlusStatusFromStorage() {
+  try {
+    const raw = localStorage.getItem(PLUS_STATUS_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function savePlusStatusToStorage(status) {
+  try {
+    localStorage.setItem(PLUS_STATUS_KEY, JSON.stringify(status));
+  } catch {
+    // ignorieren – App funktioniert auch ohne gespeicherten Status
+  }
+}
 
 // Kategorien, die als Plus-Kategorien gelten
 // (kannst du jederzeit anpassen/erweitern)
