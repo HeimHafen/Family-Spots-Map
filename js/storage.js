@@ -17,6 +17,9 @@ const LANG_STORAGE_KEY = "fs_lang";
 const THEME_STORAGE_KEY = "fs_theme";
 const FAVORITES_STORAGE_KEY = "fs_favorites";
 
+const LEGACY_PLUS_TRUE = "1";
+const LEGACY_PLUS_FALSE = "0";
+
 function safeGet(key) {
   try {
     return localStorage.getItem(key);
@@ -114,15 +117,143 @@ export function saveFavoritesToStorage(favoritesSet) {
 }
 
 // ------------------------------------------------------
-// Plus-Status
+// Plus-Status (neues Modell)
 // ------------------------------------------------------
 
-export function loadPlusActive() {
-  return safeGet(PLUS_STORAGE_KEY) === "1";
+/**
+ * Lies den vollständigen Plus-Status aus dem Storage.
+ *
+ * Mögliche Rückgabe:
+ *  - null          → kein Eintrag
+ *  - { active, plan?, code?, partner?, source?, activatedAt?, expiresAt? }
+ *
+ *  - ist abwärtskompatibel zu altem "1"/"0"-Format
+ *  - setzt bei abgelaufenen Codes active=false und speichert das zurück
+ */
+export function getPlusStatus() {
+  const stored = safeGet(PLUS_STORAGE_KEY);
+  if (!stored) return null;
+
+  // Legacy-Format: nur "1" / "0"
+  if (stored === LEGACY_PLUS_TRUE) {
+    return {
+      active: true,
+      plan: "legacy",
+      code: null,
+      partner: null,
+      source: "legacy",
+      activatedAt: null,
+      expiresAt: null
+    };
+  }
+  if (stored === LEGACY_PLUS_FALSE) {
+    return {
+      active: false,
+      plan: null,
+      code: null,
+      partner: null,
+      source: "legacy",
+      activatedAt: null,
+      expiresAt: null
+    };
+  }
+
+  // Neues JSON-Format
+  try {
+    const parsed = JSON.parse(stored);
+    if (!parsed || typeof parsed !== "object") return null;
+
+    const status = { ...parsed };
+
+    // Fallback: validUntil → expiresAt
+    if (!status.expiresAt && status.validUntil) {
+      status.expiresAt = status.validUntil;
+    }
+
+    // Ablauf prüfen
+    if (status.expiresAt) {
+      const ts = Date.parse(status.expiresAt);
+      if (!Number.isNaN(ts) && ts < Date.now()) {
+        // Abgelaufen → als inaktiv markieren
+        if (status.active !== false) {
+          status.active = false;
+          try {
+            safeSet(PLUS_STORAGE_KEY, JSON.stringify(status));
+          } catch (err) {
+            console.warn("[Family Spots] Konnte abgelaufenen Plus-Status nicht aktualisieren:", err);
+          }
+        }
+      }
+    }
+
+    if (typeof status.active !== "boolean") {
+      status.active = !!status.active;
+    }
+
+    return status;
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Plus-Status nicht lesen:", err);
+    return null;
+  }
 }
 
+/**
+ * Speichert den vollständigen Plus-Status im neuen JSON-Format.
+ * Wird z. B. von plus.js (redeemPartnerCode) verwendet.
+ */
+export function savePlusStatus(status) {
+  if (!status || typeof status !== "object") return;
+
+  const normalized = {
+    code: status.code || null,
+    plan: status.plan || "plus",
+    partner: status.partner || null,
+    source: status.source || "manual",
+    activatedAt: status.activatedAt || new Date().toISOString(),
+    expiresAt: status.expiresAt || status.validUntil || null,
+    active: status.active !== undefined ? !!status.active : true
+  };
+
+  try {
+    safeSet(PLUS_STORAGE_KEY, JSON.stringify(normalized));
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Plus-Status nicht speichern:", err);
+  }
+}
+
+/**
+ * Kompatibilitäts-Helfer:
+ * Gibt nur true/false zurück, ob Plus aktuell aktiv ist.
+ * Nutzt intern getPlusStatus().
+ */
+export function loadPlusActive() {
+  const status = getPlusStatus();
+  if (!status || !status.active) return false;
+
+  const expires = status.expiresAt || status.validUntil;
+  if (!expires) return true;
+
+  const ts = Date.parse(expires);
+  if (Number.isNaN(ts)) return true;
+
+  return ts >= Date.now();
+}
+
+/**
+ * Kompatibilitäts-Helfer:
+ * Setzt nur das active-Flag, lässt alle anderen Felder unverändert.
+ */
 export function savePlusActive(isActive) {
-  safeSet(PLUS_STORAGE_KEY, isActive ? "1" : "0");
+  const current = getPlusStatus() || {};
+  const next = {
+    ...current,
+    active: !!isActive
+  };
+
+  if (!next.plan) next.plan = "manual";
+  if (!next.source) next.source = "manual_toggle";
+
+  savePlusStatus(next);
 }
 
 // ------------------------------------------------------
