@@ -11,9 +11,6 @@ import { TillaCompanion } from "./features/tilla.js";
 import {
   DEFAULT_MAP_CENTER,
   DEFAULT_MAP_ZOOM,
-  PLUS_STORAGE_KEY,
-  DAYLOG_STORAGE_KEY,
-  SPOTS_CACHE_KEY,
   LANG_DE,
   LANG_EN,
   THEME_LIGHT,
@@ -26,10 +23,26 @@ import {
   CATEGORY_LABELS_DE,
   CATEGORY_LABELS_EN,
   HEADER_TAGLINE_TEXT,
-  COMPASS_PLUS_HINT_KEY,
   FILTERS,
   CATEGORY_ACCESS
 } from "./config.js";
+
+import {
+  loadStoredLang,
+  saveStoredLang,
+  loadStoredTheme,
+  saveStoredTheme,
+  loadSpotsFromCache,
+  saveSpotsToCache,
+  loadFavoritesFromStorage,
+  saveFavoritesToStorage,
+  loadPlusActive,
+  savePlusActive,
+  loadDaylog,
+  saveDaylog,
+  hasSeenCompassPlusHint,
+  markCompassPlusHintSeen
+} from "./storage.js";
 
 import {
   normalizeSpot,
@@ -119,14 +132,10 @@ function getRandomPlayIdea() {
   return "";
 }
 
-/** Sprache aus LocalStorage / Browser / I18N ableiten */
+/** Sprache aus Storage / Browser / I18N ableiten */
 function getInitialLang() {
-  try {
-    const stored = localStorage.getItem("fs_lang");
-    if (stored === LANG_DE || stored === LANG_EN) return stored;
-  } catch {
-    // ignore
-  }
+  const stored = loadStoredLang();
+  if (stored === LANG_DE || stored === LANG_EN) return stored;
 
   if (
     typeof I18N !== "undefined" &&
@@ -470,20 +479,11 @@ function getCompassPlusHintText(lang = currentLang) {
   return "Tipp: Kompass, Family Spots Plus und „Mein Tag“ kannst du jederzeit über die Buttons „Anzeigen“ öffnen und wieder einklappen.";
 }
 
-function hasSeenCompassPlusHint() {
-  try {
-    return localStorage.getItem(COMPASS_PLUS_HINT_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-
 function markCompassPlusHintSeenAndRemove() {
-  try {
-    localStorage.setItem(COMPASS_PLUS_HINT_KEY, "1");
-  } catch {
-    // ignore
-  }
+  // Flag in Storage setzen
+  markCompassPlusHintSeen();
+
+  // Hinweis im DOM entfernen
   if (compassPlusHintEl && compassPlusHintEl.parentNode) {
     compassPlusHintEl.parentNode.removeChild(compassPlusHintEl);
   }
@@ -517,17 +517,12 @@ function ensureCompassPlusHint() {
 }
 
 /**
- * Setzt Sprache, aktualisiert UI & speichert in localStorage.
+ * Setzt Sprache, aktualisiert UI & speichert in Storage.
  */
 function setLanguage(lang, { initial = false } = {}) {
   currentLang = lang === LANG_EN ? LANG_EN : LANG_DE;
 
-  try {
-    localStorage.setItem("fs_lang", currentLang);
-  } catch {
-    // ignore
-  }
-
+  saveStoredLang(currentLang);
   document.documentElement.lang = currentLang;
 
   try {
@@ -647,7 +642,7 @@ function setLanguage(lang, { initial = false } = {}) {
 // ------------------------------------------------------
 
 function getInitialTheme() {
-  const stored = localStorage.getItem("fs_theme");
+  const stored = loadStoredTheme();
   if (stored === THEME_LIGHT || stored === THEME_DARK) return stored;
 
   if (
@@ -662,7 +657,7 @@ function getInitialTheme() {
 
 function setTheme(theme) {
   currentTheme = theme === THEME_DARK ? THEME_DARK : THEME_LIGHT;
-  localStorage.setItem("fs_theme", currentTheme);
+  saveStoredTheme(currentTheme);
   document.documentElement.setAttribute("data-theme", currentTheme);
 }
 
@@ -693,22 +688,8 @@ function showToast(keyOrMessage) {
 }
 
 // ------------------------------------------------------
-// Spots – Cache / Laden
+// Spots – Laden (Cache-Logik in storage.js)
 // ------------------------------------------------------
-
-function loadSpotsFromCache() {
-  try {
-    const stored = localStorage.getItem(SPOTS_CACHE_KEY);
-    if (!stored) return null;
-    const parsed = JSON.parse(stored);
-    if (Array.isArray(parsed)) return parsed;
-    if (parsed && Array.isArray(parsed.spots)) return parsed.spots;
-    return null;
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Spots-Cache nicht lesen:", err);
-    return null;
-  }
-}
 
 function showSpotsLoadErrorUI() {
   if (!spotListEl) return;
@@ -751,11 +732,8 @@ async function loadSpots() {
     const data = await res.json();
     raw = Array.isArray(data) ? data : data.spots || [];
 
-    try {
-      localStorage.setItem(SPOTS_CACHE_KEY, JSON.stringify(raw));
-    } catch (err) {
-      console.warn("[Family Spots] Konnte Spots-Cache nicht speichern:", err);
-    }
+    // in Cache schreiben (Storage-Modul)
+    saveSpotsToCache(raw);
   } catch (err) {
     console.error("[Family Spots] Fehler beim Laden der Spots:", err);
 
@@ -791,7 +769,13 @@ async function loadSpots() {
 
   spots = raw.map(normalizeSpot);
 
-  loadFavoritesFromStorage();
+  if (FEATURES.favorites) {
+    const favSet = loadFavoritesFromStorage();
+    if (favSet && favSet instanceof Set) {
+      favorites = favSet;
+    }
+  }
+
   populateCategoryOptions();
 
   if (tagFilterContainerEl) {
@@ -799,33 +783,6 @@ async function loadSpots() {
   }
 
   applyFiltersAndRender();
-}
-
-// ------------------------------------------------------
-// Favorites – Persistence
-// ------------------------------------------------------
-
-function loadFavoritesFromStorage() {
-  if (!FEATURES.favorites) return;
-
-  try {
-    const stored = localStorage.getItem("fs_favorites");
-    if (!stored) return;
-    const arr = JSON.parse(stored);
-    if (Array.isArray(arr)) favorites = new Set(arr);
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Favoriten nicht laden:", err);
-  }
-}
-
-function saveFavoritesToStorage() {
-  if (!FEATURES.favorites) return;
-
-  try {
-    localStorage.setItem("fs_favorites", JSON.stringify(Array.from(favorites)));
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
-  }
 }
 
 // ------------------------------------------------------
@@ -1425,7 +1382,8 @@ function toggleFavorite(spot) {
     favorites.add(spotId);
   }
 
-  saveFavoritesToStorage();
+  // neuen Satz speichern (Storage-Modul)
+  saveFavoritesToStorage(favorites);
 
   const toastKey = wasFavorite ? "toast_fav_removed" : "toast_fav_added";
   showToast(toastKey);
@@ -1502,12 +1460,7 @@ function loadPlusStateFromStorage(options = {}) {
     return;
   }
 
-  try {
-    plusActive = localStorage.getItem(PLUS_STORAGE_KEY) === "1";
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Plus-Status nicht laden:", err);
-    plusActive = false;
-  }
+  plusActive = loadPlusActive();
   updatePlusStatusText();
 
   if (reapplyFilters && spots.length) {
@@ -1531,11 +1484,7 @@ function handlePlusCodeSubmit() {
   }
 
   plusActive = true;
-  try {
-    localStorage.setItem(PLUS_STORAGE_KEY, "1");
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Plus-Status nicht speichern:", err);
-  }
+  savePlusActive(true);
 
   showToast("plus_code_activated");
   updatePlusStatusText();
@@ -1551,16 +1500,9 @@ function loadDaylogFromStorage() {
   if (!FEATURES.daylog) return;
   if (!daylogTextEl) return;
 
-  try {
-    const stored = localStorage.getItem(DAYLOG_STORAGE_KEY);
-    if (!stored) return;
-
-    const parsed = JSON.parse(stored);
-    if (parsed && typeof parsed.text === "string") {
-      daylogTextEl.value = parsed.text;
-    }
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Mein-Tag nicht laden:", err);
+  const stored = loadDaylog();
+  if (stored && typeof stored.text === "string") {
+    daylogTextEl.value = stored.text;
   }
 }
 
@@ -1570,16 +1512,7 @@ function handleDaylogSave() {
   const text = daylogTextEl.value.trim();
   if (!text) return;
 
-  const payload = {
-    text,
-    ts: Date.now()
-  };
-
-  try {
-    localStorage.setItem(DAYLOG_STORAGE_KEY, JSON.stringify(payload));
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Mein-Tag nicht speichern:", err);
-  }
+  saveDaylog(text);
 
   showToast("daylog_saved");
   if (tilla && typeof tilla.onDaylogSaved === "function") {
