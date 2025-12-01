@@ -1,31 +1,39 @@
+// js/features/plus.js
+// ---------------------------------------
+// Family Spots Plus – Status & Partnercodes
+// ---------------------------------------
+
+"use strict";
+
 import {
   getPlusStatus as getPlusStatusFromStorage,
-  savePlusStatus as savePlusStatusToStorage,
-} from "./storage.js";
-import { t } from "./i18n.js";
+  savePlusStatus as savePlusStatusToStorage
+} from "../storage.js";
+import { t } from "../i18n.js";
 
 const PARTNERS_URL = "data/partners.json";
 
-// Welche Kategorien später Plus sein sollen
-// (kannst du jederzeit anpassen)
+// Kategorien, die als Plus-Kategorien gelten
+// (kannst du jederzeit anpassen/erweitern)
 const PLUS_CATEGORIES = new Set([
   "rastplatz-spielplatz-dusche",
   "stellplatz-spielplatz-naehe-kostenlos",
   "wohnmobil-service-station",
   "bikepacking-spot",
   "campingplatz-familien",
-  "kletterwald-hochseilgarten",
+  "kletterwald-hochseilgarten"
 ]);
 
 let cachedPartnerCodes = null;
 
 // ---------------------------------------
-// Status
+// Status-API
 // ---------------------------------------
 
 /**
  * Normalisierte Sicht auf den Plus-Status.
- * Nutzt intern den Storage, mappt aber auf { active, plan, validUntil }.
+ * Nutzt intern den Storage, gibt aber immer
+ * { active, plan, validUntil } zurück.
  */
 export function getPlusStatus() {
   const stored = getPlusStatusFromStorage();
@@ -33,30 +41,37 @@ export function getPlusStatus() {
     return {
       active: false,
       plan: null,
-      validUntil: null,
+      validUntil: null
     };
   }
+
   return {
     active: true,
     plan: stored.plan || null,
-    validUntil: stored.expiresAt || stored.validUntil || null,
+    validUntil: stored.expiresAt || stored.validUntil || null
   };
 }
 
+/** True, wenn Plus aktuell aktiv ist. */
 export function isPlusActive() {
   return getPlusStatus().active;
 }
 
+/** True, wenn die Kategorie zu den Plus-Kategorien gehört. */
 export function isPlusCategory(slug) {
   if (!slug) return false;
   return PLUS_CATEGORIES.has(slug);
 }
 
+/**
+ * Formatiert den Status als Text für die UI.
+ * Nutzt i18n-Fallbacks.
+ */
 export function formatPlusStatus(status = getPlusStatus()) {
   if (!status.active) {
     return t(
       "plus_status_inactive",
-      "Family Spots Plus ist nicht aktiviert.",
+      "Family Spots Plus ist nicht aktiviert."
     );
   }
 
@@ -67,20 +82,17 @@ export function formatPlusStatus(status = getPlusStatus()) {
     ? until.toLocaleDateString(undefined, {
         year: "numeric",
         month: "2-digit",
-        day: "2-digit",
+        day: "2-digit"
       })
     : "";
 
   if (!dateStr) {
-    return t(
-      "plus_status_active",
-      "Family Spots Plus ist aktiv.",
-    );
+    return t("plus_status_active", "Family Spots Plus ist aktiv.");
   }
 
   return t(
     "plus_status_active_until",
-    `Family Spots Plus ist aktiv bis ${dateStr}.`,
+    `Family Spots Plus ist aktiv bis ${dateStr}.`
   );
 }
 
@@ -94,15 +106,16 @@ async function loadPartnerCodes() {
   try {
     const res = await fetch(PARTNERS_URL);
     if (!res.ok) {
-      console.warn("Cannot load partners.json");
+      console.warn("[Family Spots] Cannot load partners.json");
       cachedPartnerCodes = [];
       return cachedPartnerCodes;
     }
+
     const json = await res.json();
     cachedPartnerCodes = Array.isArray(json.codes) ? json.codes : [];
     return cachedPartnerCodes;
   } catch (err) {
-    console.error("Error loading partner codes", err);
+    console.error("[Family Spots] Error loading partner codes:", err);
     cachedPartnerCodes = [];
     return cachedPartnerCodes;
   }
@@ -110,9 +123,11 @@ async function loadPartnerCodes() {
 
 /**
  * Versucht, einen Partnercode einzulösen.
- * Gibt ein Objekt { ok, reason?, status?, entry? } zurück.
  *
- * reason kann sein:
+ * Rückgabe:
+ *  { ok, reason?, status?, entry? }
+ *
+ * reason:
  *  - "empty"
  *  - "not_found"
  *  - "invalid_days"
@@ -128,7 +143,7 @@ export async function redeemPartnerCode(rawCode) {
     (c) =>
       c.code &&
       String(c.code).toUpperCase() === code &&
-      c.enabled !== false,
+      c.enabled !== false
   );
 
   if (!entry) {
@@ -143,7 +158,7 @@ export async function redeemPartnerCode(rawCode) {
   const now = Date.now();
   const validUntil = new Date(now + days * 24 * 60 * 60 * 1000);
 
-  // Status so speichern, dass er zum Storage-Schema passt
+  // Im Storage-Format speichern
   const statusForStorage = {
     code,
     plan: entry.plan || "plus",
@@ -151,6 +166,7 @@ export async function redeemPartnerCode(rawCode) {
     source: entry.source || "partner",
     activatedAt: new Date().toISOString(),
     expiresAt: validUntil.toISOString(),
+    active: true
   };
 
   savePlusStatusToStorage(statusForStorage);
@@ -159,12 +175,12 @@ export async function redeemPartnerCode(rawCode) {
   const statusForReturn = {
     active: true,
     plan: statusForStorage.plan,
-    validUntil: statusForStorage.expiresAt,
+    validUntil: statusForStorage.expiresAt
   };
 
   return {
     ok: true,
     status: statusForReturn,
-    entry,
+    entry
   };
 }
