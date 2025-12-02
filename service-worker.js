@@ -33,15 +33,15 @@ const ASSETS = [
   "assets/icons/icon-512.png"
 ];
 
-// Installation – App Shell cachen
+// 📦 Install: Pre-cache App Shell
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) =>
       Promise.all(
         ASSETS.map((asset) =>
-          cache.add(asset).catch((err) =>
-            console.warn("[SW] Asset konnte nicht geladen werden:", asset)
-          )
+          cache.add(asset).catch((err) => {
+            console.warn("[SW] Asset konnte nicht geladen werden:", asset);
+          })
         )
       )
     )
@@ -49,7 +49,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// Aktivierung – alte Caches löschen
+// 🔄 Activate: Clean up old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -63,16 +63,17 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Fetch-Strategien: JSON = network-first / Rest = cache-first mit SWR
+// 🌐 Fetch handler
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
   const { request } = event;
   const url = new URL(request.url);
 
-  // Nur gleiche Origin
+  // Nur gleiche Origin cachen
   if (url.origin !== location.origin) return;
 
-  // JSON: Network First
+  // 🔄 JSON: Network first
   if (url.pathname.endsWith(".json")) {
     event.respondWith(
       fetch(request)
@@ -87,7 +88,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Navigations-Request → offline.html als Fallback
+  // 🧭 Navigations-Anfragen → offline.html fallback
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(() => caches.match(OFFLINE_URL))
@@ -95,7 +96,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Andere Assets: Cache First + Background Update
+  // 📁 Andere Assets: Cache first + stale-while-revalidate
   event.respondWith(
     caches.match(request).then((cached) => {
       const fetchAndUpdate = fetch(request)
@@ -107,7 +108,7 @@ self.addEventListener("fetch", (event) => {
           }
           return response;
         })
-        .catch(() => null); // Silently fail
+        .catch(() => null); // still return cached
 
       return cached || fetchAndUpdate;
     })
