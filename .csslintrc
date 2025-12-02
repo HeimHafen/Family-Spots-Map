@@ -1,0 +1,7 @@
+{
+  "box-model": false,
+  "adjoining-classes": false,
+  "duplicate-properties": true,
+  "empty-rules": true,
+  "ids": false
+}
