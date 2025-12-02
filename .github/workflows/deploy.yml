@@ -1,3 +1,5 @@
+# Datei: .github/workflows/deploy.yml
+
 name: Deploy to GitHub Pages
 
 on:
@@ -11,19 +13,19 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  upload:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Upload artifact
+      - name: Upload Static Files
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
   deploy:
-    needs: build
+    needs: upload
     runs-on: ubuntu-latest
     environment:
       name: github-pages
