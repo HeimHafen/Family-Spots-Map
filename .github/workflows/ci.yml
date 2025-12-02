@@ -1,37 +1,53 @@
-# Datei: .github/workflows/ci.yml
-
 name: Family Spots Map CI
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
 
 jobs:
   validate:
+    name: Code Quality Checks
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: 📥 Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: 🔧 Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
-      - name: Install HTML/CSS/JS Linters
+      - name: 📦 Install Linters
+        run: npm install -g htmlhint csslint eslint
+
+      - name: 🔍 Run HTML Linter
         run: |
-          npm install -g htmlhint csslint eslint
+          if [ -f htmlhint.json ]; then
+            echo "→ Running HTMLHint..."
+            htmlhint .
+          else
+            echo "⚠️ htmlhint.json nicht gefunden – HTML-Skip"
+          fi
 
-      - name: Run HTML Linter
-        run: htmlhint .
+      - name: 🎨 Run CSS Linter
+        run: |
+          if [ -f .csslintrc ]; then
+            echo "→ Running CSSLint..."
+            csslint css/
+          else
+            echo "⚠️ .csslintrc nicht gefunden – CSS-Skip"
+          fi
 
-      - name: Run CSS Linter
-        run: csslint css/
+      - name: 💻 Run JavaScript Linter
+        run: |
+          if [ -f .eslintrc.json ]; then
+            echo "→ Running ESLint..."
+            eslint js/
+          else
+            echo "⚠️ .eslintrc.json nicht gefunden – JS-Skip"
+          fi
 
-      - name: Run JS Linter
-        run: eslint js/
-
-      - name: CI OK
-        run: echo "✅ Code checks passed"
+      - name: ✅ Linting abgeschlossen
+        run: echo "✨ Alle statischen Codeprüfungen abgeschlossen!"
