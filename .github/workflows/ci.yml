@@ -26,7 +26,7 @@ jobs:
         run: |
           if [ -f htmlhint.json ]; then
             echo "→ Running HTMLHint..."
-            htmlhint .
+            htmlhint . || echo "❌ HTMLHint hat Fehler gefunden – bitte prüfen!"
           else
             echo "⚠️ htmlhint.json nicht gefunden – HTML-Skip"
           fi
@@ -35,7 +35,7 @@ jobs:
         run: |
           if [ -f .csslintrc ]; then
             echo "→ Running CSSLint..."
-            csslint css/
+            csslint css/ || echo "❌ CSSLint hat Fehler gefunden – bitte prüfen!"
           else
             echo "⚠️ .csslintrc nicht gefunden – CSS-Skip"
           fi
@@ -44,7 +44,7 @@ jobs:
         run: |
           if [ -f .eslintrc.json ]; then
             echo "→ Running ESLint..."
-            eslint js/
+            eslint js/ || echo "❌ ESLint hat Fehler gefunden – bitte prüfen!"
           else
             echo "⚠️ .eslintrc.json nicht gefunden – JS-Skip"
           fi
