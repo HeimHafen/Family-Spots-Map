@@ -1,11 +1,11 @@
 /* =========================================
-   components.css — Komponenten‑Styles
+   components.css — Layout & Komponenten
    ========================================= */
 
 /* iOS Safari Fix + Styling für <select> */
 select {
   background-color: var(--input-bg);
-  color: var(--text-color);
+  color: var(--text-color, #452213);
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -14,17 +14,26 @@ select {
   z-index: 1;
 }
 
-/* Buttons, Buttons Small, Ghost-Buttons, Play-Button Variante */
+/* -----------------------------------------
+   Buttons
+   ----------------------------------------- */
+
 .btn {
   border: none;
   border-radius: var(--radius-pill);
   padding: 9px 16px;
   font-size: 14px;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--accent), hsl(var(--accent-h), 100%, 60%));
+  font-family: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
   color: #fffdf8;
-  box-shadow: 0 4px 10px rgba(180, 96, 33, 0.55),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 4px 10px rgba(180, 96, 33, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.75);
   cursor: pointer;
 }
 
@@ -51,16 +60,23 @@ select {
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
 }
 
+/* Spezielle Tilla-Button-Variante – etwas schlanker */
 .btn-play-idea {
   border: none;
   border-radius: var(--radius-pill);
   padding: 6px 12px;
   font-size: 13px;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--accent), hsl(var(--accent-h), 100%, 60%));
+  font-family: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
   color: #fffdf8;
-  box-shadow: 0 4px 10px rgba(180, 96, 33, 0.55),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 4px 10px rgba(180, 96, 33, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.75);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -68,7 +84,7 @@ select {
   gap: 6px;
   margin-top: 8px;
   max-width: 100%;
-  white-space: normal;
+  white-space: normal; /* darf umbrechen */
 }
 
 @media (max-width: 480px) {
@@ -78,13 +94,44 @@ select {
   }
 }
 
-/* Header / App‑Header */
+/* -----------------------------------------
+   Fokus für interaktive Komponenten
+   ----------------------------------------- */
+
+button:focus-visible,
+.language-switcher:focus-visible,
+.btn-icon:focus-visible,
+.btn:focus-visible,
+.btn-ghost:focus-visible,
+.btn-play-idea:focus-visible,
+.mood-chip:focus-visible,
+.travel-chip:focus-visible,
+.compass-mode-chip:focus-visible,
+.tag-filter-chip:focus-visible,
+.bottom-nav-item:focus-visible,
+.input:focus-visible,
+select.input:focus-visible,
+textarea.input:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px rgba(255, 171, 64, 0.85);
+}
+
+/* -----------------------------------------
+   HEADER
+   ----------------------------------------- */
+
 .app-header {
   position: sticky;
   top: 0;
   z-index: 1200;
   padding: 10px 14px 14px;
-  background: linear-gradient(135deg, var(--header-bg-top), var(--header-bg-bottom));
+  background: linear-gradient(
+    135deg,
+    var(--header-bg-top),
+    var(--header-bg-bottom)
+  );
   color: var(--header-text-color);
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
@@ -122,7 +169,7 @@ select {
   font-size: 20px;
   cursor: pointer;
   transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
-              opacity 0.12s;
+    opacity 0.12s;
 }
 
 .btn-icon:active {
@@ -169,6 +216,7 @@ select {
   letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
 }
@@ -200,7 +248,10 @@ select {
   box-shadow: var(--header-tagline-shadow);
 }
 
-/* Layout: Main container, Views */
+/* -----------------------------------------
+   MAIN LAYOUT
+   ----------------------------------------- */
+
 .app-main {
   flex: 1;
   width: 100%;
@@ -217,7 +268,10 @@ select {
   display: block;
 }
 
-/* Map View & Sidebar & Layout */
+/* -----------------------------------------
+   MAP VIEW & SIDEBAR
+   ----------------------------------------- */
+
 #view-map {
   display: flex;
   flex-direction: column;
@@ -232,13 +286,1069 @@ select {
 }
 
 [data-theme="dark"] #view-map {
-  background: linear-gradient(to bottom, #020617 0, #020617 35%, #020617 100%);
+  background: linear-gradient(
+    to bottom,
+    #020617 0,
+    #020617 35%,
+    #020617 100%
+  );
   border-radius: 0 0 28px 28px;
 }
 
-/* Sidebar Sections & Karten / Sections / Abstand Regeln */
-/* ... (Sidebar- und Section-spezifische Styles aus originaler styles.css übernehmen) ... */
+/* Karten / Sections */
 
-/* Hier alle weiteren Komponenten nach demselben Prinzip übernehmen:
-   - Cards, Spot-Liste, Buttons, Chips, Map, Marker, Bottom-Nav, Popups, Toast, Onboarding, etc. 
-   - Ich würde alle restlichen Styles aus styles.css genauso kopieren. */
+.sidebar-section {
+  background: var(--sidebar-section-bg);
+  border-radius: 24px;
+  padding: 12px 14px 14px;
+  box-shadow:
+    var(--sidebar-section-shadow),
+    inset 0 0 0 1px var(--sidebar-section-border);
+}
+
+/* globaler Abstand übereinanderliegende Cards */
+.sidebar-section + .sidebar-section {
+  margin-top: 10px;
+}
+
+/* in der Sidebar übernimmt gap den Abstand */
+.sidebar > .sidebar-section + .sidebar-section {
+  margin-top: 0;
+}
+
+/* Abstände:
+   Karte ↔ Family Spots Plus
+   Family Spots Plus ↔ Mein Tag
+*/
+.map-section + .sidebar-section {
+  margin-top: 14px;
+}
+
+/* plus-section ↔ daylog-section explizit ebenfalls 14px */
+#plus-section + #daylog-section {
+  margin-top: 14px;
+}
+
+.sidebar-section[open] {
+  padding-bottom: 14px;
+}
+
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sidebar-section-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.sidebar-section-close {
+  border: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+[data-theme="dark"] .sidebar-section-close {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.9);
+}
+
+.sidebar-section--collapsed {
+  padding-bottom: 10px;
+}
+
+.sidebar-section--collapsed > .filter-group {
+  display: none;
+}
+
+/* Kompass-Karte */
+
+.compass-card {
+  margin-top: 4px;
+  padding: 10px 10px 12px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, var(--accent-soft), #ffd2a3);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.75),
+    0 6px 12px rgba(177, 104, 40, 0.4);
+}
+
+[data-theme="dark"] .compass-card {
+  background: radial-gradient(circle at top left, #1e293b 0, #020617 80%);
+  box-shadow:
+    inset 0 0 0 1px rgba(148, 163, 184, 0.4),
+    0 10px 22px rgba(0, 0, 0, 0.9);
+}
+
+/* Form Controls */
+
+.filter-group {
+  margin-top: 8px;
+}
+
+.filter-group-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-strong);
+  margin-bottom: 4px;
+}
+
+.filter-group-helper {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* Abstand für Filter-Toggle-Button & mehr Luft über Helper-Text */
+#btn-toggle-filters {
+  margin-bottom: 1rem;
+}
+
+.sidebar-section-header + .filter-group-helper {
+  margin-top: 1rem;
+}
+
+.input,
+textarea.input,
+select.input {
+  width: 100%;
+  border-radius: var(--radius-pill);
+  border: none;
+  padding: 9px 13px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--input-bg);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
+    var(--input-shadow);
+  color: var(--text-color, #452213);
+}
+
+textarea.input {
+  border-radius: 16px;
+  resize: vertical;
+}
+
+.input:focus,
+textarea.input:focus,
+select.input:focus {
+  outline: none;
+}
+
+/* Mood & Travel & Tag Chips */
+
+.mood-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mood-chip,
+.travel-chip,
+.compass-mode-chip,
+.tag-filter-chip {
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 6px 10px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  background: var(--chip-bg);
+  color: var(--chip-color);
+  box-shadow:
+    var(--chip-shadow),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
+    background 0.12s ease-out;
+}
+
+.mood-chip-emoji {
+  font-size: 15px;
+}
+
+.mood-chip--active,
+.travel-chip--active,
+.compass-mode-chip--active,
+.tag-filter-chip--active {
+  background: linear-gradient(145deg, var(--accent-soft), var(--accent));
+  color: #3b2313;
+  box-shadow:
+    0 4px 10px rgba(245, 158, 11, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .mood-chip--active,
+[data-theme="dark"] .travel-chip--active,
+[data-theme="dark"] .compass-mode-chip--active,
+[data-theme="dark"] .tag-filter-chip--active {
+  background: linear-gradient(
+    145deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
+  color: #111827;
+  box-shadow:
+    0 4px 10px rgba(245, 158, 11, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Tap-Feedback */
+.mood-chip:active,
+.travel-chip:active,
+.compass-mode-chip:active,
+.tag-filter-chip:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Radius */
+
+.radius-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#filter-radius {
+  flex: 1;
+}
+
+.radius-max-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.radius-description {
+  margin: 4px 0 2px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* Weitere Filter / Advanced */
+
+.filter-advanced {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(193, 137, 91, 0.18);
+}
+
+[data-theme="dark"] .filter-advanced {
+  border-top-color: rgba(148, 163, 184, 0.28);
+}
+
+.filter-advanced-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 14px;
+  margin: 4px 0 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(165, 100, 53, 0.22);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+[data-theme="dark"] .filter-advanced-summary {
+  background: rgba(15, 23, 42, 0.97);
+  color: #e5e7eb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Checkboxen */
+
+.filter-group--checkbox {
+  margin-top: 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* Plus-Code-Form */
+
+.plus-code-form {
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.plus-code-row {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.plus-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* Mein Tag – extra Luft zum Button */
+
+#daylog-section .filter-group label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+#daylog-text {
+  min-height: 70px;
+}
+
+#daylog-save {
+  margin-top: 14px;
+}
+
+/* Spot-Liste */
+
+.sidebar-section--grow {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-section--grow.spot-list-collapsed {
+  padding-bottom: 10px;
+}
+
+.sidebar-section--grow.spot-list-collapsed #spot-list {
+  display: none;
+}
+
+#spot-list {
+  margin-top: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.spot-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 10px 11px 11px;
+  margin-bottom: 8px;
+  box-shadow:
+    var(--card-shadow),
+    inset 0 0 0 1px var(--card-border);
+}
+
+.spot-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 3px;
+}
+
+.spot-card-subtitle {
+  font-size: 13px;
+  margin: 0 0 4px;
+  color: var(--text-soft);
+}
+
+.spot-card-meta {
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+/* Map */
+
+.map-section {
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow:
+    var(--map-card-shadow),
+    inset 0 0 0 1px var(--map-card-border);
+  background: var(--map-card-bg);
+  min-height: 320px;
+  position: relative;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+}
+
+/* Map-Tiles farblich an App anpassen */
+.leaflet-container .leaflet-tile {
+  filter: var(--map-filter);
+  transition: filter 0.25s ease-out;
+}
+
+@media (max-width: 899px) {
+  .map-section {
+    min-height: 60vh;
+  }
+
+  .map-container {
+    min-height: 60vh;
+  }
+}
+
+/* Spot-Details */
+
+.spot-details {
+  position: static;
+  margin: 8px 10px 10px;
+  max-height: none;
+  overflow-y: visible;
+  background: rgba(255, 248, 239, 0.96);
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(116, 68, 33, 0.6);
+  padding: 10px 12px 11px;
+}
+
+[data-theme="dark"] .spot-details {
+  background: rgba(15, 23, 42, 0.98);
+  color: #fef3e7;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.9);
+}
+
+@media (min-width: 900px) {
+  #view-map {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .sidebar {
+    flex: 0 0 320px;
+  }
+
+  .map-section {
+    flex: 1 1 auto;
+    min-height: 560px;
+  }
+
+  #spot-list {
+    max-height: 380px;
+  }
+
+  .spot-details {
+    position: absolute;
+    margin: 0;
+    right: 16px;
+    bottom: 16px;
+    left: auto;
+    width: 320px;
+    max-height: 75%;
+    overflow-y: auto;
+  }
+}
+
+/* =========================================
+   TILLA SIDEBAR
+   ========================================= */
+
+@keyframes tilla-bob {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(2.5deg);
+  }
+  75% {
+    transform: translateY(-2px) rotate(-1.5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
+
+@keyframes tilla-card-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tilla-sidebar-section {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.tilla-sidebar-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 22px;
+  background: var(--card-bg);
+  box-shadow:
+    var(--card-shadow),
+    inset 0 0 0 1px var(--card-border);
+  animation: tilla-card-in 0.45s ease-out 0.1s both;
+}
+
+[data-theme="dark"] .tilla-sidebar-card {
+  background: rgba(15, 23, 42, 0.97);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.45);
+}
+
+.tilla-sidebar-avatar {
+  flex: 0 0 auto;
+}
+
+.tilla-sidebar-avatar img {
+  display: block;
+  width: 110px;
+  height: auto;
+  transform-origin: center bottom;
+  animation: tilla-bob 3.5s ease-in-out infinite;
+}
+
+.tilla-sidebar-text {
+  flex: 1 1 auto;
+}
+
+#tilla-sidebar-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* =========================================
+   ABOUT VIEW
+   ========================================= */
+
+.page-about {
+  background: var(--card-bg);
+  border-radius: 26px;
+  padding: 18px 16px 22px;
+  box-shadow:
+    var(--card-shadow),
+    inset 0 0 0 1px var(--card-border);
+}
+
+.page-about h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 22px;
+}
+
+.page-about h3 {
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.page-about p {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+/* =========================================
+   BOTTOM NAV
+   ========================================= */
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  height: 60px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-nav-background {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 6px;
+  top: 6px;
+  border-radius: 22px;
+  background: var(--bottom-nav-backdrop);
+  filter: blur(10px);
+  opacity: 0.6;
+}
+
+.bottom-nav-indicator {
+  display: none;
+}
+
+.bottom-nav-item {
+  pointer-events: auto;
+  border: none;
+  background: var(--bottom-nav-item-bg);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  margin: 0 4px;
+  min-width: 76px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--bottom-nav-item-color);
+  box-shadow:
+    0 3px 9px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+}
+
+.bottom-nav-item--active {
+  background: var(--bottom-nav-item-active-bg);
+  color: var(--bottom-nav-item-active-color);
+}
+
+[data-theme="dark"] .bottom-nav-item--active {
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.bottom-nav-item:active {
+  transform: translateY(1px) scale(0.97);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.bottom-nav-icon {
+  font-size: 18px;
+}
+
+/* =========================================
+   TOAST
+   ========================================= */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 90px;
+  transform: translateX(-50%);
+  max-width: 90%;
+  background: var(--toast-bg);
+  color: #fff7ec;
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  font-size: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  z-index: 1100;
+}
+
+.toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* =========================================
+   NOSCRIPT
+   ========================================= */
+
+.noscript-warning {
+  padding: 8px 12px;
+  background: #d84315;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* =========================================
+   MAP MARKER & ATTRIBUTION
+   ========================================= */
+
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 999px;
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background-color: var(--accent);
+  border-radius: 999px;
+  border: 2px solid var(--accent-soft);
+  color: #3b2313;
+  font-weight: 600;
+  font-family: inherit;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+}
+
+.marker-cluster span {
+  display: block;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.spot-marker {
+  border-radius: var(--radius-pill);
+}
+
+.spot-marker-inner {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-pill);
+  background: radial-gradient(
+    circle at 30% 20%,
+    #fff8e1 0,
+    var(--accent-soft) 40%,
+    var(--accent) 100%
+  );
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.9),
+    0 6px 14px rgba(0, 0, 0, 0.55);
+  position: relative;
+}
+
+.spot-marker-inner::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle,
+    rgba(255, 183, 77, 0.35),
+    transparent 60%
+  );
+}
+
+.pin-pop {
+  animation: pin-pop 0.22s ease-out;
+}
+
+@keyframes pin-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Attribution – leicht nach links und etwas vom Rand weg */
+.leaflet-control-attribution {
+  bottom: 4px !important;
+  right: 12px !important;
+  font-size: 10px;
+}
+
+/* Popup */
+
+.popup strong {
+  font-size: 14px;
+}
+
+.popup small {
+  font-size: 13px;
+}
+
+.popup-actions {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.popup-link {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  color: #1f2933;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Radius-Kreis auf Accent */
+.radius-circle {
+  stroke: var(--radius-circle-stroke);
+  stroke-width: 2;
+  fill: var(--radius-circle-fill);
+}
+
+/* =========================================
+   MISC
+   ========================================= */
+
+hr {
+  border: none;
+  border-bottom: 1px solid rgba(193, 137, 91, 0.35);
+  margin: 16px 0;
+}
+
+[data-theme="dark"] hr {
+  border-bottom-color: rgba(148, 163, 184, 0.35);
+}
+
+/* =========================================
+   SPOT-LISTE & DETAILS – FEINTUNING
+   ========================================= */
+
+.spot-list-empty {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-soft);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] .spot-list-empty {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+}
+
+.spot-card-description {
+  margin: 4px 0 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
+.spot-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.spot-card-actions {
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.spot-card-fav-icon {
+  font-size: 16px;
+}
+
+.spot-card-detail-label {
+  font-weight: 600;
+}
+
+.spot-details--hidden {
+  display: none;
+}
+
+.spot-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.spot-details-title {
+  margin: 0 0 2px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.spot-details-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.spot-details-meta span {
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] .spot-details-meta span {
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+.spot-details-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spot-details-tags {
+  margin: 4px 0 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.spot-details-description {
+  margin: 4px 0 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.spot-details-poetry {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text-soft);
+}
+
+.spot-details-address {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.spot-details-routes {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.spot-details-route-link {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  color: #1f2933;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .spot-details-route-link {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+}
+
+/* Nur Container für die Badge-Zeile – Badges selbst kommen aus badges.css */
+.spot-details-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+/* Favorite-Toggle */
+
+.favorite-toggle {
+  margin-top: 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #7a4a2b;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
+}
+
+.favorite-toggle:hover {
+  background-color: #fff3e0;
+}
+
+[data-theme="dark"] .favorite-toggle {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="dark"] .favorite-toggle:hover {
+  background: rgba(30, 64, 175, 0.45);
+}
+
+/* =========================================
+   LANDSCAPE-WARNUNG (MOBILE)
+   ========================================= */
+
+.landscape-warning {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 70px;
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #ffffff;
+  z-index: 1400;
+  display: none;
+}
+
+@media (orientation: landscape) and (max-width: 900px) {
+  .landscape-warning {
+    display: block;
+  }
+}
+
+/* =========================================
+   PREFERS REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .tilla-sidebar-avatar img,
+  .pin-pop,
+  .toast,
+  .onboarding-slide {
+    animation: none !important;
+  }
+}
