@@ -155,22 +155,19 @@ function getInitialLang() {
 }
 
 /**
- * Header-Tagline: bevorzugt aus i18n ("header_tagline"),
- * sonst aus statischem HEADER_TAGLINE_TEXT.
+ * Header-Tagline: bevorzugt aus config.HEADER_TAGLINE_TEXT,
+ * fällt zur Not auf bestehenden Text im DOM zurück.
+ * -> KEIN I18N-Override mehr, damit der Text stabil bleibt.
  */
 function updateHeaderTagline(lang) {
   const el = document.getElementById("header-tagline");
   if (!el) return;
 
-  let text =
+  const text =
     HEADER_TAGLINE_TEXT[lang] ||
     HEADER_TAGLINE_TEXT.de ||
     el.textContent ||
     "";
-
-  if (typeof I18N !== "undefined" && typeof I18N.t === "function") {
-    text = I18N.t("header_tagline", text) || text;
-  }
 
   el.textContent = text;
 }
@@ -2032,3 +2029,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       await I18N.init();
     }
   } catch (err) {
+    console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
+  }
+
+  await init();
+});
