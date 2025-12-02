@@ -1,16 +1,18 @@
 /* ==========================================================================
-   Badges – kleine Labels für Stimmung, Distanz, Plus etc.
+   Badges – Labels für Stimmung, Distanz, Plus etc.
    Ergänzt styles.css (cremiges Family-Spots-Theme)
    ========================================================================== */
 
-.badges-row {
+/* Container für mehrere Badges */
+.badges-row,
+.spot-card__badges {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+  margin-top: 4px;
 }
 
-/* Basis-Badge – leicht warm, sehr dezent */
-
+/* Basis-Badge */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -19,10 +21,11 @@
   padding: 2px 7px;
   font-size: 0.7rem;
   line-height: 1.2;
-  background: rgba(145, 93, 54, 0.06); /* leichter warmer Schimmer */
-  color: #6f4224; /* nah an var(--text-soft) */
-  border: 1px solid transparent;
   white-space: nowrap;
+  background: rgba(145, 93, 54, 0.06);
+  color: #6f4224;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 html[data-theme="dark"] .badge {
@@ -30,130 +33,108 @@ html[data-theme="dark"] .badge {
   color: #e5e7eb;
 }
 
-/* Variationen nach Bedeutung */
+/* -------------------
+   Varianten
+------------------- */
 
-/* sehr dezente, neutrale Badges (z.B. Kategorie, Info) */
+/* Soft – neutrale Badges */
 .badge--soft {
-  background: rgba(214, 151, 93, 0.14); /* warmes Beige/Orange */
+  background: rgba(214, 151, 93, 0.14);
   color: #6f4224;
 }
-
 html[data-theme="dark"] .badge--soft {
   background: rgba(31, 41, 55, 0.9);
   color: #cbd5f5;
 }
 
-/* Outline – nur Rahmen, kein Hintergrund */
+/* Outline – nur Rahmen */
 .badge--outline {
-  border-color: rgba(148, 92, 54, 0.45);
   background: transparent;
+  border-color: rgba(148, 92, 54, 0.45);
 }
 
-/* „Match heute“ – passt gut zur aktuellen Stimmung / Kompass */
-
+/* Match – aktuelle Stimmung */
 .badge--match {
   background: rgba(34, 197, 94, 0.12);
   color: #166534;
   border-color: rgba(34, 197, 94, 0.45);
 }
-
 html[data-theme="dark"] .badge--match {
   background: rgba(22, 163, 74, 0.2);
   color: #bbf7d0;
 }
 
-/* Distanz-Badge – z. B. „4,3 km“
-   -> wärmerer Hintergrund, Blau nur als Akzent über Text/Rand */
-
+/* Distanz – z. B. „4,3 km“ */
 .badge--distance {
-  background: rgba(255, 244, 232, 0.95); /* warmes Creme */
-  color: #1f4fb0;                        /* etwas weicheres Blau */
+  background: rgba(255, 244, 232, 0.95);
+  color: #1f4fb0;
   border-color: rgba(59, 130, 246, 0.35);
 }
-
 html[data-theme="dark"] .badge--distance {
   background: rgba(37, 99, 235, 0.25);
   color: #bfdbfe;
 }
 
-/* Dauer / Aufenthaltszeit – z. B. „halber Tag“, „ganzer Tag“ */
-
+/* Dauer / Aufenthaltszeit */
 .badge--time {
   background: rgba(249, 115, 22, 0.12);
   color: #c2410c;
   border-color: rgba(249, 115, 22, 0.5);
 }
-
 html[data-theme="dark"] .badge--time {
   background: rgba(234, 88, 12, 0.2);
   color: #fed7aa;
 }
 
-/* Alters-Match – „perfekt für 4–9“ etc. */
-
+/* Alters-Match */
 .badge--age {
   background: rgba(236, 72, 153, 0.12);
   color: #9d174d;
   border-color: rgba(236, 72, 153, 0.5);
 }
-
 html[data-theme="dark"] .badge--age {
   background: rgba(219, 39, 119, 0.24);
   color: #fce7f3;
 }
 
-/* Plus / Partner / Big Adventure */
-
+/* Plus / Partner / Adventure */
 .badge--plus {
   background: rgba(250, 204, 21, 0.12);
   color: #92400e;
   border-color: rgba(250, 204, 21, 0.65);
 }
-
 html[data-theme="dark"] .badge--plus {
   background: rgba(234, 179, 8, 0.22);
   color: #fef9c3;
 }
 
-/* Verifiziert / geprüft */
-
+/* Verifiziert */
 .badge--verified {
   background: rgba(16, 185, 129, 0.12);
   color: #047857;
   border-color: rgba(16, 185, 129, 0.48);
 }
-
 html[data-theme="dark"] .badge--verified {
   background: rgba(5, 150, 105, 0.22);
   color: #d1fae5;
 }
 
-/* „Großes Abenteuer“ / Big Ticket */
-
+/* Big Adventure / Großes Ticket */
 .badge--big {
   background: rgba(147, 51, 234, 0.12);
   color: #6b21a8;
   border-color: rgba(147, 51, 234, 0.52);
 }
-
 html[data-theme="dark"] .badge--big {
   background: rgba(126, 34, 206, 0.24);
   color: #ede9fe;
 }
 
-/* Kleines Icon in Badges (z. B. Emoji oder SVG) */
-
+/* Icon innerhalb der Badge */
 .badge__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Damit Text nicht „zittert“, wenn viele Badges sind */
-
-.spot-card__badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 4px;
+  font-size: 1em; /* mit Text skalierend */
+  line-height: 1;
 }
