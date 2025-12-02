@@ -1,4 +1,6 @@
-name: CI
+# Datei: .github/workflows/ci.yml
+
+name: Family Spots Map CI
 
 on:
   pull_request:
@@ -10,9 +12,26 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Basic validation
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install HTML/CSS/JS Linters
         run: |
-          echo "CI check OK – static app, no build step yet."
+          npm install -g htmlhint csslint eslint
+
+      - name: Run HTML Linter
+        run: htmlhint .
+
+      - name: Run CSS Linter
+        run: csslint css/
+
+      - name: Run JS Linter
+        run: eslint js/
+
+      - name: CI OK
+        run: echo "✅ Code checks passed"
