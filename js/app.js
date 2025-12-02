@@ -12,7 +12,7 @@ import { TillaCompanion } from "./features/tilla.js";
 import {
   DEFAULT_MAP_CENTER,
   DEFAULT_MAP_ZOOM,
-  // DAYLOG_STORAGE_KEY, // Daylog läuft jetzt über DayLog.js
+  DAYLOG_STORAGE_KEY,
   LANG_DE,
   LANG_EN,
   THEME_LIGHT,
@@ -55,9 +55,6 @@ import {
   formatPlusStatus,
   redeemPartnerCode
 } from "./features/plus.js";
-
-// NEU: DayLog-Komponente (Pfad: /src/components/DayLog.js)
-import { initDayLog } from "../src/components/DayLog.js";
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
@@ -649,8 +646,774 @@ function setLanguage(lang, { initial = false } = {}) {
 // Spots – Laden (über data.js)
 // ------------------------------------------------------
 
-// ... AB HIER bleibt dein Code unverändert bis zum Block
-// "Plus & Mein Tag" – dort haben wir Daylog bereinigt ...
+function showSpotsLoadErrorUI() {
+  if (!spotListEl) return;
+
+  spotListEl.innerHTML = "";
+
+  const msg = document.createElement("p");
+  msg.className = "filter-group-helper";
+  msg.textContent =
+    currentLang === LANG_DE
+      ? "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut."
+      : "Spots could not be loaded. Please check your connection and try again.";
+  spotListEl.appendChild(msg);
+
+  const retryBtn = document.createElement("button");
+  retryBtn.type = "button";
+  retryBtn.className = "btn btn-small";
+  retryBtn.textContent =
+    currentLang === LANG_DE ? "Erneut versuchen" : "Try again";
+
+  retryBtn.addEventListener("click", () => {
+    showToast(
+      currentLang === LANG_DE
+        ? "Lade Spots erneut …"
+        : "Reloading spots…"
+    );
+    loadSpots();
+  });
+
+  spotListEl.appendChild(retryBtn);
+}
+
+async function loadSpots() {
+  try {
+    const result = await loadData();
+    const rawSpots = Array.isArray(result.spots) ? result.spots : [];
+
+    spots = rawSpots.map(normalizeSpot);
+
+    loadFavoritesFromStorage();
+    populateCategoryOptions();
+
+    if (tagFilterContainerEl) {
+      renderTagFilterChips();
+    }
+
+    if (result.fromCache) {
+      showToast(
+        currentLang === LANG_DE
+          ? "Offline-Daten geladen."
+          : "Loaded offline data."
+      );
+    }
+
+    applyFiltersAndRender();
+  } catch (err) {
+    console.error("[Family Spots] Fehler beim Laden der Spots:", err);
+
+    showToast("error_data_load");
+    showSpotsLoadErrorUI();
+    spots = [];
+    filteredSpots = [];
+
+    if (map && markersLayer) {
+      hasShownMarkerLimitToast = renderMarkers({
+        map,
+        markersLayer,
+        spots: [],
+        maxMarkers: MAX_MARKERS_RENDER,
+        currentLang,
+        showToast,
+        hasShownMarkerLimitToast,
+        focusSpotOnMap
+      });
+    }
+
+    if (tilla && typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
+    }
+  }
+}
+
+// ------------------------------------------------------
+// Favorites – Persistence
+// ------------------------------------------------------
+
+function loadFavoritesFromStorage() {
+  if (!FEATURES.favorites) return;
+
+  try {
+    const stored = localStorage.getItem("fs_favorites");
+    if (!stored) return;
+    const arr = JSON.parse(stored);
+    if (Array.isArray(arr)) favorites = new Set(arr);
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Favoriten nicht laden:", err);
+  }
+}
+
+function saveFavoritesToStorage() {
+  if (!FEATURES.favorites) return;
+
+  try {
+    localStorage.setItem("fs_favorites", JSON.stringify(Array.from(favorites)));
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
+  }
+}
+
+// ------------------------------------------------------
+// Kategorien / Filter-Dropdown
+// ------------------------------------------------------
+
+function populateCategoryOptions() {
+  if (!filterCategoryEl) return;
+
+  const firstOption =
+    filterCategoryEl.querySelector("option[value='']") ||
+    document.createElement("option");
+  firstOption.value = "";
+  firstOption.textContent = t("filter_category_all");
+
+  filterCategoryEl.innerHTML = "";
+  filterCategoryEl.appendChild(firstOption);
+
+  const groupedSlugs = new Set();
+
+  Object.entries(CATEGORY_GROUPS).forEach(([groupKey, slugs]) => {
+    if (!Array.isArray(slugs) || !slugs.length) return;
+
+    const groupLabel =
+      (CATEGORY_GROUP_LABELS[currentLang] &&
+        CATEGORY_GROUP_LABELS[currentLang][groupKey]) ||
+      groupKey;
+
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = groupLabel;
+
+    slugs.forEach((slug) => {
+      if (!slug) return;
+      groupedSlugs.add(slug);
+      const opt = document.createElement("option");
+      opt.value = slug;
+      opt.textContent = getCategoryLabelWithAccess(slug);
+      optgroup.appendChild(opt);
+    });
+
+    filterCategoryEl.appendChild(optgroup);
+  });
+
+  const extraSet = new Set();
+
+  spots.forEach((spot) => {
+    if (Array.isArray(spot.categories)) {
+      spot.categories.forEach((c) => {
+        if (!c) return;
+        if (!groupedSlugs.has(c)) extraSet.add(c);
+      });
+    } else if (spot.category && !groupedSlugs.has(spot.category)) {
+      extraSet.add(spot.category);
+    }
+  });
+
+  if (extraSet.size > 0) {
+    const extraGroup = document.createElement("optgroup");
+    extraGroup.label =
+      currentLang === LANG_DE ? "Weitere Kategorien" : "Other categories";
+
+    Array.from(extraSet)
+      .sort((a, b) =>
+        getCategoryLabel(a)
+          .toLowerCase()
+          .localeCompare(
+            getCategoryLabel(b).toLowerCase(),
+            currentLang === LANG_DE ? "de" : "en"
+          )
+      )
+      .forEach((slug) => {
+        const opt = document.createElement("option");
+        opt.value = slug;
+        opt.textContent = getCategoryLabelWithAccess(slug);
+        extraGroup.appendChild(opt);
+      });
+
+    filterCategoryEl.appendChild(extraGroup);
+  }
+
+  filterCategoryEl.value = categoryFilter || "";
+}
+
+// ------------------------------------------------------
+// Radius / Geodistanz
+// ------------------------------------------------------
+
+function updateRadiusTexts() {
+  if (!filterRadiusEl || !filterRadiusMaxLabelEl || !filterRadiusDescriptionEl)
+    return;
+
+  let value = parseInt(filterRadiusEl.value, 10);
+  if (Number.isNaN(value)) {
+    value = 4;
+  }
+  value = Math.min(Math.max(value, 0), RADIUS_STEPS_KM.length - 1);
+  radiusStep = value;
+
+  filterRadiusEl.value = String(radiusStep);
+  filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
+
+  if (radiusStep === RADIUS_STEPS_KM.length - 1) {
+    filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label");
+    filterRadiusDescriptionEl.textContent = t("filter_radius_description_all");
+  } else {
+    const km = RADIUS_STEPS_KM[radiusStep];
+    filterRadiusMaxLabelEl.textContent = `${km} km`;
+    const key = `filter_radius_description_step${radiusStep}`;
+    filterRadiusDescriptionEl.textContent = t(key);
+  }
+}
+
+function initRadiusSliderA11y() {
+  if (!filterRadiusEl) return;
+
+  const min = filterRadiusEl.min || "0";
+  const max = filterRadiusEl.max || String(RADIUS_STEPS_KM.length - 1);
+
+  if (!filterRadiusEl.value) {
+    filterRadiusEl.value = max;
+  }
+
+  filterRadiusEl.setAttribute("aria-valuemin", min);
+  filterRadiusEl.setAttribute("aria-valuemax", max);
+  filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value);
+
+  filterRadiusEl.addEventListener("input", () => {
+    updateRadiusTexts();
+    applyFiltersAndRender();
+  });
+
+  updateRadiusTexts();
+}
+
+/**
+ * Distanz-Check für einen Spot relativ zu centerLatLng / radiusKm.
+ */
+function isSpotInRadius(spot, centerLatLng, radiusKm) {
+  if (!centerLatLng || typeof centerLatLng.distanceTo !== "function") {
+    return true;
+  }
+  if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
+  if (!hasValidLatLng(spot)) return true;
+
+  if (typeof L === "undefined" || typeof L.latLng !== "function") return true;
+
+  const spotLatLng = L.latLng(spot.lat, spot.lng);
+  const distanceMeters = centerLatLng.distanceTo(spotLatLng);
+  const distanceKm = distanceMeters / 1000;
+  return distanceKm <= radiusKm;
+}
+
+// ------------------------------------------------------
+// Tag-Filter-Chips (UI)
+// ------------------------------------------------------
+
+function renderTagFilterChips() {
+  if (!tagFilterContainerEl) return;
+  if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) {
+    tagFilterContainerEl.innerHTML = "";
+    return;
+  }
+
+  tagFilterContainerEl.innerHTML = "";
+
+  FILTERS.forEach((filter) => {
+    if (!filter || !filter.id) return;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "tag-filter-chip btn-chip";
+    btn.dataset.filterId = filter.id;
+
+    const isActive = activeTagFilters.has(filter.id);
+    if (isActive) {
+      btn.classList.add("tag-filter-chip--active");
+      btn.setAttribute("aria-pressed", "true");
+    } else {
+      btn.setAttribute("aria-pressed", "false");
+    }
+
+    const label =
+      (filter.label && (filter.label[currentLang] || filter.label.de)) ||
+      filter.id;
+    btn.textContent = label;
+
+    btn.addEventListener("click", () => {
+      const currentlyActive = activeTagFilters.has(filter.id);
+      if (currentlyActive) {
+        activeTagFilters.delete(filter.id);
+      } else {
+        activeTagFilters.add(filter.id);
+      }
+      renderTagFilterChips();
+      applyFiltersAndRender();
+    });
+
+    tagFilterContainerEl.appendChild(btn);
+  });
+}
+
+// ------------------------------------------------------
+// Filterlogik (verwendet filterSpots aus filters.js)
+// ------------------------------------------------------
+
+function applyFiltersAndRender() {
+  if (!spots.length) {
+    filteredSpots = [];
+    renderSpotList();
+
+    if (map && markersLayer) {
+      hasShownMarkerLimitToast = renderMarkers({
+        map,
+        markersLayer,
+        spots: [],
+        maxMarkers: MAX_MARKERS_RENDER,
+        currentLang,
+        showToast,
+        hasShownMarkerLimitToast,
+        focusSpotOnMap
+      });
+    }
+
+    if (tilla && typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
+    }
+    return;
+  }
+
+  const nonGeoFiltered = filterSpots(spots, {
+    plusActive,
+    searchTerm,
+    categoryFilter,
+    ageFilter,
+    moodFilter,
+    travelMode,
+    onlyBigAdventures,
+    onlyVerified,
+    onlyFavorites,
+    favorites,
+    activeFilterIds: activeTagFilters
+  });
+
+  let center = null;
+  if (map && typeof map.getCenter === "function") {
+    center = map.getCenter();
+  } else if (typeof L !== "undefined" && typeof L.latLng === "function") {
+    center = L.latLng(DEFAULT_MAP_CENTER[0], DEFAULT_MAP_CENTER[1]);
+  }
+
+  const radiusKm =
+    RADIUS_STEPS_KM[radiusStep] ?? RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ?? Infinity;
+
+  filteredSpots = center
+    ? nonGeoFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
+    : nonGeoFiltered;
+
+  renderSpotList();
+
+  if (map && markersLayer) {
+    hasShownMarkerLimitToast = renderMarkers({
+      map,
+      markersLayer,
+      spots: filteredSpots,
+      maxMarkers: MAX_MARKERS_RENDER,
+      currentLang,
+      showToast,
+      hasShownMarkerLimitToast,
+      focusSpotOnMap
+    });
+  }
+
+  if (!tilla) return;
+
+  if (filteredSpots.length === 0) {
+    if (typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
+    }
+  } else if (typeof tilla.onSpotsFound === "function") {
+    tilla.onSpotsFound();
+  }
+}
+
+// ------------------------------------------------------
+// Marker-Liste & Meta
+// ------------------------------------------------------
+
+function isSpotVerified(spot) {
+  return !!spot.verified || !!spot.isVerified;
+}
+
+function getSpotMetaParts(spot) {
+  const parts = [];
+  if (spot.category) parts.push(getCategoryLabel(spot.category));
+  if (isSpotVerified(spot)) {
+    parts.push(currentLang === LANG_DE ? "verifiziert" : "verified");
+  }
+  if (spot.visit_minutes) {
+    parts.push(
+      currentLang === LANG_DE
+        ? `~${spot.visit_minutes} Min.`
+        : `~${spot.visit_minutes} min`
+    );
+  }
+  return parts;
+}
+
+function renderSpotList() {
+  if (!spotListEl) return;
+  spotListEl.innerHTML = "";
+
+  if (!filteredSpots.length) {
+    const msg = document.createElement("p");
+    msg.className = "filter-group-helper";
+    msg.textContent =
+      currentLang === LANG_DE
+        ? "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus."
+        : "Right now no spot matches your filters. Try a wider radius or remove one of the filters.";
+    spotListEl.appendChild(msg);
+    return;
+  }
+
+  filteredSpots.forEach((spot) => {
+    const card = document.createElement("article");
+    card.className = "spot-card";
+    const spotId = getSpotId(spot);
+    card.dataset.spotId = spotId;
+
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", getSpotName(spot));
+
+    const titleEl = document.createElement("h3");
+    titleEl.className = "spot-card-title";
+    titleEl.textContent = getSpotName(spot);
+
+    const subtitleText = getSpotSubtitle(spot);
+    const subtitleEl = document.createElement("p");
+    subtitleEl.className = "spot-card-subtitle";
+    subtitleEl.textContent = subtitleText;
+
+    const metaEl = document.createElement("p");
+    metaEl.className = "spot-card-meta";
+
+    const metaParts = getSpotMetaParts(spot);
+    if (Array.isArray(spot.tags)) {
+      metaParts.push(spot.tags.join(", "));
+    }
+    metaEl.textContent = metaParts.join(" · ");
+
+    const headerRow = document.createElement("div");
+    headerRow.style.display = "flex";
+    headerRow.style.alignItems = "center";
+    headerRow.style.justifyContent = "space-between";
+    headerRow.style.gap = "8px";
+
+    headerRow.appendChild(titleEl);
+
+    if (FEATURES.favorites) {
+      const favBtn = document.createElement("button");
+      favBtn.type = "button";
+      favBtn.className = "btn-ghost btn-small";
+
+      syncFavButtonState(favBtn, spotId);
+
+      favBtn.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        toggleFavorite(spot);
+        syncFavButtonState(favBtn, spotId);
+      });
+
+      headerRow.appendChild(favBtn);
+    }
+
+    card.appendChild(headerRow);
+    if (subtitleText) card.appendChild(subtitleEl);
+    if (metaParts.length) card.appendChild(metaEl);
+
+    card.addEventListener("click", () => {
+      lastSpotTriggerEl = card;
+      focusSpotOnMap(spot);
+    });
+
+    card.addEventListener(
+      "keydown",
+      activateOnEnterSpace(() => {
+        lastSpotTriggerEl = card;
+        focusSpotOnMap(spot);
+      })
+    );
+
+    spotListEl.appendChild(card);
+  });
+}
+
+function syncFavButtonState(btn, spotId) {
+  const isFav = favorites.has(spotId);
+  btn.textContent = isFav ? "★" : "☆";
+  btn.setAttribute(
+    "aria-label",
+    isFav
+      ? currentLang === LANG_DE
+        ? "Aus Favoriten entfernen"
+        : "Remove from favourites"
+      : currentLang === LANG_DE
+      ? "Zu Favoriten hinzufügen"
+      : "Add to favourites"
+  );
+}
+
+// ------------------------------------------------------
+// Detail-Panel
+// ------------------------------------------------------
+
+function focusSpotOnMap(spot) {
+  if (!map || !hasValidLatLng(spot)) {
+    showSpotDetails(spot);
+    return;
+  }
+  const zoom = Math.max(map.getZoom ? map.getZoom() : DEFAULT_MAP_ZOOM, 13);
+  map.setView([spot.lat, spot.lng], zoom);
+  showSpotDetails(spot);
+}
+
+function closeSpotDetails(options = {}) {
+  const { returnFocus = true } = options;
+
+  if (!spotDetailEl) return;
+
+  spotDetailEl.classList.add("spot-details--hidden");
+  spotDetailEl.innerHTML = "";
+
+  if (
+    returnFocus &&
+    lastSpotTriggerEl &&
+    typeof lastSpotTriggerEl.focus === "function"
+  ) {
+    lastSpotTriggerEl.focus();
+  }
+}
+
+function showSpotDetails(spot) {
+  if (!spotDetailEl) return;
+
+  const spotId = getSpotId(spot);
+  const name = getSpotName(spot);
+  const subtitle = getSpotSubtitle(spot);
+  const metaParts = getSpotMetaParts(spot);
+  const tags = Array.isArray(spot.tags) ? spot.tags : [];
+
+  let description = "";
+  if (currentLang === LANG_DE) {
+    description =
+      spot.summary_de || spot.poetry || spot.description || spot.text || "";
+  } else {
+    description =
+      spot.summary_en || spot.poetry || spot.description || spot.text || "";
+  }
+
+  const addressParts = [];
+  if (spot.address) addressParts.push(spot.address);
+  if (spot.postcode) addressParts.push(spot.postcode);
+  if (spot.city) addressParts.push(spot.city);
+  if (!addressParts.length && subtitle) addressParts.push(subtitle);
+  const addressText = addressParts.join(", ");
+
+  spotDetailEl.innerHTML = "";
+  spotDetailEl.classList.remove("spot-details--hidden");
+
+  const headerEl = document.createElement("div");
+  headerEl.className = "spot-details-header";
+
+  const titleWrapperEl = document.createElement("div");
+
+  const titleEl = document.createElement("h3");
+  titleEl.className = "spot-details-title";
+  titleEl.textContent = name;
+  titleWrapperEl.appendChild(titleEl);
+
+  if (subtitle && !addressText) {
+    const subtitleEl = document.createElement("p");
+    subtitleEl.className = "spot-card-subtitle";
+    subtitleEl.textContent = subtitle;
+    titleWrapperEl.appendChild(subtitleEl);
+  }
+
+  const actionsEl = document.createElement("div");
+  actionsEl.className = "spot-details-actions";
+
+  if (FEATURES.favorites) {
+    const favBtn = document.createElement("button");
+    favBtn.type = "button";
+    favBtn.className = "btn-ghost btn-small";
+    syncFavButtonState(favBtn, spotId);
+    favBtn.addEventListener("click", () => {
+      toggleFavorite(spot);
+      syncFavButtonState(favBtn, spotId);
+    });
+    actionsEl.appendChild(favBtn);
+  }
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.className = "btn-ghost btn-small";
+  closeBtn.textContent = currentLang === LANG_DE ? "Schließen" : "Close";
+  closeBtn.addEventListener("click", () => {
+    closeSpotDetails({ returnFocus: true });
+  });
+  actionsEl.appendChild(closeBtn);
+
+  headerEl.appendChild(titleWrapperEl);
+  headerEl.appendChild(actionsEl);
+
+  const metaEl = document.createElement("div");
+  metaEl.className = "spot-details-meta";
+  metaParts.forEach((p) => {
+    const span = document.createElement("span");
+    span.textContent = p;
+    metaEl.appendChild(span);
+  });
+
+  const tagsEl = document.createElement("div");
+  tagsEl.className = "spot-details-tags";
+  tags.forEach((tag) => {
+    const span = document.createElement("span");
+    span.className = "badge";
+    span.textContent = tag;
+    tagsEl.appendChild(span);
+  });
+
+  spotDetailEl.appendChild(headerEl);
+  if (metaParts.length) {
+    spotDetailEl.appendChild(metaEl);
+  }
+
+  if (description) {
+    const descEl = document.createElement("p");
+    descEl.className = "spot-details-description";
+    descEl.textContent = description;
+    spotDetailEl.appendChild(descEl);
+  }
+
+  if (addressText) {
+    const addrEl = document.createElement("p");
+    addrEl.className = "spot-details-address";
+    addrEl.textContent = addressText;
+    spotDetailEl.appendChild(addrEl);
+  }
+
+  const routeUrls = getRouteUrlsForSpot(spot);
+  if (routeUrls) {
+    const routesEl = document.createElement("div");
+    routesEl.className = "spot-details-routes";
+
+    const appleLink = document.createElement("a");
+    appleLink.href = routeUrls.apple;
+    appleLink.target = "_blank";
+    appleLink.rel = "noopener noreferrer";
+    appleLink.className = "spot-details-route-link";
+    appleLink.textContent = t("route_apple");
+
+    const googleLink = document.createElement("a");
+    googleLink.href = routeUrls.google;
+    googleLink.target = "_blank";
+    googleLink.rel = "noopener noreferrer";
+    googleLink.className = "spot-details-route-link";
+    googleLink.textContent = t("route_google");
+
+    routesEl.appendChild(appleLink);
+    routesEl.appendChild(googleLink);
+
+    spotDetailEl.appendChild(routesEl);
+  }
+
+  if (tags.length) {
+    spotDetailEl.appendChild(tagsEl);
+  }
+
+  if (typeof spotDetailEl.scrollTop === "number") {
+    spotDetailEl.scrollTop = 0;
+  }
+}
+
+// ------------------------------------------------------
+// Favoriten
+// ------------------------------------------------------
+
+function toggleFavorite(spot) {
+  if (!FEATURES.favorites) return;
+
+  const spotId = getSpotId(spot);
+  const wasFavorite = favorites.has(spotId);
+
+  if (wasFavorite) {
+    favorites.delete(spotId);
+  } else {
+    favorites.add(spotId);
+  }
+
+  saveFavoritesToStorage();
+
+  const toastKey = wasFavorite ? "toast_fav_removed" : "toast_fav_added";
+  showToast(toastKey);
+
+  if (tilla) {
+    const callbackName = wasFavorite ? "onFavoriteRemoved" : "onFavoriteAdded";
+    const callback = tilla[callbackName];
+    if (typeof callback === "function") {
+      callback.call(tilla);
+    }
+  }
+
+  renderSpotList();
+}
+
+// ------------------------------------------------------
+// Kompass
+// ------------------------------------------------------
+
+function updateCompassButtonLabel() {
+  if (!FEATURES.compass) return;
+  if (!btnToggleCompassEl || !compassSectionEl) return;
+  const span = btnToggleCompassEl.querySelector("span") || btnToggleCompassEl;
+  const isOpen = !!compassSectionEl.open;
+  span.textContent = isOpen ? t("btn_hide_compass") : t("btn_show_compass");
+  btnToggleCompassEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
+function updateCompassUI() {
+  if (!compassApplyBtnEl) return;
+
+  if (!FEATURES.compass) {
+    compassApplyBtnEl.classList.add("hidden");
+    return;
+  }
+
+  const shouldShow = !!travelMode;
+  compassApplyBtnEl.classList.toggle("hidden", !shouldShow);
+}
+
+function handleCompassApply() {
+  if (!FEATURES.compass) return;
+  if (!filterRadiusEl) return;
+
+  radiusStep = travelMode === "everyday" || !travelMode ? 1 : 3;
+
+  filterRadiusEl.value = String(radiusStep);
+  updateRadiusTexts();
+  applyFiltersAndRender();
+
+  if (tilla && typeof tilla.onCompassApplied === "function") {
+    tilla.onCompassApplied({ travelMode, radiusStep });
+  }
+}
+
+function handleToggleCompass() {
+  if (!FEATURES.compass) return;
+  if (!compassSectionEl) return;
+  compassSectionEl.open = !compassSectionEl.open;
+  updateCompassButtonLabel();
+  markCompassPlusHintSeenAndRemove();
+}
 
 // ------------------------------------------------------
 // Plus & Mein Tag
@@ -712,13 +1475,112 @@ async function handlePlusCodeSubmit() {
   applyFiltersAndRender();
 }
 
-// Daylog-Storage und Save-Logik sind entfernt – DayLog.js übernimmt das.
+function loadDaylogFromStorage() {
+  if (!FEATURES.daylog) return;
+  if (!daylogTextEl) return;
+
+  try {
+    const stored = localStorage.getItem(DAYLOG_STORAGE_KEY);
+    if (!stored) return;
+
+    const parsed = JSON.parse(stored);
+    if (parsed && typeof parsed.text === "string") {
+      daylogTextEl.value = parsed.text;
+    }
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Mein-Tag nicht laden:", err);
+  }
+}
+
+function handleDaylogSave() {
+  if (!FEATURES.daylog) return;
+  if (!daylogTextEl) return;
+  const text = daylogTextEl.value.trim();
+  if (!text) return;
+
+  const payload = {
+    text,
+    ts: Date.now()
+  };
+
+  try {
+    localStorage.setItem(DAYLOG_STORAGE_KEY, JSON.stringify(payload));
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Mein-Tag nicht speichern:", err);
+  }
+
+  showToast("daylog_saved");
+  if (tilla && typeof tilla.onDaylogSaved === "function") {
+    tilla.onDaylogSaved();
+  }
+}
 
 // ------------------------------------------------------
 // Geolocation
 // ------------------------------------------------------
 
-// ... dein restlicher Code bleibt wie in der ursprünglichen Datei ...
+function handleLocateClick() {
+  if (!navigator.geolocation || !map) {
+    showToast("toast_location_error");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      map.setView([latitude, longitude], 13);
+      showToast("toast_location_ok");
+    },
+    () => {
+      showToast("toast_location_error");
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
+}
+
+// ------------------------------------------------------
+// Filter-Umschalter & View-Toggle
+// ------------------------------------------------------
+
+function handleToggleFilters() {
+  if (!btnToggleFiltersEl || !filterBodyEls.length) return;
+
+  filtersCollapsed = !filtersCollapsed;
+  const isExpanded = !filtersCollapsed;
+
+  filterBodyEls.forEach((el) => {
+    el.classList.toggle("hidden", filtersCollapsed);
+  });
+
+  const span = btnToggleFiltersEl.querySelector("span");
+  if (span) {
+    span.textContent = filtersCollapsed
+      ? t("btn_show_filters")
+      : t("btn_hide_filters");
+  }
+
+  btnToggleFiltersEl.setAttribute(
+    "aria-expanded",
+    isExpanded ? "true" : "false"
+  );
+}
+
+function handleToggleView() {
+  if (!sidebarEl || !btnToggleViewEl) return;
+  const isHidden = sidebarEl.classList.toggle("hidden");
+  const span = btnToggleViewEl.querySelector("span");
+  if (span) {
+    span.textContent = isHidden ? t("btn_show_list") : t("btn_only_map");
+  }
+
+  btnToggleViewEl.setAttribute("aria-pressed", isHidden ? "true" : "false");
+
+  if (map) {
+    window.setTimeout(() => {
+      map.invalidateSize();
+    }, 300);
+  }
+}
 
 // ------------------------------------------------------
 // Initialisierung
@@ -1078,10 +1940,9 @@ async function init() {
       });
     }
 
-    // DayLog-Speichern läuft jetzt komplett über DayLog.js
-    // if (FEATURES.daylog && daylogSaveEl) {
-    //   daylogSaveEl.addEventListener("click", handleDaylogSave);
-    // }
+    if (FEATURES.daylog && daylogSaveEl) {
+      daylogSaveEl.addEventListener("click", handleDaylogSave);
+    }
 
     if (FEATURES.compass && compassApplyBtnEl) {
       compassApplyBtnEl.addEventListener("click", handleCompassApply);
@@ -1140,12 +2001,7 @@ async function init() {
 
     updateCompassUI();
     loadPlusStateFromStorage();
-
-    // NEU: DayLog initialisieren (holt sich seine DOM-Elemente selbst)
-    if (FEATURES.daylog) {
-      initDayLog();
-    }
-
+    loadDaylogFromStorage();
     initLazyLoadImages();
     ensureCompassPlusHint();
 
@@ -1176,8 +2032,3 @@ document.addEventListener("DOMContentLoaded", async () => {
       await I18N.init();
     }
   } catch (err) {
-    console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
-  }
-
-  await init();
-});
