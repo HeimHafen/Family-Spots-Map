@@ -230,6 +230,8 @@ let activeTagFilters = new Set();
 
 // DOM-Referenzen
 let languageSwitcherEl;
+let languageSwitcherFlagEl;
+let languageSwitcherCodeEl;
 let themeToggleEl;
 let btnLocateEl;
 let btnHelpEl;
@@ -316,21 +318,14 @@ function activateOnEnterSpace(handler) {
   };
 }
 
-// WICHTIG: jetzt mit dänischer Unterstützung (data-i18n-da)
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
-    let attr = "data-i18n-de";
-
-    if (currentLang === LANG_EN) {
-      attr = "data-i18n-en";
-    } else if (currentLang === LANG_DA) {
-      attr = "data-i18n-da";
-    }
-
-    const text = el.getAttribute(attr);
-    if (text) {
-      el.textContent = text;
-    }
+    const keyAttr =
+      currentLang === LANG_EN
+        ? "i18n-en"
+        : "i18n-de";
+    const text = el.getAttribute(`data-${keyAttr}`);
+    if (text) el.textContent = text;
   });
 }
 
@@ -452,29 +447,36 @@ function getCategoryLabelWithAccess(slug) {
   return base;
 }
 
+/**
+ * Flaggen-/Sprach-Button visuell aktualisieren.
+ */
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
 
-  const options = languageSwitcherEl.querySelectorAll(
-    ".language-switcher-option"
-  );
+  // bevorzugt Flagge + Kürzel verwenden
+  if (languageSwitcherFlagEl) {
+    let src = "assets/flags/flag-de.svg";
+    let code = "DE";
 
-  if (!options.length) {
+    if (currentLang === LANG_DA) {
+      src = "assets/flags/flag-dk.svg";
+      code = "DK";
+    } else if (currentLang === LANG_EN) {
+      src = "assets/flags/flag-gb.svg";
+      code = "EN";
+    }
+
+    languageSwitcherFlagEl.src = src;
+    if (languageSwitcherCodeEl) {
+      languageSwitcherCodeEl.textContent = code;
+    }
+  } else {
     // Fallback: nur Text im Button
     let label = "DE";
     if (currentLang === LANG_DA) label = "DK";
     else if (currentLang === LANG_EN) label = "EN";
     languageSwitcherEl.textContent = label;
-    return;
   }
-
-  options.forEach((opt) => {
-    const lang = opt.getAttribute("data-lang");
-    const isActive = lang === currentLang;
-    opt.classList.toggle("language-switcher-option--active", isActive);
-    opt.style.fontWeight = isActive ? "600" : "400";
-    opt.style.opacity = isActive ? "1" : "0.6";
-  });
 
   let ariaLabel;
   if (currentLang === LANG_DE) {
@@ -586,8 +588,14 @@ function setLanguage(lang, { initial = false } = {}) {
       typeof I18N !== "undefined" &&
       typeof I18N.setLanguage === "function"
     ) {
-      // WICHTIG: I18N bekommt jetzt "de", "en" ODER "da"
-      I18N.setLanguage(currentLang);
+      // i18n kann jetzt de/en/da, wir reichen currentLang direkt durch
+      I18N.setLanguage(
+        currentLang === LANG_DE
+          ? "de"
+          : currentLang === LANG_EN
+          ? "en"
+          : "da"
+      );
     }
   } catch (err) {
     console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
@@ -613,13 +621,33 @@ function setLanguage(lang, { initial = false } = {}) {
   updateCompassUI();
 
   const aboutDe = document.getElementById("page-about-de");
+  const aboutDa = document.getElementById("page-about-da");
   const aboutEn = document.getElementById("page-about-en");
+
   if (aboutDe && aboutEn) {
-    const showDe = currentLang === LANG_DE || currentLang === LANG_DA;
-    aboutDe.classList.toggle("hidden", !showDe);
-    aboutDe.setAttribute("aria-hidden", showDe ? "false" : "true");
-    aboutEn.classList.toggle("hidden", showDe);
-    aboutEn.setAttribute("aria-hidden", showDe ? "true" : "false");
+    if (aboutDa) {
+      // drei Sprachen vorhanden
+      const langCode = currentLang;
+      const showDe = langCode === LANG_DE;
+      const showDa = langCode === LANG_DA;
+      const showEn = langCode === LANG_EN;
+
+      aboutDe.classList.toggle("hidden", !showDe);
+      aboutDe.setAttribute("aria-hidden", showDe ? "false" : "true");
+
+      aboutDa.classList.toggle("hidden", !showDa);
+      aboutDa.setAttribute("aria-hidden", showDa ? "false" : "true");
+
+      aboutEn.classList.toggle("hidden", !showEn);
+      aboutEn.setAttribute("aria-hidden", showEn ? "false" : "true");
+    } else {
+      // nur de/en vorhanden – DK nutzt DE
+      const showDe = currentLang === LANG_DE || currentLang === LANG_DA;
+      aboutDe.classList.toggle("hidden", !showDe);
+      aboutDe.setAttribute("aria-hidden", showDe ? "false" : "true");
+      aboutEn.classList.toggle("hidden", showDe);
+      aboutEn.setAttribute("aria-hidden", showDe ? "true" : "false");
+    }
   }
 
   if (btnToggleFiltersEl) {
@@ -647,26 +675,17 @@ function setLanguage(lang, { initial = false } = {}) {
   }
 
   if (filterSearchEl) {
-    if (currentLang === LANG_EN) {
-      filterSearchEl.placeholder = "Place, spot, keywords …";
-    } else if (currentLang === LANG_DA) {
-      filterSearchEl.placeholder = "Sted, spot, nøgleord …";
-    } else {
-      filterSearchEl.placeholder = "Ort, Spot, Stichwörter …";
-    }
+    filterSearchEl.placeholder =
+      currentLang === LANG_EN
+        ? "Place, spot, keywords …"
+        : "Ort, Spot, Stichwörter …";
   }
 
   if (daylogTextEl && FEATURES.daylog) {
-    if (currentLang === LANG_EN) {
-      daylogTextEl.placeholder =
-        "Today we went to the wildlife park – the goats were sooo cute!";
-    } else if (currentLang === LANG_DA) {
-      daylogTextEl.placeholder =
-        "I dag fandt vi et sted, hvor tiden et øjeblik gik lidt langsommere.";
-    } else {
-      daylogTextEl.placeholder =
-        "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
-    }
+    daylogTextEl.placeholder =
+      currentLang === LANG_EN
+        ? "Today we went to the wildlife park – the goats were sooo cute!"
+        : "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
   }
 
   updateRadiusTexts();
@@ -1656,6 +1675,8 @@ async function init() {
     languageSwitcherEl =
       document.getElementById("language-switcher") ||
       document.getElementById("language-toggle");
+    languageSwitcherFlagEl = document.getElementById("language-switcher-flag");
+    languageSwitcherCodeEl = document.getElementById("language-switcher-code");
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
