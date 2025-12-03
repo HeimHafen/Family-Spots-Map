@@ -468,23 +468,36 @@ function getCategoryLabelWithAccess(slug) {
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
 
-  // Flag + Code wechseln
+  // Nur Flagge im Button
   if (languageSwitcherFlagEl) {
     let src = "assets/flags/flag-de.svg";
-    let code = "DE";
 
     if (currentLang === LANG_DA) {
       src = "assets/flags/flag-dk.svg";
-      code = "DK";
     } else if (currentLang === LANG_EN) {
       src = "assets/flags/flag-gb.svg";
-      code = "EN";
     }
 
     languageSwitcherFlagEl.src = src;
-    if (languageSwitcherCodeEl) {
-      languageSwitcherCodeEl.textContent = code;
-    }
+  } else {
+    // Fallback: falls Bild aus irgendeinem Grund fehlt, zeige Kürzel als Text
+    let label = "DE";
+    if (currentLang === LANG_DA) label = "DK";
+    else if (currentLang === LANG_EN) label = "EN";
+    languageSwitcherEl.textContent = label;
+  }
+
+  // Aria-Label für Screenreader
+  let ariaLabel;
+  if (currentLang === LANG_DE) {
+    ariaLabel = "Sprache: Deutsch (Tippen für Dansk)";
+  } else if (currentLang === LANG_DA) {
+    ariaLabel = "Sprog: Dansk (tryk for English)";
+  } else {
+    ariaLabel = "Language: English (tap for Deutsch)";
+  }
+  languageSwitcherEl.setAttribute("aria-label", ariaLabel);
+}
   } else {
     // Fallback: nur Text im Button
     let label = "DE";
