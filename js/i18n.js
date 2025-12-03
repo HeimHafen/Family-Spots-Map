@@ -10,13 +10,13 @@
  * ---------------------------------- */
 
 /** @type {const} */
-const SUPPORTED_LANGS = ["de", "en"];
+const SUPPORTED_LANGS = ["de", "en", "da"];
 /** @type {const} */
 const DEFAULT_LANG = "de";
 /** @type {const} */
 const STORAGE_LANG_KEY = "fs_lang";
 
-/** @typedef {"de" | "en"} LangCode */
+/** @typedef {"de" | "en" | "da"} LangCode */
 
 /** @type {LangCode} */
 let currentLang = DEFAULT_LANG;
@@ -27,12 +27,13 @@ let currentLang = DEFAULT_LANG;
  */
 const messagesByLang = {
   de: {},
-  en: {}
+  en: {},
+  da: {}
 };
 
 /**
  * Spielideen-Struktur:
- * [{ de: "…", en: "…" }, …]
+ * [{ de: "…", en: "…", da?: "…" }, …]
  * @type {Array<Record<LangCode, string>>}
  */
 let playIdeas = [];
@@ -42,13 +43,15 @@ let playIdeas = [];
  * ----------------------------------- */
 
 /**
- * Normalisiert eine Sprache auf "de" oder "en".
- * Alles außer "en" wird bewusst auf "de" gefaltet.
+ * Normalisiert eine Sprache auf "de", "en" oder "da".
+ * Alles außer "en" und "da" wird bewusst auf "de" gefaltet.
  * @param {string | null | undefined} lang
  * @returns {LangCode}
  */
 function normalizeLang(lang) {
-  return lang === "en" ? "en" : "de";
+  if (lang === "en") return "en";
+  if (lang === "da") return "da";
+  return "de";
 }
 
 /**
@@ -157,7 +160,7 @@ async function loadMessagesForLang(lang) {
 
 /**
  * Lädt Spielideen aus data/play-ideas.json.
- * Struktur: [{ de: "…", en: "…" }, …]
+ * Struktur: [{ de: "…", en: "…", da?: "…" }, …]
  */
 async function loadPlayIdeas() {
   if (playIdeas.length) return;
@@ -190,7 +193,7 @@ async function loadPlayIdeas() {
 
 /**
  * Initialisiert i18n:
- *  - lädt de/en Übersetzungen
+ *  - lädt de/en/da Übersetzungen
  *  - lädt Spielideen
  *  - bestimmt Startsprache (lang-Param -> localStorage -> Browser -> de)
  *  - setzt <html lang="…">
@@ -208,6 +211,7 @@ async function init(lang) {
   await Promise.all([
     loadMessagesForLang("de"),
     loadMessagesForLang("en"),
+    loadMessagesForLang("da"),
     loadPlayIdeas()
   ]);
 
@@ -216,7 +220,7 @@ async function init(lang) {
 }
 
 /**
- * Sprache wechseln (de/en) und DOM aktualisieren.
+ * Sprache wechseln (de/en/da) und DOM aktualisieren.
  * @param {LangCode} lang
  */
 function setLanguage(lang) {
