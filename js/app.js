@@ -51,16 +51,21 @@ import { initToast, showToast } from "./toast.js";
 import { loadData } from "./data.js";
 import {
   getPlusStatus,
-  isPlusActive,
   formatPlusStatus,
   redeemPartnerCode
 } from "./features/plus.js";
 
 // ------------------------------------------------------
-// Zusätzliche Sprach-Konstante für Dänisch
+// Sprach-Helfer
 // ------------------------------------------------------
-const LANG_DA = "da";
-const SUPPORTED_LANGS = [LANG_DE, LANG_EN, LANG_DA];
+
+// zusätzliches Sprach-Kürzel für Dänisch (UI-Sprache; Texte wie Deutsch)
+const LANG_DK = "dk";
+
+/** Hilfsfunktion: DE & DK verwenden deutsche Texte, EN englische */
+function isGermanLang(lang = currentLang) {
+  return lang !== LANG_EN;
+}
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
@@ -68,50 +73,7 @@ const SUPPORTED_LANGS = [LANG_DE, LANG_EN, LANG_DA];
 
 /**
  * @typedef {Object} Spot
- * @property {number} [lat]
- * @property {number} [lng]
- * @property {number} [lon]
- * @property {string|number} [id]
- * @property {string} [title]
- * @property {string} [name]
- * @property {string} [spotName]
- * @property {string} [city]
- * @property {string} [town]
- * @property {string} [country]
- * @property {string} [category]
- * @property {string[]} [categories]
- * @property {string[]} [tags]
- * @property {string} [subtitle]
- * @property {string} [shortDescription]
- * @property {string} [summary_de]
- * @property {string} [summary_en]
- * @property {string} [poetry]
- * @property {string} [description]
- * @property {string} [text]
- * @property {string} [address]
- * @property {string} [postcode]
- * @property {number} [visit_minutes]
- * @property {boolean} [plusOnly]
- * @property {boolean} [plus]
- * @property {boolean} [bigAdventure]
- * @property {boolean} [isBigAdventure]
- * @property {boolean} [longTrip]
- * @property {boolean} [verified]
- * @property {boolean} [isVerified]
- * @property {string[]|string} [ageGroups]
- * @property {string[]|string} [age]
- * @property {string[]|string} [ages]
- * @property {string[]|string} [moods]
- * @property {string[]|string} [moodTags]
- * @property {string[]|string} [mood]
- * @property {string[]|string} [travelModes]
- * @property {string[]|string} [travel]
- * @property {string[]|string} [tripModes]
- * @property {string} [_searchText]
- * @property {string[]} [_ageGroups]
- * @property {string[]} [_moods]
- * @property {string[]} [_travelModes]
- * @property {string[]} [_tagsMerged]
+ * ...
  */
 
 // ------------------------------------------------------
@@ -139,7 +101,9 @@ function getRandomPlayIdea() {
 function getInitialLang() {
   try {
     const stored = localStorage.getItem("fs_lang");
-    if (SUPPORTED_LANGS.includes(stored)) return stored;
+    if (stored === LANG_DE || stored === LANG_EN || stored === LANG_DK) {
+      return stored;
+    }
   } catch {
     // ignore
   }
@@ -149,7 +113,7 @@ function getInitialLang() {
     typeof I18N.getLanguage === "function"
   ) {
     const fromI18n = I18N.getLanguage();
-    if (SUPPORTED_LANGS.includes(fromI18n)) return fromI18n;
+    if (fromI18n === LANG_DE || fromI18n === LANG_EN) return fromI18n;
   }
 
   const htmlLang =
@@ -158,7 +122,7 @@ function getInitialLang() {
       .slice(0, 2);
 
   if (htmlLang === "en") return LANG_EN;
-  if (htmlLang === "da" || htmlLang === "dk") return LANG_DA;
+  if (htmlLang === "da" || htmlLang === "dk") return LANG_DK;
   return LANG_DE;
 }
 
@@ -191,32 +155,27 @@ let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
 // Map / Daten
-/** @type {any} */
 let map = null;
-/** @type {any} */
 let markersLayer = null;
-/** @type {Spot[]} */
 let spots = [];
-/** @type {Spot[]} */
 let filteredSpots = [];
 let favorites = new Set();
 
-/** Toast-Entprellung für Marker-Limit */
+// Marker-Limit Toast
 let hasShownMarkerLimitToast = false;
 
 // Filter-States
 let plusActive = false;
-let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
-let travelMode = null; // "everyday" | "trip" | null
-let radiusStep = 4; // 0–4
-let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
+let moodFilter = null;
+let travelMode = null;
+let radiusStep = 4;
+let ageFilter = "all";
 let searchTerm = "";
 let categoryFilter = "";
 let onlyBigAdventures = false;
 let onlyVerified = false;
 let onlyFavorites = false;
 let filtersCollapsed = true;
-/** Aktive Tag-Filter (IDs aus FILTERS) */
 let activeTagFilters = new Set();
 
 // DOM-Referenzen
@@ -244,9 +203,9 @@ let filterVerifiedEl;
 let filterFavoritesEl;
 let spotListEl;
 let spotDetailEl;
-let tagFilterContainerEl; // Container für Tag-Filter-Chips
+let tagFilterContainerEl;
 
-// Plus & Mein Tag – Sections + Toggle-Buttons
+// Plus & Mein Tag
 let plusSectionEl;
 let btnTogglePlusEl;
 let daylogSectionEl;
@@ -267,19 +226,11 @@ let compassApplyLabelEl;
 let compassApplyBtnEl;
 let btnToggleCompassEl;
 
-// Tilla
+// Tilla & Co
 let tilla = null;
-
-// Spielideen
 let playIdeasBtnEl = null;
-
-// Filter-Body innerhalb der Filter-Section
 let filterBodyEls = [];
-
-// Fokus-Merkung für Detail-Panel
 let lastSpotTriggerEl = null;
-
-// Onboarding-Hint (Kompass / Plus / Mein Tag)
 let compassPlusHintEl = null;
 
 // ------------------------------------------------------
@@ -309,19 +260,8 @@ function activateOnEnterSpace(handler) {
 
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
-    let keyAttr;
-    if (currentLang === LANG_DE) keyAttr = "i18n-de";
-    else if (currentLang === LANG_EN) keyAttr = "i18n-en";
-    else keyAttr = "i18n-da";
-
-    let text = el.getAttribute(`data-${keyAttr}`);
-    if (!text) {
-      text =
-        el.getAttribute("data-i18n-da") ||
-        el.getAttribute("data-i18n-de") ||
-        el.getAttribute("data-i18n-en") ||
-        el.textContent;
-    }
+    const keyAttr = currentLang === LANG_EN ? "i18n-en" : "i18n-de";
+    const text = el.getAttribute(`data-${keyAttr}`);
     if (text) el.textContent = text;
   });
 }
@@ -335,10 +275,6 @@ function initLazyLoadImages() {
   });
 }
 
-/**
- * Meta-Title, Meta-Description, ARIA-Labels & Tilla-Alt aus i18n setzen.
- * Wird bei jedem Sprachwechsel aufgerufen.
- */
 function updateMetaAndA11yFromI18n() {
   if (typeof I18N === "undefined" || typeof I18N.t !== "function") return;
 
@@ -402,39 +338,31 @@ function getCategoryLabel(slug) {
   );
 }
 
-/**
- * Liefert das Kategorien-Label inkl. Hinweis auf Plus / Add-ons.
- * Basis-Kategorien bleiben unverändert.
- */
 function getCategoryLabelWithAccess(slug) {
   const base = getCategoryLabel(slug);
   if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) return base;
 
   const access = CATEGORY_ACCESS.perCategory[slug];
-  if (!access) {
-    return base;
-  }
+  if (!access) return base;
 
   if (access.level === "subscription") {
-    const suffix = currentLang === LANG_DE ? " · Plus" : " · Plus";
-    return base + suffix;
+    return base + " · Plus";
   }
 
   if (access.level === "addon") {
     let suffix;
     if (access.addonId === "addon_water") {
-      suffix =
-        currentLang === LANG_DE
-          ? " · Wasser-Add-on (Plus)"
-          : " · water add-on (Plus)";
+      suffix = currentLang === LANG_EN
+        ? " · water add-on (Plus)"
+        : " · Wasser-Add-on (Plus)";
     } else if (access.addonId === "addon_rv") {
-      suffix =
-        currentLang === LANG_DE
-          ? " · WoMo-Add-on (Plus)"
-          : " · RV add-on (Plus)";
+      suffix = currentLang === LANG_EN
+        ? " · RV add-on (Plus)"
+        : " · WoMo-Add-on (Plus)";
     } else {
-      suffix =
-        currentLang === LANG_DE ? " · Add-on (Plus)" : " · add-on (Plus)";
+      suffix = currentLang === LANG_EN
+        ? " · add-on (Plus)"
+        : " · Add-on (Plus)";
     }
     return base + suffix;
   }
@@ -445,59 +373,43 @@ function getCategoryLabelWithAccess(slug) {
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
 
+  const flagSpan =
+    languageSwitcherEl.querySelector(".language-switcher-flag") ||
+    languageSwitcherEl;
+
   let flag = "🇩🇪";
-  let code = "DE";
-  let ariaLabel =
-    "Sprache: Deutsch (Tippen für Englisch / Dänisch)";
+  let ariaLabel = "";
 
   if (currentLang === LANG_EN) {
     flag = "🇬🇧";
-    code = "EN";
-    ariaLabel =
-      "Language: English (tap for Danish / German)";
-  } else if (currentLang === LANG_DA) {
+    ariaLabel = "Language: English (tap for Deutsch)";
+  } else if (currentLang === LANG_DK) {
     flag = "🇩🇰";
-    code = "DK";
-    ariaLabel =
-      "Sprog: Dansk (tryk for tysk / engelsk)";
+    ariaLabel = "Sprog: Dansk (tryk for English)";
+  } else {
+    flag = "🇩🇪";
+    ariaLabel = "Sprache: Deutsch (Tippen für Dansk)";
   }
 
-  languageSwitcherEl.innerHTML =
-    `<span class="language-switcher-flag" aria-hidden="true">${flag}</span>` +
-    `<span class="language-switcher-code">${code}</span>`;
-
+  flagSpan.textContent = flag;
   languageSwitcherEl.setAttribute("aria-label", ariaLabel);
 }
 
 function updateGenericSectionToggleLabel(btn, isOpen) {
   if (!btn) return;
   const target = btn.querySelector("span") || btn;
-  let showLabel;
-  let hideLabel;
-
-  if (currentLang === LANG_DE) {
-    showLabel = "Anzeigen";
-    hideLabel = "Ausblenden";
-  } else if (currentLang === LANG_EN) {
-    showLabel = "Show";
-    hideLabel = "Hide";
-  } else {
-    showLabel = "Vis";
-    hideLabel = "Skjul";
-  }
-
+  const showLabel = isGermanLang() ? "Anzeigen" : "Show";
+  const hideLabel = isGermanLang() ? "Ausblenden" : "Hide";
   target.textContent = isOpen ? hideLabel : showLabel;
   btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
 }
 
 function updatePlusStatusText(status) {
   if (!plusStatusTextEl) return;
-
   if (!FEATURES.plus) {
     plusStatusTextEl.textContent = "";
     return;
   }
-
   const s = status || getPlusStatus();
   plusStatusTextEl.textContent = formatPlusStatus(s);
 }
@@ -509,9 +421,6 @@ function updatePlusStatusText(status) {
 function getCompassPlusHintText(lang = currentLang) {
   if (lang === LANG_EN) {
     return "Tip: You can open and collapse Compass, Family Spots Plus and “My day” at any time using the “Show” buttons.";
-  }
-  if (lang === LANG_DA) {
-    return "Tip: Du kan altid åbne og folde Kompas, Family Spots Plus og “Min dag” ud igen via knapperne „Vis“.";
   }
   return "Tipp: Kompass, Family Spots Plus und „Mein Tag“ kannst du jederzeit über die Buttons „Anzeigen“ öffnen und wieder einklappen.";
 }
@@ -563,21 +472,13 @@ function ensureCompassPlusHint() {
 }
 
 /**
- * Mappt unsere 3 UI-Sprachen auf die 2 Kernsprachen des I18N-Moduls.
- * (Damit I18N intern weiterhin nur DE/EN kennt.)
- */
-function getCoreI18nLang(uiLang) {
-  return uiLang === LANG_EN ? LANG_EN : LANG_DE;
-}
-
-/**
  * Setzt Sprache, aktualisiert UI & speichert in localStorage.
  */
 function setLanguage(lang, { initial = false } = {}) {
   if (lang === LANG_EN) {
     currentLang = LANG_EN;
-  } else if (lang === LANG_DA) {
-    currentLang = LANG_DA;
+  } else if (lang === LANG_DK) {
+    currentLang = LANG_DK;
   } else {
     currentLang = LANG_DE;
   }
@@ -588,22 +489,22 @@ function setLanguage(lang, { initial = false } = {}) {
     // ignore
   }
 
-  document.documentElement.lang = currentLang;
+  const textLang = currentLang === LANG_EN ? LANG_EN : LANG_DE;
+  document.documentElement.lang = textLang;
 
   try {
     if (
       typeof I18N !== "undefined" &&
       typeof I18N.setLanguage === "function"
     ) {
-      // I18N bekommt nur DE/EN, UI kann DE/EN/DA
-      I18N.setLanguage(getCoreI18nLang(currentLang));
+      I18N.setLanguage(textLang);
     }
   } catch (err) {
     console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
   }
 
   updateMetaAndA11yFromI18n();
-  updateHeaderTagline(currentLang);
+  updateHeaderTagline(textLang);
 
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
   if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
@@ -624,7 +525,7 @@ function setLanguage(lang, { initial = false } = {}) {
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
   if (aboutDe && aboutEn) {
-    const showDe = currentLang === LANG_DE;
+    const showDe = textLang === LANG_DE;
     aboutDe.classList.toggle("hidden", !showDe);
     aboutDe.setAttribute("aria-hidden", showDe ? "false" : "true");
     aboutEn.classList.toggle("hidden", showDe);
@@ -656,26 +557,15 @@ function setLanguage(lang, { initial = false } = {}) {
   }
 
   if (filterSearchEl) {
-    if (currentLang === LANG_DE) {
-      filterSearchEl.placeholder = "Ort, Spot, Stichwörter …";
-    } else if (currentLang === LANG_EN) {
-      filterSearchEl.placeholder = "Place, spot, keywords …";
-    } else {
-      filterSearchEl.placeholder = "Sted, spot, søgeord …";
-    }
+    filterSearchEl.placeholder = isGermanLang()
+      ? "Ort, Spot, Stichwörter …"
+      : "Place, spot, keywords …";
   }
 
   if (daylogTextEl && FEATURES.daylog) {
-    if (currentLang === LANG_DE) {
-      daylogTextEl.placeholder =
-        "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
-    } else if (currentLang === LANG_EN) {
-      daylogTextEl.placeholder =
-        "Today we went to the wildlife park – the goats were sooo cute!";
-    } else {
-      daylogTextEl.placeholder =
-        "I dag var vi i dyreparken – gederne var bare så søde!";
-    }
+    daylogTextEl.placeholder = isGermanLang()
+      ? "Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
+      : "Today we went to the wildlife park – the goats were sooo cute!";
   }
 
   updateRadiusTexts();
@@ -699,11 +589,7 @@ function setLanguage(lang, { initial = false } = {}) {
   updatePlusStatusText();
 
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
-    let label;
-    if (currentLang === LANG_DE) label = "Schließen";
-    else if (currentLang === LANG_EN) label = "Close";
-    else label = "Luk";
-    btn.textContent = label;
+    btn.textContent = isGermanLang() ? "Schließen" : "Close";
   });
 
   ensureCompassPlusHint();
@@ -727,39 +613,23 @@ function showSpotsLoadErrorUI() {
 
   const msg = document.createElement("p");
   msg.className = "filter-group-helper";
-
-  if (currentLang === LANG_DE) {
-    msg.textContent =
-      "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.";
-  } else if (currentLang === LANG_EN) {
-    msg.textContent =
-      "Spots could not be loaded. Please check your connection and try again.";
-  } else {
-    msg.textContent =
-      "Spots kunne ikke indlæses. Tjek din forbindelse og prøv igen.";
-  }
-
+  msg.textContent = isGermanLang()
+    ? "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut."
+    : "Spots could not be loaded. Please check your connection and try again.";
   spotListEl.appendChild(msg);
 
   const retryBtn = document.createElement("button");
   retryBtn.type = "button";
   retryBtn.className = "btn btn-small";
-
-  if (currentLang === LANG_DE) {
-    retryBtn.textContent = "Erneut versuchen";
-  } else if (currentLang === LANG_EN) {
-    retryBtn.textContent = "Try again";
-  } else {
-    retryBtn.textContent = "Prøv igen";
-  }
+  retryBtn.textContent = isGermanLang()
+    ? "Erneut versuchen"
+    : "Try again";
 
   retryBtn.addEventListener("click", () => {
     showToast(
-      currentLang === LANG_DE
+      isGermanLang()
         ? "Lade Spots erneut …"
-        : currentLang === LANG_EN
-        ? "Reloading spots…"
-        : "Indlæser spots igen …"
+        : "Reloading spots…"
     );
     loadSpots();
   });
@@ -783,11 +653,9 @@ async function loadSpots() {
 
     if (result.fromCache) {
       showToast(
-        currentLang === LANG_DE
+        isGermanLang()
           ? "Offline-Daten geladen."
-          : currentLang === LANG_EN
-          ? "Loaded offline data."
-          : "Offline-data indlæst."
+          : "Loaded offline data."
       );
     }
 
@@ -864,23 +732,15 @@ function populateCategoryOptions() {
 
   const groupedSlugs = new Set();
 
+  const langKeyForGroups = currentLang === LANG_EN ? LANG_EN : LANG_DE;
+
   Object.entries(CATEGORY_GROUPS).forEach(([groupKey, slugs]) => {
     if (!Array.isArray(slugs) || !slugs.length) return;
 
-    let groupLabel =
-      CATEGORY_GROUP_LABELS[currentLang] &&
-      CATEGORY_GROUP_LABELS[currentLang][groupKey];
-
-    if (!groupLabel && currentLang === LANG_DA) {
-      // Für DA auf EN-Fallback zurückgreifen, falls vorhanden
-      groupLabel =
-        CATEGORY_GROUP_LABELS[LANG_EN] &&
-        CATEGORY_GROUP_LABELS[LANG_EN][groupKey];
-    }
-
-    if (!groupLabel) {
-      groupLabel = groupKey;
-    }
+    const groupLabel =
+      (CATEGORY_GROUP_LABELS[langKeyForGroups] &&
+        CATEGORY_GROUP_LABELS[langKeyForGroups][groupKey]) ||
+      groupKey;
 
     const optgroup = document.createElement("optgroup");
     optgroup.label = groupLabel;
@@ -912,13 +772,9 @@ function populateCategoryOptions() {
 
   if (extraSet.size > 0) {
     const extraGroup = document.createElement("optgroup");
-    if (currentLang === LANG_DE) {
-      extraGroup.label = "Weitere Kategorien";
-    } else if (currentLang === LANG_EN) {
-      extraGroup.label = "Other categories";
-    } else {
-      extraGroup.label = "Flere kategorier";
-    }
+    extraGroup.label = isGermanLang()
+      ? "Weitere Kategorien"
+      : "Other categories";
 
     Array.from(extraSet)
       .sort((a, b) =>
@@ -926,7 +782,7 @@ function populateCategoryOptions() {
           .toLowerCase()
           .localeCompare(
             getCategoryLabel(b).toLowerCase(),
-            currentLang === LANG_DE ? "de" : "en"
+            isGermanLang() ? "de" : "en"
           )
       )
       .forEach((slug) => {
@@ -951,9 +807,7 @@ function updateRadiusTexts() {
     return;
 
   let value = parseInt(filterRadiusEl.value, 10);
-  if (Number.isNaN(value)) {
-    value = 4;
-  }
+  if (Number.isNaN(value)) value = 4;
   value = Math.min(Math.max(value, 0), RADIUS_STEPS_KM.length - 1);
   radiusStep = value;
 
@@ -993,9 +847,6 @@ function initRadiusSliderA11y() {
   updateRadiusTexts();
 }
 
-/**
- * Distanz-Check für einen Spot relativ zu centerLatLng / radiusKm.
- */
 function isSpotInRadius(spot, centerLatLng, radiusKm) {
   if (!centerLatLng || typeof centerLatLng.distanceTo !== "function") {
     return true;
@@ -1061,7 +912,7 @@ function renderTagFilterChips() {
 }
 
 // ------------------------------------------------------
-// Filterlogik (verwendet filterSpots aus filters.js)
+// Filterlogik
 // ------------------------------------------------------
 
 function applyFiltersAndRender() {
@@ -1110,7 +961,9 @@ function applyFiltersAndRender() {
   }
 
   const radiusKm =
-    RADIUS_STEPS_KM[radiusStep] ?? RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ?? Infinity;
+    RADIUS_STEPS_KM[radiusStep] ??
+    RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ??
+    Infinity;
 
   filteredSpots = center
     ? nonGeoFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
@@ -1154,17 +1007,11 @@ function getSpotMetaParts(spot) {
   const parts = [];
   if (spot.category) parts.push(getCategoryLabel(spot.category));
   if (isSpotVerified(spot)) {
-    if (currentLang === LANG_DE) {
-      parts.push("verifiziert");
-    } else if (currentLang === LANG_EN) {
-      parts.push("verified");
-    } else {
-      parts.push("verificeret");
-    }
+    parts.push(isGermanLang() ? "verifiziert" : "verified");
   }
   if (spot.visit_minutes) {
     parts.push(
-      currentLang === LANG_DE
+      isGermanLang()
         ? `~${spot.visit_minutes} Min.`
         : `~${spot.visit_minutes} min`
     );
@@ -1179,16 +1026,9 @@ function renderSpotList() {
   if (!filteredSpots.length) {
     const msg = document.createElement("p");
     msg.className = "filter-group-helper";
-    if (currentLang === LANG_DE) {
-      msg.textContent =
-        "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus.";
-    } else if (currentLang === LANG_EN) {
-      msg.textContent =
-        "Right now no spot matches your filters. Try a wider radius or remove one of the filters.";
-    } else {
-      msg.textContent =
-        "Lige nu passer ingen spots til jeres filtre. Prøv en større radius eller fjern et filter.";
-    }
+    msg.textContent = isGermanLang()
+      ? "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus."
+      : "Right now no spot matches your filters. Try a wider radius or remove one of the filters.";
     spotListEl.appendChild(msg);
     return;
   }
@@ -1269,28 +1109,16 @@ function renderSpotList() {
 function syncFavButtonState(btn, spotId) {
   const isFav = favorites.has(spotId);
   btn.textContent = isFav ? "★" : "☆";
-
-  let addLabelDe = "Zu Favoriten hinzufügen";
-  let addLabelEn = "Add to favourites";
-  let addLabelDa = "Føj til favoritter";
-
-  let removeLabelDe = "Aus Favoriten entfernen";
-  let removeLabelEn = "Remove from favourites";
-  let removeLabelDa = "Fjern fra favoritter";
-
-  const label = isFav
-    ? currentLang === LANG_DE
-      ? removeLabelDe
-      : currentLang === LANG_EN
-      ? removeLabelEn
-      : removeLabelDa
-    : currentLang === LANG_DE
-    ? addLabelDe
-    : currentLang === LANG_EN
-    ? addLabelEn
-    : addLabelDa;
-
-  btn.setAttribute("aria-label", label);
+  btn.setAttribute(
+    "aria-label",
+    isFav
+      ? isGermanLang()
+        ? "Aus Favoriten entfernen"
+        : "Remove from favourites"
+      : isGermanLang()
+      ? "Zu Favoriten hinzufügen"
+      : "Add to favourites"
+  );
 }
 
 // ------------------------------------------------------
@@ -1334,7 +1162,8 @@ function showSpotDetails(spot) {
   const tags = Array.isArray(spot.tags) ? spot.tags : [];
 
   let description = "";
-  if (currentLang === LANG_DE) {
+  const textLangIsDe = isGermanLang();
+  if (textLangIsDe) {
     description =
       spot.summary_de || spot.poetry || spot.description || spot.text || "";
   } else {
@@ -1387,15 +1216,7 @@ function showSpotDetails(spot) {
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
   closeBtn.className = "btn-ghost btn-small";
-
-  if (currentLang === LANG_DE) {
-    closeBtn.textContent = "Schließen";
-  } else if (currentLang === LANG_EN) {
-    closeBtn.textContent = "Close";
-  } else {
-    closeBtn.textContent = "Luk";
-  }
-
+  closeBtn.textContent = isGermanLang() ? "Schließen" : "Close";
   closeBtn.addEventListener("click", () => {
     closeSpotDetails({ returnFocus: true });
   });
@@ -1587,7 +1408,6 @@ async function handlePlusCodeSubmit() {
   if (!plusCodeInputEl || !plusStatusTextEl) return;
 
   const raw = plusCodeInputEl.value.trim();
-
   const result = await redeemPartnerCode(raw);
 
   if (!result.ok) {
@@ -1613,6 +1433,8 @@ async function handlePlusCodeSubmit() {
 
   applyFiltersAndRender();
 }
+
+const DAYLOG_STORAGE_KEY = DAYLOG_STORAGE_KEY || "fs_daylog";
 
 function loadDaylogFromStorage() {
   if (!FEATURES.daylog) return;
@@ -1821,7 +1643,6 @@ async function init() {
     const initialTheme = getInitialTheme();
     currentTheme = applyTheme(initialTheme);
 
-    // Toast-System initialisieren
     initToast({ element: toastEl, t });
 
     const mapResult = initMap({
@@ -1859,13 +1680,16 @@ async function init() {
 
     if (languageSwitcherEl) {
       languageSwitcherEl.addEventListener("click", () => {
-        const idx = SUPPORTED_LANGS.indexOf(currentLang);
-        const nextLang =
-          SUPPORTED_LANGS[(idx + 1 + SUPPORTED_LANGS.length) % SUPPORTED_LANGS.length];
+        let nextLang;
+        if (currentLang === LANG_DE) {
+          nextLang = LANG_DK; // DE -> DK
+        } else if (currentLang === LANG_DK) {
+          nextLang = LANG_EN; // DK -> EN
+        } else {
+          nextLang = LANG_DE; // EN -> DE
+        }
         setLanguage(nextLang);
       });
-      // Direkt nach Init die visuelle Darstellung setzen
-      updateLanguageSwitcherVisual();
     }
 
     if (themeToggleEl) {
@@ -1880,7 +1704,6 @@ async function init() {
       btnLocateEl.addEventListener("click", handleLocateClick);
     }
 
-    // Router initialisieren (Map <-> About)
     initRouter({
       viewMapEl,
       viewAboutEl,
