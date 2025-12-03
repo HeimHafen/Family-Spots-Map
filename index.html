@@ -45,7 +45,7 @@
     "operatingSystem": "iOS, Android, Web",
     "applicationCategory": "TravelApplication",
     "url": "https://heimhafen.github.io/Family-Spots-Map/",
-    "inLanguage": ["de", "en", "da"],
+    "inLanguage": ["de", "en"],
     "description": "Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern.",
     "offers": {
       "@type": "Offer",
@@ -100,8 +100,7 @@
             class="sr-only"
             id="language-switcher-label"
             data-i18n-de="Sprache wechseln"
-            data-i18n-en="Change language"
-            data-i18n-da="Skift sprog">
+            data-i18n-en="Change language">
             Sprache wechseln
           </span>
 
@@ -112,12 +111,17 @@
             type="button"
             aria-labelledby="language-switcher-label">
             <img
-              src="assets/flags/flag-de.svg"
-              alt="Deutsch"
+              id="language-switcher-flag"
               class="language-switcher-flag"
-              width="32"
-              height="32"
+              src="assets/flags/flag-de.svg"
+              alt=""
               aria-hidden="true" />
+            <span
+              id="language-switcher-code"
+              class="language-switcher-code"
+              aria-hidden="true">
+              DE
+            </span>
           </button>
         </div>
         <div class="app-header-right">
@@ -126,8 +130,7 @@
             class="sr-only"
             id="skip-to-spots-label"
             data-i18n-de="Direkt zur Spot-Liste springen"
-            data-i18n-en="Skip directly to spot list"
-            data-i18n-da="Gå direkte til spotlisten">
+            data-i18n-en="Skip directly to spot list">
             Direkt zur Spot-Liste springen
           </span>
           <button
@@ -143,8 +146,7 @@
             class="sr-only"
             id="theme-toggle-label"
             data-i18n-de="Designmodus wechseln"
-            data-i18n-en="Switch color theme"
-            data-i18n-da="Skift design-tilstand">
+            data-i18n-en="Switch color theme">
             Designmodus wechseln
           </span>
           <button
@@ -158,8 +160,7 @@
             class="sr-only"
             id="btn-locate-label"
             data-i18n-de="Eigenen Standort auf der Karte anzeigen"
-            data-i18n-en="Center map on your location"
-            data-i18n-da="Vis din position på kortet">
+            data-i18n-en="Center map on your location">
             Eigenen Standort auf der Karte anzeigen
           </span>
           <button
@@ -182,8 +183,7 @@
           class="header-tagline"
           id="header-tagline"
           data-i18n-de="Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf."
-          data-i18n-en="Today is a good day for everyday life to turn into a little family adventure."
-          data-i18n-da="I dag er en god dag, hvor hverdagen gerne må blive til et lille familieeventyr.">
+          data-i18n-en="Today is a good day for everyday life to turn into a little family adventure.">
           Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf.
         </p>
       </div>
@@ -209,8 +209,7 @@
                 class="sidebar-section-title"
                 id="tilla-title"
                 data-i18n-de="Familien-Begleiterin Tilla"
-                data-i18n-en="Family companion Tilla"
-                data-i18n-da="Familieledsageren Tilla">
+                data-i18n-en="Family companion Tilla">
                 Familien-Begleiterin Tilla
               </h2>
             </header>
@@ -228,8 +227,7 @@
                 <p
                   id="tilla-sidebar-text"
                   data-i18n-de="Ich bin Tilla, eure kleine Schildkröte. Alltag darf auch leicht sein. Lass uns schauen, welcher Ort in eurer Nähe euch heute ein Lächeln zaubert. 🌿"
-                  data-i18n-en="I’m Tilla, your little turtle companion. Everyday life can feel light, too. Let’s see which nearby place might bring a smile to you today. 🌿"
-                  data-i18n-da="Jeg er Tilla, jeres lille skildpadde. Hverdagen må også gerne føles let. Lad os se, hvilket sted i nærheden af jer der kan trylle et smil frem i dag. 🌿">
+                  data-i18n-en="I’m Tilla, your little turtle companion. Everyday life can feel light, too. Let’s see which nearby place might bring a smile to you today. 🌿">
                   Ich bin Tilla, eure kleine Schildkröte. Alltag darf auch leicht sein. Lass uns schauen, welcher Ort in eurer Nähe euch heute ein Lächeln zaubert. 🌿
                 </p>
                 <div class="tilla-sidebar-actions">
@@ -240,8 +238,7 @@
                     <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
                     <span
                       data-i18n-de="Spielideen für unterwegs"
-                      data-i18n-en="Play ideas on the go"
-                      data-i18n-da="Legidéer til turen">
+                      data-i18n-en="Play ideas on the go">
                       Spielideen für unterwegs
                     </span>
                   </button>
@@ -257,8 +254,7 @@
                 class="sidebar-section-title"
                 id="compass-label"
                 data-i18n-de="Familien-Kompass"
-                data-i18n-en="Family Compass"
-                data-i18n-da="Familiekompasset">
+                data-i18n-en="Family Compass">
                 Familien-Kompass
               </h2>
               <!-- kein interaktives Element mehr im summary -->
@@ -267,8 +263,7 @@
                 class="btn-ghost btn-small">
                 <span
                   data-i18n-de="Kompass anzeigen"
-                  data-i18n-en="Show compass"
-                  data-i18n-da="Vis kompas">
+                  data-i18n-en="Show compass">
                   Kompass anzeigen
                 </span>
               </span>
@@ -278,8 +273,7 @@
                 class="filter-group-helper"
                 id="compass-helper"
                 data-i18n-de="Manche Tage rufen laut nach Abenteuer, andere wünschen sich nur einen ruhigen Moment um die Ecke. Sag mir einfach, wonach es sich heute anfühlt – ich, Tilla, rücke Radius und Spots sanft für euch zurecht."
-                data-i18n-en="Some days shout for adventure, others long for a quiet moment around the corner. Just tell me what today feels like – I, Tilla, will gently adjust radius and spots for you."
-                data-i18n-da="Nogle dage råber højt efter eventyr, andre ønsker sig bare et roligt øjeblik lige om hjørnet. Fortæl mig bare, hvordan dagen føles – så justerer jeg, Tilla, radius og spots blidt for jer.">
+                data-i18n-en="Some days shout for adventure, others long for a quiet moment around the corner. Just tell me what today feels like – I, Tilla, will gently adjust radius and spots for you.">
                 Manche Tage rufen laut nach Abenteuer, andere wünschen sich nur einen ruhigen Moment um die Ecke. Sag mir einfach, wonach es sich heute anfühlt – ich, Tilla, rücke Radius und Spots sanft für euch zurecht.
               </p>
               <div class="compass-mode-row" role="group" aria-labelledby="compass-label">
@@ -292,8 +286,7 @@
                   <span
                     class="mood-chip-label"
                     data-i18n-de="Alltag in der Nähe"
-                    data-i18n-en="Everyday nearby"
-                    data-i18n-da="Hverdag i nærheden">
+                    data-i18n-en="Everyday nearby">
                     Alltag in der Nähe
                   </span>
                 </button>
@@ -306,8 +299,7 @@
                   <span
                     class="mood-chip-label"
                     data-i18n-de="Ausflug / Tagestour"
-                    data-i18n-en="Day trip"
-                    data-i18n-da="Udflugt / dagstur">
+                    data-i18n-en="Day trip">
                     Ausflug / Tagestour
                   </span>
                 </button>
@@ -316,16 +308,14 @@
                 class="filter-group-helper"
                 id="compass-apply-helper"
                 data-i18n-de="Tippt auf „Kompass anwenden“ – dann stelle ich den Umkreis passend zu eurer Wahl ein."
-                data-i18n-en="Tap “Apply compass” and I’ll set the radius to match your choice."
-                data-i18n-da="Tryk på „Brug kompasset“ – så indstiller jeg radius, så den passer til jeres valg.">
+                data-i18n-en="Tap “Apply compass” and I’ll set the radius to match your choice.">
                 Tippt auf „Kompass anwenden“ – dann stelle ich den Umkreis passend zu eurer Wahl ein.
               </p>
               <button type="button" id="compass-apply" class="btn btn-small hidden">
                 <span
                   id="compass-apply-label"
                   data-i18n-de="Kompass anwenden"
-                  data-i18n-en="Apply compass"
-                  data-i18n-da="Brug kompasset">
+                  data-i18n-en="Apply compass">
                   Kompass anwenden
                 </span>
               </button>
@@ -339,8 +329,7 @@
                 class="sidebar-section-title"
                 id="filter-title"
                 data-i18n-de="Filter"
-                data-i18n-en="Filters"
-                data-i18n-da="Filter">
+                data-i18n-en="Filters">
                 Filter
               </h2>
               <button
@@ -351,8 +340,7 @@
                 aria-expanded="false">
                 <span
                   data-i18n-de="Filter anzeigen"
-                  data-i18n-en="Show filters"
-                  data-i18n-da="Vis filter">
+                  data-i18n-en="Show filters">
                   Filter anzeigen
                 </span>
               </button>
@@ -361,8 +349,7 @@
             <p
               class="filter-group-helper"
               data-i18n-de="Hier flüstert ihr eure Wünsche in die Karte – Familien-Kompass und Tilla richten sich leise danach."
-              data-i18n-en="Here you whisper your wishes into the map – the Family Compass and Tilla quietly follow your lead."
-              data-i18n-da="Her hvisker I jeres ønsker ind i kortet – familiekompasset og Tilla retter sig stille efter dem.">
+              data-i18n-en="Here you whisper your wishes into the map – the Family Compass and Tilla quietly follow your lead.">
               Hier flüstert ihr eure Wünsche in die Karte – Familien-Kompass und Tilla richten sich leise danach.
             </p>
 
@@ -373,8 +360,7 @@
                 for="filter-search"
                 id="filter-search-label"
                 data-i18n-de="Suche"
-                data-i18n-en="Search"
-                data-i18n-da="Søg">
+                data-i18n-en="Search">
                 Suche
               </label>
               <input
@@ -385,8 +371,7 @@
                 placeholder="Ort, Spot, Stichwort …"
                 autocomplete="off"
                 data-i18n-de="Ort, Spot, Stichwort …"
-                data-i18n-en="Place, spot, keywords …"
-                data-i18n-da="Sted, spot, nøgleord …" />
+                data-i18n-en="Place, spot, keywords …" />
             </div>
 
             <!-- Stimmung (immer sichtbar) -->
@@ -395,16 +380,14 @@
                 class="filter-group-label"
                 id="filter-mood-label"
                 data-i18n-de="Stimmung"
-                data-i18n-en="Mood"
-                data-i18n-da="Stemning">
+                data-i18n-en="Mood">
                 Stimmung
               </label>
               <p
                 class="filter-group-helper"
                 id="filter-mood-helper"
                 data-i18n-de="Wonach fühlt es sich heute an? Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?"
-                data-i18n-en="What does today feel like? Calm, movement, water or a day with animals?"
-                data-i18n-da="Hvordan føles dagen i dag? Ro, bevægelse, vand eller en dag med dyr?">
+                data-i18n-en="What does today feel like? Calm, movement, water or a day with animals?">
                 Wonach fühlt es sich heute an? Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?
               </p>
               <div class="mood-row" role="group" aria-labelledby="filter-mood-label">
@@ -414,8 +397,7 @@
                     class="mood-chip-label"
                     id="mood-relaxed-label"
                     data-i18n-de="Entspannt"
-                    data-i18n-en="Relaxed"
-                    data-i18n-da="Afslappet">
+                    data-i18n-en="Relaxed">
                     Entspannt
                   </span>
                 </button>
@@ -425,8 +407,7 @@
                     class="mood-chip-label"
                     id="mood-action-label"
                     data-i18n-de="Bewegung"
-                    data-i18n-en="Active"
-                    data-i18n-da="Bevægelse">
+                    data-i18n-en="Active">
                     Bewegung
                   </span>
                 </button>
@@ -436,8 +417,7 @@
                     class="mood-chip-label"
                     id="mood-water-label"
                     data-i18n-de="Wasser &amp; Sand"
-                    data-i18n-en="Water &amp; sand"
-                    data-i18n-da="Vand &amp; sand">
+                    data-i18n-en="Water &amp; sand">
                     Wasser &amp; Sand
                   </span>
                 </button>
@@ -447,8 +427,7 @@
                     class="mood-chip-label"
                     id="mood-animals-label"
                     data-i18n-de="Tier-Tag"
-                    data-i18n-en="Animal day"
-                    data-i18n-da="Dyredag">
+                    data-i18n-en="Animal day">
                     Tier-Tag
                   </span>
                 </button>
@@ -462,16 +441,14 @@
                 for="filter-radius"
                 id="filter-radius-label"
                 data-i18n-de="Micro-Abenteuer-Radius"
-                data-i18n-en="Micro-adventure radius"
-                data-i18n-da="Mikro-eventyr-radius">
+                data-i18n-en="Micro-adventure radius">
                 Micro-Abenteuer-Radius
               </label>
               <p
                 class="filter-group-helper"
                 id="filter-radius-helper"
                 data-i18n-de="Wie weit darf euer Abenteuer heute gehen?"
-                data-i18n-en="How far may your adventure go today?"
-                data-i18n-da="Hvor langt må jeres eventyr række i dag?">
+                data-i18n-en="How far may your adventure go today?">
                 Wie weit darf euer Abenteuer heute gehen?
               </p>
               <div class="radius-row">
@@ -491,8 +468,7 @@
                   id="filter-radius-max-label"
                   class="radius-max-label"
                   data-i18n-de="Alle Spots"
-                  data-i18n-en="All spots"
-                  data-i18n-da="Alle spots">
+                  data-i18n-en="All spots">
                   Alle Spots
                 </span>
               </div>
@@ -500,8 +476,7 @@
                 id="filter-radius-description"
                 class="radius-description"
                 data-i18n-de="Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
-                data-i18n-en="All spots – no radius limit. The map is all yours."
-                data-i18n-da="Alle spots – uden radiusbegrænsning. Kortet er helt jeres.">
+                data-i18n-en="All spots – no radius limit. The map is all yours.">
                 Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
               </p>
             </div>
@@ -512,8 +487,7 @@
                 <span
                   class="filter-group-label"
                   data-i18n-de="Weitere Filter"
-                  data-i18n-en="More filters"
-                  data-i18n-da="Flere filter">
+                  data-i18n-en="More filters">
                   Weitere Filter
                 </span>
               </summary>
@@ -521,8 +495,7 @@
               <p
                 class="filter-group-helper"
                 data-i18n-de="Hier findest du Schnellfilter, Kategorien, Alter &amp; besondere Spots – für genau das, was heute zu euch passt."
-                data-i18n-en="Here you can fine-tune quick filters, categories, age and special spots – for exactly what fits your family today."
-                data-i18n-da="Her finder du hurtigfiltre, kategorier, alder og særlige spots – præcis det, der passer til jer i dag.">
+                data-i18n-en="Here you can fine-tune quick filters, categories, age and special spots – for exactly what fits your family today.">
                 Hier findest du Schnellfilter, Kategorien, Alter &amp; besondere Spots – für genau das, was heute zu euch passt.
               </p>
 
@@ -532,16 +505,14 @@
                   class="filter-group-label"
                   id="filter-tags-label"
                   data-i18n-de="Schnellfilter"
-                  data-i18n-en="Quick filters"
-                  data-i18n-da="Hurtigfiltre">
+                  data-i18n-en="Quick filters">
                   Schnellfilter
                 </label>
                 <p
                   class="filter-group-helper"
                   id="filter-tags-helper"
                   data-i18n-de="Ein Tipp genügt – „mit Wasser“, „ruhig“, „Action“ oder „Naturpfad“. Die Karte sortiert für euch vor."
-                  data-i18n-en="One tap is enough – “with water”, “calm”, “action” or “nature trail”. The map pre-sorts for you."
-                  data-i18n-da="Et tryk er nok – „med vand“, „rolig“, „action“ eller „natursti“. Kortet sorterer for jer.">
+                  data-i18n-en="One tap is enough – “with water”, “calm”, “action” or “nature trail”. The map pre-sorts for you.">
                   Ein Tipp genügt – „mit Wasser“, „ruhig“, „Action“ oder „Naturpfad“. Die Karte sortiert für euch vor.
                 </p>
                 <div
@@ -596,16 +567,14 @@
                   for="filter-category"
                   id="filter-category-label"
                   data-i18n-de="Kategorie"
-                  data-i18n-en="Category"
-                  data-i18n-da="Kategori">
+                  data-i18n-en="Category">
                   Kategorie
                 </label>
                 <select id="filter-category" name="category" class="input">
                   <option
                     value=""
                     data-i18n-de="Alle Kategorien"
-                    data-i18n-en="All categories"
-                    data-i18n-da="Alle kategorier">
+                    data-i18n-en="All categories">
                     Alle Kategorien
                   </option>
                 </select>
@@ -618,8 +587,7 @@
                   for="filter-age"
                   id="filter-age-label"
                   data-i18n-de="Alter der Kinder"
-                  data-i18n-en="Age of children"
-                  data-i18n-da="Børnenes alder">
+                  data-i18n-en="Age of children">
                   Alter der Kinder
                 </label>
                 <select id="filter-age" name="age" class="input">
@@ -627,32 +595,28 @@
                     value="all"
                     id="filter-age-all"
                     data-i18n-de="Alle Altersstufen"
-                    data-i18n-en="All age groups"
-                    data-i18n-da="Alle aldre">
+                    data-i18n-en="All age groups">
                     Alle Altersstufen
                   </option>
                   <option
                     value="0-3"
                     id="filter-age-0-3"
                     data-i18n-de="0–3 Jahre"
-                    data-i18n-en="0–3 years"
-                    data-i18n-da="0–3 år">
+                    data-i18n-en="0–3 years">
                     0–3 Jahre
                   </option>
                   <option
                     value="4-9"
                     id="filter-age-4-9"
                     data-i18n-de="4–9 Jahre"
-                    data-i18n-en="4–9 years"
-                    data-i18n-da="4–9 år">
+                    data-i18n-en="4–9 years">
                     4–9 Jahre
                   </option>
                   <option
                     value="10+"
                     id="filter-age-10-plus"
                     data-i18n-de="10+ Jahre"
-                    data-i18n-en="10+ years"
-                    data-i18n-da="10+ år">
+                    data-i18n-en="10+ years">
                     10+ Jahre
                   </option>
                 </select>
@@ -662,10 +626,7 @@
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-verified-label">
                   <input id="filter-verified" name="verified" type="checkbox" />
-                  <span
-                    data-i18n-de="Nur verifizierte Spots"
-                    data-i18n-en="Only verified spots"
-                    data-i18n-da="Kun verificerede spots">
+                  <span data-i18n-de="Nur verifizierte Spots" data-i18n-en="Only verified spots">
                     Nur verifizierte Spots
                   </span>
                 </label>
@@ -683,7 +644,7 @@
                 type="button"
                 aria-pressed="false"
                 aria-controls="sidebar">
-                <span data-i18n-de="Nur Karte" data-i18n-en="Map only" data-i18n-da="Kun kort">Nur Karte</span>
+                <span data-i18n-de="Nur Karte" data-i18n-en="Map only">Nur Karte</span>
               </button>
             </header>
             <div id="spot-list" class="spot-list"><!-- Karten via JS --></div>
@@ -706,8 +667,7 @@
               class="btn-ghost btn-small">
               <span
                 data-i18n-de="Anzeigen"
-                data-i18n-en="Show"
-                data-i18n-da="Vis">
+                data-i18n-en="Show">
                 Anzeigen
               </span>
             </span>
@@ -716,8 +676,7 @@
             <p
               id="plus-status-text"
               data-i18n-de="Family Spots Plus ist nicht aktiviert."
-              data-i18n-en="Family Spots Plus is not activated."
-              data-i18n-da="Family Spots Plus er ikke aktiveret.">
+              data-i18n-en="Family Spots Plus is not activated.">
               Family Spots Plus ist nicht aktiviert.
             </p>
           </div>
@@ -725,17 +684,13 @@
             <label
               for="plus-code-input"
               data-i18n-de="Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
-              data-i18n-en="Enter partner code (e.g. from campground, municipality or sponsor):"
-              data-i18n-da="Indtast partnerkode (f.eks. fra campingplads, kommune eller sponsor):">
+              data-i18n-en="Enter partner code (e.g. from campground, municipality or sponsor):">
               Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):
             </label>
             <div class="plus-code-row">
               <input id="plus-code-input" name="plus-code" class="input" type="text" autocomplete="off" />
               <button id="plus-code-submit" class="btn" type="button">
-                <span
-                  data-i18n-de="Code aktivieren"
-                  data-i18n-en="Activate code"
-                  data-i18n-da="Aktivér kode">
+                <span data-i18n-de="Code aktivieren" data-i18n-en="Activate code">
                   Code aktivieren
                 </span>
               </button>
@@ -743,8 +698,7 @@
             <p
               class="plus-note"
               data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
-              data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap."
-              data-i18n-da="Family Spots Plus låser ekstra filter og spots op – helt uden abonnementsfælde.">
+              data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap.">
               Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle.
             </p>
           </div>
@@ -756,8 +710,7 @@
             <h2
               class="sidebar-section-title"
               data-i18n-de="Mein Tag 💛"
-              data-i18n-en="My day 💛"
-              data-i18n-da="Min dag 💛">
+              data-i18n-en="My day 💛">
               Mein Tag 💛
             </h2>
             <!-- kein Button mehr im summary -->
@@ -766,8 +719,7 @@
               class="btn-ghost btn-small">
               <span
                 data-i18n-de="Anzeigen"
-                data-i18n-en="Show"
-                data-i18n-da="Vis">
+                data-i18n-en="Show">
                 Anzeigen
               </span>
             </span>
@@ -776,15 +728,13 @@
             <label
               for="daylog-text"
               data-i18n-de="Wie war euer Tag?"
-              data-i18n-en="How was your day?"
-              data-i18n-da="Hvordan var jeres dag?">
+              data-i18n-en="How was your day?">
               Wie war euer Tag?
             </label>
             <p
               class="filter-group-helper"
               data-i18n-de="Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß an Tilla."
-              data-i18n-en="Capture a little moment you’d like to remember later – and if you like, add a small note to Tilla."
-              data-i18n-da="Skriv et lille øjeblik ned, som I gerne vil huske senere – hvis du har lyst, med en lille hilsen til Tilla.">
+              data-i18n-en="Capture a little moment you’d like to remember later – and if you like, add a small note to Tilla.">
               Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß an Tilla.
             </p>
             <textarea
@@ -794,12 +744,7 @@
               rows="3"
               placeholder="Heute haben wir einen Ort gefunden, an dem die Zeit kurz langsamer wurde."></textarea>
             <button id="daylog-save" class="btn btn-small" type="button">
-              <span
-                data-i18n-de="Speichern 💾"
-                data-i18n-en="Save 💾"
-                data-i18n-da="Gem 💾">
-                Speichern 💾
-              </span>
+              <span data-i18n-de="Speichern 💾" data-i18n-en="Save 💾">Speichern 💾</span>
             </button>
           </div>
         </details>
@@ -981,6 +926,179 @@
           </p>
         </article>
 
+        <!-- Dänisch -->
+        <article id="page-about-da" class="page page-about hidden" lang="da" aria-hidden="true">
+          <h2>Om Family Spots Map</h2>
+          <p>
+            Family Spots Map er et kort, nænsomt tegnet til familieeventyr – af forældre til forældre.<br />
+            Ikke endeløse lister, ikke anonyme stjerner,<br />
+            men håndplukkede legepladser, zoologiske haver og dyreparker,<br />
+            vandspots, museer, bevægelsesparker<br />
+            og alle de steder, hvor børn allerede har grinet, undret sig og leget.
+          </p>
+          <p>
+            I centrum står kvalitet, tryghed og virkelige, jordnære oplevelser med børn –<br />
+            ikke et kort, der vil være størst,<br />
+            men et, som I kan stole på,<br />
+            når I tager af sted med rygsække, snacks<br />
+            og en lille smule håb i tasken.
+          </p>
+          <p>
+            Family Spots Map vokser ud af blikket fra en ung familie,<br />
+            der selv er på tur med børn –<br />
+            nogle dage trætte, andre fulde af energi,<br />
+            men altid på jagt efter et godt sted<br />
+            til et par lyse timer sammen.
+          </p>
+          <p>
+            <strong>Tilla, vores lille skildpadde, hvisker os, hvor dyrebar fælles tid er.</strong><br />
+            Hun inviterer jer til at sætte tempoet ned,<br />
+            trække vejret et øjeblik<br />
+            og finde det ene sted, hvor minutter<br />
+            bliver til et familietidspunkt, der bliver hos jer.
+          </p>
+
+          <hr />
+          <h3>Sådan fungerer Family Spots Map</h3>
+          <p>
+            <strong>Kort &amp; filtre:</strong> Zoom ind på jeres område,<br />
+            stryg med fingrene hen over kortet<br />
+            og lad dig vise, hvad der passer til jer i dag –<br />
+            legeplads, dyrepark, pumptrack<br />
+            eller et sted, som dine søgeord fremkalder.
+          </p>
+          <p>
+            <strong>Spotkort:</strong> Hvert spot får sin egen lille scene –<br />
+            en kort beskrivelse, særlige hints<br />
+            som “autosafari”, “tilgængelig” eller “vand i nærheden”<br />
+            og – hvor det er muligt – mærket, der viser, at vi har tjekket stedet for jer.
+          </p>
+          <p>
+            <strong>Favoritter:</strong> Giv jeres yndlingssteder en stjerne,<br />
+            så I genfinder dem med et enkelt blik,<br />
+            også når forbindelsen bliver svag<br />
+            og I må stole på jeres egen kompasfølelse.
+          </p>
+          <p>
+            <strong>Offline-grundfunktion:</strong> De vigtigste data ligger lokalt på jeres enhed,<br />
+            så I kan finde jeres spots igen,<br />
+            selv når signalet kun hvisker<br />
+            eller kort forsvinder helt på vejen.
+          </p>
+
+          <hr />
+          <h3>Kurateret &amp; verificeret – vores kvalitetsløfte</h3>
+          <p>
+            Family Spots Map er ikke en anonym samling af nåle,<br />
+            men et levende kort,<br />
+            hvor hver eneste spot er valgt bevidst<br />
+            og bliver set efter igen og igen.
+          </p>
+          <p>
+            <strong>Verificerede spots</strong> bærer et lille løfte som label.<br />
+            Det betyder for eksempel:<br />
+            Stedet er blevet besøgt personligt eller grundigt researchet,<br />
+            placering, kategori og nøgletal er tjekket,<br />
+            og særlige oplysninger om entré, sæson eller parkering<br />
+            bliver tilføjet, hvor det er muligt.
+          </p>
+          <p>
+            Alligevel er verden i bevægelse:<br />
+            legeredskaber skiftes ud, stier lukkes, regler ændres –<br />
+            tjek derfor altid skilte på stedet,<br />
+            de aktuelle informationer fra arrangører<br />
+            og jeres egen fornemmelse.
+          </p>
+
+          <hr />
+          <h3>Family Spots Plus – mere til camping, autocamper &amp; eventyr</h3>
+          <p>
+            Ud over grundkategorierne åbner <strong>Family Spots Plus</strong> døren<br />
+            til særlige ekstra-kategorier –<br />
+            rastepladser med legeplads &amp; brusebad,<br />
+            gratis overnatningsspots tæt på legepladser,<br />
+            servicestationer til autocampere,<br />
+            familievenlige campingpladser,<br />
+            bikepacking-spots og ruter,<br />
+            der føles som små eventyrstier.
+          </p>
+          <p>
+            Selve kortet er tænkt som et lille årsabonnement<br />
+            til <strong>19,90&nbsp;€/år</strong> – for alle, der gerne bruger det<br />
+            og vil hjælpe med at bære projektet.<br />
+            Plus-kategorierne er valgfrie tilkøb<br />
+            til særlige ønsker og koster<br />
+            <strong>2,99&nbsp;€/år</strong> pr. Plus-pakke.<br />
+            Efter købet får du en Plus-kode,<br />
+            som du indtaster i appen –<br />
+            og Plus-kategorierne åbner sig for dig.
+          </p>
+          <p>
+            <strong>Hvordan genkender jeg Plus-kategorier?</strong><br />
+            I kategorilisten bærer Plus-indhold et tydeligt mærke –<br />
+            for eksempel “· Plus”, “· vand-add-on (Plus)”<br />
+            eller “· autocamper-add-on (Plus)”.<br />
+            Det, der ikke har et ekstra mærke, hører til grundkortet.
+          </p>
+
+          <hr />
+          <h3>Vær med – hjælp os med at gøre kortet bedre</h3>
+          <p>
+            Kender du et sted, der mangler her –<br />
+            en særlig legeplads,<br />
+            et skjult natur-spot<br />
+            eller en campingplads, der føles helt rigtig med børn?
+          </p>
+          <p>
+            Så send os de vigtigste oplysninger:<br />
+            sted, kategori og kort, hvorfor netop dette sted<br />
+            fungerer så godt for familier.<br />
+            Måske er det udsigten, roen,<br />
+            den ene gynge eller det venlige “hej” på stedet.
+          </p>
+          <p>
+            Sammen gør vi kortet bedre skridt for skridt –<br />
+            sådan som familier virkelig har brug for det.
+          </p>
+
+          <hr />
+          <h3>Brug, ansvar &amp; sikkerhed</h3>
+          <p>
+            Family Spots Map giver information<br />
+            efter bedste viden,<br />
+            men kan ikke garantere fuldstændighed,<br />
+            sikkerhed eller overholdelse af alle lokale regler.
+          </p>
+          <p>På stedet bør I altid være opmærksomme på:</p>
+          <ul>
+            <li>skilte og alle de hints, stedet selv giver,</li>
+            <li>naturbeskyttelse, badevagt og vejret her og nu,</li>
+            <li>jeres børns alder, mod og evner.</li>
+          </ul>
+          <p>
+            Brug sker på eget ansvar –<br />
+            I kender jeres børn<br />
+            og jeres situation bedst.
+          </p>
+
+          <hr />
+          <h3>Projektstatus &amp; version</h3>
+          <p>
+            Family Spots Map er et voksende hjerteprojekt.<br />
+            Nye spots, regioner og kategorier kommer stille og roligt til –<br />
+            først der, hvor vi selv rejser med vores børn,<br />
+            derefter sammen med partnere og fællesskab.
+          </p>
+          <p>Aktuel kortversion: <strong>2025-12-01</strong></p>
+          <p>
+            Hvis kortet har hjulpet jer<br />
+            til en god dag som familie,<br />
+            et øjeblik af lethed<br />
+            eller et sted, I gerne vil vende tilbage til,<br />
+            så har det opfyldt sit formål.
+          </p>
+        </article>
+
         <!-- Englisch -->
         <article id="page-about-en" class="page page-about hidden" lang="en" aria-hidden="true">
           <h2>About Family Spots Map</h2>
@@ -1139,8 +1257,7 @@
         <span
           id="bottom-nav-map-label"
           data-i18n-de="Karte"
-          data-i18n-en="Map"
-          data-i18n-da="Kort">
+          data-i18n-en="Map">
           Karte
         </span>
       </button>
@@ -1153,8 +1270,7 @@
         <span
           id="bottom-nav-about-label"
           data-i18n-de="Über Family Spots Map"
-          data-i18n-en="About Family Spots Map"
-          data-i18n-da="Om Family Spots Map">
+          data-i18n-en="About Family Spots Map">
           Über Family Spots Map
         </span>
       </button>
