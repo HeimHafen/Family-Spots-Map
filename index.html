@@ -82,9 +82,6 @@
   <link rel="stylesheet" href="css/badges.css" />
 </head>
 <body>
-  <a href="#view-map" class="skip-link">Direkt zum Kartenbereich springen</a>
-  <a href="#spots-title" class="skip-link">Direkt zur Spot-Liste springen</a>
-
   <noscript>
     <div class="noscript-warning">
       Family Spots Map benötigt JavaScript, um korrekt zu funktionieren.
@@ -115,6 +112,23 @@
           </button>
         </div>
         <div class="app-header-right">
+          <!-- Skip-Button zur Spot-Liste -->
+          <span
+            class="sr-only"
+            id="skip-to-spots-label"
+            data-i18n-de="Direkt zur Spot-Liste springen"
+            data-i18n-en="Skip directly to spot list">
+            Direkt zur Spot-Liste springen
+          </span>
+          <button
+            id="btn-skip-spots"
+            class="btn-icon"
+            type="button"
+            aria-labelledby="skip-to-spots-label"
+            onclick="document.getElementById('spots-title').scrollIntoView({behavior: 'smooth'});">
+            ↘️
+          </button>
+
           <span
             class="sr-only"
             id="theme-toggle-label"
