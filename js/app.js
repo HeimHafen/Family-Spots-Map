@@ -76,12 +76,14 @@ const LANG_DA = "da";
  * @property {string} [town]
  * @property {string} [country]
  * @property {string} [category]
+ * @property {string} [categorySlug]
  * @property {string[]} [categories]
  * @property {string[]} [tags]
  * @property {string} [subtitle]
  * @property {string} [shortDescription]
  * @property {string} [summary_de]
  * @property {string} [summary_en]
+ * @property {string} [summary_da]
  * @property {string} [poetry]
  * @property {string} [description]
  * @property {string} [text]
@@ -230,6 +232,8 @@ let activeTagFilters = new Set();
 
 // DOM-Referenzen
 let languageSwitcherEl;
+let languageSwitcherFlagEl;
+let languageSwitcherCodeEl;
 let themeToggleEl;
 let btnLocateEl;
 let btnHelpEl;
@@ -316,21 +320,27 @@ function activateOnEnterSpace(handler) {
   };
 }
 
-// WICHTIG: jetzt mit dänischer Unterstützung (data-i18n-da)
+/**
+ * Statisches Fallback-i18n über data-i18n-de / -en / -da
+ * (z. B. für Tilla-Text im HTML)
+ */
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
-    let attr = "data-i18n-de";
-
+    let attrName;
     if (currentLang === LANG_EN) {
-      attr = "data-i18n-en";
+      attrName = "data-i18n-en";
     } else if (currentLang === LANG_DA) {
-      attr = "data-i18n-da";
+      attrName = "data-i18n-da";
+    } else {
+      attrName = "data-i18n-de";
     }
 
-    const text = el.getAttribute(attr);
-    if (text) {
-      el.textContent = text;
+    let text = el.getAttribute(attrName);
+    if (!text) {
+      // Fallback: erst de, dann en
+      text = el.getAttribute("data-i18n-de") || el.getAttribute("data-i18n-en");
     }
+    if (text) el.textContent = text;
   });
 }
 
@@ -452,30 +462,38 @@ function getCategoryLabelWithAccess(slug) {
   return base;
 }
 
+/**
+ * Sprach-Badge (Flagge + Kürzel) aktualisieren
+ */
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
 
-  const options = languageSwitcherEl.querySelectorAll(
-    ".language-switcher-option"
-  );
+  // Flag + Code wechseln
+  if (languageSwitcherFlagEl) {
+    let src = "assets/flags/flag-de.svg";
+    let code = "DE";
 
-  if (!options.length) {
+    if (currentLang === LANG_DA) {
+      src = "assets/flags/flag-dk.svg";
+      code = "DK";
+    } else if (currentLang === LANG_EN) {
+      src = "assets/flags/flag-gb.svg";
+      code = "EN";
+    }
+
+    languageSwitcherFlagEl.src = src;
+    if (languageSwitcherCodeEl) {
+      languageSwitcherCodeEl.textContent = code;
+    }
+  } else {
     // Fallback: nur Text im Button
     let label = "DE";
     if (currentLang === LANG_DA) label = "DK";
     else if (currentLang === LANG_EN) label = "EN";
     languageSwitcherEl.textContent = label;
-    return;
   }
 
-  options.forEach((opt) => {
-    const lang = opt.getAttribute("data-lang");
-    const isActive = lang === currentLang;
-    opt.classList.toggle("language-switcher-option--active", isActive);
-    opt.style.fontWeight = isActive ? "600" : "400";
-    opt.style.opacity = isActive ? "1" : "0.6";
-  });
-
+  // Aria-Label aktualisieren
   let ariaLabel;
   if (currentLang === LANG_DE) {
     ariaLabel = "Sprache: Deutsch (Tippen für Dansk)";
@@ -516,6 +534,9 @@ function updatePlusStatusText(status) {
 function getCompassPlusHintText(lang = currentLang) {
   if (lang === LANG_EN) {
     return "Tip: You can open and collapse Compass, Family Spots Plus and “My day” at any time using the “Show” buttons.";
+  }
+  if (lang === LANG_DA) {
+    return "Tip: Du kan altid åbne og lukke Kompas, Family Spots Plus og “Min dag” med knappen “Vis”.";
   }
   return "Tipp: Kompass, Family Spots Plus und „Mein Tag“ kannst du jederzeit über die Buttons „Anzeigen“ öffnen und wieder einklappen.";
 }
@@ -586,8 +607,10 @@ function setLanguage(lang, { initial = false } = {}) {
       typeof I18N !== "undefined" &&
       typeof I18N.setLanguage === "function"
     ) {
-      // WICHTIG: I18N bekommt jetzt "de", "en" ODER "da"
-      I18N.setLanguage(currentLang);
+      let i18nLang = LANG_DE;
+      if (currentLang === LANG_EN) i18nLang = LANG_EN;
+      else if (currentLang === LANG_DA) i18nLang = "da";
+      I18N.setLanguage(i18nLang);
     }
   } catch (err) {
     console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
@@ -613,13 +636,24 @@ function setLanguage(lang, { initial = false } = {}) {
   updateCompassUI();
 
   const aboutDe = document.getElementById("page-about-de");
+  const aboutDa = document.getElementById("page-about-da");
   const aboutEn = document.getElementById("page-about-en");
-  if (aboutDe && aboutEn) {
-    const showDe = currentLang === LANG_DE || currentLang === LANG_DA;
+
+  if (aboutDe && aboutEn && aboutDa) {
+    const langCode = currentLang;
+
+    const showDe = langCode === LANG_DE;
+    const showDa = langCode === LANG_DA;
+    const showEn = langCode === LANG_EN;
+
     aboutDe.classList.toggle("hidden", !showDe);
     aboutDe.setAttribute("aria-hidden", showDe ? "false" : "true");
-    aboutEn.classList.toggle("hidden", showDe);
-    aboutEn.setAttribute("aria-hidden", showDe ? "true" : "false");
+
+    aboutDa.classList.toggle("hidden", !showDa);
+    aboutDa.setAttribute("aria-hidden", showDa ? "false" : "true");
+
+    aboutEn.classList.toggle("hidden", !showEn);
+    aboutEn.setAttribute("aria-hidden", showEn ? "false" : "true");
   }
 
   if (btnToggleFiltersEl) {
@@ -647,26 +681,21 @@ function setLanguage(lang, { initial = false } = {}) {
   }
 
   if (filterSearchEl) {
-    if (currentLang === LANG_EN) {
-      filterSearchEl.placeholder = "Place, spot, keywords …";
-    } else if (currentLang === LANG_DA) {
-      filterSearchEl.placeholder = "Sted, spot, nøgleord …";
-    } else {
-      filterSearchEl.placeholder = "Ort, Spot, Stichwörter …";
-    }
+    filterSearchEl.placeholder =
+      currentLang === LANG_EN
+        ? "Place, spot, keywords …"
+        : currentLang === LANG_DA
+        ? "Sted, spot, søgeord …"
+        : "Ort, Spot, Stichwörter …";
   }
 
   if (daylogTextEl && FEATURES.daylog) {
-    if (currentLang === LANG_EN) {
-      daylogTextEl.placeholder =
-        "Today we went to the wildlife park – the goats were sooo cute!";
-    } else if (currentLang === LANG_DA) {
-      daylogTextEl.placeholder =
-        "I dag fandt vi et sted, hvor tiden et øjeblik gik lidt langsommere.";
-    } else {
-      daylogTextEl.placeholder =
-        "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
-    }
+    daylogTextEl.placeholder =
+      currentLang === LANG_EN
+        ? "Today we went to the wildlife park – the goats were sooo cute!"
+        : currentLang === LANG_DA
+        ? "I dag var vi i dyreparken – gederne var såå søde!"
+        : "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
   }
 
   updateRadiusTexts();
@@ -691,7 +720,11 @@ function setLanguage(lang, { initial = false } = {}) {
 
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
     btn.textContent =
-      currentLang === LANG_EN ? "Close" : "Schließen";
+      currentLang === LANG_EN
+        ? "Close"
+        : currentLang === LANG_DA
+        ? "Luk"
+        : "Schließen";
   });
 
   ensureCompassPlusHint();
@@ -718,6 +751,8 @@ function showSpotsLoadErrorUI() {
   msg.textContent =
     currentLang === LANG_EN
       ? "Spots could not be loaded. Please check your connection and try again."
+      : currentLang === LANG_DA
+      ? "Spots kunne ikke indlæses. Tjek venligst forbindelsen og prøv igen."
       : "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.";
   spotListEl.appendChild(msg);
 
@@ -725,12 +760,18 @@ function showSpotsLoadErrorUI() {
   retryBtn.type = "button";
   retryBtn.className = "btn btn-small";
   retryBtn.textContent =
-    currentLang === LANG_EN ? "Try again" : "Erneut versuchen";
+    currentLang === LANG_EN
+      ? "Try again"
+      : currentLang === LANG_DA
+      ? "Prøv igen"
+      : "Erneut versuchen";
 
   retryBtn.addEventListener("click", () => {
     showToast(
       currentLang === LANG_EN
         ? "Reloading spots…"
+        : currentLang === LANG_DA
+        ? "Indlæser spots igen …"
         : "Lade Spots erneut …"
     );
     loadSpots();
@@ -757,6 +798,8 @@ async function loadSpots() {
       showToast(
         currentLang === LANG_EN
           ? "Loaded offline data."
+          : currentLang === LANG_DA
+          ? "Indlæste offline-data."
           : "Offline-Daten geladen."
       );
     }
@@ -873,7 +916,11 @@ function populateCategoryOptions() {
   if (extraSet.size > 0) {
     const extraGroup = document.createElement("optgroup");
     extraGroup.label =
-      currentLang === LANG_EN ? "Other categories" : "Weitere Kategorien";
+      currentLang === LANG_EN
+        ? "Other categories"
+        : currentLang === LANG_DA
+        ? "Andre kategorier"
+        : "Weitere Kategorien";
 
     Array.from(extraSet)
       .sort((a, b) =>
@@ -1110,12 +1157,18 @@ function getSpotMetaParts(spot) {
   if (spot.category) parts.push(getCategoryLabel(spot.category));
   if (isSpotVerified(spot)) {
     parts.push(
-      currentLang === LANG_EN ? "verified" : "verifiziert"
+      currentLang === LANG_EN
+        ? "verified"
+        : currentLang === LANG_DA
+        ? "verificeret"
+        : "verifiziert"
     );
   }
   if (spot.visit_minutes) {
     parts.push(
       currentLang === LANG_EN
+        ? `~${spot.visit_minutes} min`
+        : currentLang === LANG_DA
         ? `~${spot.visit_minutes} min`
         : `~${spot.visit_minutes} Min.`
     );
@@ -1133,6 +1186,8 @@ function renderSpotList() {
     msg.textContent =
       currentLang === LANG_EN
         ? "Right now no spot matches your filters. Try a wider radius or remove one of the filters."
+        : currentLang === LANG_DA
+        ? "Der er lige nu ingen spots, der matcher dine filtre. Prøv en større radius eller fjern et filter."
         : "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus.";
     spotListEl.appendChild(msg);
     return;
@@ -1219,9 +1274,13 @@ function syncFavButtonState(btn, spotId) {
     isFav
       ? currentLang === LANG_EN
         ? "Remove from favourites"
+        : currentLang === LANG_DA
+        ? "Fjern fra favoritter"
         : "Aus Favoriten entfernen"
       : currentLang === LANG_EN
       ? "Add to favourites"
+      : currentLang === LANG_DA
+      ? "Zu favoritter hinzufügen"
       : "Zu Favoriten hinzufügen"
   );
 }
@@ -1270,6 +1329,14 @@ function showSpotDetails(spot) {
   if (currentLang === LANG_EN) {
     description =
       spot.summary_en || spot.poetry || spot.description || spot.text || "";
+  } else if (currentLang === LANG_DA) {
+    description =
+      spot.summary_da ||
+      spot.summary_de ||
+      spot.poetry ||
+      spot.description ||
+      spot.text ||
+      "";
   } else {
     description =
       spot.summary_de || spot.poetry || spot.description || spot.text || "";
@@ -1321,7 +1388,11 @@ function showSpotDetails(spot) {
   closeBtn.type = "button";
   closeBtn.className = "btn-ghost btn-small";
   closeBtn.textContent =
-    currentLang === LANG_EN ? "Close" : "Schließen";
+    currentLang === LANG_EN
+      ? "Close"
+      : currentLang === LANG_DA
+      ? "Luk"
+      : "Schließen";
   closeBtn.addEventListener("click", () => {
     closeSpotDetails({ returnFocus: true });
   });
@@ -1656,6 +1727,8 @@ async function init() {
     languageSwitcherEl =
       document.getElementById("language-switcher") ||
       document.getElementById("language-toggle");
+    languageSwitcherFlagEl = document.getElementById("language-switcher-flag");
+    languageSwitcherCodeEl = document.getElementById("language-switcher-code");
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
