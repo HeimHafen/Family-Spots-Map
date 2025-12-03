@@ -16,6 +16,7 @@
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
   <link rel="alternate" hreflang="de" href="https://heimhafen.github.io/Family-Spots-Map/" />
   <link rel="alternate" hreflang="en" href="https://heimhafen.github.io/Family-Spots-Map/en/" />
+  <link rel="alternate" hreflang="da" href="https://heimhafen.github.io/Family-Spots-Map/" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Family Spots Map – familienfreundliche Abenteuerkarte" />
@@ -108,11 +109,13 @@
             class="language-switcher"
             type="button"
             aria-labelledby="language-switcher-label">
-            <span class="language-switcher-flag" aria-hidden="true">🇩🇪</span>
+            <span class="language-switcher-option" data-lang="de">🇩🇪 DE</span>
+            <span class="language-switcher-option" data-lang="da">🇩🇰 DK</span>
+            <span class="language-switcher-option" data-lang="en">🇬🇧 EN</span>
           </button>
         </div>
         <div class="app-header-right">
-          <!-- Skip-Button zur Spot-Liste (nur Icon, Text ist Screenreader-only) -->
+          <!-- Skip-Button zur Spot-Liste -->
           <span
             class="sr-only"
             id="skip-to-spots-label"
@@ -625,7 +628,7 @@
           <section class="sidebar-section sidebar-section--grow" aria-labelledby="spots-title">
             <header class="sidebar-section-header">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
-            <button
+              <button
                 id="btn-toggle-view"
                 class="btn-ghost btn-small"
                 type="button"
@@ -741,7 +744,7 @@
            ABOUT VIEW
            ========================================= -->
       <section id="view-about" class="view" aria-label="Über Family Spots Map">
-        <!-- Deutsch -->
+        <!-- Deutsch / Dansk (gemeinsam) -->
         <article id="page-about-de" class="page page-about" lang="de" aria-hidden="false">
           <h2>Über Family Spots Map</h2>
           <p>
