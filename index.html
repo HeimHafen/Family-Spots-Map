@@ -24,6 +24,8 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heimhafen.github.io/Family-Spots-Map/" />
   <meta property="og:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="de_DE" />
   <meta property="og:site_name" content="Family Spots Map" />
 
@@ -33,6 +35,26 @@
   <meta name="twitter:description"
         content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer." />
   <meta name="twitter:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Family Spots Map",
+    "operatingSystem": "iOS, Android, Web",
+    "applicationCategory": "TravelApplication",
+    "url": "https://heimhafen.github.io/Family-Spots-Map/",
+    "inLanguage": ["de", "en"],
+    "description": "Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern.",
+    "offers": {
+      "@type": "Offer",
+      "price": "19.90",
+      "priceCurrency": "EUR",
+      "description": "Jahresabo für die Grundkarte"
+    }
+  }
+  </script>
 
   <!-- PWA / Apple -->
   <link rel="manifest" href="manifest.webmanifest" />
@@ -60,6 +82,9 @@
   <link rel="stylesheet" href="css/badges.css" />
 </head>
 <body>
+  <a href="#view-map" class="skip-link">Direkt zum Kartenbereich springen</a>
+  <a href="#spots-title" class="skip-link">Direkt zur Spot-Liste springen</a>
+
   <noscript>
     <div class="noscript-warning">
       Family Spots Map benötigt JavaScript, um korrekt zu funktionieren.
@@ -167,7 +192,9 @@
                   src="assets/tilla/tilla-hero.png"
                   alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
                   loading="lazy"
-                  decoding="async" />
+                  decoding="async"
+                  width="512"
+                  height="512" />
               </div>
               <div class="tilla-sidebar-text">
                 <p
@@ -406,7 +433,10 @@
                   max="4"
                   step="1"
                   value="4"
-                  aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description" />
+                  aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description"
+                  aria-valuemin="0"
+                  aria-valuemax="4"
+                  aria-valuenow="4" />
                 <span
                   id="filter-radius-max-label"
                   class="radius-max-label"
