@@ -59,6 +59,19 @@ import {
 // zusätzliche Sprache (nicht aus config.js importiert)
 const LANG_DA = "da";
 
+// Flaggen-Icons für den Sprachumschalter
+const FLAG_ICON_SRC = {
+  [LANG_DE]: "assets/flags/flag-de.svg",
+  [LANG_DA]: "assets/flags/flag-dk.svg",
+  [LANG_EN]: "assets/flags/flag-gb.svg"
+};
+
+const FLAG_ALT_LABEL = {
+  [LANG_DE]: "Deutsch",
+  [LANG_DA]: "Dansk",
+  [LANG_EN]: "English"
+};
+
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
 // ------------------------------------------------------
@@ -445,26 +458,36 @@ function getCategoryLabelWithAccess(slug) {
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
 
+  const flagImg = languageSwitcherEl.querySelector(".language-switcher-flag");
   const options = languageSwitcherEl.querySelectorAll(
     ".language-switcher-option"
   );
 
-  if (!options.length) {
-    // Fallback: nur Text im Button
+  // Bild-Flagge im runden Button aktualisieren
+  if (flagImg) {
+    const src = FLAG_ICON_SRC[currentLang] || FLAG_ICON_SRC[LANG_DE];
+    flagImg.src = src;
+
+    const alt = FLAG_ALT_LABEL[currentLang] || "Language";
+    flagImg.alt = alt;
+  }
+
+  // Falls noch alte Text-Optionen verwendet werden, diese weiter pflegen
+  if (options.length) {
+    options.forEach((opt) => {
+      const lang = opt.getAttribute("data-lang");
+      const isActive = lang === currentLang;
+      opt.classList.toggle("language-switcher-option--active", isActive);
+      opt.style.fontWeight = isActive ? "600" : "400";
+      opt.style.opacity = isActive ? "1" : "0.6";
+    });
+  } else if (!flagImg) {
+    // Fallback: reiner Text im Button
     let label = "DE";
     if (currentLang === LANG_DA) label = "DK";
     else if (currentLang === LANG_EN) label = "EN";
     languageSwitcherEl.textContent = label;
-    return;
   }
-
-  options.forEach((opt) => {
-    const lang = opt.getAttribute("data-lang");
-    const isActive = lang === currentLang;
-    opt.classList.toggle("language-switcher-option--active", isActive);
-    opt.style.fontWeight = isActive ? "600" : "400";
-    opt.style.opacity = isActive ? "1" : "0.6";
-  });
 
   let ariaLabel;
   if (currentLang === LANG_DE) {
@@ -570,6 +593,10 @@ function setLanguage(lang, { initial = false } = {}) {
   }
 
   document.documentElement.lang = currentLang;
+
+  if (languageSwitcherEl) {
+    languageSwitcherEl.setAttribute("data-current-lang", currentLang);
+  }
 
   try {
     if (
