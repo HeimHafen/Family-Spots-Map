@@ -51,21 +51,13 @@ import { initToast, showToast } from "./toast.js";
 import { loadData } from "./data.js";
 import {
   getPlusStatus,
+  isPlusActive,
   formatPlusStatus,
   redeemPartnerCode
 } from "./features/plus.js";
 
-// ------------------------------------------------------
-// Sprach-Helfer
-// ------------------------------------------------------
-
-// zusätzliches Sprach-Kürzel für Dänisch (UI-Sprache; Texte wie Deutsch)
-const LANG_DK = "dk";
-
-/** Hilfsfunktion: DE & DK verwenden deutsche Texte, EN englische */
-function isGermanLang(lang = currentLang) {
-  return lang !== LANG_EN;
-}
+// zusätzliche Sprache (nicht aus config.js importiert)
+const LANG_DA = "da";
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
@@ -73,7 +65,50 @@ function isGermanLang(lang = currentLang) {
 
 /**
  * @typedef {Object} Spot
- * ...
+ * @property {number} [lat]
+ * @property {number} [lng]
+ * @property {number} [lon]
+ * @property {string|number} [id]
+ * @property {string} [title]
+ * @property {string} [name]
+ * @property {string} [spotName]
+ * @property {string} [city]
+ * @property {string} [town]
+ * @property {string} [country]
+ * @property {string} [category]
+ * @property {string[]} [categories]
+ * @property {string[]} [tags]
+ * @property {string} [subtitle]
+ * @property {string} [shortDescription]
+ * @property {string} [summary_de]
+ * @property {string} [summary_en]
+ * @property {string} [poetry]
+ * @property {string} [description]
+ * @property {string} [text]
+ * @property {string} [address]
+ * @property {string} [postcode]
+ * @property {number} [visit_minutes]
+ * @property {boolean} [plusOnly]
+ * @property {boolean} [plus]
+ * @property {boolean} [bigAdventure]
+ * @property {boolean} [isBigAdventure]
+ * @property {boolean} [longTrip]
+ * @property {boolean} [verified]
+ * @property {boolean} [isVerified]
+ * @property {string[]|string} [ageGroups]
+ * @property {string[]|string} [age]
+ * @property {string[]|string} [ages]
+ * @property {string[]|string} [moods]
+ * @property {string[]|string} [moodTags]
+ * @property {string[]|string} [mood]
+ * @property {string[]|string} [travelModes]
+ * @property {string[]|string} [travel]
+ * @property {string[]|string} [tripModes]
+ * @property {string} [_searchText]
+ * @property {string[]} [_ageGroups]
+ * @property {string[]} [_moods]
+ * @property {string[]} [_travelModes]
+ * @property {string[]} [_tagsMerged]
  */
 
 // ------------------------------------------------------
@@ -101,7 +136,11 @@ function getRandomPlayIdea() {
 function getInitialLang() {
   try {
     const stored = localStorage.getItem("fs_lang");
-    if (stored === LANG_DE || stored === LANG_EN || stored === LANG_DK) {
+    if (
+      stored === LANG_DE ||
+      stored === LANG_EN ||
+      stored === LANG_DA
+    ) {
       return stored;
     }
   } catch {
@@ -113,7 +152,13 @@ function getInitialLang() {
     typeof I18N.getLanguage === "function"
   ) {
     const fromI18n = I18N.getLanguage();
-    if (fromI18n === LANG_DE || fromI18n === LANG_EN) return fromI18n;
+    if (
+      fromI18n === LANG_DE ||
+      fromI18n === LANG_EN ||
+      fromI18n === LANG_DA
+    ) {
+      return fromI18n;
+    }
   }
 
   const htmlLang =
@@ -122,7 +167,7 @@ function getInitialLang() {
       .slice(0, 2);
 
   if (htmlLang === "en") return LANG_EN;
-  if (htmlLang === "da" || htmlLang === "dk") return LANG_DK;
+  if (htmlLang === "da" || htmlLang === "dk") return LANG_DA;
   return LANG_DE;
 }
 
@@ -155,27 +200,32 @@ let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
 // Map / Daten
+/** @type {any} */
 let map = null;
+/** @type {any} */
 let markersLayer = null;
+/** @type {Spot[]} */
 let spots = [];
+/** @type {Spot[]} */
 let filteredSpots = [];
 let favorites = new Set();
 
-// Marker-Limit Toast
+/** Toast-Entprellung für Marker-Limit */
 let hasShownMarkerLimitToast = false;
 
 // Filter-States
 let plusActive = false;
-let moodFilter = null;
-let travelMode = null;
-let radiusStep = 4;
-let ageFilter = "all";
+let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
+let travelMode = null; // "everyday" | "trip" | null
+let radiusStep = 4; // 0–4
+let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
 let categoryFilter = "";
 let onlyBigAdventures = false;
 let onlyVerified = false;
 let onlyFavorites = false;
 let filtersCollapsed = true;
+/** Aktive Tag-Filter (IDs aus FILTERS) */
 let activeTagFilters = new Set();
 
 // DOM-Referenzen
@@ -203,9 +253,9 @@ let filterVerifiedEl;
 let filterFavoritesEl;
 let spotListEl;
 let spotDetailEl;
-let tagFilterContainerEl;
+let tagFilterContainerEl; // Container für Tag-Filter-Chips
 
-// Plus & Mein Tag
+// Plus & Mein Tag – Sections + Toggle-Buttons
 let plusSectionEl;
 let btnTogglePlusEl;
 let daylogSectionEl;
@@ -226,11 +276,19 @@ let compassApplyLabelEl;
 let compassApplyBtnEl;
 let btnToggleCompassEl;
 
-// Tilla & Co
+// Tilla
 let tilla = null;
+
+// Spielideen
 let playIdeasBtnEl = null;
+
+// Filter-Body innerhalb der Filter-Section
 let filterBodyEls = [];
+
+// Fokus-Merkung für Detail-Panel
 let lastSpotTriggerEl = null;
+
+// Onboarding-Hint (Kompass / Plus / Mein Tag)
 let compassPlusHintEl = null;
 
 // ------------------------------------------------------
@@ -275,6 +333,10 @@ function initLazyLoadImages() {
   });
 }
 
+/**
+ * Meta-Title, Meta-Description, ARIA-Labels & Tilla-Alt aus i18n setzen.
+ * Wird bei jedem Sprachwechsel aufgerufen.
+ */
 function updateMetaAndA11yFromI18n() {
   if (typeof I18N === "undefined" || typeof I18N.t !== "function") return;
 
@@ -338,31 +400,41 @@ function getCategoryLabel(slug) {
   );
 }
 
+/**
+ * Liefert das Kategorien-Label inkl. Hinweis auf Plus / Add-ons.
+ * Basis-Kategorien bleiben unverändert.
+ */
 function getCategoryLabelWithAccess(slug) {
   const base = getCategoryLabel(slug);
   if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) return base;
 
   const access = CATEGORY_ACCESS.perCategory[slug];
-  if (!access) return base;
+  if (!access) {
+    return base;
+  }
 
   if (access.level === "subscription") {
-    return base + " · Plus";
+    const suffix = " · Plus";
+    return base + suffix;
   }
 
   if (access.level === "addon") {
     let suffix;
     if (access.addonId === "addon_water") {
-      suffix = currentLang === LANG_EN
-        ? " · water add-on (Plus)"
-        : " · Wasser-Add-on (Plus)";
+      suffix =
+        currentLang === LANG_EN
+          ? " · water add-on (Plus)"
+          : " · Wasser-Add-on (Plus)";
     } else if (access.addonId === "addon_rv") {
-      suffix = currentLang === LANG_EN
-        ? " · RV add-on (Plus)"
-        : " · WoMo-Add-on (Plus)";
+      suffix =
+        currentLang === LANG_EN
+          ? " · RV add-on (Plus)"
+          : " · WoMo-Add-on (Plus)";
     } else {
-      suffix = currentLang === LANG_EN
-        ? " · add-on (Plus)"
-        : " · Add-on (Plus)";
+      suffix =
+        currentLang === LANG_EN
+          ? " · add-on (Plus)"
+          : " · Add-on (Plus)";
     }
     return base + suffix;
   }
@@ -373,43 +445,56 @@ function getCategoryLabelWithAccess(slug) {
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
 
-  const flagSpan =
-    languageSwitcherEl.querySelector(".language-switcher-flag") ||
-    languageSwitcherEl;
+  const options = languageSwitcherEl.querySelectorAll(
+    ".language-switcher-option"
+  );
 
-  let flag = "🇩🇪";
-  let ariaLabel = "";
-
-  if (currentLang === LANG_EN) {
-    flag = "🇬🇧";
-    ariaLabel = "Language: English (tap for Deutsch)";
-  } else if (currentLang === LANG_DK) {
-    flag = "🇩🇰";
-    ariaLabel = "Sprog: Dansk (tryk for English)";
-  } else {
-    flag = "🇩🇪";
-    ariaLabel = "Sprache: Deutsch (Tippen für Dansk)";
+  if (!options.length) {
+    // Fallback: nur Text im Button
+    let label = "DE";
+    if (currentLang === LANG_DA) label = "DK";
+    else if (currentLang === LANG_EN) label = "EN";
+    languageSwitcherEl.textContent = label;
+    return;
   }
 
-  flagSpan.textContent = flag;
+  options.forEach((opt) => {
+    const lang = opt.getAttribute("data-lang");
+    const isActive = lang === currentLang;
+    opt.classList.toggle("language-switcher-option--active", isActive);
+    opt.style.fontWeight = isActive ? "600" : "400";
+    opt.style.opacity = isActive ? "1" : "0.6";
+  });
+
+  let ariaLabel;
+  if (currentLang === LANG_DE) {
+    ariaLabel = "Sprache: Deutsch (Tippen für Dansk)";
+  } else if (currentLang === LANG_DA) {
+    ariaLabel = "Sprog: Dansk (tryk for English)";
+  } else {
+    ariaLabel = "Language: English (tap for Deutsch)";
+  }
   languageSwitcherEl.setAttribute("aria-label", ariaLabel);
 }
 
 function updateGenericSectionToggleLabel(btn, isOpen) {
   if (!btn) return;
   const target = btn.querySelector("span") || btn;
-  const showLabel = isGermanLang() ? "Anzeigen" : "Show";
-  const hideLabel = isGermanLang() ? "Ausblenden" : "Hide";
+  const isDeLike = currentLang === LANG_DE || currentLang === LANG_DA;
+  const showLabel = isDeLike ? "Anzeigen" : "Show";
+  const hideLabel = isDeLike ? "Ausblenden" : "Hide";
   target.textContent = isOpen ? hideLabel : showLabel;
   btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
 }
 
 function updatePlusStatusText(status) {
   if (!plusStatusTextEl) return;
+
   if (!FEATURES.plus) {
     plusStatusTextEl.textContent = "";
     return;
   }
+
   const s = status || getPlusStatus();
   plusStatusTextEl.textContent = formatPlusStatus(s);
 }
@@ -475,13 +560,8 @@ function ensureCompassPlusHint() {
  * Setzt Sprache, aktualisiert UI & speichert in localStorage.
  */
 function setLanguage(lang, { initial = false } = {}) {
-  if (lang === LANG_EN) {
-    currentLang = LANG_EN;
-  } else if (lang === LANG_DK) {
-    currentLang = LANG_DK;
-  } else {
-    currentLang = LANG_DE;
-  }
+  currentLang =
+    lang === LANG_EN ? LANG_EN : lang === LANG_DA ? LANG_DA : LANG_DE;
 
   try {
     localStorage.setItem("fs_lang", currentLang);
@@ -489,22 +569,22 @@ function setLanguage(lang, { initial = false } = {}) {
     // ignore
   }
 
-  const textLang = currentLang === LANG_EN ? LANG_EN : LANG_DE;
-  document.documentElement.lang = textLang;
+  document.documentElement.lang = currentLang;
 
   try {
     if (
       typeof I18N !== "undefined" &&
       typeof I18N.setLanguage === "function"
     ) {
-      I18N.setLanguage(textLang);
+      const i18nLang = currentLang === LANG_EN ? LANG_EN : LANG_DE;
+      I18N.setLanguage(i18nLang);
     }
   } catch (err) {
     console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
   }
 
   updateMetaAndA11yFromI18n();
-  updateHeaderTagline(textLang);
+  updateHeaderTagline(currentLang);
 
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
   if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
@@ -525,7 +605,7 @@ function setLanguage(lang, { initial = false } = {}) {
   const aboutDe = document.getElementById("page-about-de");
   const aboutEn = document.getElementById("page-about-en");
   if (aboutDe && aboutEn) {
-    const showDe = textLang === LANG_DE;
+    const showDe = currentLang === LANG_DE || currentLang === LANG_DA;
     aboutDe.classList.toggle("hidden", !showDe);
     aboutDe.setAttribute("aria-hidden", showDe ? "false" : "true");
     aboutEn.classList.toggle("hidden", showDe);
@@ -557,15 +637,17 @@ function setLanguage(lang, { initial = false } = {}) {
   }
 
   if (filterSearchEl) {
-    filterSearchEl.placeholder = isGermanLang()
-      ? "Ort, Spot, Stichwörter …"
-      : "Place, spot, keywords …";
+    filterSearchEl.placeholder =
+      currentLang === LANG_EN
+        ? "Place, spot, keywords …"
+        : "Ort, Spot, Stichwörter …";
   }
 
   if (daylogTextEl && FEATURES.daylog) {
-    daylogTextEl.placeholder = isGermanLang()
-      ? "Heute waren wir im Wildpark – die Ziegen waren sooo süß!"
-      : "Today we went to the wildlife park – the goats were sooo cute!";
+    daylogTextEl.placeholder =
+      currentLang === LANG_EN
+        ? "Today we went to the wildlife park – the goats were sooo cute!"
+        : "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
   }
 
   updateRadiusTexts();
@@ -589,7 +671,8 @@ function setLanguage(lang, { initial = false } = {}) {
   updatePlusStatusText();
 
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
-    btn.textContent = isGermanLang() ? "Schließen" : "Close";
+    btn.textContent =
+      currentLang === LANG_EN ? "Close" : "Schließen";
   });
 
   ensureCompassPlusHint();
@@ -613,23 +696,23 @@ function showSpotsLoadErrorUI() {
 
   const msg = document.createElement("p");
   msg.className = "filter-group-helper";
-  msg.textContent = isGermanLang()
-    ? "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut."
-    : "Spots could not be loaded. Please check your connection and try again.";
+  msg.textContent =
+    currentLang === LANG_EN
+      ? "Spots could not be loaded. Please check your connection and try again."
+      : "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.";
   spotListEl.appendChild(msg);
 
   const retryBtn = document.createElement("button");
   retryBtn.type = "button";
   retryBtn.className = "btn btn-small";
-  retryBtn.textContent = isGermanLang()
-    ? "Erneut versuchen"
-    : "Try again";
+  retryBtn.textContent =
+    currentLang === LANG_EN ? "Try again" : "Erneut versuchen";
 
   retryBtn.addEventListener("click", () => {
     showToast(
-      isGermanLang()
-        ? "Lade Spots erneut …"
-        : "Reloading spots…"
+      currentLang === LANG_EN
+        ? "Reloading spots…"
+        : "Lade Spots erneut …"
     );
     loadSpots();
   });
@@ -653,9 +736,9 @@ async function loadSpots() {
 
     if (result.fromCache) {
       showToast(
-        isGermanLang()
-          ? "Offline-Daten geladen."
-          : "Loaded offline data."
+        currentLang === LANG_EN
+          ? "Loaded offline data."
+          : "Offline-Daten geladen."
       );
     }
 
@@ -732,14 +815,12 @@ function populateCategoryOptions() {
 
   const groupedSlugs = new Set();
 
-  const langKeyForGroups = currentLang === LANG_EN ? LANG_EN : LANG_DE;
-
   Object.entries(CATEGORY_GROUPS).forEach(([groupKey, slugs]) => {
     if (!Array.isArray(slugs) || !slugs.length) return;
 
     const groupLabel =
-      (CATEGORY_GROUP_LABELS[langKeyForGroups] &&
-        CATEGORY_GROUP_LABELS[langKeyForGroups][groupKey]) ||
+      (CATEGORY_GROUP_LABELS[currentLang] &&
+        CATEGORY_GROUP_LABELS[currentLang][groupKey]) ||
       groupKey;
 
     const optgroup = document.createElement("optgroup");
@@ -772,9 +853,8 @@ function populateCategoryOptions() {
 
   if (extraSet.size > 0) {
     const extraGroup = document.createElement("optgroup");
-    extraGroup.label = isGermanLang()
-      ? "Weitere Kategorien"
-      : "Other categories";
+    extraGroup.label =
+      currentLang === LANG_EN ? "Other categories" : "Weitere Kategorien";
 
     Array.from(extraSet)
       .sort((a, b) =>
@@ -782,7 +862,7 @@ function populateCategoryOptions() {
           .toLowerCase()
           .localeCompare(
             getCategoryLabel(b).toLowerCase(),
-            isGermanLang() ? "de" : "en"
+            currentLang === LANG_DE ? "de" : "en"
           )
       )
       .forEach((slug) => {
@@ -807,7 +887,9 @@ function updateRadiusTexts() {
     return;
 
   let value = parseInt(filterRadiusEl.value, 10);
-  if (Number.isNaN(value)) value = 4;
+  if (Number.isNaN(value)) {
+    value = 4;
+  }
   value = Math.min(Math.max(value, 0), RADIUS_STEPS_KM.length - 1);
   radiusStep = value;
 
@@ -847,6 +929,9 @@ function initRadiusSliderA11y() {
   updateRadiusTexts();
 }
 
+/**
+ * Distanz-Check für einen Spot relativ zu centerLatLng / radiusKm.
+ */
 function isSpotInRadius(spot, centerLatLng, radiusKm) {
   if (!centerLatLng || typeof centerLatLng.distanceTo !== "function") {
     return true;
@@ -912,7 +997,7 @@ function renderTagFilterChips() {
 }
 
 // ------------------------------------------------------
-// Filterlogik
+// Filterlogik (verwendet filterSpots aus filters.js)
 // ------------------------------------------------------
 
 function applyFiltersAndRender() {
@@ -961,9 +1046,7 @@ function applyFiltersAndRender() {
   }
 
   const radiusKm =
-    RADIUS_STEPS_KM[radiusStep] ??
-    RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ??
-    Infinity;
+    RADIUS_STEPS_KM[radiusStep] ?? RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ?? Infinity;
 
   filteredSpots = center
     ? nonGeoFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
@@ -1007,13 +1090,15 @@ function getSpotMetaParts(spot) {
   const parts = [];
   if (spot.category) parts.push(getCategoryLabel(spot.category));
   if (isSpotVerified(spot)) {
-    parts.push(isGermanLang() ? "verifiziert" : "verified");
+    parts.push(
+      currentLang === LANG_EN ? "verified" : "verifiziert"
+    );
   }
   if (spot.visit_minutes) {
     parts.push(
-      isGermanLang()
-        ? `~${spot.visit_minutes} Min.`
-        : `~${spot.visit_minutes} min`
+      currentLang === LANG_EN
+        ? `~${spot.visit_minutes} min`
+        : `~${spot.visit_minutes} Min.`
     );
   }
   return parts;
@@ -1026,9 +1111,10 @@ function renderSpotList() {
   if (!filteredSpots.length) {
     const msg = document.createElement("p");
     msg.className = "filter-group-helper";
-    msg.textContent = isGermanLang()
-      ? "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus."
-      : "Right now no spot matches your filters. Try a wider radius or remove one of the filters.";
+    msg.textContent =
+      currentLang === LANG_EN
+        ? "Right now no spot matches your filters. Try a wider radius or remove one of the filters."
+        : "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus.";
     spotListEl.appendChild(msg);
     return;
   }
@@ -1112,12 +1198,12 @@ function syncFavButtonState(btn, spotId) {
   btn.setAttribute(
     "aria-label",
     isFav
-      ? isGermanLang()
-        ? "Aus Favoriten entfernen"
-        : "Remove from favourites"
-      : isGermanLang()
-      ? "Zu Favoriten hinzufügen"
-      : "Add to favourites"
+      ? currentLang === LANG_EN
+        ? "Remove from favourites"
+        : "Aus Favoriten entfernen"
+      : currentLang === LANG_EN
+      ? "Add to favourites"
+      : "Zu Favoriten hinzufügen"
   );
 }
 
@@ -1162,13 +1248,12 @@ function showSpotDetails(spot) {
   const tags = Array.isArray(spot.tags) ? spot.tags : [];
 
   let description = "";
-  const textLangIsDe = isGermanLang();
-  if (textLangIsDe) {
-    description =
-      spot.summary_de || spot.poetry || spot.description || spot.text || "";
-  } else {
+  if (currentLang === LANG_EN) {
     description =
       spot.summary_en || spot.poetry || spot.description || spot.text || "";
+  } else {
+    description =
+      spot.summary_de || spot.poetry || spot.description || spot.text || "";
   }
 
   const addressParts = [];
@@ -1216,7 +1301,8 @@ function showSpotDetails(spot) {
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
   closeBtn.className = "btn-ghost btn-small";
-  closeBtn.textContent = isGermanLang() ? "Schließen" : "Close";
+  closeBtn.textContent =
+    currentLang === LANG_EN ? "Close" : "Schließen";
   closeBtn.addEventListener("click", () => {
     closeSpotDetails({ returnFocus: true });
   });
@@ -1408,6 +1494,7 @@ async function handlePlusCodeSubmit() {
   if (!plusCodeInputEl || !plusStatusTextEl) return;
 
   const raw = plusCodeInputEl.value.trim();
+
   const result = await redeemPartnerCode(raw);
 
   if (!result.ok) {
@@ -1433,8 +1520,6 @@ async function handlePlusCodeSubmit() {
 
   applyFiltersAndRender();
 }
-
-const DAYLOG_STORAGE_KEY = DAYLOG_STORAGE_KEY || "fs_daylog";
 
 function loadDaylogFromStorage() {
   if (!FEATURES.daylog) return;
@@ -1643,6 +1728,7 @@ async function init() {
     const initialTheme = getInitialTheme();
     currentTheme = applyTheme(initialTheme);
 
+    // Toast-System initialisieren
     initToast({ element: toastEl, t });
 
     const mapResult = initMap({
@@ -1680,16 +1766,15 @@ async function init() {
 
     if (languageSwitcherEl) {
       languageSwitcherEl.addEventListener("click", () => {
-        let nextLang;
-        if (currentLang === LANG_DE) {
-          nextLang = LANG_DK; // DE -> DK
-        } else if (currentLang === LANG_DK) {
-          nextLang = LANG_EN; // DK -> EN
-        } else {
-          nextLang = LANG_DE; // EN -> DE
-        }
+        const nextLang =
+          currentLang === LANG_DE
+            ? LANG_DA
+            : currentLang === LANG_DA
+            ? LANG_EN
+            : LANG_DE;
         setLanguage(nextLang);
       });
+      updateLanguageSwitcherVisual();
     }
 
     if (themeToggleEl) {
@@ -1704,6 +1789,7 @@ async function init() {
       btnLocateEl.addEventListener("click", handleLocateClick);
     }
 
+    // Router initialisieren (Map <-> About)
     initRouter({
       viewMapEl,
       viewAboutEl,
