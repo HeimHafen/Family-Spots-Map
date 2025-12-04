@@ -3,7 +3,8 @@
     "id": "red-cars-counting",
     "texts": {
       "de": "Zählt unterwegs alle roten Autos. Wer zuerst 10 gesehen hat, darf das nächste Ziel aussuchen.",
-      "en": "Count all the red cars you see. Whoever reaches 10 first may choose the next stop."
+      "en": "Count all the red cars you see. Whoever reaches 10 first may choose the next stop.",
+      "da": "Tæl alle de røde biler, I ser undervejs. Den, der først når 10, må vælge næste stop."
     },
     "tags": ["Beobachtung", "Zählen", "Aufmerksamkeit", "Unterwegs"],
     "suitableFor": ["Auto", "Stadt", "Autobahn", "Unterwegs"],
@@ -16,7 +17,8 @@
     "id": "story-about-tilla",
     "texts": {
       "de": "Denkt euch gemeinsam eine Geschichte über Tilla aus – woher kommt sie, wo will sie heute hin?",
-      "en": "Make up a story about Tilla together – where does she come from and where is she going today?"
+      "en": "Make up a story about Tilla together – where does she come from and where is she going today?",
+      "da": "Find sammen på en historie om Tilla – hvor kommer hun fra, og hvor vil hun hen i dag?"
     },
     "tags": ["Kreativität", "Fantasie", "Sprache", "Verbundenheit"],
     "suitableFor": ["Wiese", "Wald", "Park", "Pause", "Wandern", "Auto", "Zug"],
@@ -29,7 +31,8 @@
     "id": "tree-with-name",
     "texts": {
       "de": "Sucht einen Baum, der euch besonders gefällt, und gebt ihm einen Namen.",
-      "en": "Find a tree you really like and give it a name."
+      "en": "Find a tree you really like and give it a name.",
+      "da": "Find et træ, I særlig godt kan lide, og giv det et navn."
     },
     "tags": ["Natur", "Achtsamkeit", "Fantasie"],
     "suitableFor": ["Wald", "Park", "Wiese", "Wandern"],
@@ -42,7 +45,8 @@
     "id": "mini-photo-walk",
     "texts": {
       "de": "Macht einen Mini-Fotowalk: Jedes Kind darf 3 Fotos von Dingen machen, die es schön findet.",
-      "en": "Do a tiny photo walk: each child may take 3 photos of things they find beautiful."
+      "en": "Do a tiny photo walk: each child may take 3 photos of things they find beautiful.",
+      "da": "Tag på en mini-fototur: Hvert barn må tage 3 billeder af ting, det synes er smukke."
     },
     "tags": ["Kreativität", "Wahrnehmung", "Erinnerungen"],
     "suitableFor": ["Stadt", "Wald", "Wiese", "Unterwegs"],
@@ -55,7 +59,8 @@
     "id": "sound-guessing",
     "texts": {
       "de": "Spielt Geräusche-Raten: Einer macht ein Geräusch, die anderen müssen erraten, was es ist.",
-      "en": "Play sound guessing: one person makes a sound, the others guess what it is."
+      "en": "Play sound guessing: one person makes a sound, the others guess what it is.",
+      "da": "Leg lyd-gæt: Én laver en lyd, de andre skal gætte, hvad det er."
     },
     "tags": ["Sinne", "Hören", "Ratespiel"],
     "suitableFor": ["Auto", "Zug", "Pause", "Drinnen", "Unterwegs"],
@@ -68,7 +73,8 @@
     "id": "rainbow-hunt",
     "texts": {
       "de": "Sucht unterwegs nach Dingen in Regenbogenfarben – findet ihr alle sieben Farben?",
-      "en": "Hunt for rainbow colours on the way – can you find all seven?"
+      "en": "Hunt for rainbow colours on the way – can you find all seven?",
+      "da": "Kig efter ting i regnbuens farver undervejs – kan I finde alle syv?"
     },
     "tags": ["Farben", "Beobachtung", "Kooperation"],
     "suitableFor": ["Stadt", "Dorf", "Auto", "Zug", "Spaziergang"],
@@ -81,7 +87,8 @@
     "id": "animal-spotting-count",
     "texts": {
       "de": "Zählt, wie viele Tiere ihr unterwegs entdeckt – echte und als Figuren oder auf Schildern.",
-      "en": "Count how many animals you spot – real ones and those on signs or as statues."
+      "en": "Count how many animals you spot – real ones and those on signs or as statues.",
+      "da": "Tæl, hvor mange dyr I opdager – både rigtige dyr og dem på skilte eller som figurer."
     },
     "tags": ["Tiere", "Zählen", "Aufmerksamkeit"],
     "suitableFor": ["Auto", "Zug", "Stadt", "Zoo", "Wald", "Unterwegs"],
@@ -94,7 +101,8 @@
     "id": "secret-family-sign",
     "texts": {
       "de": "Erfindet ein Familien-Geheimzeichen, das nur ihr kennt – zum Beispiel für „Ich hab dich lieb“.",
-      "en": "Invent a secret family sign only you know – for example for 'I love you'."
+      "en": "Invent a secret family sign only you know – for example for 'I love you'.",
+      "da": "Find på et hemmeligt familiesignal, som kun I kender – for eksempel for „Jeg elsker dig“."
     },
     "tags": ["Verbundenheit", "Humor", "Nonverbale-Kommunikation"],
     "suitableFor": ["Überall", "Unterwegs", "Zuhause"],
@@ -107,7 +115,8 @@
     "id": "child-navigator",
     "texts": {
       "de": "Lasst ein Kind den Weg ansagen: „Geradeaus“, „links“, „rechts“ – natürlich nur, wenn es sicher ist.",
-      "en": "Let one child be the navigator: 'straight', 'left', 'right' – as long as it’s safe, of course."
+      "en": "Let one child be the navigator: 'straight', 'left', 'right' – as long as it’s safe, of course.",
+      "da": "Lad et barn være navigator: „Ligeud“, „til venstre“, „til højre“ – selvfølgelig kun dér, hvor det er sikkert."
     },
     "tags": ["Mitbestimmung", "Raumgefühl", "Vertrauen"],
     "suitableFor": ["Spaziergang", "Stadt", "Wandern", "Radweg"],
@@ -120,7 +129,8 @@
     "id": "mini-pause-listening",
     "texts": {
       "de": "Macht eine Mini-Pause und legt euch für eine Minute ins Gras oder setzt euch auf eine Bank und lauscht.",
-      "en": "Take a tiny break: lie down in the grass or sit on a bench for a minute and just listen."
+      "en": "Take a tiny break: lie down in the grass or sit on a bench for a minute and just listen.",
+      "da": "Hold en mini-pause og læg jer i græsset eller sæt jer på en bænk i et minut og lyt."
     },
     "tags": ["Achtsamkeit", "Entspannung", "Sinne"],
     "suitableFor": ["Wiese", "Park", "Wald", "Rastplatz"],
@@ -133,7 +143,8 @@
     "id": "memory-marker-stone",
     "texts": {
       "de": "Sucht einen Ort, an dem ihr gemeinsam einen kleinen Stein oder Zapfen als „Erinnerungszeichen“ ablegt.",
-      "en": "Find a spot where you place a small stone or cone together as a little memory marker."
+      "en": "Find a spot where you place a small stone or cone together as a little memory marker.",
+      "da": "Find et sted, hvor I sammen lægger en lille sten eller kogle som „minde-tegn“."
     },
     "tags": ["Ritual", "Erinnerung", "Natur"],
     "suitableFor": ["Wald", "Wiese", "Strand", "Park"],
@@ -146,7 +157,8 @@
     "id": "i-spy-seasonal",
     "texts": {
       "de": "Spielt „Ich sehe was, was du nicht siehst“ mit Dingen, die typisch für euren Ort oder die Jahreszeit sind.",
-      "en": "Play 'I spy with my little eye' using things typical for your area or the current season."
+      "en": "Play 'I spy with my little eye' using things typical for your area or the current season.",
+      "da": "Leg „Jeg ser noget, som du ikke ser“ med ting, der er typiske for stedet eller årstiden."
     },
     "tags": ["Beobachtung", "Sprache", "Jahreszeiten"],
     "suitableFor": ["Stadt", "Wald", "Auto", "Zug", "Unterwegs"],
@@ -159,7 +171,8 @@
     "id": "same-letter-hunt",
     "texts": {
       "de": "Jede Person sucht etwas, das mit demselben Buchstaben beginnt wie ihr Vorname.",
-      "en": "Each person finds something that starts with the same letter as their first name."
+      "en": "Each person finds something that starts with the same letter as their first name.",
+      "da": "Hver person finder noget, der begynder med samme bogstav som deres fornavn."
     },
     "tags": ["Sprache", "Buchstaben", "Beobachtung"],
     "suitableFor": ["Stadt", "Wald", "Park", "Auto", "Zug"],
@@ -172,7 +185,8 @@
     "id": "rhyme-game",
     "texts": {
       "de": "Erfindet ein Reimspiel: Einer sagt ein Wort, die anderen denken sich passende Reime dazu aus.",
-      "en": "Play a rhyming game: one person says a word, the others think of words that rhyme with it."
+      "en": "Play a rhyming game: one person says a word, the others think of words that rhyme with it.",
+      "da": "Lav en rim-leg: Én siger et ord, de andre finder på ord, der rimer på det."
     },
     "tags": ["Sprache", "Kreativität", "Humor"],
     "suitableFor": ["Auto", "Zug", "Pause", "Zuhause"],
@@ -185,7 +199,8 @@
     "id": "soft-and-hard-hunt",
     "texts": {
       "de": "Sucht unterwegs drei Dinge, die weich sind, und drei, die sich hart anfühlen.",
-      "en": "Look for three things that feel soft and three that feel hard."
+      "en": "Look for three things that feel soft and three that feel hard.",
+      "da": "Find tre ting, der føles bløde, og tre, der føles hårde."
     },
     "tags": ["Sinne", "Tastsinn", "Beobachtung"],
     "suitableFor": ["Wald", "Wiese", "Park", "Strand"],
@@ -198,7 +213,8 @@
     "id": "superhero-family",
     "texts": {
       "de": "Denkt euch eine kleine Superhelden-Familie aus. Welche Kräfte hat jede Person?",
-      "en": "Invent a superhero family. What special power does each person have?"
+      "en": "Invent a superhero family. What special power does each person have?",
+      "da": "Find på en lille superheltefamilie. Hvilken superkraft har hver person?"
     },
     "tags": ["Fantasie", "Rollen", "Selbstbild"],
     "suitableFor": ["Auto", "Zug", "Pause", "Zuhause"],
@@ -211,7 +227,8 @@
     "id": "yes-and-story",
     "texts": {
       "de": "Spielt „Ja und…“: Einer beginnt eine Geschichte, jeder Satz der anderen muss mit „Ja und…“ weitergehen.",
-      "en": "Play 'Yes, and…': one starts a story, every new sentence from the others has to begin with 'Yes, and…'."
+      "en": "Play 'Yes, and…': one starts a story, every new sentence from the others has to begin with 'Yes, and…'.",
+      "da": "Leg „Ja, og…“: Én begynder en historie, og alle nye sætninger skal starte med „Ja, og…“."
     },
     "tags": ["Kreativität", "Kooperation", "Humor", "Improvisation"],
     "suitableFor": ["Auto", "Zug", "Abendrunde", "Zuhause"],
@@ -224,7 +241,8 @@
     "id": "moving-things-count",
     "texts": {
       "de": "Zählt Dinge, die sich bewegen: Autos, Fahrräder, Blätter im Wind, Wolken…",
-      "en": "Count things that are moving: cars, bikes, leaves in the wind, clouds…"
+      "en": "Count things that are moving: cars, bikes, leaves in the wind, clouds…",
+      "da": "Tæl ting, der bevæger sig: biler, cykler, blade i vinden, skyer …"
     },
     "tags": ["Beobachtung", "Achtsamkeit", "Zählen"],
     "suitableFor": ["Auto", "Zug", "Wiese", "Park"],
@@ -237,7 +255,8 @@
     "id": "cloud-shapes",
     "texts": {
       "de": "Sucht Formen in den Wolken und gebt ihnen Namen oder kleine Geschichten.",
-      "en": "Look for shapes in the clouds and give them names or little stories."
+      "en": "Look for shapes in the clouds and give them names or little stories.",
+      "da": "Kig efter former i skyerne og giv dem navne eller små historier."
     },
     "tags": ["Fantasie", "Entspannung", "Beobachtung"],
     "suitableFor": ["Wiese", "Strand", "Park", "Rastplatz"],
@@ -250,7 +269,8 @@
     "id": "animal-abc",
     "texts": {
       "de": "Spielt ein Tier-ABC: Für jeden Buchstaben des Alphabets nennt ihr ein Tier.",
-      "en": "Play an animal ABC: for each letter of the alphabet, name an animal."
+      "en": "Play an animal ABC: for each letter of the alphabet, name an animal.",
+      "da": "Leg dyre-ABC: For hvert bogstav i alfabetet nævner I et dyr."
     },
     "tags": ["Tiere", "Sprache", "Buchstaben"],
     "suitableFor": ["Auto", "Zug", "Pause", "Zuhause"],
@@ -263,7 +283,8 @@
     "id": "playground-superpower",
     "texts": {
       "de": "Überlegt euch für jeden unterwegs gesehenen Spielplatz eine besondere Superkraft: Was ist hier das Beste?",
-      "en": "For every playground you see, think of its superpower: what is the very best thing about it?"
+      "en": "For every playground you see, think of its superpower: what is the very best thing about it?",
+      "da": "Find på en superkraft til hver legeplads, I ser: Hvad er det allerbedste ved lige præcis den?"
     },
     "tags": ["Fantasie", "Spielplatz", "Ressourcenblick"],
     "suitableFor": ["Stadt", "Dorf", "Radweg", "Auto"],
@@ -276,7 +297,8 @@
     "id": "one-colour-hunt",
     "texts": {
       "de": "Wählt eine Farbe und sucht alle Dinge unterwegs, die diese Farbe haben.",
-      "en": "Pick one colour and look for everything along the way that has this colour."
+      "en": "Pick one colour and look for everything along the way that has this colour.",
+      "da": "Vælg én farve og kig efter alle ting undervejs, som har den farve."
     },
     "tags": ["Farben", "Beobachtung", "Fokus"],
     "suitableFor": ["Stadt", "Wald", "Auto", "Zug", "Spaziergang"],
@@ -289,7 +311,8 @@
     "id": "sound-bingo",
     "texts": {
       "de": "Macht ein Geräusche-Bingo: Jede Person denkt sich ein Geräusch aus, das sie heute gern hören würde.",
-      "en": "Create a sound bingo: each person chooses a sound they’d like to hear today."
+      "en": "Create a sound bingo: each person chooses a sound they’d like to hear today.",
+      "da": "Lav lyd-bingo: Hver person vælger en lyd, de gerne vil høre i dag."
     },
     "tags": ["Hören", "Achtsamkeit", "Humor"],
     "suitableFor": ["Stadt", "Wald", "Strand", "Auto", "Zug"],
@@ -302,7 +325,8 @@
     "id": "bridges-and-tunnels-count",
     "texts": {
       "de": "Zählt, wie viele Brücken, Tunnel oder Unterführungen ihr auf der Tour entdeckt.",
-      "en": "Count how many bridges, tunnels or underpasses you find on your trip."
+      "en": "Count how many bridges, tunnels or underpasses you find on your trip.",
+      "da": "Tæl, hvor mange broer, tunneller eller underføringer I opdager på turen."
     },
     "tags": ["Beobachtung", "Zählen", "Reiseroute"],
     "suitableFor": ["Auto", "Zug", "Radweg"],
@@ -315,7 +339,8 @@
     "id": "if-i-were-an-animal",
     "texts": {
       "de": "Spielt „Wenn ich ein Tier wäre…“: Jede Person sagt, welches Tier sie heute wäre und warum.",
-      "en": "Play 'If I were an animal…': everyone says which animal they would be today and why."
+      "en": "Play 'If I were an animal…': everyone says which animal they would be today and why.",
+      "da": "Leg „Hvis jeg var et dyr…“: Hver person fortæller, hvilket dyr de ville være i dag – og hvorfor."
     },
     "tags": ["Selbstwahrnehmung", "Fantasie", "Gespräch"],
     "suitableFor": ["Auto", "Zug", "Abendrunde", "Zuhause"],
@@ -328,7 +353,8 @@
     "id": "letter-hunt-word",
     "texts": {
       "de": "Sucht unterwegs nach Buchstaben, aus denen ihr gemeinsam ein Wort legen könnt (z. B. auf Schildern).",
-      "en": "Hunt for letters on signs that you can combine to form a word together."
+      "en": "Hunt for letters on signs that you can combine to form a word together.",
+      "da": "Led efter bogstaver på skilte, som I kan sætte sammen til et ord."
     },
     "tags": ["Lesen", "Buchstaben", "Kooperation"],
     "suitableFor": ["Stadt", "Dorf", "Auto", "Zug"],
@@ -341,7 +367,8 @@
     "id": "family-song",
     "texts": {
       "de": "Erfindet ein kleines Familien-Lied mit einer einfachen Melodie, die ihr unterwegs summen könnt.",
-      "en": "Invent a little family song with a simple melody you can hum on the way."
+      "en": "Invent a little family song with a simple melody you can hum on the way.",
+      "da": "Find på en lille familiesang med en enkel melodi, som I kan nynne undervejs."
     },
     "tags": ["Musik", "Kreativität", "Gemeinschaft"],
     "suitableFor": ["Spaziergang", "Wald", "Auto", "Zug", "Zuhause"],
@@ -354,7 +381,8 @@
     "id": "step-count-guess",
     "texts": {
       "de": "Zählt eure Schritte bis zum nächsten Ziel und schätzt vorher, wie viele es wohl sein werden.",
-      "en": "Count your steps to the next stop and guess beforehand how many it will be."
+      "en": "Count your steps to the next stop and guess beforehand how many it will be.",
+      "da": "Tæl jeres skridt til det næste mål og gæt på forhånd, hvor mange det mon bliver."
     },
     "tags": ["Zählen", "Körpergefühl", "Schätzen"],
     "suitableFor": ["Wandern", "Spaziergang", "Stadt", "Wald"],
@@ -367,7 +395,8 @@
     "id": "gratitude-game",
     "texts": {
       "de": "Spielt ein Dankbarkeits-Spiel: Jede Person nennt drei Dinge, für die sie heute dankbar ist.",
-      "en": "Play a gratitude game: each person names three things they are thankful for today."
+      "en": "Play a gratitude game: each person names three things they are thankful for today.",
+      "da": "Leg et taknemmeligheds-spil: Hver person nævner tre ting, de er taknemmelige for i dag."
     },
     "tags": ["Achtsamkeit", "Gefühle", "Reflexion"],
     "suitableFor": ["Abendrunde", "Rastplatz", "Zuhause"],
@@ -380,7 +409,8 @@
     "id": "reporter-game",
     "texts": {
       "de": "Stellt euch vor, ihr seid Reporter. Was würdet ihr über den Ort schreiben, an dem ihr gerade seid?",
-      "en": "Pretend you are reporters. What would you write about the place you are in right now?"
+      "en": "Pretend you are reporters. What would you write about the place you are in right now?",
+      "da": "Forestil jer, at I er reportere. Hvad ville I skrive om stedet, hvor I er lige nu?"
     },
     "tags": ["Sprache", "Beobachtung", "Kreativität"],
     "suitableFor": ["Stadt", "Sehenswürdigkeit", "Museum", "Wald"],
@@ -393,7 +423,8 @@
     "id": "favourite-smell",
     "texts": {
       "de": "Sucht einen „Lieblingsgeruch des Tages“ – vielleicht Wald, Meer, Regen oder frische Luft.",
-      "en": "Find your 'favourite smell of the day' – maybe forest, sea, rain or just fresh air."
+      "en": "Find your 'favourite smell of the day' – maybe forest, sea, rain or just fresh air.",
+      "da": "Find dagens „yndlingsduft“ – måske skov, hav, regn eller bare frisk luft."
     },
     "tags": ["Sinne", "Geruchssinn", "Achtsamkeit"],
     "suitableFor": ["Wald", "Meer", "Stadt", "Wiese"],
@@ -406,7 +437,8 @@
     "id": "statue-game",
     "texts": {
       "de": "Spielt Statue: Einer ruft „Stopp!“, alle bleiben wie eingefroren stehen, bis jemand „Weiter!“ sagt.",
-      "en": "Play statue: one shouts 'Stop!', everyone freezes like a statue until someone says 'Go!'."
+      "en": "Play statue: one shouts 'Stop!', everyone freezes like a statue until someone says 'Go!'.",
+      "da": "Leg statue: Én råber „Stop!“, alle fryser som statuer, indtil nogen siger „Fortsæt!“."
     },
     "tags": ["Bewegung", "Impulskontrolle", "Humor"],
     "suitableFor": ["Park", "Wiese", "Wald", "Spielplatz"],
@@ -419,7 +451,8 @@
     "id": "tiny-courage-challenge",
     "texts": {
       "de": "Überlegt euch für jeden eine kleine Mutaufgabe, die sich gut anfühlt – z. B. kurz barfuß gehen.",
-      "en": "Think of a tiny courage challenge for each person that feels good – like walking barefoot for a moment."
+      "en": "Think of a tiny courage challenge for each person that feels good – like walking barefoot for a moment.",
+      "da": "Find på en lille mod-udfordring til hver, som føles rar – for eksempel at gå lidt barfodet."
     },
     "tags": ["Mut", "Körpererfahrung", "Selbstvertrauen"],
     "suitableFor": ["Wiese", "Wald", "Strand", "Park"],
@@ -432,7 +465,8 @@
     "id": "nature-floor-art",
     "texts": {
       "de": "Sucht drei verschiedene Blätter oder Steine und legt daraus ein kleines Bodenbild.",
-      "en": "Find three different leaves or stones and create a tiny artwork on the ground."
+      "en": "Find three different leaves or stones and create a tiny artwork on the ground.",
+      "da": "Find tre forskellige blade eller sten og lav et lille kunstværk på jorden."
     },
     "tags": ["Kreativität", "Natur", "Gestalten"],
     "suitableFor": ["Wald", "Wiese", "Park", "Strand"],
@@ -445,7 +479,8 @@
     "id": "time-travel-forward",
     "texts": {
       "de": "Spielt „Vorwärts-Zeitreise“: Wie könnte dieser Ort in 10 Jahren aussehen?",
-      "en": "Play 'time travel forward': how might this place look in 10 years?"
+      "en": "Play 'time travel forward': how might this place look in 10 years?",
+      "da": "Leg „tidsrejse fremad“: Hvordan kunne dette sted se ud om 10 år?"
     },
     "tags": ["Fantasie", "Zukunft", "Gespräch"],
     "suitableFor": ["Stadt", "Dorf", "Wald", "Strand"],
@@ -458,7 +493,8 @@
     "id": "birdsong-count",
     "texts": {
       "de": "Zählt, wie viele verschiedene Vogelstimmen ihr hören könnt – ihr müsst sie nicht kennen, nur wahrnehmen.",
-      "en": "Count how many different birdsongs you can hear – no need to know them, just notice them."
+      "en": "Count how many different birdsongs you can hear – no need to know them, just notice them.",
+      "da": "Tæl, hvor mange forskellige fuglestemmer I kan høre – I behøver ikke kende dem, bare lægge mærke til dem."
     },
     "tags": ["Hören", "Natur", "Achtsamkeit"],
     "suitableFor": ["Wald", "Park", "Wiese", "See"],
@@ -471,7 +507,8 @@
     "id": "family-motto",
     "texts": {
       "de": "Erfindet für die Familie ein gemeinsames Motto für diesen Ausflug und sprecht es laut aus.",
-      "en": "Invent a shared family motto for this trip and say it out loud together."
+      "en": "Invent a shared family motto for this trip and say it out loud together.",
+      "da": "Find på et fælles familiemotto for denne tur og sig det højt sammen."
     },
     "tags": ["Gemeinschaft", "Ritual", "Motivation"],
     "suitableFor": ["Start-des-Tages", "Rastplatz", "Zuhause"],
@@ -484,7 +521,8 @@
     "id": "swap-places-sign",
     "texts": {
       "de": "Spielt „Wechsel den Platz“: Immer wenn ihr ein bestimmtes Zeichen seht (z. B. ein rotes Schild), tauschen zwei Personen die Plätze.",
-      "en": "Play 'swap places': whenever you see a certain sign (for example a red sign), two people swap places."
+      "en": "Play 'swap places': whenever you see a certain sign (for example a red sign), two people swap places.",
+      "da": "Leg „Byt plads“: Hver gang I ser et bestemt tegn (for eksempel et rødt skilt), bytter to personer plads."
     },
     "tags": ["Bewegung", "Humor", "Aufmerksamkeit"],
     "suitableFor": ["Spaziergang", "Wandern", "Spielplatz"],
@@ -497,7 +535,8 @@
     "id": "favourite-moment-of-day",
     "texts": {
       "de": "Zum Abschluss: Jede Person erzählt einen Lieblingsmoment des Tages – groß oder ganz winzig.",
-      "en": "At the end: each person tells one favourite moment of the day – big or very small."
+      "en": "At the end: each person tells one favourite moment of the day – big or very small.",
+      "da": "Til sidst: Hver person fortæller om ét yndlingsøjeblik fra dagen – stort eller bitte lille."
     },
     "tags": ["Reflexion", "Dankbarkeit", "Tagesabschluss"],
     "suitableFor": ["Abendrunde", "Zelt", "Zuhause"],
