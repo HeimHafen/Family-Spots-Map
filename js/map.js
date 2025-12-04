@@ -108,19 +108,16 @@ export function renderMarkers({
   const shouldLimit = spots.length > maxMarkers;
   const toRender = shouldLimit ? spots.slice(0, maxMarkers) : spots;
 
+  // DivIcon-HTML als String (nicht als DOM-Element) – kompatibel mit Leaflet
+  const iconHtml =
+    '<div class="spot-marker"><div class="spot-marker-inner pin-pop"></div></div>';
+
   toRender.forEach((spot) => {
     if (!hasValidLatLng(spot)) return;
     if (typeof L === "undefined" || typeof L.divIcon !== "function") return;
 
-    // Marker-HTML (kleiner Punkt/Pin)
-    const el = document.createElement("div");
-    el.className = "spot-marker";
-    const inner = document.createElement("div");
-    inner.className = "spot-marker-inner pin-pop";
-    el.appendChild(inner);
-
     const icon = L.divIcon({
-      html: el,
+      html: iconHtml,
       className: "",
       iconSize: [24, 24],
       iconAnchor: [12, 12]
@@ -140,10 +137,14 @@ export function renderMarkers({
 
   if (shouldLimit) {
     if (!hasShownMarkerLimitToast && typeof showToast === "function") {
-      const msg =
-        currentLang === "de"
-          ? `Nur die ersten ${maxMarkers} Spots auf der Karte – bitte Filter oder Zoom nutzen.`
-          : `Only the first ${maxMarkers} spots are shown on the map – please use filters or zoom in.`;
+      let msg;
+      if (currentLang === "de") {
+        msg = `Nur die ersten ${maxMarkers} Spots auf der Karte – bitte Filter oder Zoom nutzen.`;
+      } else if (currentLang === "da" || currentLang === "dk") {
+        msg = `Kun de første ${maxMarkers} spots vises på kortet – brug gerne filtre eller zoom ind.`;
+      } else {
+        msg = `Only the first ${maxMarkers} spots are shown on the map – please use filters or zoom in.`;
+      }
       showToast(msg);
       hasShownMarkerLimitToast = true;
     }
