@@ -1,1031 +1,1529 @@
 // js/app.js
 // ======================================================
-// Zentrales App-Modul der Family Spots Map
-//  - lädt Spots & Index
-//  - initialisiert Leaflet-Map
-//  - steuert Filter, Tilla, Plus, Daylog, Sprache & Theme
+// Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
+// Map- und Filterlogik ist in map.js / filters.js ausgelagert.
+// Daten & Plus-Logik sind in data.js / features/plus.js ausgelagert.
 // ======================================================
 
 "use strict";
 
-import { loadData, getIndexData } from "./data.js";
-import { initMap, renderMarkers, getRouteUrlsForSpot } from "./map.js";
+import "./i18n.js"; // Modul führt sich selbst aus und setzt globales I18N
 import { TillaCompanion } from "./features/tilla.js";
+import {
+  DEFAULT_MAP_CENTER,
+  DEFAULT_MAP_ZOOM,
+  DAYLOG_STORAGE_KEY,
+  LANG_DE,
+  LANG_EN,
+  THEME_LIGHT,
+  THEME_DARK,
+  RADIUS_STEPS_KM,
+  MAX_MARKERS_RENDER,
+  FEATURES,
+  CATEGORY_GROUPS,
+  CATEGORY_GROUP_LABELS,
+  CATEGORY_LABELS_DE,
+  CATEGORY_LABELS_EN,
+  HEADER_TAGLINE_TEXT,
+  COMPASS_PLUS_HINT_KEY,
+  FILTERS,
+  CATEGORY_ACCESS,
+  // ➕ NEU: dänische Kategorien
+  CATEGORY_LABELS_DA
+} from "./config.js";
 
-/** @typedef {import("./app.js").Spot} Spot */ // nur für Editor-Hilfe, keine Laufzeitwirkung
+import {
+  normalizeSpot,
+  filterSpots,
+  getSpotName,
+  getSpotSubtitle,
+  getSpotId
+} from "./filters.js";
 
-// ------------------------------------------------------
-// Konstante Keys für localStorage
-// ------------------------------------------------------
+import {
+  initMap,
+  renderMarkers,
+  getRouteUrlsForSpot,
+  hasValidLatLng
+} from "./map.js";
 
-const STORAGE_KEYS = {
-  THEME: "familyspots.theme.v1",
-  LANGUAGE: "familyspots.language.v1",
-  TRAVEL_MODE: "familyspots.travelMode.v1",
-  FAVORITES: "familyspots.favorites.v1",
-  DAYLOG: "familyspots.daylog.v1",
-  PLUS_CODE: "familyspots.plusCode.v1"
-};
+import { initRouter } from "./router.js";
+import { getInitialTheme, applyTheme } from "./theme.js";
+import { initToast, showToast } from "./toast.js";
+import { loadData } from "./data.js";
+import {
+  getPlusStatus,
+  isPlusActive,
+  formatPlusStatus,
+  redeemPartnerCode
+} from "./features/plus.js";
 
-// Radius-Stufen (Index entspricht Slider-Wert 0–4)
-const RADIUS_STEPS_KM = [5, 15, 30, 60, Infinity];
-
-// Kleine Spielideen für den Tilla-Button
-const PLAY_IDEAS = {
-  de: [
-    "Macht eine Mini-Schatzsuche: Jedes Kind denkt sich eine Sache aus, die alle finden sollen.",
-    "Sammelt drei Dinge in der Natur mit derselben Farbe und baut daraus ein kleines Kunstwerk.",
-    "Findet zusammen fünf runde und fünf eckige Dinge und legt daraus ein Bild auf dem Boden."
-  ],
-  en: [
-    "Do a tiny treasure hunt: each child thinks of one thing everyone has to find.",
-    "Collect three things in nature with the same colour and build a tiny artwork.",
-    "Look for five round and five square objects and arrange them as a little picture."
-  ],
-  da: [
-    "Lav en mini-skattejagt: Hvert barn finder på én ting, som alle skal finde.",
-    "Saml tre ting i naturen med samme farve og lav et lille kunstværk sammen.",
-    "Find fem runde og fem kantede ting og læg dem som et lille billede på jorden."
-  ]
-};
-
-// ------------------------------------------------------
-// globaler App-State (modulintern)
-// ------------------------------------------------------
-
-const appState = {
-  map: null,
-  markersLayer: null,
-  allSpots: [],
-  filteredSpots: [],
-  hasShownMarkerLimitToast: false,
-  currentLang: "de",
-  travelMode: "everyday", // "everyday" | "trip"
-  tilla: null,
-  favorites: new Set(),
-  plusActive: false,
-  toastTimeoutId: null,
-  defaultCenter: null // {lat,lng,zoom}? aus Index
-};
-
-const filters = {
-  search: "",
-  mood: null, // "relaxed" | "action" | "water" | "animals"
-  radiusStep: 4, // 0..4 (4 = alle)
-  category: "",
-  age: "all", // "all" | "0-3" | "4-9" | "10+"
-  verifiedOnly: false,
-  quickFilters: new Set()
-};
+// zusätzliche Sprache (nicht aus config.js importiert)
+const LANG_DA = "da";
 
 // ------------------------------------------------------
-// Bootstrap
+// Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
 // ------------------------------------------------------
 
-(async function bootstrap() {
-  // Sprache aus Storage oder HTML ableiten
-  appState.currentLang = loadStoredLanguage() || detectInitialLang();
-  applyLanguage(appState.currentLang);
+/**
+ * @typedef {Object} Spot
+ * @property {number} [lat]
+ * @property {number} [lng]
+ * @property {number} [lon]
+ * @property {string|number} [id]
+ * @property {string} [title]
+ * @property {string} [name]
+ * @property {string} [spotName]
+ * @property {string} [city]
+ * @property {string} [town]
+ * @property {string} [country]
+ * @property {string} [category]
+ * @property {string} [categorySlug]
+ * @property {string[]} [categories]
+ * @property {string[]} [tags]
+ * @property {string} [subtitle]
+ * @property {string} [shortDescription]
+ * @property {string} [summary_de]
+ * @property {string} [summary_en]
+ * @property {string} [summary_da]
+ * @property {string} [poetry]
+ * @property {string} [description]
+ * @property {string} [text]
+ * @property {string} [address]
+ * @property {string} [postcode]
+ * @property {number} [visit_minutes]
+ * @property {boolean} [plusOnly]
+ * @property {boolean} [plus]
+ * @property {boolean} [bigAdventure]
+ * @property {boolean} [isBigAdventure]
+ * @property {boolean} [longTrip]
+ * @property {boolean} [verified]
+ * @property {boolean} [isVerified]
+ * @property {string[]|string} [ageGroups]
+ * @property {string[]|string} [age]
+ * @property {string[]|string} [ages]
+ * @property {string[]|string} [moods]
+ * @property {string[]|string} [moodTags]
+ * @property {string[]|string} [mood]
+ * @property {string[]|string} [travelModes]
+ * @property {string[]|string} [travel]
+ * @property {string[]|string} [tripModes]
+ * @property {string} [_searchText]
+ * @property {string[]} [_ageGroups]
+ * @property {string[]} [_moods]
+ * @property {string[]} [_travelModes]
+ * @property {string[]} [_tagsMerged]
+ */
 
-  // Theme wiederherstellen
-  restoreTheme();
+// ------------------------------------------------------
+// I18N / Text-Helfer
+// ------------------------------------------------------
 
-  // Map initialisieren
-  const { map, markersLayer } = initMap();
-  appState.map = map;
-  appState.markersLayer = markersLayer;
+/** Übersetzungs-Helper (fällt zur Not auf Key zurück) */
+const t = (key) =>
+  typeof I18N !== "undefined" && typeof I18N.t === "function"
+    ? I18N.t(key)
+    : key;
 
-  // Favoriten & Plus/Daylog laden (vor UI-Bindings sinnvoll)
-  appState.favorites = loadFavoritesFromStorage();
-  appState.plusActive = !!loadPlusCodeFromStorage();
+/** Spielideen aus I18N abholen – mit statischem Fallback */
+function getRandomPlayIdea() {
+  // 1. Wenn I18N eigene Ideen liefert, diese bevorzugen
+  if (
+    typeof I18N !== "undefined" &&
+    typeof I18N.getRandomPlayIdea === "function"
+  ) {
+    const ideaFromI18n = I18N.getRandomPlayIdea();
+    if (ideaFromI18n) return ideaFromI18n;
+  }
 
-  // Tilla initialisieren
-  appState.tilla = new TillaCompanion({
-    getText: (key) => {
-      try {
-        if (
-          typeof window !== "undefined" &&
-          window.I18N &&
-          typeof window.I18N.t === "function"
-        ) {
-          return window.I18N.t(key);
-        }
-      } catch {
-        // ignore
-      }
-      return key;
+  // 2. Statische Fallback-Ideen je Sprache
+  const FALLBACK_PLAY_IDEAS = {
+    de: [
+      "Macht eine Mini-Schatzsuche: Jedes Kind denkt sich eine Sache aus, die alle finden sollen.",
+      "Sammelt drei Dinge in der Natur mit derselben Farbe und baut daraus ein kleines Kunstwerk.",
+      "Findet fünf runde und fünf eckige Dinge und legt daraus ein Bild auf dem Boden.",
+      "Spielt „Ich sehe was, was du nicht siehst“ nur mit Dingen in einer bestimmten Farbe.",
+      "Erfindet gemeinsam eine kleine Geschichte zu einem Baum, Stein oder Haus, an dem ihr gerade vorbeikommt."
+    ],
+    en: [
+      "Do a tiny treasure hunt: each child thinks of one thing everyone has to find.",
+      "Collect three things in nature with the same colour and build a tiny artwork from them.",
+      "Look for five round and five square objects and arrange them as a little picture on the ground.",
+      "Play “I spy with my little eye” but only with things of one colour.",
+      "Make up a short story together about a tree, rock or house you can see right now."
+    ],
+    da: [
+      "Lav en mini-skattejagt: Hvert barn finder på én ting, som alle skal finde.",
+      "Saml tre ting i naturen med samme farve og lav et lille kunstværk ud af dem.",
+      "Find fem runde og fem kantede ting og læg dem som et lille billede på jorden.",
+      "Leg „Jeg ser noget, som du ikke ser“ – men kun med ting i én bestemt farve.",
+      "Find på en lille historie sammen om et træ, en sten eller et hus, som I kan se lige nu."
+    ]
+  };
+
+  const langKey =
+    currentLang === LANG_EN ? "en" : currentLang === LANG_DA ? "da" : "de";
+  const list = FALLBACK_PLAY_IDEAS[langKey] || FALLBACK_PLAY_IDEAS.de;
+
+  if (!Array.isArray(list) || list.length === 0) {
+    return "";
+  }
+
+  const idx = Math.floor(Math.random() * list.length);
+  return list[idx];
+}
+
+/** Sprache aus LocalStorage / Browser / I18N ableiten */
+function getInitialLang() {
+  try {
+    const stored = localStorage.getItem("fs_lang");
+    if (
+      stored === LANG_DE ||
+      stored === LANG_EN ||
+      stored === LANG_DA
+    ) {
+      return stored;
     }
-  });
+  } catch {
+    // ignore
+  }
 
-  // Reisemodus aus Storage
-  const storedMode = loadTravelModeFromStorage();
-  if (storedMode === "trip" || storedMode === "everyday") {
-    appState.travelMode = storedMode;
-    if (appState.tilla) {
-      appState.tilla.setTravelMode(storedMode);
+  if (
+    typeof I18N !== "undefined" &&
+    typeof I18N.getLanguage === "function"
+  ) {
+    const fromI18n = I18N.getLanguage();
+    if (
+      fromI18n === LANG_DE ||
+      fromI18n === LANG_EN ||
+      fromI18n === LANG_DA
+    ) {
+      return fromI18n;
     }
   }
 
-  // UI-Handler setzen
-  setupLanguageSwitcher();
-  setupThemeToggle();
-  setupLocateButton();
-  setupAboutViewToggle();
-  setupViewToggle();
-  setupPlayIdeaButton();
-  setupFilters();
-  setupCompass();
-  setupPlusSection();
-  setupDaylogSection();
-  setupSpotListInteractions();
+  const htmlLang =
+    (document.documentElement.lang || navigator.language || LANG_DE)
+      .toLowerCase()
+      .slice(0, 2);
 
-  // Plus-Status-Text initial anzeigen
-  updatePlusStatusText();
+  if (htmlLang === "en") return LANG_EN;
+  if (htmlLang === "da" || htmlLang === "dk") return LANG_DA;
+  return LANG_DE;
+}
 
-  // Daylog-Text aus Storage in Textarea
-  restoreDaylogText();
+/**
+ * Header-Tagline: bevorzugt aus i18n ("header_tagline"),
+ * sonst aus statischem HEADER_TAGLINE_TEXT.
+ */
+function updateHeaderTagline(lang) {
+  const el = document.getElementById("header-tagline");
+  if (!el) return;
 
-  // Daten laden & erste Darstellung
-  await loadAndRenderSpots();
-})();
+  let text =
+    HEADER_TAGLINE_TEXT[lang] ||
+    HEADER_TAGLINE_TEXT.de ||
+    el.textContent ||
+    "";
+
+  if (typeof I18N !== "undefined" && typeof I18N.t === "function") {
+    text = I18N.t("header_tagline", text) || text;
+  }
+
+  el.textContent = text;
+}
 
 // ------------------------------------------------------
-// Sprach-Handling
+// Globaler UI-State
 // ------------------------------------------------------
 
-function detectInitialLang() {
-  try {
-    const htmlLang = (document.documentElement.lang || "").toLowerCase();
-    if (htmlLang.startsWith("en")) return "en";
-    if (htmlLang.startsWith("da")) return "da";
-  } catch {
-    // ignore
-  }
+let currentLang = LANG_DE;
+let currentTheme = THEME_LIGHT;
 
-  if (typeof navigator !== "undefined" && navigator.language) {
-    const nav = navigator.language.toLowerCase();
-    if (nav.startsWith("en")) return "en";
-    if (nav.startsWith("da")) return "da";
-  }
+// Map / Daten
+/** @type {any} */
+let map = null;
+/** @type {any} */
+let markersLayer = null;
+/** @type {Spot[]} */
+let spots = [];
+/** @type {Spot[]} */
+let filteredSpots = [];
+let favorites = new Set();
 
-  return "de";
+/** Toast-Entprellung für Marker-Limit */
+let hasShownMarkerLimitToast = false;
+
+// Filter-States
+let plusActive = false;
+let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
+let travelMode = null; // "everyday" | "trip" | null
+let radiusStep = 4; // 0–4
+let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
+let searchTerm = "";
+let categoryFilter = "";
+let onlyBigAdventures = false;
+let onlyVerified = false;
+let onlyFavorites = false;
+let filtersCollapsed = true;
+/** Aktive Tag-Filter (IDs aus FILTERS) */
+let activeTagFilters = new Set();
+
+// DOM-Referenzen
+let languageSwitcherEl;
+let languageSwitcherFlagEl;
+let themeToggleEl;
+let btnLocateEl;
+let btnHelpEl;
+let viewMapEl;
+let viewAboutEl;
+let bottomNavButtons;
+let bottomNavMapLabelEl;
+let bottomNavAboutLabelEl;
+let sidebarEl;
+let filterSectionEl;
+let btnToggleFiltersEl;
+let btnToggleViewEl;
+let filterSearchEl;
+let filterCategoryEl;
+let filterAgeEl;
+let filterRadiusEl;
+let filterRadiusMaxLabelEl;
+let filterRadiusDescriptionEl;
+let filterBigEl;
+let filterVerifiedEl;
+let filterFavoritesEl;
+let spotListEl;
+let spotDetailEl;
+let tagFilterContainerEl; // Container für Tag-Filter-Chips
+
+// Plus & Mein Tag – Sections + Toggle-Buttons
+let plusSectionEl;
+let btnTogglePlusEl;
+let daylogSectionEl;
+let btnToggleDaylogEl;
+
+let plusCodeInputEl;
+let plusCodeSubmitEl;
+let plusStatusTextEl;
+let daylogTextEl;
+let daylogSaveEl;
+let toastEl;
+
+// Kompass
+let compassSectionEl;
+let compassLabelEl;
+let compassHelperEl;
+let compassApplyLabelEl;
+let compassApplyBtnEl;
+let btnToggleCompassEl;
+
+// Tilla
+let tilla = null;
+
+// Spielideen
+let playIdeasBtnEl = null;
+
+// Filter-Body innerhalb der Filter-Section
+let filterBodyEls = [];
+
+// Fokus-Merkung für Detail-Panel
+let lastSpotTriggerEl = null;
+
+// Onboarding-Hint (Kompass / Plus / Mein Tag)
+let compassPlusHintEl = null;
+
+// ------------------------------------------------------
+// Utilities
+// ------------------------------------------------------
+
+function debounce(fn, delay = 200) {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => fn(...args), delay);
+  };
 }
 
-function loadStoredLanguage() {
-  try {
-    const lang = localStorage.getItem(STORAGE_KEYS.LANGUAGE);
-    if (!lang) return null;
-    if (lang === "de" || lang === "en" || lang === "da") return lang;
-  } catch {
-    // ignore
-  }
-  return null;
+function activateOnEnterSpace(handler) {
+  return (event) => {
+    if (
+      event.key === "Enter" ||
+      event.key === " " ||
+      event.key === "Spacebar"
+    ) {
+      event.preventDefault();
+      handler(event);
+    }
+  };
 }
 
-function saveLanguage(lang) {
-  try {
-    localStorage.setItem(STORAGE_KEYS.LANGUAGE, lang);
-  } catch {
-    // ignore
-  }
-}
-
-function applyLanguage(lang) {
-  const docEl = document.documentElement;
-  if (docEl) docEl.lang = lang;
-
-  // generische data-i18n-* Attribute
-  const attrName = `data-i18n-${lang}`;
-  const elements = document.querySelectorAll(`[${attrName}]`);
-
-  elements.forEach((el) => {
-    const value = el.getAttribute(attrName);
-    if (!value) return;
-
-    const tag = el.tagName.toLowerCase();
-
-    if (tag === "input" || tag === "textarea") {
-      const type = /** @type {HTMLInputElement} */ (el).type;
-      if (type === "text" || type === "search" || tag === "textarea") {
-        /** @type {HTMLInputElement|HTMLTextAreaElement} */ (el).placeholder =
-          value;
-      }
+/**
+ * Statisches Fallback-i18n über data-i18n-de / -en / -da
+ * (z. B. für Tilla-Text im HTML)
+ */
+function applyStaticI18n() {
+  document.querySelectorAll("[data-i18n-de]").forEach((el) => {
+    let attrName;
+    if (currentLang === LANG_EN) {
+      attrName = "data-i18n-en";
+    } else if (currentLang === LANG_DA) {
+      attrName = "data-i18n-da";
     } else {
-      el.textContent = value;
+      attrName = "data-i18n-de";
+    }
+
+    let text = el.getAttribute(attrName);
+    if (!text) {
+      // Fallback: erst de, dann en
+      text = el.getAttribute("data-i18n-de") || el.getAttribute("data-i18n-en");
+    }
+    if (text) el.textContent = text;
+  });
+}
+
+function initLazyLoadImages() {
+  if (!("loading" in HTMLImageElement.prototype)) return;
+  document.querySelectorAll("img").forEach((img) => {
+    if (!img.loading || img.loading === "auto") {
+      img.loading = "lazy";
     }
   });
+}
 
-  updateAboutLanguage(lang);
-  updateLanguageSwitcherUI(lang);
+/**
+ * Meta-Title, Meta-Description, ARIA-Labels & Tilla-Alt aus i18n setzen.
+ * Wird bei jedem Sprachwechsel aufgerufen.
+ */
+function updateMetaAndA11yFromI18n() {
+  if (typeof I18N === "undefined" || typeof I18N.t !== "function") return;
 
-  // Tilla informieren
-  if (appState.tilla) {
-    appState.tilla.onLanguageChanged();
+  const metaTitle = I18N.t("meta_title", document.title || "");
+  if (metaTitle) {
+    document.title = metaTitle;
+  }
+
+  const metaDescEl = document.querySelector('meta[name="description"]');
+  if (metaDescEl) {
+    const currentDesc = metaDescEl.getAttribute("content") || "";
+    metaDescEl.setAttribute(
+      "content",
+      I18N.t("meta_description", currentDesc)
+    );
+  }
+
+  if (themeToggleEl) {
+    const fallback = themeToggleEl.getAttribute("aria-label") || "";
+    themeToggleEl.setAttribute(
+      "aria-label",
+      I18N.t("btn_theme_toggle_aria", fallback)
+    );
+  }
+
+  if (btnLocateEl) {
+    const fallback = btnLocateEl.getAttribute("aria-label") || "";
+    btnLocateEl.setAttribute(
+      "aria-label",
+      I18N.t("btn_locate_aria", fallback)
+    );
+  }
+
+  if (btnHelpEl) {
+    const fallback = btnHelpEl.getAttribute("aria-label") || "";
+    btnHelpEl.setAttribute("aria-label", I18N.t("btn_help_aria", fallback));
+  }
+
+  const tillaImg = document.querySelector("#tilla-section img");
+  if (tillaImg) {
+    const fallback = tillaImg.alt || "";
+    tillaImg.alt = I18N.t("alt_tilla_image", fallback);
   }
 }
 
-function updateAboutLanguage(lang) {
-  const de = document.getElementById("page-about-de");
-  const en = document.getElementById("page-about-en");
-  const da = document.getElementById("page-about-da");
-  if (!de || !en || !da) return;
+// ------------------------------------------------------
+// Sprache & Übersetzungen
+// ------------------------------------------------------
 
-  [de, en, da].forEach((article) => {
-    article.classList.add("hidden");
-    article.setAttribute("aria-hidden", "true");
-  });
+function getCategoryLabel(slug) {
+  if (!slug) return "";
 
-  let active = de;
-  if (lang === "en") active = en;
-  else if (lang === "da") active = da;
+  let langMap;
+  let fallbackMap;
 
-  active.classList.remove("hidden");
-  active.setAttribute("aria-hidden", "false");
+  if (currentLang === LANG_EN) {
+    langMap = CATEGORY_LABELS_EN;
+    fallbackMap = CATEGORY_LABELS_DE;
+  } else if (currentLang === LANG_DA) {
+    langMap = CATEGORY_LABELS_DA;
+    fallbackMap = CATEGORY_LABELS_DE;
+  } else {
+    // Standard: Deutsch
+    langMap = CATEGORY_LABELS_DE;
+    fallbackMap = CATEGORY_LABELS_EN;
+  }
+
+  return (
+    (langMap && langMap[slug]) ||
+    (fallbackMap && fallbackMap[slug]) ||
+    slug.replace(/[_-]/g, " ")
+  );
 }
 
-function updateLanguageSwitcherUI(lang) {
-  const flagEl = document.getElementById("language-switcher-flag");
-  if (!flagEl) return;
+/**
+ * Liefert das Kategorien-Label inkl. Hinweis auf Plus / Add-ons.
+ * Basis-Kategorien bleiben unverändert.
+ */
+function getCategoryLabelWithAccess(slug) {
+  const base = getCategoryLabel(slug);
+  if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) return base;
 
-  const symbol = lang === "en" ? "🇬🇧" : lang === "da" ? "🇩🇰" : "🇩🇪";
-  const label = lang === "en" ? "English" : lang === "da" ? "Dansk" : "Deutsch";
+  const access = CATEGORY_ACCESS.perCategory[slug];
+  if (!access) {
+    return base;
+  }
 
-  // Variante 1: <img id="language-switcher-flag">
-  if (flagEl.tagName.toLowerCase() === "img") {
-    const img = /** @type {HTMLImageElement} */ (flagEl);
+  if (access.level === "subscription") {
+    const suffix = " · Plus";
+    return base + suffix;
+  }
+
+  if (access.level === "addon") {
+    let suffix;
+    if (access.addonId === "addon_water") {
+      suffix =
+        currentLang === LANG_EN
+          ? " · water add-on (Plus)"
+          : currentLang === LANG_DA
+          ? " · vand-add-on (Plus)"
+          : " · Wasser-Add-on (Plus)";
+    } else if (access.addonId === "addon_rv") {
+      suffix =
+        currentLang === LANG_EN
+          ? " · RV add-on (Plus)"
+          : currentLang === LANG_DA
+          ? " · autocamper-add-on (Plus)"
+          : " · WoMo-Add-on (Plus)";
+    } else {
+      suffix =
+        currentLang === LANG_EN
+          ? " · add-on (Plus)"
+          : currentLang === LANG_DA
+          ? " · add-on (Plus)"
+          : " · Add-on (Plus)";
+    }
+    return base + suffix;
+  }
+
+  return base;
+}
+
+/**
+ * Sprach-Badge (Flagge) aktualisieren
+ */
+function updateLanguageSwitcherVisual() {
+  if (!languageSwitcherEl) return;
+
+  if (languageSwitcherFlagEl) {
     let src = "assets/flags/flag-de.svg";
-    if (lang === "en") src = "assets/flags/flag-en.svg";
-    else if (lang === "da") src = "assets/flags/flag-da.svg";
-    img.src = src;
-    img.alt = label;
+    let alt = "Deutsch";
+
+    if (currentLang === LANG_EN) {
+      src = "assets/flags/flag-en.svg";
+      alt = "English";
+    } else if (currentLang === LANG_DA) {
+      src = "assets/flags/flag-da.svg";
+      alt = "Dansk";
+    }
+
+    languageSwitcherFlagEl.src = src;
+    languageSwitcherFlagEl.alt = alt;
+  } else {
+    // Fallback: falls das Bild fehlt, zeige Kürzel als Text
+    let label = "DE";
+    if (currentLang === LANG_EN) label = "EN";
+    else if (currentLang === LANG_DA) label = "DA";
+    languageSwitcherEl.textContent = label;
+  }
+
+  // Aria-Label aktualisieren
+  let ariaLabel;
+  if (currentLang === LANG_DE) {
+    ariaLabel = "Sprache: Deutsch (Tippen für Dansk)";
+  } else if (currentLang === LANG_DA) {
+    ariaLabel = "Sprog: Dansk (tryk for English)";
+  } else {
+    ariaLabel = "Language: English (tap for Deutsch)";
+  }
+  languageSwitcherEl.setAttribute("aria-label", ariaLabel);
+}
+
+function updateGenericSectionToggleLabel(btn, isOpen) {
+  if (!btn) return;
+  const target = btn.querySelector("span") || btn;
+  const isDeLike = currentLang === LANG_DE || currentLang === LANG_DA;
+  const showLabel = isDeLike ? "Anzeigen" : "Show";
+  const hideLabel = isDeLike ? "Ausblenden" : "Hide";
+  target.textContent = isOpen ? hideLabel : showLabel;
+  btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
+function updatePlusStatusText(status) {
+  if (!plusStatusTextEl) return;
+
+  if (!FEATURES.plus) {
+    plusStatusTextEl.textContent = "";
     return;
   }
 
-  // Variante 2: <span id="language-switcher-flag"> (Emoji)
-  flagEl.textContent = symbol;
-  flagEl.setAttribute("aria-label", label);
-}
-
-function setupLanguageSwitcher() {
-  const btn = document.getElementById("language-switcher");
-  if (!btn) return;
-
-  btn.addEventListener("click", () => {
-    const order = ["de", "en", "da"];
-    const currentIndex = order.indexOf(appState.currentLang);
-    const next = order[(currentIndex + 1) % order.length];
-    appState.currentLang = next;
-    saveLanguage(next);
-    applyLanguage(next);
-  });
+  const s = status || getPlusStatus();
+  plusStatusTextEl.textContent = formatPlusStatus(s);
 }
 
 // ------------------------------------------------------
-// Theme (light/dark)
+// Onboarding-Hint (Kompass / Plus / Mein Tag)
 // ------------------------------------------------------
 
-function restoreTheme() {
+function getCompassPlusHintText(lang = currentLang) {
+  if (lang === LANG_EN) {
+    return "Tip: You can open and collapse Compass, Family Spots Plus and “My day” at any time using the “Show” buttons.";
+  }
+  if (lang === LANG_DA) {
+    return "Tip: Du kan altid åbne og lukke Kompas, Family Spots Plus og “Min dag” med knappen “Vis”.";
+  }
+  return "Tipp: Kompass, Family Spots Plus und „Mein Tag“ kannst du jederzeit über die Buttons „Anzeigen“ öffnen und wieder einklappen.";
+}
+
+function hasSeenCompassPlusHint() {
   try {
-    const stored = localStorage.getItem(STORAGE_KEYS.THEME);
-    if (stored === "dark" || stored === "light") {
-      document.documentElement.setAttribute("data-theme", stored);
-    }
+    return localStorage.getItem(COMPASS_PLUS_HINT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markCompassPlusHintSeenAndRemove() {
+  try {
+    localStorage.setItem(COMPASS_PLUS_HINT_KEY, "1");
   } catch {
     // ignore
   }
+  if (compassPlusHintEl && compassPlusHintEl.parentNode) {
+    compassPlusHintEl.parentNode.removeChild(compassPlusHintEl);
+  }
+  compassPlusHintEl = null;
 }
 
-function setupThemeToggle() {
-  const btn = document.getElementById("theme-toggle");
-  if (!btn) return;
+function ensureCompassPlusHint() {
+  if (!sidebarEl) return;
+  if (hasSeenCompassPlusHint()) return;
+  if (!plusSectionEl && !daylogSectionEl && !compassSectionEl) return;
 
-  btn.addEventListener("click", () => {
-    const current =
-      document.documentElement.getAttribute("data-theme") === "dark"
-        ? "dark"
-        : "light";
-    const next = current === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", next);
-    try {
-      localStorage.setItem(STORAGE_KEYS.THEME, next);
-    } catch {
-      // ignore
-    }
-  });
-}
+  if (!compassPlusHintEl) {
+    const hint = document.createElement("p");
+    hint.id = "compass-plus-hint";
+    hint.className = "filter-group-helper";
+    hint.style.marginBottom = "6px";
+    hint.textContent = getCompassPlusHintText();
 
-// ------------------------------------------------------
-// Map: Locate-Button
-// ------------------------------------------------------
-
-function setupLocateButton() {
-  const btn = document.getElementById("btn-locate");
-  if (!btn || !appState.map) return;
-
-  btn.addEventListener("click", () => {
-    if (!navigator.geolocation) {
-      showToast(
-        "Standortbestimmung wird von diesem Gerät/Browser nicht unterstützt."
-      );
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        if (appState.map) {
-          appState.map.setView([latitude, longitude], 12);
-          showToast("Karte auf deinen Standort zentriert.");
-        }
-      },
-      () => {
-        showToast("Standort konnte nicht ermittelt werden.");
-      },
-      { enableHighAccuracy: true, timeout: 8000 }
-    );
-  });
-}
-
-// ------------------------------------------------------
-// Views: Karte / About
-// ------------------------------------------------------
-
-function setupAboutViewToggle() {
-  const btnHelp = document.getElementById("btn-help");
-  const viewMap = document.getElementById("view-map");
-  const viewAbout = document.getElementById("view-about");
-  if (!btnHelp || !viewMap || !viewAbout) return;
-
-  btnHelp.addEventListener("click", () => {
-    const mapActive = viewMap.classList.contains("view--active");
-    if (mapActive) {
-      viewMap.classList.remove("view--active");
-      viewAbout.classList.add("view--active");
+    let anchor =
+      plusSectionEl || daylogSectionEl || compassSectionEl || sidebarEl.firstChild;
+    if (anchor && anchor.parentNode === sidebarEl) {
+      sidebarEl.insertBefore(hint, anchor);
     } else {
-      viewAbout.classList.remove("view--active");
-      viewMap.classList.add("view--active");
+      sidebarEl.insertBefore(hint, sidebarEl.firstChild);
     }
-  });
+
+    compassPlusHintEl = hint;
+  } else {
+    compassPlusHintEl.textContent = getCompassPlusHintText();
+  }
 }
 
-// Sidebar ein-/ausblenden (Nur Karte)
-function setupViewToggle() {
-  const btn = document.getElementById("btn-toggle-view");
-  const sidebar = document.getElementById("sidebar");
-  if (!btn || !sidebar) return;
+/**
+ * Setzt Sprache, aktualisiert UI & speichert in localStorage.
+ */
+function setLanguage(lang, { initial = false } = {}) {
+  currentLang =
+    lang === LANG_EN ? LANG_EN : lang === LANG_DA ? LANG_DA : LANG_DE;
 
-  btn.addEventListener("click", () => {
-    const collapsed = sidebar.classList.toggle("sidebar--collapsed");
-    btn.setAttribute("aria-pressed", collapsed ? "true" : "false");
-    // der Text selbst wird über data-i18n gesteuert – hier kein Wechsel nötig
-  });
-}
-
-// „Spielideen für unterwegs“ mit Tilla verbinden
-function setupPlayIdeaButton() {
-  const btn = document.getElementById("btn-play-idea");
-  if (!btn) return;
-
-  btn.addEventListener("click", () => {
-    const lang = appState.currentLang === "en" || appState.currentLang === "da"
-      ? appState.currentLang
-      : "de";
-    const ideas = PLAY_IDEAS[lang] || PLAY_IDEAS.de;
-    if (!ideas || ideas.length === 0) return;
-
-    const idx = Math.floor(Math.random() * ideas.length);
-    const idea = ideas[idx];
-
-    if (appState.tilla) {
-      appState.tilla.showPlayIdea(idea);
-    }
-  });
-}
-
-// ------------------------------------------------------
-// Toast
-// ------------------------------------------------------
-
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-
-  toast.textContent = message;
-  toast.classList.add("toast--visible");
-
-  if (appState.toastTimeoutId != null) {
-    clearTimeout(appState.toastTimeoutId);
+  try {
+    localStorage.setItem("fs_lang", currentLang);
+  } catch {
+    // ignore
   }
 
-  appState.toastTimeoutId = window.setTimeout(() => {
-    toast.classList.remove("toast--visible");
-  }, 3500);
-}
+  document.documentElement.lang = currentLang;
 
-// ------------------------------------------------------
-// Daten laden & initiales Rendern
-// ------------------------------------------------------
-
-async function loadAndRenderSpots() {
   try {
-    const { spots, index, fromCache } = await loadData();
-    appState.allSpots = Array.isArray(spots) ? spots : [];
-
-    const idx = index || getIndexData() || null;
-    if (idx && idx.defaultLocation && appState.map) {
-      const lat = Number(idx.defaultLocation.lat);
-      const lng = Number(idx.defaultLocation.lng);
-      const zoom =
-        typeof idx.defaultLocation.zoom === "number"
-          ? idx.defaultLocation.zoom
-          : appState.map.getZoom();
-      if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
-        appState.defaultCenter = { lat, lng, zoom };
-        appState.map.setView([lat, lng], zoom);
-      }
-    }
-
-    // Kategorie-Dropdown basierend auf Index (falls vorhanden) oder Spots befüllen
-    populateCategoryOptions(appState.allSpots, idx);
-
-    // Filter anwenden & UI rendern
-    appState.filteredSpots = applyFilters();
-    renderSpotsAndMap();
-
-    if (fromCache) {
-      showToast("Spots wurden aus dem Cache geladen (Offline-Modus).");
+    if (
+      typeof I18N !== "undefined" &&
+      typeof I18N.setLanguage === "function"
+    ) {
+      let i18nLang = LANG_DE;
+      if (currentLang === LANG_EN) i18nLang = LANG_EN;
+      else if (currentLang === LANG_DA) i18nLang = "da";
+      I18N.setLanguage(i18nLang);
     }
   } catch (err) {
-    console.error("[Family Spots] Fehler beim Laden der Daten:", err);
-    showToast("Beim Laden der Spots ist ein Fehler aufgetreten.");
-    appState.filteredSpots = [];
-    renderSpotsAndMap();
-    if (appState.tilla) {
-      appState.tilla.onNoSpotsFound();
+    console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
+  }
+
+  updateMetaAndA11yFromI18n();
+  updateHeaderTagline(currentLang);
+
+  if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
+  if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
+
+  if (FEATURES.compass && compassLabelEl) {
+    compassLabelEl.textContent = t("compass_title");
+  }
+  if (FEATURES.compass && compassHelperEl) {
+    compassHelperEl.textContent = t("compass_helper");
+  }
+  if (FEATURES.compass && compassApplyLabelEl) {
+    compassApplyLabelEl.textContent = t("compass_apply_label");
+  }
+
+  updateCompassButtonLabel();
+  updateCompassUI();
+
+  const aboutDe = document.getElementById("page-about-de");
+  const aboutDa = document.getElementById("page-about-da");
+  const aboutEn = document.getElementById("page-about-en");
+
+  if (aboutDe && aboutEn && aboutDa) {
+    const langCode = currentLang;
+
+    const showDe = langCode === LANG_DE;
+    const showDa = langCode === LANG_DA;
+    const showEn = langCode === LANG_EN;
+
+    aboutDe.classList.toggle("hidden", !showDe);
+    aboutDe.setAttribute("aria-hidden", showDe ? "false" : "true");
+
+    aboutDa.classList.toggle("hidden", !showDa);
+    aboutDa.setAttribute("aria-hidden", showDa ? "false" : "true");
+
+    aboutEn.classList.toggle("hidden", !showEn);
+    aboutEn.setAttribute("aria-hidden", showEn ? "false" : "true");
+  }
+
+  if (btnToggleFiltersEl) {
+    const span = btnToggleFiltersEl.querySelector("span");
+    if (span) {
+      span.textContent = filtersCollapsed
+        ? t("btn_show_filters")
+        : t("btn_hide_filters");
+    }
+  }
+
+  if (btnToggleViewEl && sidebarEl) {
+    const sidebarHidden = sidebarEl.classList.contains("hidden");
+    const span = btnToggleViewEl.querySelector("span");
+    if (span) {
+      span.textContent = sidebarHidden ? t("btn_show_list") : t("btn_only_map");
+    }
+  }
+
+  if (plusSectionEl && btnTogglePlusEl) {
+    updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
+  }
+  if (daylogSectionEl && btnToggleDaylogEl) {
+    updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
+  }
+
+  if (filterSearchEl) {
+    filterSearchEl.placeholder =
+      currentLang === LANG_EN
+        ? "Place, spot, keywords …"
+        : currentLang === LANG_DA
+        ? "Sted, spot, søgeord …"
+        : "Ort, Spot, Stichwörter …";
+  }
+
+  if (daylogTextEl && FEATURES.daylog) {
+    daylogTextEl.placeholder =
+      currentLang === LANG_EN
+        ? "Today we went to the wildlife park – the goats were sooo cute!"
+        : currentLang === LANG_DA
+        ? "I dag var vi i dyreparken – gederne var såå søde!"
+        : "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
+  }
+
+  updateRadiusTexts();
+
+  if (filterCategoryEl) {
+    const firstOption = filterCategoryEl.querySelector("option[value='']");
+    if (firstOption) firstOption.textContent = t("filter_category_all");
+    populateCategoryOptions();
+  }
+
+  if (tagFilterContainerEl) {
+    renderTagFilterChips();
+  }
+
+  if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
+    tilla.onLanguageChanged();
+  }
+
+  updateLanguageSwitcherVisual();
+  applyStaticI18n();
+  updatePlusStatusText();
+
+  document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
+    btn.textContent =
+      currentLang === LANG_EN
+        ? "Close"
+        : currentLang === LANG_DA
+        ? "Luk"
+        : "Schließen";
+  });
+
+  ensureCompassPlusHint();
+
+  if (!initial) {
+    const headerTitle = document.querySelector(".header-title");
+    if (headerTitle && typeof headerTitle.focus === "function") {
+      headerTitle.focus();
     }
   }
 }
 
 // ------------------------------------------------------
-// Filter-Logik
+// Spots – Laden (über data.js)
 // ------------------------------------------------------
 
-function setupFilters() {
-  const searchInput = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("filter-search")
-  );
-  const radiusInput = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("filter-radius")
-  );
-  const radiusDesc = document.getElementById("filter-radius-description");
-  const radiusMaxLabel = document.getElementById("filter-radius-max-label");
-  const categorySelect = /** @type {HTMLSelectElement|null} */ (
-    document.getElementById("filter-category")
-  );
-  const ageSelect = /** @type {HTMLSelectElement|null} */ (
-    document.getElementById("filter-age")
-  );
-  const verifiedCheckbox = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("filter-verified")
-  );
-  const filterToggleBtn = document.getElementById("btn-toggle-filters");
-  const filterSection = document.getElementById("filter-section");
+function showSpotsLoadErrorUI() {
+  if (!spotListEl) return;
 
-  // Suche
-  if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      filters.search = searchInput.value.trim();
-      updateFilteredSpots();
-    });
-  }
+  spotListEl.innerHTML = "";
 
-  // Radius
-  if (radiusInput) {
-    const updateRadiusTexts = () => {
-      const step = Number(radiusInput.value || "4");
-      filters.radiusStep = step;
+  const msg = document.createElement("p");
+  msg.className = "filter-group-helper";
+  msg.textContent =
+    currentLang === LANG_EN
+      ? "Spots could not be loaded. Please check your connection and try again."
+      : currentLang === LANG_DA
+      ? "Spots kunne ikke indlæses. Tjek venligst forbindelsen og prøv igen."
+      : "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.";
+  spotListEl.appendChild(msg);
 
-      if (radiusMaxLabel) {
-        if (step >= RADIUS_STEPS_KM.length - 1) {
-          radiusMaxLabel.textContent = getRadiusLabelAll();
-        } else {
-          const km = RADIUS_STEPS_KM[step];
-          radiusMaxLabel.textContent = `${km} km`;
-        }
-      }
+  const retryBtn = document.createElement("button");
+  retryBtn.type = "button";
+  retryBtn.className = "btn btn-small";
+  retryBtn.textContent =
+    currentLang === LANG_EN
+      ? "Try again"
+      : currentLang === LANG_DA
+      ? "Prøv igen"
+      : "Erneut versuchen";
 
-      if (radiusDesc) {
-        if (step >= RADIUS_STEPS_KM.length - 1) {
-          radiusDesc.textContent =
-            "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.";
-        } else {
-          const km = RADIUS_STEPS_KM[step];
-          radiusDesc.textContent = `Spots im Umkreis von ca. ${km} km.`;
-        }
-      }
+  retryBtn.addEventListener("click", () => {
+    showToast(
+      currentLang === LANG_EN
+        ? "Reloading spots…"
+        : currentLang === LANG_DA
+        ? "Indlæser spots igen …"
+        : "Lade Spots erneut …"
+    );
+    loadSpots();
+  });
 
-      radiusInput.setAttribute("aria-valuenow", String(step));
-    };
+  spotListEl.appendChild(retryBtn);
+}
 
-    radiusInput.addEventListener("input", () => {
-      updateRadiusTexts();
-      updateFilteredSpots();
-    });
+async function loadSpots() {
+  try {
+    const result = await loadData();
+    const rawSpots = Array.isArray(result.spots) ? result.spots : [];
 
-    updateRadiusTexts();
-  }
+    spots = rawSpots.map(normalizeSpot);
 
-  // Kategorie
-  if (categorySelect) {
-    categorySelect.addEventListener("change", () => {
-      filters.category = categorySelect.value || "";
-      updateFilteredSpots();
-    });
-  }
+    loadFavoritesFromStorage();
+    populateCategoryOptions();
 
-  // Alter
-  if (ageSelect) {
-    ageSelect.addEventListener("change", () => {
-      filters.age = ageSelect.value || "all";
-      updateFilteredSpots();
-    });
-  }
+    if (tagFilterContainerEl) {
+      renderTagFilterChips();
+    }
 
-  // Verifiziert
-  if (verifiedCheckbox) {
-    verifiedCheckbox.addEventListener("change", () => {
-      filters.verifiedOnly = verifiedCheckbox.checked;
-      updateFilteredSpots();
-    });
-  }
-
-  // Schnellfilter (Quick-Filter-Chips)
-  const quickFilterRow = document.getElementById("filter-tags");
-  if (quickFilterRow) {
-    quickFilterRow.addEventListener("click", (event) => {
-      const btn = /** @type {HTMLElement|null} */ (
-        event.target instanceof HTMLElement
-          ? event.target.closest(".quick-filter-chip")
-          : null
+    if (result.fromCache) {
+      showToast(
+        currentLang === LANG_EN
+          ? "Loaded offline data."
+          : currentLang === LANG_DA
+          ? "Indlæste offline-data."
+          : "Offline-Daten geladen."
       );
-      if (!btn) return;
+    }
 
-      const id = btn.getAttribute("data-quick-id");
-      if (!id) return;
+    applyFiltersAndRender();
+  } catch (err) {
+    console.error("[Family Spots] Fehler beim Laden der Spots:", err);
 
-      const isActive = btn.getAttribute("aria-pressed") === "true";
-      const nextActive = !isActive;
-      btn.setAttribute("aria-pressed", nextActive ? "true" : "false");
-      btn.classList.toggle("quick-filter-chip--active", nextActive);
+    showToast("error_data_load");
+    showSpotsLoadErrorUI();
+    spots = [];
+    filteredSpots = [];
 
-      if (nextActive) {
-        filters.quickFilters.add(id);
-      } else {
-        filters.quickFilters.delete(id);
-      }
-
-      updateFilteredSpots();
-    });
-  }
-
-  // Stimmung (Mood-Chips)
-  const moodRow = document.querySelector(".mood-row");
-  if (moodRow) {
-    moodRow.addEventListener("click", (event) => {
-      const btn = /** @type {HTMLElement|null} */ (
-        event.target instanceof HTMLElement
-          ? event.target.closest(".mood-chip")
-          : null
-      );
-      if (!btn) return;
-
-      const moodId = btn.getAttribute("data-mood");
-      if (!moodId) return;
-
-      const isActive = btn.getAttribute("aria-pressed") === "true";
-      const willActivate = !isActive;
-
-      // Alle Mood-Chips zurücksetzen
-      const allChips = moodRow.querySelectorAll(".mood-chip");
-      allChips.forEach((chip) => {
-        chip.setAttribute("aria-pressed", "false");
-        chip.classList.remove("mood-chip--active");
+    if (map && markersLayer) {
+      hasShownMarkerLimitToast = renderMarkers({
+        map,
+        markersLayer,
+        spots: [],
+        maxMarkers: MAX_MARKERS_RENDER,
+        currentLang,
+        showToast,
+        hasShownMarkerLimitToast,
+        focusSpotOnMap
       });
-
-      if (willActivate) {
-        btn.setAttribute("aria-pressed", "true");
-        btn.classList.add("mood-chip--active");
-        filters.mood = moodId;
-      } else {
-        filters.mood = null;
-      }
-
-      updateFilteredSpots();
-    });
-  }
-
-  // Filter anzeigen/ausblenden (Button im Header)
-  if (filterToggleBtn && filterSection) {
-    filterToggleBtn.addEventListener("click", () => {
-      const expanded = filterToggleBtn.getAttribute("aria-expanded") === "true";
-      const nextExpanded = !expanded;
-      filterToggleBtn.setAttribute(
-        "aria-expanded",
-        nextExpanded ? "true" : "false"
-      );
-      filterSection.classList.toggle("filter-section--collapsed", !nextExpanded);
-    });
-  }
-}
-
-function getRadiusLabelAll() {
-  // einfache i18n-Anmutung über aktuelle Sprache
-  if (appState.currentLang === "en") return "All spots";
-  if (appState.currentLang === "da") return "Alle spots";
-  return "Alle Spots";
-}
-
-function updateFilteredSpots() {
-  appState.filteredSpots = applyFilters();
-  renderSpotsAndMap();
-
-  if (appState.filteredSpots.length === 0) {
-    if (appState.tilla) {
-      appState.tilla.onNoSpotsFound();
-    }
-  } else {
-    if (appState.tilla) {
-      appState.tilla.onSpotsFound();
-    }
-  }
-}
-
-function applyFilters() {
-  const spots = appState.allSpots;
-  if (!Array.isArray(spots) || spots.length === 0) {
-    return [];
-  }
-
-  const search = filters.search.toLowerCase();
-
-  const hasRadiusLimit = filters.radiusStep < RADIUS_STEPS_KM.length - 1;
-  const maxDistanceKm = hasRadiusLimit
-    ? RADIUS_STEPS_KM[filters.radiusStep]
-    : Infinity;
-
-  const center =
-    appState.defaultCenter && typeof appState.defaultCenter.lat === "number"
-      ? appState.defaultCenter
-      : null;
-
-  return spots.filter((spot) => {
-    if (!spot) return false;
-
-    // Suchtext
-    if (search) {
-      const haystack = [
-        spot.title,
-        spot.name,
-        spot.spotName,
-        spot.description,
-        spot.city,
-        spot.region,
-        spot.country,
-        Array.isArray(spot.tags) ? spot.tags.join(" ") : "",
-        Array.isArray(spot.categories) ? spot.categories.join(" ") : ""
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-      if (!haystack.includes(search)) {
-        return false;
-      }
     }
 
-    // Stimmung (Mood)
-    if (filters.mood) {
-      const moodField = spot.mood || spot.moods;
-      let moodsArr = [];
-
-      if (Array.isArray(moodField)) {
-        moodsArr = moodField.map((m) => String(m));
-      } else if (typeof moodField === "string") {
-        moodsArr = moodField.split(",").map((m) => m.trim());
-      }
-
-      if (moodsArr.length && !moodsArr.includes(filters.mood)) {
-        return false;
-      }
+    if (tilla && typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
     }
-
-    // Kategorie
-    if (filters.category) {
-      const cat = String(filters.category);
-      const spotCats = [];
-      if (spot.category) spotCats.push(String(spot.category));
-      if (Array.isArray(spot.categories)) {
-        spotCats.push(...spot.categories.map((c) => String(c)));
-      }
-      if (!spotCats.some((c) => c === cat)) {
-        return false;
-      }
-    }
-
-    // Alter
-    if (filters.age && filters.age !== "all") {
-      let rangeMin = 0;
-      let rangeMax = 99;
-
-      if (filters.age === "0-3") {
-        rangeMin = 0;
-        rangeMax = 3;
-      } else if (filters.age === "4-9") {
-        rangeMin = 4;
-        rangeMax = 9;
-      } else if (filters.age === "10+") {
-        rangeMin = 10;
-        rangeMax = 99;
-      }
-
-      const sMin =
-        typeof spot.ageMin === "number" && !Number.isNaN(spot.ageMin)
-          ? spot.ageMin
-          : 0;
-      const sMax =
-        typeof spot.ageMax === "number" && !Number.isNaN(spot.ageMax)
-          ? spot.ageMax
-          : 99;
-
-      if (sMax < rangeMin || sMin > rangeMax) {
-        return false;
-      }
-    }
-
-    // Verifiziert
-    if (filters.verifiedOnly) {
-      const isVerified =
-        !!spot.verified || !!spot.isVerified || spot.quality === "verified";
-      if (!isVerified) return false;
-    }
-
-    // Quick-Filter (gegen Tags)
-    if (filters.quickFilters.size > 0) {
-      const tagSet = new Set();
-      if (Array.isArray(spot.tags)) {
-        spot.tags.forEach((t) => tagSet.add(String(t)));
-      }
-      if (Array.isArray(spot.quickTags)) {
-        spot.quickTags.forEach((t) => tagSet.add(String(t)));
-      }
-
-      // alle Quick-Filter müssen erfüllt sein
-      for (const q of filters.quickFilters) {
-        if (!tagSet.has(q)) return false;
-      }
-    }
-
-    // Radiusfilter (falls Default-Center vorhanden)
-    if (center && hasRadiusLimit && Number.isFinite(maxDistanceKm)) {
-      const lat = Number(spot.lat);
-      const lng = Number(spot.lng);
-      if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
-        const dist = haversineKm(center.lat, center.lng, lat, lng);
-        if (dist > maxDistanceKm) return false;
-      }
-    }
-
-    return true;
-  });
-}
-
-// einfache Haversine-Berechnung in km
-function haversineKm(lat1, lon1, lat2, lon2) {
-  const R = 6371; // km
-  const toRad = (deg) => (deg * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-// Kategorie-Select: bevorzugt Index, sonst Spots
-function populateCategoryOptions(spots, index) {
-  const select = /** @type {HTMLSelectElement|null} */ (
-    document.getElementById("filter-category")
-  );
-  if (!select) return;
-
-  // erste Option („Alle Kategorien …“) merken
-  const firstOption = select.options[0] || null;
-  select.innerHTML = "";
-  if (firstOption) {
-    select.appendChild(firstOption);
-  }
-
-  const seen = new Set();
-  const ids = [];
-
-  // 1. Versuch: Kategorien aus dem Index lesen (falls vorhanden)
-  if (index && Array.isArray(index.categories) && index.categories.length) {
-    index.categories.forEach((c) => {
-      let id = null;
-      if (typeof c === "string") {
-        id = c;
-      } else if (c && typeof c === "object") {
-        id = c.id || c.key || c.slug || c.value || null;
-      }
-      if (!id) return;
-      const key = String(id);
-      if (seen.has(key)) return;
-      seen.add(key);
-      ids.push(key);
-    });
-  } else {
-    // Fallback: Kategorien aus den Spots ableiten
-    spots.forEach((spot) => {
-      if (!spot) return;
-      const cat =
-        spot.category ||
-        (Array.isArray(spot.categories) ? spot.categories[0] : null);
-      if (!cat) return;
-      const key = String(cat);
-      if (seen.has(key)) return;
-      seen.add(key);
-      ids.push(key);
-    });
-  }
-
-  ids.sort((a, b) => a.localeCompare(b, "de"));
-
-  ids.forEach((cat) => {
-    const opt = document.createElement("option");
-    opt.value = cat;
-    opt.textContent = cat;
-    select.appendChild(opt);
-  });
-}
-
-// ------------------------------------------------------
-// Familien-Kompass / Reisemodus
-// ------------------------------------------------------
-
-function setupCompass() {
-  const compassModeRow = document.querySelector(".compass-mode-row");
-  const compassApplyBtn = document.getElementById("compass-apply");
-
-  if (compassModeRow) {
-    compassModeRow.addEventListener("click", (event) => {
-      const btn = /** @type {HTMLElement|null} */ (
-        event.target instanceof HTMLElement
-          ? event.target.closest(".compass-mode-chip")
-          : null
-      );
-      if (!btn) return;
-
-      const mode = btn.getAttribute("data-travel-mode");
-      if (mode !== "everyday" && mode !== "trip") return;
-
-      const isActive = btn.getAttribute("aria-pressed") === "true";
-      const willActivate = !isActive;
-
-      // alle Chips zurücksetzen
-      const allChips = compassModeRow.querySelectorAll(".compass-mode-chip");
-      allChips.forEach((chip) => {
-        chip.setAttribute("aria-pressed", "false");
-        chip.classList.remove("compass-mode-chip--active");
-      });
-
-      if (willActivate) {
-        btn.setAttribute("aria-pressed", "true");
-        btn.classList.add("compass-mode-chip--active");
-        appState.travelMode = mode;
-        saveTravelModeToStorage(mode);
-      } else {
-        appState.travelMode = "everyday";
-        saveTravelModeToStorage("everyday");
-      }
-
-      if (compassApplyBtn) {
-        compassApplyBtn.classList.remove("hidden");
-      }
-    });
-  }
-
-  if (compassApplyBtn) {
-    compassApplyBtn.addEventListener("click", () => {
-      // hier könnte man Radius je nach Modus verändern – wir lassen den aktuellen Wert
-      if (appState.tilla) {
-        appState.tilla.onCompassApplied({
-          travelMode: appState.travelMode,
-          radiusStep: filters.radiusStep
-        });
-      }
-      showToast("Kompass wurde angewendet.");
-      updateFilteredSpots();
-    });
   }
 }
 
 // ------------------------------------------------------
-// Plus-Bereich
+// Favorites – Persistence
 // ------------------------------------------------------
 
-function setupPlusSection() {
-  const input = /** @type {HTMLInputElement|null} */ (
-    document.getElementById("plus-code-input")
-  );
-  const submit = document.getElementById("plus-code-submit");
-  if (!input || !submit) return;
-
-  submit.addEventListener("click", () => {
-    const code = input.value.trim();
-    if (!code) {
-      appState.plusActive = false;
-      savePlusCodeToStorage("");
-      updatePlusStatusText();
-      showToast("Family Spots Plus wurde deaktiviert.");
-      return;
-    }
-
-    // aktuell: jeder nicht-leere Code aktiviert Plus
-    appState.plusActive = true;
-    savePlusCodeToStorage(code);
-    updatePlusStatusText();
-    if (appState.tilla) {
-      appState.tilla.onPlusActivated();
-    }
-    showToast("Family Spots Plus ist jetzt aktiv.");
-  });
-
-  // falls bereits ein Code gespeichert: ins Input übernehmen
-  const stored = loadPlusCodeFromStorage();
-  if (stored && input.value.trim() === "") {
-    input.value = stored;
-  }
-}
-
-function updatePlusStatusText() {
-  const el = document.getElementById("plus-status-text");
-  if (!el) return;
-
-  if (appState.plusActive) {
-    el.textContent =
-      appState.currentLang === "en"
-        ? "Family Spots Plus is activated."
-        : appState.currentLang === "da"
-        ? "Family Spots Plus er aktiveret."
-        : "Family Spots Plus ist aktiviert.";
-  } else {
-    // der Default-Text ist bereits im HTML/i18n hinterlegt
-    // wir lassen ihn, falls Plus nicht aktiv ist
-  }
-}
-
-// ------------------------------------------------------
-// Daylog („Mein Tag“)
-// ------------------------------------------------------
-
-function setupDaylogSection() {
-  const textarea = /** @type {HTMLTextAreaElement|null} */ (
-    document.getElementById("daylog-text")
-  );
-  const btnSave = document.getElementById("daylog-save");
-  if (!textarea || !btnSave) return;
-
-  btnSave.addEventListener("click", () => {
-    const value = textarea.value.trim();
-    try {
-      localStorage.setItem(STORAGE_KEYS.DAYLOG, value);
-    } catch {
-      // ignore
-    }
-    showToast("Dein Tag wurde gespeichert.");
-    if (appState.tilla) {
-      appState.tilla.onDaylogSaved();
-    }
-  });
-}
-
-function restoreDaylogText() {
-  const textarea = /** @type {HTMLTextAreaElement|null} */ (
-    document.getElementById("daylog-text")
-  );
-  if (!textarea) return;
+function loadFavoritesFromStorage() {
+  if (!FEATURES.favorites) return;
 
   try {
-    const stored = localStorage.getItem(STORAGE_KEYS.DAYLOG);
-    if (stored != null) {
-      textarea.value = stored;
+    const stored = localStorage.getItem("fs_favorites");
+    if (!stored) return;
+    const arr = JSON.parse(stored);
+    if (Array.isArray(arr)) favorites = new Set(arr);
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Favoriten nicht laden:", err);
+  }
+}
+
+function saveFavoritesToStorage() {
+  if (!FEATURES.favorites) return;
+
+  try {
+    localStorage.setItem("fs_favorites", JSON.stringify(Array.from(favorites)));
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
+  }
+}
+
+// ------------------------------------------------------
+// Kategorien / Filter-Dropdown
+// ------------------------------------------------------
+
+function populateCategoryOptions() {
+  if (!filterCategoryEl) return;
+
+  const firstOption =
+    filterCategoryEl.querySelector("option[value='']") ||
+    document.createElement("option");
+  firstOption.value = "";
+  firstOption.textContent = t("filter_category_all");
+
+  filterCategoryEl.innerHTML = "";
+  filterCategoryEl.appendChild(firstOption);
+
+  const groupedSlugs = new Set();
+
+  Object.entries(CATEGORY_GROUPS).forEach(([groupKey, slugs]) => {
+    if (!Array.isArray(slugs) || !slugs.length) return;
+
+    const groupLabel =
+      (CATEGORY_GROUP_LABELS[currentLang] &&
+        CATEGORY_GROUP_LABELS[currentLang][groupKey]) ||
+      groupKey;
+
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = groupLabel;
+
+    slugs.forEach((slug) => {
+      if (!slug) return;
+      groupedSlugs.add(slug);
+      const opt = document.createElement("option");
+      opt.value = slug;
+      opt.textContent = getCategoryLabelWithAccess(slug);
+      optgroup.appendChild(opt);
+    });
+
+    filterCategoryEl.appendChild(optgroup);
+  });
+
+  const extraSet = new Set();
+
+  spots.forEach((spot) => {
+    if (Array.isArray(spot.categories)) {
+      spot.categories.forEach((c) => {
+        if (!c) return;
+        if (!groupedSlugs.has(c)) extraSet.add(c);
+      });
+    } else if (spot.category && !groupedSlugs.has(spot.category)) {
+      extraSet.add(spot.category);
     }
-  } catch {
-    // ignore
+  });
+
+  if (extraSet.size > 0) {
+    const extraGroup = document.createElement("optgroup");
+    extraGroup.label =
+      currentLang === LANG_EN
+        ? "Other categories"
+        : currentLang === LANG_DA
+        ? "Andre kategorier"
+        : "Weitere Kategorien";
+
+    Array.from(extraSet)
+      .sort((a, b) =>
+        getCategoryLabel(a)
+          .toLowerCase()
+          .localeCompare(
+            getCategoryLabel(b).toLowerCase(),
+            currentLang === LANG_DE
+              ? "de"
+              : currentLang === LANG_DA
+              ? "da"
+              : "en"
+          )
+      )
+      .forEach((slug) => {
+        const opt = document.createElement("option");
+        opt.value = slug;
+        opt.textContent = getCategoryLabelWithAccess(slug);
+        extraGroup.appendChild(opt);
+      });
+
+    filterCategoryEl.appendChild(extraGroup);
+  }
+
+  filterCategoryEl.value = categoryFilter || "";
+}
+
+// ------------------------------------------------------
+// Radius / Geodistanz
+// ------------------------------------------------------
+
+function updateRadiusTexts() {
+  if (!filterRadiusEl || !filterRadiusMaxLabelEl || !filterRadiusDescriptionEl)
+    return;
+
+  let value = parseInt(filterRadiusEl.value, 10);
+  if (Number.isNaN(value)) {
+    value = 4;
+  }
+  value = Math.min(Math.max(value, 0), RADIUS_STEPS_KM.length - 1);
+  radiusStep = value;
+
+  filterRadiusEl.value = String(radiusStep);
+  filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
+
+  if (radiusStep === RADIUS_STEPS_KM.length - 1) {
+    filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label");
+    filterRadiusDescriptionEl.textContent = t("filter_radius_description_all");
+  } else {
+    const km = RADIUS_STEPS_KM[radiusStep];
+    filterRadiusMaxLabelEl.textContent = `${km} km`;
+    const key = `filter_radius_description_step${radiusStep}`;
+    filterRadiusDescriptionEl.textContent = t(key);
+  }
+}
+
+function initRadiusSliderA11y() {
+  if (!filterRadiusEl) return;
+
+  const min = filterRadiusEl.min || "0";
+  const max = filterRadiusEl.max || String(RADIUS_STEPS_KM.length - 1);
+
+  if (!filterRadiusEl.value) {
+    filterRadiusEl.value = max;
+  }
+
+  filterRadiusEl.setAttribute("aria-valuemin", min);
+  filterRadiusEl.setAttribute("aria-valuemax", max);
+  filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value);
+
+  filterRadiusEl.addEventListener("input", () => {
+    updateRadiusTexts();
+    applyFiltersAndRender();
+  });
+
+  updateRadiusTexts();
+}
+
+/**
+ * Distanz-Check für einen Spot relativ zu centerLatLng / radiusKm.
+ */
+function isSpotInRadius(spot, centerLatLng, radiusKm) {
+  if (!centerLatLng || typeof centerLatLng.distanceTo !== "function") {
+    return true;
+  }
+  if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
+  if (!hasValidLatLng(spot)) return true;
+
+  if (typeof L === "undefined" || typeof L.latLng !== "function") return true;
+
+  const spotLatLng = L.latLng(spot.lat, spot.lng);
+  const distanceMeters = centerLatLng.distanceTo(spotLatLng);
+  const distanceKm = distanceMeters / 1000;
+  return distanceKm <= radiusKm;
+}
+
+// ------------------------------------------------------
+// Tag-Filter-Chips (UI)
+// ------------------------------------------------------
+
+function renderTagFilterChips() {
+  if (!tagFilterContainerEl) return;
+  if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) {
+    tagFilterContainerEl.innerHTML = "";
+    return;
+  }
+
+  tagFilterContainerEl.innerHTML = "";
+
+  FILTERS.forEach((filter) => {
+    if (!filter || !filter.id) return;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "tag-filter-chip btn-chip";
+    btn.dataset.filterId = filter.id;
+
+    const isActive = activeTagFilters.has(filter.id);
+    if (isActive) {
+      btn.classList.add("tag-filter-chip--active");
+      btn.setAttribute("aria-pressed", "true");
+    } else {
+      btn.setAttribute("aria-pressed", "false");
+    }
+
+    const label =
+      (filter.label && (filter.label[currentLang] || filter.label.de)) ||
+      filter.id;
+    btn.textContent = label;
+
+    btn.addEventListener("click", () => {
+      const currentlyActive = activeTagFilters.has(filter.id);
+      if (currentlyActive) {
+        activeTagFilters.delete(filter.id);
+      } else {
+        activeTagFilters.add(filter.id);
+      }
+      renderTagFilterChips();
+      applyFiltersAndRender();
+    });
+
+    tagFilterContainerEl.appendChild(btn);
+  });
+}
+
+// ------------------------------------------------------
+// Filterlogik (verwendet filterSpots aus filters.js)
+// ------------------------------------------------------
+
+function applyFiltersAndRender() {
+  if (!spots.length) {
+    filteredSpots = [];
+    renderSpotList();
+
+    if (map && markersLayer) {
+      hasShownMarkerLimitToast = renderMarkers({
+        map,
+        markersLayer,
+        spots: [],
+        maxMarkers: MAX_MARKERS_RENDER,
+        currentLang,
+        showToast,
+        hasShownMarkerLimitToast,
+        focusSpotOnMap
+      });
+    }
+
+    if (tilla && typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
+    }
+    return;
+  }
+
+  const nonGeoFiltered = filterSpots(spots, {
+    plusActive,
+    searchTerm,
+    categoryFilter,
+    ageFilter,
+    moodFilter,
+    travelMode,
+    onlyBigAdventures,
+    onlyVerified,
+    onlyFavorites,
+    favorites,
+    activeFilterIds: activeTagFilters
+  });
+
+  let center = null;
+  if (map && typeof map.getCenter === "function") {
+    center = map.getCenter();
+  } else if (typeof L !== "undefined" && typeof L.latLng === "function") {
+    center = L.latLng(DEFAULT_MAP_CENTER[0], DEFAULT_MAP_CENTER[1]);
+  }
+
+  const radiusKm =
+    RADIUS_STEPS_KM[radiusStep] ?? RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ?? Infinity;
+
+  filteredSpots = center
+    ? nonGeoFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
+    : nonGeoFiltered;
+
+  renderSpotList();
+
+  if (map && markersLayer) {
+    hasShownMarkerLimitToast = renderMarkers({
+      map,
+      markersLayer,
+      spots: filteredSpots,
+      maxMarkers: MAX_MARKERS_RENDER,
+      currentLang,
+      showToast,
+      hasShownMarkerLimitToast,
+      focusSpotOnMap
+    });
+  }
+
+  if (!tilla) return;
+
+  if (filteredSpots.length === 0) {
+    if (typeof tilla.onNoSpotsFound === "function") {
+      tilla.onNoSpotsFound();
+    }
+  } else if (typeof tilla.onSpotsFound === "function") {
+    tilla.onSpotsFound();
+  }
+}
+
+// ------------------------------------------------------
+// Marker-Liste & Meta
+// ------------------------------------------------------
+
+function isSpotVerified(spot) {
+  return !!spot.verified || !!spot.isVerified;
+}
+
+function getSpotMetaParts(spot) {
+  const parts = [];
+  if (spot.category) parts.push(getCategoryLabel(spot.category));
+  if (isSpotVerified(spot)) {
+    parts.push(
+      currentLang === LANG_EN
+        ? "verified"
+        : currentLang === LANG_DA
+        ? "verificeret"
+        : "verifiziert"
+    );
+  }
+  if (spot.visit_minutes) {
+    parts.push(
+      currentLang === LANG_EN
+        ? `~${spot.visit_minutes} min`
+        : currentLang === LANG_DA
+        ? `~${spot.visit_minutes} min`
+        : `~${spot.visit_minutes} Min.`
+    );
+  }
+  return parts;
+}
+
+function renderSpotList() {
+  if (!spotListEl) return;
+  spotListEl.innerHTML = "";
+
+  if (!filteredSpots.length) {
+    const msg = document.createElement("p");
+    msg.className = "filter-group-helper";
+    msg.textContent =
+      currentLang === LANG_EN
+        ? "Right now no spot matches your filters. Try a wider radius or remove one of the filters."
+        : currentLang === LANG_DA
+        ? "Der er lige nu ingen spots, der matcher dine filtre. Prøv en større radius eller fjern et filter."
+        : "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus.";
+    spotListEl.appendChild(msg);
+    return;
+  }
+
+  filteredSpots.forEach((spot) => {
+    const card = document.createElement("article");
+    card.className = "spot-card";
+    const spotId = getSpotId(spot);
+    card.dataset.spotId = spotId;
+
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", getSpotName(spot));
+
+    const titleEl = document.createElement("h3");
+    titleEl.className = "spot-card-title";
+    titleEl.textContent = getSpotName(spot);
+
+    const subtitleText = getSpotSubtitle(spot);
+    const subtitleEl = document.createElement("p");
+    subtitleEl.className = "spot-card-subtitle";
+    subtitleEl.textContent = subtitleText;
+
+    const metaEl = document.createElement("p");
+    metaEl.className = "spot-card-meta";
+
+    const metaParts = getSpotMetaParts(spot);
+    if (Array.isArray(spot.tags)) {
+      metaParts.push(spot.tags.join(", "));
+    }
+    metaEl.textContent = metaParts.join(" · ");
+
+    const headerRow = document.createElement("div");
+    headerRow.style.display = "flex";
+    headerRow.style.alignItems = "center";
+    headerRow.style.justifyContent = "space-between";
+    headerRow.style.gap = "8px";
+
+    headerRow.appendChild(titleEl);
+
+    if (FEATURES.favorites) {
+      const favBtn = document.createElement("button");
+      favBtn.type = "button";
+      favBtn.className = "btn-ghost btn-small";
+
+      syncFavButtonState(favBtn, spotId);
+
+      favBtn.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        toggleFavorite(spot);
+        syncFavButtonState(favBtn, spotId);
+      });
+
+      headerRow.appendChild(favBtn);
+    }
+
+    card.appendChild(headerRow);
+    if (subtitleText) card.appendChild(subtitleEl);
+    if (metaParts.length) card.appendChild(metaEl);
+
+    card.addEventListener("click", () => {
+      lastSpotTriggerEl = card;
+      focusSpotOnMap(spot);
+    });
+
+    card.addEventListener(
+      "keydown",
+      activateOnEnterSpace(() => {
+        lastSpotTriggerEl = card;
+        focusSpotOnMap(spot);
+      })
+    );
+
+    spotListEl.appendChild(card);
+  });
+}
+
+function syncFavButtonState(btn, spotId) {
+  const isFav = favorites.has(spotId);
+  btn.textContent = isFav ? "★" : "☆";
+  btn.setAttribute(
+    "aria-label",
+    isFav
+      ? currentLang === LANG_EN
+        ? "Remove from favourites"
+        : currentLang === LANG_DA
+        ? "Fjern fra favoritter"
+        : "Aus Favoriten entfernen"
+      : currentLang === LANG_EN
+      ? "Add to favourites"
+      : currentLang === LANG_DA
+      ? "Tilføj til favoritter"
+      : "Zu Favoriten hinzufügen"
+  );
+}
+
+// ------------------------------------------------------
+// Detail-Panel
+// ------------------------------------------------------
+
+function focusSpotOnMap(spot) {
+  if (!map || !hasValidLatLng(spot)) {
+    showSpotDetails(spot);
+    return;
+  }
+  const zoom = Math.max(map.getZoom ? map.getZoom() : DEFAULT_MAP_ZOOM, 13);
+  map.setView([spot.lat, spot.lng], zoom);
+  showSpotDetails(spot);
+}
+
+function closeSpotDetails(options = {}) {
+  const { returnFocus = true } = options;
+
+  if (!spotDetailEl) return;
+
+  spotDetailEl.classList.add("spot-details--hidden");
+  spotDetailEl.innerHTML = "";
+
+  if (
+    returnFocus &&
+    lastSpotTriggerEl &&
+    typeof lastSpotTriggerEl.focus === "function"
+  ) {
+    lastSpotTriggerEl.focus();
+  }
+}
+
+function showSpotDetails(spot) {
+  if (!spotDetailEl) return;
+
+  const spotId = getSpotId(spot);
+  const name = getSpotName(spot);
+  const subtitle = getSpotSubtitle(spot);
+  const metaParts = getSpotMetaParts(spot);
+  const tags = Array.isArray(spot.tags) ? spot.tags : [];
+
+  let description = "";
+  if (currentLang === LANG_EN) {
+    description =
+      spot.summary_en || spot.poetry || spot.description || spot.text || "";
+  } else if (currentLang === LANG_DA) {
+    description =
+      spot.summary_da ||
+      spot.summary_de ||
+      spot.poetry ||
+      spot.description ||
+      spot.text ||
+      "";
+  } else {
+    description =
+      spot.summary_de || spot.poetry || spot.description || spot.text || "";
+  }
+
+  const addressParts = [];
+  if (spot.address) addressParts.push(spot.address);
+  if (spot.postcode) addressParts.push(spot.postcode);
+  if (spot.city) addressParts.push(spot.city);
+  if (!addressParts.length && subtitle) addressParts.push(subtitle);
+  const addressText = addressParts.join(", ");
+
+  spotDetailEl.innerHTML = "";
+  spotDetailEl.classList.remove("spot-details--hidden");
+
+  const headerEl = document.createElement("div");
+  headerEl.className = "spot-details-header";
+
+  const titleWrapperEl = document.createElement("div");
+
+  const titleEl = document.createElement("h3");
+  titleEl.className = "spot-details-title";
+  titleEl.textContent = name;
+  titleWrapperEl.appendChild(titleEl);
+
+  if (subtitle && !addressText) {
+    const subtitleEl = document.createElement("p");
+    subtitleEl.className = "spot-card-subtitle";
+    subtitleEl.textContent = subtitle;
+    titleWrapperEl.appendChild(subtitleEl);
+  }
+
+  const actionsEl = document.createElement("div");
+  actionsEl.className = "spot-details-actions";
+
+  if (FEATURES.favorites) {
+    const favBtn = document.createElement("button");
+    favBtn.type = "button";
+    favBtn.className = "btn-ghost btn-small";
+    syncFavButtonState(favBtn, spotId);
+    favBtn.addEventListener("click", () => {
+      toggleFavorite(spot);
+      syncFavButtonState(favBtn, spotId);
+    });
+    actionsEl.appendChild(favBtn);
+  }
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.className = "btn-ghost btn-small";
+  closeBtn.textContent =
+    currentLang === LANG_EN
+      ? "Close"
+      : currentLang === LANG_DA
+      ? "Luk"
+      : "Schließen";
+  closeBtn.addEventListener("click", () => {
+    closeSpotDetails({ returnFocus: true });
+  });
+  actionsEl.appendChild(closeBtn);
+
+  headerEl.appendChild(titleWrapperEl);
+  headerEl.appendChild(actionsEl);
+
+  const metaEl = document.createElement("div");
+  metaEl.className = "spot-details-meta";
+  metaParts.forEach((p) => {
+    const span = document.createElement("span");
+    span.textContent = p;
+    metaEl.appendChild(span);
+  });
+
+  const tagsEl = document.createElement("div");
+  tagsEl.className = "spot-details-tags";
+  tags.forEach((tag) => {
+    const span = document.createElement("span");
+    span.className = "badge";
+    span.textContent = tag;
+    tagsEl.appendChild(span);
+  });
+
+  spotDetailEl.appendChild(headerEl);
+  if (metaParts.length) {
+    spotDetailEl.appendChild(metaEl);
+  }
+
+  if (description) {
+    const descEl = document.createElement("p");
+    descEl.className = "spot-details-description";
+    descEl.textContent = description;
+    spotDetailEl.appendChild(descEl);
+  }
+
+  if (addressText) {
+    const addrEl = document.createElement("p");
+    addrEl.className = "spot-details-address";
+    addrEl.textContent = addressText;
+    spotDetailEl.appendChild(addrEl);
+  }
+
+  const routeUrls = getRouteUrlsForSpot(spot);
+  if (routeUrls) {
+    const routesEl = document.createElement("div");
+    routesEl.className = "spot-details-routes";
+
+    const appleLink = document.createElement("a");
+    appleLink.href = routeUrls.apple;
+    appleLink.target = "_blank";
+    appleLink.rel = "noopener noreferrer";
+    appleLink.className = "spot-details-route-link";
+    appleLink.textContent = t("route_apple");
+
+    const googleLink = document.createElement("a");
+    googleLink.href = routeUrls.google;
+    googleLink.target = "_blank";
+    googleLink.rel = "noopener noreferrer";
+    googleLink.className = "spot-details-route-link";
+    googleLink.textContent = t("route_google");
+
+    routesEl.appendChild(appleLink);
+    routesEl.appendChild(googleLink);
+
+    spotDetailEl.appendChild(routesEl);
+  }
+
+  if (tags.length) {
+    spotDetailEl.appendChild(tagsEl);
+  }
+
+  if (typeof spotDetailEl.scrollTop === "number") {
+    spotDetailEl.scrollTop = 0;
   }
 }
 
@@ -1033,304 +1531,708 @@ function restoreDaylogText() {
 // Favoriten
 // ------------------------------------------------------
 
-function loadFavoritesFromStorage() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEYS.FAVORITES);
-    if (!stored) return new Set();
-    const arr = JSON.parse(stored);
-    if (!Array.isArray(arr)) return new Set();
-    return new Set(arr.map((s) => String(s)));
-  } catch {
-    return new Set();
-  }
-}
+function toggleFavorite(spot) {
+  if (!FEATURES.favorites) return;
 
-function saveFavoritesToStorage() {
-  try {
-    const arr = Array.from(appState.favorites);
-    localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(arr));
-  } catch {
-    // ignore
-  }
-}
+  const spotId = getSpotId(spot);
+  const wasFavorite = favorites.has(spotId);
 
-function getSpotKey(spot, fallbackIndex) {
-  if (spot && spot.id != null) {
-    return `id:${String(spot.id)}`;
-  }
-  const name = (spot && (spot.title || spot.name || spot.spotName)) || "";
-  const lat =
-    spot && typeof spot.lat === "number" && !Number.isNaN(spot.lat)
-      ? String(spot.lat)
-      : "?";
-  const lng =
-    spot && typeof spot.lng === "number" && !Number.isNaN(spot.lng)
-      ? String(spot.lng)
-      : "?";
-  return `${fallbackIndex}:${name}:${lat},${lng}`;
-}
-
-// ------------------------------------------------------
-// Reisen / Travel-Mode in Storage
-// ------------------------------------------------------
-
-function loadTravelModeFromStorage() {
-  try {
-    const val = localStorage.getItem(STORAGE_KEYS.TRAVEL_MODE);
-    if (val === "trip" || val === "everyday") return val;
-  } catch {
-    // ignore
-  }
-  return null;
-}
-
-function saveTravelModeToStorage(mode) {
-  try {
-    localStorage.setItem(STORAGE_KEYS.TRAVEL_MODE, mode);
-  } catch {
-    // ignore
-  }
-}
-
-// ------------------------------------------------------
-// Plus-Code Storage
-// ------------------------------------------------------
-
-function loadPlusCodeFromStorage() {
-  try {
-    return localStorage.getItem(STORAGE_KEYS.PLUS_CODE) || "";
-  } catch {
-    return "";
-  }
-}
-
-function savePlusCodeToStorage(code) {
-  try {
-    if (!code) {
-      localStorage.removeItem(STORAGE_KEYS.PLUS_CODE);
-    } else {
-      localStorage.setItem(STORAGE_KEYS.PLUS_CODE, code);
-    }
-  } catch {
-    // ignore
-  }
-}
-
-// ------------------------------------------------------
-// Spots + Map rendern
-// ------------------------------------------------------
-
-function renderSpotsAndMap() {
-  const spots = appState.filteredSpots || [];
-
-  renderSpotList(spots);
-  appState.hasShownMarkerLimitToast = renderMarkers({
-    map: appState.map,
-    markersLayer: appState.markersLayer,
-    spots,
-    currentLang: appState.currentLang,
-    showToast,
-    hasShownMarkerLimitToast: appState.hasShownMarkerLimitToast,
-    focusSpotOnMap
-  });
-}
-
-// Spot-Liste
-function renderSpotList(spots) {
-  const listEl = document.getElementById("spot-list");
-  if (!listEl) return;
-
-  if (!Array.isArray(spots) || spots.length === 0) {
-    listEl.innerHTML =
-      '<p class="spot-list-empty">Keine Spots mit diesen Filtern gefunden.</p>';
-    return;
-  }
-
-  let html = "";
-
-  spots.forEach((spot, index) => {
-    if (!spot) return;
-    const title =
-      spot.title || spot.name || spot.spotName || `Spot #${index + 1}`;
-    const locationParts = [];
-    if (spot.city) locationParts.push(String(spot.city));
-    if (spot.region) locationParts.push(String(spot.region));
-    if (spot.country) locationParts.push(String(spot.country));
-    const locationText = locationParts.join(" · ");
-
-    const key = getSpotKey(spot, index);
-    const isFav = appState.favorites.has(key);
-
-    html += `
-      <article class="spot-card" data-spot-index="${index}">
-        <header class="spot-card-header">
-          <h3 class="spot-card-title">${escapeHtml(title)}</h3>
-          <button
-            type="button"
-            class="spot-card-fav"
-            aria-pressed="${isFav ? "true" : "false"}"
-            aria-label="${isFav ? "Favorit entfernen" : "Zu Favoriten hinzufügen"}">
-            ${isFav ? "★" : "☆"}
-          </button>
-        </header>
-        ${
-          locationText
-            ? `<p class="spot-card-location">${escapeHtml(locationText)}</p>`
-            : ""
-        }
-      </article>
-    `;
-  });
-
-  listEl.innerHTML = html;
-}
-
-// Spot-Details
-function renderSpotDetail(spot) {
-  const detailEl = document.getElementById("spot-detail");
-  if (!detailEl) return;
-
-  if (!spot) {
-    detailEl.classList.add("spot-details--hidden");
-    detailEl.innerHTML = "";
-    return;
-  }
-
-  const title =
-    spot.title || spot.name || spot.spotName || String(spot.id || "Spot");
-  const description = spot.description || "";
-  const locationParts = [];
-  if (spot.city) locationParts.push(String(spot.city));
-  if (spot.region) locationParts.push(String(spot.region));
-  if (spot.country) locationParts.push(String(spot.country));
-  const locationText = locationParts.join(" · ");
-
-  const routeUrls = getRouteUrlsForSpot(spot);
-
-  let html = `
-    <div class="spot-details-card">
-      <header class="spot-details-header">
-        <h3 class="spot-details-title">${escapeHtml(title)}</h3>
-        ${
-          locationText
-            ? `<p class="spot-details-location">${escapeHtml(
-                locationText
-              )}</p>`
-            : ""
-        }
-      </header>
-  `;
-
-  if (description) {
-    html += `<p class="spot-details-description">${escapeHtml(
-      description
-    )}</p>`;
-  }
-
-  if (routeUrls) {
-    html += `
-      <div class="spot-details-actions">
-        <a href="${routeUrls.apple}" target="_blank" rel="noopener" class="btn btn-small">
-          Apple Maps
-        </a>
-        <a href="${routeUrls.google}" target="_blank" rel="noopener" class="btn btn-small">
-          Google Maps
-        </a>
-      </div>
-    `;
-  }
-
-  html += `</div>`;
-
-  detailEl.innerHTML = html;
-  detailEl.classList.remove("spot-details--hidden");
-}
-
-// ------------------------------------------------------
-// Spot-Liste: Interaktionen (Karte fokussieren, Favoriten)
-// ------------------------------------------------------
-
-function setupSpotListInteractions() {
-  const listEl = document.getElementById("spot-list");
-  if (!listEl) return;
-
-  listEl.addEventListener("click", (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-
-    // Favoriten-Button?
-    const favBtn = target.closest(".spot-card-fav");
-    if (favBtn) {
-      handleFavoriteClick(favBtn);
-      return;
-    }
-
-    // Karte fokussieren / Details öffnen
-    const card = target.closest(".spot-card");
-    if (!card) return;
-    const indexStr = card.getAttribute("data-spot-index");
-    if (!indexStr) return;
-    const index = Number(indexStr);
-    const spot = appState.filteredSpots[index];
-    if (!spot) return;
-
-    focusSpotOnMap(spot);
-  });
-}
-
-function handleFavoriteClick(buttonEl) {
-  const card = buttonEl.closest(".spot-card");
-  if (!card) return;
-  const indexStr = card.getAttribute("data-spot-index");
-  if (!indexStr) return;
-  const index = Number(indexStr);
-  const spot = appState.filteredSpots[index];
-  if (!spot) return;
-
-  const key = getSpotKey(spot, index);
-  const isFav = appState.favorites.has(key);
-  const willBeFav = !isFav;
-
-  if (willBeFav) {
-    appState.favorites.add(key);
-    buttonEl.textContent = "★";
-    buttonEl.setAttribute("aria-pressed", "true");
-    if (appState.tilla) {
-      appState.tilla.onFavoriteAdded();
-    }
+  if (wasFavorite) {
+    favorites.delete(spotId);
   } else {
-    appState.favorites.delete(key);
-    buttonEl.textContent = "☆";
-    buttonEl.setAttribute("aria-pressed", "false");
-    if (appState.tilla) {
-      appState.tilla.onFavoriteRemoved();
-    }
+    favorites.add(spotId);
   }
 
   saveFavoritesToStorage();
-}
 
-// Von Karte auf Spot fokussieren
-function focusSpotOnMap(spot) {
-  if (
-    appState.map &&
-    spot &&
-    typeof spot.lat === "number" &&
-    typeof spot.lng === "number"
-  ) {
-    appState.map.setView([spot.lat, spot.lng], appState.map.getZoom() || 12);
+  const toastKey = wasFavorite ? "toast_fav_removed" : "toast_fav_added";
+  showToast(toastKey);
+
+  if (tilla) {
+    const callbackName = wasFavorite ? "onFavoriteRemoved" : "onFavoriteAdded";
+    const callback = tilla[callbackName];
+    if (typeof callback === "function") {
+      callback.call(tilla);
+    }
   }
-  renderSpotDetail(spot);
+
+  renderSpotList();
 }
 
 // ------------------------------------------------------
-// Hilfsfunktionen
+// Kompass
 // ------------------------------------------------------
 
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+function updateCompassButtonLabel() {
+  if (!FEATURES.compass) return;
+  if (!btnToggleCompassEl || !compassSectionEl) return;
+  const span = btnToggleCompassEl.querySelector("span") || btnToggleCompassEl;
+  const isOpen = !!compassSectionEl.open;
+  span.textContent = isOpen ? t("btn_hide_compass") : t("btn_show_compass");
+  btnToggleCompassEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
 }
+
+function updateCompassUI() {
+  if (!compassApplyBtnEl) return;
+
+  if (!FEATURES.compass) {
+    compassApplyBtnEl.classList.add("hidden");
+    return;
+  }
+
+  const shouldShow = !!travelMode;
+  compassApplyBtnEl.classList.toggle("hidden", !shouldShow);
+}
+
+function handleCompassApply() {
+  if (!FEATURES.compass) return;
+  if (!filterRadiusEl) return;
+
+  radiusStep = travelMode === "everyday" || !travelMode ? 1 : 3;
+
+  filterRadiusEl.value = String(radiusStep);
+  updateRadiusTexts();
+  applyFiltersAndRender();
+
+  if (tilla && typeof tilla.onCompassApplied === "function") {
+    tilla.onCompassApplied({ travelMode, radiusStep });
+  }
+}
+
+function handleToggleCompass() {
+  if (!FEATURES.compass) return;
+  if (!compassSectionEl) return;
+  compassSectionEl.open = !compassSectionEl.open;
+  updateCompassButtonLabel();
+  markCompassPlusHintSeenAndRemove();
+}
+
+// ------------------------------------------------------
+// Plus & Mein Tag
+// ------------------------------------------------------
+
+function loadPlusStateFromStorage(options = {}) {
+  const { reapplyFilters = false } = options;
+
+  if (!FEATURES.plus) {
+    plusActive = false;
+    updatePlusStatusText({ active: false, plan: null, validUntil: null });
+    return;
+  }
+
+  try {
+    const status = getPlusStatus();
+    plusActive = !!status.active;
+    updatePlusStatusText(status);
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Plus-Status nicht laden:", err);
+    plusActive = false;
+    updatePlusStatusText({ active: false, plan: null, validUntil: null });
+  }
+
+  if (reapplyFilters && spots.length) {
+    applyFiltersAndRender();
+  }
+}
+
+async function handlePlusCodeSubmit() {
+  if (!FEATURES.plus) return;
+  if (!plusCodeInputEl || !plusStatusTextEl) return;
+
+  const raw = plusCodeInputEl.value.trim();
+
+  const result = await redeemPartnerCode(raw);
+
+  if (!result.ok) {
+    if (result.reason === "empty") {
+      showToast("plus_code_empty");
+    } else if (result.reason === "invalid_days") {
+      showToast("plus_code_unknown");
+    } else {
+      showToast("plus_code_unknown");
+    }
+    return;
+  }
+
+  const status = result.status || getPlusStatus();
+  plusActive = !!status.active;
+  updatePlusStatusText(status);
+
+  showToast("plus_code_activated");
+
+  if (tilla && typeof tilla.onPlusActivated === "function") {
+    tilla.onPlusActivated();
+  }
+
+  applyFiltersAndRender();
+}
+
+function loadDaylogFromStorage() {
+  if (!FEATURES.daylog) return;
+  if (!daylogTextEl) return;
+
+  try {
+    const stored = localStorage.getItem(DAYLOG_STORAGE_KEY);
+    if (!stored) return;
+
+    const parsed = JSON.parse(stored);
+    if (parsed && typeof parsed.text === "string") {
+      daylogTextEl.value = parsed.text;
+    }
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Mein-Tag nicht laden:", err);
+  }
+}
+
+function handleDaylogSave() {
+  if (!FEATURES.daylog) return;
+  if (!daylogTextEl) return;
+  const text = daylogTextEl.value.trim();
+  if (!text) return;
+
+  const payload = {
+    text,
+    ts: Date.now()
+  };
+
+  try {
+    localStorage.setItem(DAYLOG_STORAGE_KEY, JSON.stringify(payload));
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Mein-Tag nicht speichern:", err);
+  }
+
+  showToast("daylog_saved");
+  if (tilla && typeof tilla.onDaylogSaved === "function") {
+    tilla.onDaylogSaved();
+  }
+}
+
+// ------------------------------------------------------
+// Geolocation
+// ------------------------------------------------------
+
+function handleLocateClick() {
+  if (!navigator.geolocation || !map) {
+    showToast("toast_location_error");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      map.setView([latitude, longitude], 13);
+      showToast("toast_location_ok");
+    },
+    () => {
+      showToast("toast_location_error");
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
+}
+
+// ------------------------------------------------------
+// Filter-Umschalter & View-Toggle
+// ------------------------------------------------------
+
+function handleToggleFilters() {
+  if (!btnToggleFiltersEl || !filterBodyEls.length) return;
+
+  filtersCollapsed = !filtersCollapsed;
+  const isExpanded = !filtersCollapsed;
+
+  filterBodyEls.forEach((el) => {
+    el.classList.toggle("hidden", filtersCollapsed);
+  });
+
+  const span = btnToggleFiltersEl.querySelector("span");
+  if (span) {
+    span.textContent = filtersCollapsed
+      ? t("btn_show_filters")
+      : t("btn_hide_filters");
+  }
+
+  btnToggleFiltersEl.setAttribute(
+    "aria-expanded",
+    isExpanded ? "true" : "false"
+  );
+}
+
+function handleToggleView() {
+  if (!sidebarEl || !btnToggleViewEl) return;
+  const isHidden = sidebarEl.classList.toggle("hidden");
+  const span = btnToggleViewEl.querySelector("span");
+  if (span) {
+    span.textContent = isHidden ? t("btn_show_list") : t("btn_only_map");
+  }
+
+  btnToggleViewEl.setAttribute("aria-pressed", isHidden ? "true" : "false");
+
+  if (map) {
+    window.setTimeout(() => {
+      map.invalidateSize();
+    }, 300);
+  }
+}
+
+// ------------------------------------------------------
+// Initialisierung
+// ------------------------------------------------------
+
+async function init() {
+  try {
+    languageSwitcherEl =
+      document.getElementById("language-switcher") ||
+      document.getElementById("language-toggle");
+    languageSwitcherFlagEl = document.getElementById("language-switcher-flag");
+    themeToggleEl = document.getElementById("theme-toggle");
+    btnLocateEl = document.getElementById("btn-locate");
+    btnHelpEl = document.getElementById("btn-help");
+
+    viewMapEl = document.getElementById("view-map");
+    viewAboutEl = document.getElementById("view-about");
+
+    bottomNavButtons = document.querySelectorAll(".bottom-nav-item");
+    bottomNavMapLabelEl = document.getElementById("bottom-nav-map-label");
+    bottomNavAboutLabelEl = document.getElementById("bottom-nav-about-label");
+
+    sidebarEl = document.querySelector(".sidebar");
+    const filterTitleEl = document.getElementById("filter-title");
+    filterSectionEl = filterTitleEl
+      ? filterTitleEl.closest(".sidebar-section")
+      : null;
+
+    if (filterSectionEl) {
+      filterBodyEls = Array.from(filterSectionEl.children).filter(
+        (el) => !el.classList.contains("sidebar-section-header")
+      );
+      filtersCollapsed = true;
+      filterBodyEls.forEach((el) => el.classList.add("hidden"));
+    }
+
+    btnToggleFiltersEl = document.getElementById("btn-toggle-filters");
+    btnToggleViewEl = document.getElementById("btn-toggle-view");
+
+    playIdeasBtnEl = document.getElementById("btn-play-idea");
+
+    filterSearchEl = document.getElementById("filter-search");
+    filterCategoryEl = document.getElementById("filter-category");
+    filterAgeEl = document.getElementById("filter-age");
+    filterRadiusEl = document.getElementById("filter-radius");
+    filterRadiusMaxLabelEl = document.getElementById("filter-radius-max-label");
+    filterRadiusDescriptionEl = document.getElementById(
+      "filter-radius-description"
+    );
+    filterBigEl = document.getElementById("filter-big-adventures");
+    filterVerifiedEl = document.getElementById("filter-verified");
+    filterFavoritesEl = document.getElementById("filter-favorites");
+    tagFilterContainerEl = document.getElementById("filter-tags");
+
+    spotListEl = document.getElementById("spot-list");
+    spotDetailEl = document.getElementById("spot-detail");
+
+    plusSectionEl = document.getElementById("plus-section");
+    btnTogglePlusEl = document.getElementById("btn-toggle-plus");
+    daylogSectionEl = document.getElementById("daylog-section");
+    btnToggleDaylogEl = document.getElementById("btn-toggle-daylog");
+
+    plusCodeInputEl = document.getElementById("plus-code-input");
+    plusCodeSubmitEl = document.getElementById("plus-code-submit");
+    plusStatusTextEl = document.getElementById("plus-status-text");
+
+    daylogTextEl = document.getElementById("daylog-text");
+    daylogSaveEl = document.getElementById("daylog-save");
+
+    toastEl = document.getElementById("toast");
+
+    compassSectionEl = document.getElementById("compass-section");
+    compassLabelEl = document.getElementById("compass-label");
+    compassHelperEl = document.getElementById("compass-helper");
+    compassApplyLabelEl = document.getElementById("compass-apply-label");
+    compassApplyBtnEl = document.getElementById("compass-apply");
+    btnToggleCompassEl = document.getElementById("btn-toggle-compass");
+
+    if (btnToggleFiltersEl && filterSectionEl && filterSectionEl.id) {
+      btnToggleFiltersEl.setAttribute("aria-controls", filterSectionEl.id);
+      btnToggleFiltersEl.setAttribute("aria-expanded", "false");
+    }
+
+    if (
+      FEATURES.compass &&
+      btnToggleCompassEl &&
+      compassSectionEl &&
+      compassSectionEl.id
+    ) {
+      btnToggleCompassEl.setAttribute("aria-controls", compassSectionEl.id);
+      btnToggleCompassEl.setAttribute(
+        "aria-expanded",
+        compassSectionEl.open ? "true" : "false"
+      );
+    }
+
+    const initialLang = getInitialLang();
+    setLanguage(initialLang, { initial: true });
+
+    const initialTheme = getInitialTheme();
+    currentTheme = applyTheme(initialTheme);
+
+    // Toast-System initialisieren
+    initToast({ element: toastEl, t });
+
+    const mapResult = initMap({
+      center: DEFAULT_MAP_CENTER,
+      zoom: DEFAULT_MAP_ZOOM
+    });
+    map = mapResult.map;
+    markersLayer = mapResult.markersLayer;
+
+    if (map) {
+      if (spotDetailEl) {
+        map.on("click", () => {
+          closeSpotDetails({ returnFocus: true });
+        });
+      }
+
+      map.on(
+        "moveend zoomend",
+        debounce(() => {
+          applyFiltersAndRender();
+        }, 200)
+      );
+
+      window.addEventListener(
+        "resize",
+        debounce(() => {
+          map.invalidateSize();
+        }, 200)
+      );
+    }
+
+    tilla = new TillaCompanion({
+      getText: (key) => t(key)
+    });
+
+    if (languageSwitcherEl) {
+      languageSwitcherEl.addEventListener("click", () => {
+        const nextLang =
+          currentLang === LANG_DE
+            ? LANG_DA
+            : currentLang === LANG_DA
+            ? LANG_EN
+            : LANG_DE;
+        setLanguage(nextLang);
+      });
+      updateLanguageSwitcherVisual();
+    }
+
+    if (themeToggleEl) {
+      themeToggleEl.addEventListener("click", () => {
+        const nextTheme =
+          currentTheme === THEME_LIGHT ? THEME_DARK : THEME_LIGHT;
+        currentTheme = applyTheme(nextTheme);
+      });
+    }
+
+    if (btnLocateEl) {
+      btnLocateEl.addEventListener("click", handleLocateClick);
+    }
+
+    // Router initialisieren (Map <-> About)
+    initRouter({
+      viewMapEl,
+      viewAboutEl,
+      bottomNavButtons,
+      btnHelpEl,
+      getCurrentLang: () => currentLang
+    });
+
+    if (filterSearchEl) {
+      const applySearch = debounce((value) => {
+        searchTerm = value.trim();
+        applyFiltersAndRender();
+      }, 200);
+
+      filterSearchEl.addEventListener("input", (e) => {
+        applySearch(e.target.value);
+      });
+    }
+
+    if (filterCategoryEl) {
+      filterCategoryEl.addEventListener("change", (e) => {
+        categoryFilter = e.target.value;
+        applyFiltersAndRender();
+      });
+    }
+
+    if (filterAgeEl) {
+      filterAgeEl.addEventListener("change", (e) => {
+        ageFilter = e.target.value;
+        applyFiltersAndRender();
+      });
+    }
+
+    if (filterRadiusEl) {
+      initRadiusSliderA11y();
+    }
+
+    if (filterBigEl) {
+      filterBigEl.addEventListener("change", (e) => {
+        onlyBigAdventures = e.target.checked;
+        applyFiltersAndRender();
+      });
+    }
+
+    if (filterVerifiedEl) {
+      filterVerifiedEl.addEventListener("change", (e) => {
+        onlyVerified = e.target.checked;
+        applyFiltersAndRender();
+      });
+    }
+
+    if (FEATURES.favorites && filterFavoritesEl) {
+      filterFavoritesEl.addEventListener("change", (e) => {
+        onlyFavorites = e.target.checked;
+        applyFiltersAndRender();
+      });
+    }
+
+    if (FEATURES.moodFilter) {
+      document.querySelectorAll(".mood-chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          const value = chip.getAttribute("data-mood");
+          if (moodFilter === value) {
+            moodFilter = null;
+            chip.classList.remove("mood-chip--active");
+            chip.setAttribute("aria-pressed", "false");
+          } else {
+            moodFilter = value;
+            document.querySelectorAll(".mood-chip").forEach((c) => {
+              c.classList.remove("mood-chip--active");
+              c.setAttribute("aria-pressed", "false");
+            });
+            chip.classList.add("mood-chip--active");
+            chip.setAttribute("aria-pressed", "true");
+          }
+          applyFiltersAndRender();
+        });
+      });
+    }
+
+    if (FEATURES.travelMode) {
+      document.querySelectorAll(".travel-chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          const mode = chip.getAttribute("data-travel-mode") || "everyday";
+
+          if (travelMode === mode) {
+            travelMode = null;
+            chip.classList.remove("travel-chip--active");
+            chip.setAttribute("aria-pressed", "false");
+            if (tilla && typeof tilla.setTravelMode === "function") {
+              tilla.setTravelMode(null);
+            }
+          } else {
+            travelMode = mode;
+            document.querySelectorAll(".travel-chip").forEach((c) => {
+              const isActive = c === chip;
+              c.classList.toggle("travel-chip--active", isActive);
+              c.setAttribute("aria-pressed", isActive ? "true" : "false");
+            });
+            if (tilla && typeof tilla.setTravelMode === "function") {
+              tilla.setTravelMode(mode);
+            }
+          }
+
+          updateCompassUI();
+          applyFiltersAndRender();
+        });
+      });
+    }
+
+    if (btnToggleFiltersEl) {
+      btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
+      const span = btnToggleFiltersEl.querySelector("span");
+      if (span) span.textContent = t("btn_show_filters");
+    }
+
+    if (btnToggleViewEl) {
+      btnToggleViewEl.addEventListener("click", handleToggleView);
+      const span = btnToggleViewEl.querySelector("span");
+      if (span) span.textContent = t("btn_only_map");
+      btnToggleViewEl.setAttribute("aria-pressed", "false");
+    }
+
+    if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
+      const toggleCompassHandler = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        handleToggleCompass();
+      };
+
+      btnToggleCompassEl.addEventListener("click", toggleCompassHandler);
+      btnToggleCompassEl.addEventListener(
+        "keydown",
+        activateOnEnterSpace(toggleCompassHandler)
+      );
+
+      compassSectionEl.addEventListener("toggle", () => {
+        updateCompassButtonLabel();
+      });
+
+      updateCompassButtonLabel();
+    }
+
+    if (plusSectionEl && btnTogglePlusEl) {
+      plusSectionEl.id = plusSectionEl.id || "plus-section";
+      btnTogglePlusEl.setAttribute("aria-controls", plusSectionEl.id);
+
+      const togglePlusHandler = (event) => {
+        event.preventDefault();
+        const isOpen = !plusSectionEl.open;
+        plusSectionEl.open = isOpen;
+        updateGenericSectionToggleLabel(btnTogglePlusEl, isOpen);
+        markCompassPlusHintSeenAndRemove();
+      };
+
+      btnTogglePlusEl.addEventListener("click", togglePlusHandler);
+      btnTogglePlusEl.addEventListener(
+        "keydown",
+        activateOnEnterSpace(togglePlusHandler)
+      );
+
+      plusSectionEl.addEventListener("toggle", () => {
+        updateGenericSectionToggleLabel(btnTogglePlusEl, plusSectionEl.open);
+      });
+
+      updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
+    }
+
+    if (daylogSectionEl && btnToggleDaylogEl) {
+      daylogSectionEl.id = daylogSectionEl.id || "daylog-section";
+      btnToggleDaylogEl.setAttribute("aria-controls", daylogSectionEl.id);
+
+      const toggleDaylogHandler = (event) => {
+        event.preventDefault();
+        const isOpen = !daylogSectionEl.open;
+        daylogSectionEl.open = isOpen;
+        updateGenericSectionToggleLabel(btnToggleDaylogEl, isOpen);
+        markCompassPlusHintSeenAndRemove();
+      };
+
+      btnToggleDaylogEl.addEventListener("click", toggleDaylogHandler);
+      btnToggleDaylogEl.addEventListener(
+        "keydown",
+        activateOnEnterSpace(toggleDaylogHandler)
+      );
+
+      daylogSectionEl.addEventListener("toggle", () => {
+        updateGenericSectionToggleLabel(
+          btnToggleDaylogEl,
+          daylogSectionEl.open
+        );
+      });
+
+      updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
+    }
+
+    if (FEATURES.plus && plusCodeSubmitEl) {
+      plusCodeSubmitEl.addEventListener("click", () => {
+        handlePlusCodeSubmit();
+      });
+    }
+
+    if (FEATURES.daylog && daylogSaveEl) {
+      daylogSaveEl.addEventListener("click", handleDaylogSave);
+    }
+
+    if (FEATURES.compass && compassApplyBtnEl) {
+      compassApplyBtnEl.addEventListener("click", handleCompassApply);
+    }
+
+    if (FEATURES.playIdeas && playIdeasBtnEl) {
+      playIdeasBtnEl.addEventListener("click", () => {
+        const idea = getRandomPlayIdea();
+        if (!idea) return;
+
+        if (tilla && typeof tilla.showPlayIdea === "function") {
+          tilla.showPlayIdea(idea);
+
+          const tillaCard = document.querySelector(".tilla-sidebar-card");
+          if (tillaCard && typeof tillaCard.scrollIntoView === "function") {
+            tillaCard.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest"
+            });
+          }
+        } else {
+          showToast(idea);
+        }
+      });
+    }
+
+    document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
+      const targetId = btn.getAttribute("data-target");
+      let section = null;
+      if (targetId) section = document.getElementById(targetId);
+      if (!section) section = btn.closest(".sidebar-section");
+      if (!section) return;
+
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const tag = section.tagName.toLowerCase();
+        if (tag === "details") {
+          section.open = false;
+        } else {
+          section.classList.add("hidden");
+        }
+
+        if (section.id === "compass-section" && btnToggleCompassEl) {
+          updateCompassButtonLabel();
+        }
+
+        if (section.id === "plus-section" && btnTogglePlusEl) {
+          updateGenericSectionToggleLabel(btnTogglePlusEl, false);
+        }
+
+        if (section.id === "daylog-section" && btnToggleDaylogEl) {
+          updateGenericSectionToggleLabel(btnToggleDaylogEl, false);
+        }
+      });
+    });
+
+    updateCompassUI();
+    loadPlusStateFromStorage();
+    loadDaylogFromStorage();
+    initLazyLoadImages();
+    ensureCompassPlusHint();
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" && event.key !== "Esc") return;
+      if (!spotDetailEl) return;
+
+      const isOpen = !spotDetailEl.classList.contains("spot-details--hidden");
+      if (!isOpen) return;
+
+      event.preventDefault();
+      closeSpotDetails({ returnFocus: true });
+    });
+
+    loadSpots();
+  } catch (err) {
+    console.error("[Family Spots] Init-Fehler:", err);
+  }
+}
+
+// ------------------------------------------------------
+// DOMContentLoaded – I18N.init() + App-Init
+// ------------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    if (typeof I18N !== "undefined" && typeof I18N.init === "function") {
+      await I18N.init();
+    }
+  } catch (err) {
+    console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
+  }
+
+  await init();
+});
