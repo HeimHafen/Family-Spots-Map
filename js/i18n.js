@@ -9,7 +9,7 @@
  * Unterstützte Sprachen & Defaults
  * ---------------------------------- */
 
-/** @type {const} */
+/** @type {readonly ["de", "en", "da"]} */
 const SUPPORTED_LANGS = ["de", "en", "da"];
 /** @type {const} */
 const DEFAULT_LANG = "de";
@@ -43,9 +43,32 @@ const messagesByLang = {
  */
 let playIdeas = [];
 
+/** Index der zuletzt ausgegebenen Spielidee (zur Entdopplung). */
+let lastPlayIdeaIndex = -1;
+
 /* --------------------------------------
  * Helpers
  * ----------------------------------- */
+
+/**
+ * JSON-Parsing mit Fallback.
+ * @template T
+ * @param {string|null} raw
+ * @param {T} fallback
+ * @returns {T}
+ */
+function safeParseJson(raw, fallback) {
+  if (!raw) return fallback;
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed === null || typeof parsed === "object") {
+      return /** @type {T} */ (parsed);
+    }
+    return fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 /**
  * Normalisiert eine Sprache auf "de", "en" oder "da".
@@ -54,8 +77,15 @@ let playIdeas = [];
  * @returns {LangCode}
  */
 function normalizeLang(lang) {
-  if (lang === "en") return "en";
-  if (lang === "da") return "da";
+  if (!lang) return "de";
+
+  const v = String(lang).toLowerCase();
+
+  if (v.startsWith("en")) return "en";
+  if (v === "da" || v.startsWith("da") || v === "dk" || v.startsWith("dk")) {
+    return "da";
+  }
+
   return "de";
 }
 
@@ -65,6 +95,7 @@ function normalizeLang(lang) {
  */
 function getStoredLang() {
   try {
+    if (typeof localStorage === "undefined") return null;
     const stored = localStorage.getItem(STORAGE_LANG_KEY);
     if (stored && SUPPORTED_LANGS.includes(stored)) {
       return /** @type {LangCode} */ (stored);
@@ -94,9 +125,9 @@ function detectBrowserLang() {
 
   for (const value of candidates) {
     if (!value) continue;
-    const code = String(value).toLowerCase().slice(0, 2);
+    const code = normalizeLang(String(value));
     if (SUPPORTED_LANGS.includes(code)) {
-      return /** @type {LangCode} */ (code);
+      return code;
     }
   }
 
@@ -111,7 +142,9 @@ function setLangInternal(lang) {
   currentLang = normalizeLang(lang || DEFAULT_LANG);
 
   try {
-    localStorage.setItem(STORAGE_LANG_KEY, currentLang);
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(STORAGE_LANG_KEY, currentLang);
+    }
   } catch {
     // Wenn Storage nicht verfügbar ist, ist das kein Beinbruch.
   }
@@ -292,16 +325,29 @@ function applyTranslations(root = document) {
  *   { texts: { de, en, da } }
  * als auch das ältere Schema:
  *   { de, en, da }
+ * Versucht, nicht zweimal dieselbe Idee direkt hintereinander zu liefern.
+ *
  * @returns {string}
  */
 function getRandomPlayIdea() {
   if (!playIdeas.length) return "";
 
-  const idx = Math.floor(Math.random() * playIdeas.length);
+  let idx;
+  if (playIdeas.length === 1) {
+    idx = 0;
+  } else {
+    let tries = 0;
+    do {
+      idx = Math.floor(Math.random() * playIdeas.length);
+      tries++;
+    } while (idx === lastPlayIdeaIndex && tries < 5);
+  }
+
+  lastPlayIdeaIndex = idx;
   const idea = playIdeas[idx];
   if (!idea || typeof idea !== "object") return "";
 
-  // Neues Schema: idea.texts.{de,en,da}
+  // Neues Schema: idea.texts.{de,en,da}, sonst flach {de,en,da}
   const texts =
     (idea.texts && typeof idea.texts === "object" ? idea.texts : null) || idea;
 
