@@ -238,6 +238,7 @@ let languageSwitcherFlagEl;
 let themeToggleEl;
 let btnLocateEl;
 let btnHelpEl;
+let btnSkipSpotsEl; // NEU: Skip-Button zur Spot-Liste
 let viewMapEl;
 let viewAboutEl;
 let bottomNavButtons;
@@ -698,7 +699,7 @@ function setLanguage(lang, { initial = false } = {}) {
         ? "Place, spot, keywords …"
         : currentLang === LANG_DA
         ? "Sted, spot, søgeord …"
-        : "Ort, Spot, Stichwörter …";
+        : "Ort, Spot, Stichwort …";
   }
 
   if (daylogTextEl && FEATURES.daylog) {
@@ -1747,6 +1748,7 @@ async function init() {
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
+    btnSkipSpotsEl = document.getElementById("btn-skip-spots");
 
     viewMapEl = document.getElementById("view-map");
     viewAboutEl = document.getElementById("view-about");
@@ -1894,6 +1896,18 @@ async function init() {
 
     if (btnLocateEl) {
       btnLocateEl.addEventListener("click", handleLocateClick);
+    }
+
+    if (btnSkipSpotsEl) {
+      const spotsTitleEl = document.getElementById("spots-title");
+      btnSkipSpotsEl.addEventListener("click", () => {
+        if (spotsTitleEl && typeof spotsTitleEl.scrollIntoView === "function") {
+          spotsTitleEl.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }
+      });
     }
 
     // Router initialisieren (Map <-> About)
