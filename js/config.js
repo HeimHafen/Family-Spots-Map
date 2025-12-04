@@ -877,7 +877,7 @@ export const FILTERS = [
       da: "Billigt / gratis"
     }
   }
-];
+};
 
 // ------------------------------------------------------
 // Texte & Onboarding-Keys
