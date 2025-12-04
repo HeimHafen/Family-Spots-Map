@@ -49,12 +49,12 @@ let cachedPartnerCodes = null;
 // ---------------------------------------
 /**
  * @typedef {Object} NormalizedPlusStatus
- * @property {boolean} active
- * @property {string|null} plan          // z. B. "plus" oder "family_plus"
- * @property {string|null} validUntil    // ISO-String
- * @property {string[]|null} addons      // optionale Add-ons (IDs)
- * @property {string|null} partner       // z. B. "Camping XY"
- * @property {string|null} source        // z. B. "partner"
+ * @property {boolean} active          // ist Plus aktuell aktiv (unter Berücksichtigung von Ablaufdatum)?
+ * @property {string|null} plan        // z. B. "plus" oder "family_plus"
+ * @property {string|null} validUntil  // ISO-String (Ende der Laufzeit)
+ * @property {string[]|null} addons    // optionale Add-ons (IDs, z. B. ["addon_rv"])
+ * @property {string|null} partner     // z. B. "Campingplatz XY"
+ * @property {string|null} source      // z. B. "partner", "store"
  */
 
 // ---------------------------------------
@@ -74,27 +74,18 @@ let cachedPartnerCodes = null;
  *   partner: string|null,
  *   source: string|null
  * }
+ *
+ * WICHTIG:
+ *  - Berücksichtigt Ablaufdatum (validUntil / expiresAt)
+ *  - Wenn abgelaufen → active = false
  */
 export function getPlusStatus() {
-  const stored = getPlusStatusFromStorage();
+  const stored = getPlusStatusFromStorage() || {};
 
-  if (!stored || !stored.active) {
-    /** @type {NormalizedPlusStatus} */
-    const inactiveStatus = {
-      active: false,
-      plan: null,
-      validUntil: null,
-      addons: null,
-      partner: null,
-      source: null
-    };
-    return inactiveStatus;
-  }
+  const validUntilIso = stored.expiresAt || stored.validUntil || null;
+  let active = !!stored.active;
 
-  const validUntil = stored.expiresAt || stored.validUntil || null;
-  const plan = stored.plan || "plus";
-
-  // Add-ons optional unterstützen (falls du das später nutzen willst)
+  // Add-ons optional unterstützen
   let addons = null;
   if (Array.isArray(stored.addons)) {
     addons = stored.addons.map(String);
@@ -102,20 +93,42 @@ export function getPlusStatus() {
     addons = [String(stored.addonId)];
   }
 
+  // Ablauf prüfen – ein abgelaufener Code soll nicht mehr als aktiv gelten
+  if (validUntilIso) {
+    const d = new Date(validUntilIso);
+    if (!Number.isNaN(d.getTime())) {
+      if (Date.now() > d.getTime()) {
+        active = false;
+      }
+    }
+  }
+
   /** @type {NormalizedPlusStatus} */
   const normalized = {
-    active: true,
-    plan,
-    validUntil,
+    active,
+    plan: stored.plan || "plus",
+    validUntil: validUntilIso,
     addons,
     partner: stored.partner || null,
     source: stored.source || null
   };
 
+  // Falls überhaupt kein sinnvoller Status vorliegt, standardisieren:
+  if (!stored || Object.keys(stored).length === 0) {
+    return {
+      active: false,
+      plan: null,
+      validUntil: null,
+      addons: null,
+      partner: null,
+      source: null
+    };
+  }
+
   return normalized;
 }
 
-/** True, wenn Plus aktuell aktiv ist. */
+/** True, wenn Plus aktuell aktiv ist (inkl. Ablaufprüfung). */
 export function isPlusActive() {
   return getPlusStatus().active;
 }
@@ -134,7 +147,7 @@ export function isPlusCategory(slug) {
  * Nutzt i18n-Fallbacks.
  */
 export function formatPlusStatus(status = getPlusStatus()) {
-  if (!status || !status.active) {
+  if (!status) {
     return t(
       "plus_status_inactive",
       "Family Spots Plus ist nicht aktiviert."
@@ -145,10 +158,33 @@ export function formatPlusStatus(status = getPlusStatus()) {
   const until = untilIso ? new Date(untilIso) : null;
   const hasValidDate = until && !Number.isNaN(until.getTime());
 
+  // Inaktiv (nie aktiviert oder abgelaufen)
+  if (!status.active) {
+    if (hasValidDate) {
+      const dateStr = until.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      });
+
+      return t(
+        "plus_status_expired",
+        `Family Spots Plus ist abgelaufen am ${dateStr}.`
+      );
+    }
+
+    return t(
+      "plus_status_inactive",
+      "Family Spots Plus ist nicht aktiviert."
+    );
+  }
+
+  // Aktiv, aber ohne sinnvolles Datum
   if (!hasValidDate) {
     return t("plus_status_active", "Family Spots Plus ist aktiv.");
   }
 
+  // Aktiv bis konkretes Datum
   const dateStr = until.toLocaleDateString(undefined, {
     year: "numeric",
     month: "2-digit",
@@ -177,10 +213,14 @@ export function formatPlusStatus(status = getPlusStatus()) {
  *       "plan": "plus",
  *       "partner": "Dev",
  *       "source": "partner",
- *       "addons": ["addon_rv", "addon_water"] // optional
+ *       "addons": ["addon_rv", "addon_water"], // optional
+ *       "validUntil": "2026-12-31T23:59:59.000Z" // optional
  *     }
  *   ]
  * }
+ *
+ * Alternativ:
+ *  - direkt ein Array von Einträgen.
  */
 async function loadPartnerCodes() {
   if (cachedPartnerCodes) return cachedPartnerCodes;
@@ -218,9 +258,9 @@ async function loadPartnerCodes() {
  *  { ok, reason?, status?, entry? }
  *
  * reason:
- *  - "empty"
- *  - "not_found"
- *  - "invalid_days"
+ *  - "empty"        → kein Code eingegeben
+ *  - "not_found"    → Code unbekannt oder deaktiviert
+ *  - "invalid_days" → Weder gültiges validUntil noch gültige days
  */
 export async function redeemPartnerCode(rawCode) {
   const code = (rawCode || "").trim().toUpperCase();
@@ -282,15 +322,23 @@ export async function redeemPartnerCode(rawCode) {
     statusForStorage.addons = [String(entry.addonId)];
   }
 
+  // (Optional) Hier könnten wir zukünftig noch prüfen,
+  // ob plan/addons zu SUBSCRIPTIONS/ADDONS passen.
+  void SUBSCRIPTIONS;
+  void ADDONS;
+
   // in localStorage ablegen
   savePlusStatusToStorage(statusForStorage);
 
   // Normalisierte Sicht nach außen
+  /** @type {NormalizedPlusStatus} */
   const statusForReturn = {
     active: true,
     plan: statusForStorage.plan,
     validUntil: statusForStorage.expiresAt,
-    addons: statusForStorage.addons || null
+    addons: statusForStorage.addons || null,
+    partner: statusForStorage.partner,
+    source: statusForStorage.source
   };
 
   return {
