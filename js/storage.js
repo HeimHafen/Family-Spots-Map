@@ -17,8 +17,13 @@ const LANG_STORAGE_KEY = "fs_lang";
 const THEME_STORAGE_KEY = "fs_theme";
 const FAVORITES_STORAGE_KEY = "fs_favorites";
 
+// Legacy-Flags für das alte Plus-Format
 const LEGACY_PLUS_TRUE = "1";
 const LEGACY_PLUS_FALSE = "0";
+
+// ------------------------------------------------------
+// interne Helfer für sicheren Zugriff
+// ------------------------------------------------------
 
 function safeGet(key) {
   try {
@@ -67,9 +72,16 @@ export function saveStoredTheme(theme) {
 // Spots-Cache
 // ------------------------------------------------------
 
+/**
+ * Spots-Cache aus localStorage laden.
+ * Akzeptiert sowohl:
+ *  - Array   → [ ...spots ]
+ *  - Objekt  → { spots: [...] }
+ */
 export function loadSpotsFromCache() {
   const stored = safeGet(SPOTS_CACHE_KEY);
   if (!stored) return null;
+
   try {
     const parsed = JSON.parse(stored);
     if (Array.isArray(parsed)) return parsed;
@@ -81,6 +93,9 @@ export function loadSpotsFromCache() {
   }
 }
 
+/**
+ * Spots im Cache speichern.
+ */
 export function saveSpotsToCache(spots) {
   if (!spots) return;
   try {
@@ -94,9 +109,14 @@ export function saveSpotsToCache(spots) {
 // Favoriten
 // ------------------------------------------------------
 
+/**
+ * Favoriten als Set laden.
+ * Rückgabe: immer ein Set<string>.
+ */
 export function loadFavoritesFromStorage() {
   const stored = safeGet(FAVORITES_STORAGE_KEY);
   if (!stored) return new Set();
+
   try {
     const arr = JSON.parse(stored);
     if (Array.isArray(arr)) return new Set(arr);
@@ -106,8 +126,12 @@ export function loadFavoritesFromStorage() {
   return new Set();
 }
 
+/**
+ * Favoriten-Set speichern.
+ */
 export function saveFavoritesToStorage(favoritesSet) {
   if (!(favoritesSet instanceof Set)) return;
+
   try {
     const arr = Array.from(favoritesSet);
     safeSet(FAVORITES_STORAGE_KEY, JSON.stringify(arr));
@@ -124,10 +148,20 @@ export function saveFavoritesToStorage(favoritesSet) {
  * Lies den vollständigen Plus-Status aus dem Storage.
  *
  * Mögliche Rückgabe:
- *  - null          → kein Eintrag
- *  - { active, plan?, code?, partner?, source?, activatedAt?, expiresAt? }
+ *  - null
+ *  - {
+ *      active,
+ *      plan?,
+ *      code?,
+ *      partner?,
+ *      source?,
+ *      activatedAt?,
+ *      expiresAt?,
+ *      validUntil? (legacy)
+ *    }
  *
- *  - ist abwärtskompatibel zu altem "1"/"0"-Format
+ * Eigenschaften:
+ *  - abwärtskompatibel zum alten "1"/"0"-Format
  *  - setzt bei abgelaufenen Codes active=false und speichert das zurück
  */
 export function getPlusStatus() {
@@ -180,7 +214,10 @@ export function getPlusStatus() {
           try {
             safeSet(PLUS_STORAGE_KEY, JSON.stringify(status));
           } catch (err) {
-            console.warn("[Family Spots] Konnte abgelaufenen Plus-Status nicht aktualisieren:", err);
+            console.warn(
+              "[Family Spots] Konnte abgelaufenen Plus-Status nicht aktualisieren:",
+              err
+            );
           }
         }
       }
@@ -199,7 +236,7 @@ export function getPlusStatus() {
 
 /**
  * Speichert den vollständigen Plus-Status im neuen JSON-Format.
- * Wird z. B. von plus.js (redeemPartnerCode) verwendet.
+ * Wird z. B. von features/plus.js (redeemPartnerCode) verwendet.
  */
 export function savePlusStatus(status) {
   if (!status || typeof status !== "object") return;
@@ -223,8 +260,8 @@ export function savePlusStatus(status) {
 
 /**
  * Kompatibilitäts-Helfer:
- * Gibt nur true/false zurück, ob Plus aktuell aktiv ist.
- * Nutzt intern getPlusStatus().
+ * Gibt nur true/false zurück, ob Plus aktuell aktiv ist
+ * (inkl. Ablaufprüfung).
  */
 export function loadPlusActive() {
   const status = getPlusStatus();
@@ -260,9 +297,16 @@ export function savePlusActive(isActive) {
 // Mein Tag (Daylog)
 // ------------------------------------------------------
 
+/**
+ * Daylog laden.
+ * Rückgabe:
+ *  - null
+ *  - { text: string, ts: number }
+ */
 export function loadDaylog() {
   const stored = safeGet(DAYLOG_STORAGE_KEY);
   if (!stored) return null;
+
   try {
     const parsed = JSON.parse(stored);
     if (parsed && typeof parsed.text === "string") {
@@ -274,9 +318,13 @@ export function loadDaylog() {
   return null;
 }
 
+/**
+ * Daylog speichern (nur nicht-leere Texte).
+ */
 export function saveDaylog(text) {
   const trimmed = (text || "").trim();
   if (!trimmed) return;
+
   const payload = { text: trimmed, ts: Date.now() };
   try {
     safeSet(DAYLOG_STORAGE_KEY, JSON.stringify(payload));
