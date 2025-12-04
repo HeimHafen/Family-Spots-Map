@@ -364,10 +364,7 @@ function doesSpotMatchBaseFilters(
 
   // Nur Favoriten
   if (FEATURES.favorites && onlyFavorites) {
-    const id =
-      spot.id != null
-        ? String(spot.id)
-        : String(spot.title || spot.name || spot.spotName || "Spot");
+    const id = getSpotId(spot);
     if (!favorites || !(favorites instanceof Set) || !favorites.has(id)) {
       return false;
     }
