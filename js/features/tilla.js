@@ -33,7 +33,7 @@
  * Struktur:
  * FALLBACK_TEXTS[lang][key] = string | string[]
  */
-const FALLBACK_TEXTS = {
+const FALLBACK_TEXTS = Object.freeze({
   de: {
     turtle_intro_1: [
       "Hallo, ich bin Tilla – eure kleine Schildkröten-Begleiterin für Familien-Abenteuer.",
@@ -118,16 +118,14 @@ const FALLBACK_TEXTS = {
       "For your travel day I’ve opened up the radius. We’ll look for great places to pause and recharge. 🚐"
     ]
   }
-};
-
-// Spielideen – Quelle: data/play-ideas.json
-const PLAY_IDEAS_URL = "data/play-ideas.json";
+});
 
 /**
  * Ermittelt die aktive Sprache.
  *  - bevorzugt I18N.getLanguage(), falls vorhanden
  *  - fällt auf <html lang="…"> zurück
- *  - default: "de"
+ *  - alles außer "en" → "de" (inkl. "da")
+ *
  * @returns {"de"|"en"}
  */
 function getActiveLang() {
@@ -137,11 +135,12 @@ function getActiveLang() {
       window.I18N &&
       typeof window.I18N.getLanguage === "function"
     ) {
-      const lang = window.I18N.getLanguage();
-      return lang === "en" ? "en" : "de";
+      const lang = String(window.I18N.getLanguage() || "").toLowerCase();
+      if (lang.startsWith("en")) return "en";
+      return "de";
     }
   } catch {
-    // Fallback auf document
+    // ignore
   }
 
   if (typeof document !== "undefined" && document.documentElement) {
@@ -153,7 +152,16 @@ function getActiveLang() {
 }
 
 /**
- * @typedef {"intro"|"everyday"|"trip"|"plus"|"daylog"|"fav-added"|"fav-removed"|"no-spots"|"play-idea"} TillaState
+ * @typedef {"intro"
+ *         |"everyday"
+ *         |"trip"
+ *         |"plus"
+ *         |"daylog"
+ *         |"fav-added"
+ *         |"fav-removed"
+ *         |"no-spots"
+ *         |"play-idea"} TillaState
+ *
  * @typedef {"everyday"|"trip"} TravelMode
  */
 
@@ -187,13 +195,6 @@ export class TillaCompanion {
         ? document.getElementById("tilla-sidebar-text")
         : null;
 
-    if (!this.textEl) {
-      console.warn(
-        "[Tilla] Element mit ID #tilla-sidebar-text wurde nicht gefunden. Tilla bleibt still."
-      );
-      return;
-    }
-
     /** @type {TillaState} */
     this.state = "intro";
 
@@ -210,16 +211,12 @@ export class TillaCompanion {
      */
     this._lastVariantIndex = {};
 
-    // Spielideen
-    /** @type {Array<{id:string,texts:{de?:string,en?:string}}>|null} */
-    this.playIdeas = null;
-    /** @type {Promise<Array<any>> | null} */
-    this._playIdeasLoading = null;
-    /** @type {string | null} */
-    this._lastPlayIdeaId = null;
-
-    // Button für Spielideen verdrahten (falls vorhanden)
-    this._setupPlayIdeas();
+    if (!this.textEl) {
+      console.warn(
+        "[Tilla] Element mit ID #tilla-sidebar-text wurde nicht gefunden. Tilla bleibt still."
+      );
+      return;
+    }
 
     this._renderState();
   }
@@ -438,108 +435,6 @@ export class TillaCompanion {
   }
 
   /**
-   * Spielideen-JSON einmalig laden (mit Cache).
-   * @returns {Promise<Array<any>>}
-   * @private
-   */
-  _ensurePlayIdeasLoaded() {
-    if (this.playIdeas && this.playIdeas.length > 0) {
-      return Promise.resolve(this.playIdeas);
-    }
-
-    if (this._playIdeasLoading) {
-      return this._playIdeasLoading;
-    }
-
-    this._playIdeasLoading = fetch(PLAY_IDEAS_URL, { cache: "no-cache" })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data)) {
-          this.playIdeas = data;
-        } else {
-          console.warn("[Tilla] play-ideas.json enthält kein Array.");
-          this.playIdeas = [];
-        }
-        return this.playIdeas;
-      })
-      .catch((error) => {
-        console.error("[Tilla] Fehler beim Laden von play-ideas.json:", error);
-        this.playIdeas = [];
-        return this.playIdeas;
-      });
-
-    return this._playIdeasLoading;
-  }
-
-  /**
-   * Wählt eine zufällige Spielidee in passender Sprache.
-   * Vermeidet, nach Möglichkeit, dieselbe Idee zweimal hintereinander.
-   * @param {"de"|"en"} lang
-   * @returns {string | null}
-   * @private
-   */
-  _pickRandomPlayIdea(lang) {
-    if (!Array.isArray(this.playIdeas) || this.playIdeas.length === 0) {
-      return null;
-    }
-
-    let idea = null;
-
-    if (this.playIdeas.length === 1) {
-      idea = this.playIdeas[0];
-    } else {
-      let idx;
-      let safety = 0;
-      do {
-        idx = Math.floor(Math.random() * this.playIdeas.length);
-        idea = this.playIdeas[idx];
-        safety++;
-      } while (idea && idea.id === this._lastPlayIdeaId && safety < 5);
-    }
-
-    if (!idea) return null;
-
-    this._lastPlayIdeaId = idea.id;
-
-    const texts = idea.texts || {};
-    return texts[lang] || texts.de || texts.en || null;
-  }
-
-  /**
-   * Verdrahtet den "🎲 Spielideen"-Button, falls vorhanden.
-   * @private
-   */
-  _setupPlayIdeas() {
-    if (typeof document === "undefined" || !this.textEl) return;
-
-    const button = document.getElementById("btn-play-idea");
-    if (!button) return;
-
-    // Ideen im Hintergrund schon mal laden
-    this._ensurePlayIdeasLoaded();
-
-    button.addEventListener("click", () => {
-      this.lastInteraction = Date.now();
-      this.state = "play-idea";
-
-      this._ensurePlayIdeasLoaded().then(() => {
-        const lang = getActiveLang();
-        const ideaText = this._pickRandomPlayIdea(lang);
-        if (!ideaText) {
-          return;
-        }
-        const decorated = `🎲 ${ideaText}`;
-        this.showPlayIdea(decorated);
-      });
-    });
-  }
-
-  /**
    * Rendert den aktuellen State in das Tilla-Panel.
    * Achtung: Wenn state === "play-idea", wird nicht automatisch überschrieben.
    * @private
@@ -558,9 +453,9 @@ export class TillaCompanion {
       case "intro": {
         const intro = this._t("turtle_intro_1");
         if (this.travelMode === "trip") {
-          text = intro + " " + this._t("turtle_trip_mode");
+          text = `${intro} ${this._t("turtle_trip_mode")}`;
         } else if (this.travelMode === "everyday") {
-          text = intro + " " + this._t("turtle_everyday_mode");
+          text = `${intro} ${this._t("turtle_everyday_mode")}`;
         } else {
           text = intro;
         }
@@ -605,9 +500,9 @@ export class TillaCompanion {
       default: {
         const intro = this._t("turtle_intro_1");
         if (this.travelMode === "trip") {
-          text = intro + " " + this._t("turtle_trip_mode");
+          text = `${intro} ${this._t("turtle_trip_mode")}`;
         } else if (this.travelMode === "everyday") {
-          text = intro + " " + this._t("turtle_everyday_mode");
+          text = `${intro} ${this._t("turtle_everyday_mode")}`;
         } else {
           text = intro;
         }
