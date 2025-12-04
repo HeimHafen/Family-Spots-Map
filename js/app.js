@@ -12,7 +12,6 @@ import { TillaCompanion } from "./features/tilla.js";
 import {
   DEFAULT_MAP_CENTER,
   DEFAULT_MAP_ZOOM,
-  DAYLOG_STORAGE_KEY,
   LANG_DE,
   LANG_EN,
   THEME_LIGHT,
@@ -25,7 +24,6 @@ import {
   CATEGORY_LABELS_DE,
   CATEGORY_LABELS_EN,
   HEADER_TAGLINE_TEXT,
-  COMPASS_PLUS_HINT_KEY,
   FILTERS,
   CATEGORY_ACCESS,
   // ➕ NEU: dänische Kategorien
@@ -57,6 +55,17 @@ import {
   formatPlusStatus,
   redeemPartnerCode
 } from "./features/plus.js";
+
+import {
+  loadStoredLang,
+  saveStoredLang,
+  loadFavoritesFromStorage as storageLoadFavorites,
+  saveFavoritesToStorage as storageSaveFavorites,
+  loadDaylog as storageLoadDaylog,
+  saveDaylog as storageSaveDaylog,
+  hasSeenCompassPlusHint as storageHasSeenCompassHint,
+  markCompassPlusHintSeen as storageMarkCompassPlusHintSeen
+} from "./storage.js";
 
 // zusätzliche Sprache (nicht aus config.js importiert)
 const LANG_DA = "da";
@@ -136,35 +145,30 @@ function getRandomPlayIdea() {
   return "";
 }
 
-/** Sprache aus LocalStorage / Browser / I18N ableiten */
+/** Sprache aus Storage / Browser / I18N ableiten */
 function getInitialLang() {
+  // 1) Storage (über storage.js)
   try {
-    const stored = localStorage.getItem("fs_lang");
-    if (
-      stored === LANG_DE ||
-      stored === LANG_EN ||
-      stored === LANG_DA
-    ) {
+    const stored = loadStoredLang();
+    if (stored === LANG_DE || stored === LANG_EN || stored === LANG_DA) {
       return stored;
     }
   } catch {
     // ignore
   }
 
+  // 2) I18N
   if (
     typeof I18N !== "undefined" &&
     typeof I18N.getLanguage === "function"
   ) {
     const fromI18n = I18N.getLanguage();
-    if (
-      fromI18n === LANG_DE ||
-      fromI18n === LANG_EN ||
-      fromI18n === LANG_DA
-    ) {
+    if (fromI18n === LANG_DE || fromI18n === LANG_EN || fromI18n === LANG_DA) {
       return fromI18n;
     }
   }
 
+  // 3) <html lang> / Browser
   const htmlLang =
     (document.documentElement.lang || navigator.language || LANG_DE)
       .toLowerCase()
@@ -554,9 +558,10 @@ function getCompassPlusHintText(lang = currentLang) {
   return "Tipp: Kompass, Family Spots Plus und „Mein Tag“ kannst du jederzeit über die Buttons „Anzeigen“ öffnen und wieder einklappen.";
 }
 
+// Speicher-basierte Abfrage, ob der Hint schon gezeigt wurde
 function hasSeenCompassPlusHint() {
   try {
-    return localStorage.getItem(COMPASS_PLUS_HINT_KEY) === "1";
+    return storageHasSeenCompassHint();
   } catch {
     return false;
   }
@@ -564,10 +569,11 @@ function hasSeenCompassPlusHint() {
 
 function markCompassPlusHintSeenAndRemove() {
   try {
-    localStorage.setItem(COMPASS_PLUS_HINT_KEY, "1");
+    storageMarkCompassPlusHintSeen();
   } catch {
     // ignore
   }
+
   if (compassPlusHintEl && compassPlusHintEl.parentNode) {
     compassPlusHintEl.parentNode.removeChild(compassPlusHintEl);
   }
@@ -601,17 +607,14 @@ function ensureCompassPlusHint() {
 }
 
 /**
- * Setzt Sprache, aktualisiert UI & speichert in localStorage.
+ * Setzt Sprache, aktualisiert UI & speichert in Storage.
  */
 function setLanguage(lang, { initial = false } = {}) {
   currentLang =
     lang === LANG_EN ? LANG_EN : lang === LANG_DA ? LANG_DA : LANG_DE;
 
-  try {
-    localStorage.setItem("fs_lang", currentLang);
-  } catch {
-    // ignore
-  }
+  // in Storage persistieren
+  saveStoredLang(currentLang);
 
   document.documentElement.lang = currentLang;
 
@@ -849,24 +852,32 @@ async function loadSpots() {
 // Favorites – Persistence
 // ------------------------------------------------------
 
+/**
+ * Favoriten aus Storage laden (über storage.js).
+ */
 function loadFavoritesFromStorage() {
-  if (!FEATURES.favorites) return;
+  if (!FEATURES.favorites) {
+    favorites = new Set();
+    return;
+  }
 
   try {
-    const stored = localStorage.getItem("fs_favorites");
-    if (!stored) return;
-    const arr = JSON.parse(stored);
-    if (Array.isArray(arr)) favorites = new Set(arr);
+    const set = storageLoadFavorites();
+    favorites = set instanceof Set ? set : new Set();
   } catch (err) {
     console.warn("[Family Spots] Konnte Favoriten nicht laden:", err);
+    favorites = new Set();
   }
 }
 
+/**
+ * Favoriten im Storage speichern (über storage.js).
+ */
 function saveFavoritesToStorage() {
   if (!FEATURES.favorites) return;
 
   try {
-    localStorage.setItem("fs_favorites", JSON.stringify(Array.from(favorites)));
+    storageSaveFavorites(favorites);
   } catch (err) {
     console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
   }
@@ -1633,12 +1644,9 @@ function loadDaylogFromStorage() {
   if (!daylogTextEl) return;
 
   try {
-    const stored = localStorage.getItem(DAYLOG_STORAGE_KEY);
-    if (!stored) return;
-
-    const parsed = JSON.parse(stored);
-    if (parsed && typeof parsed.text === "string") {
-      daylogTextEl.value = parsed.text;
+    const stored = storageLoadDaylog();
+    if (stored && typeof stored.text === "string") {
+      daylogTextEl.value = stored.text;
     }
   } catch (err) {
     console.warn("[Family Spots] Konnte Mein-Tag nicht laden:", err);
@@ -1648,16 +1656,12 @@ function loadDaylogFromStorage() {
 function handleDaylogSave() {
   if (!FEATURES.daylog) return;
   if (!daylogTextEl) return;
+
   const text = daylogTextEl.value.trim();
   if (!text) return;
 
-  const payload = {
-    text,
-    ts: Date.now()
-  };
-
   try {
-    localStorage.setItem(DAYLOG_STORAGE_KEY, JSON.stringify(payload));
+    storageSaveDaylog(text);
   } catch (err) {
     console.warn("[Family Spots] Konnte Mein-Tag nicht speichern:", err);
   }
