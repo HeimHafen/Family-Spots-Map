@@ -5,7 +5,7 @@
 
 "use strict";
 
-import { FEATURES, LANG_DE, LANG_EN } from "../config.js";
+import { FEATURES } from "../config.js";
 
 let compassSectionEl = null;
 let btnToggleCompassEl = null;
@@ -14,7 +14,8 @@ let compassHelperEl = null;
 let compassApplyLabelEl = null;
 let compassApplyBtnEl = null;
 
-let currentLang = LANG_DE;
+// nur noch generischer Sprachcode, i18n übernimmt de/en/da
+let currentLang = "de";
 
 // vom App-Shell übergebene Funktionen
 let tFn = (key) => key;
@@ -49,10 +50,10 @@ function updateCompassButtonLabel() {
   const span =
     btnToggleCompassEl.querySelector("span") || btnToggleCompassEl;
   const isOpen = !!compassSectionEl.open;
-  const isDe = currentLang === LANG_DE;
 
-  const showLabel = isDe ? "Kompass anzeigen" : "Show compass";
-  const hideLabel = isDe ? "Kompass ausblenden" : "Hide compass";
+  // Labels jetzt vollständig aus i18n (de/en/da)
+  const showLabel = tFn("btn_show_compass");
+  const hideLabel = tFn("btn_hide_compass");
 
   span.textContent = isOpen ? hideLabel : showLabel;
   btnToggleCompassEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
@@ -69,7 +70,7 @@ function updateCompassUI() {
 }
 
 export function updateCompassLanguage(lang) {
-  currentLang = lang === LANG_EN ? LANG_EN : LANG_DE;
+  currentLang = lang || "de";
 
   if (!FEATURES.compass) return;
 
@@ -143,7 +144,7 @@ export function initCompassUI({
   onCompassApplyFn = onCompassApply || null;
   markHintSeenFn = markHintSeen || null;
 
-  currentLang = initialLang || LANG_DE;
+  currentLang = initialLang || "de";
 
   if (compassSectionEl && btnToggleCompassEl) {
     compassSectionEl.id = compassSectionEl.id || "compass-section";
