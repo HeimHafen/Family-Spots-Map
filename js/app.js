@@ -528,10 +528,10 @@ function updateLanguageSwitcherVisual() {
     let alt = "Deutsch";
 
     if (currentLang === LANG_EN) {
-      src = "assets/flags/flag-en.svg";
+      src = "assets/flags/flag-gb.svg";
       alt = "English";
     } else if (currentLang === LANG_DA) {
-      src = "assets/flags/flag-da.svg";
+      src = "assets/flags/flag-dk.svg";
       alt = "Dansk";
     }
 
