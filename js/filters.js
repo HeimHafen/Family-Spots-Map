@@ -37,6 +37,11 @@ function normalizeArrayField(raw) {
 // Spot-Helfer (nur Daten, kein DOM)
 // ------------------------------------------------------
 
+/**
+ * Liefert den primären Anzeigenamen eines Spots.
+ * @param {Spot} spot
+ * @returns {string}
+ */
 export function getSpotName(spot) {
   return (
     spot.title ||
@@ -46,6 +51,11 @@ export function getSpotName(spot) {
   );
 }
 
+/**
+ * Liefert eine Unterzeile (Ort / Adresse / Kurzbeschreibung).
+ * @param {Spot} spot
+ * @returns {string}
+ */
 export function getSpotSubtitle(spot) {
   if (spot.city && spot.country) return `${spot.city}, ${spot.country}`;
   if (spot.city) return spot.city;
@@ -54,6 +64,11 @@ export function getSpotSubtitle(spot) {
   return spot.subtitle || spot.shortDescription || "";
 }
 
+/**
+ * Liefert eine stabile ID für den Spot (für Favoriten etc.).
+ * @param {Spot} spot
+ * @returns {string}
+ */
 export function getSpotId(spot) {
   return String(spot.id || getSpotName(spot));
 }
@@ -128,6 +143,11 @@ function getSpotTags(spot) {
     });
   }
 
+  // Optional: falls du categorySlug verwendest, diesen auch berücksichtigen
+  if (spot.categorySlug) {
+    catSlugs.add(String(spot.categorySlug));
+  }
+
   // 3. Kategorie-Tags aus CATEGORY_TAGS hinzumischen
   catSlugs.forEach((slug) => {
     const catTags = CATEGORY_TAGS[slug];
@@ -173,10 +193,12 @@ export function normalizeSpot(raw) {
   /** @type {Spot} */
   const spot = { ...raw };
 
+  // lon → lng normalisieren
   if (spot.lon != null && spot.lng == null) {
     spot.lng = spot.lon;
   }
 
+  // falls keine Haupt-Kategorie gesetzt ist, erste Kategorie aus categories[] übernehmen
   if (
     !spot.category &&
     Array.isArray(spot.categories) &&
@@ -185,10 +207,11 @@ export function normalizeSpot(raw) {
     spot.category = spot.categories[0];
   }
 
-  spot._searchText = buildSpotSearchText(spot);
-  spot._ageGroups = getSpotAgeGroups(spot);
-  spot._moods = getSpotMoods(spot);
-  spot._travelModes = getSpotTravelModes(spot);
+  // Caches vorbereiten
+  buildSpotSearchText(spot);
+  getSpotAgeGroups(spot);
+  getSpotMoods(spot);
+  getSpotTravelModes(spot);
 
   return spot;
 }
@@ -197,6 +220,11 @@ export function normalizeSpot(raw) {
 // Plus-/Add-on-Logik (nur Daten)
 // ------------------------------------------------------
 
+/**
+ * Liefert alle Kategorie-Slugs eines Spots.
+ * @param {Spot} spot
+ * @returns {string[]}
+ */
 function getSpotCategorySlugs(spot) {
   const slugs = new Set();
   if (spot.category) slugs.add(String(spot.category));
@@ -205,18 +233,32 @@ function getSpotCategorySlugs(spot) {
       if (c) slugs.add(String(c));
     });
   }
+  if (spot.categorySlug) {
+    slugs.add(String(spot.categorySlug));
+  }
   return Array.from(slugs);
 }
 
+/**
+ * Prüft, ob eine Kategorie eine Plus-/Add-on-Kategorie ist.
+ * @param {string} slug
+ * @returns {boolean}
+ */
 function isCategoryRestricted(slug) {
   if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) return false;
   const rule = CATEGORY_ACCESS.perCategory[slug];
   if (!rule) return false;
 
   const level = rule.level || CATEGORY_ACCESS.defaultLevel || "free";
-  return level !== "free"; // "subscription" oder "addon" → Plus nötig
+  // "subscription" oder "addon" → Plus nötig
+  return level !== "free";
 }
 
+/**
+ * Prüft, ob ein Spot Plus/Add-on erfordert.
+ * @param {Spot} spot
+ * @returns {boolean}
+ */
 function isSpotPlusRestricted(spot) {
   // 1. Alte Flags auf Spots (falls du irgendwo plusOnly gesetzt hast)
   if (spot.plusOnly || spot.plus) return true;
@@ -226,10 +268,20 @@ function isSpotPlusRestricted(spot) {
   return slugs.some(isCategoryRestricted);
 }
 
+/**
+ * Prüft, ob ein Spot "großes Abenteuer" ist.
+ * @param {Spot} spot
+ * @returns {boolean}
+ */
 function isSpotBigAdventure(spot) {
   return !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
 }
 
+/**
+ * Prüft, ob ein Spot verifiziert ist.
+ * @param {Spot} spot
+ * @returns {boolean}
+ */
 function isSpotVerified(spot) {
   return !!spot.verified || !!spot.isVerified;
 }
@@ -353,7 +405,11 @@ function doesSpotMatchBaseFilters(
   }
 
   // Große Abenteuer
-  if (FEATURES.bigAdventureFilter && onlyBigAdventures && !isSpotBigAdventure(spot)) {
+  if (
+    FEATURES.bigAdventureFilter &&
+    onlyBigAdventures &&
+    !isSpotBigAdventure(spot)
+  ) {
     return false;
   }
 
@@ -405,19 +461,23 @@ export function filterSpots(
   }
 ) {
   const activeTagFilters =
-    activeFilterIds instanceof Set ? activeFilterIds : new Set(activeFilterIds || []);
+    activeFilterIds instanceof Set
+      ? activeFilterIds
+      : new Set(activeFilterIds || []);
+
+  const trimmedSearch = (searchTerm || "").trim();
 
   return spots.filter((spot) =>
     doesSpotMatchBaseFilters(spot, {
-      plusActive,
-      searchTerm,
-      categoryFilter,
-      ageFilter,
-      moodFilter,
-      travelMode,
-      onlyBigAdventures,
-      onlyVerified,
-      onlyFavorites,
+      plusActive: !!plusActive,
+      searchTerm: trimmedSearch,
+      categoryFilter: categoryFilter || "",
+      ageFilter: ageFilter || "all",
+      moodFilter: moodFilter || null,
+      travelMode: travelMode || null,
+      onlyBigAdventures: !!onlyBigAdventures,
+      onlyVerified: !!onlyVerified,
+      onlyFavorites: !!onlyFavorites,
       activeTagFilters,
       favorites
     })
