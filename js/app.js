@@ -27,7 +27,9 @@ import {
   HEADER_TAGLINE_TEXT,
   COMPASS_PLUS_HINT_KEY,
   FILTERS,
-  CATEGORY_ACCESS
+  CATEGORY_ACCESS,
+  // ➕ NEU: dänische Kategorien
+  CATEGORY_LABELS_DA
 } from "./config.js";
 
 import {
@@ -407,14 +409,25 @@ function updateMetaAndA11yFromI18n() {
 
 function getCategoryLabel(slug) {
   if (!slug) return "";
-  const langMap =
-    currentLang === LANG_EN ? CATEGORY_LABELS_EN : CATEGORY_LABELS_DE;
-  const fallbackMap =
-    currentLang === LANG_EN ? CATEGORY_LABELS_DE : CATEGORY_LABELS_EN;
+
+  let langMap;
+  let fallbackMap;
+
+  if (currentLang === LANG_EN) {
+    langMap = CATEGORY_LABELS_EN;
+    fallbackMap = CATEGORY_LABELS_DE;
+  } else if (currentLang === LANG_DA) {
+    langMap = CATEGORY_LABELS_DA;
+    fallbackMap = CATEGORY_LABELS_DE;
+  } else {
+    // Standard: Deutsch
+    langMap = CATEGORY_LABELS_DE;
+    fallbackMap = CATEGORY_LABELS_EN;
+  }
 
   return (
-    langMap[slug] ||
-    fallbackMap[slug] ||
+    (langMap && langMap[slug]) ||
+    (fallbackMap && fallbackMap[slug]) ||
     slug.replace(/[_-]/g, " ")
   );
 }
@@ -443,15 +456,21 @@ function getCategoryLabelWithAccess(slug) {
       suffix =
         currentLang === LANG_EN
           ? " · water add-on (Plus)"
+          : currentLang === LANG_DA
+          ? " · vand-add-on (Plus)"
           : " · Wasser-Add-on (Plus)";
     } else if (access.addonId === "addon_rv") {
       suffix =
         currentLang === LANG_EN
           ? " · RV add-on (Plus)"
+          : currentLang === LANG_DA
+          ? " · autocamper-add-on (Plus)"
           : " · WoMo-Add-on (Plus)";
     } else {
       suffix =
         currentLang === LANG_EN
+          ? " · add-on (Plus)"
+          : currentLang === LANG_DA
           ? " · add-on (Plus)"
           : " · Add-on (Plus)";
     }
@@ -921,7 +940,11 @@ function populateCategoryOptions() {
           .toLowerCase()
           .localeCompare(
             getCategoryLabel(b).toLowerCase(),
-            currentLang === LANG_DE ? "de" : "en"
+            currentLang === LANG_DE
+              ? "de"
+              : currentLang === LANG_DA
+              ? "da"
+              : "en"
           )
       )
       .forEach((slug) => {
@@ -1273,7 +1296,7 @@ function syncFavButtonState(btn, spotId) {
       : currentLang === LANG_EN
       ? "Add to favourites"
       : currentLang === LANG_DA
-      ? "Zu favoritter hinzufügen"
+      ? "Tilføj til favoritter"
       : "Zu Favoriten hinzufügen"
   );
 }
