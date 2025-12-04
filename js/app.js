@@ -30,6 +30,25 @@ const STORAGE_KEYS = {
 // Radius-Stufen (Index entspricht Slider-Wert 0–4)
 const RADIUS_STEPS_KM = [5, 15, 30, 60, Infinity];
 
+// Kleine Spielideen für den Tilla-Button
+const PLAY_IDEAS = {
+  de: [
+    "Macht eine Mini-Schatzsuche: Jedes Kind denkt sich eine Sache aus, die alle finden sollen.",
+    "Sammelt drei Dinge in der Natur mit derselben Farbe und baut daraus ein kleines Kunstwerk.",
+    "Findet zusammen fünf runde und fünf eckige Dinge und legt daraus ein Bild auf dem Boden."
+  ],
+  en: [
+    "Do a tiny treasure hunt: each child thinks of one thing everyone has to find.",
+    "Collect three things in nature with the same colour and build a tiny artwork.",
+    "Look for five round and five square objects and arrange them as a little picture."
+  ],
+  da: [
+    "Lav en mini-skattejagt: Hvert barn finder på én ting, som alle skal finde.",
+    "Saml tre ting i naturen med samme farve og lav et lille kunstværk sammen.",
+    "Find fem runde og fem kantede ting og læg dem som et lille billede på jorden."
+  ]
+};
+
 // ------------------------------------------------------
 // globaler App-State (modulintern)
 // ------------------------------------------------------
@@ -113,6 +132,7 @@ const filters = {
   setupLocateButton();
   setupAboutViewToggle();
   setupViewToggle();
+  setupPlayIdeaButton();
   setupFilters();
   setupCompass();
   setupPlusSection();
@@ -224,24 +244,26 @@ function updateAboutLanguage(lang) {
 }
 
 function updateLanguageSwitcherUI(lang) {
-  const flagImg = /** @type {HTMLImageElement|null} */ (
-    document.getElementById("language-switcher-flag")
-  );
-  if (!flagImg) return;
+  const flagEl = document.getElementById("language-switcher-flag");
+  if (!flagEl) return;
 
-  let src = "assets/flags/flag-de.svg";
-  let alt = "Deutsch";
+  const symbol = lang === "en" ? "🇬🇧" : lang === "da" ? "🇩🇰" : "🇩🇪";
+  const label = lang === "en" ? "English" : lang === "da" ? "Dansk" : "Deutsch";
 
-  if (lang === "en") {
-    src = "assets/flags/flag-en.svg";
-    alt = "English";
-  } else if (lang === "da") {
-    src = "assets/flags/flag-da.svg";
-    alt = "Dansk";
+  // Variante 1: <img id="language-switcher-flag">
+  if (flagEl.tagName.toLowerCase() === "img") {
+    const img = /** @type {HTMLImageElement} */ (flagEl);
+    let src = "assets/flags/flag-de.svg";
+    if (lang === "en") src = "assets/flags/flag-en.svg";
+    else if (lang === "da") src = "assets/flags/flag-da.svg";
+    img.src = src;
+    img.alt = label;
+    return;
   }
 
-  flagImg.src = src;
-  flagImg.alt = alt;
+  // Variante 2: <span id="language-switcher-flag"> (Emoji)
+  flagEl.textContent = symbol;
+  flagEl.setAttribute("aria-label", label);
 }
 
 function setupLanguageSwitcher() {
@@ -302,7 +324,9 @@ function setupLocateButton() {
 
   btn.addEventListener("click", () => {
     if (!navigator.geolocation) {
-      showToast("Standortbestimmung wird von diesem Gerät/Browser nicht unterstützt.");
+      showToast(
+        "Standortbestimmung wird von diesem Gerät/Browser nicht unterstützt."
+      );
       return;
     }
 
@@ -357,6 +381,27 @@ function setupViewToggle() {
   });
 }
 
+// „Spielideen für unterwegs“ mit Tilla verbinden
+function setupPlayIdeaButton() {
+  const btn = document.getElementById("btn-play-idea");
+  if (!btn) return;
+
+  btn.addEventListener("click", () => {
+    const lang = appState.currentLang === "en" || appState.currentLang === "da"
+      ? appState.currentLang
+      : "de";
+    const ideas = PLAY_IDEAS[lang] || PLAY_IDEAS.de;
+    if (!ideas || ideas.length === 0) return;
+
+    const idx = Math.floor(Math.random() * ideas.length);
+    const idea = ideas[idx];
+
+    if (appState.tilla) {
+      appState.tilla.showPlayIdea(idea);
+    }
+  });
+}
+
 // ------------------------------------------------------
 // Toast
 // ------------------------------------------------------
@@ -400,8 +445,8 @@ async function loadAndRenderSpots() {
       }
     }
 
-    // Kategorie-Dropdown basierend auf Spots befüllen
-    populateCategoryOptions(appState.allSpots);
+    // Kategorie-Dropdown basierend auf Index (falls vorhanden) oder Spots befüllen
+    populateCategoryOptions(appState.allSpots, idx);
 
     // Filter anwenden & UI rendern
     appState.filteredSpots = applyFilters();
@@ -770,34 +815,56 @@ function haversineKm(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-// Kategorie-Select basierend auf Spots füllen
-function populateCategoryOptions(spots) {
+// Kategorie-Select: bevorzugt Index, sonst Spots
+function populateCategoryOptions(spots, index) {
   const select = /** @type {HTMLSelectElement|null} */ (
     document.getElementById("filter-category")
   );
   if (!select) return;
 
-  const seen = new Set();
-  const options = [];
-
-  spots.forEach((spot) => {
-    if (!spot) return;
-    const cat = spot.category || (Array.isArray(spot.categories) ? spot.categories[0] : null);
-    if (!cat) return;
-    const key = String(cat);
-    if (seen.has(key)) return;
-    seen.add(key);
-    options.push(key);
-  });
-
-  // bestehende Optionen (inkl. "Alle Kategorien") beibehalten
-  // und danach dynamisch ergänzen
-  // – wir löschen alle außer der ersten Option.
-  while (select.options.length > 1) {
-    select.remove(1);
+  // erste Option („Alle Kategorien …“) merken
+  const firstOption = select.options[0] || null;
+  select.innerHTML = "";
+  if (firstOption) {
+    select.appendChild(firstOption);
   }
 
-  options.sort().forEach((cat) => {
+  const seen = new Set();
+  const ids = [];
+
+  // 1. Versuch: Kategorien aus dem Index lesen (falls vorhanden)
+  if (index && Array.isArray(index.categories) && index.categories.length) {
+    index.categories.forEach((c) => {
+      let id = null;
+      if (typeof c === "string") {
+        id = c;
+      } else if (c && typeof c === "object") {
+        id = c.id || c.key || c.slug || c.value || null;
+      }
+      if (!id) return;
+      const key = String(id);
+      if (seen.has(key)) return;
+      seen.add(key);
+      ids.push(key);
+    });
+  } else {
+    // Fallback: Kategorien aus den Spots ableiten
+    spots.forEach((spot) => {
+      if (!spot) return;
+      const cat =
+        spot.category ||
+        (Array.isArray(spot.categories) ? spot.categories[0] : null);
+      if (!cat) return;
+      const key = String(cat);
+      if (seen.has(key)) return;
+      seen.add(key);
+      ids.push(key);
+    });
+  }
+
+  ids.sort((a, b) => a.localeCompare(b, "de"));
+
+  ids.forEach((cat) => {
     const opt = document.createElement("option");
     opt.value = cat;
     opt.textContent = cat;
@@ -1245,7 +1312,12 @@ function handleFavoriteClick(buttonEl) {
 
 // Von Karte auf Spot fokussieren
 function focusSpotOnMap(spot) {
-  if (appState.map && spot && typeof spot.lat === "number" && typeof spot.lng === "number") {
+  if (
+    appState.map &&
+    spot &&
+    typeof spot.lat === "number" &&
+    typeof spot.lng === "number"
+  ) {
     appState.map.setView([spot.lat, spot.lng], appState.map.getZoom() || 12);
   }
   renderSpotDetail(spot);
