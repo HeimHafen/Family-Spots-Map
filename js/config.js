@@ -518,27 +518,9 @@ export const CATEGORY_TAGS = {
     "nature",
     "family-friendly"
   ],
-  strand: [
-    "water",
-    "beach",
-    "outdoor",
-    "summer",
-    "family-friendly"
-  ],
-  eisbahn: [
-    "ice-skating",
-    "winter",
-    "sport",
-    "seasonal",
-    "family-friendly"
-  ],
-  rodelhuegel: [
-    "sledding",
-    "winter",
-    "snow",
-    "outdoor",
-    "family-friendly"
-  ],
+  strand: ["water", "beach", "outdoor", "summer", "family-friendly"],
+  eisbahn: ["ice-skating", "winter", "sport", "seasonal", "family-friendly"],
+  rodelhuegel: ["sledding", "winter", "snow", "outdoor", "family-friendly"],
 
   freizeitpark: [
     "theme-park",
@@ -657,12 +639,7 @@ export const CATEGORY_TAGS = {
     "nature",
     "family-friendly"
   ],
-  "radweg-family": [
-    "cycling",
-    "family-route",
-    "outdoor",
-    "family-friendly"
-  ],
+  "radweg-family": ["cycling", "family-route", "outdoor", "family-friendly"],
 
   familiencafe: ["food", "cafe", "indoor", "family-friendly"],
   "kinder-familiencafe": [
@@ -755,13 +732,7 @@ export const CATEGORY_TAGS = {
     "picnic-possible",
     "family-friendly"
   ],
-  picknickwiese: [
-    "picnic",
-    "nature",
-    "relax",
-    "outdoor",
-    "family-friendly"
-  ]
+  picknickwiese: ["picnic", "nature", "relax", "outdoor", "family-friendly"]
 };
 
 // ------------------------------------------------------
@@ -789,7 +760,14 @@ export const FILTERS = [
   },
   {
     id: "older-kids-teens",
-    tags: ["older-kids", "teen-friendly", "skate", "pumptrack", "climbing", "bouldering"],
+    tags: [
+      "older-kids",
+      "teen-friendly",
+      "skate",
+      "pumptrack",
+      "climbing",
+      "bouldering"
+    ],
     label: {
       de: "Größere Kinder & Teens",
       en: "Older kids & teens",
@@ -877,7 +855,7 @@ export const FILTERS = [
       da: "Billigt / gratis"
     }
   }
-};
+];
 
 // ------------------------------------------------------
 // Texte & Onboarding-Keys
@@ -970,12 +948,7 @@ export const ADDONS = Object.freeze({
       en: "Special water spots, swimming lakes and family-friendly bathing places.",
       da: "Særlige vand-spots, badesøer og familievenlige badesteder."
     },
-    categories: [
-      "badesee",
-      "strand",
-      "wasserspielplatz",
-      "schwimmbad"
-    ]
+    categories: ["badesee", "strand", "wasserspielplatz", "schwimmbad"]
   },
 
   addon_rv: {
