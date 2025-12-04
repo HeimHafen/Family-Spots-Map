@@ -233,7 +233,6 @@ let activeTagFilters = new Set();
 // DOM-Referenzen
 let languageSwitcherEl;
 let languageSwitcherFlagEl;
-let languageSwitcherCodeEl;
 let themeToggleEl;
 let btnLocateEl;
 let btnHelpEl;
@@ -463,7 +462,7 @@ function getCategoryLabelWithAccess(slug) {
 }
 
 /**
- * Sprach-Badge (Flagge + Kürzel) aktualisieren
+ * Sprach-Badge (Flagge) aktualisieren
  */
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
@@ -480,26 +479,7 @@ function updateLanguageSwitcherVisual() {
 
     languageSwitcherFlagEl.src = src;
   } else {
-    // Fallback: falls Bild aus irgendeinem Grund fehlt, zeige Kürzel als Text
-    let label = "DE";
-    if (currentLang === LANG_DA) label = "DK";
-    else if (currentLang === LANG_EN) label = "EN";
-    languageSwitcherEl.textContent = label;
-  }
-
-  // Aria-Label für Screenreader
-  let ariaLabel;
-  if (currentLang === LANG_DE) {
-    ariaLabel = "Sprache: Deutsch (Tippen für Dansk)";
-  } else if (currentLang === LANG_DA) {
-    ariaLabel = "Sprog: Dansk (tryk for English)";
-  } else {
-    ariaLabel = "Language: English (tap for Deutsch)";
-  }
-  languageSwitcherEl.setAttribute("aria-label", ariaLabel);
-}
-  } else {
-    // Fallback: nur Text im Button
+    // Fallback: falls das Bild fehlt, zeige Kürzel als Text
     let label = "DE";
     if (currentLang === LANG_DA) label = "DK";
     else if (currentLang === LANG_EN) label = "EN";
@@ -1741,7 +1721,6 @@ async function init() {
       document.getElementById("language-switcher") ||
       document.getElementById("language-toggle");
     languageSwitcherFlagEl = document.getElementById("language-switcher-flag");
-    languageSwitcherCodeEl = document.getElementById("language-switcher-code");
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
