@@ -137,11 +137,12 @@ function extractLatLng(source) {
 
 /**
  * Normalisiert einen Roh-Spot aus dem dataLoader in das Format,
- * das von map.js / filters.js erwartet wird:
+ * das von map.js / app.js erwartet wird:
  *
  *  - bevorzugt s.raw als Basisdaten,
  *  - merged s darüber (damit berechnete Felder erhalten bleiben),
- *  - lat/lng werden aus s.location, raw.location, s selbst und raw extrahiert.
+ *  - lat/lng werden aus s.location, raw.location, s selbst und raw extrahiert,
+ *  - categories/category & tags werden in eine robuste Standardform gebracht.
  *
  * @param {any} s
  * @returns {Spot}
@@ -164,6 +165,45 @@ function normalizeRawSpot(s) {
     lat,
     lng
   };
+
+  // --- Struktur-Sicherungen ---------------------------------------
+
+  // Kategorien / category
+  if (Array.isArray(spot.categories)) {
+    // category aus erster Kategorie spiegeln, falls nicht gesetzt
+    if (!spot.category && spot.categories.length > 0) {
+      spot.category = String(spot.categories[0]);
+    }
+  } else if (spot.category) {
+    // categories aus category ableiten
+    spot.categories = [String(spot.category)];
+  } else if (raw.category) {
+    // Fallback, falls nur im raw vorhanden
+    spot.category = String(raw.category);
+    spot.categories = [String(raw.category)];
+  } else if (Array.isArray(raw.categories)) {
+    spot.categories = raw.categories.slice();
+    if (!spot.category && raw.categories.length > 0) {
+      spot.category = String(raw.categories[0]);
+    }
+  } else {
+    // keine Kategorie-Infos vorhanden – leeres Array
+    spot.categories = [];
+  }
+
+  // Tags immer als Array
+  if (!Array.isArray(spot.tags)) {
+    if (Array.isArray(raw.tags)) {
+      spot.tags = raw.tags.slice();
+    } else if (typeof raw.tags === "string") {
+      spot.tags = raw.tags
+        .split(/[;,]+/)
+        .map((t) => t.trim())
+        .filter(Boolean);
+    } else {
+      spot.tags = [];
+    }
+  }
 
   return spot;
 }
