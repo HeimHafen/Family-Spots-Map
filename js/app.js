@@ -1,8 +1,10 @@
 // js/app.js
 // ======================================================
+//
 // Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
 // Map- und Filterlogik ist in map.js / filters.js ausgelagert.
 // Daten & Plus-Logik sind in data.js / features/plus.js ausgelagert.
+//
 // ======================================================
 
 "use strict";
@@ -14,6 +16,7 @@ import {
   DEFAULT_MAP_ZOOM,
   LANG_DE,
   LANG_EN,
+  LANG_DA,               // NEU: dänische Sprache direkt aus config.js
   THEME_LIGHT,
   THEME_DARK,
   RADIUS_STEPS_KM,
@@ -26,8 +29,7 @@ import {
   HEADER_TAGLINE_TEXT,
   FILTERS,
   CATEGORY_ACCESS,
-  // ➕ NEU: dänische Kategorien
-  CATEGORY_LABELS_DA
+  CATEGORY_LABELS_DA      // dänische Kategorien
 } from "./config.js";
 
 import {
@@ -66,9 +68,6 @@ import {
   hasSeenCompassPlusHint as storageHasSeenCompassHint,
   markCompassPlusHintSeen as storageMarkCompassPlusHintSeen
 } from "./storage.js";
-
-// zusätzliche Sprache (nicht aus config.js importiert)
-const LANG_DA = "da";
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
@@ -1140,7 +1139,9 @@ function applyFiltersAndRender() {
   }
 
   const radiusKm =
-    RADIUS_STEPS_KM[radiusStep] ?? RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ?? Infinity;
+    RADIUS_STEPS_KM[radiusStep] ??
+    RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ??
+    Infinity;
 
   filteredSpots = center
     ? nonGeoFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
