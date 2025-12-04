@@ -5,6 +5,96 @@
 
 "use strict";
 
+/**
+ * Sprachcodes, die die App unterstützt.
+ * @typedef {"de" | "en" | "da"} LangCode
+ */
+
+/**
+ * Konfiguration für Feature-Flags.
+ * Alle Flags sind read-only und werden nur gelesen (nicht beschrieben).
+ * @typedef {Object} FeaturesConfig
+ * @property {boolean} plus
+ * @property {boolean} moodFilter
+ * @property {boolean} travelMode
+ * @property {boolean} bigAdventureFilter
+ * @property {boolean} verifiedFilter
+ * @property {boolean} favorites
+ * @property {boolean} daylog
+ * @property {boolean} playIdeas
+ * @property {boolean} compass
+ */
+
+/**
+ * Kategorie-Gruppen-Key (deutscher Gruppenname als interne ID).
+ * @typedef {
+ *  "Spiel & Bewegung" |
+ *  "Tiere & Natur" |
+ *  "Wasser & Schwimmen" |
+ *  "Erlebnis & Freizeit" |
+ *  "Wandern & Radfahren" |
+ *  "Essen & Trinken" |
+ *  "Lernen & Kultur" |
+ *  "Praktisches" |
+ *  "Unterwegs mit WoMo & Rad" |
+ *  "Entspannung & Naturorte"
+ * } CategoryGroupKey
+ */
+
+/**
+ * Zugriffslevel für Kategorien.
+ * @typedef {"free" | "subscription" | "addon"} CategoryAccessLevel
+ */
+
+/**
+ * Zugriffsregel für eine einzelne Kategorie.
+ * @typedef {Object} CategoryAccessRule
+ * @property {CategoryAccessLevel} level
+ * @property {string} [subscriptionId]
+ * @property {string} [addonId]
+ */
+
+/**
+ * Gesamtkonfiguration für Kategorie-Zugriff.
+ * @typedef {Object} CategoryAccessConfig
+ * @property {CategoryAccessLevel} defaultLevel
+ * @property {Record<string, CategoryAccessRule>} perCategory
+ */
+
+/**
+ * Subscription-Definition (z. B. Family Spots Plus).
+ * @typedef {Object} SubscriptionConfig
+ * @property {string} id
+ * @property {"subscription"} type
+ * @property {number} pricePerYear
+ * @property {string} currency
+ * @property {Record<LangCode, string>} label
+ * @property {Record<LangCode, string>} shortLabel
+ * @property {Record<LangCode, string>} description
+ * @property {{id: string, label: Record<LangCode, string>}[]} benefits
+ */
+
+/**
+ * Add-on-Definition (z. B. Wasser & Baden).
+ * @typedef {Object} AddonConfig
+ * @property {string} id
+ * @property {"addon"} type
+ * @property {string} requiresSubscriptionId
+ * @property {number} pricePerYear
+ * @property {string} currency
+ * @property {Record<LangCode, string>} label
+ * @property {Record<LangCode, string>} description
+ * @property {string[]} categories
+ */
+
+/**
+ * Filterchip-Konfiguration.
+ * @typedef {Object} FilterConfig
+ * @property {string} id
+ * @property {string[]} tags
+ * @property {Record<LangCode, string>} label
+ */
+
 // ------------------------------------------------------
 // Map & Storage Keys
 // ------------------------------------------------------
@@ -20,10 +110,10 @@ export const SPOTS_CACHE_KEY = "fs_spots_cache_v1";
 // Sprachen & Theme
 // ------------------------------------------------------
 
-/** @typedef {"de" | "en" | "da"} LangCode */
-
 export const LANG_DE = "de";
+/** @type {LangCode} */
 export const LANG_EN = "en";
+/** @type {LangCode} */
 export const LANG_DA = "da";
 
 export const THEME_LIGHT = "light";
@@ -46,6 +136,7 @@ export const MAX_MARKERS_RENDER = 500;
 /**
  * Feature-Flags zentral, damit man Funktionen gezielt deaktivieren kann.
  * Wichtig: Flags werden von app.js nur gelesen, nicht beschrieben.
+ * @type {FeaturesConfig}
  */
 export const FEATURES = Object.freeze({
   plus: true,
@@ -63,6 +154,7 @@ export const FEATURES = Object.freeze({
 // Kategorien & Gruppen
 // ------------------------------------------------------
 
+/** @type {Record<CategoryGroupKey, string[]>} */
 export const CATEGORY_GROUPS = {
   "Spiel & Bewegung": [
     "spielplatz",
@@ -145,6 +237,11 @@ export const CATEGORY_GROUPS = {
   ]
 };
 
+/**
+ * Labels für Kategorie-Gruppen in verschiedenen Sprachen.
+ * Key ist immer der deutsche Gruppenname.
+ * @type {Record<LangCode, Record<CategoryGroupKey, string>>}
+ */
 export const CATEGORY_GROUP_LABELS = {
   de: {
     "Spiel & Bewegung": "Spiel & Bewegung",
@@ -184,6 +281,7 @@ export const CATEGORY_GROUP_LABELS = {
   }
 };
 
+/** @type {Record<string, string>} */
 export const CATEGORY_LABELS_DE = {
   spielplatz: "Spielplatz",
   abenteuerspielplatz: "Abenteuerspielplatz",
@@ -253,6 +351,7 @@ export const CATEGORY_LABELS_DE = {
   picknickwiese: "Picknickwiese"
 };
 
+/** @type {Record<string, string>} */
 export const CATEGORY_LABELS_EN = {
   spielplatz: "Playground",
   abenteuerspielplatz: "Adventure playground",
@@ -322,6 +421,7 @@ export const CATEGORY_LABELS_EN = {
   picknickwiese: "Picnic meadow"
 };
 
+/** @type {Record<string, string>} */
 export const CATEGORY_LABELS_DA = {
   spielplatz: "Legeplads",
   abenteuerspielplatz: "Eventyrlegeplads",
@@ -394,6 +494,7 @@ export const CATEGORY_LABELS_DA = {
 // Kategorie-Tags (für Filter-Logik)
 // ------------------------------------------------------
 
+/** @type {Record<string, string[]>} */
 export const CATEGORY_TAGS = {
   spielplatz: ["playground", "outdoor", "all-ages", "family-friendly"],
   abenteuerspielplatz: [
@@ -739,6 +840,10 @@ export const CATEGORY_TAGS = {
 // Filter-Chips (Mapping Filter → Tags)
 // ------------------------------------------------------
 
+/**
+ * Filter-Chips (Mapping Filter → Tags)
+ * @type {FilterConfig[]}
+ */
 export const FILTERS = [
   {
     id: "bad-weather",
@@ -861,6 +966,7 @@ export const FILTERS = [
 // Texte & Onboarding-Keys
 // ------------------------------------------------------
 
+/** @type {Record<LangCode, string>} */
 export const HEADER_TAGLINE_TEXT = {
   de: "Heute ist Zeit für Familie.",
   en: "Make today a family day.",
@@ -877,6 +983,7 @@ export const COMPASS_PLUS_HINT_KEY = "fs_hint_compass_plus_v1";
 /**
  * Basis-Abos (z. B. 19,90 €/Jahr)
  * – aktuell 1 Abo: "Family Spots Plus"
+ * @type {Record<string, SubscriptionConfig>}
  */
 export const SUBSCRIPTIONS = Object.freeze({
   family_plus: {
@@ -930,6 +1037,7 @@ export const SUBSCRIPTIONS = Object.freeze({
 
 /**
  * Add-ons (z. B. 2,99 €/Jahr) – an ein Basis-Abo gebunden.
+ * @type {Record<string, AddonConfig>}
  */
 export const ADDONS = Object.freeze({
   addon_water: {
@@ -985,6 +1093,7 @@ export const ADDONS = Object.freeze({
  *  - addonId: wenn level === "addon"
  *
  * Default ist "free", falls Kategorie hier nicht eingetragen ist.
+ * @type {CategoryAccessConfig}
  */
 export const CATEGORY_ACCESS = Object.freeze({
   defaultLevel: "free",
