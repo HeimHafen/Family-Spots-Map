@@ -5,7 +5,7 @@
 
 "use strict";
 
-import { FEATURES, LANG_DE, LANG_EN } from "../config.js";
+import { FEATURES, LANG_DE, LANG_EN, LANG_DA } from "../config.js";
 import { getPlusStatus, formatPlusStatus, redeemPartnerCode } from "./plus.js";
 
 let sectionEl = null;
@@ -22,20 +22,60 @@ let tillaInstance = null;
 let markHintSeenFn = null;
 let onPlusStateChangedFn = null;
 
+/**
+ * Hilfsfunktion: Keyboard-Activation (Enter/Space) auf Buttons.
+ * @param {(event: KeyboardEvent) => void} handler
+ * @returns {(event: KeyboardEvent) => void}
+ */
+function activateOnEnterSpace(handler) {
+  return (event) => {
+    if (
+      event.key === "Enter" ||
+      event.key === " " ||
+      event.key === "Spacebar"
+    ) {
+      event.preventDefault();
+      handler(event);
+    }
+  };
+}
+
+/**
+ * Sprachabhängige Labels für den Toggle-Button (Anzeigen/Ausblenden).
+ * @param {string} lang
+ * @returns {{show: string, hide: string}}
+ */
+function getToggleLabels(lang) {
+  switch (lang) {
+    case LANG_EN:
+      return { show: "Show", hide: "Hide" };
+    case LANG_DA:
+      return { show: "Vis", hide: "Skjul" };
+    case LANG_DE:
+    default:
+      return { show: "Anzeigen", hide: "Ausblenden" };
+  }
+}
+
+/**
+ * Text des Toggle-Buttons aktualisieren (inkl. aria-expanded).
+ */
 function updateToggleLabel() {
   if (!toggleBtnEl || !sectionEl) return;
 
   const target = toggleBtnEl.querySelector("span") || toggleBtnEl;
   const isOpen = !!sectionEl.open;
-  const isDe = currentLang === LANG_DE;
 
-  const showLabel = isDe ? "Anzeigen" : "Show";
-  const hideLabel = isDe ? "Ausblenden" : "Hide";
+  const { show, hide } = getToggleLabels(currentLang);
+  target.textContent = isOpen ? hide : show;
 
-  target.textContent = isOpen ? hideLabel : showLabel;
   toggleBtnEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
 }
 
+/**
+ * Plus-Status-Text anhand gespeicherten Status oder übergebenem Status aktualisieren.
+ * @param {ReturnType<typeof getPlusStatus>} [status]
+ */
 function updatePlusStatusText(status) {
   if (!statusTextEl) return;
 
@@ -48,6 +88,10 @@ function updatePlusStatusText(status) {
   statusTextEl.textContent = formatPlusStatus(s);
 }
 
+/**
+ * Plus-Status aus Storage laden und internen State aktualisieren.
+ * Triggert onPlusStateChanged, falls gesetzt.
+ */
 function loadPlusStateFromStorage() {
   if (!FEATURES.plus) {
     plusActive = false;
@@ -70,6 +114,10 @@ function loadPlusStateFromStorage() {
   }
 }
 
+/**
+ * Einlösen eines Partnercodes (Plus).
+ * Nutzt redeemPartnerCode und zeigt passende Toasts.
+ */
 async function handlePlusCodeSubmit() {
   if (!FEATURES.plus) return;
   if (!codeInputEl || !statusTextEl) return;
@@ -98,10 +146,7 @@ async function handlePlusCodeSubmit() {
     showToastFn("plus_code_activated");
   }
 
-  if (
-    tillaInstance &&
-    typeof tillaInstance.onPlusActivated === "function"
-  ) {
+  if (tillaInstance && typeof tillaInstance.onPlusActivated === "function") {
     tillaInstance.onPlusActivated();
   }
 
@@ -110,16 +155,48 @@ async function handlePlusCodeSubmit() {
   }
 }
 
+/**
+ * Sprache für die Plus-UI aktualisieren (DE/EN/DA).
+ * Wird typischerweise von außen aufgerufen, wenn der globale Language-Switcher wechselt.
+ *
+ * @param {string} lang
+ */
 export function updatePlusLanguage(lang) {
-  currentLang = lang === LANG_EN ? LANG_EN : LANG_DE;
+  if (lang === LANG_EN) {
+    currentLang = LANG_EN;
+  } else if (lang === LANG_DA) {
+    currentLang = LANG_DA;
+  } else {
+    currentLang = LANG_DE;
+  }
+
   updatePlusStatusText();
   updateToggleLabel();
 }
 
+/**
+ * Liefert, ob Plus aktuell aktiv ist (laut lokalem Status).
+ * @returns {boolean}
+ */
 export function isPlusActive() {
   return !!plusActive;
 }
 
+/**
+ * Initialisiert die Plus-UI (Bereich, Toggle, Code-Feld, Status-Text).
+ *
+ * @param {Object} [options]
+ * @param {HTMLElement} [options.section] - <details>-Element für Plus-Bereich.
+ * @param {HTMLButtonElement} [options.toggleButton] - Button zum Öffnen/Schließen des Plus-Abschnitts.
+ * @param {HTMLInputElement} [options.codeInput] - Eingabefeld für Partnercode.
+ * @param {HTMLButtonElement} [options.codeSubmit] - Button zum Einlösen des Codes.
+ * @param {HTMLElement} [options.statusText] - Element für Statusanzeige.
+ * @param {(msg: string) => void} [options.showToast] - Toast-Funktion.
+ * @param {any} [options.tilla] - Tilla-Instanz (optional, für onPlusActivated).
+ * @param {() => void} [options.markHintSeen] - Callback, um Onboarding-Hints als "gesehen" zu markieren.
+ * @param {(active: boolean) => void} [options.onPlusStateChanged] - Callback, wenn sich Plus-Status ändert.
+ * @param {string} [options.initialLang] - Initiale Sprache (z. B. LANG_DE / LANG_EN / LANG_DA).
+ */
 export function initPlusUI({
   section,
   toggleButton,
@@ -147,9 +224,14 @@ export function initPlusUI({
 
   currentLang = initialLang || LANG_DE;
 
+  // Accordion / Toggle
   if (sectionEl && toggleBtnEl) {
     sectionEl.id = sectionEl.id || "plus-section";
     toggleBtnEl.setAttribute("aria-controls", sectionEl.id);
+    toggleBtnEl.setAttribute(
+      "aria-expanded",
+      sectionEl.open ? "true" : "false"
+    );
 
     const toggleHandler = (event) => {
       event.preventDefault();
@@ -157,34 +239,28 @@ export function initPlusUI({
       sectionEl.open = isOpen;
       updateToggleLabel();
 
-      if (typeof markHintSeenFn === "function") {
+      if (isOpen && typeof markHintSeenFn === "function") {
+        // Hint nur dann als "gesehen" markieren, wenn der Bereich geöffnet wird
         markHintSeenFn();
       }
     };
 
     toggleBtnEl.addEventListener("click", toggleHandler);
-    toggleBtnEl.addEventListener("keydown", (event) => {
-      if (
-        event.key === "Enter" ||
-        event.key === " " ||
-        event.key === "Spacebar"
-      ) {
-        event.preventDefault();
-        toggleHandler(event);
-      }
-    });
+    toggleBtnEl.addEventListener("keydown", activateOnEnterSpace(toggleHandler));
 
     sectionEl.addEventListener("toggle", () => {
       updateToggleLabel();
     });
   }
 
+  // Code-Submit
   if (codeSubmitEl) {
     codeSubmitEl.addEventListener("click", () => {
       handlePlusCodeSubmit();
     });
   }
 
+  // Initiale Sprache anwenden + Status laden
   updatePlusLanguage(currentLang);
   loadPlusStateFromStorage();
 }
