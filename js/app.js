@@ -10,7 +10,7 @@
 
 import { loadData, getIndexData } from "./data.js";
 import { initMap, renderMarkers, getRouteUrlsForSpot } from "./map.js";
-import { TillaCompanion } from "./tilla.js";
+import { TillaCompanion } from "./features/tilla.js";
 
 /** @typedef {import("./app.js").Spot} Spot */ // nur für Editor-Hilfe, keine Laufzeitwirkung
 
