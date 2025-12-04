@@ -15,9 +15,48 @@ import { SUBSCRIPTIONS, ADDONS, CATEGORY_ACCESS } from "../config.js";
 const PARTNERS_URL = "data/partners.json";
 
 // ---------------------------------------
+// Typen (JSDoc – nur für Tooling/Lesbarkeit)
+// ---------------------------------------
+
+/**
+ * @typedef {Object} NormalizedPlusStatus
+ * @property {boolean} active          - Ist Plus aktuell aktiv (unter Berücksichtigung Ablauf)?
+ * @property {string|null} plan        - z. B. "plus" oder "family_plus"
+ * @property {string|null} validUntil  - ISO-String (Ende der Laufzeit)
+ * @property {string[]|null} addons    - optionale Add-ons (IDs, z. B. ["addon_rv"])
+ * @property {string|null} partner     - z. B. "Campingplatz XY"
+ * @property {string|null} source      - z. B. "partner", "store"
+ */
+
+/**
+ * @typedef {Object} PartnerCodeEntry
+ * @property {string} code
+ * @property {number} [days]
+ * @property {string} [plan]
+ * @property {string} [partner]
+ * @property {string} [source]
+ * @property {boolean} [enabled]
+ * @property {string[]} [addons]
+ * @property {string} [addonId]
+ * @property {string} [validUntil]
+ */
+
+/**
+ * @typedef {Object} PartnerCodeResult
+ * @property {boolean} ok
+ * @property {"empty"|"not_found"|"invalid_days"|undefined} [reason]
+ * @property {NormalizedPlusStatus} [status]
+ * @property {PartnerCodeEntry} [entry]
+ */
+
+// ---------------------------------------
 // Plus-Kategorien aus Config ableiten
 // ---------------------------------------
 
+/**
+ * Erzeugt ein Set aller Kategorien, die gemäß CATEGORY_ACCESS Plus/Add-on erfordern.
+ * @returns {Set<string>}
+ */
 function buildPlusCategorySet() {
   const result = new Set();
 
@@ -38,24 +77,67 @@ function buildPlusCategorySet() {
 /**
  * Set aller Kategorien, die nur mit Plus/Add-on sichtbar sein sollen.
  * Basis ist config.js → CATEGORY_ACCESS.
+ * Wird einmalig beim Modul-Load berechnet.
+ * @type {Set<string>}
  */
 const PLUS_CATEGORIES = buildPlusCategorySet();
 
-// Cache für Partnercodes
+/**
+ * Cache für Partnercodes (wird lazy befüllt).
+ * @type {PartnerCodeEntry[]|null}
+ */
 let cachedPartnerCodes = null;
 
 // ---------------------------------------
-// Typ-Hinweis (nur zur Orientierung)
+// Hilfsfunktionen
 // ---------------------------------------
+
 /**
- * @typedef {Object} NormalizedPlusStatus
- * @property {boolean} active          // ist Plus aktuell aktiv (unter Berücksichtigung von Ablaufdatum)?
- * @property {string|null} plan        // z. B. "plus" oder "family_plus"
- * @property {string|null} validUntil  // ISO-String (Ende der Laufzeit)
- * @property {string[]|null} addons    // optionale Add-ons (IDs, z. B. ["addon_rv"])
- * @property {string|null} partner     // z. B. "Campingplatz XY"
- * @property {string|null} source      // z. B. "partner", "store"
+ * Prüft, ob ein Date-Objekt gültig ist.
+ * @param {Date|null} date
+ * @returns {boolean}
  */
+function isValidDate(date) {
+  return !!(date && !Number.isNaN(date.getTime()));
+}
+
+/**
+ * Normalisiert Add-ons aus beliebigen Feldern auf ein String-Array oder null.
+ * @param {any} raw
+ * @param {any} [fallbackRaw]
+ * @returns {string[]|null}
+ */
+function normalizeAddons(raw, fallbackRaw) {
+  let source = raw;
+
+  if (!Array.isArray(source) && fallbackRaw) {
+    source = fallbackRaw;
+  }
+
+  if (Array.isArray(source)) {
+    const list = source
+      .map((v) => (v == null ? "" : String(v).trim()))
+      .filter(Boolean);
+    return list.length ? list : null;
+  }
+
+  if (source) {
+    const single = String(source).trim();
+    return single ? [single] : null;
+  }
+
+  return null;
+}
+
+/**
+ * Prüft, ob ein gespeicherter Status im Wesentlichen "leer" ist.
+ * @param {any} raw
+ * @returns {boolean}
+ */
+function isEmptyStoredStatus(raw) {
+  if (!raw || typeof raw !== "object") return true;
+  return Object.keys(raw).length === 0;
+}
 
 // ---------------------------------------
 // Status-API
@@ -63,8 +145,7 @@ let cachedPartnerCodes = null;
 
 /**
  * Normalisierte Sicht auf den Plus-Status.
- * Nutzt intern den Storage, gibt aber immer
- * ein konsistentes Objekt zurück:
+ * Nutzt intern den Storage, gibt aber immer ein konsistentes Objekt zurück:
  *
  * {
  *   active: boolean,
@@ -78,28 +159,35 @@ let cachedPartnerCodes = null;
  * WICHTIG:
  *  - Berücksichtigt Ablaufdatum (validUntil / expiresAt)
  *  - Wenn abgelaufen → active = false
+ *
+ * @returns {NormalizedPlusStatus}
  */
 export function getPlusStatus() {
   const stored = getPlusStatusFromStorage() || {};
 
+  // Falls überhaupt kein sinnvoller Status vorliegt, standardisieren:
+  if (isEmptyStoredStatus(stored)) {
+    return {
+      active: false,
+      plan: null,
+      validUntil: null,
+      addons: null,
+      partner: null,
+      source: null
+    };
+  }
+
   const validUntilIso = stored.expiresAt || stored.validUntil || null;
   let active = !!stored.active;
 
-  // Add-ons optional unterstützen
-  let addons = null;
-  if (Array.isArray(stored.addons)) {
-    addons = stored.addons.map(String);
-  } else if (stored.addonId) {
-    addons = [String(stored.addonId)];
-  }
+  // Add-ons optional unterstützen (alter + neuer Storage-Stil)
+  const addons = normalizeAddons(stored.addons, stored.addonId);
 
   // Ablauf prüfen – ein abgelaufener Code soll nicht mehr als aktiv gelten
   if (validUntilIso) {
     const d = new Date(validUntilIso);
-    if (!Number.isNaN(d.getTime())) {
-      if (Date.now() > d.getTime()) {
-        active = false;
-      }
+    if (isValidDate(d) && Date.now() > d.getTime()) {
+      active = false;
     }
   }
 
@@ -113,22 +201,13 @@ export function getPlusStatus() {
     source: stored.source || null
   };
 
-  // Falls überhaupt kein sinnvoller Status vorliegt, standardisieren:
-  if (!stored || Object.keys(stored).length === 0) {
-    return {
-      active: false,
-      plan: null,
-      validUntil: null,
-      addons: null,
-      partner: null,
-      source: null
-    };
-  }
-
   return normalized;
 }
 
-/** True, wenn Plus aktuell aktiv ist (inkl. Ablaufprüfung). */
+/**
+ * True, wenn Plus aktuell aktiv ist (inkl. Ablaufprüfung).
+ * @returns {boolean}
+ */
 export function isPlusActive() {
   return getPlusStatus().active;
 }
@@ -136,6 +215,9 @@ export function isPlusActive() {
 /**
  * True, wenn die Kategorie in eine Plus-/Add-on-Kategorie fällt.
  * Basis: CATEGORY_ACCESS in config.js
+ *
+ * @param {string} slug
+ * @returns {boolean}
  */
 export function isPlusCategory(slug) {
   if (!slug) return false;
@@ -145,6 +227,9 @@ export function isPlusCategory(slug) {
 /**
  * Formatiert den Status als Text für die UI.
  * Nutzt i18n-Fallbacks.
+ *
+ * @param {NormalizedPlusStatus} [status]
+ * @returns {string}
  */
 export function formatPlusStatus(status = getPlusStatus()) {
   if (!status) {
@@ -156,11 +241,11 @@ export function formatPlusStatus(status = getPlusStatus()) {
 
   const untilIso = status.validUntil;
   const until = untilIso ? new Date(untilIso) : null;
-  const hasValidDate = until && !Number.isNaN(until.getTime());
+  const hasValidDate = isValidDate(until);
 
   // Inaktiv (nie aktiviert oder abgelaufen)
   if (!status.active) {
-    if (hasValidDate) {
+    if (hasValidDate && until) {
       const dateStr = until.toLocaleDateString(undefined, {
         year: "numeric",
         month: "2-digit",
@@ -214,13 +299,16 @@ export function formatPlusStatus(status = getPlusStatus()) {
  *       "partner": "Dev",
  *       "source": "partner",
  *       "addons": ["addon_rv", "addon_water"], // optional
- *       "validUntil": "2026-12-31T23:59:59.000Z" // optional
+ *       "validUntil": "2026-12-31T23:59:59.000Z", // optional
+ *       "enabled": true                           // optional
  *     }
  *   ]
  * }
  *
  * Alternativ:
  *  - direkt ein Array von Einträgen.
+ *
+ * @returns {Promise<PartnerCodeEntry[]>}
  */
 async function loadPartnerCodes() {
   if (cachedPartnerCodes) return cachedPartnerCodes;
@@ -261,6 +349,9 @@ async function loadPartnerCodes() {
  *  - "empty"        → kein Code eingegeben
  *  - "not_found"    → Code unbekannt oder deaktiviert
  *  - "invalid_days" → Weder gültiges validUntil noch gültige days
+ *
+ * @param {string} rawCode
+ * @returns {Promise<PartnerCodeResult>}
  */
 export async function redeemPartnerCode(rawCode) {
   const code = (rawCode || "").trim().toUpperCase();
@@ -284,11 +375,12 @@ export async function redeemPartnerCode(rawCode) {
   }
 
   // Ablaufdatum: entweder über days oder direkt über validUntil
+  /** @type {Date|null} */
   let validUntilDate = null;
 
   if (entry.validUntil) {
     const d = new Date(entry.validUntil);
-    if (!Number.isNaN(d.getTime())) {
+    if (isValidDate(d)) {
       validUntilDate = d;
     }
   }
@@ -316,14 +408,14 @@ export async function redeemPartnerCode(rawCode) {
   };
 
   // optionale Add-ons aus dem Code übernehmen
-  if (Array.isArray(entry.addons)) {
-    statusForStorage.addons = entry.addons.map(String);
-  } else if (entry.addonId) {
-    statusForStorage.addons = [String(entry.addonId)];
+  const normalizedAddons = normalizeAddons(entry.addons, entry.addonId);
+  if (normalizedAddons) {
+    statusForStorage.addons = normalizedAddons;
   }
 
   // (Optional) Hier könnten wir zukünftig noch prüfen,
   // ob plan/addons zu SUBSCRIPTIONS/ADDONS passen.
+  // Aktuell werden alle gültigen Codes akzeptiert, egal ob Config-Eintrag existiert.
   void SUBSCRIPTIONS;
   void ADDONS;
 
