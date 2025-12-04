@@ -20,10 +20,11 @@ export const SPOTS_CACHE_KEY = "fs_spots_cache_v1";
 // Sprachen & Theme
 // ------------------------------------------------------
 
-/** @typedef {"de" | "en"} LangCode */
+/** @typedef {"de" | "en" | "da"} LangCode */
 
 export const LANG_DE = "de";
 export const LANG_EN = "en";
+export const LANG_DA = "da";
 
 export const THEME_LIGHT = "light";
 export const THEME_DARK = "dark";
@@ -168,6 +169,18 @@ export const CATEGORY_GROUP_LABELS = {
     "Praktisches": "Useful on the way",
     "Unterwegs mit WoMo & Rad": "On the road (RV & bike)",
     "Entspannung & Naturorte": "Relax & nature"
+  },
+  da: {
+    "Spiel & Bewegung": "Leg & bevægelse",
+    "Tiere & Natur": "Dyr & natur",
+    "Wasser & Schwimmen": "Vand & badning",
+    "Erlebnis & Freizeit": "Oplevelser & fritid",
+    "Wandern & Radfahren": "Vandring & cykling",
+    "Essen & Trinken": "Mad & drikke",
+    "Lernen & Kultur": "Læring & kultur",
+    "Praktisches": "Praktisk på tur",
+    "Unterwegs mit WoMo & Rad": "På farten (autocamper & cykel)",
+    "Entspannung & Naturorte": "Afslapning & natursteder"
   }
 };
 
@@ -307,6 +320,74 @@ export const CATEGORY_LABELS_EN = {
   "campingplatz-familien": "Family campground",
   "park-garten": "Park / garden",
   picknickwiese: "Picnic meadow"
+};
+
+export const CATEGORY_LABELS_DA = {
+  spielplatz: "Legeplads",
+  abenteuerspielplatz: "Eventyrlegeplads",
+  "indoor-spielplatz": "Indendørs legeplads",
+  waldspielplatz: "Skovlegeplads",
+  wasserspielplatz: "Vandlegeplads",
+  "barrierefreier-spielplatz": "Tilgængelig legeplads",
+  bewegungspark: "Bevægelsespark",
+  multifunktionsfeld: "Multibane",
+  bolzplatz: "Boldbane",
+  pumptrack: "Pumptrack",
+  skatepark: "Skatepark",
+  verkehrsgarten: "Trafiklegeplads",
+  "toddler-barfuss-motorik": "Tumling / barfod / motorik",
+  zoo: "Zoo",
+  tierpark: "Dyrepark",
+  wildpark: "Dyrepark & safari",
+  bauernhof: "Gård",
+  naturerlebnispfad: "Natursti",
+  walderlebnisroute: "Skovoplevelsesrute",
+  freilichtmuseum: "Frilandsmuseum",
+  schwimmbad: "Svømmebad",
+  badesee: "Badesø",
+  strand: "Familiestrand",
+  eisbahn: "Skøjtebane",
+  rodelhuegel: "Kælkebakke",
+  freizeitpark: "Forlystelsespark",
+
+  hoehle: "Hule / klippevandring",
+  felsenwanderung: "Klippevandring",
+  aussichtspunkt: "Udsigtspunkt / panorama",
+  baumhaus: "Træhus / udsigtshytte",
+  labyrinth: "Labyrint / vildnis",
+  klangpfad: "Natur-lydsti",
+  "ueberdachter-spielplatz": "Overdækket legeplads",
+  "dirtbike-track": "Dirtbike / ungdomsbane",
+  "streetball-platz": "Streetball / basketballbane",
+  "waldbaden-ort": "Skovbadning / roligt naturspot",
+  "natur-aussichtspunkt": "Naturligt udsigtspunkt",
+
+  trampolinpark: "Trampolinpark",
+  kletterhalle: "Klatrehal",
+  "kletteranlage-outdoor": "Udendørs klatreanlæg",
+  "kletterwald-hochseilgarten": "Klatreskov / højdebane",
+  boulderpark: "Boulderpark",
+  minigolf: "Minigolf",
+  "wanderweg-kinderwagen": "Vandrerute (barnevognsvenlig)",
+  "radweg-family": "Familievenlig cykelrute",
+  familiencafe: "Familiecafé",
+  "kinder-familiencafe": "Børne- & familiecafé",
+  "familien-restaurant": "Familierestaurant",
+  "museum-kinder": "Museum (børn)",
+  "kinder-museum": "Børnemuseum",
+  kinder_museum: "Børnemuseum",
+  bibliothek: "Børne- & familiebibliotek",
+  "oeffentliche-toilette": "Offentligt toilet",
+  wickelraum: "Puslerum",
+  "familien-event": "Familieevent",
+  "stellplatz-spielplatz-naehe-kostenlos":
+    "Gratis autocamperplads (tæt på legeplads)",
+  "wohnmobil-service-station": "Autocamper serviceplads",
+  "rastplatz-spielplatz-dusche": "Rasteplads (legeplads & bruser)",
+  "bikepacking-spot": "Bikepacking-spot",
+  "campingplatz-familien": "Familievenlig campingplads",
+  "park-garten": "Park / have",
+  picknickwiese: "Picniceng"
 };
 
 // ------------------------------------------------------
@@ -693,7 +774,8 @@ export const FILTERS = [
     tags: ["indoor", "bad-weather"],
     label: {
       de: "Schlechtwetter",
-      en: "Bad weather"
+      en: "Bad weather",
+      da: "Dårligt vejr"
     }
   },
   {
@@ -701,7 +783,8 @@ export const FILTERS = [
     tags: ["toddler-friendly", "younger-kids", "sensory", "barefoot"],
     label: {
       de: "Kleinkinder",
-      en: "Toddlers"
+      en: "Toddlers",
+      da: "Små børn"
     }
   },
   {
@@ -709,7 +792,8 @@ export const FILTERS = [
     tags: ["older-kids", "teen-friendly", "skate", "pumptrack", "climbing", "bouldering"],
     label: {
       de: "Größere Kinder & Teens",
-      en: "Older kids & teens"
+      en: "Older kids & teens",
+      da: "Større børn & teens"
     }
   },
   {
@@ -717,7 +801,8 @@ export const FILTERS = [
     tags: ["accessible", "wheelchair"],
     label: {
       de: "Barrierefrei",
-      en: "Accessible"
+      en: "Accessible",
+      da: "Tilgængelig"
     }
   },
   {
@@ -725,7 +810,8 @@ export const FILTERS = [
     tags: ["stroller-friendly"],
     label: {
       de: "Kinderwagen-tauglich",
-      en: "Stroller-friendly"
+      en: "Stroller-friendly",
+      da: "Barnevognsvenlig"
     }
   },
   {
@@ -733,7 +819,8 @@ export const FILTERS = [
     tags: ["animals", "zoo", "wildlife", "petting-zoo", "farm"],
     label: {
       de: "Tiere",
-      en: "Animals"
+      en: "Animals",
+      da: "Dyr"
     }
   },
   {
@@ -741,7 +828,8 @@ export const FILTERS = [
     tags: ["water", "swimming", "lake", "beach"],
     label: {
       de: "Wasser & Baden",
-      en: "Water & swimming"
+      en: "Water & swimming",
+      da: "Vand & badning"
     }
   },
   {
@@ -749,7 +837,8 @@ export const FILTERS = [
     tags: ["winter", "snow", "ice-skating", "sledding"],
     label: {
       de: "Winter & Schnee",
-      en: "Winter & snow"
+      en: "Winter & snow",
+      da: "Vinter & sne"
     }
   },
   {
@@ -757,7 +846,8 @@ export const FILTERS = [
     tags: ["rv", "rest-area", "dump-station", "service", "travel"],
     label: {
       de: "WoMo & Vanlife",
-      en: "RV & vanlife"
+      en: "RV & vanlife",
+      da: "Autocamper & vanlife"
     }
   },
   {
@@ -765,7 +855,8 @@ export const FILTERS = [
     tags: ["camping", "bikepacking", "overnight"],
     label: {
       de: "Mit Übernachtung",
-      en: "With overnight stay"
+      en: "With overnight stay",
+      da: "Med overnatning"
     }
   },
   {
@@ -773,7 +864,8 @@ export const FILTERS = [
     tags: ["full-day", "theme-park"],
     label: {
       de: "Ganztages-Ausflug",
-      en: "Full-day trip"
+      en: "Full-day trip",
+      da: "Heldagstur"
     }
   },
   {
@@ -781,7 +873,8 @@ export const FILTERS = [
     tags: ["free"],
     label: {
       de: "Günstig / kostenlos",
-      en: "Low budget / free"
+      en: "Low budget / free",
+      da: "Billigt / gratis"
     }
   }
 ];
@@ -792,7 +885,8 @@ export const FILTERS = [
 
 export const HEADER_TAGLINE_TEXT = {
   de: "Heute ist Zeit für Familie.",
-  en: "Make today a family day."
+  en: "Make today a family day.",
+  da: "I dag er der tid til familien."
 };
 
 // Onboarding-Hint (Kompass / Plus / Mein Tag)
@@ -814,36 +908,42 @@ export const SUBSCRIPTIONS = Object.freeze({
     currency: "EUR",
     label: {
       de: "Family Spots Plus",
-      en: "Family Spots Plus"
+      en: "Family Spots Plus",
+      da: "Family Spots Plus"
     },
     shortLabel: {
       de: "Plus",
-      en: "Plus"
+      en: "Plus",
+      da: "Plus"
     },
     description: {
       de: "Schaltet zusätzliche Spots, Kategorien und Komfort-Funktionen für Familien frei.",
-      en: "Unlocks additional spots, categories and comfort features for families."
+      en: "Unlocks additional spots, categories and comfort features for families.",
+      da: "Låser op for ekstra spots, kategorier og komfortfunktioner for familier."
     },
     benefits: [
       {
         id: "more_spots",
         label: {
           de: "Mehr sorgfältig kuratierte Spots & Regionen",
-          en: "More carefully curated spots & regions"
+          en: "More carefully curated spots & regions",
+          da: "Flere nøje udvalgte spots og regioner"
         }
       },
       {
         id: "special_categories",
         label: {
           de: "Spezielle Kategorien wie WoMo-Spots, Bikepacking & Routen",
-          en: "Special categories such as RV spots, bikepacking & routes"
+          en: "Special categories such as RV spots, bikepacking & routes",
+          da: "Særlige kategorier som autocamper-spots, bikepacking & ruter"
         }
       },
       {
         id: "support_project",
         label: {
           de: "Unterstützt die Weiterentwicklung von Family Spots Map",
-          en: "Supports the ongoing development of Family Spots Map"
+          en: "Supports the ongoing development of Family Spots Map",
+          da: "Støtter den fortsatte udvikling af Family Spots Map"
         }
       }
     ]
@@ -862,11 +962,13 @@ export const ADDONS = Object.freeze({
     currency: "EUR",
     label: {
       de: "Wasser & Baden Add-on",
-      en: "Water & swimming add-on"
+      en: "Water & swimming add-on",
+      da: "Vand & badning-add-on"
     },
     description: {
       de: "Besondere Wasser-Spots, Badeseen & familienfreundliche Badeplätze.",
-      en: "Special water spots, swimming lakes and family-friendly bathing places."
+      en: "Special water spots, swimming lakes and family-friendly bathing places.",
+      da: "Særlige vand-spots, badesøer og familievenlige badesteder."
     },
     categories: [
       "badesee",
@@ -884,11 +986,13 @@ export const ADDONS = Object.freeze({
     currency: "EUR",
     label: {
       de: "WoMo & Vanlife Add-on",
-      en: "RV & vanlife add-on"
+      en: "RV & vanlife add-on",
+      da: "Autocamper & vanlife-add-on"
     },
     description: {
       de: "Extra-Spots für Reisen mit Wohnmobil, Camper & Rad.",
-      en: "Extra spots for travelling with RV, camper and bike."
+      en: "Extra spots for travelling with RV, camper and bike.",
+      da: "Ekstra spots til rejser med autocamper, campervan og cykel."
     },
     categories: [
       "stellplatz-spielplatz-naehe-kostenlos",
