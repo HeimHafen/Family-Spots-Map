@@ -32,9 +32,14 @@ const messagesByLang = {
 };
 
 /**
- * Spielideen-Struktur:
- * [{ de: "…", en: "…", da?: "…" }, …]
- * @type {Array<Record<LangCode, string>>}
+ * Spielideen-Struktur (aus data/play-ideas.json):
+ * [
+ *   { id: string, texts: { de?: string, en?: string, da?: string }, ... },
+ *   ...
+ * ]
+ * Wir unterstützen sowohl dieses Schema mit `texts` als auch
+ * ein älteres flaches Schema ({ de, en, da }).
+ * @type {Array<any>}
  */
 let playIdeas = [];
 
@@ -160,7 +165,8 @@ async function loadMessagesForLang(lang) {
 
 /**
  * Lädt Spielideen aus data/play-ideas.json.
- * Struktur: [{ de: "…", en: "…", da?: "…" }, …]
+ * Struktur (aktuell):
+ * [{ id, texts: { de, en, da }, ... }, …]
  */
 async function loadPlayIdeas() {
   if (playIdeas.length) return;
@@ -176,7 +182,7 @@ async function loadPlayIdeas() {
 
     const json = await res.json();
     if (Array.isArray(json)) {
-      playIdeas = /** @type {Array<Record<LangCode, string>>} */ (json);
+      playIdeas = json;
     } else {
       console.warn("[i18n] play-ideas.json ist kein Array.");
       playIdeas = [];
@@ -282,14 +288,33 @@ function applyTranslations(root = document) {
 
 /**
  * Liefert eine zufällige Spielidee in der aktuellen Sprache.
+ * Unterstützt sowohl:
+ *   { texts: { de, en, da } }
+ * als auch das ältere Schema:
+ *   { de, en, da }
  * @returns {string}
  */
 function getRandomPlayIdea() {
   if (!playIdeas.length) return "";
+
   const idx = Math.floor(Math.random() * playIdeas.length);
   const idea = playIdeas[idx];
   if (!idea || typeof idea !== "object") return "";
-  return idea[currentLang] || idea.de || idea.en || "";
+
+  // Neues Schema: idea.texts.{de,en,da}
+  const texts =
+    (idea.texts && typeof idea.texts === "object" ? idea.texts : null) || idea;
+
+  /** @type {Array<LangCode>} */
+  const langOrder = [currentLang, "de", "en", "da"];
+
+  for (const code of langOrder) {
+    if (texts[code]) {
+      return texts[code];
+    }
+  }
+
+  return "";
 }
 
 /* --------------------------------------
