@@ -22,6 +22,10 @@ import {
  * Schreibt gültige Werte zurück auf den Spot, damit nachfolgende
  * Aufrufe von Leaflet immer konsistente Zahlen vorfinden.
  *
+ * Unterstützt zusätzlich Fallbacks:
+ *  - latitude / longitude
+ *  - lon (als Alternative für lng)
+ *
  * @param {Spot | null | undefined} spot
  * @returns {boolean} true, wenn lat/lng gültig sind
  */
@@ -29,6 +33,17 @@ export function hasValidLatLng(spot) {
   if (!spot) return false;
 
   let { lat, lng } = spot;
+
+  // Fallbacks auf alternative Feldnamen (defensiv, für ältere Datenstände)
+  if (lat == null && typeof spot.latitude !== "undefined") {
+    lat = spot.latitude;
+  }
+  if (lng == null && typeof spot.longitude !== "undefined") {
+    lng = spot.longitude;
+  }
+  if (lng == null && typeof spot.lon !== "undefined") {
+    lng = spot.lon;
+  }
 
   if (typeof lat === "string") lat = parseFloat(lat);
   if (typeof lng === "string") lng = parseFloat(lng);
