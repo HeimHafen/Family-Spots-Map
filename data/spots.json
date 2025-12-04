@@ -24,7 +24,8 @@
         "Wohnmobil"
       ],
       "summary_de": "Kostenloser Wohnmobil-Stellplatz in Vejlby Klit mit Toiletten, Müllcontainern, Picknicktisch und nur etwa 50 m bis zum Strand. Zwei Spielplätze sind fußläufig erreichbar (ca. 10–15 Minuten).",
-      "summary_en": "Free motorhome parking in Vejlby Klit with toilets, waste containers, picnic table and only about 50 m to the beach. Two playgrounds are within walking distance (around 10–15 minutes)."
+      "summary_en": "Free motorhome parking in Vejlby Klit with toilets, waste containers, picnic table and only about 50 m to the beach. Two playgrounds are within walking distance (around 10–15 minutes).",
+      "summary_da": "Gratis autocamperplads i Vejlby Klit med toiletter, affaldscontainere og picnicbord – og kun ca. 50 m til stranden. To legepladser kan nås til fods (ca. 10–15 minutter)."
     },
     {
       "id": "vejby_klit_playground_neerlandiavej",
@@ -47,7 +48,8 @@
         "familienfreundlich"
       ],
       "summary_de": "Kleiner Quartiers-Spielplatz in Vejlby Klit, von Ferienhäusern umgeben und zu Fuß vom Stellplatz erreichbar (ca. 10–15 Minuten). Ideal für eine kurze Runde toben nach Strand oder Abendessen.",
-      "summary_en": "Small neighbourhood playground in Vejlby Klit, surrounded by holiday homes and within a 10–15 minute walk from the RV spot. Good for a quick play stop after the beach or dinner."
+      "summary_en": "Small neighbourhood playground in Vejlby Klit, surrounded by holiday homes and within a 10–15 minute walk from the RV spot. Good for a quick play stop after the beach or dinner.",
+      "summary_da": "Lille kvarterslegeplads i Vejlby Klit, omgivet af sommerhuse og i gåafstand fra autocamperpladsen (ca. 10–15 minutter). Ideel til en kort legepause efter strandtur eller aftensmad."
     },
     {
       "id": "vejby_klit_playground_barendsvej",
@@ -70,7 +72,8 @@
         "familienfreundlich"
       ],
       "summary_de": "Spielplatz in einer ruhigen Ferienhaussiedlung von Vejlby Klit – zu Fuß vom Stellplatz erreichbar und gut für eine kleine Spielrunde zwischendurch.",
-      "summary_en": "Playground in a quiet holiday home area of Vejlby Klit – within walking distance from the RV spot and ideal for a short play break."
+      "summary_en": "Playground in a quiet holiday home area of Vejlby Klit – within walking distance from the RV spot and ideal for a short play break.",
+      "summary_da": "Legeplads i et roligt sommerhusområde i Vejlby Klit – i gåafstand fra autocamperpladsen og god til en lille legetur ind imellem."
     },
     {
       "id": "bovbjerg_fyr_aussichtspunkt",
@@ -94,7 +97,8 @@
         "Picknick"
       ],
       "summary_de": "Bovbjerg Fyr ist ein markanter, roter Leuchtturm hoch oben auf der Steilküste westlich von Lemvig. Von hier schaut ihr weit über die Nordsee, die vorgelagerte Strandlinie und das hügelige Hinterland. Rund um den Turm gibt es Wiesen zum Sitzen oder Picknicken, kleine Wege führen an der Kante entlang, und bei klarer Sicht wirkt der Horizont fast endlos. Über Treppen gelangt ihr hinunter zum Naturstrand – perfekt für eine kurze Erkundungstour am Wasser (für Kinderwagen und sehr kleine Kinder ist der Abstieg eher nichts). Ob als Stop auf der Wohnmobiltour oder als kleines Ausflugsziel vom Ferienhaus aus: Der Spot fühlt sich wie ein echter „Nordsee-Postkartenmoment“ an.",
-      "summary_en": "Bovbjerg Fyr is a striking red lighthouse perched on the cliffs west of Lemvig. From up here you have wide views over the North Sea, the long natural beach below and the rolling landscape behind you. Meadows around the lighthouse invite you to sit down or have a picnic, and small paths run along the edge of the cliffs. Stairways lead down to the natural beach – great for a short walk by the water (not ideal for strollers or very small children). Whether you come by motorhome or from a nearby holiday home, this spot feels like a real North Sea postcard moment."
+      "summary_en": "Bovbjerg Fyr is a striking red lighthouse perched on the cliffs west of Lemvig. From up here you have wide views over the North Sea, the long natural beach below and the rolling landscape behind you. Meadows around the lighthouse invite you to sit down or have a picnic, and small paths run along the edge of the cliffs. Stairways lead down to the natural beach – great for a short walk by the water (not ideal for strollers or very small children). Whether you come by motorhome or from a nearby holiday home, this spot feels like a real North Sea postcard moment.",
+      "summary_da": "Bovbjerg Fyr er et markant rødt fyrtårn højt oppe på klinten vest for Lemvig. Herfra har I vid udsigt over Nordsøen, den lange naturstrand nedenfor og det bakkede landskab bag jer. Rundt om tårnet ligger græsarealer til at sidde på eller holde picnic, og små stier følger kanten af klinten. Trapper fører ned til naturstranden – perfekt til en kort tur ved vandet (ikke så velegnet til klapvogne og helt små børn). Uanset om I kommer i autocamper eller fra et sommerhus i nærheden, føles stedet som et ægte “Nordsø-postkortøjeblik”."
     },
 
     {
@@ -116,16 +120,22 @@
       ],
       "summary_de": "Giraffen über der Windschutzscheibe – Safari im Norden.",
       "summary_en": "Serengeti-Park Hodenhagen is a family-friendly wildlife park in Hodenhagen with drive-through safari and large outdoor enclosures for a full day out.",
+      "summary_da": "Giraffer over forruden – safari i Norden.",
       "visit_label_de": "Plant einen ganzen Tag mit Auto ein: Autosafari, zu Fuß durch den Park und je nach Kindern ein Abstecher in den Freizeitbereich.",
       "visit_label_en": "Plan a full day with a car: drive-through safari, walking areas and, if you like, some rides.",
+      "visit_label_da": "Sæt en hel dag af med bil: bilsafari, gåture gennem parken og alt efter børnene et smut i forlystelsesområdet.",
       "suitability_de": "Ideal für tierbegeisterte Kindergarten- und Schulkinder, Teens und Erwachsene. Mit Babys funktioniert es im eigenen Tempo – am besten mit genug Pausen.",
       "suitability_en": "Great for animal-loving preschoolers, school kids, teens and adults. Works with babies if you take it slow and plan enough breaks.",
+      "suitability_da": "Ideel til dyreglade børnehave- og skolebørn, teenagere og voksne. Med babyer fungerer det i eget tempo – bedst med godt med pauser.",
       "season_de": "Saison von Frühling bis Herbst; Ferien und Wochenenden sind sehr voll, unter der Woche meist entspannter.",
       "season_en": "Best from spring to autumn; school holidays and weekends are busy, weekdays are more relaxed.",
+      "season_da": "Sæson fra forår til efterår; ferier og weekender er meget travle, hverdage er som regel mere rolige.",
       "infrastructure_de": "Große Parkplätze, sanitäre Anlagen, mehrere Spielplätze, Gastronomie und Picknickmöglichkeiten. Kinderwagen sind möglich, die Wege sind aber lang.",
       "infrastructure_en": "Large parking areas, toilets, several playgrounds, food options and picnic spots. Strollers are possible but distances are long.",
+      "infrastructure_da": "Store parkeringspladser, toiletter, flere legepladser, spisesteder og picnicområder. Barne- og klapvogne er mulige, men afstandene er lange.",
       "why_we_like_de": "Weil sich der Moment, wenn Giraffen am Auto vorbeiziehen, wie ein kleiner Afrika-Tag im Norden anfühlt – ohne Flug und mit viel Familienzeit.",
-      "why_we_like_en": "Because giraffes passing by the car feel like a tiny African day in northern Germany – no plane needed, just time together as a family."
+      "why_we_like_en": "Because giraffes passing by the car feel like a tiny African day in northern Germany – no plane needed, just time together as a family.",
+      "why_we_like_da": "Fordi øjeblikket, når girafferne går forbi bilen, føles som en lille Afrikadag i Nordtyskland – uden fly og med masser af tid sammen som familie."
     },
     {
       "id": "wildpark_poing",
@@ -145,7 +155,8 @@
         "großer Spielplatz"
       ],
       "summary_de": "Hirschtritt im Moos, Kinderlachen im Holz.",
-      "summary_en": "Wildpark Poing is a family-friendly wildlife park in Poing with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "Wildpark Poing is a family-friendly wildlife park in Poing with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Hjorteskridt i mosset, børnelatter i træerne."
     },
     {
       "id": "schwarze_berge",
@@ -165,7 +176,8 @@
         "Aussichtsturm"
       ],
       "summary_de": "Heidewind und Habichtschatten – Wege klettern in die Kronen.",
-      "summary_en": "Wildpark Schwarze Berge is a family-friendly wildlife park in Rosengarten (Harburg) with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "Wildpark Schwarze Berge is a family-friendly wildlife park in Rosengarten (Harburg) with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Heatherblæst og høgeskygger – stierne kravler op i trækronerne."
     },
     {
       "id": "wisentgehege_springe",
@@ -185,7 +197,8 @@
         "weite Rundwege"
       ],
       "summary_de": "Schwere Schritte, leichte Herzen – Urkraft im Grünen.",
-      "summary_en": "Wisentgehege Springe is a family-friendly wildlife park in Springe with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "Wisentgehege Springe is a family-friendly wildlife park in Springe with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Tunge skridt, lette hjerter – urkraft midt i det grønne."
     },
     {
       "id": "wildpark_eekholt",
@@ -205,7 +218,8 @@
         "Naturlehrpfade"
       ],
       "summary_de": "Zwischen Knicks und Bächen flüstert der Norden Geschichten.",
-      "summary_en": "Wildpark Eekholt is a family-friendly wildlife park in Großenaspe with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "Wildpark Eekholt is a family-friendly wildlife park in Großenaspe with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Mellem levende hegn og bække hvisker Norden historier."
     },
     {
       "id": "wildpark_reuschenberg",
@@ -225,7 +239,8 @@
         "Spielbereiche"
       ],
       "summary_de": "Sanfte Pfoten, kurze Beine – ein Park für ruhige Wunder.",
-      "summary_en": "Wildpark Reuschenberg is a family-friendly wildlife park in Leverkusen with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "Wildpark Reuschenberg is a family-friendly wildlife park in Leverkusen with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Bløde poter, korte ben – en park for stille små mirakler."
     },
     {
       "id": "givskud_zoo",
@@ -245,7 +260,8 @@
         "Großtiere"
       ],
       "summary_de": "Der Weg ist Wildnis – Löwenbrüllen im Rückspiegel.",
-      "summary_en": "GIVSKUD ZOO – ZOOTOPIA (Safari) is a family-friendly wildlife park in Givskud with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "GIVSKUD ZOO – ZOOTOPIA (Safari) is a family-friendly wildlife park in Givskud with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Vejen er vildmark – løvebrøl i bakspejlet."
     },
     {
       "id": "ree_park_safari",
@@ -265,7 +281,8 @@
         "Afrika & Amerika Areale"
       ],
       "summary_de": "Savannengras im Wind – der Zug summt durch Geschichten.",
-      "summary_en": "Ree Park Safari (Ebeltoft) is a family-friendly wildlife park in Ebeltoft with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "Ree Park Safari (Ebeltoft) is a family-friendly wildlife park in Ebeltoft with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Savannegræs i vinden – toget summer gennem fortællinger."
     },
     {
       "id": "knuthenborg_safari",
@@ -285,7 +302,8 @@
         "Auto- & Bus-Safari"
       ],
       "summary_de": "Breite Alleen, lange Hälse – Urlaub im eigenen Tempo.",
-      "summary_en": "Knuthenborg Safaripark is a family-friendly wildlife park in Maribo/Lolland with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "Knuthenborg Safaripark is a family-friendly wildlife park in Maribo/Lolland with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Brede alléer, lange halser – ferie i eget tempo."
     },
     {
       "id": "skandinavisk_dyrepark",
@@ -305,7 +323,8 @@
         "nordische Tierwelt"
       ],
       "summary_de": "Weites Gras, weiße Pfoten – der Norden atmet weit.",
-      "summary_en": "Skandinavisk Dyrepark is a family-friendly wildlife park in Kolind/Djursland with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "Skandinavisk Dyrepark is a family-friendly wildlife park in Kolind/Djursland with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Vidstrakt græs, hvide poter – Norden trækker vejret dybt."
     },
     {
       "id": "jaegersborg_dyrehave",
@@ -325,7 +344,8 @@
         "UNESCO-Kulturlandschaft"
       ],
       "summary_de": "Alte Eichen, rote Hirsche – Kopenhagen hört das Blätterrauschen.",
-      "summary_en": "Dyrehaven (Jægersborg Deer Park) is a family-friendly wildlife park in Klampenborg with animals in natural enclosures and plenty of space for a day out."
+      "summary_en": "Dyrehaven (Jægersborg Deer Park) is a family-friendly wildlife park in Klampenborg with animals in natural enclosures and plenty of space for a day out.",
+      "summary_da": "Gamle egetræer, røde hjorte – København lytter til bladenes susen."
     },
     {
       "id": "zoo_berlin",
@@ -346,7 +366,8 @@
         "zentrale Lage"
       ],
       "summary_de": "Zwischen Gedächtniskirche und Giraffen wächst Großstadt-Zauber mit Pfotentritt.",
-      "summary_en": "Zoologischer Garten Berlin is a large zoo in Berlin with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Zoologischer Garten Berlin is a large zoo in Berlin with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Mellem Gedächtniskirche og giraffer vokser storbyens magi med poter i spil."
     },
     {
       "id": "tierpark_berlin",
@@ -367,7 +388,8 @@
         "Schloss Friedrichsfelde"
       ],
       "summary_de": "Weite Wiesen, leise Wege – die Stadt bleibt draußen, Abenteuer drin.",
-      "summary_en": "Tierpark Berlin is a large zoo in Berlin with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Tierpark Berlin is a large zoo in Berlin with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Vide enge, stille stier – byen bliver udenfor, eventyret er indenfor."
     },
     {
       "id": "hagenbeck_hamburg",
@@ -387,7 +409,8 @@
         "historische Freianlagen"
       ],
       "summary_de": "Nordwind trifft Tropenluft – Seelöwen singen am Hanse-Horizont.",
-      "summary_en": "Tierpark Hagenbeck is a large zoo in Hamburg with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Tierpark Hagenbeck is a large zoo in Hamburg with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Nordenvind møder tropevarme – søløver synger ved den hanseatiske horisont."
     },
     {
       "id": "wilhelma_stuttgart",
@@ -407,7 +430,8 @@
         "maurische Architektur"
       ],
       "summary_de": "Zwischen Palmen und Pavillons tanzt der Tag in zwei Welten.",
-      "summary_en": "Wilhelma – Zoologisch-Botanischer Garten is a large zoo in Stuttgart with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Wilhelma – Zoologisch-Botanischer Garten is a large zoo in Stuttgart with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Mellem palmer og pavilloner danser dagen i to verdener."
     },
     {
       "id": "zoo_leipzig",
@@ -427,7 +451,8 @@
         "Themenwelten"
       ],
       "summary_de": "Ein Schritt, drei Kontinente – Wärme, Dschungel, Wunder.",
-      "summary_en": "Zoo Leipzig (Gondwanaland) is a large zoo in Leipzig with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Zoo Leipzig (Gondwanaland) is a large zoo in Leipzig with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Ét skridt, tre kontinenter – varme, jungle, vidundere."
     },
     {
       "id": "zoo_koeln",
@@ -447,7 +472,8 @@
         "Hippodom"
       ],
       "summary_de": "Zwischen Dom und Rhein dreht das Lachen seine Runden.",
-      "summary_en": "Kölner Zoo is a large zoo in Köln with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Kölner Zoo is a large zoo in Köln with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Mellem domkirken og Rhinen tager latteren sine runder."
     },
     {
       "id": "zoo_frankfurt",
@@ -467,7 +493,8 @@
         "zentral"
       ],
       "summary_de": "Wenn die Stadt glitzert, erwacht die Nacht im Tierreich.",
-      "summary_en": "Zoo Frankfurt is a large zoo in Frankfurt am Main with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Zoo Frankfurt is a large zoo in Frankfurt am Main with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Når byen glitrer, vågner natten i dyreriget."
     },
     {
       "id": "erlebnis_zoo_hannover",
@@ -487,7 +514,8 @@
         "Bootsfahrt Sambesi"
       ],
       "summary_de": "Vom Sambesi bis Yukon: Ein Tag reist weiter als die Uhr.",
-      "summary_en": "Erlebnis-Zoo Hannover is a large zoo in Hannover with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Erlebnis-Zoo Hannover is a large zoo in Hannover with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Fra Sambesi til Yukon: Én dag rejser længere end uret."
     },
     {
       "id": "zoom_gelsenkirchen",
@@ -507,7 +535,8 @@
         "familienfreundlich"
       ],
       "summary_de": "Drei Welten, ein Spaziergang – mit Eisbärblick und Savannenduft.",
-      "summary_en": "ZOOM Erlebniswelt is a large zoo in Gelsenkirchen with many species, themed areas and enough to explore for several hours."
+      "summary_en": "ZOOM Erlebniswelt is a large zoo in Gelsenkirchen with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Tre verdener, én gåtur – med isbjørneblik og savanneluft."
     },
     {
       "id": "zoo_rostock",
@@ -527,7 +556,8 @@
         "Polarium"
       ],
       "summary_de": "Vom Urknall zum Eisbär – Wissen leuchtet, Kinder staunen.",
-      "summary_en": "Zoo Rostock (Darwineum/Polarium) is a large zoo in Rostock with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Zoo Rostock (Darwineum/Polarium) is a large zoo in Rostock with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Fra Big Bang til isbjørn – viden lyser, børn undrer sig."
     },
     {
       "id": "copenhagen_zoo",
@@ -548,7 +578,8 @@
         "Aussichtsturm"
       ],
       "summary_de": "Zwischen Backstein und Birken steht der Norden Auge in Auge.",
-      "summary_en": "København Zoo is a large zoo in København/Frederiksberg with many species, themed areas and enough to explore for several hours."
+      "summary_en": "København Zoo is a large zoo in København/Frederiksberg with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Mellem mursten og birk står Norden ansigt til ansigt."
     },
     {
       "id": "odense_zoo",
@@ -568,7 +599,8 @@
         "Themenwelten"
       ],
       "summary_de": "Am Wasser entlang – ein Bogen voller Begegnungen.",
-      "summary_en": "Odense Zoo is a large zoo in Odense with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Odense Zoo is a large zoo in Odense with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Langs vandet – en bue fuld af møder."
     },
     {
       "id": "aalborg_zoo",
@@ -588,7 +620,8 @@
         "zentrale Lage"
       ],
       "summary_de": "Nordlicht im Blick, neugierige Nasen an der Scheibe.",
-      "summary_en": "Aalborg Zoo is a large zoo in Aalborg with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Aalborg Zoo is a large zoo in Aalborg with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Nordlys i blikket, nysgerrige næser mod ruden."
     },
     {
       "id": "randers_regnskov",
@@ -608,7 +641,8 @@
         "Freiflug-Voliere"
       ],
       "summary_de": "Unter Glas regnet der Wald – und die Zeit wird warm.",
-      "summary_en": "Randers Regnskov is a large zoo in Randers with many species, themed areas and enough to explore for several hours."
+      "summary_en": "Randers Regnskov is a large zoo in Randers with many species, themed areas and enough to explore for several hours.",
+      "summary_da": "Under glas regner skoven – og tiden bliver varm."
     },
     {
       "id": "heide_park",
@@ -623,7 +657,8 @@
       "visit_minutes": 420,
       "verified": true,
       "summary_de": "Heide Park Resort ist ein Freizeitpark in Soltau – mit Achterbahnen, Familienattraktionen und viel Action für einen ganzen Tag.",
-      "summary_en": "Heide Park Resort is a theme park in Soltau with coasters, family rides and lots of action for a full day."
+      "summary_en": "Heide Park Resort is a theme park in Soltau with coasters, family rides and lots of action for a full day.",
+      "summary_da": "Heide Park Resort er en forlystelsespark i Soltau – med rutsjebaner, familieattraktioner og masser af action til en hel dag."
     },
     {
       "id": "hansa_park",
@@ -638,7 +673,8 @@
       "visit_minutes": 420,
       "verified": true,
       "summary_de": "HANSA-PARK ist ein Freizeitpark in Sierksdorf – mit Achterbahnen, Familienattraktionen und viel Action für einen ganzen Tag.",
-      "summary_en": "HANSA-PARK is a theme park in Sierksdorf with coasters, family rides and lots of action for a full day."
+      "summary_en": "HANSA-PARK is a theme park in Sierksdorf with coasters, family rides and lots of action for a full day.",
+      "summary_da": "HANSA-PARK er en forlystelsespark i Sierksdorf – med rutsjebaner, familieattraktioner og masser af action til en hel dag."
     },
     {
       "id": "phantasialand",
@@ -653,7 +689,8 @@
       "visit_minutes": 420,
       "verified": true,
       "summary_de": "Phantasialand ist ein Freizeitpark in Brühl – mit Achterbahnen, Familienattraktionen und viel Action für einen ganzen Tag.",
-      "summary_en": "Phantasialand is a theme park in Brühl with coasters, family rides and lots of action for a full day."
+      "summary_en": "Phantasialand is a theme park in Brühl with coasters, family rides and lots of action for a full day.",
+      "summary_da": "Phantasialand er en forlystelsespark i Brühl – med rutsjebaner, familieattraktioner og masser af action til en hel dag."
     },
     {
       "id": "europa_park",
@@ -668,7 +705,8 @@
       "visit_minutes": 420,
       "verified": true,
       "summary_de": "Europa-Park ist ein Freizeitpark in Rust – mit Achterbahnen, Familienattraktionen und viel Action für einen ganzen Tag.",
-      "summary_en": "Europa-Park is a theme park in Rust with coasters, family rides and lots of action for a full day."
+      "summary_en": "Europa-Park is a theme park in Rust with coasters, family rides and lots of action for a full day.",
+      "summary_da": "Europa-Park er en forlystelsespark i Rust – med rutsjebaner, familieattraktioner og masser af action til en hel dag."
     },
     {
       "id": "legoland_de",
@@ -683,7 +721,8 @@
       "visit_minutes": 420,
       "verified": true,
       "summary_de": "LEGOLAND Deutschland Resort ist ein Freizeitpark in Günzburg – mit Achterbahnen, Familienattraktionen und viel Action für einen ganzen Tag.",
-      "summary_en": "LEGOLAND Deutschland Resort is a theme park in Günzburg with coasters, family rides and lots of action for a full day."
+      "summary_en": "LEGOLAND Deutschland Resort is a theme park in Günzburg with coasters, family rides and lots of action for a full day.",
+      "summary_da": "LEGOLAND Deutschland Resort er en forlystelsespark i Günzburg – med rutsjebaner, familieattraktioner og masser af action til en hel dag."
     },
     {
       "id": "belantis",
@@ -698,7 +737,8 @@
       "visit_minutes": 360,
       "verified": true,
       "summary_de": "BELANTIS – Das AbenteuerReich ist ein Freizeitpark in Leipzig – mit Achterbahnen, Familienattraktionen und viel Action für einen ganzen Tag.",
-      "summary_en": "BELANTIS – Das AbenteuerReich is a theme park in Leipzig with coasters, family rides and lots of action for a full day."
+      "summary_en": "BELANTIS – Das AbenteuerReich is a theme park in Leipzig with coasters, family rides and lots of action for a full day.",
+      "summary_da": "BELANTIS – Das AbenteuerReich er en forlystelsespark i Leipzig – med rutsjebaner, familieattraktioner og masser af action til en hel dag."
     },
     {
       "id": "plg_aktivspielplatz_kaltenmoor",
@@ -717,7 +757,8 @@
         "abenteuer"
       ],
       "summary_de": "Zwischen Blocks und Birken tobt die Fantasie.",
-      "summary_en": "Aktivspielplatz Kaltenmoor is a family-friendly playground in Lüneburg with different play areas for kids."
+      "summary_en": "Aktivspielplatz Kaltenmoor is a family-friendly playground in Lüneburg with different play areas for kids.",
+      "summary_da": "Mellem boligblokke og birketræer tumler fantasien."
     },
     {
       "id": "plg_gruenes_heinerle",
@@ -737,7 +778,8 @@
         "schatten"
       ],
       "summary_de": "Klettergriffe wie Blätter, Wege wie Pfade.",
-      "summary_en": "Grünes Heinerle is a family-friendly playground in Korntal-Münchingen with different play areas for kids."
+      "summary_en": "Grünes Heinerle is a family-friendly playground in Korntal-Münchingen with different play areas for kids.",
+      "summary_da": "Klagegreb som blade, stier som små skovveje."
     },
     {
       "id": "plg_piratenschiff_mannheim",
@@ -757,7 +799,8 @@
         "wasser"
       ],
       "summary_de": "Volle Fahrt voraus – im Kopf sprüht die Gischt.",
-      "summary_en": "Kinderspielplatz Piratenschiff is a family-friendly playground in Mannheim (Sandhofen) with different play areas for kids."
+      "summary_en": "Kinderspielplatz Piratenschiff is a family-friendly playground in Mannheim (Sandhofen) with different play areas for kids.",
+      "summary_da": "Fuld fart frem – i hovedet sprøjter skumsprøjtet."
     },
     {
       "id": "plg_backensholzer_hof",
@@ -777,7 +820,8 @@
         "natur"
       ],
       "summary_de": "Heu, Holz und Himmel – Lachen weht über die Wiese.",
-      "summary_en": "Kinderspielplatz Backensholzer Hof is a family-friendly playground in Oster-Ohrstedt with different play areas for kids."
+      "summary_en": "Kinderspielplatz Backensholzer Hof is a family-friendly playground in Oster-Ohrstedt with different play areas for kids.",
+      "summary_da": "Hø, træ og himmel – latter blæser hen over engen."
     },
     {
       "id": "plg_am_haindoernchen",
@@ -797,7 +841,8 @@
         "kleinkind"
       ],
       "summary_de": "Zwischen Hecken wird das Kleine groß.",
-      "summary_en": "Spielplatz Am Haindörnchen is a family-friendly playground in Kaarst (Driesch) with different play areas for kids."
+      "summary_en": "Spielplatz Am Haindörnchen is a family-friendly playground in Kaarst (Driesch) with different play areas for kids.",
+      "summary_da": "Mellem hække bliver de små store."
     },
     {
       "id": "ffm_hafenpark_ost_play",
@@ -817,7 +862,8 @@
         "city"
       ],
       "summary_de": "Zwischen Kaimauern tanzen Rollen und Ideen.",
-      "summary_en": "Spielplatz/Skate im Osthafenpark is a family-friendly playground in Frankfurt am Main with different play areas for kids."
+      "summary_en": "Spielplatz/Skate im Osthafenpark is a family-friendly playground in Frankfurt am Main with different play areas for kids.",
+      "summary_da": "Mellem kajmure danser hjul og idéer."
     },
     {
       "id": "ffm_heinrich_kraft_park",
@@ -838,7 +884,8 @@
         "sport"
       ],
       "summary_de": "Beton wird Bühne – Bewegung hat Adresse.",
-      "summary_en": "Heinrich-Kraft-Park (Sportfelder) is a family-friendly playground in Frankfurt am Main with different play areas for kids."
+      "summary_en": "Heinrich-Kraft-Park (Sportfelder) is a family-friendly playground in Frankfurt am Main with different play areas for kids.",
+      "summary_da": "Beton bliver scene – bevægelse har adresse."
     },
     {
       "id": "travemuende_strandspielplatz",
@@ -859,7 +906,8 @@
         "aussicht"
       ],
       "summary_de": "Sand glitzert wie Fernglaslicht.",
-      "summary_en": "Strandspielplatz Travemünde is a family-friendly playground in Lübeck-Travemünde with different play areas for kids."
+      "summary_en": "Strandspielplatz Travemünde is a family-friendly playground in Lübeck-Travemünde with different play areas for kids.",
+      "summary_da": "Sandet glitrer som kikkertlys."
     },
     {
       "id": "colorado_park_ffm",
@@ -879,7 +927,8 @@
         "stadt"
       ],
       "summary_de": "Zwischen Kiefern und Kanten ruft die Höhe.",
-      "summary_en": "Abenteuerspielplatz Colorado Park is a family-friendly playground in Frankfurt am Main with different play areas for kids."
+      "summary_en": "Abenteuerspielplatz Colorado Park is a family-friendly playground in Frankfurt am Main with different play areas for kids.",
+      "summary_da": "Mellem fyrretræer og kanter kalder højden."
     },
     {
       "id": "traktor_spielplatz_eschborn",
@@ -899,7 +948,8 @@
         "klettern"
       ],
       "summary_de": "Ein Traktor aus Träumen zieht das Lachen durch den Sand.",
-      "summary_en": "Traktorspielplatz Eschborn is a family-friendly playground in Eschborn with different play areas for kids."
+      "summary_en": "Traktorspielplatz Eschborn is a family-friendly playground in Eschborn with different play areas for kids.",
+      "summary_da": "En traktor af drømme trækker latteren gennem sandet."
     },
     {
       "id": "plg_wasser_und_sand_lenningen",
@@ -918,7 +968,8 @@
       "poetry": "Wasser flüstert, Sand formt Welten.",
       "verified": true,
       "summary_de": "Wasser flüstert, Sand formt Welten.",
-      "summary_en": "Spielplatz Wasser und Sand is a family-friendly playground in Lenningen with different play areas for kids."
+      "summary_en": "Spielplatz Wasser und Sand is a family-friendly playground in Lenningen with different play areas for kids.",
+      "summary_da": "Vand hvisker, sand former verdener."
     },
     {
       "id": "plg_piratenschiff_starnberg",
@@ -937,7 +988,8 @@
       "poetry": "Holzdeck, See und Segel im Herzen.",
       "verified": true,
       "summary_de": "Holzdeck, See und Segel im Herzen.",
-      "summary_en": "Piratenschiff Spielplatz is a family-friendly playground in Starnberg with different play areas for kids."
+      "summary_en": "Piratenschiff Spielplatz is a family-friendly playground in Starnberg with different play areas for kids.",
+      "summary_da": "Trædæk, sø og sejl i hjertet."
     },
     {
       "id": "plg_urftstrasse_nettersheim",
@@ -955,7 +1007,8 @@
       "poetry": "Zwischen Fachwerk und Feldweg geht’s die Rutsche hinab.",
       "verified": true,
       "summary_de": "Zwischen Fachwerk und Feldweg geht’s die Rutsche hinab.",
-      "summary_en": "Spielplatz Urftstraße is a family-friendly playground in Nettersheim with different play areas for kids."
+      "summary_en": "Spielplatz Urftstraße is a family-friendly playground in Nettersheim with different play areas for kids.",
+      "summary_da": "Mellem bindingsværk og markvej går turen ned ad rutsjebanen."
     },
     {
       "id": "plg_spielpark_hof_loebke",
@@ -974,7 +1027,8 @@
       "poetry": "Hofluft, Holz und Hügel – Herz wird weit.",
       "verified": true,
       "summary_de": "Hofluft, Holz und Hügel – Herz wird weit.",
-      "summary_en": "Spielpark Hof Löbke is a family-friendly playground in Ibbenbüren with different play areas for kids."
+      "summary_en": "Spielpark Hof Löbke is a family-friendly playground in Ibbenbüren with different play areas for kids.",
+      "summary_da": "Gårdlugt, træ og bakker – hjertet bliver stort."
     },
     {
       "id": "plg_volksgarten_bungtwald_mg",
@@ -993,7 +1047,8 @@
       "poetry": "Baumkronen rauschen, Kinder lachen darunter.",
       "verified": true,
       "summary_de": "Baumkronen rauschen, Kinder lachen darunter.",
-      "summary_en": "Spielplatz Volksgarten-Bungtwald is a family-friendly playground in Mönchengladbach with different play areas for kids."
+      "summary_en": "Spielplatz Volksgarten-Bungtwald is a family-friendly playground in Mönchengladbach with different play areas for kids.",
+      "summary_da": "Trækroner suser, børnene ler nedenunder."
     },
     {
       "id": "plg_spielplatz_fuer_alle_wegberg",
@@ -1012,7 +1067,8 @@
       "poetry": "Für kleine Schritte und große Sprünge gemacht.",
       "verified": true,
       "summary_de": "Für kleine Schritte und große Sprünge gemacht.",
-      "summary_en": "Der Spielplatz für alle is a family-friendly playground in Wegberg with different play areas for kids."
+      "summary_en": "Der Spielplatz für alle is a family-friendly playground in Wegberg with different play areas for kids.",
+      "summary_da": "Skabt til små skridt og store spring."
     },
     {
       "id": "plg_grinderwald_linsburg",
@@ -1031,7 +1087,8 @@
       "poetry": "Harzduft in der Luft, Mut in den Beinen.",
       "verified": true,
       "summary_de": "Harzduft in der Luft, Mut in den Beinen.",
-      "summary_en": "Grinderwald Spielplatz is a family-friendly playground in Linsburg with different play areas for kids."
+      "summary_en": "Grinderwald Spielplatz is a family-friendly playground in Linsburg with different play areas for kids.",
+      "summary_da": "Duften af harpiks i luften, mod i benene."
     },
     {
       "id": "plg_abenteuerwald_sommerberg",
@@ -1050,7 +1107,8 @@
       "poetry": "Über Stege und Stämme wächst der Mut mit.",
       "verified": true,
       "summary_de": "Über Stege und Stämme wächst der Mut mit.",
-      "summary_en": "Abenteuerwald Sommerberg is a family-friendly playground in Bad Wildbad with different play areas for kids."
+      "summary_en": "Abenteuerwald Sommerberg is a family-friendly playground in Bad Wildbad with different play areas for kids.",
+      "summary_da": "Over broer og stammer vokser modet med."
     },
     {
       "id": "plg_zoo_berlin_spielplatz",
@@ -1070,7 +1128,8 @@
       "poetry": "Zwischen Pandas und Pfauenflair rutscht das Lachen wie Licht.",
       "verified": true,
       "summary_de": "Zwischen Pandas und Pfauenflair rutscht das Lachen wie Licht.",
-      "summary_en": "Spielplatz Zoologischer Garten Berlin is a family-friendly playground in Berlin with different play areas for kids."
+      "summary_en": "Spielplatz Zoologischer Garten Berlin is a family-friendly playground in Berlin with different play areas for kids.",
+      "summary_da": "Mellem pandaer og påfugleflair glider latteren som lys."
     },
     {
       "id": "plg_rutschenturm_elbauenpark",
@@ -1089,7 +1148,8 @@
       "poetry": "Fünf Bahnen Mut – unten wartet Jubelwind.",
       "verified": true,
       "summary_de": "Fünf Bahnen Mut – unten wartet Jubelwind.",
-      "summary_en": "Rutschenturm Elbauenpark is a family-friendly playground in Magdeburg with different play areas for kids."
+      "summary_en": "Rutschenturm Elbauenpark is a family-friendly playground in Magdeburg with different play areas for kids.",
+      "summary_da": "Fem baner mod – nedenfor venter jubelvinden."
     },
     {
       "id": "plg_berlin_nelly_sachs_park",
@@ -1108,7 +1168,8 @@
       "poetry": "Zwischen Linden rauscht die Stadt.",
       "verified": true,
       "summary_de": "Zwischen Linden rauscht die Stadt.",
-      "summary_en": "Spielplatz im Nelly-Sachs-Park is a family-friendly playground in Berlin with different play areas for kids."
+      "summary_en": "Spielplatz im Nelly-Sachs-Park is a family-friendly playground in Berlin with different play areas for kids.",
+      "summary_da": "Mellem lindetræer bruser byen."
     },
     {
       "id": "plg_hamburg_schemmannstrasse",
@@ -1127,7 +1188,8 @@
       "poetry": "Rotklinker und Kinderglucksen.",
       "verified": true,
       "summary_de": "Rotklinker und Kinderglucksen.",
-      "summary_en": "Spielplatz Schemmannstraße is a family-friendly playground in Hamburg with different play areas for kids."
+      "summary_en": "Spielplatz Schemmannstraße is a family-friendly playground in Hamburg with different play areas for kids.",
+      "summary_da": "Rødt murværk og børnefnisen."
     },
     {
       "id": "plg_muenchen_hirschgarten_elefant",
@@ -1146,7 +1208,8 @@
       "poetry": "Savannen aus Sand im Schatten alter Bäume.",
       "verified": true,
       "summary_de": "Savannen aus Sand im Schatten alter Bäume.",
-      "summary_en": "Elefantenspielplatz im Hirschgarten is a family-friendly playground in München with different play areas for kids."
+      "summary_en": "Elefantenspielplatz im Hirschgarten is a family-friendly playground in München with different play areas for kids.",
+      "summary_da": "Savanner af sand i skyggen af gamle træer."
     },
     {
       "id": "plg_koeln_ritterspielplatz_duennwald",
@@ -1165,7 +1228,8 @@
       "poetry": "Die Burg ruft: Auf ins Spiel!",
       "verified": true,
       "summary_de": "Die Burg ruft: Auf ins Spiel!",
-      "summary_en": "Ritterspielplatz Dünnwald is a family-friendly playground in Köln with different play areas for kids."
+      "summary_en": "Ritterspielplatz Dünnwald is a family-friendly playground in Köln with different play areas for kids.",
+      "summary_da": "Borgen kalder: På med legen!"
     },
     {
       "id": "plg_frankfurt_heinrich_kraft_park",
@@ -1186,7 +1250,8 @@
       "poetry": "Im Blätterdach plätschert Mut.",
       "verified": true,
       "summary_de": "Im Blätterdach plätschert Mut.",
-      "summary_en": "Waldspielpark Heinrich-Kraft-Park is a family-friendly spot in Frankfurt am Main."
+      "summary_en": "Waldspielpark Heinrich-Kraft-Park is a family-friendly spot in Frankfurt am Main.",
+      "summary_da": "Under bladtæppet klukker modet."
     },
     {
       "id": "plg_erding_stadtpark",
@@ -1206,7 +1271,8 @@
       "poetry": "Keltentürme und Wasserläufe.",
       "verified": true,
       "summary_de": "Keltentürme und Wasserläufe.",
-      "summary_en": "Stadtpark Erding – WENIADUNUM & Wasserspiel is a family-friendly playground in Erding with different play areas for kids."
+      "summary_en": "Stadtpark Erding – WENIADUNUM & Wasserspiel is a family-friendly playground in Erding with different play areas for kids.",
+      "summary_da": "Keltiske tårne og vandløb."
     },
     {
       "id": "plg_muenchen_wasserfelsen",
@@ -1225,7 +1291,8 @@
       "poetry": "Wasser tanzt über Steine.",
       "verified": true,
       "summary_de": "Wasser tanzt über Steine.",
-      "summary_en": "Wasserspielplatz Wasserfelsen (Prinz-Eugen-Park) is a family-friendly playground in München with different play areas for kids."
+      "summary_en": "Wasserspielplatz Wasserfelsen (Prinz-Eugen-Park) is a family-friendly playground in München with different play areas for kids.",
+      "summary_da": "Vand danser over sten."
     },
     {
       "id": "plg_mintraching_feuerwehr",
@@ -1245,7 +1312,8 @@
       "poetry": "Tatütata – Sommer aus Schläuchen.",
       "verified": true,
       "summary_de": "Tatütata – Sommer aus Schläuchen.",
-      "summary_en": "Feuerwehr-Spielplatz Mintraching is a family-friendly playground in Neufahrn b. Freising (Mintraching) with different play areas for kids."
+      "summary_en": "Feuerwehr-Spielplatz Mintraching is a family-friendly playground in Neufahrn b. Freising (Mintraching) with different play areas for kids.",
+      "summary_da": "Udrykningshorn – sommer gennem slanger."
     },
     {
       "id": "plg_dachau_baumhaus_amper",
@@ -1264,7 +1332,8 @@
       "poetry": "Weiden wiegen die Zeit.",
       "verified": true,
       "summary_de": "Weiden wiegen die Zeit.",
-      "summary_en": "Baumhaus-Spielplatz an der Amperbrücke is a family-friendly playground in Dachau with different play areas for kids."
+      "summary_en": "Baumhaus-Spielplatz an der Amperbrücke is a family-friendly playground in Dachau with different play areas for kids.",
+      "summary_da": "Pilertræer vugger tiden."
     },
     {
       "id": "plg_assling_mitterweg",
@@ -1284,7 +1353,8 @@
       "poetry": "Sonne auf Holz, Lachen im Kreis.",
       "verified": true,
       "summary_de": "Sonne auf Holz, Lachen im Kreis.",
-      "summary_en": "Abenteuerspielplatz Aßling (Mitterweg) is a family-friendly playground in Aßling with different play areas for kids."
+      "summary_en": "Abenteuerspielplatz Aßling (Mitterweg) is a family-friendly playground in Aßling with different play areas for kids.",
+      "summary_da": "Sol på træ, latter i ring."
     },
     {
       "id": "plg_bad_feilnbach_mittelalter",
@@ -1303,7 +1373,8 @@
       "poetry": "Helm auf, Herz voran.",
       "verified": true,
       "summary_de": "Helm auf, Herz voran.",
-      "summary_en": "Mittelalter-Spielplatz Bad Feilnbach is a family-friendly playground in Bad Feilnbach with different play areas for kids."
+      "summary_en": "Mittelalter-Spielplatz Bad Feilnbach is a family-friendly playground in Bad Feilnbach with different play areas for kids.",
+      "summary_da": "Hjelmen på, hjertet forrest."
     },
     {
       "id": "plg_muenchen_georg_freundorfer",
@@ -1322,7 +1393,8 @@
       "poetry": "Zwischen Westend-Häusern wird die Pause zum Abenteuer.",
       "verified": true,
       "summary_de": "Zwischen Westend-Häusern wird die Pause zum Abenteuer.",
-      "summary_en": "Georg-Freundorfer-Platz is a family-friendly playground in München with different play areas for kids."
+      "summary_en": "Georg-Freundorfer-Platz is a family-friendly playground in München with different play areas for kids.",
+      "summary_da": "Mellem Westend-huse bliver pausen til eventyr."
     },
     {
       "id": "plg_muenchen_mittersendling_zielstatt",
@@ -1341,7 +1413,8 @@
       "poetry": "Zwischen Werkhallen und Isarwind klettert die Fantasie durchs Holz.",
       "verified": true,
       "summary_de": "Zwischen Werkhallen und Isarwind klettert die Fantasie durchs Holz.",
-      "summary_en": "Spielplatz Mittersendling (Zielstattstraße) is a family-friendly playground in München with different play areas for kids."
+      "summary_en": "Spielplatz Mittersendling (Zielstattstraße) is a family-friendly playground in München with different play areas for kids.",
+      "summary_da": "Mellem værkshaller og Isarvind klatrer fantasien gennem træet."
     },
     {
       "id": "asp_bauer_lipp_weiterstadt",
@@ -1362,7 +1435,8 @@
       "poetry": "Auf dem Hof rauscht Kinderlachen zwischen Kürbissen und Holz.",
       "verified": true,
       "summary_de": "Auf dem Hof rauscht Kinderlachen zwischen Kürbissen und Holz.",
-      "summary_en": "Bauer Lipp Spielplatz is a family-friendly playground in Weiterstadt with different play areas for kids."
+      "summary_en": "Bauer Lipp Spielplatz is a family-friendly playground in Weiterstadt with different play areas for kids.",
+      "summary_da": "På gården bruser børnelatter mellem græskar og træ."
     },
     {
       "id": "asp_limespark_erlensee",
@@ -1383,7 +1457,8 @@
       "poetry": "Zwischen Römerpfad und Kinderlachen wächst ein Abenteuer aus Sand.",
       "verified": true,
       "summary_de": "Zwischen Römerpfad und Kinderlachen wächst ein Abenteuer aus Sand.",
-      "summary_en": "Spielplatz Limespark is a family-friendly playground in Erlensee with different play areas for kids."
+      "summary_en": "Spielplatz Limespark is a family-friendly playground in Erlensee with different play areas for kids.",
+      "summary_da": "Mellem romersti og børnelatter vokser et eventyr ud af sand."
     },
     {
       "id": "asp_grossmutterwiese_aschaffenburg",
@@ -1403,7 +1478,8 @@
       "poetry": "Wo Wasserläufe tanzen, wächst Kinderlachen zu Mut ohne Risiko.",
       "verified": true,
       "summary_de": "Wo Wasserläufe tanzen, wächst Kinderlachen zu Mut ohne Risiko.",
-      "summary_en": "Wasserspielplatz Großmutterwiese is a family-friendly playground in Aschaffenburg with different play areas for kids."
+      "summary_en": "Wasserspielplatz Großmutterwiese is a family-friendly playground in Aschaffenburg with different play areas for kids.",
+      "summary_da": "Hvor vandløb danser, vokser børnelatter til mod uden risiko."
     },
     {
       "id": "asp_edenkoben_alla_hopp",
@@ -1423,7 +1499,8 @@
       "poetry": "Zwischen Weinreben und Waldlicht steigt der Hügel zum Toben.",
       "verified": true,
       "summary_de": "Zwischen Weinreben und Waldlicht steigt der Hügel zum Toben.",
-      "summary_en": "alla hopp! Anlage Edenkoben is a family-friendly playground in Edenkoben with different play areas for kids."
+      "summary_en": "alla hopp! Anlage Edenkoben is a family-friendly playground in Edenkoben with different play areas for kids.",
+      "summary_da": "Mellem vinranker og skovlys rejser bakken sig til tumleri."
     },
     {
       "id": "bauspielfarm_recklinghausen",
@@ -1443,7 +1520,8 @@
       "poetry": "Nägel, Holz und Sonne – Ideen bekommen Flügel.",
       "verified": true,
       "summary_de": "Nägel, Holz und Sonne – Ideen bekommen Flügel.",
-      "summary_en": "Bauspielfarm Recklinghausen is a family-friendly playground in Recklinghausen with different play areas for kids."
+      "summary_en": "Bauspielfarm Recklinghausen is a family-friendly playground in Recklinghausen with different play areas for kids.",
+      "summary_da": "Søm, træ og sol – idéer får vinger."
     },
     {
       "id": "museumsdorf_kuernbach_spielplatz",
@@ -1462,7 +1540,8 @@
       "poetry": "Zwischen alten Höfen funkelt neues Lachen.",
       "verified": true,
       "summary_de": "Zwischen alten Höfen funkelt neues Lachen.",
-      "summary_en": "Museumsdorf (Spielplatz) – Kürnbach is a family-friendly playground in Bad Schussenried with different play areas for kids."
+      "summary_en": "Museumsdorf (Spielplatz) – Kürnbach is a family-friendly playground in Bad Schussenried with different play areas for kids.",
+      "summary_da": "Mellem gamle gårde funkler ny latter."
     },
     {
       "id": "rheinpark_koeln",
@@ -1481,7 +1560,8 @@
       "poetry": "Zwischen Rheinluft und Lachen wächst jedes Abenteuer Flügel.",
       "verified": true,
       "summary_de": "Zwischen Rheinluft und Lachen wächst jedes Abenteuer Flügel.",
-      "summary_en": "Spielplatz im Rheinpark (Köln-Deutz) is a family-friendly playground in Köln with different play areas for kids."
+      "summary_en": "Spielplatz im Rheinpark (Köln-Deutz) is a family-friendly playground in Köln with different play areas for kids.",
+      "summary_da": "Mellem Rhinenluft og latter får hvert eventyr vinger."
     },
     {
       "id": "kleinwallstadt_altes_schloss",
@@ -1501,7 +1581,8 @@
       "poetry": "Zwischen Mauer und Wiese summt die Zeit vor Freude.",
       "verified": true,
       "summary_de": "Zwischen Mauer und Wiese summt die Zeit vor Freude.",
-      "summary_en": "Abenteuerspielplatz »Am Alten Schloss« is a family-friendly playground in Kleinwallstadt with different play areas for kids."
+      "summary_en": "Abenteuerspielplatz »Am Alten Schloss« is a family-friendly playground in Kleinwallstadt with different play areas for kids.",
+      "summary_da": "Mellem mur og eng summer tiden af glæde."
     },
     {
       "id": "ffm_waldspielpark_louisa",
@@ -1521,7 +1602,8 @@
       "poetry": "Unter Eichen spritzt das Lachen wie Sonne im Wasser.",
       "verified": true,
       "summary_de": "Unter Eichen spritzt das Lachen wie Sonne im Wasser.",
-      "summary_en": "Waldspielpark Louisa (FFM) is a family-friendly playground in Frankfurt am Main with different play areas for kids."
+      "summary_en": "Waldspielpark Louisa (FFM) is a family-friendly playground in Frankfurt am Main with different play areas for kids.",
+      "summary_da": "Under egetræer sprøjter latteren som sol i vandet."
     },
     {
       "id": "alla_hopp_schwetzingen",
@@ -1540,7 +1622,8 @@
       "poetry": "Bewegung wird Landschaft – für Klein bis Groß.",
       "verified": true,
       "summary_de": "Bewegung wird Landschaft – für Klein bis Groß.",
-      "summary_en": "alla hopp! Spielanlage Schwetzingen is a family-friendly playground in Schwetzingen with different play areas for kids."
+      "summary_en": "alla hopp! Spielanlage Schwetzingen is a family-friendly playground in Schwetzingen with different play areas for kids.",
+      "summary_da": "Bevægelse bliver landskab – for små og store."
     },
     {
       "id": "hof_grass_hungen",
@@ -1560,7 +1643,8 @@
       "poetry": "Am Bachrand wird die Zeit zum Plansch.",
       "verified": true,
       "summary_de": "Am Bachrand wird die Zeit zum Plansch.",
-      "summary_en": "Wasserspielplatz Hof Grass is a family-friendly playground in Hungen with different play areas for kids."
+      "summary_en": "Wasserspielplatz Hof Grass is a family-friendly playground in Hungen with different play areas for kids.",
+      "summary_da": "Ved bækbredden bliver tiden til plask."
     },
     {
       "id": "limespark_erlensee_alt",
@@ -1579,7 +1663,8 @@
       "poetry": "Ein Park wie ein Werkzeugkasten fürs Spielen.",
       "verified": true,
       "summary_de": "Ein Park wie ein Werkzeugkasten fürs Spielen.",
-      "summary_en": "Spielplatz Limespark (Westzugang) is a family-friendly playground in Erlensee with different play areas for kids."
+      "summary_en": "Spielplatz Limespark (Westzugang) is a family-friendly playground in Erlensee with different play areas for kids.",
+      "summary_da": "En park som en værktøjskasse til leg."
     },
     {
       "id": "spielplatz_kinderburg_gelsenkirchen",
@@ -1598,7 +1683,8 @@
       "poetry": "Ein Turm aus Fantasie mitten im Grün.",
       "verified": true,
       "summary_de": "Ein Turm aus Fantasie mitten im Grün.",
-      "summary_en": "Spielplatz Kinderburg (Revierpark) is a family-friendly playground in Gelsenkirchen with different play areas for kids."
+      "summary_en": "Spielplatz Kinderburg (Revierpark) is a family-friendly playground in Gelsenkirchen with different play areas for kids.",
+      "summary_da": "Et tårn af fantasi midt i det grønne."
     },
     {
       "id": "spuk_im_wald_leimen",
@@ -1617,7 +1703,8 @@
       "poetry": "Zwischen Buchen flüstern Figuren vom Mut.",
       "verified": true,
       "summary_de": "Zwischen Buchen flüstern Figuren vom Mut.",
-      "summary_en": "Spuk im Wald (Leimen) is a family-friendly playground in Leimen with different play areas for kids."
+      "summary_en": "Spuk im Wald (Leimen) is a family-friendly playground in Leimen with different play areas for kids.",
+      "summary_da": "Mellem bøgetræer hvisker figurer om mod."
     },
     {
       "id": "entdeckerpark_kalkhorst",
@@ -1636,7 +1723,8 @@
       "poetry": "Holz und Horizonte – Entdeckerlust im Norden.",
       "verified": true,
       "summary_de": "Holz und Horizonte – Entdeckerlust im Norden.",
-      "summary_en": "Entdeckerpark Kalkhorst is a family-friendly playground in Kalkhorst with different play areas for kids."
+      "summary_en": "Entdeckerpark Kalkhorst is a family-friendly playground in Kalkhorst with different play areas for kids.",
+      "summary_da": "Træ og horisonter – opdagerglæde i Norden."
     },
     {
       "id": "moevenstein_spielplatz_travemuende",
@@ -1655,7 +1743,8 @@
       "poetry": "Möwen rufen, Rutschen singen.",
       "verified": true,
       "summary_de": "Möwen rufen, Rutschen singen.",
-      "summary_en": "Mövenstein Spielplatz (Travemünde) is a family-friendly playground in Lübeck-Travemünde with different play areas for kids."
+      "summary_en": "Mövenstein Spielplatz (Travemünde) is a family-friendly playground in Lübeck-Travemünde with different play areas for kids.",
+      "summary_da": "Måger kalder, rutsjebaner synger."
     },
     {
       "id": "piratenspielplatz_travemuende",
@@ -1674,7 +1763,8 @@
       "poetry": "Segel im Kopf, Sand unter Füßen.",
       "verified": true,
       "summary_de": "Segel im Kopf, Sand unter Füßen.",
-      "summary_en": "Piratenspielplatz Travemünde is a family-friendly playground in Lübeck-Travemünde with different play areas for kids."
+      "summary_en": "Piratenspielplatz Travemünde is a family-friendly playground in Lübeck-Travemünde with different play areas for kids.",
+      "summary_da": "Sejl i hovedet, sand under fødderne."
     },
     {
       "id": "saalepark_salzhemmendorf",
@@ -1693,7 +1783,8 @@
       "poetry": "Ein Rundweg für runde Tage.",
       "verified": true,
       "summary_de": "Ein Rundweg für runde Tage.",
-      "summary_en": "Saalepark Spielplatz is a family-friendly playground in Salzhemmendorf with different play areas for kids."
+      "summary_en": "Saalepark Spielplatz is a family-friendly playground in Salzhemmendorf with different play areas for kids.",
+      "summary_da": "En rundtur til runde dage."
     },
     {
       "id": "asp_harzer_seeland",
@@ -1713,7 +1804,8 @@
       "poetry": "Auf Holz und Stahl – hier wächst der Mut.",
       "verified": true,
       "summary_de": "Auf Holz und Stahl – hier wächst der Mut.",
-      "summary_en": "Abenteuerland Harzer SeeLand is a family-friendly playground in Seeland with different play areas for kids."
+      "summary_en": "Abenteuerland Harzer SeeLand is a family-friendly playground in Seeland with different play areas for kids.",
+      "summary_da": "På træ og stål – her vokser modet."
     },
     {
       "id": "asp_dudenhofen",
@@ -1732,7 +1824,8 @@
       "poetry": "Über Stämme und Stege – ein Pfad für tapfere Füße.",
       "verified": true,
       "summary_de": "Über Stämme und Stege – ein Pfad für tapfere Füße.",
-      "summary_en": "Abenteuerspielplatz Dudenhofen is a family-friendly playground in Dudenhofen with different play areas for kids."
+      "summary_en": "Abenteuerspielplatz Dudenhofen is a family-friendly playground in Dudenhofen with different play areas for kids.",
+      "summary_da": "Over stammer og broer – en sti for modige fødder."
     },
     {
       "id": "asp_saarbruecken_eschberg",
@@ -1752,7 +1845,8 @@
       "poetry": "Wo Funken tanzen, wachsen kleine Städte aus Brettern.",
       "verified": true,
       "summary_de": "Wo Funken tanzen, wachsen kleine Städte aus Brettern.",
-      "summary_en": "Abenteuerspielplatz Eschberg is a family-friendly playground in Saarbrücken with different play areas for kids."
+      "summary_en": "Abenteuerspielplatz Eschberg is a family-friendly playground in Saarbrücken with different play areas for kids.",
+      "summary_da": "Hvor gnister danser, vokser små byer op af brædder."
     },
     {
       "id": "asp_aachen_kirschbaeumchen",
@@ -1772,7 +1866,8 @@
       "poetry": "Zwischen Tipis und Geheimwegen findet jedes Kind sein Reich.",
       "verified": true,
       "summary_de": "Zwischen Tipis und Geheimwegen findet jedes Kind sein Reich.",
-      "summary_en": "ASP „Zum Kirschbäumchen“ is a family-friendly playground in Aachen with different play areas for kids."
+      "summary_en": "ASP „Zum Kirschbäumchen“ is a family-friendly playground in Aachen with different play areas for kids.",
+      "summary_da": "Mellem tipier og hemmelige stier finder hvert barn sit eget rige."
     },
     {
       "id": "asp_schwerin_bauspielplatz",
@@ -1792,7 +1887,8 @@
       "poetry": "Holz, Wasser, Funken – Kindheit wie Gold.",
       "verified": true,
       "summary_de": "Holz, Wasser, Funken – Kindheit wie Gold.",
-      "summary_en": "Bauspielplatz Schwerin e.V. is a family-friendly playground in Schwerin with different play areas for kids."
+      "summary_en": "Bauspielplatz Schwerin e.V. is a family-friendly playground in Schwerin with different play areas for kids.",
+      "summary_da": "Træ, vand, gnister – barndom som guld."
     },
     {
       "id": "asp_hamburg_bullerberge",
@@ -1813,7 +1909,8 @@
       "poetry": "Wasser glitzert, Seilbrücken singen – Hamburgs Herz schlägt kinderlaut.",
       "verified": true,
       "summary_de": "Wasser glitzert, Seilbrücken singen – Hamburgs Herz schlägt kinderlaut.",
-      "summary_en": "Großer Spielplatz „Bullerberge“ (Planten un Blomen) is a family-friendly playground in Hamburg with different play areas for kids."
+      "summary_en": "Großer Spielplatz „Bullerberge“ (Planten un Blomen) is a family-friendly playground in Hamburg with different play areas for kids.",
+      "summary_da": "Vand glitrer, reb-broer synger – Hamborgs hjerte slår børnehøjt."
     },
     {
       "id": "asp_karlshagen_zauberwald",
@@ -1833,7 +1930,8 @@
       "poetry": "Zwischen Dünensand und Kiefern flüstert der Wind: Trau dich.",
       "verified": true,
       "summary_de": "Zwischen Dünensand und Kiefern flüstert der Wind: Trau dich.",
-      "summary_en": "Karlchens Zauberwald is a family-friendly playground in Karlshagen with different play areas for kids."
+      "summary_en": "Karlchens Zauberwald is a family-friendly playground in Karlshagen with different play areas for kids.",
+      "summary_da": "Mellem klitsand og fyrretræer hvisker vinden: Turde."
     },
     {
       "id": "asp_berlin_seilfabrik",
@@ -1853,7 +1951,8 @@
       "poetry": "Fäden aus Mut, Knoten aus Lachen.",
       "verified": true,
       "summary_de": "Fäden aus Mut, Knoten aus Lachen.",
-      "summary_en": "Kletterspielplatz Berliner Seilfabrik is a family-friendly playground in Berlin with different play areas for kids."
+      "summary_en": "Kletterspielplatz Berliner Seilfabrik is a family-friendly playground in Berlin with different play areas for kids.",
+      "summary_da": "Tråde af mod, knuder af latter."
     },
     {
       "id": "asp_bergedorf_rathaus",
@@ -1872,7 +1971,8 @@
       "poetry": "Zwischen Backstein und Burggraben turnen die Träume frei.",
       "verified": true,
       "summary_de": "Zwischen Backstein und Burggraben turnen die Träume frei.",
-      "summary_en": "Spielplatz Rathaus Bergedorf is a family-friendly playground in Hamburg with different play areas for kids."
+      "summary_en": "Spielplatz Rathaus Bergedorf is a family-friendly playground in Hamburg with different play areas for kids.",
+      "summary_da": "Mellem mursten og voldgrav springer drømmene frit rundt."
     },
     {
       "id": "asp_hannover_welfengarten",
@@ -1891,7 +1991,8 @@
       "poetry": "Unter alten Kronen klettert die Zeit die Seile hinauf.",
       "verified": true,
       "summary_de": "Unter alten Kronen klettert die Zeit die Seile hinauf.",
-      "summary_en": "Spielplatz Welfengarten is a family-friendly playground in Hannover with different play areas for kids."
+      "summary_en": "Spielplatz Welfengarten is a family-friendly playground in Hannover with different play areas for kids.",
+      "summary_da": "Under gamle kroner klatrer tiden op ad rebene."
     },
     {
       "id": "asp_vegesack_spielschiff",
@@ -1911,7 +2012,8 @@
       "poetry": "Salz in der Luft, ein Schiff im Sand.",
       "verified": true,
       "summary_de": "Salz in der Luft, ein Schiff im Sand.",
-      "summary_en": "Spielschiff Vegesack (Vegesacker Krabbe) is a family-friendly playground in Bremen-Vegesack with different play areas for kids."
+      "summary_en": "Spielschiff Vegesack (Vegesacker Krabbe) is a family-friendly playground in Bremen-Vegesack with different play areas for kids.",
+      "summary_da": "Salt i luften, et skib i sandet."
     },
     {
       "id": "asp_clausthal_robinson",
@@ -1930,7 +2032,8 @@
       "poetry": "Wie eine Insel im Wald – Abenteuer im Tannenduft.",
       "verified": true,
       "summary_de": "Wie eine Insel im Wald – Abenteuer im Tannenduft.",
-      "summary_en": "Robinson-Spielplatz (Harz) is a family-friendly playground in Clausthal-Zellerfeld with different play areas for kids."
+      "summary_en": "Robinson-Spielplatz (Harz) is a family-friendly playground in Clausthal-Zellerfeld with different play areas for kids.",
+      "summary_da": "Som en ø i skoven – eventyr i duften af gran."
     },
     {
       "id": "asp_garrel_reservistenfort",
@@ -1950,7 +2053,8 @@
       "poetry": "Zwischen Eichen, Moos und Mut wartet ein Fort auf Eroberung.",
       "verified": true,
       "summary_de": "Zwischen Eichen, Moos und Mut wartet ein Fort auf Eroberung.",
-      "summary_en": "Abenteuerspielplatz „Reservistenfort“ is a family-friendly playground in Garrel with different play areas for kids."
+      "summary_en": "Abenteuerspielplatz „Reservistenfort“ is a family-friendly playground in Garrel with different play areas for kids.",
+      "summary_da": "Mellem egetræer, mos og mod venter et fort på at blive erobret."
     },
     {
       "id": "asp_wolfsburg_bodenlos",
@@ -1969,7 +2073,8 @@
       "poetry": "Fäden aus Seil, gewebt in die Kronen – die Schwerkraft wird freundlich.",
       "verified": true,
       "summary_de": "Fäden aus Seil, gewebt in die Kronen – die Schwerkraft wird freundlich.",
-      "summary_en": "Seilspielplatz „Bodenlos“ (Allerpark) is a family-friendly playground in Wolfsburg with different play areas for kids."
+      "summary_en": "Seilspielplatz „Bodenlos“ (Allerpark) is a family-friendly playground in Wolfsburg with different play areas for kids.",
+      "summary_da": "Rebtråde, vævet ind i trækronerne – tyngdekraften bliver venlig."
     },
     {
       "id": "spielplatz_felicitas_chocolatier",
@@ -1988,7 +2093,8 @@
       "poetry": "Zwischen Kakaoduft und Kletterspaß schmilzt die Zeit wie Schokolade.",
       "verified": true,
       "summary_de": "Zwischen Kakaoduft und Kletterspaß schmilzt die Zeit wie Schokolade.",
-      "summary_en": "Spielplatz Felicitas Chocolatier is a family-friendly playground in the region with different play areas for kids."
+      "summary_en": "Spielplatz Felicitas Chocolatier is a family-friendly playground in the region with different play areas for kids.",
+      "summary_da": "Mellem kakaoduft og klatreglæde smelter tiden som chokolade."
     },
     {
       "id": "dino_spielplatz_magdeburg",
@@ -2007,7 +2113,8 @@
       "poetry": "Zwischen Fossil-Spuren und Fantasie klettern kleine Urzeithelden.",
       "verified": true,
       "summary_de": "Zwischen Fossil-Spuren und Fantasie klettern kleine Urzeithelden.",
-      "summary_en": "Dino-Spielplatz is a family-friendly playground in Magdeburg with different play areas for kids."
+      "summary_en": "Dino-Spielplatz is a family-friendly playground in Magdeburg with different play areas for kids.",
+      "summary_da": "Mellem fossilsport og fantasi klatrer små urtidshelte."
     },
     {
       "id": "brauerei_spielplatz_magdeburg",
@@ -2025,7 +2132,8 @@
       "poetry": "Backstein, Schatten, Spiel – hier steigt die Laune wie Hefe.",
       "verified": true,
       "summary_de": "Backstein, Schatten, Spiel – hier steigt die Laune wie Hefe.",
-      "summary_en": "Brauerei-Spielplatz is a family-friendly playground in Magdeburg with different play areas for kids."
+      "summary_en": "Brauerei-Spielplatz is a family-friendly playground in Magdeburg with different play areas for kids.",
+      "summary_da": "Mursten, skygge, leg – her stiger humøret som gær."
     },
     {
       "id": "altmuehlsee_erlebnisspielplatz_wald",
@@ -2045,7 +2153,8 @@
       "poetry": "Seewind und Römerpfad – im Sand wird Abenteuer gebaut.",
       "verified": true,
       "summary_de": "Seewind und Römerpfad – im Sand wird Abenteuer gebaut.",
-      "summary_en": "Altmühlsee – Erlebnisspielplatz (Seezentrum Wald) is a family-friendly playground in Gunzenhausen with different play areas for kids."
+      "summary_en": "Altmühlsee – Erlebnisspielplatz (Seezentrum Wald) is a family-friendly playground in Gunzenhausen with different play areas for kids.",
+      "summary_da": "Søvind og romersti – i sandet bygges eventyr."
     },
     {
       "id": "spielplatz_ruesselsheim_gerhart_hauptmann",
@@ -2064,7 +2173,8 @@
       "poetry": "Zwischen Schule und Schatten wächst die Festung im Kopf.",
       "verified": true,
       "summary_de": "Zwischen Schule und Schatten wächst die Festung im Kopf.",
-      "summary_en": "Spielplatz an der Gerhart-Hauptmann-Schule is a family-friendly playground in Rüsselsheim am Main (Königstädten) with different play areas for kids."
+      "summary_en": "Spielplatz an der Gerhart-Hauptmann-Schule is a family-friendly playground in Rüsselsheim am Main (Königstädten) with different play areas for kids.",
+      "summary_da": "Mellem skole og skygge vokser borgen i hovedet."
     },
     {
       "id": "spielpark_wakitu_hannover",
@@ -2083,7 +2193,8 @@
       "poetry": "Wasserläufe, Holz und Hügel – Stadtabenteuer unter Bäumen.",
       "verified": true,
       "summary_de": "Wasserläufe, Holz und Hügel – Stadtabenteuer unter Bäumen.",
-      "summary_en": "Spielpark Wakitu is a family-friendly playground in Hannover with different play areas for kids."
+      "summary_en": "Spielpark Wakitu is a family-friendly playground in Hannover with different play areas for kids.",
+      "summary_da": "Vandløb, træ og bakker – storbyeventyr under træerne."
     },
     {
       "id": "niddapark_wasserspiele_ffm",
@@ -2103,7 +2214,8 @@
       "address": "Am Ginnheimer Wäldchen, 60431 Frankfurt am Main",
       "verified": true,
       "summary_de": "Sommerfunken auf Asphalt – Wasser wird zur Bühne.",
-      "summary_en": "Wasserspiele im Niddapark is a family-friendly playground in Frankfurt am Main with different play areas for kids."
+      "summary_en": "Wasserspiele im Niddapark is a family-friendly playground in Frankfurt am Main with different play areas for kids.",
+      "summary_da": "Sommergnister på asfalt – vandet bliver til scene."
     },
     {
       "id": "kassel_landaustrasse_alt",
@@ -2123,7 +2235,8 @@
       "address": "Staatspark Karlsaue, Landaustraße, 34121 Kassel",
       "verified": true,
       "summary_de": "Fulda flüstert – und wir klettern hinein ins Glück.",
-      "summary_en": "Erlebnisspielplatz Landaustraße – weiterer Eintrag is a family-friendly playground in Kassel with different play areas for kids."
+      "summary_en": "Erlebnisspielplatz Landaustraße – weiterer Eintrag is a family-friendly playground in Kassel with different play areas for kids.",
+      "summary_da": "Fulda hvisker – og vi klatrer ind i lykken."
     },
     {
       "id": "bispingen_abenteuerspielplatz",
@@ -2143,7 +2256,8 @@
       "address": "Hans-Christoph-Seebohm-Ring, 29646 Bispingen",
       "verified": true,
       "summary_de": "Im Heidewind werden Seile zu Pfaden.",
-      "summary_en": "Abenteuerspielplatz Bispingen is a family-friendly playground in Bispingen with different play areas for kids."
+      "summary_en": "Abenteuerspielplatz Bispingen is a family-friendly playground in Bispingen with different play areas for kids.",
+      "summary_da": "I hedeblæsten bliver reb til stier."
     },
     {
       "id": "felto_filzwelt_soltau",
@@ -2165,7 +2279,8 @@
         "Textil"
       ],
       "summary_de": "Faden über Faden – aus Wolle wird Wunder.",
-      "summary_en": "felto – Filzwelt Soltau (Kinder-Museum) is a children’s and family museum in Soltau for discovering, touching and trying things out."
+      "summary_en": "felto – Filzwelt Soltau (Kinder-Museum) is a children’s and family museum in Soltau for discovering, touching and trying things out.",
+      "summary_da": "Tråd for tråd – af uld bliver der til vidundere."
     },
     {
       "id": "pumptrack_laatzen_gutenbergstrasse",
@@ -2186,7 +2301,8 @@
         "Bike & Scooter"
       ],
       "summary_de": "Asphaltwellen, Herz im Takt – ein Kreis, der Mut macht.",
-      "summary_en": "Pumptrack Laatzen (Park der Sinne) offers a pump track in Laatzen, ideal for bikes and scooters that love waves and turns."
+      "summary_en": "Pumptrack Laatzen (Park der Sinne) offers a pump track in Laatzen, ideal for bikes and scooters that love waves and turns.",
+      "summary_da": "Asfaltbølger, hjertet i takt – en rundbane, der giver mod."
     },
     {
       "id": "skatepark_springe_b217",
@@ -2207,7 +2323,8 @@
         "Ramps"
       ],
       "summary_de": "Kanten, Curbs, kleine Siege – die Stadt wird zur Line.",
-      "summary_en": "Skatepark Springe is a skate park in Springe with areas and ramps for boards, scooters and BMX."
+      "summary_en": "Skatepark Springe is a skate park in Springe with areas and ramps for boards, scooters and BMX.",
+      "summary_da": "Kanter, curbs, små sejre – byen bliver til en line."
     },
     {
       "id": "skatepark_lemvig_havnen",
@@ -2228,7 +2345,8 @@
         "Harbour"
       ],
       "summary_de": "Am Hafen rollt die See im Beton – Wellen aus Schwung.",
-      "summary_en": "Skatepark Lemvig (Havnen 10B) is a skate park in Lemvig with areas and ramps for boards, scooters and BMX."
+      "summary_en": "Skatepark Lemvig (Havnen 10B) is a skate park in Lemvig with areas and ramps for boards, scooters and BMX.",
+      "summary_da": "Ved havnen ruller havet i betonen – bølger af fart og flow."
     }
   ]
 }
