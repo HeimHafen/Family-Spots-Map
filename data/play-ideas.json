@@ -544,5 +544,173 @@
     "age": "4+",
     "type": "Reflexionsspiel",
     "dynamic": false
+  },
+  {
+    "id": "tilla-postcard",
+    "texts": {
+      "de": "Stellt euch vor, ihr schreibt Tilla eine Postkarte von diesem Ort: Was würdet ihr ihr erzählen?",
+      "en": "Imagine you are writing Tilla a postcard from this place: what would you tell her?",
+      "da": "Forestil jer, at I skriver et postkort til Tilla fra dette sted: Hvad ville I fortælle hende?"
+    },
+    "tags": ["Sprache", "Reflexion", "Verbundenheit"],
+    "suitableFor": ["Wiese", "Park", "Stadt", "Abendrunde", "Zuhause"],
+    "duration": "mittel",
+    "age": "5+",
+    "type": "Erzählspiel",
+    "dynamic": false
+  },
+  {
+    "id": "mini-treasure-map",
+    "texts": {
+      "de": "Zeichnet gemeinsam eine Mini-Schatzkarte von dem Ort, an dem ihr seid, und versteckt einen kleinen Schatz (z. B. einen Stein oder Stock).",
+      "en": "Draw a tiny treasure map of the place you are in and hide a little treasure (for example a stone or stick).",
+      "da": "Tegn et lille skattekort over stedet, hvor I er, og gem en lille skat (for eksempel en sten eller en pind)."
+    },
+    "tags": ["Kreativität", "Orientierung", "Natur"],
+    "suitableFor": ["Wald", "Park", "Spielplatz", "Wiese", "Strand"],
+    "duration": "mittel",
+    "age": "5+",
+    "type": "Abenteuerspiel",
+    "dynamic": true
+  },
+  {
+    "id": "weather-report-game",
+    "texts": {
+      "de": "Spielt Wetterbericht: Eine Person ist Reporter und beschreibt das Wetter so, als wäre es eine spannende Nachrichtensendung.",
+      "en": "Play weather report: one person is the reporter and describes the weather as if it were breaking news.",
+      "da": "Leg vejrudsendelse: Én er reporter og beskriver vejret, som om det var en vigtig nyhedsudsendelse."
+    },
+    "tags": ["Sprache", "Humor", "Beobachtung"],
+    "suitableFor": ["Wiese", "Stadt", "Strand", "Wald", "Unterwegs"],
+    "duration": "kurz",
+    "age": "5+",
+    "type": "Rollenspiel",
+    "dynamic": false
+  },
+  {
+    "id": "shadow-shapes",
+    "texts": {
+      "de": "Spielt mit euren Schatten: Könnt ihr Tiere, Buchstaben oder lustige Figuren nur mit euren Schatten formen?",
+      "en": "Play with your shadows: can you make animals, letters or funny shapes using only your shadows?",
+      "da": "Leg med jeres skygger: Kan I lave dyr, bogstaver eller sjove figurer kun med jeres skygger?"
+    },
+    "tags": ["Bewegung", "Fantasie", "Sinne"],
+    "suitableFor": ["Wiese", "Park", "Spielplatz", "Strand"],
+    "duration": "kurz",
+    "age": "3+",
+    "type": "Bewegungsspiel",
+    "dynamic": true
+  },
+  {
+    "id": "kindness-missions",
+    "texts": {
+      "de": "Erfindet kleine Freundlichkeits-Missionen: Jemand lächelt drei Menschen an, jemand sagt „Danke“ besonders bewusst.",
+      "en": "Create tiny kindness missions: one person smiles at three people, another says 'thank you' especially consciously.",
+      "da": "Find på små venligheds-missioner: Én smiler til tre mennesker, en anden siger „tak“ ekstra bevidst."
+    },
+    "tags": ["Achtsamkeit", "Verbundenheit", "Soziales"],
+    "suitableFor": ["Stadt", "Dorf", "Unterwegs", "Zuhause"],
+    "duration": "mittel",
+    "age": "5+",
+    "type": "Sozialspiel",
+    "dynamic": true
+  },
+  {
+    "id": "backpack-oracle",
+    "texts": {
+      "de": "Spielt Rucksack-Orakel: Jede Person zieht einen Gegenstand aus dem Rucksack und erzählt, warum er heute wichtig war oder noch wichtig werden könnte.",
+      "en": "Play backpack oracle: each person takes one item out of the backpack and tells why it was important today or might still become important.",
+      "da": "Leg rygsæk-orakel: Hver person tager én ting op af rygsækken og fortæller, hvorfor den var vigtig i dag, eller kan blive det."
+    },
+    "tags": ["Reflexion", "Humor", "Sprache"],
+    "suitableFor": ["Rastplatz", "Wiese", "Zug", "Zuhause"],
+    "duration": "mittel",
+    "age": "5+",
+    "type": "Gesprächsspiel",
+    "dynamic": false
+  },
+  {
+    "id": "three-sounds-memory",
+    "texts": {
+      "de": "Sammelt drei Geräusche dieses Ortes, die ihr euch merken wollt, und sprecht sie später am Tag noch einmal gemeinsam nach.",
+      "en": "Collect three sounds of this place that you want to remember and imitate them together again later in the day.",
+      "da": "Saml tre lyde fra dette sted, som I gerne vil huske, og efterlign dem sammen senere på dagen."
+    },
+    "tags": ["Hören", "Erinnerung", "Achtsamkeit"],
+    "suitableFor": ["Wald", "Park", "Stadt", "Strand", "See"],
+    "duration": "mittel",
+    "age": "3+",
+    "type": "Sinnesspiel",
+    "dynamic": false
+  },
+  {
+    "id": "slow-motion-race",
+    "texts": {
+      "de": "Macht ein Zeitlupen-Rennen: Wer kann am langsamsten bis zu einem vereinbarten Punkt gehen, ohne stehenzubleiben?",
+      "en": "Do a slow-motion race: who can walk to an agreed point the slowest without stopping?",
+      "da": "Lav et langsom-løb: Hvem kan gå langsomst hen til et aftalt punkt uden at stoppe?"
+    },
+    "tags": ["Bewegung", "Humor", "Körpergefühl"],
+    "suitableFor": ["Wiese", "Spielplatz", "Park", "Strand"],
+    "duration": "kurz",
+    "age": "3+",
+    "type": "Bewegungsspiel",
+    "dynamic": true
+  },
+  {
+    "id": "tiny-museum",
+    "texts": {
+      "de": "Eröffnet ein Mini-Museum: Jedes Kind sucht einen Fund (Stein, Blatt, Ticket) und erklärt, warum er in die Ausstellung kommt.",
+      "en": "Open a tiny museum: each child finds one object (stone, leaf, ticket) and explains why it belongs in the exhibition.",
+      "da": "Åbn et mini-museum: Hvert barn finder en ting (sten, blad, billet) og forklarer, hvorfor den skal med i udstillingen."
+    },
+    "tags": ["Kreativität", "Sprache", "Natur", "Erinnerung"],
+    "suitableFor": ["Wald", "Wiese", "Park", "Stadt", "Strand"],
+    "duration": "mittel",
+    "age": "4+",
+    "type": "Kreativspiel",
+    "dynamic": true
+  },
+  {
+    "id": "feeling-check-in-weather",
+    "texts": {
+      "de": "Macht einen Gefühls-Check-in mit Wettersprache: „In mir ist gerade Sonnenschein, leichter Regen oder Wind“ – ohne zu werten.",
+      "en": "Do a feelings check-in using weather words: 'inside me it’s sunny, light rain or windy' – without judging.",
+      "da": "Lav et følelses-tjek med vejr-ord: „Inde i mig er der sol, let regn eller blæst“ – uden at dømme."
+    },
+    "tags": ["Gefühle", "Achtsamkeit", "Gespräch"],
+    "suitableFor": ["Abendrunde", "Auto", "Zug", "Zuhause"],
+    "duration": "kurz",
+    "age": "5+",
+    "type": "Gesprächsspiel",
+    "dynamic": false
+  },
+  {
+    "id": "future-self-message",
+    "texts": {
+      "de": "Sprecht eine kurze Botschaft an euer Zukunfts-Ich: Was soll es sich von diesem Tag merken?",
+      "en": "Speak a short message to your future self: what should it remember from this day?",
+      "da": "Sig en kort besked til jeres fremtidige jeg: Hvad skal det huske fra denne dag?"
+    },
+    "tags": ["Reflexion", "Erinnerung", "Gefühle"],
+    "suitableFor": ["Abendrunde", "Zelt", "Zuhause", "Rastplatz"],
+    "duration": "mittel",
+    "age": "6+",
+    "type": "Reflexionsspiel",
+    "dynamic": false
+  },
+  {
+    "id": "tilla-route-name",
+    "texts": {
+      "de": "Gebt eurer heutigen Route einen Namen, so als wäre sie ein offizieller Tilla-Weg – wie würde er heißen?",
+      "en": "Give today’s route a name as if it were an official Tilla trail – what would it be called?",
+      "da": "Giv dagens rute et navn, som om det var en officiel Tilla-sti – hvad skulle den hedde?"
+    },
+    "tags": ["Fantasie", "Orientierung", "Gemeinschaft"],
+    "suitableFor": ["Wandern", "Spaziergang", "Radweg", "Stadt"],
+    "duration": "kurz",
+    "age": "4+",
+    "type": "Fantasiespiel",
+    "dynamic": false
   }
 ]
