@@ -12,7 +12,7 @@
   <meta name="color-scheme" content="light dark" />
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
 
-  <!-- Canonical & hreflang (für aktuelle GitHub-Pages-URL; bei eigener Domain anpassen) -->
+  <!-- Canonical & hreflang (bei eigener Domain anpassen) -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
   <link rel="alternate" hreflang="de" href="https://heimhafen.github.io/Family-Spots-Map/" />
   <link rel="alternate" hreflang="en" href="https://heimhafen.github.io/Family-Spots-Map/en/" />
@@ -83,6 +83,11 @@
   <link rel="stylesheet" href="css/badges.css" />
 </head>
 <body>
+  <!-- Globaler Skip-Link für Screenreader & Tastatur -->
+  <a href="#view-map" class="skip-link">
+    Zum Hauptinhalt springen
+  </a>
+
   <noscript>
     <div class="noscript-warning">
       Family Spots Map benötigt JavaScript, um korrekt zu funktionieren.
@@ -94,8 +99,8 @@
     <!-- =========================================
          HEADER
          ========================================= -->
-    <header class="app-header">
-      <div class="app-header-top">
+    <header class="app-header" role="banner">
+      <nav class="app-header-top" aria-label="App-Einstellungen und Schnellzugriffe">
         <div class="app-header-left">
           <span
             class="sr-only"
@@ -119,7 +124,8 @@
               alt=""
               width="24"
               height="24"
-              loading="lazy" />
+              loading="lazy"
+              decoding="async" />
           </button>
 
           <!-- Info-Button (öffnet „Über Family Spots Map“) -->
@@ -128,7 +134,7 @@
             class="btn-icon"
             type="button"
             aria-label="Über Family Spots Map">
-            ℹ️
+            <span aria-hidden="true">ℹ️</span>
           </button>
         </div>
         <div class="app-header-right">
@@ -147,7 +153,7 @@
             type="button"
             aria-labelledby="skip-to-spots-label"
             onclick="document.getElementById('spots-title').scrollIntoView({behavior: 'smooth'});">
-            🗺️
+            <span aria-hidden="true">🗺️</span>
           </button>
 
           <span
@@ -163,8 +169,9 @@
             class="btn-icon"
             type="button"
             aria-labelledby="theme-toggle-label">
-            🌓
+            <span aria-hidden="true">🌓</span>
           </button>
+
           <span
             class="sr-only"
             id="btn-locate-label"
@@ -178,10 +185,10 @@
             class="btn-icon"
             type="button"
             aria-labelledby="btn-locate-label">
-            📍
+            <span aria-hidden="true">📍</span>
           </button>
         </div>
-      </div>
+      </nav>
 
       <div class="app-header-main">
         <h1 class="header-title" id="app-title" tabindex="-1">
@@ -203,7 +210,7 @@
     <!-- =========================================
          MAIN
          ========================================= -->
-    <main class="app-main" role="main">
+    <main class="app-main" id="main-content" role="main">
       <!-- =======================
            MAP VIEW
            ======================= -->
@@ -262,7 +269,7 @@
           </section>
 
           <!-- Familien-Kompass -->
-          <details class="sidebar-section" id="compass-section">
+          <details class="sidebar-section" id="compass-section" aria-labelledby="compass-label">
             <summary class="sidebar-section-header" id="compass-summary">
               <h2
                 class="sidebar-section-title"
@@ -494,10 +501,7 @@
                   max="4"
                   step="1"
                   value="4"
-                  aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description"
-                  aria-valuemin="0"
-                  aria-valuemax="4"
-                  aria-valuenow="4" />
+                  aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description" />
                 <span
                   id="filter-radius-max-label"
                   class="radius-max-label"
@@ -518,10 +522,11 @@
             </div>
 
             <!-- Weitere Filter (Advanced) -->
-            <details class="filter-advanced" id="advanced-filters">
-              <summary class="filter-advanced-summary">
+            <details class="filter-advanced" id="advanced-filters" aria-labelledby="advanced-filters-label">
+              <summary class="filter-advanced-summary" id="advanced-filters-summary">
                 <span
                   class="filter-group-label"
+                  id="advanced-filters-label"
                   data-i18n-de="Weitere Filter"
                   data-i18n-en="More filters"
                   data-i18n-da="Flere filtre">
@@ -700,15 +705,15 @@
         </aside>
 
         <!-- Karte + Details -->
-        <section class="map-section" aria-label="Karte">
+        <section class="map-section" aria-label="Karte mit Spots">
           <div id="map" class="map-container"></div>
           <aside id="spot-detail" class="spot-details spot-details--hidden" aria-live="polite"></aside>
         </section>
 
         <!-- Family Spots Plus -->
-        <details class="sidebar-section" id="plus-section">
+        <details class="sidebar-section" id="plus-section" aria-labelledby="plus-section-title">
           <summary class="sidebar-section-header">
-            <h2 class="sidebar-section-title">Family Spots Plus</h2>
+            <h2 class="sidebar-section-title" id="plus-section-title">Family Spots Plus</h2>
             <!-- kein Button mehr im summary -->
             <span
               id="btn-toggle-plus"
@@ -757,10 +762,11 @@
         </details>
 
         <!-- Mein Tag -->
-        <details class="sidebar-section" id="daylog-section">
+        <details class="sidebar-section" id="daylog-section" aria-labelledby="daylog-section-title">
           <summary class="sidebar-section-header">
             <h2
               class="sidebar-section-title"
+              id="daylog-section-title"
               data-i18n-de="Mein Tag 💛"
               data-i18n-en="My day 💛"
               data-i18n-da="Min dag 💛">
@@ -923,6 +929,31 @@
             oder „· WoMo-Add-on (Plus)“.<br />
             Was keinen Zusatz trägt, gehört zur Basis<br />
             und ist Teil der Grundkarte.
+          </p>
+
+          <hr />
+          <h3>Für Kommunen, Destinationen &amp; Campingplätze</h3>
+          <p>
+            Family Spots Map ist nicht nur eine Karte für Familien,<br />
+            sondern auch ein Werkzeug für Orte, die bewusst familienfreundlich auftreten möchten –<br />
+            Städte, Gemeinden, Tourismusregionen, Campingplätze und Ferienanlagen.
+          </p>
+          <p>
+            Als Partner könnt ihr:
+          </p>
+          <ul>
+            <li>eure Region oder Anlage mit kuratierten Familien-Spots sichtbar machen,</li>
+            <li>eigene Plus-Codes an Gäste, Bürgerinnen und Bürger ausgeben,</li>
+            <li>euere familienfreundlichen Angebote klar markieren und hervorheben,</li>
+            <li>Rückmeldungen aus der Nutzung der Karte nutzen, um Angebote weiterzuentwickeln.</li>
+          </ul>
+          <p>
+            So entsteht aus einer Karte ein Service-Baustein für eure Familienstrategie –<br />
+            vom familienfreundlichen Campingplatz bis zur „Kinder &amp; Familien“-Schwerpunktregion.
+          </p>
+          <p>
+            Interesse an einer Pilotregion oder Kooperation? Schreibe gern an
+            <a href="mailto:hallo@familyspotsmap.de?subject=Partneranfrage">hallo@familyspotsmap.de</a>.
           </p>
 
           <hr />
@@ -1100,6 +1131,31 @@
           </p>
 
           <hr />
+          <h3>For kommuner, destinationer &amp; campingpladser</h3>
+          <p>
+            Family Spots Map er ikke kun et kort til familier,<br />
+            men også et værktøj for steder, der ønsker at være tydeligt familievenlige –<br />
+            byer, kommuner, destinationer, campingpladser og ferieanlæg.
+          </p>
+          <p>
+            Som partner kan I:
+          </p>
+          <ul>
+            <li>gøre jeres område eller anlæg synligt for familier gennem kuraterede spots,</li>
+            <li>udlevere egne Plus-koder til gæster og borgere,</li>
+            <li>markere jeres familievenlige tilbud tydeligt i kortet,</li>
+            <li>bruge indsigter fra brugen af kortet til at udvikle jeres tilbud videre.</li>
+          </ul>
+          <p>
+            På den måde bliver kortet en del af jeres familieindsats –<br />
+            fra den familievenlige campingplads til hele familie-destinationer.
+          </p>
+          <p>
+            Interesseret i et pilotprojekt eller samarbejde? Skriv til
+            <a href="mailto:hallo@familyspotsmap.de?subject=Partneranfrage">hallo@familyspotsmap.de</a>.
+          </p>
+
+          <hr />
           <h3>Vær med – hjælp kortet med at blive bedre</h3>
           <p>
             Kender du et spot, der mangler her –<br />
@@ -1187,6 +1243,7 @@
             and discover a place where minutes<br />
             quietly turn into family memories.
           </p>
+
           <hr />
           <h3>How Family Spots Map works</h3>
           <p>
@@ -1212,6 +1269,7 @@
             helping you to rediscover your spots<br />
             even with poor reception.
           </p>
+
           <hr />
           <h3>Curated &amp; verified – our quality promise</h3>
           <p>
@@ -1234,6 +1292,7 @@
             signs and operator updates,<br />
             and trust your own judgement.
           </p>
+
           <hr />
           <h3>Family Spots Plus – more for RV &amp; adventures</h3>
           <p>
@@ -1264,6 +1323,32 @@
             or “· RV add-on (Plus)”.<br />
             Categories without a suffix belong to the base map.
           </p>
+
+          <hr />
+          <h3>For municipalities, destinations &amp; partners</h3>
+          <p>
+            Family Spots Map is not only designed for families,<br />
+            but also for destinations that want to position themselves as family friendly –<br />
+            cities, municipalities, regions, campgrounds and holiday parks.
+          </p>
+          <p>
+            As a partner you can:
+          </p>
+          <ul>
+            <li>highlight your region or site with curated family spots,</li>
+            <li>provide Plus codes to guests, citizens or customers,</li>
+            <li>showcase your family-friendly services directly on the map,</li>
+            <li>use insights from app usage to improve your offering over time.</li>
+          </ul>
+          <p>
+            This turns the map into a building block of your family strategy –<br />
+            from a single family-friendly campground to a full family destination.
+          </p>
+          <p>
+            Interested in a pilot region or partnership? Feel free to reach out to
+            <a href="mailto:hallo@familyspotsmap.de?subject=Partneranfrage">hallo@familyspotsmap.de</a>.
+          </p>
+
           <hr />
           <h3>Usage, responsibility &amp; safety</h3>
           <p>
@@ -1283,6 +1368,7 @@
             you know your children<br />
             and your situation best.
           </p>
+
           <hr />
           <h3>Project status &amp; version</h3>
           <p>
@@ -1309,7 +1395,7 @@
 
   <!-- Landscape-Warnung für Mobile Landscape -->
   <div class="landscape-warning" aria-hidden="true">
-    Bitte Gerät drehen 📱🔄 – im Hochformat macht die Family Spots Map Tilla ein bisschen glücklicher.
+    <span aria-hidden="true">Bitte Gerät drehen 📱🔄 – im Hochformat macht die Family Spots Map Tilla ein bisschen glücklicher.</span>
   </div>
 
   <!-- Scripts: Leaflet + MarkerCluster -->
