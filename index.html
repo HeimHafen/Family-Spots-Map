@@ -168,7 +168,8 @@
             id="btn-skip-spots"
             class="btn-icon"
             type="button"
-            aria-labelledby="skip-to-spots-label">
+            aria-labelledby="skip-to-spots-label"
+            onclick="document.getElementById('spots-title').scrollIntoView({ behavior: 'smooth', block: 'start' });">
             <span aria-hidden="true">🗺️</span>
           </button>
 
@@ -1425,13 +1426,12 @@
     </footer>
 
     <!-- =========================================
-         TOAST (Bottom-Nav entfernt)
+         TOAST
          ========================================= -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
 
-  <!-- Landscape-Warnung für Mobile Landscape
-       (per JS bei Bedarf aria-hidden auf false und z.B. role="status" setzen) -->
+  <!-- Landscape-Warnung für Mobile Landscape -->
   <div class="landscape-warning" aria-hidden="true">
     <span aria-hidden="true">Bitte Gerät drehen 📱🔄 – im Hochformat macht die Family Spots Map Tilla ein bisschen glücklicher.</span>
   </div>
