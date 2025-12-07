@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="de" data-theme="light">
 <head>
@@ -12,6 +11,7 @@
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
+  <meta name="format-detection" content="telephone=no" />
 
   <!-- Canonical & hreflang (bei eigener Domain anpassen) -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
@@ -38,7 +38,7 @@
         content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer." />
   <meta name="twitter:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
 
-  <!-- Structured Data -->
+  <!-- Structured Data: WebApp -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -58,11 +58,27 @@
   }
   </script>
 
+  <!-- Structured Data: Organization (optional, für Marke/Projekt) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Family Spots Map",
+    "url": "https://heimhafen.github.io/Family-Spots-Map/",
+    "logo": "https://heimhafen.github.io/Family-Spots-Map/assets/icons/icon-192.png",
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "email": "hallo@familyspotsmap.de",
+      "contactType": "customer support",
+      "availableLanguage": ["de", "en", "da"]
+    }]
+  }
+  </script>
+
   <!-- PWA / Apple -->
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="format-detection" content="telephone=no" />
 
   <!-- Performance hints -->
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
@@ -85,7 +101,7 @@
 </head>
 <body>
   <!-- Globaler Skip-Link für Screenreader & Tastatur -->
-  <a href="#view-map" class="skip-link">
+  <a href="#main-content" class="skip-link">
     Zum Hauptinhalt springen
   </a>
 
@@ -152,8 +168,7 @@
             id="btn-skip-spots"
             class="btn-icon"
             type="button"
-            aria-labelledby="skip-to-spots-label"
-            onclick="document.getElementById('spots-title').scrollIntoView({behavior: 'smooth'});">
+            aria-labelledby="skip-to-spots-label">
             <span aria-hidden="true">🗺️</span>
           </button>
 
@@ -215,7 +230,11 @@
       <!-- =======================
            MAP VIEW
            ======================= -->
-      <section id="view-map" class="view view--active" aria-label="Karte">
+      <section
+        id="view-map"
+        class="view view--active"
+        aria-label="Karte"
+        aria-hidden="false">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar" aria-labelledby="spots-title">
           <!-- Tilla-Begleiterin -->
@@ -816,7 +835,11 @@
       <!-- =========================================
            ABOUT VIEW
            ========================================= -->
-      <section id="view-about" class="view" aria-label="Über Family Spots Map">
+      <section
+        id="view-about"
+        class="view"
+        aria-label="Über Family Spots Map"
+        aria-hidden="true">
         <!-- Deutsch -->
         <article id="page-about-de" class="page page-about" lang="de" aria-hidden="false">
           <h2>Über Family Spots Map</h2>
@@ -849,7 +872,7 @@
           </p>
 
           <hr />
-          <h3>So funktioniert Family Spots Map</h3>
+          <h3 id="about-how-it-works">So funktioniert Family Spots Map</h3>
           <p>
             <strong>Karte &amp; Filter:</strong> Zoome in eure Region,<br />
             streif mit den Fingern über die Karte<br />
@@ -877,7 +900,7 @@
           </p>
 
           <hr />
-          <h3>Kuratiert &amp; verifiziert – unser Qualitätsversprechen</h3>
+          <h3 id="about-plus">Kuratiert &amp; verifiziert – unser Qualitätsversprechen</h3>
           <p>
             Family Spots Map ist keine anonyme Sammelplattform,<br />
             sondern eine lebendige Karte,<br />
@@ -933,7 +956,7 @@
           </p>
 
           <hr />
-          <h3>Für Kommunen, Destinationen &amp; Campingplätze</h3>
+          <h3 id="about-partners">Für Kommunen, Destinationen &amp; Campingplätze</h3>
           <p>
             Family Spots Map ist nicht nur eine Karte für Familien,<br />
             sondern auch ein Werkzeug für Orte, die bewusst familienfreundlich auftreten möchten –<br />
@@ -958,7 +981,7 @@
           </p>
 
           <hr />
-          <h3>Mitmachen – hilf, die Karte besser zu machen</h3>
+          <h3 id="about-contribute">Mitmachen – hilf, die Karte besser zu machen</h3>
           <p>
             Du kennst einen Spot, der hier noch fehlt –<br />
             einen besonderen Spielplatz,<br />
@@ -1389,12 +1412,26 @@
     </main>
 
     <!-- =========================================
+         FOOTER (Platzhalter für Impressum / Datenschutz)
+         ========================================= -->
+    <footer class="app-footer" aria-label="Fußbereich">
+      <nav class="footer-nav" aria-label="Rechtliches und Kontakt">
+        <a href="/impressum.html">Impressum</a>
+        <span aria-hidden="true">·</span>
+        <a href="/datenschutz.html">Datenschutz</a>
+        <span aria-hidden="true">·</span>
+        <a href="mailto:hallo@familyspotsmap.de">Kontakt</a>
+      </nav>
+    </footer>
+
+    <!-- =========================================
          TOAST (Bottom-Nav entfernt)
          ========================================= -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
 
-  <!-- Landscape-Warnung für Mobile Landscape -->
+  <!-- Landscape-Warnung für Mobile Landscape
+       (per JS bei Bedarf aria-hidden auf false und z.B. role="status" setzen) -->
   <div class="landscape-warning" aria-hidden="true">
     <span aria-hidden="true">Bitte Gerät drehen 📱🔄 – im Hochformat macht die Family Spots Map Tilla ein bisschen glücklicher.</span>
   </div>
