@@ -345,6 +345,9 @@ let filterSummaryEl;
 let isFilterModalOpen = false;
 let lastFocusBeforeFilterModal = null;
 
+// Skip-Link (Zum Hauptinhalt springen)
+let skipLinkEl;
+
 // ------------------------------------------------------
 // Utilities
 // ------------------------------------------------------
@@ -2127,6 +2130,8 @@ async function init() {
     compassApplyBtnEl = document.getElementById("compass-apply");
     btnToggleCompassEl = document.getElementById("btn-toggle-compass");
 
+    skipLinkEl = document.querySelector(".skip-link");
+
     if (btnToggleFiltersEl && filterSectionEl && filterSectionEl.id) {
       btnToggleFiltersEl.setAttribute("aria-controls", filterSectionEl.id);
       btnToggleFiltersEl.setAttribute("aria-expanded", "false");
@@ -2475,6 +2480,29 @@ async function init() {
       filterModalEl.addEventListener("click", (event) => {
         if (event.target === filterModalEl) {
           closeFilterModal({ returnFocus: true });
+        }
+      });
+    }
+
+    // Skip-Link „Zum Hauptinhalt springen“
+    if (skipLinkEl) {
+      skipLinkEl.addEventListener("click", (event) => {
+        const href = skipLinkEl.getAttribute("href") || "";
+        if (!href.startsWith("#")) return;
+        event.preventDefault();
+        const id = href.slice(1);
+        const target = document.getElementById(id);
+        if (!target) return;
+
+        // Sicherstellen, dass der Bereich fokussierbar ist
+        if (!target.hasAttribute("tabindex")) {
+          target.setAttribute("tabindex", "-1");
+        }
+
+        // Scrollen & Fokus setzen
+        target.scrollIntoView();
+        if (typeof target.focus === "function") {
+          target.focus();
         }
       });
     }
