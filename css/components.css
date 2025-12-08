@@ -504,6 +504,18 @@ select.input:focus {
     background 0.12s ease-out;
 }
 
+/* Dark Mode: Standardzustand der Chips besser lesbar */
+[data-theme="dark"] .mood-chip,
+[data-theme="dark"] .travel-chip,
+[data-theme="dark"] .compass-mode-chip,
+[data-theme="dark"] .tag-filter-chip {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.7);
+}
+
 .mood-chip-emoji {
   font-size: 15px;
 }
@@ -564,6 +576,15 @@ select.input:focus {
     0 2px 6px rgba(0, 0, 0, 0.12),
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
   cursor: pointer;
+}
+
+/* Dark Mode: Chips im Filter-Modal */
+[data-theme="dark"] .btn-chip {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.7);
 }
 
 .tag-filter-chip--active {
@@ -1107,7 +1128,7 @@ body[data-filter-modal-open="1"] {
     0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+  transition: transform 0.08s ease-out, box-shadow 0.08s.ease-out;
 }
 
 .bottom-nav-item--active {
@@ -1263,7 +1284,7 @@ body[data-filter-modal-open="1"] {
 }
 
 .pin-pop {
-  animation: pin-pop 0.22s ease-out;
+  animation: pin-pop 0.22s.ease-out;
 }
 
 @keyframes pin-pop {
