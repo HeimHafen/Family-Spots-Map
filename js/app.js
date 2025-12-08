@@ -1,4 +1,3 @@
-
 // js/app.js
 // ======================================================
 // Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
@@ -856,6 +855,12 @@ async function loadSpots() {
 
     spots = rawSpots.map(normalizeSpot);
 
+    // DEBUG: Wie viele Spots kommen wirklich aus den Daten?
+    console.log("[Family Spots] loadSpots:", {
+      rawSpots: rawSpots.length,
+      normalizedSpots: spots.length
+    });
+
     loadFavoritesFromStorage();
     populateCategoryOptions();
 
@@ -1448,11 +1453,26 @@ function applyFiltersAndRender() {
   }
 
   const radiusKm =
-    RADIUS_STEPS_KM[radiusStep] ?? RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ?? Infinity;
+    RADIUS_STEPS_KM[radiusStep] ??
+    RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ??
+    Infinity;
+
+  // DEBUG: Status nach filterSpots, vor Radius
+  console.log("[Family Spots] applyFiltersAndRender BEFORE radius:", {
+    totalSpots: spots.length,
+    afterFilterSpots: nonGeoFiltered.length,
+    radiusStep,
+    radiusKm
+  });
 
   filteredSpots = center
     ? nonGeoFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
     : nonGeoFiltered;
+
+  // DEBUG: Status nach Radius-Filter
+  console.log("[Family Spots] applyFiltersAndRender AFTER radius:", {
+    filteredSpots: filteredSpots.length
+  });
 
   renderSpotList();
 
@@ -1461,7 +1481,9 @@ function applyFiltersAndRender() {
       map,
       markersLayer,
       spots: filteredSpots,
-      maxMarkers: MAX_MARKERS_RENDER,
+      // WICHTIG: hier testweise kein Marker-Limit mehr
+      maxMarkers: Infinity,
+      // vorher: maxMarkers: MAX_MARKERS_RENDER,
       currentLang,
       showToast,
       hasShownMarkerLimitToast,
@@ -2509,27 +2531,6 @@ async function init() {
 
     if (FEATURES.compass && compassApplyBtnEl) {
       compassApplyBtnEl.addEventListener("click", handleCompassApply);
-    }
-
-    if (FEATURES.playIdeas && playIdeasBtnEl) {
-      playIdeasBtnEl.addEventListener("click", () => {
-        const idea = getRandomPlayIdea();
-        if (!idea) return;
-
-        if (tilla && typeof tilla.showPlayIdea === "function") {
-          tilla.showPlayIdea(idea);
-
-          const tillaCard = document.querySelector(".tilla-sidebar-card");
-          if (tillaCard && typeof tillaCard.scrollIntoView === "function") {
-            tillaCard.scrollIntoView({
-              behavior: "smooth",
-              block: "nearest"
-            });
-          }
-        } else {
-          showToast(idea);
-        }
-      });
     }
 
     // Filter-Modal öffnen / schließen / anwenden / zurücksetzen
