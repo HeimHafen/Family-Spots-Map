@@ -878,7 +878,7 @@ select.input:focus {
 /* Map-Tiles farblich an App anpassen */
 .leaflet-container .leaflet-tile {
   filter: var(--map-filter);
-  transition: filter 0.25s ease-out;
+  transition: filter 0.25s.ease-out;
 }
 
 @media (max-width: 899px) {
