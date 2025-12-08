@@ -600,12 +600,12 @@ function updatePlusStatusText(status) {
 
 function getCompassPlusHintText(lang = currentLang) {
   if (lang === LANG_EN) {
-    return "Tip: You can open and collapse Compass, Family Spots Plus and “My day” at any time using the “Show” buttons.";
+    return "Tip: Use “Show” to open or hide Compass, Plus and “My day” at any time.";
   }
   if (lang === LANG_DA) {
-    return "Tip: Du kan altid åbne og lukke Kompas, Family Spots Plus og “Min dag” med knappen “Vis”.";
+    return "Tip: Brug “Vis” til at åbne eller lukke Kompas, Plus og “Min dag” når som helst.";
   }
-  return "Tipp: Kompass, Family Spots Plus und „Mein Tag“ kannst du jederzeit über die Buttons „Anzeigen“ öffnen und wieder einklappen.";
+  return "Tipp: Kompass, Plus und „Mein Tag“ kannst du über „Anzeigen“ jederzeit ein- und ausklappen.";
 }
 
 function hasSeenCompassPlusHint() {
@@ -633,25 +633,71 @@ function ensureCompassPlusHint() {
   if (hasSeenCompassPlusHint()) return;
   if (!plusSectionEl && !daylogSectionEl && !compassSectionEl) return;
 
-  if (!compassPlusHintEl) {
-    const hint = document.createElement("p");
-    hint.id = "compass-plus-hint";
-    hint.className = "filter-group-helper";
-    hint.style.marginBottom = "6px";
-    hint.textContent = getCompassPlusHintText();
-
-    let anchor =
-      plusSectionEl || daylogSectionEl || compassSectionEl || sidebarEl.firstChild;
-    if (anchor && anchor.parentNode === sidebarEl) {
-      sidebarEl.insertBefore(hint, anchor);
-    } else {
-      sidebarEl.insertBefore(hint, sidebarEl.firstChild);
+  // Wenn schon vorhanden → nur Text & ARIA aktualisieren
+  if (compassPlusHintEl) {
+    const textEl = compassPlusHintEl.querySelector(
+      ".fsm-onboarding-hint__text"
+    );
+    if (textEl) {
+      textEl.textContent = getCompassPlusHintText();
     }
-
-    compassPlusHintEl = hint;
-  } else {
-    compassPlusHintEl.textContent = getCompassPlusHintText();
+    const closeBtn = compassPlusHintEl.querySelector(
+      ".fsm-onboarding-hint__close"
+    );
+    if (closeBtn) {
+      if (currentLang === LANG_EN) {
+        closeBtn.setAttribute("aria-label", "Hide this hint");
+      } else if (currentLang === LANG_DA) {
+        closeBtn.setAttribute("aria-label", "Skjul dette tip");
+      } else {
+        closeBtn.setAttribute("aria-label", "Hinweis ausblenden");
+      }
+    }
+    return;
   }
+
+  // Neu erstellen
+  const wrapper = document.createElement("div");
+  wrapper.className = "fsm-onboarding-hint";
+  wrapper.id = "compass-plus-hint";
+
+  const textEl = document.createElement("p");
+  textEl.className = "fsm-onboarding-hint__text";
+  textEl.textContent = getCompassPlusHintText();
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.className = "fsm-onboarding-hint__close";
+
+  if (currentLang === LANG_EN) {
+    closeBtn.setAttribute("aria-label", "Hide this hint");
+  } else if (currentLang === LANG_DA) {
+    closeBtn.setAttribute("aria-label", "Skjul dette tip");
+  } else {
+    closeBtn.setAttribute("aria-label", "Hinweis ausblenden");
+  }
+
+  closeBtn.textContent = "×";
+
+  closeBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    markCompassPlusHintSeenAndRemove();
+  });
+
+  wrapper.appendChild(textEl);
+  wrapper.appendChild(closeBtn);
+
+  // Einfügeort: vor Plus / Mein Tag / Kompass – oder ganz oben in der Sidebar
+  let anchor =
+    plusSectionEl || daylogSectionEl || compassSectionEl || sidebarEl.firstChild;
+
+  if (anchor && anchor.parentNode === sidebarEl) {
+    sidebarEl.insertBefore(wrapper, anchor);
+  } else {
+    sidebarEl.insertBefore(wrapper, sidebarEl.firstChild);
+  }
+
+  compassPlusHintEl = wrapper;
 }
 
 /**
