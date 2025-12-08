@@ -1,7 +1,7 @@
 // js/map.js
 // ======================================================
-// Leaflet-Map + Marker-Rendering + Routing-Helfer
-// (keine UI-States, aber DOM für Marker-HTML)
+/* Leaflet-Map + Marker-Rendering + Routing-Helfer
+   (keine UI-States, aber DOM für Marker-HTML) */
 // ======================================================
 
 "use strict";
@@ -108,16 +108,16 @@ export function initMap({
   // Marker-Layer (Cluster, falls verfügbar)
   let markersLayer;
   if (typeof L.markerClusterGroup === "function") {
-    // MarkerCluster mit eigener Icon-Gestaltung,
-    // und chunkedLoading, damit Spots nach und nach auftauchen
+    // MarkerCluster mit eigener Icon-Gestaltung
     markersLayer = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: true,
       disableClusteringAtZoom: 11,
       animateAddingMarkers: true,
+      // kann drin bleiben, ist aber für unseren Effekt nicht zwingend
       chunkedLoading: true,
-      chunkDelay: 40,      // Abstand zwischen den "Paketen"
-      chunkInterval: 200,  // max. Rechenzeit pro Paket in ms
+      chunkDelay: 40,
+      chunkInterval: 200,
       iconCreateFunction(cluster) {
         const count = cluster.getChildCount();
         const label = count > 999 ? "999+" : String(count);
@@ -146,15 +146,20 @@ export function initMap({
   return { map, markersLayer };
 }
 
+// ------------------------------------------------------
+// Sequenzielles Rendering – damit Spots „nach und nach“ erscheinen
+// ------------------------------------------------------
+
+let lastRenderId = 0;
+
 /**
  * Marker auf der Map rendern.
  *
  * Wird bei jedem Filter-/Zoom-Update aufgerufen. Entfernt alle
  * bestehenden Marker und rendert die übergebenen Spots neu.
  *
- * Für MarkerCluster-Gruppen werden alle Marker gesammelt und mit
- * addLayers(...) hinzugefügt – so greift chunkedLoading und die Pins
- * „poppen“ nach und nach auf.
+ * Marker werden in kleinen Batches nacheinander hinzugefügt,
+ * sodass sie sichtbar „aufpoppen“.
  *
  * @param {Object} params
  * @param {any} params.map
@@ -188,6 +193,9 @@ export function renderMarkers({
     return hasShownMarkerLimitToast;
   }
 
+  // Neue Render-Runde identifizieren (zum Abbrechen alter Batches)
+  const renderId = ++lastRenderId;
+
   markersLayer.clearLayers();
 
   if (!Array.isArray(spots) || spots.length === 0) {
@@ -205,8 +213,8 @@ export function renderMarkers({
     ? spots.slice(0, effectiveMaxMarkers)
     : spots;
 
-  // DivIcon-HTML als String – kompatibel mit Leaflet.
-  // Die CSS-Klasse .pin-pop sorgt für das eigentliche „Poppen“.
+  // DivIcon-HTML als String – die CSS-Klasse .pin-pop sorgt für die
+  // eigentliche „Pop“-Animation beim Einfügen ins DOM.
   const iconHtml =
     '<div class="spot-marker"><div class="spot-marker-inner pin-pop"></div></div>';
 
@@ -224,7 +232,7 @@ export function renderMarkers({
 
     const marker = L.marker([spot.lat, spot.lng], { icon });
 
-    // Kein Leaflet-Popup – nur der große Info-Kasten unten in der UI
+    // Kein Leaflet-Popup – nur der große Info-Kasten in der UI
     if (typeof focusSpotOnMap === "function") {
       marker.on("click", () => {
         focusSpotOnMap(spot);
@@ -234,12 +242,32 @@ export function renderMarkers({
     markers.push(marker);
   });
 
-  // Wenn MarkerClusterGroup: addLayers(...) -> chunkedLoading greift
-  if (typeof markersLayer.addLayers === "function") {
-    markersLayer.addLayers(markers);
-  } else {
-    // Fallback für einfache LayerGroup (ältere Browser / ohne Plugin)
-    markers.forEach((m) => markersLayer.addLayer(m));
+  // Marker in Batches hinzufügen – damit sie nach und nach erscheinen
+  const BATCH_SIZE = 30;
+
+  const schedule =
+    typeof window !== "undefined" &&
+    typeof window.requestAnimationFrame === "function"
+      ? window.requestAnimationFrame
+      : (fn) => window.setTimeout(fn, 16);
+
+  function addBatch(startIndex) {
+    // Wenn inzwischen ein neuer renderMarkers-Lauf gestartet wurde:
+    if (renderId !== lastRenderId) return;
+
+    const end = Math.min(startIndex + BATCH_SIZE, markers.length);
+
+    for (let i = startIndex; i < end; i++) {
+      markersLayer.addLayer(markers[i]);
+    }
+
+    if (end < markers.length) {
+      schedule(() => addBatch(end));
+    }
+  }
+
+  if (markers.length > 0) {
+    addBatch(0);
   }
 
   if (shouldLimit) {
