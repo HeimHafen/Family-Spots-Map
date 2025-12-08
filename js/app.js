@@ -855,11 +855,7 @@ async function loadSpots() {
 
     spots = rawSpots.map(normalizeSpot);
 
-    // DEBUG: Wie viele Spots kommen wirklich aus den Daten?
-    console.log("[Family Spots] loadSpots:", {
-      rawSpots: rawSpots.length,
-      normalizedSpots: spots.length
-    });
+    console.log("[Family Spots] loadSpots:", { total: spots.length });
 
     loadFavoritesFromStorage();
     populateCategoryOptions();
@@ -1431,6 +1427,20 @@ function applyFiltersAndRender() {
     return;
   }
 
+  console.log("[Family Spots] applyFiltersAndRender BEFORE radius:", {
+    plusActive,
+    radiusStep,
+    searchTerm,
+    categoryFilter,
+    ageFilter,
+    moodFilter,
+    travelMode,
+    onlyBigAdventures,
+    onlyVerified,
+    onlyFavorites,
+    activeTagFilters: Array.from(activeTagFilters)
+  });
+
   const nonGeoFiltered = filterSpots(spots, {
     plusActive,
     searchTerm,
@@ -1457,21 +1467,14 @@ function applyFiltersAndRender() {
     RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ??
     Infinity;
 
-  // DEBUG: Status nach filterSpots, vor Radius
-  console.log("[Family Spots] applyFiltersAndRender BEFORE radius:", {
-    totalSpots: spots.length,
-    afterFilterSpots: nonGeoFiltered.length,
-    radiusStep,
-    radiusKm
-  });
-
   filteredSpots = center
     ? nonGeoFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
     : nonGeoFiltered;
 
-  // DEBUG: Status nach Radius-Filter
   console.log("[Family Spots] applyFiltersAndRender AFTER radius:", {
-    filteredSpots: filteredSpots.length
+    totalSpots: spots.length,
+    afterNonGeo: nonGeoFiltered.length,
+    afterRadius: filteredSpots.length
   });
 
   renderSpotList();
@@ -1481,9 +1484,7 @@ function applyFiltersAndRender() {
       map,
       markersLayer,
       spots: filteredSpots,
-      // WICHTIG: hier testweise kein Marker-Limit mehr
-      maxMarkers: Infinity,
-      // vorher: maxMarkers: MAX_MARKERS_RENDER,
+      maxMarkers: MAX_MARKERS_RENDER,
       currentLang,
       showToast,
       hasShownMarkerLimitToast,
@@ -1987,24 +1988,24 @@ function handleToggleCompass() {
 // Plus & Mein Tag
 // ------------------------------------------------------
 
+/**
+ * DEV-HACK: Plus immer aktiv
+ * Diese Version ignoriert den gespeicherten Status komplett.
+ */
 function loadPlusStateFromStorage(options = {}) {
   const { reapplyFilters = false } = options;
 
-  if (!FEATURES.plus) {
-    plusActive = false;
-    updatePlusStatusText({ active: false, plan: null, validUntil: null });
-    return;
-  }
+  // Plus einfach dauerhaft an
+  plusActive = true;
 
-  try {
-    const status = getPlusStatus();
-    plusActive = !!status.active;
-    updatePlusStatusText(status);
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Plus-Status nicht laden:", err);
-    plusActive = false;
-    updatePlusStatusText({ active: false, plan: null, validUntil: null });
-  }
+  // Optional: Dev-Status im UI anzeigen
+  updatePlusStatusText({
+    active: true,
+    plan: "dev",
+    validUntil: null
+  });
+
+  console.log("[Family Spots] DEV: Plus forced active:", { plusActive });
 
   if (reapplyFilters && spots.length) {
     applyFiltersAndRender();
@@ -2510,10 +2511,7 @@ async function init() {
       );
 
       daylogSectionEl.addEventListener("toggle", () => {
-        updateGenericSectionToggleLabel(
-          btnToggleDaylogEl,
-          daylogSectionEl.open
-        );
+        updateGenericSectionToggleLabel(btnToggleDaylogEl, daylogSectionEl.open);
       });
 
       updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
@@ -2531,6 +2529,27 @@ async function init() {
 
     if (FEATURES.compass && compassApplyBtnEl) {
       compassApplyBtnEl.addEventListener("click", handleCompassApply);
+    }
+
+    if (FEATURES.playIdeas && playIdeasBtnEl) {
+      playIdeasBtnEl.addEventListener("click", () => {
+        const idea = getRandomPlayIdea();
+        if (!idea) return;
+
+        if (tilla && typeof tilla.showPlayIdea === "function") {
+          tilla.showPlayIdea(idea);
+
+          const tillaCard = document.querySelector(".tilla-sidebar-card");
+          if (tillaCard && typeof tillaCard.scrollIntoView === "function") {
+            tillaCard.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest"
+            });
+          }
+        } else {
+          showToast(idea);
+        }
+      });
     }
 
     // Filter-Modal öffnen / schließen / anwenden / zurücksetzen
