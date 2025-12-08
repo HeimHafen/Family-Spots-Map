@@ -1517,16 +1517,88 @@ function renderSpotList() {
   if (!spotListEl) return;
   spotListEl.innerHTML = "";
 
+  // Neuer, reichhaltiger Empty State
   if (!filteredSpots.length) {
-    const msg = document.createElement("p");
-    msg.className = "filter-group-helper";
-    msg.textContent =
-      currentLang === LANG_EN
-        ? "Right now no spot matches your filters. Try a wider radius or remove one of the filters."
-        : currentLang === LANG_DA
-        ? "Der er lige nu ingen spots, der matcher dine filtre. Prøv en større radius eller fjern et filter."
-        : "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus.";
-    spotListEl.appendChild(msg);
+    const wrapper = document.createElement("div");
+    wrapper.className = "empty-state";
+
+    const titleEl = document.createElement("h3");
+    titleEl.className = "empty-state-title";
+
+    const textEl = document.createElement("p");
+    textEl.className = "empty-state-text";
+
+    const actionsEl = document.createElement("div");
+    actionsEl.className = "empty-state-actions";
+
+    // Texte nach Sprache
+    if (currentLang === LANG_EN) {
+      titleEl.textContent = "No spots for your selection right now";
+      textEl.textContent =
+        "Your radius might be too small or there are many filters active. Try one of these options:";
+    } else if (currentLang === LANG_DA) {
+      titleEl.textContent = "Ingen spots til jeres valg lige nu";
+      textEl.textContent =
+        "Måske er radius for lille, eller der er mange filtre slået til. Prøv en af disse muligheder:";
+    } else {
+      titleEl.textContent = "Gerade keine Spots für eure Auswahl";
+      textEl.textContent =
+        "Vielleicht ist euer Radius zu klein oder es sind viele Filter aktiv. Ihr könnt es so versuchen:";
+    }
+
+    // Button: Radius vergrößern
+    const btnRadius = document.createElement("button");
+    btnRadius.type = "button";
+    btnRadius.className = "btn btn-small";
+
+    if (currentLang === LANG_EN) {
+      btnRadius.textContent = "Increase radius";
+    } else if (currentLang === LANG_DA) {
+      btnRadius.textContent = "Større radius";
+    } else {
+      btnRadius.textContent = "Radius vergrößern";
+    }
+
+    btnRadius.addEventListener("click", () => {
+      if (!filterRadiusEl) return;
+
+      const maxIndex = RADIUS_STEPS_KM.length - 1;
+      let value = parseInt(filterRadiusEl.value, 10);
+      if (Number.isNaN(value)) value = radiusStep;
+
+      if (value < maxIndex) {
+        radiusStep = value + 1;
+        filterRadiusEl.value = String(radiusStep);
+        updateRadiusTexts();
+        applyFiltersAndRender();
+      }
+    });
+
+    // Button: Filter zurücksetzen
+    const btnReset = document.createElement("button");
+    btnReset.type = "button";
+    btnReset.className = "btn btn-small btn-secondary";
+
+    if (currentLang === LANG_EN) {
+      btnReset.textContent = "Reset all filters";
+    } else if (currentLang === LANG_DA) {
+      btnReset.textContent = "Nulstil alle filtre";
+    } else {
+      btnReset.textContent = "Alle Filter zurücksetzen";
+    }
+
+    btnReset.addEventListener("click", () => {
+      resetAllFilters();
+    });
+
+    actionsEl.appendChild(btnRadius);
+    actionsEl.appendChild(btnReset);
+
+    wrapper.appendChild(titleEl);
+    wrapper.appendChild(textEl);
+    wrapper.appendChild(actionsEl);
+
+    spotListEl.appendChild(wrapper);
     return;
   }
 
