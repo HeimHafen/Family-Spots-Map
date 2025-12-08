@@ -2654,4 +2654,18 @@ async function init() {
   }
 }
 
-//
+// ------------------------------------------------------
+// DOMContentLoaded – I18N.init() + App-Init
+// ------------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    if (typeof I18N !== "undefined" && typeof I18N.init === "function") {
+      await I18N.init();
+    }
+  } catch (err) {
+    console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
+  }
+
+  await init();
+});
