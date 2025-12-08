@@ -1,57 +1,23 @@
 // js/map.js
-// ======================================================
-// Leaflet-Map + Marker-Rendering + Routing-Helfer
-// (keine UI-States, aber DOM für Marker-HTML)
-// ======================================================
+// =========================================
+// Leaflet-Map + Marker / Cluster
+// =========================================
 
 "use strict";
 
-import {
-  DEFAULT_MAP_CENTER,
-  DEFAULT_MAP_ZOOM,
-  MAX_MARKERS_RENDER
-} from "./config.js";
-
 /**
- * @typedef {import("./app.js").Spot} Spot
- */
-
-/**
- * Koordinaten validieren und bei Bedarf String → Zahl konvertieren.
- *
- * Schreibt gültige Werte zurück auf den Spot, damit nachfolgende
- * Aufrufe von Leaflet immer konsistente Zahlen vorfinden.
- *
- * Unterstützt zusätzlich Fallbacks:
- * - latitude / longitude
- * - lon (als Alternative für lng)
- *
- * @param {Spot | null | undefined} spot
- * @returns {boolean} true, wenn lat/lng gültig sind
+ * Prüft, ob ein Spot brauchbare Koordinaten hat.
+ * Normalisiert ggf. lon -> lng.
  */
 export function hasValidLatLng(spot) {
   if (!spot) return false;
 
-  let { lat, lng } = spot;
+  let lat = Number(spot.lat);
+  let lng = spot.lng != null ? Number(spot.lng) : Number(spot.lon);
 
-  // Fallbacks auf alternative Feldnamen (defensiv, für ältere Datenstände)
-  if (lat == null && typeof spot.latitude !== "undefined") {
-    lat = spot.latitude;
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+    return false;
   }
-  if (lng == null && typeof spot.longitude !== "undefined") {
-    lng = spot.longitude;
-  }
-  if (lng == null && typeof spot.lon !== "undefined") {
-    lng = spot.lon;
-  }
-
-  if (typeof lat === "string") lat = parseFloat(lat);
-  if (typeof lng === "string") lng = parseFloat(lng);
-
-  if (typeof lat !== "number" || typeof lng !== "number") return false;
-  if (Number.isNaN(lat) || Number.isNaN(lng)) return false;
-  if (lat < -90 || lat > 90) return false;
-  if (lng < -180 || lng > 180) return false;
 
   spot.lat = lat;
   spot.lng = lng;
@@ -59,267 +25,131 @@ export function hasValidLatLng(spot) {
 }
 
 /**
- * Initialisiert die Leaflet-Map und gibt Map + Marker-Layer zurück.
- *
- * Falls Leaflet (L) nicht verfügbar ist oder der Map-Container fehlt,
- * wird ein Fallback-Objekt mit { map: null, markersLayer: null } geliefert.
- *
- * @param {Object} [options]
- * @param {number[]} [options.center]
- * @param {number} [options.zoom]
- * @returns {{map: any, markersLayer: any}}
+ * Initialisiert die Leaflet-Karte und den Marker-Layer.
+ * Wenn das MarkerCluster-Plugin verfügbar ist, wird ein Cluster-Layer genutzt,
+ * sonst fällt die Funktion auf ein einfaches LayerGroup zurück.
  */
-export function initMap({
-  center = DEFAULT_MAP_CENTER,
-  zoom = DEFAULT_MAP_ZOOM
-} = {}) {
-  if (typeof L === "undefined" || typeof L.map !== "function") {
-    console.error("[Family Spots] Leaflet (L) ist nicht verfügbar.");
-    return { map: null, markersLayer: null };
+export function initMap({ center, zoom }) {
+  if (typeof L === "undefined") {
+    throw new Error("Leaflet (L) ist nicht geladen.");
   }
 
-  const containerId = "map";
-  const containerEl = document.getElementById(containerId);
-  if (!containerEl) {
-    console.error(
-      `[Family Spots] Map-Container mit id="${containerId}" wurde nicht im DOM gefunden.`
-    );
-    return { map: null, markersLayer: null };
-  }
+  const map = L.map("map", {
+    center,
+    zoom,
+    zoomControl: true,
+    attributionControl: true
+  });
 
-  let map;
-  try {
-    map = L.map(containerEl, {
-      center,
-      zoom,
-      zoomControl: false
-    });
-  } catch (err) {
-    console.error(
-      "[Family Spots] Fehler beim Initialisieren der Karte:",
-      err
-    );
-    return { map: null, markersLayer: null };
-  }
-
-  // Basis-OSM-Tiles
+  // Basis-Tiles
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 18,
-    attribution: "© OpenStreetMap-Mitwirkende"
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende'
   }).addTo(map);
 
-  // Marker-Layer (Cluster, falls verfügbar)
+  // Marker-Layer: Cluster, wenn möglich
   let markersLayer;
   if (typeof L.markerClusterGroup === "function") {
-    // MarkerCluster mit eigener Icon-Gestaltung
     markersLayer = L.markerClusterGroup({
-      showCoverageOnHover: false,
-      spiderfyOnMaxZoom: true,
-      disableClusteringAtZoom: 11,
-      animateAddingMarkers: true, // kann drin bleiben
       chunkedLoading: true,
-      chunkDelay: 40,
-      chunkInterval: 200,
-      iconCreateFunction(cluster) {
-        const count = cluster.getChildCount();
-        const label = count > 999 ? "999+" : String(count);
-
-        // Cluster-Icon – Styling über .marker-cluster-* in CSS
-        return L.divIcon({
-          html: `
-            <div class="marker-cluster">
-              <div><span>${label}</span></div>
-            </div>
-          `.trim(),
-          className: "", // Klassen kommen vom Plugin selbst (marker-cluster-*)
-          iconSize: [32, 32],
-          iconAnchor: [16, 16]
-        });
-      }
+      showCoverageOnHover: false,
+      spiderfyOnMaxZoom: false,
+      disableClusteringAtZoom: 13
     });
   } else {
     console.warn(
-      "[Family Spots] markerClusterGroup nicht gefunden – nutze normale LayerGroup."
+      "[Family Spots] Leaflet.markercluster nicht verfügbar – verwende einfache Marker-Ebene."
     );
     markersLayer = L.layerGroup();
   }
 
-  map.addLayer(markersLayer);
+  markersLayer.addTo(map);
 
   return { map, markersLayer };
 }
 
-// ------------------------------------------------------
-// Sequenzielles Rendering – damit Spots „nach und nach“ erscheinen
-// ------------------------------------------------------
-
-let lastRenderId = 0;
-
 /**
- * Marker auf der Map rendern.
- *
- * Wird bei jedem Filter-/Zoom-Update aufgerufen. Entfernt alle
- * bestehenden Marker und rendert die übergebenen Spots neu.
- *
- * Marker werden in kleinen Batches nacheinander hinzugefügt,
- * sodass sie sichtbar „aufpoppen“.
- *
- * @param {Object} params
- * @param {any} params.map
- * @param {any} params.markersLayer
- * @param {Spot[]} params.spots
- * @param {number} [params.maxMarkers]
- * @param {string} [params.currentLang] ISO-Sprache ("de" | "en" | "da")
- * @param {(msg:string)=>void} [params.showToast]
- * @param {boolean} [params.hasShownMarkerLimitToast]
- * @param {(spot:Spot)=>void} [params.focusSpotOnMap]
- * @returns {boolean} neuer Wert für hasShownMarkerLimitToast
+ * Rendert Marker für eine Spot-Liste.
+ * - nutzt den übergebenen markersLayer (Cluster oder LayerGroup)
+ * - begrenzt die Anzahl Marker (maxMarkers)
+ * - ruft bei Klick/Enter focusSpotOnMap(spot) auf
+ * - gibt zurück, ob der Marker-Limit-Toast bereits gezeigt wurde
  */
 export function renderMarkers({
   map,
   markersLayer,
   spots,
-  maxMarkers = MAX_MARKERS_RENDER,
-  currentLang = "de",
+  maxMarkers,
+  currentLang, // wird hier nur für Toast-Text genutzt, falls du das später brauchst
   showToast,
-  hasShownMarkerLimitToast = false,
+  hasShownMarkerLimitToast,
   focusSpotOnMap
 }) {
-  // Wenn Map oder Layer fehlen, keine Fehler werfen – einfach nichts tun.
   if (!map || !markersLayer) return hasShownMarkerLimitToast;
 
-  // Leaflet-Schutz – falls L unerwartet nicht verfügbar ist.
-  if (typeof L === "undefined" || typeof L.divIcon !== "function") {
-    console.error(
-      "[Family Spots] Leaflet ist nicht verfügbar – Marker können nicht gerendert werden."
-    );
-    return hasShownMarkerLimitToast;
-  }
-
-  // Neue Render-Runde identifizieren (zum Abbrechen alter Batches)
-  const renderId = ++lastRenderId;
-
-  // Alte Marker entfernen
   markersLayer.clearLayers();
 
   if (!Array.isArray(spots) || spots.length === 0) {
     return hasShownMarkerLimitToast;
   }
 
-  // Sicherheitsnetz für maxMarkers
-  const effectiveMaxMarkers =
-    typeof maxMarkers === "number" && maxMarkers > 0
-      ? maxMarkers
-      : MAX_MARKERS_RENDER;
+  let list = spots;
+  let tooManyMarkers = false;
 
-  const shouldLimit = spots.length > effectiveMaxMarkers;
-  const toRender = shouldLimit ? spots.slice(0, effectiveMaxMarkers) : spots;
+  if (maxMarkers && spots.length > maxMarkers) {
+    list = spots.slice(0, maxMarkers);
+    tooManyMarkers = true;
+  }
 
-  // DivIcon-HTML als String – die CSS-Klasse .pin-pop sorgt für die
-  // eigentliche „Pop“-Animation beim Einfügen ins DOM.
-  const iconHtml = `
-    <div class="spot-marker pin-pop">
-      <div class="spot-marker-inner"></div>
-    </div>
-  `.trim();
-
-  const markers = [];
-
-  toRender.forEach((spot) => {
+  list.forEach((spot) => {
     if (!hasValidLatLng(spot)) return;
 
+    // HTML für unseren runden Punkt-Marker
+    const html = '<div class="spot-marker-inner"></div>';
+
     const icon = L.divIcon({
-      html: iconHtml,
-      className: "",
-      iconSize: [24, 24],
-      iconAnchor: [12, 12]
+      className: "spot-marker pin-pop", // pin-pop sorgt für das kurze Aufpoppen
+      html,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9]
     });
 
     const marker = L.marker([spot.lat, spot.lng], { icon });
 
-    // Kein Leaflet-Popup – nur der große Info-Kasten in der UI
     if (typeof focusSpotOnMap === "function") {
-      marker.on("click", () => {
-        focusSpotOnMap(spot);
+      marker.on("click", () => focusSpotOnMap(spot));
+      marker.on("keypress", (ev) => {
+        const key = ev.originalEvent && ev.originalEvent.key;
+        if (key === "Enter" || key === " " || key === "Spacebar") {
+          focusSpotOnMap(spot);
+        }
       });
     }
 
-    markers.push(marker);
+    markersLayer.addLayer(marker);
   });
 
-  // Marker in Batches hinzufügen – damit sie nach und nach erscheinen
-  const BATCH_SIZE = 30;
-
-  const schedule =
-    typeof window !== "undefined" &&
-    typeof window.requestAnimationFrame === "function"
-      ? window.requestAnimationFrame.bind(window)
-      : (fn) => window.setTimeout(fn, 16);
-
-  function addBatch(startIndex) {
-    // Wenn inzwischen ein neuer renderMarkers-Lauf gestartet wurde:
-    if (renderId !== lastRenderId) return;
-
-    const end = Math.min(startIndex + BATCH_SIZE, markers.length);
-
-    for (let i = startIndex; i < end; i++) {
-      markersLayer.addLayer(markers[i]);
-    }
-
-    if (end < markers.length) {
-      schedule(() => addBatch(end));
-    }
-  }
-
-  if (markers.length > 0) {
-    addBatch(0);
-  }
-
-  // Hinweis bei Marker-Limit
-  if (shouldLimit) {
-    // Nur einmal pro Session anzeigen
-    if (!hasShownMarkerLimitToast && typeof showToast === "function") {
-      let msg;
-      if (currentLang === "de") {
-        msg = `Nur die ersten ${effectiveMaxMarkers} Spots auf der Karte – bitte Filter oder Zoom nutzen.`;
-      } else if (currentLang === "da" || currentLang === "dk") {
-        msg = `Kun de første ${effectiveMaxMarkers} spots vises på kortet – brug gerne filtre eller zoom ind.`;
-      } else {
-        msg = `Only the first ${effectiveMaxMarkers} spots are shown on the map – please use filters or zoom in.`;
-      }
-      showToast(msg);
-      hasShownMarkerLimitToast = true;
-    }
-  } else {
-    // Reset, falls Filter/Zoom wieder unter das Limit fallen
-    hasShownMarkerLimitToast = false;
+  if (tooManyMarkers && !hasShownMarkerLimitToast && typeof showToast === "function") {
+    showToast("toast_marker_limit");
+    hasShownMarkerLimitToast = true;
   }
 
   return hasShownMarkerLimitToast;
 }
 
 /**
- * Routen-URLs für einen Spot berechnen.
- *
- * Nutzt Apple Maps und Google Maps. Wenn keine gültigen Koordinaten
- * vorhanden sind, wird null zurückgegeben.
- *
- * @param {Spot} spot
- * @returns {{apple: string, google: string} | null}
+ * Baut Routing-URLs für Apple Maps und Google Maps.
  */
 export function getRouteUrlsForSpot(spot) {
   if (!hasValidLatLng(spot)) return null;
 
   const { lat, lng } = spot;
-  const name =
-    spot.title ||
-    spot.name ||
-    spot.spotName ||
-    (spot.id != null ? String(spot.id) : "Spot");
-  const encodedName = encodeURIComponent(name || "");
 
   return {
-    apple: `https://maps.apple.com/?ll=${lat},${lng}&q=${encodedName}`,
+    apple: `https://maps.apple.com/?ll=${lat},${lng}&q=${encodeURIComponent(
+      `${lat},${lng}`
+    )}`,
     google: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
   };
 }
