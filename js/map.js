@@ -126,6 +126,11 @@ export function initMap({
  * Wird bei jedem Filter-/Zoom-Update aufgerufen. Entfernt alle
  * bestehenden Marker und rendert die übergebenen Spots neu.
  *
+ * Es werden maximal MAX_MARKERS_RENDER (oder der übergebene maxMarkers-Wert)
+ * gerendert. Wenn mehr Spots vorhanden sind, werden die Spots gewählt,
+ * die der aktuellen Kartenmitte am nächsten liegen – so hast du nicht
+ * „alle Spots auf einmal“, sondern einen sinnvollen Ausschnitt.
+ *
  * @param {Object} params
  * @param {any} params.map
  * @param {any} params.markersLayer
@@ -171,9 +176,31 @@ export function renderMarkers({
       : MAX_MARKERS_RENDER;
 
   const shouldLimit = spots.length > effectiveMaxMarkers;
-  const toRender = shouldLimit
-    ? spots.slice(0, effectiveMaxMarkers)
-    : spots;
+
+  let spotsToRender;
+
+  if (shouldLimit) {
+    // Nur die Spots rendern, die der aktuellen Kartenmitte am nächsten sind
+    const center = map.getCenter();
+    const cLat = center.lat;
+    const cLng = center.lng;
+
+    spotsToRender = spots
+      .slice()
+      .filter((spot) => hasValidLatLng(spot))
+      .sort((a, b) => {
+        const dALat = a.lat - cLat;
+        const dALng = a.lng - cLng;
+        const dBLat = b.lat - cLat;
+        const dBLng = b.lng - cLng;
+        const distA = dALat * dALat + dALng * dALng;
+        const distB = dBLat * dBLat + dBLng * dBLng;
+        return distA - distB;
+      })
+      .slice(0, effectiveMaxMarkers);
+  } else {
+    spotsToRender = spots;
+  }
 
   // DivIcon-HTML als String (nicht als DOM-Element) – kompatibel mit Leaflet
   const iconHtml =
@@ -187,7 +214,7 @@ export function renderMarkers({
     iconAnchor: [12, 12]
   });
 
-  toRender.forEach((spot) => {
+  spotsToRender.forEach((spot) => {
     if (!hasValidLatLng(spot)) return;
 
     const marker = L.marker([spot.lat, spot.lng], { icon: baseIcon });
