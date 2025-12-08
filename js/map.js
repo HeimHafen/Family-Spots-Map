@@ -110,14 +110,13 @@ export function initMap({
 
   // Marker-Layer (Cluster, falls verfügbar)
   let markersLayer;
-
   if (typeof L.markerClusterGroup === "function") {
     // MarkerCluster mit eigener Icon-Gestaltung
     markersLayer = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: true,
       disableClusteringAtZoom: 11,
-      animateAddingMarkers: true, // kann drin bleiben, ist aber für unseren Effekt nicht zwingend
+      animateAddingMarkers: true, // kann drin bleiben
       chunkedLoading: true,
       chunkDelay: 40,
       chunkInterval: 200,
@@ -128,7 +127,9 @@ export function initMap({
         // Cluster-Icon – Styling über .marker-cluster-* in CSS
         return L.divIcon({
           html: `
-            <div><span>${label}</span></div>
+            <div class="marker-cluster">
+              <div><span>${label}</span></div>
+            </div>
           `.trim(),
           className: "", // Klassen kommen vom Plugin selbst (marker-cluster-*)
           iconSize: [32, 32],
@@ -212,9 +213,7 @@ export function renderMarkers({
       : MAX_MARKERS_RENDER;
 
   const shouldLimit = spots.length > effectiveMaxMarkers;
-  const toRender = shouldLimit
-    ? spots.slice(0, effectiveMaxMarkers)
-    : spots;
+  const toRender = shouldLimit ? spots.slice(0, effectiveMaxMarkers) : spots;
 
   // DivIcon-HTML als String – die CSS-Klasse .pin-pop sorgt für die
   // eigentliche „Pop“-Animation beim Einfügen ins DOM.
