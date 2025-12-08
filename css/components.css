@@ -418,6 +418,12 @@ textarea.input:focus-visible {
   margin-bottom: 1rem;
 }
 
+/* Im eingeklappten Zustand keinen Zusatzabstand,
+   damit Höhe und Optik zum Familien-Kompass passen */
+.sidebar-section--collapsed #btn-toggle-filters {
+  margin-bottom: 0;
+}
+
 .sidebar-section-header + .filter-group-helper {
   margin-top: 1rem;
 }
@@ -1042,7 +1048,7 @@ body[data-filter-modal-open="1"] {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s ease-out, transform 0.18s.ease-out;
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
   z-index: 1100;
 }
 
