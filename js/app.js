@@ -333,21 +333,6 @@ let lastSpotTriggerEl = null;
 // Onboarding-Hint (Kompass / Plus / Mein Tag)
 let compassPlusHintEl = null;
 
-// Filtermodal
-let btnOpenFilterModalEl;
-let filterModalEl;
-let filterModalCloseEl;
-let filterModalApplyEl;
-let filterModalResetEl;
-let filterSummaryEl;
-
-// State für Filtermodal
-let isFilterModalOpen = false;
-let lastFocusBeforeFilterModal = null;
-
-// Skip-Link (Zum Hauptinhalt springen)
-let skipLinkEl;
-
 // ------------------------------------------------------
 // Utilities
 // ------------------------------------------------------
@@ -784,7 +769,6 @@ function setLanguage(lang, { initial = false } = {}) {
   updateLanguageSwitcherVisual();
   applyStaticI18n();
   updatePlusStatusText();
-  updateFilterSummary();
 
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
     btn.textContent =
@@ -1135,268 +1119,6 @@ function renderTagFilterChips() {
 }
 
 // ------------------------------------------------------
-// Kompakte Filter-Zusammenfassung (unter Basis-Filtern)
-// ------------------------------------------------------
-
-function getMoodLabelForSummary() {
-  if (!moodFilter) return "";
-
-  if (currentLang === LANG_EN) {
-    if (moodFilter === "relaxed") return "Relaxed";
-    if (moodFilter === "action") return "Active";
-    if (moodFilter === "water") return "Water & sand";
-    if (moodFilter === "animals") return "Animal day";
-  } else if (currentLang === LANG_DA) {
-    if (moodFilter === "relaxed") return "Afslappet";
-    if (moodFilter === "action") return "Aktiv";
-    if (moodFilter === "water") return "Vand & sand";
-    if (moodFilter === "animals") return "Dyredag";
-  } else {
-    if (moodFilter === "relaxed") return "Entspannt";
-    if (moodFilter === "action") return "Bewegung";
-    if (moodFilter === "water") return "Wasser & Sand";
-    if (moodFilter === "animals") return "Tier-Tag";
-  }
-  return "";
-}
-
-function updateFilterSummary() {
-  if (!filterSummaryEl) return;
-
-  const parts = [];
-  const maxRadiusIndex = RADIUS_STEPS_KM.length - 1;
-
-  // Suche
-  if (searchTerm) {
-    if (currentLang === LANG_EN) {
-      parts.push(`Search: “${searchTerm}”`);
-    } else if (currentLang === LANG_DA) {
-      parts.push(`Søgning: “${searchTerm}”`);
-    } else {
-      parts.push(`Suche: „${searchTerm}“`);
-    }
-  }
-
-  // Stimmung
-  const moodLabel = getMoodLabelForSummary();
-  if (moodLabel) {
-    if (currentLang === LANG_EN) {
-      parts.push(`Mood: ${moodLabel}`);
-    } else if (currentLang === LANG_DA) {
-      parts.push(`Stemning: ${moodLabel}`);
-    } else {
-      parts.push(`Stimmung: ${moodLabel}`);
-    }
-  }
-
-  // Radius
-  if (radiusStep !== maxRadiusIndex) {
-    const km = RADIUS_STEPS_KM[radiusStep];
-    if (currentLang === LANG_EN) {
-      parts.push(`Radius: ${km} km`);
-    } else if (currentLang === LANG_DA) {
-      parts.push(`Radius: ${km} km`);
-    } else {
-      parts.push(`Radius: ${km} km`);
-    }
-  }
-
-  // Kategorie
-  if (categoryFilter && filterCategoryEl) {
-    const selected = filterCategoryEl.selectedOptions[0];
-    const label =
-      (selected && selected.textContent.trim()) ||
-      getCategoryLabel(categoryFilter);
-    if (label) {
-      if (currentLang === LANG_EN) {
-        parts.push(`Category: ${label}`);
-      } else if (currentLang === LANG_DA) {
-        parts.push(`Kategori: ${label}`);
-      } else {
-        parts.push(`Kategorie: ${label}`);
-      }
-    }
-  }
-
-  // Alter
-  if (ageFilter !== "all" && filterAgeEl) {
-    const selected = filterAgeEl.selectedOptions[0];
-    const label = selected ? selected.textContent.trim() : ageFilter;
-    if (currentLang === LANG_EN) {
-      parts.push(`Age: ${label}`);
-    } else if (currentLang === LANG_DA) {
-      parts.push(`Alder: ${label}`);
-    } else {
-      parts.push(`Alter: ${label}`);
-    }
-  }
-
-  // Schnellfilter (Tag-Filter)
-  if (activeTagFilters && activeTagFilters.size > 0) {
-    const count = activeTagFilters.size;
-    if (currentLang === LANG_EN) {
-      parts.push(`Quick filters (${count})`);
-    } else if (currentLang === LANG_DA) {
-      parts.push(`Hurtigfiltre (${count})`);
-    } else {
-      parts.push(`Schnellfilter (${count})`);
-    }
-  }
-
-  // Nur verifizierte
-  if (onlyVerified) {
-    if (currentLang === LANG_EN) {
-      parts.push("Only verified spots");
-    } else if (currentLang === LANG_DA) {
-      parts.push("Kun verificerede spots");
-    } else {
-      parts.push("Nur verifizierte Spots");
-    }
-  }
-
-  // Nur Favoriten
-  if (onlyFavorites) {
-    if (currentLang === LANG_EN) {
-      parts.push("Favourites only");
-    } else if (currentLang === LANG_DA) {
-      parts.push("Kun favoritter");
-    } else {
-      parts.push("Nur Favoriten");
-    }
-  }
-
-  // Große Abenteuer
-  if (onlyBigAdventures) {
-    if (currentLang === LANG_EN) {
-      parts.push("Big adventures");
-    } else if (currentLang === LANG_DA) {
-      parts.push("Store eventyr");
-    } else {
-      parts.push("Große Abenteuer");
-    }
-  }
-
-  let text;
-  if (!parts.length) {
-    if (currentLang === LANG_EN) {
-      text = "Active filters: basic filters";
-    } else if (currentLang === LANG_DA) {
-      text = "Aktive filtre: basisfiltre";
-    } else {
-      text = "Aktive Filter: Basisfilter";
-    }
-  } else {
-    const prefix =
-      currentLang === LANG_EN
-        ? "Active filters: "
-        : currentLang === LANG_DA
-        ? "Aktive filtre: "
-        : "Aktive Filter: ";
-    text = prefix + parts.join(" · ");
-  }
-
-  filterSummaryEl.textContent = text;
-}
-
-// ------------------------------------------------------
-// Filter-Modal öffnen / schließen / zurücksetzen
-// ------------------------------------------------------
-
-function openFilterModal() {
-  if (!filterModalEl) return;
-  isFilterModalOpen = true;
-  lastFocusBeforeFilterModal = document.activeElement;
-  filterModalEl.hidden = false;
-
-  // Body-Scroll sperren, solange das Modal geöffnet ist
-  if (document && document.body) {
-    document.body.setAttribute("data-filter-modal-open", "1");
-  }
-
-  const focusable = filterModalEl.querySelector(
-    "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
-  );
-  if (focusable && typeof focusable.focus === "function") {
-    focusable.focus();
-  }
-}
-
-function closeFilterModal(options = {}) {
-  if (!filterModalEl) return;
-  if (!isFilterModalOpen) return;
-
-  const { returnFocus = true } = options;
-
-  isFilterModalOpen = false;
-  filterModalEl.hidden = true;
-
-  // Body-Scroll wieder freigeben
-  if (document && document.body) {
-    document.body.removeAttribute("data-filter-modal-open");
-  }
-
-  if (
-    returnFocus &&
-    lastFocusBeforeFilterModal &&
-    typeof lastFocusBeforeFilterModal.focus === "function"
-  ) {
-    lastFocusBeforeFilterModal.focus();
-  }
-}
-
-function resetAllFilters() {
-  searchTerm = "";
-  moodFilter = null;
-  travelMode = null;
-  ageFilter = "all";
-  categoryFilter = "";
-  onlyBigAdventures = false;
-  onlyVerified = false;
-  onlyFavorites = false;
-  activeTagFilters.clear();
-
-  // Radius auf Maximum (alle Spots)
-  radiusStep = RADIUS_STEPS_KM.length - 1;
-
-  if (filterSearchEl) filterSearchEl.value = "";
-  if (filterAgeEl) filterAgeEl.value = "all";
-  if (filterCategoryEl) filterCategoryEl.value = "";
-
-  if (filterRadiusEl) {
-    filterRadiusEl.value = String(radiusStep);
-    updateRadiusTexts();
-  }
-
-  if (filterBigEl) filterBigEl.checked = false;
-  if (filterVerifiedEl) filterVerifiedEl.checked = false;
-  if (filterFavoritesEl) filterFavoritesEl.checked = false;
-
-  // Mood-Chips zurücksetzen
-  document.querySelectorAll(".mood-chip").forEach((chip) => {
-    chip.classList.remove("mood-chip--active");
-    chip.setAttribute("aria-pressed", "false");
-  });
-
-  // Travel-Mode-Chips zurücksetzen
-  document.querySelectorAll(".travel-chip").forEach((chip) => {
-    chip.classList.remove("travel-chip--active");
-    chip.setAttribute("aria-pressed", "false");
-  });
-
-  if (tilla && typeof tilla.setTravelMode === "function") {
-    tilla.setTravelMode(null);
-  }
-
-  // Tag-Filter-Chips neu zeichnen
-  if (tagFilterContainerEl) {
-    renderTagFilterChips();
-  }
-
-  updateCompassUI();
-  applyFiltersAndRender();
-}
-
-// ------------------------------------------------------
 // Filterlogik (verwendet filterSpots aus filters.js)
 // ------------------------------------------------------
 
@@ -1421,7 +1143,6 @@ function applyFiltersAndRender() {
     if (tilla && typeof tilla.onNoSpotsFound === "function") {
       tilla.onNoSpotsFound();
     }
-    updateFilterSummary();
     return;
   }
 
@@ -1467,8 +1188,6 @@ function applyFiltersAndRender() {
       focusSpotOnMap
     });
   }
-
-  updateFilterSummary();
 
   if (!tilla) return;
 
@@ -1517,88 +1236,16 @@ function renderSpotList() {
   if (!spotListEl) return;
   spotListEl.innerHTML = "";
 
-  // Neuer, reichhaltiger Empty State
   if (!filteredSpots.length) {
-    const wrapper = document.createElement("div");
-    wrapper.className = "empty-state";
-
-    const titleEl = document.createElement("h3");
-    titleEl.className = "empty-state-title";
-
-    const textEl = document.createElement("p");
-    textEl.className = "empty-state-text";
-
-    const actionsEl = document.createElement("div");
-    actionsEl.className = "empty-state-actions";
-
-    // Texte nach Sprache
-    if (currentLang === LANG_EN) {
-      titleEl.textContent = "No spots for your selection right now";
-      textEl.textContent =
-        "Your radius might be too small or there are many filters active. Try one of these options:";
-    } else if (currentLang === LANG_DA) {
-      titleEl.textContent = "Ingen spots til jeres valg lige nu";
-      textEl.textContent =
-        "Måske er radius for lille, eller der er mange filtre slået til. Prøv en af disse muligheder:";
-    } else {
-      titleEl.textContent = "Gerade keine Spots für eure Auswahl";
-      textEl.textContent =
-        "Vielleicht ist euer Radius zu klein oder es sind viele Filter aktiv. Ihr könnt es so versuchen:";
-    }
-
-    // Button: Radius vergrößern
-    const btnRadius = document.createElement("button");
-    btnRadius.type = "button";
-    btnRadius.className = "btn btn-small";
-
-    if (currentLang === LANG_EN) {
-      btnRadius.textContent = "Increase radius";
-    } else if (currentLang === LANG_DA) {
-      btnRadius.textContent = "Større radius";
-    } else {
-      btnRadius.textContent = "Radius vergrößern";
-    }
-
-    btnRadius.addEventListener("click", () => {
-      if (!filterRadiusEl) return;
-
-      const maxIndex = RADIUS_STEPS_KM.length - 1;
-      let value = parseInt(filterRadiusEl.value, 10);
-      if (Number.isNaN(value)) value = radiusStep;
-
-      if (value < maxIndex) {
-        radiusStep = value + 1;
-        filterRadiusEl.value = String(radiusStep);
-        updateRadiusTexts();
-        applyFiltersAndRender();
-      }
-    });
-
-    // Button: Filter zurücksetzen
-    const btnReset = document.createElement("button");
-    btnReset.type = "button";
-    btnReset.className = "btn btn-small btn-secondary";
-
-    if (currentLang === LANG_EN) {
-      btnReset.textContent = "Reset all filters";
-    } else if (currentLang === LANG_DA) {
-      btnReset.textContent = "Nulstil alle filtre";
-    } else {
-      btnReset.textContent = "Alle Filter zurücksetzen";
-    }
-
-    btnReset.addEventListener("click", () => {
-      resetAllFilters();
-    });
-
-    actionsEl.appendChild(btnRadius);
-    actionsEl.appendChild(btnReset);
-
-    wrapper.appendChild(titleEl);
-    wrapper.appendChild(textEl);
-    wrapper.appendChild(actionsEl);
-
-    spotListEl.appendChild(wrapper);
+    const msg = document.createElement("p");
+    msg.className = "filter-group-helper";
+    msg.textContent =
+      currentLang === LANG_EN
+        ? "Right now no spot matches your filters. Try a wider radius or remove one of the filters."
+        : currentLang === LANG_DA
+        ? "Der er lige nu ingen spots, der matcher dine filtre. Prøv en større radius eller fjern et filter."
+        : "Aktuell passt kein Spot zu euren Filtern. Probiert einen größeren Radius oder nehmt einen Filter heraus.";
+    spotListEl.appendChild(msg);
     return;
   }
 
@@ -2180,14 +1827,6 @@ async function init() {
     filterFavoritesEl = document.getElementById("filter-favorites");
     tagFilterContainerEl = document.getElementById("filter-tags");
 
-    filterSummaryEl = document.getElementById("filter-summary");
-
-    btnOpenFilterModalEl = document.getElementById("btn-open-filter-modal");
-    filterModalEl = document.getElementById("filter-modal");
-    filterModalCloseEl = document.getElementById("filter-modal-close");
-    filterModalApplyEl = document.getElementById("filter-modal-apply");
-    filterModalResetEl = document.getElementById("filter-modal-reset");
-
     spotListEl = document.getElementById("spot-list");
     spotDetailEl = document.getElementById("spot-detail");
 
@@ -2211,8 +1850,6 @@ async function init() {
     compassApplyLabelEl = document.getElementById("compass-apply-label");
     compassApplyBtnEl = document.getElementById("compass-apply");
     btnToggleCompassEl = document.getElementById("btn-toggle-compass");
-
-    skipLinkEl = document.querySelector(".skip-link");
 
     if (btnToggleFiltersEl && filterSectionEl && filterSectionEl.id) {
       btnToggleFiltersEl.setAttribute("aria-controls", filterSectionEl.id);
@@ -2531,64 +2168,6 @@ async function init() {
       });
     }
 
-    // Filter-Modal öffnen / schließen / anwenden / zurücksetzen
-    if (btnOpenFilterModalEl && filterModalEl) {
-      btnOpenFilterModalEl.addEventListener("click", () => {
-        openFilterModal();
-      });
-    }
-
-    if (filterModalCloseEl) {
-      filterModalCloseEl.addEventListener("click", () => {
-        closeFilterModal({ returnFocus: true });
-      });
-    }
-
-    if (filterModalApplyEl) {
-      filterModalApplyEl.addEventListener("click", () => {
-        applyFiltersAndRender();
-        closeFilterModal({ returnFocus: true });
-      });
-    }
-
-    if (filterModalResetEl) {
-      filterModalResetEl.addEventListener("click", () => {
-        resetAllFilters();
-      });
-    }
-
-    // Klick auf den Overlay-Hintergrund schließt das Modal
-    if (filterModalEl) {
-      filterModalEl.addEventListener("click", (event) => {
-        if (event.target === filterModalEl) {
-          closeFilterModal({ returnFocus: true });
-        }
-      });
-    }
-
-    // Skip-Link „Zum Hauptinhalt springen“
-    if (skipLinkEl) {
-      skipLinkEl.addEventListener("click", (event) => {
-        const href = skipLinkEl.getAttribute("href") || "";
-        if (!href.startsWith("#")) return;
-        event.preventDefault();
-        const id = href.slice(1);
-        const target = document.getElementById(id);
-        if (!target) return;
-
-        // Sicherstellen, dass der Bereich fokussierbar ist
-        if (!target.hasAttribute("tabindex")) {
-          target.setAttribute("tabindex", "-1");
-        }
-
-        // Scrollen & Fokus setzen
-        target.scrollIntoView();
-        if (typeof target.focus === "function") {
-          target.focus();
-        }
-      });
-    }
-
     document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
       const targetId = btn.getAttribute("data-target");
       let section = null;
@@ -2627,26 +2206,15 @@ async function init() {
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
-
-      // 1. Erst das Filter-Modal schließen, falls offen
-      if (isFilterModalOpen && filterModalEl && !filterModalEl.hidden) {
-        event.preventDefault();
-        closeFilterModal({ returnFocus: true });
-        return;
-      }
-
-      // 2. Dann ggf. das Spot-Detail
       if (!spotDetailEl) return;
 
-      const isOpen =
-        !spotDetailEl.classList.contains("spot-details--hidden");
+      const isOpen = !spotDetailEl.classList.contains("spot-details--hidden");
       if (!isOpen) return;
 
       event.preventDefault();
       closeSpotDetails({ returnFocus: true });
     });
 
-    updateFilterSummary();
     loadSpots();
   } catch (err) {
     console.error("[Family Spots] Init-Fehler:", err);
