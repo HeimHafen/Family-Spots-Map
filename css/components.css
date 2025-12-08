@@ -21,10 +21,14 @@ select {
 .btn {
   border: none;
   border-radius: var(--radius-pill);
-  padding: 9px 16px;
+  padding: 8px 16px;
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
   background: linear-gradient(
     135deg,
     var(--accent),
@@ -38,20 +42,24 @@ select {
 }
 
 .btn-small {
-  padding: 7px 14px;
+  padding: 6px 14px;
   font-size: 13px;
 }
 
 .btn-ghost {
   border-radius: var(--radius-pill);
   border: none;
-  padding: 5px 10px;
+  padding: 6px 14px;
   background: rgba(255, 255, 255, 0.88);
   color: #7a4a2b;
   font-size: 13px;
   font-weight: 600;
   box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
 }
 
 [data-theme="dark"] .btn-ghost {
@@ -82,6 +90,7 @@ select {
   align-items: center;
   justify-content: center;
   gap: 6px;
+  line-height: 1.1;
   margin-top: 8px;
   max-width: 100%;
   white-space: normal; /* darf umbrechen */
@@ -463,7 +472,7 @@ select.input:focus {
 .tag-filter-chip {
   border: none;
   border-radius: var(--radius-pill);
-  padding: 7px 10px;
+  padding: 6px 10px 7px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -476,6 +485,7 @@ select.input:focus {
   cursor: pointer;
   transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
     background 0.12s ease-out;
+  line-height: 1.1;
 }
 
 .mood-chip-emoji {
@@ -560,21 +570,21 @@ select.input:focus {
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  padding: 10px 16px;
-  margin: 8px 0 4px;
+  padding: 8px 16px;
+  margin: 4px 0 0;
   border-radius: 999px;
-  min-height: 40px;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 2px 6px rgba(165, 100, 53, 0.22);
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
+  min-height: 36px;
 }
 
-/* Label in der Pille exakt mittig – kein zusätzlicher Margin */
 .filter-advanced-summary .filter-group-label {
   margin: 0;
+  line-height: 1.2;
 }
 
 [data-theme="dark"] .filter-advanced-summary {
@@ -1102,7 +1112,7 @@ body[data-filter-modal-open="1"] {
 }
 
 .pin-pop {
-  animation: pin-pop 0.22s ease-out;
+  animation: pin-pop 0.22s.ease-out;
 }
 
 @keyframes pin-pop {
@@ -1336,6 +1346,9 @@ hr {
   font-size: 14px;
   font-weight: 600;
   box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .favorite-toggle:hover {
