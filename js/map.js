@@ -72,7 +72,8 @@ export function initMap({ center, zoom }) {
 /**
  * Rendert Marker für eine Spot-Liste.
  * - nutzt den übergebenen markersLayer (Cluster oder LayerGroup)
- * - begrenzt die Anzahl Marker (maxMarkers)
+ * - maxMarkers dient nur noch als Schwellenwert für einen Hinweis-Toast,
+ *   es werden aber trotzdem alle Spots gerendert
  * - ruft bei Klick/Enter focusSpotOnMap(spot) auf
  * - gibt zurück, ob der Marker-Limit-Toast bereits gezeigt wurde
  */
@@ -81,7 +82,7 @@ export function renderMarkers({
   markersLayer,
   spots,
   maxMarkers,
-  currentLang, // wird hier nur für Toast-Text genutzt, falls du das später brauchst
+  currentLang, // aktuell nur für evtl. spätere Toast-Texte
   showToast,
   hasShownMarkerLimitToast,
   focusSpotOnMap
@@ -94,13 +95,11 @@ export function renderMarkers({
     return hasShownMarkerLimitToast;
   }
 
-  let list = spots;
-  let tooManyMarkers = false;
-
-  if (maxMarkers && spots.length > maxMarkers) {
-    list = spots.slice(0, maxMarkers);
-    tooManyMarkers = true;
-  }
+  // NEU: wir begrenzen die Liste nicht mehr hart, sondern nutzen maxMarkers
+  // nur als Schwellwert für einen Hinweis.
+  const list = spots;
+  const tooManyMarkers =
+    maxMarkers && Number.isFinite(maxMarkers) && spots.length > maxMarkers;
 
   list.forEach((spot) => {
     if (!hasValidLatLng(spot)) return;
@@ -130,6 +129,7 @@ export function renderMarkers({
     markersLayer.addLayer(marker);
   });
 
+  // Hinweis-Toast, wenn sehr viele Marker gerendert werden
   if (tooManyMarkers && !hasShownMarkerLimitToast && typeof showToast === "function") {
     showToast("toast_marker_limit");
     hasShownMarkerLimitToast = true;
