@@ -149,6 +149,10 @@ export function initMap({
  * Wird bei jedem Filter-/Zoom-Update aufgerufen. Entfernt alle
  * bestehenden Marker und rendert die übergebenen Spots neu.
  *
+ * Die Marker nutzen eine CSS-Animation (.pin-pop) und erhalten
+ * hier eine gestaffelte animation-delay, damit sie „nach und nach“
+ * aufpoppen.
+ *
  * @param {Object} params
  * @param {any} params.map
  * @param {any} params.markersLayer
@@ -198,22 +202,28 @@ export function renderMarkers({
     ? spots.slice(0, effectiveMaxMarkers)
     : spots;
 
-  // DivIcon-HTML als String (nicht als DOM-Element) – kompatibel mit Leaflet
-  const iconHtml =
-    '<div class="spot-marker"><div class="spot-marker-inner pin-pop"></div></div>';
-
-  // Icon einmalig erzeugen und für alle Marker wiederverwenden
-  const baseIcon = L.divIcon({
-    html: iconHtml,
-    className: "",
-    iconSize: [24, 24],
-    iconAnchor: [12, 12]
-  });
-
-  toRender.forEach((spot) => {
+  // Marker erzeugen – jeder mit eigener animation-delay,
+  // damit die Pins nacheinander auftauchen.
+  toRender.forEach((spot, index) => {
     if (!hasValidLatLng(spot)) return;
 
-    const marker = L.marker([spot.lat, spot.lng], { icon: baseIcon });
+    // Staffelung: 0 ms, 40 ms, 80 ms, ... max. 600 ms
+    const delayMs = Math.min(index * 40, 600);
+
+    const iconHtml = `
+      <div class="spot-marker">
+        <div class="spot-marker-inner pin-pop" style="animation-delay:${delayMs}ms;"></div>
+      </div>
+    `.trim();
+
+    const icon = L.divIcon({
+      html: iconHtml,
+      className: "",
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+
+    const marker = L.marker([spot.lat, spot.lng], { icon });
 
     // Kein Leaflet-Popup – nur der große Info-Kasten unten in der UI
     if (typeof focusSpotOnMap === "function") {
