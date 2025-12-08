@@ -99,6 +99,53 @@
   <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/badges.css" />
+
+  <!-- Kleine UI-Feintunings: Skip-Link & Filtermodal-Header -->
+  <style>
+    /* Skip-Link: als dezente Pille, nur bei Fokus sichtbar */
+    .skip-link {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      top: calc(env(safe-area-inset-top, 0px) + 8px);
+      z-index: 3000;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      color: #fef3e7;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.75);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.16s ease-out, transform 0.16s ease-out;
+    }
+
+    [data-theme="light"] .skip-link {
+      background: #3b2313;
+      color: #fff7eb;
+    }
+
+    .skip-link:focus-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Filtermodal-Header mit Text-Button zum Schließen */
+    .filter-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .filter-modal-close-btn {
+      white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
   <!-- Globaler Skip-Link -->
@@ -1405,11 +1452,16 @@
             </h2>
             <button
               id="filter-modal-close"
-              class="btn-icon"
+              class="btn-ghost btn-small filter-modal-close-btn"
               type="button"
-              aria-label="Filter schließen"
             >
-              ✕
+              <span
+                data-i18n-de="Alle Filter ausblenden"
+                data-i18n-en="Hide all filters"
+                data-i18n-da="Skjul alle filtre"
+              >
+                Alle Filter ausblenden
+              </span>
             </button>
           </header>
 
@@ -1660,7 +1712,7 @@
     defer
   ></script>
   <script
-    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.js"
     defer
   ></script>
 
