@@ -463,7 +463,7 @@ select.input:focus {
 .tag-filter-chip {
   border: none;
   border-radius: var(--radius-pill);
-  padding: 6px 10px 7px;
+  padding: 7px 10px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -570,6 +570,11 @@ select.input:focus {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
+}
+
+/* Label in der Pille exakt mittig – kein zusätzlicher Margin */
+.filter-advanced-summary .filter-group-label {
+  margin: 0;
 }
 
 [data-theme="dark"] .filter-advanced-summary {
