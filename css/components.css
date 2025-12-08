@@ -21,14 +21,10 @@ select {
 .btn {
   border: none;
   border-radius: var(--radius-pill);
-  padding: 8px 16px;
+  padding: 9px 16px;
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.1;
   background: linear-gradient(
     135deg,
     var(--accent),
@@ -42,24 +38,20 @@ select {
 }
 
 .btn-small {
-  padding: 6px 14px;
+  padding: 7px 14px;
   font-size: 13px;
 }
 
 .btn-ghost {
   border-radius: var(--radius-pill);
   border: none;
-  padding: 6px 14px;
+  padding: 5px 10px;
   background: rgba(255, 255, 255, 0.88);
   color: #7a4a2b;
   font-size: 13px;
   font-weight: 600;
   box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.1;
 }
 
 [data-theme="dark"] .btn-ghost {
@@ -90,7 +82,6 @@ select {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  line-height: 1.1;
   margin-top: 8px;
   max-width: 100%;
   white-space: normal; /* darf umbrechen */
@@ -485,7 +476,6 @@ select.input:focus {
   cursor: pointer;
   transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
     background 0.12s ease-out;
-  line-height: 1.1;
 }
 
 .mood-chip-emoji {
@@ -568,9 +558,9 @@ select.input:focus {
   list-style: none;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* Text mittig */
   gap: 6px;
-  padding: 8px 16px;
+  padding: 8px 16px;       /* kompakter, aber noch luftig */
   margin: 4px 0 0;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.9);
@@ -579,12 +569,11 @@ select.input:focus {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  min-height: 36px;
 }
 
+/* Label im „Weitere Filter“-Chip wirklich zentriert */
 .filter-advanced-summary .filter-group-label {
   margin: 0;
-  line-height: 1.2;
 }
 
 [data-theme="dark"] .filter-advanced-summary {
@@ -806,6 +795,39 @@ select.input:focus {
   padding: 16px 20px 20px;
 }
 
+/* Header im Filter-Modal inkl. „Alle Filter ausblenden“-Button */
+.filter-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+#filter-modal-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* Close-Button als „Ghost“-Pill ohne orange Umrandung */
+#filter-modal-close {
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #7a4a2b;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
+  cursor: pointer;
+}
+
+[data-theme="dark"] #filter-modal-close {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.85);
+}
+
 /* Hintergrund nicht scrollen, wenn das Filter-Modal offen ist */
 body[data-filter-modal-open="1"] {
   overflow: hidden;
@@ -1020,7 +1042,7 @@ body[data-filter-modal-open="1"] {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  transition: opacity 0.18s ease-out, transform 0.18s.ease-out;
   z-index: 1100;
 }
 
@@ -1099,6 +1121,27 @@ body[data-filter-modal-open="1"] {
   position: relative;
 }
 
+/* Cluster-Variante des Spot-Markers (mit Zähler) */
+.spot-marker--cluster {
+  position: relative;
+}
+
+.spot-marker--cluster .spot-marker-inner {
+  width: 28px;
+  height: 28px;
+}
+
+.spot-marker-count {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #3b2313;
+}
+
 .spot-marker-inner::after {
   content: "";
   position: absolute;
@@ -1112,7 +1155,7 @@ body[data-filter-modal-open="1"] {
 }
 
 .pin-pop {
-  animation: pin-pop 0.22s.ease-out;
+  animation: pin-pop 0.22s ease-out;
 }
 
 @keyframes pin-pop {
@@ -1346,9 +1389,6 @@ hr {
   font-size: 14px;
   font-weight: 600;
   box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .favorite-toggle:hover {
