@@ -109,12 +109,15 @@ export function initMap({
   let markersLayer;
   if (typeof L.markerClusterGroup === "function") {
     // MarkerCluster mit eigener Icon-Gestaltung,
-    // damit die Cluster sich optisch wie eure Spots anfühlen
+    // und chunkedLoading, damit Spots nach und nach auftauchen
     markersLayer = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: true,
       disableClusteringAtZoom: 11,
       animateAddingMarkers: true,
+      chunkedLoading: true,
+      chunkDelay: 40,      // Abstand zwischen den "Paketen"
+      chunkInterval: 200,  // max. Rechenzeit pro Paket in ms
       iconCreateFunction(cluster) {
         const count = cluster.getChildCount();
         const label = count > 999 ? "999+" : String(count);
@@ -149,9 +152,9 @@ export function initMap({
  * Wird bei jedem Filter-/Zoom-Update aufgerufen. Entfernt alle
  * bestehenden Marker und rendert die übergebenen Spots neu.
  *
- * Die Marker nutzen eine CSS-Animation (.pin-pop) und erhalten
- * hier eine gestaffelte animation-delay, damit sie „nach und nach“
- * aufpoppen.
+ * Für MarkerCluster-Gruppen werden alle Marker gesammelt und mit
+ * addLayers(...) hinzugefügt – so greift chunkedLoading und die Pins
+ * „poppen“ nach und nach auf.
  *
  * @param {Object} params
  * @param {any} params.map
@@ -202,19 +205,15 @@ export function renderMarkers({
     ? spots.slice(0, effectiveMaxMarkers)
     : spots;
 
-  // Marker erzeugen – jeder mit eigener animation-delay,
-  // damit die Pins nacheinander auftauchen.
-  toRender.forEach((spot, index) => {
+  // DivIcon-HTML als String – kompatibel mit Leaflet.
+  // Die CSS-Klasse .pin-pop sorgt für das eigentliche „Poppen“.
+  const iconHtml =
+    '<div class="spot-marker"><div class="spot-marker-inner pin-pop"></div></div>';
+
+  const markers = [];
+
+  toRender.forEach((spot) => {
     if (!hasValidLatLng(spot)) return;
-
-    // Staffelung: 0 ms, 40 ms, 80 ms, ... max. 600 ms
-    const delayMs = Math.min(index * 40, 600);
-
-    const iconHtml = `
-      <div class="spot-marker">
-        <div class="spot-marker-inner pin-pop" style="animation-delay:${delayMs}ms;"></div>
-      </div>
-    `.trim();
 
     const icon = L.divIcon({
       html: iconHtml,
@@ -232,8 +231,16 @@ export function renderMarkers({
       });
     }
 
-    markersLayer.addLayer(marker);
+    markers.push(marker);
   });
+
+  // Wenn MarkerClusterGroup: addLayers(...) -> chunkedLoading greift
+  if (typeof markersLayer.addLayers === "function") {
+    markersLayer.addLayers(markers);
+  } else {
+    // Fallback für einfache LayerGroup (ältere Browser / ohne Plugin)
+    markers.forEach((m) => markersLayer.addLayer(m));
+  }
 
   if (shouldLimit) {
     // Nur einmal pro Session anzeigen
