@@ -1,7 +1,7 @@
 // js/map.js
 // ======================================================
-/* Leaflet-Map + Marker-Rendering + Routing-Helfer
-   (keine UI-States, aber DOM für Marker-HTML) */
+// Leaflet-Map + Marker-Rendering + Routing-Helfer
+// (keine UI-States, aber DOM für Marker-HTML)
 // ======================================================
 
 "use strict";
@@ -23,8 +23,8 @@ import {
  * Aufrufe von Leaflet immer konsistente Zahlen vorfinden.
  *
  * Unterstützt zusätzlich Fallbacks:
- *  - latitude / longitude
- *  - lon (als Alternative für lng)
+ * - latitude / longitude
+ * - lon (als Alternative für lng)
  *
  * @param {Spot | null | undefined} spot
  * @returns {boolean} true, wenn lat/lng gültig sind
@@ -95,7 +95,10 @@ export function initMap({
       zoomControl: false
     });
   } catch (err) {
-    console.error("[Family Spots] Fehler beim Initialisieren der Karte:", err);
+    console.error(
+      "[Family Spots] Fehler beim Initialisieren der Karte:",
+      err
+    );
     return { map: null, markersLayer: null };
   }
 
@@ -107,14 +110,14 @@ export function initMap({
 
   // Marker-Layer (Cluster, falls verfügbar)
   let markersLayer;
+
   if (typeof L.markerClusterGroup === "function") {
     // MarkerCluster mit eigener Icon-Gestaltung
     markersLayer = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: true,
       disableClusteringAtZoom: 11,
-      animateAddingMarkers: true,
-      // kann drin bleiben, ist aber für unseren Effekt nicht zwingend
+      animateAddingMarkers: true, // kann drin bleiben, ist aber für unseren Effekt nicht zwingend
       chunkedLoading: true,
       chunkDelay: 40,
       chunkInterval: 200,
@@ -122,14 +125,12 @@ export function initMap({
         const count = cluster.getChildCount();
         const label = count > 999 ? "999+" : String(count);
 
+        // Cluster-Icon – Styling über .marker-cluster-* in CSS
         return L.divIcon({
           html: `
-            <div class="spot-marker spot-marker--cluster pin-pop">
-              <div class="spot-marker-inner"></div>
-              <span class="spot-marker-count">${label}</span>
-            </div>
+            <div><span>${label}</span></div>
           `.trim(),
-          className: "",
+          className: "", // Klassen kommen vom Plugin selbst (marker-cluster-*)
           iconSize: [32, 32],
           iconAnchor: [16, 16]
         });
@@ -143,6 +144,7 @@ export function initMap({
   }
 
   map.addLayer(markersLayer);
+
   return { map, markersLayer };
 }
 
@@ -196,6 +198,7 @@ export function renderMarkers({
   // Neue Render-Runde identifizieren (zum Abbrechen alter Batches)
   const renderId = ++lastRenderId;
 
+  // Alte Marker entfernen
   markersLayer.clearLayers();
 
   if (!Array.isArray(spots) || spots.length === 0) {
@@ -215,8 +218,11 @@ export function renderMarkers({
 
   // DivIcon-HTML als String – die CSS-Klasse .pin-pop sorgt für die
   // eigentliche „Pop“-Animation beim Einfügen ins DOM.
-  const iconHtml =
-    '<div class="spot-marker"><div class="spot-marker-inner pin-pop"></div></div>';
+  const iconHtml = `
+    <div class="spot-marker pin-pop">
+      <div class="spot-marker-inner"></div>
+    </div>
+  `.trim();
 
   const markers = [];
 
@@ -248,7 +254,7 @@ export function renderMarkers({
   const schedule =
     typeof window !== "undefined" &&
     typeof window.requestAnimationFrame === "function"
-      ? window.requestAnimationFrame
+      ? window.requestAnimationFrame.bind(window)
       : (fn) => window.setTimeout(fn, 16);
 
   function addBatch(startIndex) {
@@ -270,6 +276,7 @@ export function renderMarkers({
     addBatch(0);
   }
 
+  // Hinweis bei Marker-Limit
   if (shouldLimit) {
     // Nur einmal pro Session anzeigen
     if (!hasShownMarkerLimitToast && typeof showToast === "function") {
