@@ -1308,6 +1308,11 @@ function openFilterModal() {
   lastFocusBeforeFilterModal = document.activeElement;
   filterModalEl.hidden = false;
 
+  // Body-Scroll sperren, solange das Modal geöffnet ist
+  if (document && document.body) {
+    document.body.setAttribute("data-filter-modal-open", "1");
+  }
+
   const focusable = filterModalEl.querySelector(
     "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
   );
@@ -1324,6 +1329,11 @@ function closeFilterModal(options = {}) {
 
   isFilterModalOpen = false;
   filterModalEl.hidden = true;
+
+  // Body-Scroll wieder freigeben
+  if (document && document.body) {
+    document.body.removeAttribute("data-filter-modal-open");
+  }
 
   if (
     returnFocus &&
