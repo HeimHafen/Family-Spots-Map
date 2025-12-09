@@ -168,7 +168,7 @@ textarea.input:focus-visible {
     inset 0 0 0 1px var(--header-icon-border);
   font-size: 20px;
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
+  transition: transform 0.08s ease-out, box-shadow 0.08s.ease-out,
     opacity 0.12s;
 }
 
@@ -500,7 +500,7 @@ select.input:focus {
     var(--chip-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: transform 0.06s ease-out, box-shadow 0.06s.ease-out,
+  transition: transform 0.06s.ease-out, box-shadow 0.06s.ease-out,
     background 0.12s.ease-out;
 }
 
@@ -742,7 +742,7 @@ select.input:focus {
 /* Spot-Liste */
 
 .sidebar-section--grow {
-  flex: 1 1 auto;
+  flex: 1 1.auto;
   display: flex;
   flex-direction: column;
 }
@@ -921,7 +921,7 @@ select.input:focus {
   }
 
   .map-section {
-    flex: 1 1 auto;
+    flex: 1 1.auto;
     min-height: 560px;
   }
 
@@ -1108,11 +1108,11 @@ body[data-filter-modal-open="1"] {
   width: 110px;
   height: auto;
   transform-origin: center bottom;
-  animation: tilla-bob 3.5s ease-in-out infinite;
+  animation: tilla-bob 3.5s.ease-in-out infinite;
 }
 
 .tilla-sidebar-text {
-  flex: 1 1 auto;
+  flex: 1 1.auto;
 }
 
 #tilla-sidebar-text {
@@ -1206,7 +1206,7 @@ body[data-filter-modal-open="1"] {
     0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s.ease-out;
+  transition: transform 0.08s.ease-out, box-shadow 0.08s.ease-out;
 }
 
 .bottom-nav-item--active {
@@ -1249,7 +1249,7 @@ body[data-filter-modal-open="1"] {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s ease-out, transform 0.18s.ease-out;
+  transition: opacity 0.18s.ease-out, transform 0.18s.ease-out;
   z-index: 1100;
 }
 
@@ -1362,7 +1362,7 @@ body[data-filter-modal-open="1"] {
 }
 
 .pin-pop {
-  animation: pin-pop 0.22s ease-out;
+  animation: pin-pop 0.22s.ease-out;
 }
 
 @keyframes pin-pop {
@@ -1452,6 +1452,12 @@ hr {
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-soft);
+}
+
+/* Text-Block im Hint – verhindert zusätzliche p-Margins,
+   damit innen oben/unten wirklich gleiche Abstände sind */
+.fsm-onboarding-hint__text {
+  margin: 0;
 }
 
 [data-theme="dark"] .fsm-onboarding-hint {
