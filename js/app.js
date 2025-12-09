@@ -2716,4 +2716,109 @@ async function init() {
     // Klick auf den Overlay-Hintergrund schließt das Modal
     if (filterModalEl) {
       filterModalEl.addEventListener("click", (event) => {
-        if (event.target === filterModalEl)
+        if (event.target === filterModalEl) {
+          closeFilterModal({ returnFocus: true });
+        }
+      });
+    }
+
+    // Skip-Link „Zum Hauptinhalt springen“
+    if (skipLinkEl) {
+      skipLinkEl.addEventListener("click", (event) => {
+        const href = skipLinkEl.getAttribute("href") || "";
+        if (!href.startsWith("#")) return;
+        event.preventDefault();
+        const id = href.slice(1);
+        const target = document.getElementById(id);
+        if (!target) return;
+
+        if (!target.hasAttribute("tabindex")) {
+          target.setAttribute("tabindex", "-1");
+        }
+
+        target.scrollIntoView();
+        if (typeof target.focus === "function") {
+          target.focus();
+        }
+      });
+    }
+
+    document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
+      const targetId = btn.getAttribute("data-target");
+      let section = null;
+      if (targetId) section = document.getElementById(targetId);
+      if (!section) section = btn.closest(".sidebar-section");
+      if (!section) return;
+
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const tag = section.tagName.toLowerCase();
+        if (tag === "details") {
+          section.open = false;
+        } else {
+          section.classList.add("hidden");
+        }
+
+        if (section.id === "compass-section" && btnToggleCompassEl) {
+          updateCompassButtonLabel();
+        }
+
+        if (section.id === "plus-section" && btnTogglePlusEl) {
+          updateGenericSectionToggleLabel(btnTogglePlusEl, false);
+        }
+
+        if (section.id === "daylog-section" && btnToggleDaylogEl) {
+          updateGenericSectionToggleLabel(btnToggleDaylogEl, false);
+        }
+      });
+    });
+
+    updateCompassUI();
+    loadPlusStateFromStorage();
+    loadDaylogFromStorage();
+    initLazyLoadImages();
+    ensureCompassPlusHint();
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" && event.key !== "Esc") return;
+
+      // 1. Erst das Filter-Modal schließen, falls offen
+      if (isFilterModalOpen && filterModalEl && !filterModalEl.hidden) {
+        event.preventDefault();
+        closeFilterModal({ returnFocus: true });
+        return;
+      }
+
+      // 2. Dann ggf. das Spot-Detail
+      if (!spotDetailEl) return;
+
+      const isOpen =
+        !spotDetailEl.classList.contains("spot-details--hidden");
+      if (!isOpen) return;
+
+      event.preventDefault();
+      closeSpotDetails({ returnFocus: true });
+    });
+
+    updateFilterSummary();
+    loadSpots();
+  } catch (err) {
+    console.error("[Family Spots] Init-Fehler:", err);
+  }
+}
+
+// ------------------------------------------------------
+// DOMContentLoaded – I18N.init() + App-Init
+// ------------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    if (typeof I18N !== "undefined" && typeof I18N.init === "function") {
+      await I18N.init();
+    }
+  } catch (err) {
+    console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
+  }
+
+  await init();
+});
