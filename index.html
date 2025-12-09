@@ -918,6 +918,26 @@
                 Speichern 💾
               </span>
             </button>
+
+            <!-- NEU: Label für letzte Speicherung -->
+            <p
+              id="daylog-last-saved"
+              class="daylog-last-saved"
+              data-i18n-de="Noch nichts gespeichert."
+              data-i18n-en="Nothing saved yet."
+              data-i18n-da="Ingen gemte endnu."
+            >
+              Noch nichts gespeichert.
+            </p>
+
+            <!-- NEU: Liste der gespeicherten Einträge (Tage/Reisepunkte) -->
+            <div
+              id="daylog-list"
+              class="daylog-list"
+              aria-live="polite"
+            >
+              <!-- Einträge werden per JS eingefügt -->
+            </div>
           </div>
         </details>
       </section>
