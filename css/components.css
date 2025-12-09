@@ -50,7 +50,8 @@ select {
   color: #7a4a2b;
   font-size: 13px;
   font-weight: 600;
-  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
+  box-shadow:
+    0 3px 8px rgba(165, 100, 53, 0.3);
   cursor: pointer;
 }
 
@@ -165,10 +166,10 @@ textarea.input:focus-visible {
   background: var(--header-icon-bg);
   box-shadow:
     var(--header-icon-shadow),
-    inset 0 0 0 1px var(--header-icon-border);
+    inset 0 0 0 1px.var(--header-icon-border);
   font-size: 20px;
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out,
+  transition: transform 0.08s ease-out, box-shadow 0.08s.ease-out,
     opacity 0.12s;
 }
 
@@ -176,7 +177,7 @@ textarea.input:focus-visible {
   transform: translateY(1px) scale(0.97);
   box-shadow:
     0 2px 5px rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px.var(--header-icon-border);
+    inset 0 0 0 1px var(--header-icon-border);
   opacity: 0.92;
 }
 
@@ -287,7 +288,7 @@ textarea.input:focus-visible {
 
 [data-theme="dark"] #view-map {
   background: linear-gradient(
-    to.bottom,
+    to bottom,
     #020617 0,
     #020617 35%,
     #020617 100%
@@ -385,7 +386,7 @@ textarea.input:focus-visible {
 }
 
 [data-theme="dark"] .compass-card {
-  background: radial-gradient(circle at top.left, #1e293b 0, #020617 80%);
+  background: radial-gradient(circle at top left, #1e293b 0, #020617 80%);
   box-shadow:
     inset 0 0 0 1px rgba(148, 163, 184, 0.4),
     0 10px 22px rgba(0, 0, 0, 0.9);
@@ -428,7 +429,7 @@ textarea.input:focus-visible {
   margin-bottom: 0;
 }
 
-/* mehr Luft über dem ersten Helper-Text unterhalb.des Headers */
+/* mehr Luft über dem ersten Helper-Text unterhalb des Headers */
 .sidebar-section-header + .filter-group-helper {
   margin-top: 1rem;
 }
@@ -500,8 +501,8 @@ select.input:focus {
     var(--chip-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
-    background 0.12s ease-out;
+  transition: transform 0.06s.ease-out, box-shadow 0.06s.ease-out,
+    background 0.12s.ease-out;
 }
 
 /* Dark Mode: Standardzustand der Chips besser lesbar */
@@ -944,7 +945,7 @@ select.input:focus {
 /* Map-Tiles farblich an App anpassen */
 .leaflet-container .leaflet-tile {
   filter: var(--map-filter);
-  transition: filter 0.25s ease-out;
+  transition: filter 0.25s.ease-out;
 }
 
 @media (max-width: 899px) {
@@ -1029,13 +1030,45 @@ select.input:focus {
 .filter-modal-inner {
   width: 100%;
   max-width: 720px;
-  max-height: calc(100vh - 64px); /* etwas mehr Abstand zum oberen Rand */
+  /* höheres Modal, kleinerer Abstand zum oberen Rand */
+  max-height: calc(100vh - 40px);
   background: var(--card-bg);
   border-radius: 24px 24px 0 0;
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 16px 20px 20px;
+}
+
+/* Kompaktere Variante für kleinere Displays:
+   weniger Text & Abstände, damit mehr Inhalt ohne Scrollen sichtbar ist */
+@media (max-height: 740px) {
+  .filter-modal-inner {
+    padding: 12px 16px 16px;
+  }
+
+  .filter-modal-header {
+    margin-bottom: 6px;
+  }
+
+  /* Einleitungstext direkt unter "Alle Filter" ausblenden */
+  .filter-modal-body > .filter-group-helper {
+    display: none;
+  }
+
+  /* übrige Hilfstexte etwas kompakter */
+  .filter-modal-body .filter-group-helper {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .filter-modal-body .filter-group {
+    margin-top: 6px;
+  }
+
+  .filter-modal-footer {
+    margin-top: 10px;
+  }
 }
 
 /* Header im Filter-Modal inkl. „Alle Filter ausblenden“-Button */
@@ -1173,8 +1206,8 @@ body[data-filter-modal-open="1"] {
   display: block;
   width: 110px;
   height: auto;
-  transform-origin: center.bottom;
-  animation: tilla-bob 3.5s ease-in-out infinite;
+  transform-origin: center bottom;
+  animation: tilla-bob 3.5s.ease-in-out infinite;
 }
 
 .tilla-sidebar-text {
@@ -1272,7 +1305,7 @@ body[data-filter-modal-open="1"] {
     0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s.ease-out;
+  transition: transform 0.08s.ease-out, box-shadow 0.08s.ease-out;
 }
 
 .bottom-nav-item--active {
