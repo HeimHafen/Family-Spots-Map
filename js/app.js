@@ -612,27 +612,33 @@ function getCompassPlusHintText(lang = currentLang) {
 // NEU: HTML-Variante mit 1./2./3. untereinander
 function getCompassPlusHintHtml(lang = currentLang) {
   if (lang === LANG_EN) {
-    return (
-      "How to find today’s spot:<br>" +
-      "1. Share your location or zoom to your region<br>" +
-      "2. Pick a mood<br>" +
-      "3. Tap a spot – off you go."
-    );
+    return `
+      <span class="fsm-onboarding-hint__title">How to find today’s spot:</span>
+      <ol class="fsm-onboarding-hint__list">
+        <li>Share your location or zoom to your region</li>
+        <li>Pick a mood</li>
+        <li>Tap a spot – off you go.</li>
+      </ol>
+    `;
   }
   if (lang === LANG_DA) {
-    return (
-      "Sådan finder I dagens spot:<br>" +
-      "1. Del jeres placering eller zoom ind på jeres område<br>" +
-      "2. Vælg stemning<br>" +
-      "3. Tryk på et spot – så er I i gang."
-    );
+    return `
+      <span class="fsm-onboarding-hint__title">Sådan finder I dagens spot:</span>
+      <ol class="fsm-onboarding-hint__list">
+        <li>Del jeres placering eller zoom ind på jeres område</li>
+        <li>Vælg stemning</li>
+        <li>Tryk på et spot – så er I i gang.</li>
+      </ol>
+    `;
   }
-  return (
-    "So holt ihr euch euren Spot für heute:<br>" +
-    "1. Standort freigeben oder in eure Region zoomen<br>" +
-    "2. Stimmung wählen<br>" +
-    "3. Auf einen Spot tippen – los geht’s."
-  );
+  return `
+    <span class="fsm-onboarding-hint__title">So holt ihr euch euren Spot für heute:</span>
+    <ol class="fsm-onboarding-hint__list">
+      <li>Standort freigeben oder in eure Region zoomen</li>
+      <li>Stimmung wählen</li>
+      <li>Auf einen Spot tippen – los geht’s.</li>
+    </ol>
+  `;
 }
 
 function hasSeenCompassPlusHint() {
@@ -665,7 +671,7 @@ function ensureCompassPlusHint() {
     wrapper.id = "compass-plus-hint";
     wrapper.className = "fsm-onboarding-hint";
 
-    const textEl = document.createElement("p");
+    const textEl = document.createElement("div");
     textEl.className = "fsm-onboarding-hint__text";
     textEl.innerHTML = getCompassPlusHintHtml();
 
