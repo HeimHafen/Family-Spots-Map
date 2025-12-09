@@ -595,50 +595,46 @@ function updatePlusStatusText(status) {
 }
 
 // ------------------------------------------------------
-// Onboarding-Hint (Kompass / Filter / Spots)
+// Onboarding-Hint (Kompass / Plus / Spots)
 // ------------------------------------------------------
 
-// alter Text-Helper (für evtl. andere Verwendungen)
-function getCompassPlusHintText(lang = currentLang) {
+// Gemeinsame Textquelle für Titel + Schritte
+function getCompassPlusHintParts(lang = currentLang) {
   if (lang === LANG_EN) {
-    return "How to find today’s spot: 1. Share your location or zoom to your region · 2. Pick a mood · 3. Tap a spot – off you go.";
+    return {
+      title: "How to find today’s spot",
+      steps: [
+        "Share your location or zoom to your region",
+        "Pick a mood",
+        "Tap a spot – off you go."
+      ]
+    };
   }
   if (lang === LANG_DA) {
-    return "Sådan finder I dagens spot: 1. Del jeres placering eller zoom ind på jeres område · 2. Vælg stemning · 3. Tryk på et spot – så er I i gang.";
+    return {
+      title: "Sådan finder I dagens spot",
+      steps: [
+        "Del jeres placering eller zoom ind på jeres område",
+        "Vælg stemning",
+        "Tryk på et spot – så er I i gang."
+      ]
+    };
   }
-  return "So holt ihr euch euren Spot für heute: 1. Standort freigeben oder in eure Region zoomen · 2. Stimmung wählen · 3. Auf einen Spot tippen – los geht’s.";
+  // Standard: Deutsch
+  return {
+    title: "So holt ihr euch euren Spot für heute",
+    steps: [
+      "Standort freigeben oder in eure Region zoomen",
+      "Stimmung wählen",
+      "Auf einen Spot tippen – los geht’s."
+    ]
+  };
 }
 
-// NEU: HTML-Variante mit 1./2./3. untereinander
-function getCompassPlusHintHtml(lang = currentLang) {
-  if (lang === LANG_EN) {
-    return `
-      <span class="fsm-onboarding-hint__title">How to find today’s spot:</span>
-      <ol class="fsm-onboarding-hint__list">
-        <li>Share your location or zoom to your region</li>
-        <li>Pick a mood</li>
-        <li>Tap a spot – off you go.</li>
-      </ol>
-    `;
-  }
-  if (lang === LANG_DA) {
-    return `
-      <span class="fsm-onboarding-hint__title">Sådan finder I dagens spot:</span>
-      <ol class="fsm-onboarding-hint__list">
-        <li>Del jeres placering eller zoom ind på jeres område</li>
-        <li>Vælg stemning</li>
-        <li>Tryk på et spot – så er I i gang.</li>
-      </ol>
-    `;
-  }
-  return `
-    <span class="fsm-onboarding-hint__title">So holt ihr euch euren Spot für heute:</span>
-    <ol class="fsm-onboarding-hint__list">
-      <li>Standort freigeben oder in eure Region zoomen</li>
-      <li>Stimmung wählen</li>
-      <li>Auf einen Spot tippen – los geht’s.</li>
-    </ol>
-  `;
+// Text-Helper im Einzeilen-Format (wird sonst nicht angezeigt, bleibt aber verfügbar)
+function getCompassPlusHintText(lang = currentLang) {
+  const { title, steps } = getCompassPlusHintParts(lang);
+  return `${title}: ${steps.join(" · ")}`;
 }
 
 function hasSeenCompassPlusHint() {
@@ -666,15 +662,28 @@ function ensureCompassPlusHint() {
   if (hasSeenCompassPlusHint()) return;
   if (!plusSectionEl && !daylogSectionEl && !compassSectionEl) return;
 
+  const { title, steps } = getCompassPlusHintParts();
+
   if (!compassPlusHintEl) {
     const wrapper = document.createElement("div");
     wrapper.id = "compass-plus-hint";
     wrapper.className = "fsm-onboarding-hint";
 
-    const textEl = document.createElement("div");
-    textEl.className = "fsm-onboarding-hint__text";
-    textEl.innerHTML = getCompassPlusHintHtml();
+    // Titel
+    const titleEl = document.createElement("p");
+    titleEl.className = "fsm-onboarding-hint__title";
+    titleEl.textContent = title;
 
+    // nummerierte Liste 1./2./3. untereinander
+    const listEl = document.createElement("ol");
+    listEl.className = "fsm-onboarding-hint__list";
+    steps.forEach((stepText) => {
+      const li = document.createElement("li");
+      li.textContent = stepText;
+      listEl.appendChild(li);
+    });
+
+    // Close-Button (x)
     const closeBtn = document.createElement("button");
     closeBtn.type = "button";
     closeBtn.className = "fsm-onboarding-hint__close";
@@ -694,7 +703,8 @@ function ensureCompassPlusHint() {
       markCompassPlusHintSeenAndRemove();
     });
 
-    wrapper.appendChild(textEl);
+    wrapper.appendChild(titleEl);
+    wrapper.appendChild(listEl);
     wrapper.appendChild(closeBtn);
 
     // Zwischen Filter-Section und Spots-Section platzieren
@@ -725,10 +735,26 @@ function ensureCompassPlusHint() {
 
     compassPlusHintEl = wrapper;
   } else {
-    const textEl =
-      compassPlusHintEl.querySelector(".fsm-onboarding-hint__text") ||
-      compassPlusHintEl;
-    textEl.innerHTML = getCompassPlusHintHtml();
+    // Sprache hat sich geändert → Texte aktualisieren
+    const updated = getCompassPlusHintParts();
+    const titleEl = compassPlusHintEl.querySelector(
+      ".fsm-onboarding-hint__title"
+    );
+    const listEl = compassPlusHintEl.querySelector(
+      ".fsm-onboarding-hint__list"
+    );
+
+    if (titleEl) {
+      titleEl.textContent = updated.title;
+    }
+    if (listEl) {
+      while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+      updated.steps.forEach((stepText) => {
+        const li = document.createElement("li");
+        li.textContent = stepText;
+        listEl.appendChild(li);
+      });
+    }
 
     const closeBtn = compassPlusHintEl.querySelector(
       ".fsm-onboarding-hint__close"
