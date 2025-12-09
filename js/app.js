@@ -713,15 +713,9 @@ function ensureCompassPlusHint() {
       anchor = spotsSectionEl;
     } else if (plusSectionEl && plusSectionEl.parentNode === sidebarEl) {
       anchor = plusSectionEl;
-    } else if (
-      daylogSectionEl &&
-      daylogSectionEl.parentNode === sidebarEl
-    ) {
+    } else if (daylogSectionEl && daylogSectionEl.parentNode === sidebarEl) {
       anchor = daylogSectionEl;
-    } else if (
-      compassSectionEl &&
-      compassSectionEl.parentNode === sidebarEl
-    ) {
+    } else if (compassSectionEl && compassSectionEl.parentNode === sidebarEl) {
       anchor = compassSectionEl;
     } else {
       anchor = sidebarEl.firstChild;
