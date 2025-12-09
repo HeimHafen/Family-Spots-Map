@@ -50,8 +50,7 @@ select {
   color: #7a4a2b;
   font-size: 13px;
   font-weight: 600;
-  box-shadow:
-    0 3px 8px rgba(165, 100, 53, 0.3);
+  box-shadow: 0 3px 8px rgba(165, 100, 53, 0.3);
   cursor: pointer;
 }
 
@@ -624,9 +623,35 @@ select.input:focus {
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
+/* Basiszustand – wird gleich darunter für Schnellfilter noch einmal
+   mit Modal-spezifischen Regeln überschrieben */
 .tag-filter-chip--active {
   background: linear-gradient(145deg, var(--accent-soft), var(--accent));
   color: #3b2313;
+}
+
+/* >>> NEU: Schnellfilter-Chips im Modal – deutlicher Aktiv-Zustand,
+   auch im Dark Mode */
+.tag-filter-row .tag-filter-chip--active,
+.tag-filter-row .btn-chip[aria-pressed="true"] {
+  background: linear-gradient(145deg, var(--accent-soft), var(--accent));
+  color: #3b2313;
+  box-shadow:
+    0 4px 10px rgba(245, 158, 11, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .tag-filter-row .tag-filter-chip--active,
+[data-theme="dark"] .tag-filter-row .btn-chip[aria-pressed="true"] {
+  background: linear-gradient(
+    145deg,
+    var(--accent),
+    hsl(var(--accent-h, 32), 100%, 60%)
+  );
+  color: #111827;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.95);
 }
 
 /* Radius */
@@ -665,42 +690,32 @@ select.input:focus {
   border-top-color: rgba(148, 163, 184, 0.28);
 }
 
-/* Zuvor großer weißer Kasten – jetzt nur noch dezente Textzeile */
 .filter-advanced-summary {
   list-style: none;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center; /* Text mittig */
   gap: 6px;
-  padding: 0;
-  margin: 8px 0 4px;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+  padding: 8px 16px;       /* kompakter, aber noch luftig */
+  margin: 4px 0 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(165, 100, 53, 0.22);
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
 }
 
-/* Default-Marker von <summary> ausblenden */
-.filter-advanced-summary::-webkit-details-marker {
-  display: none;
-}
-
-.filter-advanced-summary::marker {
-  content: "";
-}
-
-/* Label im „Weitere Filter“-Bereich ohne Extra-Margins */
+/* Label im „Weitere Filter“-Chip wirklich zentriert */
 .filter-advanced-summary .filter-group-label {
   margin: 0;
 }
 
 [data-theme="dark"] .filter-advanced-summary {
-  background: transparent;
-  color: var(--text-soft);
-  box-shadow: none;
+  background: rgba(15, 23, 42, 0.97);
+  color: #e5e7eb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
 }
 
 /* Checkboxen */
@@ -714,62 +729,6 @@ select.input:focus {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-}
-
-/* Custom Checkbox – optisch wie kleine, helle Pills unter dem Select */
-.checkbox-label input[type="checkbox"] {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-  background: var(--input-bg);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
-    var(--input-shadow);
-  cursor: pointer;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-/* Füllung, wenn aktiv */
-.checkbox-label input[type="checkbox"]:checked {
-  background: linear-gradient(
-    145deg,
-    var(--accent-soft),
-    var(--accent)
-  );
-  box-shadow:
-    0 3px 8px rgba(245, 158, 11, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.95);
-}
-
-/* Fokusrahmen für Tastaturbedienung */
-.checkbox-label input[type="checkbox"]:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 2px #ffffff,
-    0 0 0 4px rgba(255, 171, 64, 0.85);
-}
-
-/* Dark Mode: Checkbox leicht abgedunkelt, aber nicht schwarz */
-[data-theme="dark"] .checkbox-label input[type="checkbox"] {
-  background: rgba(15, 23, 42, 0.98);
-  box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.85),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.7);
-}
-
-[data-theme="dark"] .checkbox-label input[type="checkbox"]:checked {
-  background: linear-gradient(
-    145deg,
-    var(--accent),
-    hsl(var(--accent-h, 32), 100%, 60%)
-  );
-  box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.8),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
 /* Plus-Code-Form */
@@ -809,7 +768,7 @@ select.input:focus {
 /* Spot-Liste */
 
 .sidebar-section--grow {
-  flex: 1 1 auto;
+  flex: 1 1.auto;
   display: flex;
   flex-direction: column;
 }
@@ -988,7 +947,7 @@ select.input:focus {
   }
 
   .map-section {
-    flex: 1 1 auto;
+    flex: 1 1.auto;
     min-height: 560px;
   }
 
@@ -1030,45 +989,13 @@ select.input:focus {
 .filter-modal-inner {
   width: 100%;
   max-width: 720px;
-  /* höheres Modal, kleinerer Abstand zum oberen Rand */
-  max-height: calc(100vh - 40px);
+  max-height: calc(100vh - 32px);
   background: var(--card-bg);
   border-radius: 24px 24px 0 0;
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 16px 20px 20px;
-}
-
-/* Kompaktere Variante für kleinere Displays:
-   weniger Text & Abstände, damit mehr Inhalt ohne Scrollen sichtbar ist */
-@media (max-height: 740px) {
-  .filter-modal-inner {
-    padding: 12px 16px 16px;
-  }
-
-  .filter-modal-header {
-    margin-bottom: 6px;
-  }
-
-  /* Einleitungstext direkt unter "Alle Filter" ausblenden */
-  .filter-modal-body > .filter-group-helper {
-    display: none;
-  }
-
-  /* übrige Hilfstexte etwas kompakter */
-  .filter-modal-body .filter-group-helper {
-    font-size: 12px;
-    margin-bottom: 4px;
-  }
-
-  .filter-modal-body .filter-group {
-    margin-top: 6px;
-  }
-
-  .filter-modal-footer {
-    margin-top: 10px;
-  }
 }
 
 /* Header im Filter-Modal inkl. „Alle Filter ausblenden“-Button */
@@ -1199,7 +1126,7 @@ body[data-filter-modal-open="1"] {
 }
 
 .tilla-sidebar-avatar {
-  flex: 0 0 auto;
+  flex: 0 0.auto;
 }
 
 .tilla-sidebar-avatar img {
@@ -1211,7 +1138,7 @@ body[data-filter-modal-open="1"] {
 }
 
 .tilla-sidebar-text {
-  flex: 1 1 auto;
+  flex: 1 1.auto;
 }
 
 #tilla-sidebar-text {
