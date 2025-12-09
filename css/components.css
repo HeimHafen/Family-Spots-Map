@@ -630,7 +630,7 @@ select.input:focus {
   color: #3b2313;
 }
 
-/* >>> NEU: Schnellfilter-Chips im Modal – deutlicher Aktiv-Zustand,
+/* Schnellfilter-Chips im Modal – deutlicher Aktiv-Zustand,
    auch im Dark Mode */
 .tag-filter-row .tag-filter-chip--active,
 .tag-filter-row .btn-chip[aria-pressed="true"] {
@@ -690,32 +690,15 @@ select.input:focus {
   border-top-color: rgba(148, 163, 184, 0.28);
 }
 
+/* >>> „Weitere Filter“-Pill AUSBLENDEN */
 .filter-advanced-summary {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Text mittig */
-  gap: 6px;
-  padding: 8px 16px;       /* kompakter, aber noch luftig */
-  margin: 4px 0 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 6px rgba(165, 100, 53, 0.22);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
+  display: none;
 }
 
-/* Label im „Weitere Filter“-Chip wirklich zentriert */
+/* Label im (ehemaligen) „Weitere Filter“-Chip – bleibt ohne Wirkung,
+   kann aber im CSS stehen bleiben */
 .filter-advanced-summary .filter-group-label {
   margin: 0;
-}
-
-[data-theme="dark"] .filter-advanced-summary {
-  background: rgba(15, 23, 42, 0.97);
-  color: #e5e7eb;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
 }
 
 /* Checkboxen */
@@ -729,6 +712,17 @@ select.input:focus {
   align-items: center;
   gap: 8px;
   font-size: 14px;
+}
+
+/* >>> Checkbox-Optik: nicht mehr schwarz, sondern im Akzent-Farbschema */
+.filter-group--checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-soft);
+}
+
+[data-theme="dark"] .filter-group--checkbox input[type="checkbox"] {
+  accent-color: var(--accent);
 }
 
 /* Plus-Code-Form */
