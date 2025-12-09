@@ -135,7 +135,7 @@
 
     /* Onboarding-Hinweis über der Spot-Liste */
     .fsm-onboarding-hint {
-      margin-block: 0; /* gleicher Abstand über das Sidebar-Gap nach oben und unten */
+      margin-block: 0;
       padding: 0.75rem 1rem;
       border-radius: 0.75rem;
       font-size: 0.9rem;
@@ -902,6 +902,7 @@
               Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß
               an Tilla.
             </p>
+
             <textarea
               id="daylog-text"
               name="daylog"
@@ -909,6 +910,7 @@
               rows="3"
               placeholder="Heute haben wir einen Ort gefunden, an dem die Zeit kurz langsamer wurde."
             ></textarea>
+
             <button id="daylog-save" class="btn btn-small" type="button">
               <span
                 data-i18n-de="Speichern 💾"
@@ -919,24 +921,30 @@
               </span>
             </button>
 
-            <!-- NEU: Label für letzte Speicherung -->
-            <p
-              id="daylog-last-saved"
-              class="daylog-last-saved"
-              data-i18n-de="Noch nichts gespeichert."
-              data-i18n-en="Nothing saved yet."
-              data-i18n-da="Ingen gemte endnu."
-            >
-              Noch nichts gespeichert.
-            </p>
-
-            <!-- NEU: Liste der gespeicherten Einträge (Tage/Reisepunkte) -->
-            <div
-              id="daylog-list"
-              class="daylog-list"
-              aria-live="polite"
-            >
-              <!-- Einträge werden per JS eingefügt -->
+            <!-- Status + Löschen-Button in einer Zeile -->
+            <div class="daylog-meta-row">
+              <p
+                id="daylog-last-saved"
+                class="daylog-last-saved"
+                data-i18n-de="Noch nichts gespeichert."
+                data-i18n-en="Nothing saved yet."
+                data-i18n-da="Ingen gemte endnu."
+              >
+                Noch nichts gespeichert.
+              </p>
+              <button
+                id="daylog-clear"
+                class="btn-ghost btn-small daylog-clear-btn hidden"
+                type="button"
+              >
+                <span
+                  data-i18n-de="Eintrag löschen"
+                  data-i18n-en="Delete entry"
+                  data-i18n-da="Slet notat"
+                >
+                  Eintrag löschen
+                </span>
+              </button>
             </div>
           </div>
         </details>
