@@ -500,8 +500,8 @@ select.input:focus {
     var(--chip-shadow),
     inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: transform 0.06s ease-out, box-shadow 0.06s ease-out,
-    background 0.12s ease-out;
+  transition: transform 0.06s ease-out, box-shadow 0.06s.ease-out,
+    background 0.12s.ease-out;
 }
 
 /* Dark Mode: Standardzustand der Chips besser lesbar */
@@ -797,58 +797,6 @@ select.input:focus {
   color: #e5e7eb;
 }
 
-/* =========================================
-   ONBOARDING-HINT (zwischen Filter & Spots)
-   ========================================= */
-
-.fsm-onboarding-hint {
-  position: relative;
-  margin: 10px 0 10px; /* gleicher Abstand nach oben und unten */
-  padding: 10px 12px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.08),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text-soft);
-}
-
-[data-theme="dark"] .fsm-onboarding-hint {
-  background: rgba(15, 23, 42, 0.98);
-  color: #e5e7eb;
-  box-shadow:
-    0 6px 14px rgba(0, 0, 0, 0.85),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.45);
-}
-
-.fsm-onboarding-hint__text {
-  margin: 0;
-}
-
-.fsm-onboarding-hint__close {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  border: none;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.fsm-onboarding-hint__close:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 2px #ffffff,
-    0 0 0 4px rgba(255, 171, 64, 0.85);
-  background: rgba(0, 0, 0, 0.06);
-}
-
 /* sekundäre Button-Variante */
 .btn-secondary {
   background: rgba(255, 255, 255, 0.92);
@@ -930,7 +878,7 @@ select.input:focus {
 /* Map-Tiles farblich an App anpassen */
 .leaflet-container .leaflet-tile {
   filter: var(--map-filter);
-  transition: filter 0.25s ease-out;
+  transition: filter 0.25s.ease-out;
 }
 
 @media (max-width: 899px) {
@@ -1258,7 +1206,7 @@ body[data-filter-modal-open="1"] {
     0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+  transition: transform 0.08s ease-out, box-shadow 0.08s.ease-out;
 }
 
 .bottom-nav-item--active {
@@ -1301,7 +1249,7 @@ body[data-filter-modal-open="1"] {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  transition: opacity 0.18s ease-out, transform 0.18s.ease-out;
   z-index: 1100;
 }
 
@@ -1489,6 +1437,86 @@ hr {
 /* =========================================
    SPOT-LISTE & DETAILS – FEINTUNING
    ========================================= */
+
+/* Onboarding-Hinweis „So holt ihr euch euren Spot …“ */
+
+.fsm-onboarding-hint {
+  position: relative;
+  margin: 0; /* Abstand komplett über Sidebar-Gap gesteuert, dadurch Filter ↔ Hinweis ↔ Spots gleich */
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+[data-theme="dark"] .fsm-onboarding-hint {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.45);
+}
+
+.fsm-onboarding-hint__title {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.fsm-onboarding-hint__list {
+  margin: 4px 0 0;
+  padding-left: 1.2rem; /* sorgt für 1. 2. 3. untereinander */
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.fsm-onboarding-hint__list li {
+  margin-bottom: 2px;
+}
+
+.fsm-onboarding-hint__close,
+.fsm-onboarding-hint-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: none;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.fsm-onboarding-hint__close:hover,
+.fsm-onboarding-hint-close:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .fsm-onboarding-hint__close:hover,
+[data-theme="dark"] .fsm-onboarding-hint-close:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.fsm-onboarding-hint__close:focus-visible,
+.fsm-onboarding-hint-close:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px rgba(255, 171, 64, 0.85);
+}
+
+/* Wenn der Hinweis per JS versteckt wird */
+.fsm-onboarding-hint--hidden {
+  display: none;
+}
 
 .spot-list-empty {
   padding: 10px 12px;
