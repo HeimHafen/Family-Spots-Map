@@ -2102,23 +2102,42 @@ function handleToggleCompass() {
 // ------------------------------------------------------
 
 /**
- * DEV-HACK: Plus immer aktiv
- * Diese Version ignoriert den gespeicherten Status komplett.
+ * Lädt den aktuellen Plus-Status aus dem Storage (bzw. aus features/plus)
+ * und synchronisiert ihn mit dem lokalen State (plusActive) und der UI.
+ *
+ * Der Dev-Override (DEV_FORCE_PLUS) wird im Modul features/plus.js
+ * berücksichtigt und spiegelt sich in getPlusStatus() wider.
  */
 function loadPlusStateFromStorage(options = {}) {
   const { reapplyFilters = false } = options;
 
-  // Plus einfach dauerhaft an
-  plusActive = true;
+  if (!FEATURES.plus) {
+    plusActive = false;
 
-  // Optional: Dev-Status im UI anzeigen
-  updatePlusStatusText({
-    active: true,
-    plan: "dev",
-    validUntil: null
+    updatePlusStatusText({
+      active: false,
+      plan: null,
+      validUntil: null,
+      addons: null,
+      partner: null,
+      source: null
+    });
+
+    if (reapplyFilters && spots.length) {
+      applyFiltersAndRender();
+    }
+    return;
+  }
+
+  const status = getPlusStatus();
+  plusActive = !!status.active;
+
+  updatePlusStatusText(status);
+
+  console.log("[Family Spots] Plus status loaded:", {
+    plusActive,
+    status
   });
-
-  console.log("[Family Spots] DEV: Plus forced active:", { plusActive });
 
   if (reapplyFilters && spots.length) {
     applyFiltersAndRender();
@@ -2697,109 +2716,4 @@ async function init() {
     // Klick auf den Overlay-Hintergrund schließt das Modal
     if (filterModalEl) {
       filterModalEl.addEventListener("click", (event) => {
-        if (event.target === filterModalEl) {
-          closeFilterModal({ returnFocus: true });
-        }
-      });
-    }
-
-    // Skip-Link „Zum Hauptinhalt springen“
-    if (skipLinkEl) {
-      skipLinkEl.addEventListener("click", (event) => {
-        const href = skipLinkEl.getAttribute("href") || "";
-        if (!href.startsWith("#")) return;
-        event.preventDefault();
-        const id = href.slice(1);
-        const target = document.getElementById(id);
-        if (!target) return;
-
-        if (!target.hasAttribute("tabindex")) {
-          target.setAttribute("tabindex", "-1");
-        }
-
-        target.scrollIntoView();
-        if (typeof target.focus === "function") {
-          target.focus();
-        }
-      });
-    }
-
-    document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
-      const targetId = btn.getAttribute("data-target");
-      let section = null;
-      if (targetId) section = document.getElementById(targetId);
-      if (!section) section = btn.closest(".sidebar-section");
-      if (!section) return;
-
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const tag = section.tagName.toLowerCase();
-        if (tag === "details") {
-          section.open = false;
-        } else {
-          section.classList.add("hidden");
-        }
-
-        if (section.id === "compass-section" && btnToggleCompassEl) {
-          updateCompassButtonLabel();
-        }
-
-        if (section.id === "plus-section" && btnTogglePlusEl) {
-          updateGenericSectionToggleLabel(btnTogglePlusEl, false);
-        }
-
-        if (section.id === "daylog-section" && btnToggleDaylogEl) {
-          updateGenericSectionToggleLabel(btnToggleDaylogEl, false);
-        }
-      });
-    });
-
-    updateCompassUI();
-    loadPlusStateFromStorage();
-    loadDaylogFromStorage();
-    initLazyLoadImages();
-    ensureCompassPlusHint();
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key !== "Escape" && event.key !== "Esc") return;
-
-      // 1. Erst das Filter-Modal schließen, falls offen
-      if (isFilterModalOpen && filterModalEl && !filterModalEl.hidden) {
-        event.preventDefault();
-        closeFilterModal({ returnFocus: true });
-        return;
-      }
-
-      // 2. Dann ggf. das Spot-Detail
-      if (!spotDetailEl) return;
-
-      const isOpen =
-        !spotDetailEl.classList.contains("spot-details--hidden");
-      if (!isOpen) return;
-
-      event.preventDefault();
-      closeSpotDetails({ returnFocus: true });
-    });
-
-    updateFilterSummary();
-    loadSpots();
-  } catch (err) {
-    console.error("[Family Spots] Init-Fehler:", err);
-  }
-}
-
-// ------------------------------------------------------
-// DOMContentLoaded – I18N.init() + App-Init
-// ------------------------------------------------------
-
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    if (typeof I18N !== "undefined" && typeof I18N.init === "function") {
-      await I18N.init();
-    }
-  } catch (err) {
-    console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
-  }
-
-  await init();
-});
+        if (event.target === filterModalEl)
