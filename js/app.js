@@ -1414,6 +1414,47 @@ function updateFilterSummary() {
 }
 
 // ------------------------------------------------------
+// Strukturierter Filter-Kontext (für Tilla / AI-Hooks)
+// ------------------------------------------------------
+
+function getFilterContext() {
+  // aktuelle Radius-Kilometer (oder Infinity)
+  const maxIndex = RADIUS_STEPS_KM.length - 1;
+  const radiusKm =
+    radiusStep >= 0 && radiusStep <= maxIndex
+      ? RADIUS_STEPS_KM[radiusStep]
+      : RADIUS_STEPS_KM[maxIndex];
+
+  // Map-Center, falls vorhanden
+  let centerLat = null;
+  let centerLng = null;
+  if (map && typeof map.getCenter === "function") {
+    const center = map.getCenter();
+    centerLat = center.lat;
+    centerLng = center.lng;
+  }
+
+  return {
+    lang: currentLang,
+    plusActive,
+    searchTerm,
+    moodFilter,
+    travelMode,
+    radiusStep,
+    radiusKm,
+    ageFilter,
+    categoryFilter,
+    onlyBigAdventures,
+    onlyVerified,
+    onlyFavorites,
+    activeTagFilters: Array.from(activeTagFilters),
+    center: centerLat != null && centerLng != null
+      ? { lat: centerLat, lng: centerLng }
+      : null
+  };
+}
+
+// ------------------------------------------------------
 // Filter-Modal öffnen / schließen / zurücksetzen
 // ------------------------------------------------------
 
@@ -1536,7 +1577,18 @@ function applyFiltersAndRender() {
     if (tilla && typeof tilla.onNoSpotsFound === "function") {
       tilla.onNoSpotsFound();
     }
+
     updateFilterSummary();
+
+    // Kontext auch im "keine Spots"-Fall für Tilla bereitstellen
+    if (tilla && typeof tilla.onFiltersUpdated === "function") {
+      tilla.onFiltersUpdated({
+        totalSpots: spots.length,
+        filteredSpotsCount: filteredSpots.length,
+        filters: getFilterContext()
+      });
+    }
+
     return;
   }
 
@@ -1615,6 +1667,15 @@ function applyFiltersAndRender() {
     }
   } else if (typeof tilla.onSpotsFound === "function") {
     tilla.onSpotsFound();
+  }
+
+  // NEU: Tilla bekommt immer den aktuellen Filter-/Kartenkontext
+  if (typeof tilla.onFiltersUpdated === "function") {
+    tilla.onFiltersUpdated({
+      totalSpots: spots.length,
+      filteredSpotsCount: filteredSpots.length,
+      filters: getFilterContext()
+    });
   }
 }
 
