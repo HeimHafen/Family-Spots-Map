@@ -195,7 +195,7 @@ function getInitialLang() {
     const fromI18n = I18N.getLanguage();
     if (
       fromI18n === LANG_DE ||
-      fromI18n === LANG_EN ||
+      fromI18N === LANG_EN ||
       fromI18n === LANG_DA
     ) {
       return fromI18n;
@@ -295,6 +295,7 @@ let filterVerifiedEl;
 let filterFavoritesEl;
 let spotListEl;
 let spotDetailEl;
+let spotsSectionEl;
 let tagFilterContainerEl; // Container für Tag-Filter-Chips
 
 // Plus & Mein Tag – Sections + Toggle-Buttons
@@ -595,17 +596,17 @@ function updatePlusStatusText(status) {
 }
 
 // ------------------------------------------------------
-// Onboarding-Hint (Kompass / Plus / Mein Tag)
+// Onboarding-Hint (Kompass / Filter / Spots)
 // ------------------------------------------------------
 
 function getCompassPlusHintText(lang = currentLang) {
   if (lang === LANG_EN) {
-    return "Tip: Use “Show” to open or hide Compass, Plus and “My day” at any time.";
+    return "How to find today’s spot: 1. Share your location or zoom to your region · 2. Pick a mood · 3. Tap a spot – off you go.";
   }
   if (lang === LANG_DA) {
-    return "Tip: Brug “Vis” til at åbne eller lukke Kompas, Plus og “Min dag” når som helst.";
+    return "Sådan finder I dagens spot: 1. Del jeres placering eller zoom ind på jeres område · 2. Vælg stemning · 3. Tryk på et spot – så er I i gang.";
   }
-  return "Tipp: Kompass, Plus und „Mein Tag“ kannst du über „Anzeigen“ jederzeit ein- und ausklappen.";
+  return "So holt ihr euch euren Spot für heute: 1. Standort freigeben oder in eure Region zoomen · 2. Stimmung wählen · 3. Auf einen Spot tippen – los geht’s.";
 }
 
 function hasSeenCompassPlusHint() {
@@ -633,71 +634,85 @@ function ensureCompassPlusHint() {
   if (hasSeenCompassPlusHint()) return;
   if (!plusSectionEl && !daylogSectionEl && !compassSectionEl) return;
 
-  // Wenn schon vorhanden → nur Text & ARIA aktualisieren
-  if (compassPlusHintEl) {
-    const textEl = compassPlusHintEl.querySelector(
-      ".fsm-onboarding-hint__text"
-    );
-    if (textEl) {
-      textEl.textContent = getCompassPlusHintText();
+  if (!compassPlusHintEl) {
+    const wrapper = document.createElement("div");
+    wrapper.id = "compass-plus-hint";
+    wrapper.className = "fsm-onboarding-hint";
+
+    const textEl = document.createElement("p");
+    textEl.className = "fsm-onboarding-hint__text";
+    textEl.textContent = getCompassPlusHintText();
+
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.className = "fsm-onboarding-hint__close";
+
+    let ariaLabel;
+    if (currentLang === LANG_EN) {
+      ariaLabel = "Hide hint";
+    } else if (currentLang === LANG_DA) {
+      ariaLabel = "Luk tip";
+    } else {
+      ariaLabel = "Hinweis schließen";
     }
+    closeBtn.setAttribute("aria-label", ariaLabel);
+    closeBtn.textContent = "×";
+
+    closeBtn.addEventListener("click", () => {
+      markCompassPlusHintSeenAndRemove();
+    });
+
+    wrapper.appendChild(textEl);
+    wrapper.appendChild(closeBtn);
+
+    // Zwischen Filter-Section und Spots-Section platzieren
+    let anchor = null;
+    if (spotsSectionEl && spotsSectionEl.parentNode === sidebarEl) {
+      anchor = spotsSectionEl;
+    } else if (plusSectionEl && plusSectionEl.parentNode === sidebarEl) {
+      anchor = plusSectionEl;
+    } else if (
+      daylogSectionEl &&
+      daylogSectionEl.parentNode === sidebarEl
+    ) {
+      anchor = daylogSectionEl;
+    } else if (
+      compassSectionEl &&
+      compassSectionEl.parentNode === sidebarEl
+    ) {
+      anchor = compassSectionEl;
+    } else {
+      anchor = sidebarEl.firstChild;
+    }
+
+    if (anchor) {
+      sidebarEl.insertBefore(wrapper, anchor);
+    } else {
+      sidebarEl.appendChild(wrapper);
+    }
+
+    compassPlusHintEl = wrapper;
+  } else {
+    const textEl =
+      compassPlusHintEl.querySelector(".fsm-onboarding-hint__text") ||
+      compassPlusHintEl;
+    textEl.textContent = getCompassPlusHintText();
+
     const closeBtn = compassPlusHintEl.querySelector(
       ".fsm-onboarding-hint__close"
     );
     if (closeBtn) {
+      let ariaLabel;
       if (currentLang === LANG_EN) {
-        closeBtn.setAttribute("aria-label", "Hide this hint");
+        ariaLabel = "Hide hint";
       } else if (currentLang === LANG_DA) {
-        closeBtn.setAttribute("aria-label", "Skjul dette tip");
+        ariaLabel = "Luk tip";
       } else {
-        closeBtn.setAttribute("aria-label", "Hinweis ausblenden");
+        ariaLabel = "Hinweis schließen";
       }
+      closeBtn.setAttribute("aria-label", ariaLabel);
     }
-    return;
   }
-
-  // Neu erstellen
-  const wrapper = document.createElement("div");
-  wrapper.className = "fsm-onboarding-hint";
-  wrapper.id = "compass-plus-hint";
-
-  const textEl = document.createElement("p");
-  textEl.className = "fsm-onboarding-hint__text";
-  textEl.textContent = getCompassPlusHintText();
-
-  const closeBtn = document.createElement("button");
-  closeBtn.type = "button";
-  closeBtn.className = "fsm-onboarding-hint__close";
-
-  if (currentLang === LANG_EN) {
-    closeBtn.setAttribute("aria-label", "Hide this hint");
-  } else if (currentLang === LANG_DA) {
-    closeBtn.setAttribute("aria-label", "Skjul dette tip");
-  } else {
-    closeBtn.setAttribute("aria-label", "Hinweis ausblenden");
-  }
-
-  closeBtn.textContent = "×";
-
-  closeBtn.addEventListener("click", (event) => {
-    event.preventDefault();
-    markCompassPlusHintSeenAndRemove();
-  });
-
-  wrapper.appendChild(textEl);
-  wrapper.appendChild(closeBtn);
-
-  // Einfügeort: vor Plus / Mein Tag / Kompass – oder ganz oben in der Sidebar
-  let anchor =
-    plusSectionEl || daylogSectionEl || compassSectionEl || sidebarEl.firstChild;
-
-  if (anchor && anchor.parentNode === sidebarEl) {
-    sidebarEl.insertBefore(wrapper, anchor);
-  } else {
-    sidebarEl.insertBefore(wrapper, sidebarEl.firstChild);
-  }
-
-  compassPlusHintEl = wrapper;
 }
 
 /**
@@ -2260,6 +2275,9 @@ async function init() {
 
     spotListEl = document.getElementById("spot-list");
     spotDetailEl = document.getElementById("spot-detail");
+    spotsSectionEl = spotListEl
+      ? spotListEl.closest(".sidebar-section--grow")
+      : null;
 
     plusSectionEl = document.getElementById("plus-section");
     btnTogglePlusEl = document.getElementById("btn-toggle-plus");
@@ -2643,12 +2661,10 @@ async function init() {
         const target = document.getElementById(id);
         if (!target) return;
 
-        // Sicherstellen, dass der Bereich fokussierbar ist
         if (!target.hasAttribute("tabindex")) {
           target.setAttribute("tabindex", "-1");
         }
 
-        // Scrollen & Fokus setzen
         target.scrollIntoView();
         if (typeof target.focus === "function") {
           target.focus();
