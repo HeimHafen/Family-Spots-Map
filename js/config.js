@@ -107,9 +107,26 @@ export const DAYLOG_STORAGE_KEY = "fs_daylog_last";
 export const SPOTS_CACHE_KEY = "fs_spots_cache_v1";
 
 // ------------------------------------------------------
+// Dev / Demo-Konfiguration
+// ------------------------------------------------------
+
+/**
+ * Aktiviert einen erzwungenen Plus-Modus für Entwicklung & Demos.
+ *
+ * Wenn true, behandelt die App Family Spots Plus so,
+ * als wäre es dauerhaft aktiv – unabhängig vom gespeicherten Status.
+ *
+ * WICHTIG:
+ *  - In Produktion MUSS dieser Wert false sein.
+ *  - Dieser Wert wird ausschließlich gelesen, niemals zur Laufzeit beschrieben.
+ */
+export const DEV_FORCE_PLUS = false;
+
+// ------------------------------------------------------
 // Sprachen & Theme
 // ------------------------------------------------------
 
+/** @type {LangCode} */
 export const LANG_DE = "de";
 /** @type {LangCode} */
 export const LANG_EN = "en";
