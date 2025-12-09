@@ -10,7 +10,12 @@ import {
   savePlusStatus as savePlusStatusToStorage
 } from "../storage.js";
 import { t } from "../i18n.js";
-import { SUBSCRIPTIONS, ADDONS, CATEGORY_ACCESS } from "../config.js";
+import {
+  SUBSCRIPTIONS,
+  ADDONS,
+  CATEGORY_ACCESS,
+  DEV_FORCE_PLUS
+} from "../config.js";
 
 const PARTNERS_URL = "data/partners.json";
 
@@ -25,7 +30,7 @@ const PARTNERS_URL = "data/partners.json";
  * @property {string|null} validUntil  - ISO-String (Ende der Laufzeit)
  * @property {string[]|null} addons    - optionale Add-ons (IDs, z. B. ["addon_rv"])
  * @property {string|null} partner     - z. B. "Campingplatz XY"
- * @property {string|null} source      - z. B. "partner", "store"
+ * @property {string|null} source      - z. B. "partner", "store", "dev"
  */
 
 /**
@@ -159,6 +164,7 @@ function isEmptyStoredStatus(raw) {
  * WICHTIG:
  *  - Berücksichtigt Ablaufdatum (validUntil / expiresAt)
  *  - Wenn abgelaufen → active = false
+ *  - DEV_FORCE_PLUS kann den Status ausschließlich zur Laufzeit überschreiben
  *
  * @returns {NormalizedPlusStatus}
  */
@@ -167,7 +173,8 @@ export function getPlusStatus() {
 
   // Falls überhaupt kein sinnvoller Status vorliegt, standardisieren:
   if (isEmptyStoredStatus(stored)) {
-    return {
+    /** @type {NormalizedPlusStatus} */
+    const base = {
       active: false,
       plan: null,
       validUntil: null,
@@ -175,6 +182,18 @@ export function getPlusStatus() {
       partner: null,
       source: null
     };
+
+    // Dev-Override: Plus für Demos erzwingen, ohne Storage zu verändern
+    if (DEV_FORCE_PLUS) {
+      return {
+        ...base,
+        active: true,
+        plan: "family_plus",
+        source: "dev"
+      };
+    }
+
+    return base;
   }
 
   const validUntilIso = stored.expiresAt || stored.validUntil || null;
@@ -201,11 +220,22 @@ export function getPlusStatus() {
     source: stored.source || null
   };
 
+  // Dev-Override: aktiven Status für Demos erzwingen
+  if (DEV_FORCE_PLUS) {
+    return {
+      ...normalized,
+      active: true,
+      // falls kein Plan gesetzt wurde, auf "family_plus" fallen
+      plan: normalized.plan || "family_plus",
+      source: normalized.source || "dev"
+    };
+  }
+
   return normalized;
 }
 
 /**
- * True, wenn Plus aktuell aktiv ist (inkl. Ablaufprüfung).
+ * True, wenn Plus aktuell aktiv ist (inkl. Ablaufprüfung & Dev-Override).
  * @returns {boolean}
  */
 export function isPlusActive() {
