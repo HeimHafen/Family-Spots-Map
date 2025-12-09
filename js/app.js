@@ -28,7 +28,6 @@ import {
   COMPASS_PLUS_HINT_KEY,
   FILTERS,
   CATEGORY_ACCESS,
-  // ➕ NEU: dänische Kategorien
   CATEGORY_LABELS_DA
 } from "./config.js";
 
@@ -195,7 +194,7 @@ function getInitialLang() {
     const fromI18n = I18N.getLanguage();
     if (
       fromI18n === LANG_DE ||
-      fromI18N === LANG_EN ||
+      fromI18n === LANG_EN ||
       fromI18n === LANG_DA
     ) {
       return fromI18n;
@@ -599,6 +598,7 @@ function updatePlusStatusText(status) {
 // Onboarding-Hint (Kompass / Filter / Spots)
 // ------------------------------------------------------
 
+// alter Text-Helper (für evtl. andere Verwendungen)
 function getCompassPlusHintText(lang = currentLang) {
   if (lang === LANG_EN) {
     return "How to find today’s spot: 1. Share your location or zoom to your region · 2. Pick a mood · 3. Tap a spot – off you go.";
@@ -607,6 +607,32 @@ function getCompassPlusHintText(lang = currentLang) {
     return "Sådan finder I dagens spot: 1. Del jeres placering eller zoom ind på jeres område · 2. Vælg stemning · 3. Tryk på et spot – så er I i gang.";
   }
   return "So holt ihr euch euren Spot für heute: 1. Standort freigeben oder in eure Region zoomen · 2. Stimmung wählen · 3. Auf einen Spot tippen – los geht’s.";
+}
+
+// NEU: HTML-Variante mit 1./2./3. untereinander
+function getCompassPlusHintHtml(lang = currentLang) {
+  if (lang === LANG_EN) {
+    return (
+      "How to find today’s spot:<br>" +
+      "1. Share your location or zoom to your region<br>" +
+      "2. Pick a mood<br>" +
+      "3. Tap a spot – off you go."
+    );
+  }
+  if (lang === LANG_DA) {
+    return (
+      "Sådan finder I dagens spot:<br>" +
+      "1. Del jeres placering eller zoom ind på jeres område<br>" +
+      "2. Vælg stemning<br>" +
+      "3. Tryk på et spot – så er I i gang."
+    );
+  }
+  return (
+    "So holt ihr euch euren Spot für heute:<br>" +
+    "1. Standort freigeben oder in eure Region zoomen<br>" +
+    "2. Stimmung wählen<br>" +
+    "3. Auf einen Spot tippen – los geht’s."
+  );
 }
 
 function hasSeenCompassPlusHint() {
@@ -641,7 +667,7 @@ function ensureCompassPlusHint() {
 
     const textEl = document.createElement("p");
     textEl.className = "fsm-onboarding-hint__text";
-    textEl.textContent = getCompassPlusHintText();
+    textEl.innerHTML = getCompassPlusHintHtml();
 
     const closeBtn = document.createElement("button");
     closeBtn.type = "button";
@@ -696,7 +722,7 @@ function ensureCompassPlusHint() {
     const textEl =
       compassPlusHintEl.querySelector(".fsm-onboarding-hint__text") ||
       compassPlusHintEl;
-    textEl.textContent = getCompassPlusHintText();
+    textEl.innerHTML = getCompassPlusHintHtml();
 
     const closeBtn = compassPlusHintEl.querySelector(
       ".fsm-onboarding-hint__close"
