@@ -38,7 +38,7 @@
  *  "Praktisches" |
  *  "Unterwegs mit WoMo & Rad" |
  *  "Entspannung & Naturorte" |
- *  "ABF Messe"
+ *  "Messen & Events"
  * } CategoryGroupKey
  */
 
