@@ -662,6 +662,11 @@ function markCompassPlusHintSeenAndRemove() {
   compassPlusHintEl = null;
 }
 
+/**
+ * Hinweis einblenden (wenn noch nicht gesehen) und
+ * automatisch nach kurzer Zeit bzw. erster Interaktion ausblenden.
+ * Kein „X“-Button mehr.
+ */
 function ensureCompassPlusHint() {
   if (!sidebarEl) return;
   if (hasSeenCompassPlusHint()) return;
@@ -669,17 +674,26 @@ function ensureCompassPlusHint() {
 
   const { title, steps } = getCompassPlusHintParts();
 
+  // Alte Close-Buttons aus evtl. vorhandenen alten Markups entfernen
+  document.querySelectorAll(".fsm-onboarding-hint__close").forEach((btn) => {
+    if (btn.parentNode) btn.parentNode.removeChild(btn);
+  });
+
+  // Vorhandenen Wrapper wiederverwenden, falls er schon existiert
+  if (!compassPlusHintEl) {
+    compassPlusHintEl = document.getElementById("compass-plus-hint") || null;
+  }
+
+  // Falls noch kein Wrapper existiert → neu erzeugen (ohne X)
   if (!compassPlusHintEl) {
     const wrapper = document.createElement("div");
     wrapper.id = "compass-plus-hint";
     wrapper.className = "fsm-onboarding-hint";
 
-    // Titel
     const titleEl = document.createElement("p");
     titleEl.className = "fsm-onboarding-hint__title";
     titleEl.textContent = title;
 
-    // nummerierte Liste 1./2./3. untereinander
     const listEl = document.createElement("ol");
     listEl.className = "fsm-onboarding-hint__list";
     steps.forEach((stepText) => {
@@ -688,29 +702,8 @@ function ensureCompassPlusHint() {
       listEl.appendChild(li);
     });
 
-    // Close-Button (x)
-    const closeBtn = document.createElement("button");
-    closeBtn.type = "button";
-    closeBtn.className = "fsm-onboarding-hint__close";
-
-    let ariaLabel;
-    if (currentLang === LANG_EN) {
-      ariaLabel = "Hide hint";
-    } else if (currentLang === LANG_DA) {
-      ariaLabel = "Luk tip";
-    } else {
-      ariaLabel = "Hinweis schließen";
-    }
-    closeBtn.setAttribute("aria-label", ariaLabel);
-    closeBtn.textContent = "×";
-
-    closeBtn.addEventListener("click", () => {
-      markCompassPlusHintSeenAndRemove();
-    });
-
     wrapper.appendChild(titleEl);
     wrapper.appendChild(listEl);
-    wrapper.appendChild(closeBtn);
 
     // Zwischen Filter-Section und Spots-Section platzieren
     let anchor = null;
@@ -734,8 +727,7 @@ function ensureCompassPlusHint() {
 
     compassPlusHintEl = wrapper;
   } else {
-    // Sprache hat sich geändert → Texte aktualisieren
-    const updated = getCompassPlusHintParts();
+    // Sprache aktualisieren
     const titleEl = compassPlusHintEl.querySelector(
       ".fsm-onboarding-hint__title"
     );
@@ -743,32 +735,43 @@ function ensureCompassPlusHint() {
       ".fsm-onboarding-hint__list"
     );
 
-    if (titleEl) {
-      titleEl.textContent = updated.title;
-    }
+    if (titleEl) titleEl.textContent = title;
     if (listEl) {
       while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
-      updated.steps.forEach((stepText) => {
+      steps.forEach((stepText) => {
         const li = document.createElement("li");
         li.textContent = stepText;
         listEl.appendChild(li);
       });
     }
+  }
 
-    const closeBtn = compassPlusHintEl.querySelector(
-      ".fsm-onboarding-hint__close"
-    );
-    if (closeBtn) {
-      let ariaLabel;
-      if (currentLang === LANG_EN) {
-        ariaLabel = "Hide hint";
-      } else if (currentLang === LANG_DA) {
-        ariaLabel = "Luk tip";
-      } else {
-        ariaLabel = "Hinweis schließen";
+  // Auto-Hide nur einmal anhängen
+  if (compassPlusHintEl && !compassPlusHintEl._autoHideAttached) {
+    compassPlusHintEl._autoHideAttached = true;
+
+    const autoHideOnce = () => {
+      markCompassPlusHintSeenAndRemove();
+      window.removeEventListener("scroll", autoHideOnce);
+      if (map && typeof map.off === "function") {
+        map.off("moveend", autoHideOnce);
       }
-      closeBtn.setAttribute("aria-label", ariaLabel);
+    };
+
+    // a) erste Scroll-Interaktion
+    window.addEventListener("scroll", autoHideOnce, { passive: true });
+
+    // b) erste Kartenbewegung
+    if (map && typeof map.on === "function") {
+      map.on("moveend", autoHideOnce);
     }
+
+    // c) Fallback: spätestens nach 15 Sekunden
+    window.setTimeout(() => {
+      if (!hasSeenCompassPlusHint()) {
+        autoHideOnce();
+      }
+    }, 15000);
   }
 }
 
@@ -1474,7 +1477,7 @@ function openFilterModal() {
   lastFocusBeforeFilterModal = document.activeElement;
   filterModalEl.hidden = false;
 
-  // Body-Scroll sperren, solange das Modal geöffnet ist
+  // Body-Scroll sperren, solange das Filter-Modal geöffnet ist
   if (document && document.body) {
     document.body.setAttribute("data-filter-modal-open", "1");
   }
