@@ -325,6 +325,11 @@ textarea.input:focus-visible,
   margin-top: 14px;
 }
 
+/* Neuer Abstand: Spots ↔ Karte (gleicher Abstand wie unten) */
+.sidebar > .sidebar-section + .map-section {
+  margin-top: 14px;
+}
+
 /* plus-section ↔ daylog-section explizit ebenfalls 14px */
 #plus-section + #daylog-section {
   margin-top: 14px;
@@ -967,7 +972,7 @@ select.input:focus {
 /* Spot-Liste */
 
 .sidebar-section--grow {
-  flex: 1 1 auto;
+  flex: 1 1.auto;
   display: flex;
   flex-direction: column;
 }
@@ -985,11 +990,6 @@ select.input:focus {
   max-height: 320px;
   overflow-y: auto;
   padding-right: 4px;
-}
-
-/* gleicher Abstand zwischen Spots und Karte wie unter der Karte */
-.sidebar-section--grow + .map-section {
-  margin-top: 14px;
 }
 
 /* Empty-State für leere Filterergebnisse */
@@ -1707,11 +1707,11 @@ hr {
 
 /* Liste für 1., 2., 3. – sauber untereinander mit gleichen Innenabständen */
 .fsm-onboarding-hint__list {
-  margin: 0;
-  padding-left: 1.25rem;
+  margin: 0;               /* keine Zusatzabstände nach oben/unten – Padding der Karte sorgt für Gleichheit */
+  padding-left: 1.25rem;   /* Einzug für Nummerierung */
   font-size: 14px;
   line-height: 1.45;
-  list-style-type: decimal;
+  list-style-type: decimal; /* 1. 2. 3. – auch falls ein <ul> verwendet wird */
 }
 
 .fsm-onboarding-hint__list li {
@@ -1722,10 +1722,10 @@ hr {
   margin-bottom: 0;
 }
 
-/* Close-Button beim Hinweis komplett ausblenden */
+/* Close-Button im Hinweis komplett ausblenden */
 .fsm-onboarding-hint__close,
 .fsm-onboarding-hint-close {
-  display: none;
+  display: none !important;
 }
 
 /* Wenn der Hinweis per JS versteckt wird */
@@ -1943,7 +1943,7 @@ hr {
     transition-duration: 0.001ms !important;
   }
 
-  .tilla-sidebar-avatar img,
+  /* Tilla bleibt animiert – nur andere Animationen werden reduziert */
   .pin-pop,
   .toast,
   .onboarding-slide {
