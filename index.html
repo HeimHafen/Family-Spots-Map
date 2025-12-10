@@ -100,7 +100,7 @@
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/badges.css" />
 
-  <!-- Kleine UI-Feintunings: Skip-Link, Onboarding-Hinweis & Filtermodal-Header -->
+  <!-- Kleine UI-Feintunings: Skip-Link, Onboarding-Hinweis & Filtermodal-Header + Header-Typografie -->
   <style>
     /* Skip-Link: als dezente Pille, nur bei Fokus sichtbar */
     .skip-link {
@@ -172,6 +172,60 @@
 
     .filter-modal-close-btn {
       white-space: nowrap;
+    }
+
+    /* HEADER: Titel & Claim perfekt mittig mit Flaggen links/rechts */
+
+    .app-header-main {
+      text-align: center;
+      padding: 0.75rem 1rem 1rem;
+      max-width: 44rem;
+      margin: 0 auto;
+    }
+
+    .header-title {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      margin: 0;
+      font-size: clamp(1.8rem, 1.5rem + 1.4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+
+    .header-title-spots {
+      text-decoration: underline;
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.16em;
+    }
+
+    .header-flag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .header-tagline {
+      max-width: 36rem;
+      margin: 0.55rem auto 0;
+    }
+
+    @media (min-width: 768px) {
+      .app-header-main {
+        padding-block: 1rem 1.5rem;
+      }
+
+      .header-title {
+        font-size: clamp(2rem, 1.4rem + 1.8vw, 2.7rem);
+      }
+
+      .header-flag {
+        font-size: 1.6rem;
+      }
     }
   </style>
 </head>
