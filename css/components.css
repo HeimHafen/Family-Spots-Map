@@ -325,6 +325,14 @@ textarea.input:focus-visible,
   margin-top: 14px;
 }
 
+/* gleicher Abstand oberhalb der Karte wie unterhalb,
+   wenn die Karte direkt auf die Sidebar (mit Spots) folgt */
+@media (max-width: 899px) {
+  #view-map > .sidebar + .map-section {
+    margin-top: 14px;
+  }
+}
+
 /* plus-section ↔ daylog-section explizit ebenfalls 14px */
 #plus-section + #daylog-section {
   margin-top: 14px;
@@ -1717,10 +1725,37 @@ hr {
   margin-bottom: 0;
 }
 
-/* CLOSE-BUTTON DES HINWEISES AUSBLENDEN */
 .fsm-onboarding-hint__close,
 .fsm-onboarding-hint-close {
-  display: none !important;
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: none;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.fsm-onboarding-hint__close:hover,
+.fsm-onboarding-hint-close:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .fsm-onboarding-hint__close:hover,
+[data-theme="dark"] .fsm-onboarding-hint-close:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.fsm-onboarding-hint__close:focus-visible,
+.fsm-onboarding-hint-close:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px rgba(255, 171, 64, 0.85);
 }
 
 /* Wenn der Hinweis per JS versteckt wird */
