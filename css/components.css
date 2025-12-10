@@ -206,19 +206,25 @@ textarea.input:focus-visible,
   color: #fef3e7;
 }
 
+/* Titel-Block: mittig, begrenzte Breite, etwas mehr Luft */
 .app-header-main {
   text-align: center;
+  padding: 0.75rem 1rem 1rem;
+  max-width: 44rem;
+  margin: 0 auto;
 }
 
+/* „🇩🇪 Family Spots Map 🇩🇰“ – größer, Flags links/rechts */
 .header-title {
   margin: 0;
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 0.4rem;
+  font-size: clamp(1.8rem, 1.5rem + 1.4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
 }
 
@@ -228,18 +234,24 @@ textarea.input:focus-visible,
 }
 
 .header-flag {
-  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .header-title-spots {
   text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
 }
 
+/* Claim-Bubble darunter, mittig und etwas schmaler */
 .header-tagline {
   display: inline-block;
-  margin: 8px auto 0;
+  max-width: 36rem;
+  margin: 0.55rem auto 0;
   padding: 8px 20px;
   background: var(--header-tagline-bg);
   color: var(--header-tagline-color);
@@ -247,6 +259,20 @@ textarea.input:focus-visible,
   font-size: 14px;
   font-weight: 600;
   box-shadow: var(--header-tagline-shadow);
+}
+
+@media (min-width: 768px) {
+  .app-header-main {
+    padding-block: 1rem 1.5rem;
+  }
+
+  .header-title {
+    font-size: clamp(2rem, 1.4rem + 1.8vw, 2.7rem);
+  }
+
+  .header-flag {
+    font-size: 1.6rem;
+  }
 }
 
 /* -----------------------------------------
@@ -1336,7 +1362,7 @@ body[data-filter-modal-open="1"] {
   width: 110px;
   height: auto;
   transform-origin: center bottom;
-  animation: tilla-bob 3.5s ease-in-out infinite;
+  animation: tilla-bob 3.5s.ease-in-out infinite;
 }
 
 .tilla-sidebar-text {
@@ -1434,7 +1460,7 @@ body[data-filter-modal-open="1"] {
     0 3px 9px rgba(0, 0, 0, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+  transition: transform 0.08s ease-out, box-shadow 0.08s.ease-out;
 }
 
 .bottom-nav-item--active {
