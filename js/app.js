@@ -273,6 +273,9 @@ let activeTagFilters = new Set();
 // DOM-Referenzen
 let languageSwitcherEl;
 let languageSwitcherFlagEl;
+// NEU: Sprach-Chips im Menü
+let langChipButtons;
+
 let themeToggleEl;
 let btnLocateEl;
 let btnHelpEl;
@@ -538,7 +541,7 @@ function getCategoryLabelWithAccess(slug) {
 }
 
 /**
- * Sprach-Badge (Flagge) aktualisieren
+ * Sprach-Badge (Flagge) im alten Header-Pill aktualisieren (falls vorhanden)
  */
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
@@ -575,6 +578,28 @@ function updateLanguageSwitcherVisual() {
     ariaLabel = "Language: English (tap for Deutsch)";
   }
   languageSwitcherEl.setAttribute("aria-label", ariaLabel);
+}
+
+/**
+ * NEU: Sprach-Chips im Menü visuell synchronisieren
+ * .menu-language-chip mit data-lang="de|en|da"
+ */
+function updateLanguageChipVisuals() {
+  if (!langChipButtons || !langChipButtons.length) return;
+
+  langChipButtons.forEach((btn) => {
+    const code = (btn.getAttribute("data-lang") || "").toLowerCase();
+    const btnLang =
+      code === "en"
+        ? LANG_EN
+        : code === "da" || code === "dk"
+        ? LANG_DA
+        : LANG_DE;
+
+    const isActive = btnLang === currentLang;
+    btn.classList.toggle("menu-language-chip--active", isActive);
+    btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
 }
 
 function updateGenericSectionToggleLabel(btn, isOpen) {
@@ -906,7 +931,10 @@ function setLanguage(lang, { initial = false } = {}) {
     tilla.onLanguageChanged();
   }
 
+  // Header-Pill (falls vorhanden) + Menü-Chips aktualisieren
   updateLanguageSwitcherVisual();
+  updateLanguageChipVisuals();
+
   applyStaticI18n();
   updatePlusStatusText();
   updateFilterSummary();
@@ -2545,6 +2573,11 @@ async function init() {
       document.getElementById("language-switcher") ||
       document.getElementById("language-toggle");
     languageSwitcherFlagEl = document.getElementById("language-switcher-flag");
+    // NEU: Sprach-Chips im Menü (Flaggen)
+    langChipButtons = Array.from(
+      document.querySelectorAll(".menu-language-chip")
+    );
+
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
@@ -2688,6 +2721,7 @@ async function init() {
       getText: (key) => t(key)
     });
 
+    // Alter Sprach-Pill (falls im Header noch vorhanden)
     if (languageSwitcherEl) {
       languageSwitcherEl.addEventListener("click", () => {
         const nextLang =
@@ -2699,6 +2733,23 @@ async function init() {
         setLanguage(nextLang);
       });
       updateLanguageSwitcherVisual();
+    }
+
+    // NEU: Sprach-Chips im Menü bedienen
+    if (langChipButtons && langChipButtons.length) {
+      langChipButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const code = (btn.getAttribute("data-lang") || "").toLowerCase();
+          const targetLang =
+            code === "en"
+              ? LANG_EN
+              : code === "da" || code === "dk"
+              ? LANG_DA
+              : LANG_DE;
+          setLanguage(targetLang);
+        });
+      });
+      updateLanguageChipVisuals();
     }
 
     if (themeToggleEl) {
