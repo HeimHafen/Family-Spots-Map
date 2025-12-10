@@ -55,7 +55,8 @@ import {
   getPlusStatus,
   isPlusActive,
   formatPlusStatus,
-  redeemPartnerCode
+  redeemPartnerCode,
+  isPlusCategory
 } from "./features/plus.js";
 
 // ------------------------------------------------------
@@ -110,6 +111,10 @@ import {
  * @property {string[]} [_moods]
  * @property {string[]} [_travelModes]
  * @property {string[]} [_tagsMerged]
+ * @property {string} [validFrom]
+ * @property {string} [validTo]
+ * @property {string} [valid_from]
+ * @property {string} [valid_to]
  */
 
 // ------------------------------------------------------
@@ -521,6 +526,13 @@ function getCategoryLabelWithAccess(slug) {
           : currentLang === LANG_DA
           ? " · autocamper-add-on (Plus)"
           : " · WoMo-Add-on (Plus)";
+    } else if (access.addonId === "addon_abf") {
+      suffix =
+        currentLang === LANG_EN
+          ? " · ABF fair add-on"
+          : currentLang === LANG_DA
+          ? " · ABF-messe-add-on"
+          : " · ABF Messe-Add-on";
     } else {
       suffix =
         currentLang === LANG_EN
@@ -1564,6 +1576,108 @@ function resetAllFilters() {
 }
 
 // ------------------------------------------------------
+// Sichtbarkeit: Datum (validFrom/validTo) + Plus/Add-ons
+// ------------------------------------------------------
+
+/**
+ * Prüft, ob ein Spot im aktuellen Zeitpunkt gültig ist.
+ * Unterstützt sowohl validFrom/validTo als auch valid_from/valid_to.
+ * Wenn keine Felder gesetzt sind, gilt der Spot immer als gültig.
+ *
+ * @param {Spot} spot
+ * @param {Date} [now]
+ * @returns {boolean}
+ */
+function isSpotCurrentlyValid(spot, now = new Date()) {
+  const fromStr = spot.validFrom || spot.valid_from;
+  const toStr = spot.validTo || spot.valid_to;
+
+  if (fromStr) {
+    const from = new Date(fromStr);
+    if (!Number.isNaN(from.getTime()) && now < from) {
+      return false;
+    }
+  }
+
+  if (toStr) {
+    const to = new Date(toStr);
+    if (!Number.isNaN(to.getTime()) && now > to) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Prüft, ob ein Spot grundsätzlich sichtbar sein darf:
+ *  - Datum ist im Gültigkeitsfenster (z. B. ABF 2026)
+ *  - Plus-/Add-on-Regeln aus CATEGORY_ACCESS werden erfüllt
+ *
+ * @param {Spot} spot
+ * @returns {boolean}
+ */
+function userCanSeeSpot(spot) {
+  // 1. Datum (z. B. ABF 2026: 11.–15.02.2026)
+  if (!isSpotCurrentlyValid(spot)) {
+    return false;
+  }
+
+  // 2. Kategorien → Plus/Add-on prüfen
+  const slugs = Array.isArray(spot.categories)
+    ? spot.categories
+    : spot.category
+    ? [spot.category]
+    : [];
+
+  // Spots ohne Kategorie werden nicht eingeschränkt
+  if (!slugs.length) {
+    return true;
+  }
+
+  const status = getPlusStatus();
+  const plan = status.plan || null;
+  const addons = status.addons || [];
+
+  return slugs.every((slug) => {
+    // Keine Plus-/Add-on-Kategorie laut Config → immer sichtbar
+    if (!isPlusCategory(slug)) {
+      return true;
+    }
+
+    if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) {
+      return true;
+    }
+
+    const rule = CATEGORY_ACCESS.perCategory[slug];
+    if (!rule) {
+      return true;
+    }
+
+    // Für alle Plus-/Add-on-Kategorien muss Plus aktiv sein
+    if (!status.active) {
+      return false;
+    }
+
+    // Basis-Abo nötig?
+    if (rule.level === "subscription") {
+      return plan === rule.subscriptionId;
+    }
+
+    // Add-on nötig (z. B. addon_abf, addon_water, addon_rv)
+    if (rule.level === "addon") {
+      const hasBase = plan === rule.subscriptionId;
+      const hasAddon = Array.isArray(addons) && rule.addonId
+        ? addons.includes(rule.addonId)
+        : false;
+      return hasBase && hasAddon;
+    }
+
+    return true;
+  });
+}
+
+// ------------------------------------------------------
 // Filterlogik (verwendet filterSpots aus filters.js)
 // ------------------------------------------------------
 
@@ -1631,6 +1745,11 @@ function applyFiltersAndRender() {
     activeFilterIds: activeTagFilters
   });
 
+  // NEU: Plus-/Add-on- und Datumslogik (z. B. ABF 2026)
+  const visibilityFiltered = nonGeoFiltered.filter((spot) =>
+    userCanSeeSpot(spot)
+  );
+
   let center = null;
   if (map && typeof map.getCenter === "function") {
     center = map.getCenter();
@@ -1644,12 +1763,13 @@ function applyFiltersAndRender() {
     Infinity;
 
   filteredSpots = center
-    ? nonGeoFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
-    : nonGeoFiltered;
+    ? visibilityFiltered.filter((spot) => isSpotInRadius(spot, center, radiusKm))
+    : visibilityFiltered;
 
   console.log("[Family Spots] applyFiltersAndRender AFTER radius:", {
     totalSpots: spots.length,
     afterNonGeo: nonGeoFiltered.length,
+    afterVisibility: visibilityFiltered.length,
     afterRadius: filteredSpots.length
   });
 
