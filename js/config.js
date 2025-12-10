@@ -22,7 +22,6 @@
  * @property {boolean} favorites
  * @property {boolean} daylog
  * @property {boolean} playIdeas
- * @property {boolean} compass
  */
 
 /**
@@ -164,8 +163,7 @@ export const FEATURES = Object.freeze({
   verifiedFilter: true,
   favorites: true,
   daylog: true,
-  playIdeas: true,
-  compass: false
+  playIdeas: true
 });
 
 // ------------------------------------------------------
