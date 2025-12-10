@@ -1,6 +1,8 @@
 // js/i18n.js
 // --------------------------------------
 // Family Spots Map – i18n / Spielideen
+// (ABF 2026 nutzt dieselbe i18n-Logik;
+//  ABF-spezifische Texte liegen in data/i18n/*.json)
 // --------------------------------------
 
 "use strict";
