@@ -8,30 +8,31 @@
   "btn_locate_aria": "Center on my location",
   "alt_tilla_image": "Tilla the turtle – your family companion",
   "header_tagline": "Today is a day for family, and the path to the next adventure is just a breath away.",
-  "btn_show_compass": "Show compass",
-  "btn_hide_compass": "Hide compass",
-  "compass_title": "The Family Compass – where every path promises a new adventure",
-  "compass_helper": "Choose how you’re travelling today – I’ll adjust radius and spots for you.",
-  "compass_apply_label": "Apply compass",
+
   "btn_show_filters": "Show filters",
   "btn_hide_filters": "Hide filters",
   "btn_only_map": "Map only",
   "btn_show_list": "Show list",
+
   "toast_location_ok": "Your location is set – the next adventure awaits. 🌍",
   "toast_location_error": "We can’t access your location right now – but no adventure stays hidden. Maybe location is blocked or you’re offline.",
   "toast_fav_added": "Saved to your favourite spots – a sparkling moment you’ll never forget. 💛",
   "toast_fav_removed": "Removed from your favourite spots – but the journey is long, new treasures are waiting. 🌿",
+
   "filter_category_all": "All categories – everything that moves the heart and the family.",
+
   "plus_code_empty": "Please enter the key to new experiences first – your partner code.",
   "plus_code_unknown": "This code is unknown or no longer valid.",
   "plus_code_activated": "Family Spots Plus has been activated – good travels and lots of joy on your tours!",
   "plus_code_failed": "The code couldn’t be checked right now. Please try again later.",
+
   "filter_radius_max_label": "All spots",
   "filter_radius_description_step0": "Mini micro-adventures – just a breath away, perfect for a small break in everyday life.",
   "filter_radius_description_step1": "Short trips – for small adventures that are quickly there and quickly back.",
   "filter_radius_description_step2": "A small family outing – the perfect balance for half a day of discoveries.",
   "filter_radius_description_step3": "Big adventures await – discover new destinations for a whole day full of magical moments.",
   "filter_radius_description_all": "All spots – no radius limit. The map is all yours.",
+
   "turtle_intro_1": "I’m Tilla, the little turtle who stays with you at places where memories weave and adventures grow. Together, we walk your family’s path.",
   "turtle_intro_2": "Right now, I can’t find a matching spot. Maybe a short walk nearby fits today – or you can widen the radius a little. 🐢",
   "turtle_after_daylog_save": "Your day is now captured. Small moments that become big memories – every step a treasure we’ll never forget. 💛",
@@ -40,11 +41,19 @@
   "turtle_trip_mode": "You’re on your way – I’ll keep an eye out for moments that warm the heart. 🚐",
   "turtle_everyday_mode": "Everyday life can be magical too. Let’s discover small wonders nearby. 🌿",
   "turtle_plus_activated": "Family Spots Plus is now active – new paths await to be discovered. The journey continues with more places and adventures accompanying you. ✨",
-  "turtle_compass_everyday": "I’ve set the radius for your everyday mood – even small things can become great adventures if you see them with your heart. 🌿",
-  "turtle_compass_trip": "Compass set – on your journey, new places and memories await. 🌍",
+
   "daylog_saved": "Your day’s moment is saved 💾 – you can look back on it later.",
+
   "nav_map": "Map",
   "nav_about": "About Family Spots Map",
+
   "route_apple": "Open in Apple Maps",
-  "route_google": "Open in Google Maps"
+  "route_google": "Open in Google Maps",
+
+  "abf_addon_label": "ABF 2026 trade fair add-on",
+  "abf_addon_activated_toast": "ABF trade fair add-on activated – all family spots on the fairground are now unlocked.",
+  "abf_addon_hint": "With the ABF trade fair add-on you can see extra spots directly on the Hannover fairground – play areas, activities for children and calmer corners to take a breather.",
+  "abf_about_title": "ABF 2026: How to use the fair map",
+  "abf_about_body": "With Family Spots Map you can quickly find family-friendly areas on the fairground during ABF 2026: play zones, activities for children, quieter places to take a break and practical points such as baby changing rooms. Simply activate your ABF trade fair add-on and zoom into the grounds to see all fair spots.",
+  "abf_dates_hint": "Note: ABF 2026 takes place from 11 to 15 February 2026 at the Hannover fairground."
 }
