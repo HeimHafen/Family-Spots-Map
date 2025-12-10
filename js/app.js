@@ -1457,9 +1457,10 @@ function getFilterContext() {
     onlyVerified,
     onlyFavorites,
     activeTagFilters: Array.from(activeTagFilters),
-    center: centerLat != null && centerLng != null
-      ? { lat: centerLat, lng: centerLng }
-      : null
+    center:
+      centerLat != null && centerLng != null
+        ? { lat: centerLat, lng: centerLng }
+        : null
   };
 }
 
@@ -2897,7 +2898,10 @@ async function init() {
       );
 
       daylogSectionEl.addEventListener("toggle", () => {
-        updateGenericSectionToggleLabel(btnToggleDaylogEl, daylogSectionEl.open);
+        updateGenericSectionToggleLabel(
+          btnToggleDaylogEl,
+          daylogSectionEl.open
+        );
       });
 
       updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
