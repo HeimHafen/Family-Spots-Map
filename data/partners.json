@@ -2,7 +2,7 @@
   "codes": [
     {
       "code": "FS-TRIAL-DK",
-      "plan": "pass_30",
+      "plan": "family_plus",
       "days": 30,
       "partner": "DK-Ferie",
       "source": "partner",
@@ -10,26 +10,50 @@
     },
     {
       "code": "FS-CAMPER-90",
-      "plan": "pass_90",
+      "plan": "family_plus",
       "days": 90,
       "partner": "CamperPlus",
       "source": "partner",
+      "addons": ["addon_rv"],
       "enabled": true
     },
     {
       "code": "FS-PRO-2025",
-      "plan": "pro_year",
+      "plan": "family_plus",
       "days": 365,
       "partner": "Launch",
       "source": "campaign",
+      "addons": ["addon_rv", "addon_water"],
       "enabled": true
     },
     {
       "code": "FS-TEST-7",
-      "plan": "dev_test_7",
+      "plan": "family_plus",
       "days": 7,
       "partner": "Internal",
       "source": "testing",
+      "addons": ["addon_rv", "addon_water"],
+      "enabled": true
+    },
+
+    /* --- ABF / Messe-Codes --- */
+
+    {
+      "code": "FS-ABF-2025",
+      "plan": "family_plus",
+      "days": 14,
+      "partner": "ABF Hannover",
+      "source": "event",
+      "addons": ["addon_abf"],
+      "enabled": true
+    },
+    {
+      "code": "FS-ABF-STAND",
+      "plan": "family_plus",
+      "days": 7,
+      "partner": "ABF Hannover – Standaktion",
+      "source": "event",
+      "addons": ["addon_abf"],
       "enabled": true
     }
   ]
