@@ -1,1394 +1,1610 @@
 <!doctype html>
 <html lang="de" data-theme="light">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
 
-  <title>Family Spots Map – Die schönste Karte für Familien-Abenteuer</title>
-  <meta
-    name="description"
-    content="Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern."
-  />
-  <meta name="theme-color" content="#fb8c00" />
-  <meta name="robots" content="index,follow" />
-  <meta name="color-scheme" content="light dark" />
-  <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
-  <meta name="format-detection" content="telephone=no" />
+    <title>Family Spots Map – Die schönste Karte für Familien-Abenteuer</title>
+    <meta
+      name="description"
+      content="Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern."
+    />
+    <meta name="theme-color" content="#fb8c00" />
+    <meta name="robots" content="index,follow" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
+    <meta name="format-detection" content="telephone=no" />
 
-  <!-- Canonical & hreflang -->
-  <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
-  <link rel="alternate" hreflang="de" href="https://heimhafen.github.io/Family-Spots-Map/" />
-  <link rel="alternate" hreflang="en" href="https://heimhafen.github.io/Family-Spots-Map/en/" />
-  <link rel="alternate" hreflang="da" href="https://heimhafen.github.io/Family-Spots-Map/da/" />
+    <!-- Canonical & hreflang -->
+    <link
+      rel="canonical"
+      href="https://heimhafen.github.io/Family-Spots-Map/"
+    />
+    <link
+      rel="alternate"
+      hreflang="de"
+      href="https://heimhafen.github.io/Family-Spots-Map/"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://heimhafen.github.io/Family-Spots-Map/en/"
+    />
+    <link
+      rel="alternate"
+      hreflang="da"
+      href="https://heimhafen.github.io/Family-Spots-Map/da/"
+    />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Family Spots Map – familienfreundliche Abenteuerkarte" />
-  <meta
-    property="og:description"
-    content="Entdecke handverlesene Spielplätze, Wildparks, Wasser-Spots & mehr – ideal für Familienabenteuer mit Kindern."
-  />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://heimhafen.github.io/Family-Spots-Map/" />
-  <meta
-    property="og:image"
-    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
-  />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:locale" content="de_DE" />
-  <meta property="og:site_name" content="Family Spots Map" />
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Family Spots Map – familienfreundliche Abenteuerkarte"
+    />
+    <meta
+      property="og:description"
+      content="Entdecke handverlesene Spielplätze, Wildparks, Wasser-Spots & mehr – ideal für Familienabenteuer mit Kindern."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://heimhafen.github.io/Family-Spots-Map/"
+    />
+    <meta
+      property="og:image"
+      content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="Family Spots Map" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Family Spots Map – familienfreundliche Abenteuerkarte" />
-  <meta
-    name="twitter:description"
-    content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer."
-  />
-  <meta
-    name="twitter:image"
-    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
-  />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Family Spots Map – familienfreundliche Abenteuerkarte"
+    />
+    <meta
+      name="twitter:description"
+      content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer."
+    />
+    <meta
+      name="twitter:image"
+      content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
+    />
 
-  <!-- Structured Data: WebApplication -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Family Spots Map",
-      "operatingSystem": "iOS, Android, Web",
-      "applicationCategory": "TravelApplication",
-      "url": "https://heimhafen.github.io/Family-Spots-Map/",
-      "inLanguage": ["de", "en", "da"],
-      "description": "Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern.",
-      "offers": {
-        "@type": "Offer",
-        "price": "19.90",
-        "priceCurrency": "EUR",
-        "description": "Jahresabo für die Grundkarte"
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Family Spots Map",
+        "operatingSystem": "iOS, Android, Web",
+        "applicationCategory": "TravelApplication",
+        "url": "https://heimhafen.github.io/Family-Spots-Map/",
+        "inLanguage": ["de", "en", "da"],
+        "description": "Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern.",
+        "offers": {
+          "@type": "Offer",
+          "price": "19.90",
+          "priceCurrency": "EUR",
+          "description": "Jahresabo für die Grundkarte"
+        }
       }
-    }
-  </script>
+    </script>
 
-  <!-- PWA / Apple -->
-  <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <!-- PWA / Apple -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
-  <!-- Performance hints -->
-  <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <!-- Performance hints -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
 
-  <!-- Favicon / Icons -->
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
+    <!-- Favicon / Icons -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="assets/icons/icon-192.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/icons/apple-touch-icon.png"
+    />
 
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
-  />
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+    />
 
-  <!-- App Styles -->
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/badges.css" />
+    <!-- App Styles -->
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/badges.css" />
 
-  <!-- Kleine UI-Feintunings: Skip-Link, Onboarding-Hinweis & Filtermodal-Header -->
-  <style>
-    /* Skip-Link: als dezente Pille, nur bei Fokus sichtbar */
-    .skip-link {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%) translateY(-4px);
-      top: calc(env(safe-area-inset-top, 0px) + 8px);
-      z-index: 3000;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.96);
-      color: #fef3e7;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.75);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.16s ease-out, transform 0.16s ease-out;
-    }
+    <!-- Nur Skip-Link (Rest sitzt im Haupt-CSS) -->
+    <style>
+      .skip-link {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%) translateY(-4px);
+        top: calc(env(safe-area-inset-top, 0px) + 8px);
+        z-index: 3000;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.96);
+        color: #fef3e7;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.75);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.16s ease-out, transform 0.16s ease-out;
+      }
 
-    [data-theme="light"] .skip-link {
-      background: #3b2313;
-      color: #fff7eb;
-    }
+      [data-theme="light"] .skip-link {
+        background: #3b2313;
+        color: #fff7eb;
+      }
 
-    .skip-link:focus-visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* Onboarding-Hinweis über der Spot-Liste */
-    .fsm-onboarding-hint {
-      margin-block: 0;
-      padding: 0.75rem 1rem;
-      border-radius: 0.75rem;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      background-color: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(0, 0, 0, 0.06);
-    }
-
-    .fsm-onboarding-hint__text {
-      margin: 0;
-    }
-
-    .fsm-onboarding-hint__close {
-      margin-left: auto;
-      border: 0;
-      background: none;
-      cursor: pointer;
-      font-size: 1.1rem;
-      line-height: 1;
-      padding-left: 0.5rem;
-    }
-
-    /* Filtermodal-Header mit Text-Button zum Schließen */
-    .filter-modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-
-    .filter-modal-close-btn {
-      white-space: nowrap;
-    }
-  </style>
-</head>
-<body>
-  <!-- Globaler Skip-Link -->
-  <a
-    href="#view-map"
-    class="skip-link"
-    data-i18n-de="Zum Hauptinhalt springen"
-    data-i18n-en="Skip to main content"
-    data-i18n-da="Spring til hovedindholdet"
-  >
-    Zum Hauptinhalt springen
-  </a>
-
-  <noscript>
-    <div class="noscript-warning">
-      Family Spots Map benötigt JavaScript, um korrekt zu funktionieren.
-      Bitte JavaScript im Browser aktivieren, um die interaktive Karte und Filter nutzen zu können.
-    </div>
-  </noscript>
-
-  <div class="app">
-    <!-- =========================================
-         HEADER
-         ========================================= -->
-    <header class="app-header" role="banner">
-      <nav class="app-header-top" aria-label="App-Einstellungen und Schnellzugriffe">
-        <div class="app-header-left">
-          <!-- Unsichtbarer Legacy-Language-Switcher:
-               bleibt für die bestehende i18n-Logik erhalten,
-               wird aber nicht mehr direkt angezeigt -->
-          <button
-            id="language-switcher"
-            type="button"
-            class="sr-only"
-            aria-hidden="true"
-            tabindex="-1"
-          >
-            <!-- hidden language switch trigger -->
-          </button>
-        </div>
-        <div class="app-header-right">
-          <button
-            id="menu-toggle"
-            class="btn-icon btn-menu"
-            type="button"
-            aria-haspopup="true"
-            aria-expanded="false"
-            aria-controls="app-menu"
-          >
-            <span class="btn-menu-icon" aria-hidden="true">☰</span>
-            <span
-              class="sr-only"
-              data-i18n-de="Menü öffnen"
-              data-i18n-en="Open menu"
-              data-i18n-da="Åbn menu"
-            >
-              Menü öffnen
-            </span>
-          </button>
-        </div>
-      </nav>
-
-      <div class="app-header-main">
-        <h1 class="header-title" id="app-title" tabindex="-1">
-          <span class="header-flag" aria-hidden="true">🇩🇪</span>
-          Family <span class="header-title-spots">Spots</span> Map
-          <span class="header-flag" aria-hidden="true">🇩🇰</span>
-        </h1>
-        <p
-          class="header-tagline"
-          id="header-tagline"
-          data-i18n-de="Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf."
-          data-i18n-en="Today is a good day for everyday life to turn into a little family adventure."
-          data-i18n-da="I dag er en god dag, hvor hverdagen gerne må blive til et lille familieeventyr."
-        >
-          Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf.
-        </p>
-      </div>
-    </header>
-
-    <!-- =========================================
-         HEADER-MENÜ (☰)
-         ========================================= -->
-    <div
-      id="app-menu"
-      class="app-menu"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Schnellzugriffe und Einstellungen"
-      hidden
+      .skip-link:focus-visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Globaler Skip-Link -->
+    <a
+      href="#view-map"
+      class="skip-link"
+      data-i18n-de="Zum Hauptinhalt springen"
+      data-i18n-en="Skip to main content"
+      data-i18n-da="Spring til hovedindholdet"
     >
-      <div class="app-menu-backdrop" data-menu-close="1"></div>
-      <div class="app-menu-panel">
-        <div class="app-menu-list" role="menu">
-          <!-- Info -->
-          <button
-            id="btn-help"
-            class="app-menu-item"
-            type="button"
-            role="menuitem"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">ℹ️</span>
-            <span
-              class="app-menu-item-label"
-              data-i18n-de="Über Family Spots Map"
-              data-i18n-en="About Family Spots Map"
-              data-i18n-da="Om Family Spots Map"
-            >
-              Über Family Spots Map
-            </span>
-          </button>
+      Zum Hauptinhalt springen
+    </a>
 
-          <!-- Zur Spot-Liste springen -->
-          <button
-            id="btn-skip-spots"
-            class="app-menu-item"
-            type="button"
-            role="menuitem"
-            data-menu-close="1"
-            onclick="document.getElementById('spots-title').scrollIntoView({behavior: 'smooth'});"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">🗺️</span>
-            <span
-              class="app-menu-item-label"
-              id="skip-to-spots-label"
-              data-i18n-de="Zur Spot-Liste springen"
-              data-i18n-en="Jump to spot list"
-              data-i18n-da="Gå til spotlisten"
-            >
-              Zur Spot-Liste springen
-            </span>
-          </button>
+    <noscript>
+      <div class="noscript-warning">
+        Family Spots Map benötigt JavaScript, um korrekt zu funktionieren.
+        Bitte JavaScript im Browser aktivieren, um die interaktive Karte und
+        Filter nutzen zu können.
+      </div>
+    </noscript>
 
-          <!-- Theme-Toggle -->
-          <button
-            id="theme-toggle"
-            class="app-menu-item"
-            type="button"
-            role="menuitem"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">🌓</span>
-            <span
-              class="app-menu-item-label"
-              id="theme-toggle-label"
-              data-i18n-de="Designmodus wechseln"
-              data-i18n-en="Switch color theme"
-              data-i18n-da="Skift design-tilstand"
-            >
-              Designmodus wechseln
-            </span>
-          </button>
-
-          <!-- Standort -->
-          <button
-            id="btn-locate"
-            class="app-menu-item"
-            type="button"
-            role="menuitem"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">📍</span>
-            <span
-              class="app-menu-item-label"
-              id="btn-locate-label"
-              data-i18n-de="Eigenen Standort auf der Karte anzeigen"
-              data-i18n-en="Center map on your location"
-              data-i18n-da="Vis din egen position på kortet"
-            >
-              Eigenen Standort auf der Karte anzeigen
-            </span>
-          </button>
-        </div>
-
-        <!-- Sprache: Flaggen-Chips -->
-        <div
-          class="app-menu-languages"
-          role="group"
-          aria-labelledby="menu-language-label"
+    <div class="app">
+      <!-- =========================================
+           HEADER
+           ========================================= -->
+      <header class="app-header" role="banner">
+        <nav
+          class="app-header-top"
+          aria-label="App-Einstellungen und Schnellzugriffe"
         >
+          <div class="app-header-left">
+            <!-- Unsichtbarer Legacy-Language-Switcher: bleibt für die bestehende i18n-Logik erhalten -->
+            <button
+              id="language-switcher"
+              type="button"
+              class="language-switcher sr-only"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              Language
+            </button>
+          </div>
+          <div class="app-header-right">
+            <button
+              id="menu-toggle"
+              class="btn-icon btn-menu"
+              type="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="app-menu"
+            >
+              <span class="btn-menu-icon" aria-hidden="true">☰</span>
+              <span
+                class="sr-only"
+                data-i18n-de="Menü öffnen"
+                data-i18n-en="Open menu"
+                data-i18n-da="Åbn menu"
+              >
+                Menü öffnen
+              </span>
+            </button>
+          </div>
+        </nav>
+
+        <div class="app-header-main">
+          <h1 class="header-title" id="app-title" tabindex="-1">
+            <span class="header-flag" aria-hidden="true">🇩🇪</span>
+            Family <span class="header-title-spots">Spots</span> Map
+            <span class="header-flag" aria-hidden="true">🇩🇰</span>
+          </h1>
           <p
-            id="menu-language-label"
-            class="app-menu-languages-label"
-            data-i18n-de="Sprache"
-            data-i18n-en="Language"
-            data-i18n-da="Sprog"
+            class="header-tagline"
+            id="header-tagline"
+            data-i18n-de="Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf."
+            data-i18n-en="Today is a good day for everyday life to turn into a little family adventure."
+            data-i18n-da="I dag er en god dag, hvor hverdagen gerne må blive til et lille familieeventyr."
           >
-            Sprache
+            Heute ist ein guter Tag, an dem aus Alltag ein kleines
+            Familienabenteuer werden darf.
           </p>
-          <div class="app-menu-languages-row">
+        </div>
+      </header>
+
+      <!-- =========================================
+           HEADER-MENÜ (☰)
+           ========================================= -->
+      <div
+        id="app-menu"
+        class="app-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Schnellzugriffe und Einstellungen"
+        hidden
+      >
+        <div class="app-menu-backdrop" data-menu-close="1"></div>
+        <div class="app-menu-panel">
+          <div class="app-menu-list" role="menu">
+            <!-- Info -->
             <button
+              id="btn-help"
+              class="app-menu-item"
               type="button"
-              class="app-menu-lang-chip"
-              data-lang-target="de"
+              role="menuitem"
+              data-menu-close="1"
             >
-              <span class="app-menu-lang-flag" aria-hidden="true">🇩🇪</span>
-              <span class="app-menu-lang-code">DE</span>
+              <span class="app-menu-item-icon" aria-hidden="true">ℹ️</span>
+              <span
+                class="app-menu-item-label"
+                data-i18n-de="Über Family Spots Map"
+                data-i18n-en="About Family Spots Map"
+                data-i18n-da="Om Family Spots Map"
+              >
+                Über Family Spots Map
+              </span>
             </button>
+
+            <!-- Zur Spot-Liste springen -->
             <button
+              id="btn-skip-spots"
+              class="app-menu-item"
               type="button"
-              class="app-menu-lang-chip"
-              data-lang-target="da"
+              role="menuitem"
+              data-menu-close="1"
             >
-              <span class="app-menu-lang-flag" aria-hidden="true">🇩🇰</span>
-              <span class="app-menu-lang-code">DA</span>
+              <span class="app-menu-item-icon" aria-hidden="true">🗺️</span>
+              <span
+                class="app-menu-item-label"
+                id="skip-to-spots-label"
+                data-i18n-de="Zur Spot-Liste springen"
+                data-i18n-en="Jump to spot list"
+                data-i18n-da="Gå til spotlisten"
+              >
+                Zur Spot-Liste springen
+              </span>
             </button>
+
+            <!-- Theme-Toggle -->
             <button
+              id="theme-toggle"
+              class="app-menu-item"
               type="button"
-              class="app-menu-lang-chip"
-              data-lang-target="en"
+              role="menuitem"
+              data-menu-close="1"
             >
-              <span class="app-menu-lang-flag" aria-hidden="true">🇬🇧</span>
-              <span class="app-menu-lang-code">EN</span>
+              <span class="app-menu-item-icon" aria-hidden="true">🌓</span>
+              <span
+                class="app-menu-item-label"
+                id="theme-toggle-label"
+                data-i18n-de="Designmodus wechseln"
+                data-i18n-en="Switch color theme"
+                data-i18n-da="Skift design-tilstand"
+              >
+                Designmodus wechseln
+              </span>
             </button>
+
+            <!-- Standort -->
+            <button
+              id="btn-locate"
+              class="app-menu-item"
+              type="button"
+              role="menuitem"
+              data-menu-close="1"
+            >
+              <span class="app-menu-item-icon" aria-hidden="true">📍</span>
+              <span
+                class="app-menu-item-label"
+                id="btn-locate-label"
+                data-i18n-de="Eigenen Standort auf der Karte anzeigen"
+                data-i18n-en="Center map on your location"
+                data-i18n-da="Vis din egen position på kortet"
+              >
+                Eigenen Standort auf der Karte anzeigen
+              </span>
+            </button>
+          </div>
+
+          <!-- Sprache: Flaggen-Chips -->
+          <div
+            class="app-menu-languages"
+            role="group"
+            aria-labelledby="menu-language-label"
+          >
+            <p
+              id="menu-language-label"
+              class="app-menu-languages-label"
+              data-i18n-de="Sprache"
+              data-i18n-en="Language"
+              data-i18n-da="Sprog"
+            >
+              Sprache
+            </p>
+            <div class="app-menu-languages-row">
+              <button
+                type="button"
+                class="app-menu-lang-chip"
+                data-lang-target="de"
+              >
+                <span class="app-menu-lang-flag" aria-hidden="true">🇩🇪</span>
+                <span class="app-menu-lang-code">DE</span>
+              </button>
+              <button
+                type="button"
+                class="app-menu-lang-chip"
+                data-lang-target="da"
+              >
+                <span class="app-menu-lang-flag" aria-hidden="true">🇩🇰</span>
+                <span class="app-menu-lang-code">DA</span>
+              </button>
+              <button
+                type="button"
+                class="app-menu-lang-chip"
+                data-lang-target="en"
+              >
+                <span class="app-menu-lang-flag" aria-hidden="true">🇬🇧</span>
+                <span class="app-menu-lang-code">EN</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- =========================================
-         MAIN
-         ========================================= -->
-    <main class="app-main" id="main-content" role="main">
-      <!-- =======================
-           MAP VIEW
-           ======================= -->
-      <section id="view-map" class="view view--active" aria-label="Karte">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar" aria-labelledby="spots-title">
-          <!-- Tilla-Begleiterin -->
-          <section
-            id="tilla-section"
-            class="sidebar-section tilla-sidebar-section"
-            aria-labelledby="tilla-title"
-          >
-            <header class="sidebar-section-header">
-              <h2
-                class="sidebar-section-title"
-                id="tilla-title"
-                data-i18n-de="Familien-Begleiterin Tilla"
-                data-i18n-en="Family companion Tilla"
-                data-i18n-da="Familieledsageren Tilla"
+      <!-- =========================================
+           MAIN
+           ========================================= -->
+      <main class="app-main" id="main-content" role="main">
+        <!-- =======================
+             MAP VIEW
+             ======================= -->
+        <section id="view-map" class="view view--active" aria-label="Karte">
+          <!-- Sidebar -->
+          <aside class="sidebar" id="sidebar" aria-labelledby="spots-title">
+            <!-- Tilla-Begleiterin -->
+            <section
+              id="tilla-section"
+              class="sidebar-section tilla-sidebar-section"
+              aria-labelledby="tilla-title"
+            >
+              <header class="sidebar-section-header">
+                <h2
+                  class="sidebar-section-title"
+                  id="tilla-title"
+                  data-i18n-de="Familien-Begleiterin Tilla"
+                  data-i18n-en="Family companion Tilla"
+                  data-i18n-da="Familieledsageren Tilla"
+                >
+                  Familien-Begleiterin Tilla
+                </h2>
+              </header>
+              <div class="tilla-sidebar-card">
+                <div class="tilla-sidebar-avatar">
+                  <img
+                    src="assets/tilla/tilla-hero.png"
+                    alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
+                    loading="lazy"
+                    decoding="async"
+                    width="512"
+                    height="512"
+                  />
+                </div>
+                <div class="tilla-sidebar-text">
+                  <p
+                    id="tilla-sidebar-text"
+                    data-i18n-de="Ich bin Tilla, eure kleine Schildkröte. Alltag darf auch leicht sein. Lass uns schauen, welcher Ort in eurer Nähe euch heute ein Lächeln zaubert. 🌿"
+                    data-i18n-en="I’m Tilla, your little turtle companion. Everyday life can feel light, too. Let’s see which nearby place might bring a smile to you today. 🌿"
+                    data-i18n-da="Jeg er Tilla, jeres lille skildpadde. Hverdagen må også gerne føles let. Lad os se, hvilket sted i nærheden der i dag kan trylle et smil frem hos jer. 🌿"
+                  >
+                    Ich bin Tilla, eure kleine Schildkröte. Alltag darf auch
+                    leicht sein. Lass uns schauen, welcher Ort in eurer Nähe
+                    euch heute ein Lächeln zaubert. 🌿
+                  </p>
+                  <div class="tilla-sidebar-actions">
+                    <button
+                      id="btn-play-idea"
+                      type="button"
+                      class="btn btn-small btn-play-idea"
+                    >
+                      <span
+                        class="tilla-play-emoji"
+                        aria-hidden="true"
+                        >🎲</span
+                      >
+                      <span
+                        data-i18n-de="Spielideen für unterwegs"
+                        data-i18n-en="Play ideas on the go"
+                        data-i18n-da="Legidéer til turen"
+                      >
+                        Spielideen für unterwegs
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Kompakter Filter -->
+            <section
+              class="sidebar-section"
+              id="filter-section"
+              aria-labelledby="filter-title"
+            >
+              <header class="sidebar-section-header">
+                <h2
+                  class="sidebar-section-title"
+                  id="filter-title"
+                  data-i18n-de="Filter"
+                  data-i18n-en="Filters"
+                  data-i18n-da="Filtre"
+                >
+                  Filter
+                </h2>
+                <button
+                  id="btn-toggle-filters"
+                  class="btn-ghost btn-small"
+                  type="button"
+                  aria-controls="filter-section"
+                  aria-expanded="false"
+                >
+                  <span
+                    data-i18n-de="Filter anzeigen"
+                    data-i18n-en="Show filters"
+                    data-i18n-da="Vis filtre"
+                  >
+                    Filter anzeigen
+                  </span>
+                </button>
+              </header>
+
+              <p
+                class="filter-group-helper filter-group-helper--compact"
+                data-i18n-de="Suche, Stimmung &amp; Radius – alles, was ihr für den Start braucht. Weitere Filter öffnen sich bei Bedarf."
+                data-i18n-en="Search, mood &amp; radius – everything you need to get started. Open all filters only when needed."
+                data-i18n-da="Søgning, stemning &amp; radius – alt det vigtigste til at starte med. Åbn alle filtre efter behov."
               >
-                Familien-Begleiterin Tilla
-              </h2>
-            </header>
-            <div class="tilla-sidebar-card">
-              <div class="tilla-sidebar-avatar">
-                <img
-                  src="assets/tilla/tilla-hero.png"
-                  alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
-                  loading="lazy"
-                  decoding="async"
-                  width="512"
-                  height="512"
+                Suche, Stimmung &amp; Radius – alles, was ihr für den Start
+                braucht. Weitere Filter öffnen sich bei Bedarf.
+              </p>
+
+              <!-- Suche -->
+              <div class="filter-group">
+                <label
+                  class="filter-group-label"
+                  for="filter-search"
+                  id="filter-search-label"
+                  data-i18n-de="Suche"
+                  data-i18n-en="Search"
+                  data-i18n-da="Søg"
+                >
+                  Suche
+                </label>
+                <input
+                  id="filter-search"
+                  name="search"
+                  class="input"
+                  type="search"
+                  placeholder="Ort, Spot, Stichwort …"
+                  autocomplete="off"
+                  data-i18n-de="Ort, Spot, Stichwort …"
+                  data-i18n-en="Place, spot, keywords …"
+                  data-i18n-da="Sted, spot, søgeord …"
                 />
               </div>
-              <div class="tilla-sidebar-text">
-                <p
-                  id="tilla-sidebar-text"
-                  data-i18n-de="Ich bin Tilla, eure kleine Schildkröte. Alltag darf auch leicht sein. Lass uns schauen, welcher Ort in eurer Nähe euch heute ein Lächeln zaubert. 🌿"
-                  data-i18n-en="I’m Tilla, your little turtle companion. Everyday life can feel light, too. Let’s see which nearby place might bring a smile to you today. 🌿"
-                  data-i18n-da="Jeg er Tilla, jeres lille skildpadde. Hverdagen må også gerne føles let. Lad os se, hvilket sted i nærheden der i dag kan trylle et smil frem hos jer. 🌿"
+
+              <!-- Stimmung -->
+              <div class="filter-group">
+                <label
+                  class="filter-group-label"
+                  id="filter-mood-label"
+                  data-i18n-de="Stimmung"
+                  data-i18n-en="Mood"
+                  data-i18n-da="Stemning"
                 >
-                  Ich bin Tilla, eure kleine Schildkröte. Alltag darf auch leicht sein. Lass uns schauen, welcher Ort
-                  in eurer Nähe euch heute ein Lächeln zaubert. 🌿
+                  Stimmung
+                </label>
+                <p
+                  class="filter-group-helper filter-group-helper--compact"
+                  id="filter-mood-helper"
+                  data-i18n-de="Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?"
+                  data-i18n-en="Calm, movement, water or a day with animals?"
+                  data-i18n-da="Ro, bevægelse, vand eller en dag med dyr?"
+                >
+                  Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?
                 </p>
-                <div class="tilla-sidebar-actions">
-                  <button id="btn-play-idea" type="button" class="btn btn-small btn-play-idea">
-                    <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
+                <div
+                  class="mood-row"
+                  role="group"
+                  aria-labelledby="filter-mood-label"
+                  aria-describedby="filter-mood-helper"
+                >
+                  <button
+                    type="button"
+                    class="mood-chip"
+                    data-mood="relaxed"
+                    aria-pressed="false"
+                  >
+                    <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
                     <span
-                      data-i18n-de="Spielideen für unterwegs"
-                      data-i18n-en="Play ideas on the go"
-                      data-i18n-da="Legidéer til turen"
+                      class="mood-chip-label"
+                      id="mood-relaxed-label"
+                      data-i18n-de="Entspannt"
+                      data-i18n-en="Relaxed"
+                      data-i18n-da="Afslappet"
                     >
-                      Spielideen für unterwegs
+                      Entspannt
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    class="mood-chip"
+                    data-mood="action"
+                    aria-pressed="false"
+                  >
+                    <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
+                    <span
+                      class="mood-chip-label"
+                      id="mood-action-label"
+                      data-i18n-de="Bewegung"
+                      data-i18n-en="Active"
+                      data-i18n-da="Aktiv"
+                    >
+                      Bewegung
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    class="mood-chip"
+                    data-mood="water"
+                    aria-pressed="false"
+                  >
+                    <span class="mood-chip-emoji" aria-hidden="true">💧</span>
+                    <span
+                      class="mood-chip-label"
+                      id="mood-water-label"
+                      data-i18n-de="Wasser &amp; Sand"
+                      data-i18n-en="Water &amp; sand"
+                      data-i18n-da="Vand &amp; sand"
+                    >
+                      Wasser &amp; Sand
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    class="mood-chip"
+                    data-mood="animals"
+                    aria-pressed="false"
+                  >
+                    <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
+                    <span
+                      class="mood-chip-label"
+                      id="mood-animals-label"
+                      data-i18n-de="Tier-Tag"
+                      data-i18n-en="Animal day"
+                      data-i18n-da="Dyredag"
+                    >
+                      Tier-Tag
                     </span>
                   </button>
                 </div>
               </div>
-            </div>
-          </section>
 
-          <!-- Kompakter Filter -->
-          <section class="sidebar-section" id="filter-section" aria-labelledby="filter-title">
-            <header class="sidebar-section-header">
-              <h2
-                class="sidebar-section-title"
-                id="filter-title"
-                data-i18n-de="Filter"
-                data-i18n-en="Filters"
-                data-i18n-da="Filtre"
-              >
-                Filter
-              </h2>
-              <button
-                id="btn-toggle-filters"
-                class="btn-ghost btn-small"
-                type="button"
-                aria-controls="filter-section"
-                aria-expanded="false"
-              >
-                <span
-                  data-i18n-de="Filter anzeigen"
-                  data-i18n-en="Show filters"
-                  data-i18n-da="Vis filtre"
-                >
-                  Filter anzeigen
-                </span>
-              </button>
-            </header>
-
-            <p
-              class="filter-group-helper filter-group-helper--compact"
-              data-i18n-de="Suche, Stimmung &amp; Radius – alles, was ihr für den Start braucht. Weitere Filter öffnen sich bei Bedarf."
-              data-i18n-en="Search, mood &amp; radius – everything you need to get started. Open all filters only when needed."
-              data-i18n-da="Søgning, stemning &amp; radius – alt det vigtigste til at starte med. Åbn alle filtre efter behov."
-            >
-              Suche, Stimmung &amp; Radius – alles, was ihr für den Start braucht. Weitere Filter öffnen sich bei
-              Bedarf.
-            </p>
-
-            <!-- Suche -->
-            <div class="filter-group">
-              <label
-                class="filter-group-label"
-                for="filter-search"
-                id="filter-search-label"
-                data-i18n-de="Suche"
-                data-i18n-en="Search"
-                data-i18n-da="Søg"
-              >
-                Suche
-              </label>
-              <input
-                id="filter-search"
-                name="search"
-                class="input"
-                type="search"
-                placeholder="Ort, Spot, Stichwort …"
-                autocomplete="off"
-                data-i18n-de="Ort, Spot, Stichwort …"
-                data-i18n-en="Place, spot, keywords …"
-                data-i18n-da="Sted, spot, søgeord …"
-              />
-            </div>
-
-            <!-- Stimmung -->
-            <div class="filter-group">
-              <label
-                class="filter-group-label"
-                id="filter-mood-label"
-                data-i18n-de="Stimmung"
-                data-i18n-en="Mood"
-                data-i18n-da="Stemning"
-              >
-                Stimmung
-              </label>
-              <p
-                class="filter-group-helper filter-group-helper--compact"
-                id="filter-mood-helper"
-                data-i18n-de="Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?"
-                data-i18n-en="Calm, movement, water or a day with animals?"
-                data-i18n-da="Ro, bevægelse, vand eller en dag med dyr?"
-              >
-                Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?
-              </p>
-              <div
-                class="mood-row"
-                role="group"
-                aria-labelledby="filter-mood-label"
-                aria-describedby="filter-mood-helper"
-              >
-                <button type="button" class="mood-chip" data-mood="relaxed" aria-pressed="false">
-                  <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-relaxed-label"
-                    data-i18n-de="Entspannt"
-                    data-i18n-en="Relaxed"
-                    data-i18n-da="Afslappet"
-                  >
-                    Entspannt
-                  </span>
-                </button>
-                <button type="button" class="mood-chip" data-mood="action" aria-pressed="false">
-                  <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-action-label"
-                    data-i18n-de="Bewegung"
-                    data-i18n-en="Active"
-                    data-i18n-da="Aktiv"
-                  >
-                    Bewegung
-                  </span>
-                </button>
-                <button type="button" class="mood-chip" data-mood="water" aria-pressed="false">
-                  <span class="mood-chip-emoji" aria-hidden="true">💧</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-water-label"
-                    data-i18n-de="Wasser &amp; Sand"
-                    data-i18n-en="Water &amp; sand"
-                    data-i18n-da="Vand &amp; sand"
-                  >
-                    Wasser &amp; Sand
-                  </span>
-                </button>
-                <button type="button" class="mood-chip" data-mood="animals" aria-pressed="false">
-                  <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-animals-label"
-                    data-i18n-de="Tier-Tag"
-                    data-i18n-en="Animal day"
-                    data-i18n-da="Dyredag"
-                  >
-                    Tier-Tag
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Micro-Abenteuer-Radius -->
-            <div class="filter-group">
-              <label
-                class="filter-group-label"
-                for="filter-radius"
-                id="filter-radius-label"
-                data-i18n-de="Micro-Abenteuer-Radius"
-                data-i18n-en="Micro-adventure radius"
-                data-i18n-da="Mikroeventyr-radius"
-              >
-                Micro-Abenteuer-Radius
-              </label>
-              <p
-                class="filter-group-helper filter-group-helper--compact"
-                id="filter-radius-helper"
-                data-i18n-de="Wie weit darf euer Abenteuer heute gehen?"
-                data-i18n-en="How far may your adventure go today?"
-                data-i18n-da="Hvor langt må jeres eventyr række i dag?"
-              >
-                Wie weit darf euer Abenteuer heute gehen?
-              </p>
-              <div class="radius-row">
-                <input
-                  id="filter-radius"
-                  name="radius"
-                  type="range"
-                  min="0"
-                  max="4"
-                  step="1"
-                  value="4"
-                  aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description"
-                />
-                <span
-                  id="filter-radius-max-label"
-                  class="radius-max-label"
-                  data-i18n-de="Alle Spots"
-                  data-i18n-en="All spots"
-                  data-i18n-da="Alle spots"
-                >
-                  Alle Spots
-                </span>
-              </div>
-              <p
-                id="filter-radius-description"
-                class="radius-description"
-                data-i18n-de="Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
-                data-i18n-en="All spots – no radius limit. The map is all yours."
-                data-i18n-da="Alle spots – ingen radiusbegrænsning. Kortet er helt jeres."
-              >
-                Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
-              </p>
-            </div>
-
-            <!-- Zusammenfassung & Button "Alle Filter öffnen" -->
-            <div class="filter-footer">
-              <button id="btn-open-filter-modal" class="btn btn-small" type="button">
-                <span
-                  data-i18n-de="Alle Filter öffnen"
-                  data-i18n-en="Open all filters"
-                  data-i18n-da="Åbn alle filtre"
-                >
-                  Alle Filter öffnen
-                </span>
-              </button>
-
-              <p
-                id="filter-summary"
-                class="filter-summary"
-                data-i18n-de="Aktive Filter: Basisfilter"
-                data-i18n-en="Active filters: basic filters"
-                data-i18n-da="Aktive filtre: basisfiltre"
-              >
-                Aktive Filter: Basisfilter
-              </p>
-            </div>
-          </section>
-
-          <!-- Onboarding-Hinweis: erster Einstieg -->
-          <section
-            class="sidebar-section fsm-onboarding-hint"
-            data-onboarding-hint
-            aria-label="Kurzer Start-Hinweis zur Karte"
-          >
-            <p class="fsm-onboarding-hint__text">
-              <strong
-                data-i18n-de="So holt ihr euch euren Spot für heute:"
-                data-i18n-en="How to find your spot for today:"
-                data-i18n-da="Sådan finder I dagens spot:"
-              >
-                So holt ihr euch euren Spot für heute:
-              </strong>
-              <br />
-              <span
-                data-i18n-de="1. Standort freigeben oder in eure Region zoomen"
-                data-i18n-en="1. Share your location or zoom into your region"
-                data-i18n-da="1. Del jeres position eller zoom ind på jeres område"
-              >
-                1. Standort freigeben oder in eure Region zoomen
-              </span>
-              <br />
-              <span
-                data-i18n-de="2. Stimmung wählen"
-                data-i18n-en="2. Choose a mood"
-                data-i18n-da="2. Vælg stemning"
-              >
-                2. Stimmung wählen
-              </span>
-              <br />
-              <span
-                data-i18n-de="3. Auf einen Spot tippen – los geht’s."
-                data-i18n-en="3. Tap a spot – and off you go."
-                data-i18n-da="3. Tryk på et spot – så er I i gang."
-              >
-                3. Auf einen Spot tippen – los geht’s.
-              </span>
-            </p>
-            <button
-              type="button"
-              class="fsm-onboarding-hint__close"
-              aria-label="Hinweis schließen"
-            >
-              ×
-            </button>
-          </section>
-
-          <!-- Spot-Liste -->
-          <section
-            class="sidebar-section sidebar-section--grow"
-            aria-labelledby="spots-title"
-          >
-            <header class="sidebar-section-header">
-              <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
-              <button
-                id="btn-toggle-view"
-                class="btn-ghost btn-small"
-                type="button"
-                aria-pressed="false"
-                aria-controls="sidebar"
-              >
-                <span
-                  data-i18n-de="Nur Karte"
-                  data-i18n-en="Map only"
-                  data-i18n-da="Kun kort"
-                >
-                  Nur Karte
-                </span>
-              </button>
-            </header>
-            <div id="spot-list" class="spot-list"><!-- Karten via JS --></div>
-          </section>
-        </aside>
-
-        <!-- Karte + Details -->
-        <section class="map-section" aria-label="Karte mit Spots">
-          <div id="map" class="map-container"></div>
-          <aside
-            id="spot-detail"
-            class="spot-details spot-details--hidden"
-            aria-live="polite"
-          ></aside>
-        </section>
-
-        <!-- Family Spots Plus -->
-        <details
-          class="sidebar-section"
-          id="plus-section"
-          aria-labelledby="plus-section-title"
-        >
-          <summary class="sidebar-section-header">
-            <h2 class="sidebar-section-title" id="plus-section-title">
-              Family Spots Plus
-            </h2>
-            <button
-              id="btn-toggle-plus"
-              class="btn-ghost btn-small"
-              type="button"
-            >
-              <span
-                data-i18n-de="Anzeigen"
-                data-i18n-en="Show"
-                data-i18n-da="Vis"
-              >
-                Anzeigen
-              </span>
-            </button>
-          </summary>
-          <div class="filter-group">
-            <p
-              id="plus-status-text"
-              data-i18n-de="Family Spots Plus ist nicht aktiviert."
-              data-i18n-en="Family Spots Plus is not activated."
-              data-i18n-da="Family Spots Plus er ikke aktiveret."
-            >
-              Family Spots Plus ist nicht aktiviert.
-            </p>
-          </div>
-          <div class="plus-code-form">
-            <label
-              for="plus-code-input"
-              data-i18n-de="Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
-              data-i18n-en="Enter partner code (e.g. from campground, municipality or sponsor):"
-              data-i18n-da="Indtast partnerkode (f.eks. fra campingplads, kommune eller sponsor):"
-            >
-              Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):
-            </label>
-            <div class="plus-code-row">
-              <input
-                id="plus-code-input"
-                name="plus-code"
-                class="input"
-                type="text"
-                autocomplete="off"
-              />
-              <button id="plus-code-submit" class="btn" type="button">
-                <span
-                  data-i18n-de="Code aktivieren"
-                  data-i18n-en="Activate code"
-                  data-i18n-da="Aktivér kode"
-                >
-                  Code aktivieren
-                </span>
-              </button>
-            </div>
-            <p
-              class="plus-note"
-              data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
-              data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap."
-              data-i18n-da="Family Spots Plus låser op for ekstra filtre &amp; spots – helt uden abonnementsfælder."
-            >
-              Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle.
-            </p>
-          </div>
-        </details>
-
-        <!-- Mein Tag -->
-        <details
-          class="sidebar-section"
-          id="daylog-section"
-          aria-labelledby="daylog-section-title"
-        >
-          <summary class="sidebar-section-header">
-            <h2
-              class="sidebar-section-title"
-              id="daylog-section-title"
-              data-i18n-de="Mein Tag 💛"
-              data-i18n-en="My day 💛"
-              data-i18n-da="Min dag 💛"
-            >
-              Mein Tag 💛
-            </h2>
-            <button
-              id="btn-toggle-daylog"
-              class="btn-ghost btn-small"
-              type="button"
-            >
-              <span
-                data-i18n-de="Anzeigen"
-                data-i18n-en="Show"
-                data-i18n-da="Vis"
-              >
-                Anzeigen
-              </span>
-            </button>
-          </summary>
-          <div class="filter-group">
-            <label
-              for="daylog-text"
-              data-i18n-de="Wie war euer Tag?"
-              data-i18n-en="How was your day?"
-              data-i18n-da="Hvordan var jeres dag?"
-            >
-              Wie war euer Tag?
-            </label>
-            <p
-              class="filter-group-helper"
-              data-i18n-de="Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß an Tilla."
-              data-i18n-en="Capture a little moment you’d like to remember later – and if you like, add a small note to Tilla."
-              data-i18n-da="Gem et lille øjeblik, som I gerne vil huske senere – og hvis du har lyst, med en lille hilsen til Tilla."
-            >
-              Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß
-              an Tilla.
-            </p>
-
-            <textarea
-              id="daylog-text"
-              name="daylog"
-              class="input"
-              rows="3"
-              placeholder="Heute haben wir einen Ort gefunden, an dem die Zeit kurz langsamer wurde."
-            ></textarea>
-
-            <button id="daylog-save" class="btn btn-small" type="button">
-              <span
-                data-i18n-de="Speichern 💾"
-                data-i18n-en="Save 💾"
-                data-i18n-da="Gem 💾"
-              >
-                Speichern 💾
-              </span>
-            </button>
-
-            <!-- Status + Löschen-Button in einer Zeile -->
-            <div class="daylog-meta-row">
-              <p
-                id="daylog-last-saved"
-                class="daylog-last-saved"
-                data-i18n-de="Noch nichts gespeichert."
-                data-i18n-en="Nothing saved yet."
-                data-i18n-da="Ingen gemte endnu."
-              >
-                Noch nichts gespeichert.
-              </p>
-              <button
-                id="daylog-clear"
-                class="btn-ghost btn-small daylog-clear-btn hidden"
-                type="button"
-              >
-                <span
-                  data-i18n-de="Eintrag löschen"
-                  data-i18n-en="Delete entry"
-                  data-i18n-da="Slet notat"
-                >
-                  Eintrag löschen
-                </span>
-              </button>
-            </div>
-
-            <!-- NEU: Liste der gespeicherten Einträge -->
-            <div id="daylog-list" class="daylog-list"></div>
-          </div>
-        </details>
-      </section>
-
-      <!-- =========================================
-           ABOUT VIEW
-           ========================================= -->
-      <section id="view-about" class="view" aria-label="Über Family Spots Map">
-        <!-- Deutsch -->
-        <article
-          id="page-about-de"
-          class="page page-about"
-          lang="de"
-          aria-hidden="false"
-        >
-          <!-- ... ABOUT-Texte bleiben unverändert ... -->
-          <!-- (ab hier exakt dein vorhandener About-Content; ich lasse ihn aus Platzgründen
-               unverändert stehen, du kannst 1:1 deine Version einsetzen) -->
-          <!-- BEGINN DEUTSCHER ABOUT-TEXT -->
-          <h2>Über Family Spots Map</h2>
-          <p>
-            Family Spots Map ist eine Karte, behutsam gezeichnet für Familienabenteuer –<br />
-            von Eltern für Eltern.<br />
-            Nicht Ströme aus Listen, nicht anonyme Sterne,<br />
-            sondern handverlesene Spielplätze, Zoos und Wildparks,<br />
-            Wasser-Spots, Museen, Bewegungsparks<br />
-            und all die Orte, an denen Kinder wirklich schon gelacht, gestaunt und gespielt haben.
-          </p>
-          <!-- (… restlicher About-Text DE, DA, EN unverändert wie in deiner Vorlage …) -->
-          <!-- END DEUTSCHER ABOUT-TEXT -->
-        </article>
-
-        <!-- Dansk -->
-        <article
-          id="page-about-da"
-          class="page page-about hidden"
-          lang="da"
-          aria-hidden="true"
-        >
-          <!-- Dänischer About-Text unverändert -->
-          <h2>Om Family Spots Map</h2>
-          <p>
-            Family Spots Map er et kort, tegnet med omtanke til familieeventyr –<br />
-            lavet af forældre til forældre.<br />
-            Ikke endeløse lister, ikke anonyme stjerner,<br />
-            men håndplukkede legepladser, zoologiske haver og dyreparker,<br />
-            vandsteder, museer, bevægelsesparker<br />
-            og alle de steder, hvor børn allerede har grinet, undret sig og leget.
-          </p>
-          <!-- … Rest wie in deiner Vorlage … -->
-        </article>
-
-        <!-- Englisch -->
-        <article
-          id="page-about-en"
-          class="page page-about hidden"
-          lang="en"
-          aria-hidden="true"
-        >
-          <!-- Englischer About-Text unverändert -->
-          <h2>About Family Spots Map</h2>
-          <p>
-            Family Spots Map is a carefully curated map for family adventures –<br />
-            drawn by parents for parents.<br />
-            Instead of endless lists or faceless ratings,<br />
-            you’ll find handpicked playgrounds, zoos and wildlife parks,<br />
-            water spots, museums, movement parks<br />
-            and many more places that have proven themselves with real kids.
-          </p>
-          <!-- … Rest wie in deiner Vorlage … -->
-        </article>
-      </section>
-
-      <!-- =========================================
-           FILTER-MODAL: ALLE FILTER
-           ========================================= -->
-      <div
-        id="filter-modal"
-        class="filter-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="filter-modal-title"
-        hidden
-      >
-        <div class="filter-modal-inner">
-          <header class="filter-modal-header">
-            <h2
-              id="filter-modal-title"
-              data-i18n-de="Alle Filter"
-              data-i18n-en="All filters"
-              data-i18n-da="Alle filtre"
-            >
-              Alle Filter
-            </h2>
-            <button
-              id="filter-modal-close"
-              class="btn-ghost btn-small filter-modal-close-btn"
-              type="button"
-            >
-              <span
-                data-i18n-de="Alle Filter ausblenden"
-                data-i18n-en="Hide all filters"
-                data-i18n-da="Skjul alle filtre"
-              >
-                Alle Filter ausblenden
-              </span>
-            </button>
-          </header>
-
-          <div class="filter-modal-body">
-            <p
-              class="filter-group-helper"
-              data-i18n-de="Hier kannst du Schnellfilter, Kategorien, Alter der Kinder und besondere Spots feinjustieren."
-              data-i18n-en="Here you can fine-tune quick filters, categories, age and special spots."
-              data-i18n-da="Her kan du finjustere hurtigfiltre, kategorier, alder og særlige spots."
-            >
-              Hier kannst du Schnellfilter, Kategorien, Alter der Kinder und besondere Spots feinjustieren.
-            </p>
-
-            <details
-              class="filter-advanced"
-              id="advanced-filters"
-              aria-labelledby="advanced-filters-label"
-              open
-            >
-              <summary
-                class="filter-advanced-summary"
-                id="advanced-filters-summary"
-              >
-                <span
-                  class="filter-group-label"
-                  id="advanced-filters-label"
-                  data-i18n-de="Weitere Filter"
-                  data-i18n-en="More filters"
-                  data-i18n-da="Flere filtre"
-                >
-                  Weitere Filter
-                </span>
-              </summary>
-
-              <p
-                class="filter-group-helper"
-                data-i18n-de="Hier findest du Schnellfilter, Kategorien, Alter &amp; besondere Spots – für genau das, was heute zu euch passt."
-                data-i18n-en="Here you can fine-tune quick filters, categories, age and special spots – for exactly what fits your family today."
-                data-i18n-da="Her finder du hurtigfiltre, kategorier, alder og særlige spots – så du kan ramme lige det, der passer til jer i dag."
-              >
-                Hier findest du Schnellfilter, Kategorien, Alter &amp; besondere Spots – für genau das, was heute zu
-                euch passt.
-              </p>
-
-              <!-- Schnellfilter -->
-              <div class="filter-group" id="filter-tags-group">
+              <!-- Micro-Abenteuer-Radius -->
+              <div class="filter-group">
                 <label
                   class="filter-group-label"
-                  id="filter-tags-label"
-                  data-i18n-de="Schnellfilter"
-                  data-i18n-en="Quick filters"
-                  data-i18n-da="Hurtigfiltre"
+                  for="filter-radius"
+                  id="filter-radius-label"
+                  data-i18n-de="Micro-Abenteuer-Radius"
+                  data-i18n-en="Micro-adventure radius"
+                  data-i18n-da="Mikroeventyr-radius"
                 >
-                  Schnellfilter
+                  Micro-Abenteuer-Radius
                 </label>
                 <p
-                  class="filter-group-helper"
-                  id="filter-tags-helper"
-                  data-i18n-de="Ein Tipp genügt – „mit Wasser“, „ruhig“, „Action“ oder „Naturpfad“. Die Karte sortiert für euch vor."
-                  data-i18n-en="One tap is enough – “with water”, “calm”, “action” or “nature trail”. The map pre-sorts for you."
-                  data-i18n-da="Et enkelt tryk – „med vand“, „rolig“, „action“ eller „natursti“. Kortet sorterer for jer."
+                  class="filter-group-helper filter-group-helper--compact"
+                  id="filter-radius-helper"
+                  data-i18n-de="Wie weit darf euer Abenteuer heute gehen?"
+                  data-i18n-en="How far may your adventure go today?"
+                  data-i18n-da="Hvor langt må jeres eventyr række i dag?"
                 >
-                  Ein Tipp genügt – „mit Wasser“, „ruhig“, „Action“ oder „Naturpfad“. Die Karte sortiert für euch vor.
+                  Wie weit darf euer Abenteuer heute gehen?
                 </p>
-                <div
-                  id="filter-tags"
-                  class="tag-filter-row"
-                  role="group"
-                  aria-labelledby="filter-tags-label"
-                  aria-describedby="filter-tags-helper"
-                >
-                  <!-- Chips werden dynamisch durch JS gerendert -->
+                <div class="radius-row">
+                  <input
+                    id="filter-radius"
+                    name="radius"
+                    type="range"
+                    min="0"
+                    max="4"
+                    step="1"
+                    value="4"
+                    aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description"
+                  />
+                  <span
+                    id="filter-radius-max-label"
+                    class="radius-max-label"
+                    data-i18n-de="Alle Spots"
+                    data-i18n-en="All spots"
+                    data-i18n-da="Alle spots"
+                  >
+                    Alle Spots
+                  </span>
                 </div>
-              </div>
-
-              <!-- Kategorie -->
-              <div class="filter-group">
-                <label
-                  class="filter-group-label"
-                  for="filter-category"
-                  id="filter-category-label"
-                  data-i18n-de="Kategorie"
-                  data-i18n-en="Category"
-                  data-i18n-da="Kategori"
+                <p
+                  id="filter-radius-description"
+                  class="radius-description"
+                  data-i18n-de="Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
+                  data-i18n-en="All spots – no radius limit. The map is all yours."
+                  data-i18n-da="Alle spots – ingen radiusbegrænsning. Kortet er helt jeres."
                 >
-                  Kategorie
-                </label>
-                <select id="filter-category" name="category" class="input">
-                  <option
-                    value=""
-                    data-i18n-de="Alle Kategorien"
-                    data-i18n-en="All categories"
-                    data-i18n-da="Alle kategorier"
-                  >
-                    Alle Kategorien
-                  </option>
-                </select>
+                  Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
+                </p>
               </div>
 
-              <!-- Alter -->
-              <div class="filter-group">
-                <label
-                  class="filter-group-label"
-                  for="filter-age"
-                  id="filter-age-label"
-                  data-i18n-de="Alter der Kinder"
-                  data-i18n-en="Age of children"
-                  data-i18n-da="Børnenes alder"
+              <!-- Zusammenfassung & Button "Alle Filter öffnen" -->
+              <div class="filter-footer">
+                <button
+                  id="btn-open-filter-modal"
+                  class="btn btn-small"
+                  type="button"
                 >
-                  Alter der Kinder
-                </label>
-                <select id="filter-age" name="age" class="input">
-                  <option
-                    value="all"
-                    id="filter-age-all"
-                    data-i18n-de="Alle Altersstufen"
-                    data-i18n-en="All age groups"
-                    data-i18n-da="Alle aldersgrupper"
-                  >
-                    Alle Altersstufen
-                  </option>
-                  <option
-                    value="0-3"
-                    id="filter-age-0-3"
-                    data-i18n-de="0–3 Jahre"
-                    data-i18n-en="0–3 years"
-                    data-i18n-da="0–3 år"
-                  >
-                    0–3 Jahre
-                  </option>
-                  <option
-                    value="4-9"
-                    id="filter-age-4-9"
-                    data-i18n-de="4–9 Jahre"
-                    data-i18n-en="4–9 years"
-                    data-i18n-da="4–9 år"
-                  >
-                    4–9 Jahre
-                  </option>
-                  <option
-                    value="10+"
-                    id="filter-age-10-plus"
-                    data-i18n-de="10+ Jahre"
-                    data-i18n-en="10+ years"
-                    data-i18n-da="10+ år"
-                  >
-                    10+ Jahre
-                  </option>
-                </select>
-              </div>
-
-              <!-- Nur verifizierte Spots -->
-              <div class="filter-group filter-group--checkbox">
-                <label class="checkbox-label" id="filter-verified-label">
-                  <input id="filter-verified" name="verified" type="checkbox" />
                   <span
-                    data-i18n-de="Nur verifizierte Spots"
-                    data-i18n-en="Only verified spots"
-                    data-i18n-da="Kun verificerede spots"
+                    data-i18n-de="Alle Filter öffnen"
+                    data-i18n-en="Open all filters"
+                    data-i18n-da="Åbn alle filtre"
                   >
-                    Nur verifizierte Spots
+                    Alle Filter öffnen
                   </span>
-                </label>
-              </div>
+                </button>
 
-              <!-- Große Abenteuer -->
-              <div class="filter-group filter-group--checkbox">
-                <label class="checkbox-label" id="filter-big-label">
-                  <input
-                    id="filter-big-adventures"
-                    name="big-adventures"
-                    type="checkbox"
-                  />
-                  <span
-                    data-i18n-de="Große Abenteuer"
-                    data-i18n-en="Big adventures"
-                    data-i18n-da="Store eventyr"
-                  >
-                    Große Abenteuer
-                  </span>
-                </label>
+                <p
+                  id="filter-summary"
+                  class="filter-summary"
+                  data-i18n-de="Aktive Filter: Basisfilter"
+                  data-i18n-en="Active filters: basic filters"
+                  data-i18n-da="Aktive filtre: basisfiltre"
+                >
+                  Aktive Filter: Basisfilter
+                </p>
               </div>
+            </section>
 
-              <!-- Nur Favoriten -->
-              <div class="filter-group filter-group--checkbox">
-                <label class="checkbox-label" id="filter-favorites-label">
-                  <input
-                    id="filter-favorites"
-                    name="favorites"
-                    type="checkbox"
-                  />
-                  <span
-                    data-i18n-de="Nur Favoriten"
-                    data-i18n-en="Favourites only"
-                    data-i18n-da="Kun favoritter"
-                  >
-                    Nur Favoriten
-                  </span>
-                </label>
-              </div>
-            </details>
-          </div>
-
-          <footer class="filter-modal-footer">
-            <button
-              id="filter-modal-reset"
-              class="btn-ghost"
-              type="button"
+            <!-- Onboarding-Hinweis: erster Einstieg -->
+            <section
+              class="sidebar-section fsm-onboarding-hint"
+              data-onboarding-hint
+              aria-label="Kurzer Start-Hinweis zur Karte"
             >
-              <span
-                data-i18n-de="Filter zurücksetzen"
-                data-i18n-en="Reset filters"
-                data-i18n-da="Nulstil filtre"
+              <p class="fsm-onboarding-hint__text">
+                <strong
+                  data-i18n-de="So holt ihr euch euren Spot für heute:"
+                  data-i18n-en="How to find your spot for today:"
+                  data-i18n-da="Sådan finder I dagens spot:"
+                >
+                  So holt ihr euch euren Spot für heute:
+                </strong>
+                <br />
+                <span
+                  data-i18n-de="1. Standort freigeben oder in eure Region zoomen"
+                  data-i18n-en="1. Share your location or zoom into your region"
+                  data-i18n-da="1. Del jeres position eller zoom ind på jeres område"
+                >
+                  1. Standort freigeben oder in eure Region zoomen
+                </span>
+                <br />
+                <span
+                  data-i18n-de="2. Stimmung wählen"
+                  data-i18n-en="2. Choose a mood"
+                  data-i18n-da="2. Vælg stemning"
+                >
+                  2. Stimmung wählen
+                </span>
+                <br />
+                <span
+                  data-i18n-de="3. Auf einen Spot tippen – los geht’s."
+                  data-i18n-en="3. Tap a spot – and off you go."
+                  data-i18n-da="3. Tryk på et spot – så er I i gang."
+                >
+                  3. Auf einen Spot tippen – los geht’s.
+                </span>
+              </p>
+              <button
+                type="button"
+                class="fsm-onboarding-hint__close"
+                aria-label="Hinweis schließen"
               >
-                Filter zurücksetzen
-              </span>
-            </button>
-            <button id="filter-modal-apply" class="btn" type="button">
-              <span
-                data-i18n-de="Filter anwenden"
-                data-i18n-en="Apply filters"
-                data-i18n-da="Brug filtre"
+                ×
+              </button>
+            </section>
+
+            <!-- Spot-Liste -->
+            <section
+              class="sidebar-section sidebar-section--grow"
+              aria-labelledby="spots-title"
+            >
+              <header class="sidebar-section-header">
+                <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
+                <button
+                  id="btn-toggle-view"
+                  class="btn-ghost btn-small"
+                  type="button"
+                  aria-pressed="false"
+                  aria-controls="sidebar"
+                >
+                  <span
+                    data-i18n-de="Nur Karte"
+                    data-i18n-en="Map only"
+                    data-i18n-da="Kun kort"
+                  >
+                    Nur Karte
+                  </span>
+                </button>
+              </header>
+              <div id="spot-list" class="spot-list"><!-- Cards via JS --></div>
+            </section>
+          </aside>
+
+          <!-- Karte + Details -->
+          <section class="map-section" aria-label="Karte mit Spots">
+            <div id="map" class="map-container"></div>
+            <aside
+              id="spot-detail"
+              class="spot-details spot-details--hidden"
+              aria-live="polite"
+            ></aside>
+          </section>
+
+          <!-- Family Spots Plus -->
+          <details
+            class="sidebar-section"
+            id="plus-section"
+            aria-labelledby="plus-section-title"
+          >
+            <summary class="sidebar-section-header">
+              <h2 class="sidebar-section-title" id="plus-section-title">
+                Family Spots Plus
+              </h2>
+              <button
+                id="btn-toggle-plus"
+                class="btn-ghost btn-small"
+                type="button"
               >
-                Filter anwenden
-              </span>
-            </button>
-          </footer>
+                <span
+                  data-i18n-de="Anzeigen"
+                  data-i18n-en="Show"
+                  data-i18n-da="Vis"
+                >
+                  Anzeigen
+                </span>
+              </button>
+            </summary>
+            <div class="filter-group">
+              <p
+                id="plus-status-text"
+                data-i18n-de="Family Spots Plus ist nicht aktiviert."
+                data-i18n-en="Family Spots Plus is not activated."
+                data-i18n-da="Family Spots Plus er ikke aktiveret."
+              >
+                Family Spots Plus ist nicht aktiviert.
+              </p>
+            </div>
+            <div class="plus-code-form">
+              <label
+                for="plus-code-input"
+                data-i18n-de="Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
+                data-i18n-en="Enter partner code (e.g. from campground, municipality or sponsor):"
+                data-i18n-da="Indtast partnerkode (f.eks. fra campingplads, kommune eller sponsor):"
+              >
+                Partner-Code eingeben (z. B. von Campingplatz, Kommune oder
+                Sponsor):
+              </label>
+              <div class="plus-code-row">
+                <input
+                  id="plus-code-input"
+                  name="plus-code"
+                  class="input"
+                  type="text"
+                  autocomplete="off"
+                />
+                <button id="plus-code-submit" class="btn" type="button">
+                  <span
+                    data-i18n-de="Code aktivieren"
+                    data-i18n-en="Activate code"
+                    data-i18n-da="Aktivér kode"
+                  >
+                    Code aktivieren
+                  </span>
+                </button>
+              </div>
+              <p
+                class="plus-note"
+                data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
+                data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap."
+                data-i18n-da="Family Spots Plus låser op for ekstra filtre &amp; spots – helt uden abonnementsfælder."
+              >
+                Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei –
+                ganz ohne Abo-Falle.
+              </p>
+            </div>
+          </details>
+
+          <!-- Mein Tag -->
+          <details
+            class="sidebar-section"
+            id="daylog-section"
+            aria-labelledby="daylog-section-title"
+          >
+            <summary class="sidebar-section-header">
+              <h2
+                class="sidebar-section-title"
+                id="daylog-section-title"
+                data-i18n-de="Mein Tag 💛"
+                data-i18n-en="My day 💛"
+                data-i18n-da="Min dag 💛"
+              >
+                Mein Tag 💛
+              </h2>
+              <button
+                id="btn-toggle-daylog"
+                class="btn-ghost btn-small"
+                type="button"
+              >
+                <span
+                  data-i18n-de="Anzeigen"
+                  data-i18n-en="Show"
+                  data-i18n-da="Vis"
+                >
+                  Anzeigen
+                </span>
+              </button>
+            </summary>
+            <div class="filter-group">
+              <label
+                for="daylog-text"
+                data-i18n-de="Wie war euer Tag?"
+                data-i18n-en="How was your day?"
+                data-i18n-da="Hvordan var jeres dag?"
+              >
+                Wie war euer Tag?
+              </label>
+              <p
+                class="filter-group-helper"
+                data-i18n-de="Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß an Tilla."
+                data-i18n-en="Capture a little moment you’d like to remember later – and if you like, add a small note to Tilla."
+                data-i18n-da="Gem et lille øjeblik, som I gerne vil huske senere – og hvis du har lyst, med en lille hilsen til Tilla."
+              >
+                Halte einen kleinen Moment fest, an den ihr euch später erinnern
+                möchtet – wenn du magst, mit einem Gruß an Tilla.
+              </p>
+
+              <textarea
+                id="daylog-text"
+                name="daylog"
+                class="input"
+                rows="3"
+                placeholder="Heute haben wir einen Ort gefunden, an dem die Zeit kurz langsamer wurde."
+              ></textarea>
+
+              <button id="daylog-save" class="btn btn-small" type="button">
+                <span
+                  data-i18n-de="Speichern 💾"
+                  data-i18n-en="Save 💾"
+                  data-i18n-da="Gem 💾"
+                >
+                  Speichern 💾
+                </span>
+              </button>
+
+              <!-- Status + Löschen-Button in einer Zeile -->
+              <div class="daylog-meta-row">
+                <p
+                  id="daylog-last-saved"
+                  class="daylog-last-saved"
+                  data-i18n-de="Noch nichts gespeichert."
+                  data-i18n-en="Nothing saved yet."
+                  data-i18n-da="Ingen gemte endnu."
+                >
+                  Noch nichts gespeichert.
+                </p>
+                <button
+                  id="daylog-clear"
+                  class="btn-ghost btn-small daylog-clear-btn hidden"
+                  type="button"
+                >
+                  <span
+                    data-i18n-de="Eintrag löschen"
+                    data-i18n-en="Delete entry"
+                    data-i18n-da="Slet notat"
+                  >
+                    Eintrag löschen
+                  </span>
+                </button>
+              </div>
+
+              <!-- Liste der gespeicherten Einträge -->
+              <div id="daylog-list" class="daylog-list"></div>
+            </div>
+          </details>
+        </section>
+
+        <!-- =========================================
+             ABOUT VIEW
+             ========================================= -->
+        <section
+          id="view-about"
+          class="view"
+          aria-label="Über Family Spots Map"
+        >
+          <!-- Deutsch -->
+          <article
+            id="page-about-de"
+            class="page page-about"
+            lang="de"
+            aria-hidden="false"
+          >
+            <h2>Über Family Spots Map</h2>
+            <p>
+              Family Spots Map ist eine Karte, behutsam gezeichnet für
+              Familienabenteuer – von Eltern für Eltern. Statt endloser Listen
+              und anonymer Sternebewertungen findest du hier handverlesene
+              Orte, an denen Kinder wirklich schon gelacht, gestaunt und
+              gespielt haben.
+            </p>
+            <p>
+              Dazu gehören besondere Spielplätze, Naturspielräume, Zoos und
+              Wildparks, Museen, Wasser-Spots, Bewegungsparks und kleine
+              Lieblingsorte, die ein normales Wochenende in einen kleinen
+              Ausflug verwandeln können.
+            </p>
+            <h3>Was die Karte anders macht</h3>
+            <p>
+              Wir schauen auf eine Frage: <strong>„Würde ich mit meinen eigenen
+              Kindern hierher fahren?“</strong> Wenn die Antwort Ja ist, wird
+              der Spot sorgfältig beschrieben – mit möglichst ehrlichen
+              Eindrücken, statt Marketing-Text. Wo ist es laut, wo ruhig? Wo
+              gibt es Schatten, Wasser, Tiere, Klettermöglichkeiten?
+            </p>
+            <p>
+              Viele Spots sind bewusst nicht überlaufen, sondern eher kleine
+              Alltagsinseln. Und manche sind „große Abenteuer“ – Tierparks,
+              Erlebnisbäder oder Tagesausflüge, die ein wenig mehr Organisation
+              brauchen und deshalb entsprechend markiert sind.
+            </p>
+            <h3>Für welche Familien ist die Karte gedacht?</h3>
+            <p>
+              Für Familien, die nicht jeden Tag ein großes Programm brauchen,
+              sondern gute Orte für <em>heute</em>. Für Eltern, die wissen
+              möchten, ob sich der Weg mit kleinen Kindern lohnt. Und für alle,
+              die eine ruhige, liebevolle Kuratierung lieber mögen als eine
+              Flut an Einträgen.
+            </p>
+            <p>
+              Viele Spots sind mit Kinderwagen gut erreichbar, andere eher für
+              Laufrad-Kinder oder größere Entdecker geeignet. In den
+              Beschreibungen findest du Hinweise zu Alter, Gelände,
+              Erreichbarkeit und Besonderheiten.
+            </p>
+            <h3>Warum gibt es Family Spots Plus?</h3>
+            <p>
+              Die Grundkarte soll für möglichst viele Familien zugänglich
+              bleiben. Mit <strong>Family Spots Plus</strong> können z.&nbsp;B.
+              Campingplätze, Kommunen oder Sponsoren zusätzliche Spots und
+              Filter in ihrer Region freischalten – ohne Abo-Falle und ohne
+              Werbung, die dir ins Gesicht springt.
+            </p>
+            <p>
+              So können Regionen, die Familien besonders willkommen heißen,
+              ihre Lieblingsorte hervorheben – und ihr bekommt dafür mehr Tiefe
+              und Auswahl auf der Karte.
+            </p>
+            <h3>Wer steckt hinter der Karte?</h3>
+            <p>
+              Hinter Family Spots Map steckt ein kleines Elternteam, das selbst
+              viel unterwegs ist – mit Kindersitzen im Auto, Sand in den
+              Schuhen und Thermoskanne im Rucksack. Viele Spots stammen aus
+              eigenen Reisen, andere aus Empfehlungen von Familien, die wir
+              persönlich kennen.
+            </p>
+            <p>
+              Die Karte darf wachsen: Wenn du einen Ort kennst, der hier fehlt
+              und vielen Familien guttun könnte, freuen wir uns über eine
+              Nachricht. Schritt für Schritt entsteht so eine Karte, die sich
+              wie ein leiser, verlässlicher Begleiter anfühlt – statt wie noch
+              ein lauter Informations-Stream.
+            </p>
+          </article>
+
+          <!-- Dansk -->
+          <article
+            id="page-about-da"
+            class="page page-about hidden"
+            lang="da"
+            aria-hidden="true"
+          >
+            <h2>Om Family Spots Map</h2>
+            <p>
+              Family Spots Map er et kort, tegnet med omtanke til
+              familieeventyr – lavet af forældre til forældre. I stedet for
+              endeløse lister og anonyme stjerner finder du nøje udvalgte
+              steder, hvor børn allerede har leget, grinet og oplevet noget
+              særligt.
+            </p>
+            <p>
+              Det kan være legepladser, naturlegepladser, zoologiske haver,
+              dyreparker, museer, vandsteder, bevægelsesparker og små
+              hverdagssteder, der kan forvandle en almindelig dag til en lille
+              tur.
+            </p>
+            <h3>Hvad gør kortet anderledes?</h3>
+            <p>
+              Vi stiller os selv ét spørgsmål:
+              <strong>“Ville jeg tage hertil med mine egne børn?”</strong> Hvis
+              svaret er ja, beskriver vi stedet ærligt – med fokus på stemning
+              og praktiske detaljer frem for reklamesprog. Er der skygge, vand,
+              dyr, ro eller masser af bevægelse?
+            </p>
+            <p>
+              Mange steder er bevidst ikke de mest turistede, men små lommer af
+              hverdag, hvor man kan trække vejret. Andre er “store eventyr”
+              – dagsture, som kræver lidt mere planlægning og derfor er
+              markeret tydeligt.
+            </p>
+            <h3>Hvem er kortet til?</h3>
+            <p>
+              Til familier der ikke har brug for stort program hver dag, men
+              gode steder til <em>lige nu</em>. Til forældre, der gerne vil
+              vide, om turen med små børn er besværet værd. Og til alle, der
+              foretrækker rolig kuratering frem for en uendelig strøm af
+              information.
+            </p>
+            <p>
+              Mange spots er barnevognsvenlige, andre egner sig bedre til
+              løbecykler eller større eventyrere. I beskrivelserne finder du
+              info om alder, terræn, tilgængelighed og særlige kendetegn.
+            </p>
+            <h3>Hvorfor findes Family Spots Plus?</h3>
+            <p>
+              Grundkortet skal være tilgængeligt for så mange familier som
+              muligt. Med <strong>Family Spots Plus</strong> kan fx
+              campingpladser, kommuner eller sponsorer låse ekstra spots og
+              filtre op i deres område – uden abonnement og uden blinkende
+              annoncer.
+            </p>
+            <p>
+              På den måde kan steder, der gerne vil gøre noget ekstra for
+              børnefamilier, fremhæve deres favoritter – og I får flere gode
+              valgmuligheder på kortet.
+            </p>
+            <h3>Hvem står bag?</h3>
+            <p>
+              Bag Family Spots Map står et lille forældreteam, der selv rejser
+              meget – med autostole på bagsædet, sand i skoene og kaffe på
+              termokande. Mange spots er fundet på egne ture, andre kommer fra
+              familier, vi kender og stoler på.
+            </p>
+            <p>
+              Kortet må gerne vokse. Hvis du kender et sted, som mangler, og
+              som kunne være en gave til andre familier, hører vi meget gerne
+              fra dig. Lidt efter lidt bliver kortet til en stille, tryg
+              rejsemakker – i stedet for endnu en støjende app.
+            </p>
+          </article>
+
+          <!-- English -->
+          <article
+            id="page-about-en"
+            class="page page-about hidden"
+            lang="en"
+            aria-hidden="true"
+          >
+            <h2>About Family Spots Map</h2>
+            <p>
+              Family Spots Map is a carefully curated map for family adventures
+              – created by parents for parents. Instead of endless lists and
+              anonymous ratings, you’ll find places where children have already
+              played, laughed and experienced something real.
+            </p>
+            <p>
+              The map includes thoughtfully selected playgrounds, nature play
+              areas, zoos and wildlife parks, museums, water spots, movement
+              parks and many small local favourites that can turn an ordinary
+              day into a mini-adventure.
+            </p>
+            <h3>What makes the map different?</h3>
+            <p>
+              We start with a simple question:
+              <strong>“Would I go here with my own kids?”</strong> If the
+              answer is yes, we describe the spot in detail – focusing on
+              atmosphere, accessibility and what the day might feel like for a
+              family, rather than just listing facilities.
+            </p>
+            <p>
+              Some spots are quiet corners that help you slow down, others are
+              full of movement and discovery. A few are marked as “big
+              adventures” – full-day trips that may require more planning but
+              can become strong memories.
+            </p>
+            <h3>Who is this map for?</h3>
+            <p>
+              For families who don’t need big entertainment every day, but who
+              appreciate good, well-chosen places for <em>today</em>. For
+              parents who like to know whether the effort of getting there will
+              be worth it with children of different ages.
+            </p>
+            <p>
+              Many spots work well with a stroller, others are better suited
+              for balance-bike kids or older explorers. The descriptions
+              include hints on age range, terrain, access and special
+              features – so you can quickly judge whether it fits your day.
+            </p>
+            <h3>Why Family Spots Plus?</h3>
+            <p>
+              The base map is meant to stay accessible for as many families as
+              possible. With <strong>Family Spots Plus</strong>, campgrounds,
+              municipalities or local partners can unlock additional spots and
+              filters for their area – without subscription traps or loud ads.
+            </p>
+            <p>
+              Regions that truly care about families can highlight their best
+              places, while you benefit from more depth and choice on the map.
+            </p>
+            <h3>Who is behind this?</h3>
+            <p>
+              Family Spots Map is built by a small parent team that spends a
+              lot of time on the road – with child seats in the car, sand in
+              the shoes and snacks in the backpack. Many spots are based on our
+              own trips; others come from trusted families whose experience we
+              value.
+            </p>
+            <p>
+              The map is allowed to grow. If you know a place that deserves a
+              little dot on the map and would be a gift to other families, we
+              would love to hear from you. Step by step, this map is meant to
+              become a quiet, reliable companion – not another noisy stream of
+              information.
+            </p>
+          </article>
+        </section>
+
+        <!-- =========================================
+             FILTER-MODAL: ALLE FILTER
+             ========================================= -->
+        <div
+          id="filter-modal"
+          class="filter-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="filter-modal-title"
+          hidden
+        >
+          <div class="filter-modal-inner">
+            <header class="filter-modal-header">
+              <h2
+                id="filter-modal-title"
+                data-i18n-de="Alle Filter"
+                data-i18n-en="All filters"
+                data-i18n-da="Alle filtre"
+              >
+                Alle Filter
+              </h2>
+              <button
+                id="filter-modal-close"
+                class="btn-ghost btn-small filter-modal-close-btn"
+                type="button"
+              >
+                <span
+                  data-i18n-de="Alle Filter ausblenden"
+                  data-i18n-en="Hide all filters"
+                  data-i18n-da="Skjul alle filtre"
+                >
+                  Alle Filter ausblenden
+                </span>
+              </button>
+            </header>
+
+            <div class="filter-modal-body">
+              <p
+                class="filter-group-helper"
+                data-i18n-de="Hier kannst du Schnellfilter, Kategorien, Alter der Kinder und besondere Spots feinjustieren."
+                data-i18n-en="Here you can fine-tune quick filters, categories, age and special spots."
+                data-i18n-da="Her kan du finjustere hurtigfiltre, kategorier, alder og særlige spots."
+              >
+                Hier kannst du Schnellfilter, Kategorien, Alter der Kinder und
+                besondere Spots feinjustieren.
+              </p>
+
+              <details
+                class="filter-advanced"
+                id="advanced-filters"
+                aria-labelledby="advanced-filters-label"
+                open
+              >
+                <summary
+                  class="filter-advanced-summary"
+                  id="advanced-filters-summary"
+                >
+                  <span
+                    class="filter-group-label"
+                    id="advanced-filters-label"
+                    data-i18n-de="Weitere Filter"
+                    data-i18n-en="More filters"
+                    data-i18n-da="Flere filtre"
+                  >
+                    Weitere Filter
+                  </span>
+                </summary>
+
+                <p
+                  class="filter-group-helper"
+                  data-i18n-de="Hier findest du Schnellfilter, Kategorien, Alter &amp; besondere Spots – für genau das, was heute zu euch passt."
+                  data-i18n-en="Here you can fine-tune quick filters, categories, age and special spots – for exactly what fits your family today."
+                  data-i18n-da="Her finder du hurtigfiltre, kategorier, alder og særlige spots – så du kan ramme lige det, der passer til jer i dag."
+                >
+                  Hier findest du Schnellfilter, Kategorien, Alter &amp;
+                  besondere Spots – für genau das, was heute zu euch passt.
+                </p>
+
+                <!-- Schnellfilter -->
+                <div class="filter-group" id="filter-tags-group">
+                  <label
+                    class="filter-group-label"
+                    id="filter-tags-label"
+                    data-i18n-de="Schnellfilter"
+                    data-i18n-en="Quick filters"
+                    data-i18n-da="Hurtigfiltre"
+                  >
+                    Schnellfilter
+                  </label>
+                  <p
+                    class="filter-group-helper"
+                    id="filter-tags-helper"
+                    data-i18n-de="Ein Tipp genügt – „mit Wasser“, „ruhig“, „Action“ oder „Naturpfad“. Die Karte sortiert für euch vor."
+                    data-i18n-en="One tap is enough – “with water”, “calm”, “action” or “nature trail”. The map pre-sorts for you."
+                    data-i18n-da="Et enkelt tryk – „med vand“, „rolig“, „action“ eller „natursti“. Kortet sorterer for jer."
+                  >
+                    Ein Tipp genügt – „mit Wasser“, „ruhig“, „Action“ oder
+                    „Naturpfad“. Die Karte sortiert für euch vor.
+                  </p>
+                  <div
+                    id="filter-tags"
+                    class="tag-filter-row"
+                    role="group"
+                    aria-labelledby="filter-tags-label"
+                    aria-describedby="filter-tags-helper"
+                  >
+                    <!-- Chips werden dynamisch durch JS gerendert -->
+                  </div>
+                </div>
+
+                <!-- Kategorie -->
+                <div class="filter-group">
+                  <label
+                    class="filter-group-label"
+                    for="filter-category"
+                    id="filter-category-label"
+                    data-i18n-de="Kategorie"
+                    data-i18n-en="Category"
+                    data-i18n-da="Kategori"
+                  >
+                    Kategorie
+                  </label>
+                  <select
+                    id="filter-category"
+                    name="category"
+                    class="input"
+                  >
+                    <option
+                      value=""
+                      data-i18n-de="Alle Kategorien"
+                      data-i18n-en="All categories"
+                      data-i18n-da="Alle kategorier"
+                    >
+                      Alle Kategorien
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Alter -->
+                <div class="filter-group">
+                  <label
+                    class="filter-group-label"
+                    for="filter-age"
+                    id="filter-age-label"
+                    data-i18n-de="Alter der Kinder"
+                    data-i18n-en="Age of children"
+                    data-i18n-da="Børnenes alder"
+                  >
+                    Alter der Kinder
+                  </label>
+                  <select id="filter-age" name="age" class="input">
+                    <option
+                      value="all"
+                      id="filter-age-all"
+                      data-i18n-de="Alle Altersstufen"
+                      data-i18n-en="All age groups"
+                      data-i18n-da="Alle aldersgrupper"
+                    >
+                      Alle Altersstufen
+                    </option>
+                    <option
+                      value="0-3"
+                      id="filter-age-0-3"
+                      data-i18n-de="0–3 Jahre"
+                      data-i18n-en="0–3 years"
+                      data-i18n-da="0–3 år"
+                    >
+                      0–3 Jahre
+                    </option>
+                    <option
+                      value="4-9"
+                      id="filter-age-4-9"
+                      data-i18n-de="4–9 Jahre"
+                      data-i18n-en="4–9 years"
+                      data-i18n-da="4–9 år"
+                    >
+                      4–9 Jahre
+                    </option>
+                    <option
+                      value="10+"
+                      id="filter-age-10-plus"
+                      data-i18n-de="10+ Jahre"
+                      data-i18n-en="10+ years"
+                      data-i18n-da="10+ år"
+                    >
+                      10+ Jahre
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Nur verifizierte Spots -->
+                <div class="filter-group filter-group--checkbox">
+                  <label class="checkbox-label" id="filter-verified-label">
+                    <input
+                      id="filter-verified"
+                      name="verified"
+                      type="checkbox"
+                    />
+                    <span
+                      data-i18n-de="Nur verifizierte Spots"
+                      data-i18n-en="Only verified spots"
+                      data-i18n-da="Kun verificerede spots"
+                    >
+                      Nur verifizierte Spots
+                    </span>
+                  </label>
+                </div>
+
+                <!-- Große Abenteuer -->
+                <div class="filter-group filter-group--checkbox">
+                  <label class="checkbox-label" id="filter-big-label">
+                    <input
+                      id="filter-big-adventures"
+                      name="big-adventures"
+                      type="checkbox"
+                    />
+                    <span
+                      data-i18n-de="Große Abenteuer"
+                      data-i18n-en="Big adventures"
+                      data-i18n-da="Store eventyr"
+                    >
+                      Große Abenteuer
+                    </span>
+                  </label>
+                </div>
+
+                <!-- Nur Favoriten -->
+                <div class="filter-group filter-group--checkbox">
+                  <label class="checkbox-label" id="filter-favorites-label">
+                    <input
+                      id="filter-favorites"
+                      name="favorites"
+                      type="checkbox"
+                    />
+                    <span
+                      data-i18n-de="Nur Favoriten"
+                      data-i18n-en="Favourites only"
+                      data-i18n-da="Kun favoritter"
+                    >
+                      Nur Favoriten
+                    </span>
+                  </label>
+                </div>
+              </details>
+            </div>
+
+            <footer class="filter-modal-footer">
+              <button
+                id="filter-modal-reset"
+                class="btn-ghost"
+                type="button"
+              >
+                <span
+                  data-i18n-de="Filter zurücksetzen"
+                  data-i18n-en="Reset filters"
+                  data-i18n-da="Nulstil filtre"
+                >
+                  Filter zurücksetzen
+                </span>
+              </button>
+              <button id="filter-modal-apply" class="btn" type="button">
+                <span
+                  data-i18n-de="Filter anwenden"
+                  data-i18n-en="Apply filters"
+                  data-i18n-da="Brug filtre"
+                >
+                  Filter anwenden
+                </span>
+              </button>
+            </footer>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
 
-    <!-- Toast -->
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  </div>
+      <!-- Toast -->
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
 
-  <!-- Landscape-Warnung -->
-  <div class="landscape-warning" aria-hidden="true">
-    <span aria-hidden="true">
-      Bitte Gerät drehen 📱🔄 – im Hochformat macht die Family Spots Map Tilla ein bisschen glücklicher.
-    </span>
-  </div>
+    <!-- Landscape-Warnung -->
+    <div class="landscape-warning" aria-hidden="true">
+      <span aria-hidden="true">
+        Bitte Gerät drehen 📱🔄 – im Hochformat macht die Family Spots Map
+        Tilla ein bisschen glücklicher.
+      </span>
+    </div>
 
-  <!-- Menü-Logik & Sprachchips steuern alten Language-Switcher -->
-  <script>
-    (function () {
-      const menuToggle = document.getElementById('menu-toggle');
-      const menu = document.getElementById('app-menu');
-      const backdrop = menu && menu.querySelector('.app-menu-backdrop');
+    <!-- Menü-Logik & Sprachchips steuern alten Language-Switcher -->
+    <script>
+      (function () {
+        const menuToggle = document.getElementById("menu-toggle");
+        const menu = document.getElementById("app-menu");
+        const backdrop = menu && menu.querySelector(".app-menu-backdrop");
 
-      function openMenu() {
-        if (!menu) return;
-        menu.hidden = false;
-        document.body.dataset.menuOpen = '1';
-        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'true');
-      }
-
-      function closeMenu() {
-        if (!menu) return;
-        menu.hidden = true;
-        delete document.body.dataset.menuOpen;
-        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
-      }
-
-      if (menuToggle) {
-        menuToggle.addEventListener('click', () => {
-          if (menu && menu.hidden) {
-            openMenu();
-          } else {
-            closeMenu();
-          }
-        });
-      }
-
-      if (backdrop) {
-        backdrop.addEventListener('click', closeMenu);
-      }
-
-      if (menu) {
-        menu.addEventListener('click', (event) => {
-          const target = event.target;
-          if (target && target.closest('[data-menu-close]')) {
-            closeMenu();
-          }
-        });
-      }
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-          closeMenu();
+        function openMenu() {
+          if (!menu) return;
+          menu.hidden = false;
+          document.body.dataset.menuOpen = "1";
+          if (menuToggle) menuToggle.setAttribute("aria-expanded", "true");
         }
-      });
 
-      // Sprachchips → alten Language-Switcher klicken, bis Ziel-Sprache aktiv ist
-      const langOrder = ['de', 'da', 'en'];
+        function closeMenu() {
+          if (!menu) return;
+          menu.hidden = true;
+          delete document.body.dataset.menuOpen;
+          if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+        }
 
-      function getCurrentLang() {
-        const html = document.documentElement;
-        return html.getAttribute('lang') || html.dataset.lang || 'de';
-      }
+        if (menuToggle) {
+          menuToggle.addEventListener("click", () => {
+            if (menu && menu.hidden) {
+              openMenu();
+            } else {
+              closeMenu();
+            }
+          });
+        }
 
-      function syncActiveLangChip() {
-        const current = getCurrentLang();
-        document.querySelectorAll('.app-menu-lang-chip').forEach((btn) => {
-          const isActive = btn.dataset.langTarget === current;
-          btn.classList.toggle('app-menu-lang-chip--active', isActive);
+        if (backdrop) {
+          backdrop.addEventListener("click", closeMenu);
+        }
+
+        if (menu) {
+          menu.addEventListener("click", (event) => {
+            const target = event.target;
+            if (target && target.closest("[data-menu-close]")) {
+              closeMenu();
+            }
+          });
+        }
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            closeMenu();
+          }
         });
-      }
 
-      function cycleLanguageTo(targetLang) {
-        const legacyButton = document.getElementById('language-switcher');
-        if (!legacyButton) return;
+        // Sprachchips → alten Language-Switcher klicken, bis Ziel-Sprache aktiv ist
+        const langOrder = ["de", "da", "en"];
 
-        if (getCurrentLang() === targetLang) {
+        function getCurrentLang() {
+          const html = document.documentElement;
+          return html.getAttribute("lang") || html.dataset.lang || "de";
+        }
+
+        function syncActiveLangChip() {
+          const current = getCurrentLang();
+          document.querySelectorAll(".app-menu-lang-chip").forEach((btn) => {
+            const isActive = btn.dataset.langTarget === current;
+            btn.classList.toggle("app-menu-lang-chip--active", isActive);
+          });
+        }
+
+        function cycleLanguageTo(targetLang) {
+          const legacyButton = document.getElementById("language-switcher");
+          if (!legacyButton) return;
+
+          if (getCurrentLang() === targetLang) {
+            syncActiveLangChip();
+            return;
+          }
+
+          let guard = 0;
+          const guardMax = langOrder.length + 1;
+
+          while (getCurrentLang() !== targetLang && guard < guardMax) {
+            legacyButton.click();
+            guard += 1;
+          }
           syncActiveLangChip();
-          return;
         }
 
-        let guard = 0;
-        const guardMax = langOrder.length + 1;
-
-        while (getCurrentLang() !== targetLang && guard < guardMax) {
-          legacyButton.click();
-          guard += 1;
-        }
-        syncActiveLangChip();
-      }
-
-      document.querySelectorAll('.app-menu-lang-chip').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const targetLang = btn.dataset.langTarget;
-          if (!targetLang) return;
-          cycleLanguageTo(targetLang);
+        document.querySelectorAll(".app-menu-lang-chip").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const targetLang = btn.dataset.langTarget;
+            if (!targetLang) return;
+            cycleLanguageTo(targetLang);
+          });
         });
-      });
 
-      window.addEventListener('load', syncActiveLangChip);
-    })();
-  </script>
+        window.addEventListener("load", syncActiveLangChip);
+      })();
+    </script>
 
-  <!-- Scripts: Leaflet + MarkerCluster -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin="anonymous"
-    defer
-  ></script>
-  <script
-    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
-    defer
-  ></script>
+    <!-- Scripts: Leaflet + MarkerCluster -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+      defer
+    ></script>
 
-  <!-- Onboarding-Hinweis (ES-Modul) -->
-  <script type="module" src="./js/onboarding-hint.js"></script>
+    <!-- Onboarding-Hinweis (ES-Modul) -->
+    <script type="module" src="./js/onboarding-hint.js"></script>
 
-  <!-- App (ES-Modul) -->
-  <script type="module" src="./js/app.js"></script>
-</body>
+    <!-- App (ES-Modul) -->
+    <script type="module" src="./js/app.js"></script>
+  </body>
 </html>
