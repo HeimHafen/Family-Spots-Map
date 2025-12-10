@@ -249,6 +249,8 @@ let spots = [];
 /** @type {Spot[]} */
 let filteredSpots = [];
 let favorites = new Set();
+/** Mein Tag – gespeicherte Einträge */
+let daylogEntries = [];
 
 /** Toast-Entprellung für Marker-Limit */
 let hasShownMarkerLimitToast = false;
@@ -308,6 +310,9 @@ let plusCodeSubmitEl;
 let plusStatusTextEl;
 let daylogTextEl;
 let daylogSaveEl;
+let daylogLastSavedEl;
+let daylogClearEl;
+let daylogListEl;
 let toastEl;
 
 // Kompass
@@ -604,7 +609,7 @@ function getCompassPlusHintParts(lang = currentLang) {
     return {
       title: "How to find today’s spot",
       steps: [
-        "Share your location or zoom to your region",
+        "Share your location or zoom into your region",
         "Pick a mood",
         "Tap a spot – off you go."
       ]
@@ -876,6 +881,10 @@ function setLanguage(lang, { initial = false } = {}) {
         : currentLang === LANG_DA
         ? "I dag var vi i dyreparken – gederne var såå søde!"
         : "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
+  }
+
+  if (FEATURES.daylog) {
+    updateDaylogUI();
   }
 
   updateRadiusTexts();
@@ -2237,44 +2246,222 @@ async function handlePlusCodeSubmit() {
   applyFiltersAndRender();
 }
 
-function loadDaylogFromStorage() {
+/**
+ * Formatiert einen Zeitstempel für Mein Tag abhängig von der aktuellen Sprache.
+ * @param {number} ts
+ * @returns {string}
+ */
+function formatDaylogTimestamp(ts) {
+  try {
+    const date = new Date(ts);
+    const locale =
+      currentLang === LANG_EN
+        ? "en-GB"
+        : currentLang === LANG_DA
+        ? "da-DK"
+        : "de-DE";
+    const options = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    };
+    return new Intl.DateTimeFormat(locale, options).format(date);
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * Aktualisiert Statuszeile, Löschen-Button und Liste der Einträge
+ * auf Basis von daylogEntries und aktueller Sprache.
+ */
+function updateDaylogUI() {
   if (!FEATURES.daylog) return;
   if (!daylogTextEl) return;
 
+  if (daylogListEl) {
+    daylogListEl.innerHTML = "";
+  }
+
+  if (!daylogEntries || daylogEntries.length === 0) {
+    if (daylogLastSavedEl) {
+      const txt =
+        currentLang === LANG_EN
+          ? "Nothing saved yet."
+          : currentLang === LANG_DA
+          ? "Ingen gemte endnu."
+          : "Noch nichts gespeichert.";
+      daylogLastSavedEl.textContent = txt;
+    }
+    if (daylogClearEl) {
+      daylogClearEl.classList.add("hidden");
+    }
+    daylogTextEl.value = "";
+    return;
+  }
+
+  // Neuere zuerst
+  daylogEntries.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  const latest = daylogEntries[0];
+
+  if (daylogLastSavedEl) {
+    const formatted = formatDaylogTimestamp(latest.ts || Date.now());
+    let label;
+    if (currentLang === LANG_EN) {
+      label = formatted ? `Last saved: ${formatted}` : "Last saved.";
+    } else if (currentLang === LANG_DA) {
+      label = formatted ? `Sidst gemt: ${formatted}` : "Sidst gemt.";
+    } else {
+      label = formatted
+        ? `Zuletzt gespeichert: ${formatted}`
+        : "Zuletzt gespeichert.";
+    }
+    daylogLastSavedEl.textContent = label;
+  }
+
+  if (daylogClearEl) {
+    daylogClearEl.classList.toggle("hidden", daylogEntries.length === 0);
+  }
+
+  // Textarea leer lassen, damit immer ein neuer Moment eingetragen werden kann
+  daylogTextEl.value = "";
+
+  if (!daylogListEl) return;
+
+  daylogEntries.forEach((entry) => {
+    if (!entry || !entry.text) return;
+
+    const item = document.createElement("article");
+    item.className = "daylog-entry";
+
+    const header = document.createElement("header");
+    header.className = "daylog-entry-header";
+
+    const dateEl = document.createElement("p");
+    dateEl.className = "daylog-entry-date";
+    dateEl.textContent = formatDaylogTimestamp(entry.ts || Date.now());
+
+    header.appendChild(dateEl);
+
+    const textEl = document.createElement("p");
+    textEl.className = "daylog-entry-text";
+    textEl.textContent = entry.text;
+
+    item.appendChild(header);
+    item.appendChild(textEl);
+
+    daylogListEl.appendChild(item);
+  });
+}
+
+/**
+ * Lädt „Mein Tag“-Einträge aus localStorage.
+ * Unterstützt altes Einzel-Format ({text, ts}) und neues Array-Format.
+ */
+function loadDaylogFromStorage() {
+  if (!FEATURES.daylog) return;
+
+  daylogEntries = [];
+
   try {
     const stored = localStorage.getItem(DAYLOG_STORAGE_KEY);
-    if (!stored) return;
+    if (!stored) {
+      updateDaylogUI();
+      return;
+    }
 
     const parsed = JSON.parse(stored);
-    if (parsed && typeof parsed.text === "string") {
-      daylogTextEl.value = parsed.text;
+
+    if (parsed && Array.isArray(parsed.entries)) {
+      daylogEntries = parsed.entries
+        .filter((e) => e && typeof e.text === "string")
+        .map((e) => ({
+          id: e.id || e.ts || Date.now(),
+          text: e.text.trim(),
+          ts: typeof e.ts === "number" ? e.ts : Date.now()
+        }))
+        .filter((e) => e.text);
+    } else if (parsed && typeof parsed.text === "string") {
+      // Legacy-Format in ein neues Array-Format überführen
+      const ts = typeof parsed.ts === "number" ? parsed.ts : Date.now();
+      daylogEntries = [
+        {
+          id: ts,
+          text: parsed.text.trim(),
+          ts
+        }
+      ];
     }
   } catch (err) {
     console.warn("[Family Spots] Konnte Mein-Tag nicht laden:", err);
   }
+
+  updateDaylogUI();
 }
 
+/**
+ * Speichert einen neuen „Mein Tag“-Eintrag.
+ * Jeder Klick auf Speichern erzeugt einen zusätzlichen Moment in der Liste.
+ */
 function handleDaylogSave() {
   if (!FEATURES.daylog) return;
   if (!daylogTextEl) return;
+
   const text = daylogTextEl.value.trim();
   if (!text) return;
 
-  const payload = {
+  const now = Date.now();
+  const entry = {
+    id: now,
     text,
-    ts: Date.now()
+    ts: now
   };
 
+  daylogEntries.push(entry);
+
   try {
+    const payload = {
+      entries: daylogEntries
+    };
     localStorage.setItem(DAYLOG_STORAGE_KEY, JSON.stringify(payload));
   } catch (err) {
     console.warn("[Family Spots] Konnte Mein-Tag nicht speichern:", err);
   }
 
+  daylogTextEl.value = "";
+
   showToast("daylog_saved");
   if (tilla && typeof tilla.onDaylogSaved === "function") {
     tilla.onDaylogSaved();
   }
+
+  updateDaylogUI();
+}
+
+/**
+ * Löscht alle „Mein Tag“-Einträge und leert UI + Storage.
+ */
+function handleDaylogClear() {
+  if (!FEATURES.daylog) return;
+
+  daylogEntries = [];
+  try {
+    localStorage.removeItem(DAYLOG_STORAGE_KEY);
+  } catch (err) {
+    console.warn("[Family Spots] Konnte Mein-Tag nicht löschen:", err);
+  }
+
+  updateDaylogUI();
+
+  const msg =
+    currentLang === LANG_EN
+      ? "Entry deleted."
+      : currentLang === LANG_DA
+      ? "Notat slettet."
+      : "Eintrag gelöscht.";
+  showToast(msg);
 }
 
 // ------------------------------------------------------
@@ -2422,6 +2609,9 @@ async function init() {
 
     daylogTextEl = document.getElementById("daylog-text");
     daylogSaveEl = document.getElementById("daylog-save");
+    daylogLastSavedEl = document.getElementById("daylog-last-saved");
+    daylogClearEl = document.getElementById("daylog-clear");
+    daylogListEl = document.getElementById("daylog-list");
 
     toastEl = document.getElementById("toast");
 
@@ -2721,6 +2911,10 @@ async function init() {
 
     if (FEATURES.daylog && daylogSaveEl) {
       daylogSaveEl.addEventListener("click", handleDaylogSave);
+    }
+
+    if (FEATURES.daylog && daylogClearEl) {
+      daylogClearEl.addEventListener("click", handleDaylogClear);
     }
 
     if (FEATURES.compass && compassApplyBtnEl) {
