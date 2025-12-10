@@ -164,7 +164,7 @@ export const FEATURES = Object.freeze({
   favorites: true,
   daylog: true,
   playIdeas: true,
-  compass: true
+  compass: false
 });
 
 // ------------------------------------------------------
@@ -990,7 +990,7 @@ export const HEADER_TAGLINE_TEXT = {
   da: "I dag er der tid til familien."
 };
 
-// Onboarding-Hint (Kompass / Plus / Mein Tag)
+// Onboarding-Hint (Spots / Plus / Mein Tag)
 export const COMPASS_PLUS_HINT_KEY = "fs_hint_compass_plus_v1";
 
 // ------------------------------------------------------
