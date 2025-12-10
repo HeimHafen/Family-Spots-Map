@@ -253,10 +253,11 @@ export const CATEGORY_GROUPS = {
     "waldbaden-ort",
     "natur-aussichtspunkt"
   ],
-  // ➕ NEU: ABF-Messe-Gruppe
-  "ABF Messe": [
-    "abf_exhibitor",     // einzelne Aussteller-Stände
-    "abf_family_area"    // Familien-/Kinderbereiche, Bühnen etc.
+  // ➕ NEU: Messe- und Event-Kategorien (für ABF etc.)
+  "Messen & Events": [
+    "messe-halle",
+    "messe-aussteller",
+    "messe-servicepunkt"
   ]
 };
 
