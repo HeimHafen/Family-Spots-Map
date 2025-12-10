@@ -325,14 +325,6 @@ textarea.input:focus-visible,
   margin-top: 14px;
 }
 
-/* gleicher Abstand oberhalb der Karte wie unterhalb,
-   wenn die Karte direkt auf die Sidebar (mit Spots) folgt */
-@media (max-width: 899px) {
-  #view-map > .sidebar + .map-section {
-    margin-top: 14px;
-  }
-}
-
 /* plus-section ↔ daylog-section explizit ebenfalls 14px */
 #plus-section + #daylog-section {
   margin-top: 14px;
@@ -975,7 +967,7 @@ select.input:focus {
 /* Spot-Liste */
 
 .sidebar-section--grow {
-  flex: 1 1.auto;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
 }
@@ -993,6 +985,11 @@ select.input:focus {
   max-height: 320px;
   overflow-y: auto;
   padding-right: 4px;
+}
+
+/* gleicher Abstand zwischen Spots und Karte wie unter der Karte */
+.sidebar-section--grow + .map-section {
+  margin-top: 14px;
 }
 
 /* Empty-State für leere Filterergebnisse */
@@ -1710,11 +1707,11 @@ hr {
 
 /* Liste für 1., 2., 3. – sauber untereinander mit gleichen Innenabständen */
 .fsm-onboarding-hint__list {
-  margin: 0;               /* keine Zusatzabstände nach oben/unten – Padding der Karte sorgt für Gleichheit */
-  padding-left: 1.25rem;   /* Einzug für Nummerierung */
+  margin: 0;
+  padding-left: 1.25rem;
   font-size: 14px;
   line-height: 1.45;
-  list-style-type: decimal; /* 1. 2. 3. – auch falls ein <ul> verwendet wird */
+  list-style-type: decimal;
 }
 
 .fsm-onboarding-hint__list li {
@@ -1725,37 +1722,10 @@ hr {
   margin-bottom: 0;
 }
 
+/* Close-Button beim Hinweis komplett ausblenden */
 .fsm-onboarding-hint__close,
 .fsm-onboarding-hint-close {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  border: none;
-  padding: 2px 6px;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--text-soft);
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.fsm-onboarding-hint__close:hover,
-.fsm-onboarding-hint-close:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="dark"] .fsm-onboarding-hint__close:hover,
-[data-theme="dark"] .fsm-onboarding-hint-close:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.fsm-onboarding-hint__close:focus-visible,
-.fsm-onboarding-hint-close:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 2px #ffffff,
-    0 0 0 4px rgba(255, 171, 64, 0.85);
+  display: none;
 }
 
 /* Wenn der Hinweis per JS versteckt wird */
