@@ -372,6 +372,59 @@
       <section id="view-map" class="view view--active" aria-label="Karte">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar" aria-labelledby="spots-title">
+          <!-- Tilla-Begleiterin -->
+          <section
+            id="tilla-section"
+            class="sidebar-section tilla-sidebar-section"
+            aria-labelledby="tilla-title"
+          >
+            <header class="sidebar-section-header">
+              <h2
+                class="sidebar-section-title"
+                id="tilla-title"
+                data-i18n-de="Familien-Begleiterin Tilla"
+                data-i18n-en="Family companion Tilla"
+                data-i18n-da="Familieledsageren Tilla"
+              >
+                Familien-Begleiterin Tilla
+              </h2>
+            </header>
+            <div class="tilla-sidebar-card">
+              <div class="tilla-sidebar-avatar">
+                <img
+                  src="assets/tilla/tilla-hero.png"
+                  alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
+                  loading="lazy"
+                  decoding="async"
+                  width="512"
+                  height="512"
+                />
+              </div>
+              <div class="tilla-sidebar-text">
+                <p
+                  id="tilla-sidebar-text"
+                  data-i18n-de="Alltag darf auch magisch sein. Lass uns gemeinsam kleine Wunder in eurer Nähe entdecken."
+                  data-i18n-en="Everyday life can be a little magical. Let’s discover small wonders near you together."
+                  data-i18n-da="Hverdagen må også gerne være magisk. Lad os sammen opdage små mirakler i nærheden af jer."
+                >
+                  Alltag darf auch magisch sein. Lass uns gemeinsam kleine Wunder in eurer Nähe entdecken.
+                </p>
+                <div class="tilla-sidebar-actions">
+                  <button id="btn-play-idea" type="button" class="btn btn-small btn-play-idea">
+                    <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
+                    <span
+                      data-i18n-de="Spielideen für unterwegs"
+                      data-i18n-en="Play ideas on the go"
+                      data-i18n-da="Legidéer til turen"
+                    >
+                      Spielideen für unterwegs
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <!-- Kompakter Filter -->
           <section class="sidebar-section" id="filter-section" aria-labelledby="filter-title">
             <header class="sidebar-section-header">
@@ -662,60 +715,6 @@
               </button>
             </header>
             <div id="spot-list" class="spot-list"><!-- Karten via JS --></div>
-          </section>
-
-          <!-- Tilla-Begleiterin -->
-          <section
-            id="tilla-section"
-            class="sidebar-section tilla-sidebar-section"
-            aria-labelledby="tilla-title"
-          >
-            <header class="sidebar-section-header">
-              <h2
-                class="sidebar-section-title"
-                id="tilla-title"
-                data-i18n-de="Familien-Begleiterin Tilla"
-                data-i18n-en="Family companion Tilla"
-                data-i18n-da="Familieledsageren Tilla"
-              >
-                Familien-Begleiterin Tilla
-              </h2>
-            </header>
-            <div class="tilla-sidebar-card">
-              <div class="tilla-sidebar-avatar">
-                <img
-                  src="assets/tilla/tilla-hero.png"
-                  alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
-                  loading="lazy"
-                  decoding="async"
-                  width="512"
-                  height="512"
-                />
-              </div>
-              <div class="tilla-sidebar-text">
-                <p
-                  id="tilla-sidebar-text"
-                  data-i18n-de="Ich bin Tilla, eure kleine Schildkröte. Heute zeige ich euch die familienfreundlichen Spots auf der ABF 2026 – von Spielbereichen über Aktionen bis hin zu ruhigeren Ecken zum Durchatmen."
-                  data-i18n-en="I’m Tilla, your little turtle companion. Today I’ll guide you to the family-friendly spots at ABF 2026 – from play areas and kids activities to calmer corners for a short break."
-                  data-i18n-da="Jeg er Tilla, jeres lille skildpadde. I dag viser jeg jer de familievenlige spots på ABF 2026 – fra legeområder og aktiviteter til roligere hjørner, hvor I kan trække vejret."
-                >
-                  Ich bin Tilla, eure kleine Schildkröte. Heute zeige ich euch die familienfreundlichen Spots auf der
-                  ABF 2026 – von Spielbereichen über Aktionen bis hin zu ruhigeren Ecken zum Durchatmen.
-                </p>
-                <div class="tilla-sidebar-actions">
-                  <button id="btn-play-idea" type="button" class="btn btn-small btn-play-idea">
-                    <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
-                    <span
-                      data-i18n-de="Spielideen für unterwegs"
-                      data-i18n-en="Play ideas on the go"
-                      data-i18n-da="Legidéer til turen"
-                    >
-                      Spielideen für unterwegs
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
           </section>
         </aside>
 
