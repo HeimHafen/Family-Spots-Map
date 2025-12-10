@@ -253,11 +253,10 @@ export const CATEGORY_GROUPS = {
     "waldbaden-ort",
     "natur-aussichtspunkt"
   ],
-  // ➕ NEU: Messe- und Event-Kategorien (für ABF etc.)
+  // ➕ NEU: Messe & Events (ABF)
   "Messen & Events": [
-    "messe-halle",
-    "messe-aussteller",
-    "messe-servicepunkt"
+    "abf_exhibitor",   // einzelne Aussteller-Stände
+    "abf_family_area"  // Familien-/Kinderbereiche, Bühnen etc.
   ]
 };
 
@@ -278,7 +277,7 @@ export const CATEGORY_GROUP_LABELS = {
     "Praktisches": "Praktisches",
     "Unterwegs mit WoMo & Rad": "Unterwegs mit WoMo & Rad",
     "Entspannung & Naturorte": "Entspannung & Naturorte",
-    "ABF Messe": "ABF Messe"
+    "Messen & Events": "ABF Messe"
   },
   en: {
     "Spiel & Bewegung": "Play & movement",
@@ -291,7 +290,7 @@ export const CATEGORY_GROUP_LABELS = {
     "Praktisches": "Useful on the way",
     "Unterwegs mit WoMo & Rad": "On the road (RV & bike)",
     "Entspannung & Naturorte": "Relax & nature",
-    "ABF Messe": "ABF fair"
+    "Messen & Events": "ABF fair"
   },
   da: {
     "Spiel & Bewegung": "Leg & bevægelse",
@@ -304,7 +303,7 @@ export const CATEGORY_GROUP_LABELS = {
     "Praktisches": "Praktisk på tur",
     "Unterwegs mit WoMo & Rad": "På farten (autocamper & cykel)",
     "Entspannung & Naturorte": "Afslapning & natursteder",
-    "ABF Messe": "ABF-messe"
+    "Messen & Events": "ABF-messe"
   }
 };
 
