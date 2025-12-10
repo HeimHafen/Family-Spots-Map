@@ -100,7 +100,7 @@
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/badges.css" />
 
-  <!-- Kleine UI-Feintunings: Skip-Link, Onboarding-Hinweis & Filtermodal-Header + Header-Typografie -->
+  <!-- Kleine UI-Feintunings: Skip-Link, Onboarding-Hinweis & Filtermodal-Header -->
   <style>
     /* Skip-Link: als dezente Pille, nur bei Fokus sichtbar */
     .skip-link {
@@ -173,60 +173,6 @@
     .filter-modal-close-btn {
       white-space: nowrap;
     }
-
-    /* HEADER: Titel & Claim perfekt mittig mit Flaggen links/rechts */
-
-    .app-header-main {
-      text-align: center;
-      padding: 0.75rem 1rem 1rem;
-      max-width: 44rem;
-      margin: 0 auto;
-    }
-
-    .header-title {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      margin: 0;
-      font-size: clamp(1.8rem, 1.5rem + 1.4vw, 2.5rem);
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      line-height: 1.1;
-    }
-
-    .header-title-spots {
-      text-decoration: underline;
-      text-decoration-thickness: 0.08em;
-      text-underline-offset: 0.16em;
-    }
-
-    .header-flag {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-
-    .header-tagline {
-      max-width: 36rem;
-      margin: 0.55rem auto 0;
-    }
-
-    @media (min-width: 768px) {
-      .app-header-main {
-        padding-block: 1rem 1.5rem;
-      }
-
-      .header-title {
-        font-size: clamp(2rem, 1.4rem + 1.8vw, 2.7rem);
-      }
-
-      .header-flag {
-        font-size: 1.6rem;
-      }
-    }
   </style>
 </head>
 <body>
@@ -283,73 +229,118 @@
               decoding="async"
             />
           </button>
-
-          <!-- Info-Button -->
-          <button
-            id="btn-help"
-            class="btn-icon"
-            type="button"
-            aria-label="Über Family Spots Map"
-          >
-            <span aria-hidden="true">ℹ️</span>
-          </button>
         </div>
+
         <div class="app-header-right">
-          <!-- Skip-Button zur Spot-Liste -->
-          <span
-            class="sr-only"
-            id="skip-to-spots-label"
-            data-i18n-de="Direkt zur Spot-Liste springen"
-            data-i18n-en="Skip directly to spot list"
-            data-i18n-da="Spring direkte til spotlisten"
-          >
-            Direkt zur Spot-Liste springen
-          </span>
+          <!-- Menü-Button (Hamburger) -->
           <button
-            id="btn-skip-spots"
-            class="btn-icon"
+            id="btn-main-menu"
+            class="btn-icon app-menu-toggle"
             type="button"
-            aria-labelledby="skip-to-spots-label"
-            onclick="document.getElementById('spots-title').scrollIntoView({behavior: 'smooth'});"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="app-menu"
           >
-            <span aria-hidden="true">🗺️</span>
+            <span aria-hidden="true">☰</span>
+            <span
+              class="sr-only"
+              data-i18n-de="Menü öffnen"
+              data-i18n-en="Open menu"
+              data-i18n-da="Åbn menu"
+            >
+              Menü öffnen
+            </span>
           </button>
 
-          <span
-            class="sr-only"
-            id="theme-toggle-label"
-            data-i18n-de="Designmodus wechseln"
-            data-i18n-en="Switch color theme"
-            data-i18n-da="Skift design-tilstand"
+          <!-- Dropdown-Menü -->
+          <div
+            id="app-menu"
+            class="app-menu"
+            role="menu"
+            aria-label="Hauptmenü"
+            hidden
           >
-            Designmodus wechseln
-          </span>
-          <button
-            id="theme-toggle"
-            class="btn-icon"
-            type="button"
-            aria-labelledby="theme-toggle-label"
-          >
-            <span aria-hidden="true">🌓</span>
-          </button>
+            <div class="app-menu-inner">
+              <!-- Über Family Spots Map -->
+              <button
+                id="btn-help"
+                class="app-menu-item"
+                type="button"
+                role="menuitem"
+              >
+                <span class="app-menu-item-icon" aria-hidden="true">ℹ️</span>
+                <span
+                  class="app-menu-item-label"
+                  data-i18n-de="Über Family Spots Map"
+                  data-i18n-en="About Family Spots Map"
+                  data-i18n-da="Om Family Spots Map"
+                >
+                  Über Family Spots Map
+                </span>
+              </button>
 
-          <span
-            class="sr-only"
-            id="btn-locate-label"
-            data-i18n-de="Eigenen Standort auf der Karte anzeigen"
-            data-i18n-en="Center map on your location"
-            data-i18n-da="Vis din egen position på kortet"
-          >
-            Eigenen Standort auf der Karte anzeigen
-          </span>
-          <button
-            id="btn-locate"
-            class="btn-icon"
-            type="button"
-            aria-labelledby="btn-locate-label"
-          >
-            <span aria-hidden="true">📍</span>
-          </button>
+              <!-- Zur Spot-Liste springen -->
+              <button
+                id="btn-skip-spots"
+                class="app-menu-item"
+                type="button"
+                role="menuitem"
+                onclick="document.getElementById('spots-title').scrollIntoView({behavior: 'smooth'});"
+                aria-labelledby="skip-to-spots-label"
+              >
+                <span class="app-menu-item-icon" aria-hidden="true">🗺️</span>
+                <span
+                  id="skip-to-spots-label"
+                  class="app-menu-item-label"
+                  data-i18n-de="Zur Spot-Liste springen"
+                  data-i18n-en="Go to spot list"
+                  data-i18n-da="Gå til spotlisten"
+                >
+                  Zur Spot-Liste springen
+                </span>
+              </button>
+
+              <!-- Designmodus wechseln -->
+              <button
+                id="theme-toggle"
+                class="app-menu-item"
+                type="button"
+                role="menuitem"
+                aria-labelledby="theme-toggle-label"
+              >
+                <span class="app-menu-item-icon" aria-hidden="true">🌓</span>
+                <span
+                  id="theme-toggle-label"
+                  class="app-menu-item-label"
+                  data-i18n-de="Designmodus wechseln"
+                  data-i18n-en="Switch color theme"
+                  data-i18n-da="Skift design-tilstand"
+                >
+                  Designmodus wechseln
+                </span>
+              </button>
+
+              <!-- Eigenen Standort anzeigen -->
+              <button
+                id="btn-locate"
+                class="app-menu-item"
+                type="button"
+                role="menuitem"
+                aria-labelledby="btn-locate-label"
+              >
+                <span class="app-menu-item-icon" aria-hidden="true">📍</span>
+                <span
+                  id="btn-locate-label"
+                  class="app-menu-item-label"
+                  data-i18n-de="Eigenen Standort auf der Karte anzeigen"
+                  data-i18n-en="Center map on your location"
+                  data-i18n-da="Vis din egen position på kortet"
+                >
+                  Eigenen Standort auf der Karte anzeigen
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </nav>
 
@@ -1117,7 +1108,7 @@
         <!-- Dansk -->
         <article
           id="page-about-da"
-          class="page page-about hidden"
+          class="page.page-about hidden"
           lang="da"
           aria-hidden="true"
         >
@@ -1785,5 +1776,61 @@
 
   <!-- App (ES-Modul) -->
   <script type="module" src="./js/app.js"></script>
+
+  <!-- Menü-Logik: Öffnen/Schließen des Header-Menüs -->
+  <script>
+    (function () {
+      const toggleBtn = document.getElementById('btn-main-menu');
+      const menu = document.getElementById('app-menu');
+
+      if (!toggleBtn || !menu) return;
+
+      function openMenu() {
+        toggleBtn.setAttribute('aria-expanded', 'true');
+        menu.removeAttribute('hidden');
+      }
+
+      function closeMenu() {
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('hidden', '');
+      }
+
+      function isOpen() {
+        return toggleBtn.getAttribute('aria-expanded') === 'true';
+      }
+
+      toggleBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
+        if (isOpen()) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      });
+
+      // Klick außerhalb schließt das Menü
+      document.addEventListener('click', function (event) {
+        if (!isOpen()) return;
+        if (!menu.contains(event.target) && event.target !== toggleBtn) {
+          closeMenu();
+        }
+      });
+
+      // ESC schließt das Menü
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && isOpen()) {
+          closeMenu();
+          toggleBtn.focus();
+        }
+      });
+
+      // Klick auf Menüeintrag schließt Menü wieder
+      menu.addEventListener('click', function (event) {
+        const button = event.target.closest('button');
+        if (!button) return;
+        closeMenu();
+      });
+    })();
+  </script>
 </body>
 </html>
