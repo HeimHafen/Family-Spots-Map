@@ -19,6 +19,9 @@ import {
 
 const PARTNERS_URL = "data/partners.json";
 
+// damit der Import nicht als "unused" gewertet wird (z. B. Bundler)
+void SUBSCRIPTIONS;
+
 // ---------------------------------------
 // Typen (JSDoc – nur für Tooling/Lesbarkeit)
 // ---------------------------------------
@@ -26,9 +29,9 @@ const PARTNERS_URL = "data/partners.json";
 /**
  * @typedef {Object} NormalizedPlusStatus
  * @property {boolean} active          - Ist Plus aktuell aktiv (unter Berücksichtigung Ablauf)?
- * @property {string|null} plan        - z. B. "plus" oder "family_plus"
+ * @property {string|null} plan        - z. B. "family_plus"
  * @property {string|null} validUntil  - ISO-String (Ende der Laufzeit)
- * @property {string[]|null} addons    - optionale Add-ons (IDs, z. B. ["addon_rv"])
+ * @property {string[]|null} addons    - optionale Add-ons (IDs, z. B. ["addon_rv", "addon_abf"])
  * @property {string|null} partner     - z. B. "Campingplatz XY"
  * @property {string|null} source      - z. B. "partner", "store", "dev"
  */
@@ -36,14 +39,14 @@ const PARTNERS_URL = "data/partners.json";
 /**
  * @typedef {Object} PartnerCodeEntry
  * @property {string} code
- * @property {number} [days]
- * @property {string} [plan]
+ * @property {number} [days]          - Laufzeit in Tagen (Alternative zu validUntil)
+ * @property {string} [plan]          - z. B. "family_plus" – falls leer, wird auf Standard gesetzt
  * @property {string} [partner]
  * @property {string} [source]
  * @property {boolean} [enabled]
- * @property {string[]} [addons]
- * @property {string} [addonId]
- * @property {string} [validUntil]
+ * @property {string[]} [addons]      - z. B. ["addon_rv", "addon_abf"]
+ * @property {string} [addonId]       - Single-Add-on-ID, z. B. "addon_abf"
+ * @property {string} [validUntil]    - ISO-String (falls feste Laufzeit)
  */
 
 /**
@@ -135,6 +138,23 @@ function normalizeAddons(raw, fallbackRaw) {
 }
 
 /**
+ * Filtert Add-ons auf bekannte IDs aus config.js (ADDONS),
+ * um Tippfehler oder veraltete Partner-Codes abzufangen.
+ *
+ * @param {any} raw
+ * @param {any} [fallbackRaw]
+ * @returns {string[]|null}
+ */
+function normalizeAndFilterAddons(raw, fallbackRaw) {
+  const list = normalizeAddons(raw, fallbackRaw);
+  if (!list || !ADDONS) return list;
+
+  const knownIds = new Set(Object.keys(ADDONS));
+  const filtered = list.filter((id) => knownIds.has(id));
+  return filtered.length ? filtered : null;
+}
+
+/**
  * Prüft, ob ein gespeicherter Status im Wesentlichen "leer" ist.
  * @param {any} raw
  * @returns {boolean}
@@ -200,7 +220,7 @@ export function getPlusStatus() {
   let active = !!stored.active;
 
   // Add-ons optional unterstützen (alter + neuer Storage-Stil)
-  const addons = normalizeAddons(stored.addons, stored.addonId);
+  const addons = normalizeAndFilterAddons(stored.addons, stored.addonId);
 
   // Ablauf prüfen – ein abgelaufener Code soll nicht mehr als aktiv gelten
   if (validUntilIso) {
@@ -213,7 +233,8 @@ export function getPlusStatus() {
   /** @type {NormalizedPlusStatus} */
   const normalized = {
     active,
-    plan: stored.plan || "plus",
+    // Fallback-Plan auf das neue Abo in config.js
+    plan: stored.plan || "family_plus",
     validUntil: validUntilIso,
     addons,
     partner: stored.partner || null,
@@ -252,6 +273,44 @@ export function isPlusActive() {
 export function isPlusCategory(slug) {
   if (!slug) return false;
   return PLUS_CATEGORIES.has(String(slug));
+}
+
+/**
+ * Prüft, ob ein bestimmtes Add-on beim aktuellen Nutzer aktiv ist,
+ * z. B. "addon_abf" für dein Messe-Add-on.
+ *
+ * @param {string} addonId
+ * @param {NormalizedPlusStatus} [status]
+ * @returns {boolean}
+ */
+export function hasAddon(addonId, status = getPlusStatus()) {
+  if (!addonId) return false;
+  const s = status || getPlusStatus();
+  if (!s.active || !Array.isArray(s.addons)) return false;
+  return s.addons.includes(addonId);
+}
+
+/**
+ * Prüft, ob für eine bestimmte Kategorie das zugehörige Add-on aktiv ist.
+ * Nutzt CATEGORY_ACCESS (level === "addon" & addonId).
+ *
+ * @param {string} slug
+ * @param {NormalizedPlusStatus} [status]
+ * @returns {boolean}
+ */
+export function hasAddonForCategory(slug, status = getPlusStatus()) {
+  if (
+    !slug ||
+    !CATEGORY_ACCESS ||
+    !CATEGORY_ACCESS.perCategory ||
+    !CATEGORY_ACCESS.perCategory[slug]
+  ) {
+    return false;
+  }
+
+  const rule = CATEGORY_ACCESS.perCategory[slug];
+  if (!rule || rule.level !== "addon" || !rule.addonId) return false;
+  return hasAddon(rule.addonId, status);
 }
 
 /**
@@ -325,12 +384,12 @@ export function formatPlusStatus(status = getPlusStatus()) {
  *     {
  *       "code": "TESTPLUS",
  *       "days": 365,
- *       "plan": "plus",
+ *       "plan": "family_plus",
  *       "partner": "Dev",
  *       "source": "partner",
- *       "addons": ["addon_rv", "addon_water"], // optional
- *       "validUntil": "2026-12-31T23:59:59.000Z", // optional
- *       "enabled": true                           // optional
+ *       "addons": ["addon_rv", "addon_water", "addon_abf"], // optional
+ *       "validUntil": "2026-12-31T23:59:59.000Z",           // optional
+ *       "enabled": true                                     // optional
  *     }
  *   ]
  * }
@@ -380,6 +439,12 @@ async function loadPartnerCodes() {
  *  - "not_found"    → Code unbekannt oder deaktiviert
  *  - "invalid_days" → Weder gültiges validUntil noch gültige days
  *
+ * Typische Beispiele:
+ *  - Voller Plus-Zeitraum:
+ *      { code: "ABF2025", days: 14, plan: "family_plus" }
+ *  - Nur Messe-Add-on (ABF):
+ *      { code: "ABFHALLE25", days: 7, addons: ["addon_abf"] }
+ *
  * @param {string} rawCode
  * @returns {Promise<PartnerCodeResult>}
  */
@@ -426,10 +491,17 @@ export async function redeemPartnerCode(rawCode) {
 
   const validUntilIso = validUntilDate.toISOString();
 
+  // optionale Add-ons aus dem Code übernehmen (inkl. Filterung auf bekannte IDs)
+  const normalizedAddons = normalizeAndFilterAddons(
+    entry.addons,
+    entry.addonId
+  );
+
   // Im Storage-Format speichern
   const statusForStorage = {
     code,
-    plan: entry.plan || "plus",
+    // Fallback-Plan an das Abo aus config.js anlehnen
+    plan: entry.plan || "family_plus",
     partner: entry.partner || null,
     source: entry.source || "partner",
     activatedAt: new Date().toISOString(),
@@ -437,17 +509,9 @@ export async function redeemPartnerCode(rawCode) {
     active: true
   };
 
-  // optionale Add-ons aus dem Code übernehmen
-  const normalizedAddons = normalizeAddons(entry.addons, entry.addonId);
   if (normalizedAddons) {
     statusForStorage.addons = normalizedAddons;
   }
-
-  // (Optional) Hier könnten wir zukünftig noch prüfen,
-  // ob plan/addons zu SUBSCRIPTIONS/ADDONS passen.
-  // Aktuell werden alle gültigen Codes akzeptiert, egal ob Config-Eintrag existiert.
-  void SUBSCRIPTIONS;
-  void ADDONS;
 
   // in localStorage ablegen
   savePlusStatusToStorage(statusForStorage);
