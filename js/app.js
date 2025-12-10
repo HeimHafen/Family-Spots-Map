@@ -26,7 +26,6 @@ import {
   CATEGORY_LABELS_DE,
   CATEGORY_LABELS_EN,
   HEADER_TAGLINE_TEXT,
-  COMPASS_PLUS_HINT_KEY,
   FILTERS,
   CATEGORY_ACCESS,
   CATEGORY_LABELS_DA
@@ -318,14 +317,6 @@ let daylogClearEl;
 let daylogListEl;
 let toastEl;
 
-// Kompass
-let compassSectionEl;
-let compassLabelEl;
-let compassHelperEl;
-let compassApplyLabelEl;
-let compassApplyBtnEl;
-let btnToggleCompassEl;
-
 // Tilla
 let tilla = null;
 
@@ -337,9 +328,6 @@ let filterBodyEls = [];
 
 // Fokus-Merkung für Detail-Panel
 let lastSpotTriggerEl = null;
-
-// Onboarding-Hint (Kompass / Plus / Mein Tag)
-let compassPlusHintEl = null;
 
 // Filtermodal
 let btnOpenFilterModalEl;
@@ -609,182 +597,6 @@ function updatePlusStatusText(status) {
   plusStatusTextEl.textContent = formatPlusStatus(s);
 }
 
-// ------------------------------------------------------
-// Onboarding-Hint (Kompass / Plus / Spots)
-// ------------------------------------------------------
-
-// Gemeinsame Textquelle für Titel + Schritte
-function getCompassPlusHintParts(lang = currentLang) {
-  if (lang === LANG_EN) {
-    return {
-      title: "How to find today’s spot",
-      steps: [
-        "Share your location or zoom into your region",
-        "Pick a mood",
-        "Tap a spot – off you go."
-      ]
-    };
-  }
-  if (lang === LANG_DA) {
-    return {
-      title: "Sådan finder I dagens spot",
-      steps: [
-        "Del jeres placering eller zoom ind på jeres område",
-        "Vælg stemning",
-        "Tryk på et spot – så er I i gang."
-      ]
-    };
-  }
-  // Standard: Deutsch
-  return {
-    title: "So holt ihr euch euren Spot für heute",
-    steps: [
-      "Standort freigeben oder in eure Region zoomen",
-      "Stimmung wählen",
-      "Auf einen Spot tippen – los geht’s."
-    ]
-  };
-}
-
-// Text-Helper im Einzeilen-Format (wird sonst nicht angezeigt, bleibt aber verfügbar)
-function getCompassPlusHintText(lang = currentLang) {
-  const { title, steps } = getCompassPlusHintParts(lang);
-  return `${title}: ${steps.join(" · ")}`;
-}
-
-function hasSeenCompassPlusHint() {
-  try {
-    return localStorage.getItem(COMPASS_PLUS_HINT_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-
-function markCompassPlusHintSeenAndRemove() {
-  try {
-    localStorage.setItem(COMPASS_PLUS_HINT_KEY, "1");
-  } catch {
-    // ignore
-  }
-  if (compassPlusHintEl && compassPlusHintEl.parentNode) {
-    compassPlusHintEl.parentNode.removeChild(compassPlusHintEl);
-  }
-  compassPlusHintEl = null;
-}
-
-/**
- * Hinweis einblenden (wenn noch nicht gesehen) und
- * automatisch nach kurzer Zeit bzw. erster Interaktion ausblenden.
- * Kein „X“-Button mehr.
- */
-function ensureCompassPlusHint() {
-  if (!sidebarEl) return;
-  if (hasSeenCompassPlusHint()) return;
-  if (!plusSectionEl && !daylogSectionEl && !compassSectionEl) return;
-
-  const { title, steps } = getCompassPlusHintParts();
-
-  // Alte Close-Buttons aus evtl. vorhandenen alten Markups entfernen
-  document.querySelectorAll(".fsm-onboarding-hint__close").forEach((btn) => {
-    if (btn.parentNode) btn.parentNode.removeChild(btn);
-  });
-
-  // Vorhandenen Wrapper wiederverwenden, falls er schon existiert
-  if (!compassPlusHintEl) {
-    compassPlusHintEl = document.getElementById("compass-plus-hint") || null;
-  }
-
-  // Falls noch kein Wrapper existiert → neu erzeugen (ohne X)
-  if (!compassPlusHintEl) {
-    const wrapper = document.createElement("div");
-    wrapper.id = "compass-plus-hint";
-    wrapper.className = "fsm-onboarding-hint";
-
-    const titleEl = document.createElement("p");
-    titleEl.className = "fsm-onboarding-hint__title";
-    titleEl.textContent = title;
-
-    const listEl = document.createElement("ol");
-    listEl.className = "fsm-onboarding-hint__list";
-    steps.forEach((stepText) => {
-      const li = document.createElement("li");
-      li.textContent = stepText;
-      listEl.appendChild(li);
-    });
-
-    wrapper.appendChild(titleEl);
-    wrapper.appendChild(listEl);
-
-    // Zwischen Filter-Section und Spots-Section platzieren
-    let anchor = null;
-    if (spotsSectionEl && spotsSectionEl.parentNode === sidebarEl) {
-      anchor = spotsSectionEl;
-    } else if (plusSectionEl && plusSectionEl.parentNode === sidebarEl) {
-      anchor = plusSectionEl;
-    } else if (daylogSectionEl && daylogSectionEl.parentNode === sidebarEl) {
-      anchor = daylogSectionEl;
-    } else if (compassSectionEl && compassSectionEl.parentNode === sidebarEl) {
-      anchor = compassSectionEl;
-    } else {
-      anchor = sidebarEl.firstChild;
-    }
-
-    if (anchor) {
-      sidebarEl.insertBefore(wrapper, anchor);
-    } else {
-      sidebarEl.appendChild(wrapper);
-    }
-
-    compassPlusHintEl = wrapper;
-  } else {
-    // Sprache aktualisieren
-    const titleEl = compassPlusHintEl.querySelector(
-      ".fsm-onboarding-hint__title"
-    );
-    const listEl = compassPlusHintEl.querySelector(
-      ".fsm-onboarding-hint__list"
-    );
-
-    if (titleEl) titleEl.textContent = title;
-    if (listEl) {
-      while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
-      steps.forEach((stepText) => {
-        const li = document.createElement("li");
-        li.textContent = stepText;
-        listEl.appendChild(li);
-      });
-    }
-  }
-
-  // Auto-Hide nur einmal anhängen
-  if (compassPlusHintEl && !compassPlusHintEl._autoHideAttached) {
-    compassPlusHintEl._autoHideAttached = true;
-
-    const autoHideOnce = () => {
-      markCompassPlusHintSeenAndRemove();
-      window.removeEventListener("scroll", autoHideOnce);
-      if (map && typeof map.off === "function") {
-        map.off("moveend", autoHideOnce);
-      }
-    };
-
-    // a) erste Scroll-Interaktion
-    window.addEventListener("scroll", autoHideOnce, { passive: true });
-
-    // b) erste Kartenbewegung
-    if (map && typeof map.on === "function") {
-      map.on("moveend", autoHideOnce);
-    }
-
-    // c) Fallback: spätestens nach 15 Sekunden
-    window.setTimeout(() => {
-      if (!hasSeenCompassPlusHint()) {
-        autoHideOnce();
-      }
-    }, 15000);
-  }
-}
-
 /**
  * Setzt Sprache, aktualisiert UI & speichert in localStorage.
  */
@@ -819,19 +631,6 @@ function setLanguage(lang, { initial = false } = {}) {
 
   if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
   if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
-
-  if (FEATURES.compass && compassLabelEl) {
-    compassLabelEl.textContent = t("compass_title");
-  }
-  if (FEATURES.compass && compassHelperEl) {
-    compassHelperEl.textContent = t("compass_helper");
-  }
-  if (FEATURES.compass && compassApplyLabelEl) {
-    compassApplyLabelEl.textContent = t("compass_apply_label");
-  }
-
-  updateCompassButtonLabel();
-  updateCompassUI();
 
   const aboutDe = document.getElementById("page-about-de");
   const aboutDa = document.getElementById("page-about-da");
@@ -929,8 +728,6 @@ function setLanguage(lang, { initial = false } = {}) {
         ? "Luk"
         : "Schließen";
   });
-
-  ensureCompassPlusHint();
 
   if (!initial) {
     const headerTitle = document.querySelector(".header-title");
@@ -1571,7 +1368,6 @@ function resetAllFilters() {
     renderTagFilterChips();
   }
 
-  updateCompassUI();
   applyFiltersAndRender();
 }
 
@@ -2242,54 +2038,6 @@ function toggleFavorite(spot) {
 }
 
 // ------------------------------------------------------
-// Kompass
-// ------------------------------------------------------
-
-function updateCompassButtonLabel() {
-  if (!FEATURES.compass) return;
-  if (!btnToggleCompassEl || !compassSectionEl) return;
-  const span = btnToggleCompassEl.querySelector("span") || btnToggleCompassEl;
-  const isOpen = !!compassSectionEl.open;
-  span.textContent = isOpen ? t("btn_hide_compass") : t("btn_show_compass");
-  btnToggleCompassEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
-}
-
-function updateCompassUI() {
-  if (!compassApplyBtnEl) return;
-
-  if (!FEATURES.compass) {
-    compassApplyBtnEl.classList.add("hidden");
-    return;
-  }
-
-  const shouldShow = !!travelMode;
-  compassApplyBtnEl.classList.toggle("hidden", !shouldShow);
-}
-
-function handleCompassApply() {
-  if (!FEATURES.compass) return;
-  if (!filterRadiusEl) return;
-
-  radiusStep = travelMode === "everyday" || !travelMode ? 1 : 3;
-
-  filterRadiusEl.value = String(radiusStep);
-  updateRadiusTexts();
-  applyFiltersAndRender();
-
-  if (tilla && typeof tilla.onCompassApplied === "function") {
-    tilla.onCompassApplied({ travelMode, radiusStep });
-  }
-}
-
-function handleToggleCompass() {
-  if (!FEATURES.compass) return;
-  if (!compassSectionEl) return;
-  compassSectionEl.open = !compassSectionEl.open;
-  updateCompassButtonLabel();
-  markCompassPlusHintSeenAndRemove();
-}
-
-// ------------------------------------------------------
 // Plus & Mein Tag
 // ------------------------------------------------------
 
@@ -2737,31 +2485,11 @@ async function init() {
 
     toastEl = document.getElementById("toast");
 
-    compassSectionEl = document.getElementById("compass-section");
-    compassLabelEl = document.getElementById("compass-label");
-    compassHelperEl = document.getElementById("compass-helper");
-    compassApplyLabelEl = document.getElementById("compass-apply-label");
-    compassApplyBtnEl = document.getElementById("compass-apply");
-    btnToggleCompassEl = document.getElementById("btn-toggle-compass");
-
     skipLinkEl = document.querySelector(".skip-link");
 
     if (btnToggleFiltersEl && filterSectionEl && filterSectionEl.id) {
       btnToggleFiltersEl.setAttribute("aria-controls", filterSectionEl.id);
       btnToggleFiltersEl.setAttribute("aria-expanded", "false");
-    }
-
-    if (
-      FEATURES.compass &&
-      btnToggleCompassEl &&
-      compassSectionEl &&
-      compassSectionEl.id
-    ) {
-      btnToggleCompassEl.setAttribute("aria-controls", compassSectionEl.id);
-      btnToggleCompassEl.setAttribute(
-        "aria-expanded",
-        compassSectionEl.open ? "true" : "false"
-      );
     }
 
     const initialLang = getInitialLang();
@@ -2936,7 +2664,6 @@ async function init() {
             }
           }
 
-          updateCompassUI();
           applyFiltersAndRender();
         });
       });
@@ -2955,26 +2682,6 @@ async function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    if (FEATURES.compass && btnToggleCompassEl && compassSectionEl) {
-      const toggleCompassHandler = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        handleToggleCompass();
-      };
-
-      btnToggleCompassEl.addEventListener("click", toggleCompassHandler);
-      btnToggleCompassEl.addEventListener(
-        "keydown",
-        activateOnEnterSpace(toggleCompassHandler)
-      );
-
-      compassSectionEl.addEventListener("toggle", () => {
-        updateCompassButtonLabel();
-      });
-
-      updateCompassButtonLabel();
-    }
-
     if (plusSectionEl && btnTogglePlusEl) {
       plusSectionEl.id = plusSectionEl.id || "plus-section";
       btnTogglePlusEl.setAttribute("aria-controls", plusSectionEl.id);
@@ -2984,7 +2691,6 @@ async function init() {
         const isOpen = !plusSectionEl.open;
         plusSectionEl.open = isOpen;
         updateGenericSectionToggleLabel(btnTogglePlusEl, isOpen);
-        markCompassPlusHintSeenAndRemove();
       };
 
       btnTogglePlusEl.addEventListener("click", togglePlusHandler);
@@ -3009,7 +2715,6 @@ async function init() {
         const isOpen = !daylogSectionEl.open;
         daylogSectionEl.open = isOpen;
         updateGenericSectionToggleLabel(btnToggleDaylogEl, isOpen);
-        markCompassPlusHintSeenAndRemove();
       };
 
       btnToggleDaylogEl.addEventListener("click", toggleDaylogHandler);
@@ -3040,10 +2745,6 @@ async function init() {
 
     if (FEATURES.daylog && daylogClearEl) {
       daylogClearEl.addEventListener("click", handleDaylogClear);
-    }
-
-    if (FEATURES.compass && compassApplyBtnEl) {
-      compassApplyBtnEl.addEventListener("click", handleCompassApply);
     }
 
     if (FEATURES.playIdeas && playIdeasBtnEl) {
@@ -3139,10 +2840,6 @@ async function init() {
           section.classList.add("hidden");
         }
 
-        if (section.id === "compass-section" && btnToggleCompassEl) {
-          updateCompassButtonLabel();
-        }
-
         if (section.id === "plus-section" && btnTogglePlusEl) {
           updateGenericSectionToggleLabel(btnTogglePlusEl, false);
         }
@@ -3153,11 +2850,9 @@ async function init() {
       });
     });
 
-    updateCompassUI();
     loadPlusStateFromStorage();
     loadDaylogFromStorage();
     initLazyLoadImages();
-    ensureCompassPlusHint();
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
