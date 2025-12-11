@@ -1,8 +1,11 @@
 // js/i18n.js
 // --------------------------------------
 // Family Spots Map – i18n / Spielideen
-// (ABF 2026 nutzt dieselbe i18n-Logik;
-//  ABF-spezifische Texte liegen in data/i18n/*.json)
+// ABF 2026 Edition:
+//  - gleiche i18n-Logik wie die Basis-App
+//  - ABF-spezifische Texte in data/i18n/*.json
+//  - ABF-spezifische Spielideen optional in
+//    data/play-ideas-abf.json (Fallback: play-ideas.json)
 // --------------------------------------
 
 "use strict";
@@ -34,7 +37,7 @@ const messagesByLang = {
 };
 
 /**
- * Spielideen-Struktur (aus data/play-ideas.json):
+ * Spielideen-Struktur (aus data/play-ideas-abf.json oder data/play-ideas.json):
  * [
  *   { id: string, texts: { de?: string, en?: string, da?: string }, ... },
  *   ...
@@ -199,32 +202,46 @@ async function loadMessagesForLang(lang) {
 }
 
 /**
- * Lädt Spielideen aus data/play-ideas.json.
- * Struktur (aktuell):
- * [{ id, texts: { de, en, da }, ... }, …]
+ * Lädt Spielideen.
+ * ABF 2026:
+ *  - bevorzugt data/play-ideas-abf.json (messe-/abf-bezogen)
+ *  - Fallback auf data/play-ideas.json (generische Ideen)
  */
 async function loadPlayIdeas() {
   if (playIdeas.length) return;
 
-  try {
-    const res = await fetch("data/play-ideas.json", {
-      cache: "no-cache"
-    });
-
+  async function loadFrom(url) {
+    const res = await fetch(url, { cache: "no-cache" });
     if (!res.ok) {
-      throw new Error(`play-ideas load failed (HTTP ${res.status})`);
+      throw new Error(`play-ideas load failed (${url}, HTTP ${res.status})`);
     }
-
     const json = await res.json();
-    if (Array.isArray(json)) {
-      playIdeas = json;
-    } else {
-      console.warn("[i18n] play-ideas.json ist kein Array.");
+    if (!Array.isArray(json)) {
+      throw new Error("play-ideas file is not an array");
+    }
+    return json;
+  }
+
+  try {
+    // 1. ABF-spezifische Datei
+    playIdeas = await loadFrom("data/play-ideas-abf.json");
+    console.info("[i18n] Spielideen aus data/play-ideas-abf.json geladen.");
+  } catch (errAbf) {
+    console.warn(
+      "[i18n] Konnte ABF-Spielideen nicht laden, versuche Fallback:",
+      errAbf
+    );
+    try {
+      // 2. Fallback auf generische Datei
+      playIdeas = await loadFrom("data/play-ideas.json");
+      console.info("[i18n] Spielideen aus data/play-ideas.json geladen.");
+    } catch (errGeneric) {
+      console.error(
+        "[i18n] Fehler beim Laden der Spielideen (Fallback):",
+        errGeneric
+      );
       playIdeas = [];
     }
-  } catch (err) {
-    console.error("[i18n] Fehler beim Laden der Spielideen:", err);
-    playIdeas = [];
   }
 }
 
@@ -235,7 +252,7 @@ async function loadPlayIdeas() {
 /**
  * Initialisiert i18n:
  *  - lädt de/en/da Übersetzungen
- *  - lädt Spielideen
+ *  - lädt Spielideen (ABF-spezifische, sonst generische)
  *  - bestimmt Startsprache (lang-Param -> localStorage -> Browser -> de)
  *  - setzt <html lang="…">
  *  - aktualisiert DOM (data-i18n / data-i18n-placeholder)
