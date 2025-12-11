@@ -1,54 +1,141 @@
 /* =========================================
    base.css — Reset, Grundlegende Styles, Globals
+   Corporate Refine
    ========================================= */
 
-/* Reset & Box‑Sizing */
+/* -----------------------------------------
+   Reset & Box-Sizing
+   ----------------------------------------- */
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-html, body {
+/* Grund-HTML-Setup */
+html,
+body {
   margin: 0;
   padding: 0;
   min-height: 100%;
 }
 
-/* Grundlegende Typografie & Body Styling */
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-               "Segoe UI", sans-serif;
-  line-height: 1.4;
-  -webkit-font-smoothing: antialiased;
-  transition: background 0.4s ease, color 0.3s ease;
-  background: var(--app-bg);
-  color: var(--text-color, #452213);
-  /* Hintergrund-Farbe & Text-Farbe kommen aus theme.css */
+/* Etwas stabilere Basis für Textskalierung */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-size: 16px;
 }
 
-/* Form Controls erben gleiche Schriftart */
+/* -----------------------------------------
+   Grundlegende Typografie & Body Styling
+   ----------------------------------------- */
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+  font-size: 0.9375rem; /* ~15px – gut lesbar, aber nicht zu groß */
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: var(--app-bg);
+  color: var(--text-color, #452213);
+  transition:
+    background 0.4s ease,
+    color 0.3s ease;
+}
+
+/* Überschriften – klare, moderne Hierarchie */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 0.35em;
+  color: var(--text-strong, #2f160b);
+}
+
+h1 {
+  font-size: clamp(2rem, 4.4vw, 2.6rem);
+  letter-spacing: 0.02em;
+}
+
+h2 {
+  font-size: clamp(1.4rem, 2.6vw, 1.6rem);
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+/* Grund-Textabstände für Fließtext (Detail-Overrides z. B. in .page-about) */
+p {
+  margin: 0 0 0.75em;
+}
+
+/* Listen etwas kompakter, aber klar strukturiert */
+ul,
+ol {
+  margin: 0 0 0.75em;
+  padding-left: 1.25rem;
+}
+
+/* Bilder: nie aus dem Layout „ausbrechen“ lassen */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* -----------------------------------------
+   Form Controls
+   ----------------------------------------- */
+
+/* Form Controls erben die Schrift-Eigenschaften des Body */
 button,
 input,
 textarea,
 select {
   font-family: inherit;
+  font-size: 100%;
 }
 
-/* Links: keine Unterstreichung, Farbe vererben */
+/* -----------------------------------------
+   Links
+   ----------------------------------------- */
+
+/* Links: neutral im UI, aber im Fließtext trotzdem erkennbar */
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* Grund-Layout */
+a:hover,
+a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+/* -----------------------------------------
+   Grund-Layout
+   ----------------------------------------- */
+
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Fokus-Outline (global, falls keine komponentenspezifische Override) */
+/* -----------------------------------------
+   Fokus-Outline (global)
+   Komponenten können das bei Bedarf überschreiben
+   ----------------------------------------- */
+
 :focus-visible {
   outline: 2px solid #ffb54f;
   outline-offset: 2px;
