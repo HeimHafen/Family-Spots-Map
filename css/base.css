@@ -91,14 +91,20 @@ h3,
 h4 {
   margin: 0 0 0.75rem;
   font-weight: 700;
-  color: var(--text-strong, #2f160b);
   line-height: 1.25;
 }
 
 /* H1 wird in der Regel per .header-title überschrieben,
-   hier nur ein sauberer Default */
+   deshalb keine feste Farbe hier – es erbt vom Container */
 h1 {
   font-size: 1.8rem;
+}
+
+/* H2–H4 bekommen die Standard-Headline-Farbe */
+h2,
+h3,
+h4 {
+  color: var(--text-strong, #2f160b);
 }
 
 h2 {
