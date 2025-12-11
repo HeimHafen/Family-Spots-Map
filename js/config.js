@@ -114,14 +114,15 @@ export const SPOTS_CACHE_KEY = "fs_spots_cache_abf2026_v1";
 // ------------------------------------------------------
 
 /**
- * Aktiviert einen erzwungenen Plus-Modus für Entwicklung & Demos.
+ * Aktiviert einen erzwungenen Plus-Modus für Entwicklung, Demos
+ * und Sondereditionen ohne Kauf-Flow (z. B. ABF 2026).
  *
  * Wenn true, behandelt die App Family Spots Plus so,
  * als wäre es dauerhaft aktiv – unabhängig vom gespeicherten Status.
  *
- * WICHTIG:
- *  - In Produktion MUSS dieser Wert false sein.
- *  - Dieser Wert wird ausschließlich gelesen, niemals zur Laufzeit beschrieben.
+ * HINWEIS:
+ *  - In der allgemeinen Produktiv-App mit echter Bezahl-Logik MUSS dieser Wert false sein.
+ *  - Für die kostenlose ABF-Sonderedition kann er bewusst true sein.
  */
 export const DEV_FORCE_PLUS = true;
 
@@ -143,8 +144,12 @@ export const THEME_DARK = "dark";
 // Radius / Marker-Limit
 // ------------------------------------------------------
 
-/** 0–4 → Radius in km, Infinity = kein Limit */
-export const RADIUS_STEPS_KM = [1, 5, 15, 40, Infinity];
+/**
+ * 0–4 → Radius in km, Infinity = kein Limit
+ * ABF 2026: Messegelände ist kompakt – daher kleinere Stufen.
+ * Ca. 150 m · 300 m · 600 m · 1,2 km · kein Limit
+ */
+export const RADIUS_STEPS_KM = [0.15, 0.3, 0.6, 1.2, Infinity];
 
 /** Maximale Marker-Anzahl für gute Performance */
 export const MAX_MARKERS_RENDER = 500;
@@ -1091,9 +1096,9 @@ export const FILTERS = [
 
 /** @type {Record<LangCode, string>} */
 export const HEADER_TAGLINE_TEXT = {
-  de: "ABF 2026 · Familienkarte für das Messegelände Hannover.",
-  en: "ABF 2026 · Family map for the Hannover fairgrounds.",
-  da: "ABF 2026 · Familiekort til messeområdet i Hannover."
+  de: "Spielbereiche, Kinderprogramm & ruhige Ecken auf der ABF 2026.",
+  en: "Play areas, kids’ programme & quiet corners at ABF 2026.",
+  da: "Legeområder, børneprogram & rolige hjørner på ABF 2026."
 };
 
 // Onboarding-Hint (Spots / Plus / Mein Tag)
