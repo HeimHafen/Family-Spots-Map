@@ -327,6 +327,7 @@ textarea.input:focus-visible,
   justify-content: center;
   gap: 6px;
   text-shadow: none;
+  color: var(--header-text-color); /* überschreibt h1-Default, fix für Light-Mode */
 }
 
 .header-title:focus-visible {
@@ -1186,6 +1187,25 @@ select.input:focus {
   max-height: 320px;
   overflow-y: auto;
   padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
+}
+
+#spot-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#spot-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#spot-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.55);
+}
+
+[data-theme="dark"] #spot-list::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.7);
 }
 
 /* Empty-State für leere Filterergebnisse */
@@ -1225,18 +1245,33 @@ select.input:focus {
 /* Spot-Karten */
 
 .spot-card {
+  position: relative;
   background: var(--card-bg);
   border-radius: 16px;
   padding: 10px 11px 11px;
   margin-bottom: 8px;
   box-shadow: var(--elevation-xs);
   border: var(--border-soft);
+  cursor: pointer;
+  transition:
+    transform 0.1s ease-out,
+    box-shadow 0.14s ease-out,
+    border-color 0.14s ease-out,
+    background-color 0.14s ease-out;
+}
+
+.spot-card:hover,
+.spot-card:focus-within {
+  transform: translateY(-1px);
+  box-shadow: var(--elevation-md);
+  border-color: rgba(148, 163, 184, 0.4);
 }
 
 .spot-card-title {
   font-size: 15px;
   font-weight: 700;
   margin: 0 0 3px;
+  letter-spacing: 0.01em;
 }
 
 .spot-card-subtitle {
