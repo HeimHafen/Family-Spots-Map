@@ -12,16 +12,16 @@
       ],
       "visit_minutes": 90,
       "verified": true,
-      "poetry": "Zwischen Messehallen wird der Tag kurz zu einem kleinen Abenteuerland.",
+      "poetry": "In der Familienwelt der ABF wird der Messetag kurz zu einem kleinen Abenteuerland.",
       "tags": [
         "Indoor-Spielbereich",
         "Basteln & Mitmachaktionen",
         "familienfreundlich",
         "Messe"
       ],
-      "summary_de": "Zentraler Familienbereich der abf mit Spiel- und Mitmachangeboten für Kinder. Gut als Basis-Spot, von dem aus ihr euren Messetag mit Kindern plant.",
-      "summary_en": "Central family area of the abf fair with play and hands-on activities for children. A good base spot to plan your family day at the fair.",
-      "summary_da": "Centralt familieområde på abf-messen med lege- og aktivitetsområder for børn. Godt som udgangspunkt for jeres messedag med børn."
+      "summary_de": "Zentraler Familienbereich der ABF 2026 in Halle 25 mit Spiel- und Mitmachangeboten für Kinder. Ein guter Basis-Spot, von dem aus ihr euren Messetag mit Kindern auf dem Messegelände Hannover plant.",
+      "summary_en": "Central family area of ABF 2026 in hall 25 with play and hands-on activities for children. A good base spot to plan your family day at the Hannover fairground.",
+      "summary_da": "Centralt familieområde på ABF 2026 i hal 25 med lege- og aktivitetsområder for børn. Godt som udgangspunkt for jeres messedag med børn på messeområdet i Hannover."
     },
     {
       "id": "abf_kinderbuehne_show",
@@ -35,15 +35,15 @@
       ],
       "visit_minutes": 45,
       "verified": true,
-      "poetry": "Kurze Shows, große Augen – eine Pause mit Programm.",
+      "poetry": "Kurze Shows, große Augen – eine Familienpause mit Programm mitten auf der ABF.",
       "tags": [
         "Bühne",
         "Shows",
         "Programm für Kinder"
       ],
-      "summary_de": "Bühne mit wechselndem Kinder- und Familienprogramm. Ideal, um zwischendurch kurz anzukommen, zuzuschauen und neue Energie zu tanken.",
-      "summary_en": "Stage with changing shows and activities for children and families. Ideal for a short break to watch, sit down and recharge.",
-      "summary_da": "Scene med skiftende shows og aktiviteter for børn og familier. God til en lille pause med underholdning og ro."
+      "summary_de": "Bühne mit wechselndem Kinder- und Familienprogramm auf der ABF 2026. Ideal, um zwischendurch kurz anzukommen, zuzuschauen und neue Energie zu tanken.",
+      "summary_en": "Stage with changing shows and activities for children and families at ABF 2026. Ideal for a short break to sit down, watch and recharge.",
+      "summary_da": "Scene med skiftende shows og aktiviteter for børn og familier på ABF 2026. God til en lille pause med underholdning og ro."
     },
     {
       "id": "abf_baby_lounge",
@@ -57,16 +57,16 @@
       ],
       "visit_minutes": 20,
       "verified": true,
-      "poetry": "Ein ruhiger Hafen mitten im Messetrubel.",
+      "poetry": "Ein ruhiger Hafen mitten im Messetrubel der ABF 2026.",
       "tags": [
         "Wickeln",
         "Stillen",
         "Ruhebereich",
         "Baby"
       ],
-      "summary_de": "Ruhiger Bereich zum Stillen, Wickeln und kurz Durchatmen mit den Kleinsten. Gut ausgeschildert und nah an den Familienbereichen.",
-      "summary_en": "Quiet area for feeding, changing and taking a short break with babies. Well signposted and close to the family zones.",
-      "summary_da": "Roligt område til amning, bleskift og en lille pause med de mindste. Godt skiltet og tæt på familieområderne."
+      "summary_de": "Ruhiger Bereich zum Stillen, Wickeln und kurz Durchatmen mit den Kleinsten auf der ABF 2026. Gut ausgeschildert und nah an den Familienbereichen.",
+      "summary_en": "Quiet area for feeding, changing and taking a short break with babies at ABF 2026. Well signposted and close to the main family areas.",
+      "summary_da": "Roligt område til amning, bleskift og en lille pause med de mindste på ABF 2026. Godt skiltet og tæt på familieområderne."
     }
   ]
 }
