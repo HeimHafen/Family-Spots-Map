@@ -1,289 +1,217 @@
 // js/features/plus.js
-// --------------------------------------
-// Family Spots Plus & Add-ons – ABF 2026 Edition
-//
-// Stellt bereit:
-//  - getPlusStatus()
-//  - isPlusActive()
-//  - formatPlusStatus(status)
-//  - redeemPartnerCode(code)
-//  - isPlusCategory(slug)
-//
-// Nutzt:
-//  - SUBSCRIPTIONS, ADDONS, CATEGORY_ACCESS, DEV_FORCE_PLUS, PLUS_STORAGE_KEY
-//    aus config.js
-// --------------------------------------
+// ------------------------------------------------------
+// Family Spots / ABF 2026 – Plus & Add-ons (lokale Logik)
+// ------------------------------------------------------
 
 "use strict";
 
 import {
+  PLUS_STORAGE_KEY,
   DEV_FORCE_PLUS,
-  CATEGORY_ACCESS,
   SUBSCRIPTIONS,
   ADDONS,
-  PLUS_STORAGE_KEY
+  CATEGORY_ACCESS
 } from "../config.js";
 
 /**
- * Internes Storage-Format:
- * {
- *   active: boolean,
- *   plan: string | null,
- *   validUntil: string | null, // ISO-String
- *   addons: string[],
- *   partner: string | null,
- *   source: "partner_code" | "dev" | null,
- *   code?: string
- * }
- */
-
-/** @typedef {import("../config.js").LangCode} LangCode */
-
-/** @typedef {Object} PlusStatus
- *  @property {boolean} active
- *  @property {string|null} plan
- *  @property {string|null} validUntil
- *  @property {string[]|null} addons
- *  @property {string|null} partner
- *  @property {string|null} source
- *  @property {string|undefined} code
+ * @typedef {import("../config.js").LangCode} LangCode
  */
 
 /**
- * Partnercodes für Promotions / Messen (inkl. ABF).
- * Key: normalisierte Eingabe (Großbuchstaben, ohne Leerzeichen).
- *
- * days: Gültigkeitsdauer ab Einlösung (in Tagen)
+ * @typedef {Object} PlusStatus
+ * @property {boolean} active
+ * @property {string|null} plan            // z. B. "family_plus"
+ * @property {string[]|null} addons        // z. B. ["addon_abf"]
+ * @property {string|null} validUntil      // optionales ISO-Datum als String
+ * @property {string|null} partner         // z. B. "abf"
+ * @property {string|null} source          // z. B. "partner_code" | "dev"
  */
-const PARTNER_CODES = {
-  // ABF 2026: Family Spots Plus + ABF-Messe-Add-on
-  // Dies ist der Code, den du auf der ABF kommunizieren kannst:
-  // → ABF2026FAMILY
-  ABF2026FAMILY: {
-    planId: "family_plus",
-    addons: ["addon_abf"],
-    days: 60,
-    partner: "abf2026"
-  },
-
-  // Optionale Testcodes für dich (kannst du löschen oder anpassen):
-  WATER2026: {
-    planId: "family_plus",
-    addons: ["addon_water"],
-    days: 30,
-    partner: "water-test"
-  },
-  RV2026: {
-    planId: "family_plus",
-    addons: ["addon_rv"],
-    days: 30,
-    partner: "rv-test"
-  }
-};
 
 // ------------------------------------------------------
-// Helpers – Sprache & Datum
+// Default-Status
+// ------------------------------------------------------
+
+/** @type {PlusStatus} */
+const DEFAULT_STATUS = Object.freeze({
+  active: false,
+  plan: null,
+  addons: [],
+  validUntil: null,
+  partner: null,
+  source: null
+});
+
+// ------------------------------------------------------
+// Kleine Helfer
 // ------------------------------------------------------
 
 /**
- * Ermittelt die aktuell verwendete UI-Sprache.
- * Fällt auf "de" zurück, wenn I18N nicht verfügbar ist.
+ * Aktuelle Sprache aus globalem I18N (fallback: "de").
  * @returns {LangCode}
  */
-function getCurrentUiLang() {
+function getCurrentLang() {
   try {
     if (typeof I18N !== "undefined" && typeof I18N.getLanguage === "function") {
-      return /** @type {LangCode} */ (I18N.getLanguage());
+      const lang = I18N.getLanguage();
+      if (lang === "en" || lang === "da") return lang;
     }
   } catch {
     // ignore
   }
-  return /** @type {LangCode} */ ("de");
+  return "de";
 }
 
 /**
- * Formatiert ein Datum für die Anzeige.
- * @param {string} isoString
- * @param {LangCode} lang
+ * Status aus localStorage lesen.
+ * @returns {PlusStatus}
  */
-function formatDateForLang(isoString, lang) {
+function readStatusFromStorage() {
   try {
-    const d = new Date(isoString);
-    if (Number.isNaN(d.getTime())) return "";
-    const locale =
-      lang === "en" ? "en-GB" : lang === "da" ? "da-DK" : "de-DE";
-    const opts = { year: "numeric", month: "2-digit", day: "2-digit" };
-    return new Intl.DateTimeFormat(locale, opts).format(d);
+    if (typeof localStorage === "undefined") return DEFAULT_STATUS;
+    const raw = localStorage.getItem(PLUS_STORAGE_KEY);
+    if (!raw) return DEFAULT_STATUS;
+
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return DEFAULT_STATUS;
+
+    /** @type {PlusStatus} */
+    const status = {
+      active: !!parsed.active,
+      plan: typeof parsed.plan === "string" ? parsed.plan : null,
+      addons: Array.isArray(parsed.addons) ? parsed.addons : [],
+      validUntil: typeof parsed.validUntil === "string" ? parsed.validUntil : null,
+      partner: typeof parsed.partner === "string" ? parsed.partner : null,
+      source: typeof parsed.source === "string" ? parsed.source : null
+    };
+
+    return status;
   } catch {
-    return "";
+    return DEFAULT_STATUS;
   }
 }
 
-// ------------------------------------------------------
-// Helpers – Storage
-// ------------------------------------------------------
+/**
+ * Status in localStorage schreiben.
+ * @param {PlusStatus} status
+ */
+function writeStatusToStorage(status) {
+  try {
+    if (typeof localStorage === "undefined") return;
+    localStorage.setItem(PLUS_STORAGE_KEY, JSON.stringify(status));
+  } catch {
+    // Storage optional – bei Fehler einfach weiterlaufen
+  }
+}
 
 /**
- * Liefert einen "leeren" Status.
+ * Dev-Status, wenn DEV_FORCE_PLUS aktiv ist.
+ * Schaltet Plus + alle Add-ons frei.
  * @returns {PlusStatus}
  */
-function createEmptyStatus() {
+function createDevStatus() {
+  const allAddonIds = Object.keys(ADDONS || {});
   return {
-    active: false,
-    plan: null,
+    active: true,
+    plan: "family_plus",
+    addons: allAddonIds,
     validUntil: null,
-    addons: [],
-    partner: null,
-    source: null,
-    code: undefined
+    partner: "dev",
+    source: "dev"
   };
 }
 
-/**
- * Interner Lesezugriff auf localStorage.
- * Achtet darauf, auch alte boolesche Werte (true/false) zu unterstützen.
- * @returns {PlusStatus}
- */
-function loadStatusFromStorage() {
-  const base = createEmptyStatus();
-
-  if (typeof localStorage === "undefined") {
-    return base;
-  }
-
-  try {
-    const raw = localStorage.getItem(PLUS_STORAGE_KEY);
-    if (!raw) return base;
-
-    let parsed;
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      // Wenn es kein valides JSON war, z. B. "true"/"false"
-      if (raw === "true" || raw === "1") {
-        return {
-          ...base,
-          active: true,
-          plan: "family_plus",
-          source: "legacy"
-        };
-      }
-      return base;
-    }
-
-    if (typeof parsed === "boolean") {
-      if (parsed) {
-        return {
-          ...base,
-          active: true,
-          plan: "family_plus",
-          source: "legacy"
-        };
-      }
-      return base;
-    }
-
-    if (!parsed || typeof parsed !== "object") {
-      return base;
-    }
-
-    return {
-      active: !!parsed.active,
-      plan: typeof parsed.plan === "string" ? parsed.plan : null,
-      validUntil:
-        typeof parsed.validUntil === "string" ? parsed.validUntil : null,
-      addons: Array.isArray(parsed.addons) ? parsed.addons : [],
-      partner: typeof parsed.partner === "string" ? parsed.partner : null,
-      source: typeof parsed.source === "string" ? parsed.source : null,
-      code: typeof parsed.code === "string" ? parsed.code : undefined
-    };
-  } catch {
-    return base;
-  }
-}
-
-/**
- * Speichert Status in localStorage.
- * @param {PlusStatus} status
- */
-function saveStatusToStorage(status) {
-  if (typeof localStorage === "undefined") return;
-  try {
-    localStorage.setItem(PLUS_STORAGE_KEY, JSON.stringify(status));
-  } catch {
-    // Storage voll o. ä. => ignorieren, Plus bleibt dann nur für die Session
-  }
-}
-
 // ------------------------------------------------------
-// Public: getPlusStatus / isPlusActive
+// Public API
 // ------------------------------------------------------
 
 /**
- * Liefert den effektiven Plus-Status.
- * Berücksichtigt:
- *  - DEV_FORCE_PLUS aus config.js
- *  - abgelaufene Laufzeiten (validUntil)
- *
+ * Liefert den aktuellen Plus-Status.
+ * Berücksichtigt DEV_FORCE_PLUS.
  * @returns {PlusStatus}
  */
 export function getPlusStatus() {
-  // Dev-Override: immer alles aktiv
   if (DEV_FORCE_PLUS) {
-    return {
-      active: true,
-      plan: "family_plus",
-      validUntil: null,
-      addons: Object.keys(ADDONS),
-      partner: "dev",
-      source: "dev",
-      code: undefined
-    };
+    return createDevStatus();
   }
 
-  const stored = loadStatusFromStorage();
-  if (!stored.active) {
-    return stored;
-  }
+  const status = readStatusFromStorage();
 
-  // Prüfen, ob Abo abgelaufen ist
-  if (stored.validUntil) {
-    try {
-      const now = Date.now();
-      const until = new Date(stored.validUntil).getTime();
-      if (!Number.isNaN(until) && now > until) {
-        // Abgelaufen → deaktivieren, aber Info behalten
-        const expired = {
-          ...stored,
-          active: false
-        };
-        saveStatusToStorage(expired);
-        return expired;
-      }
-    } catch {
-      // Ignorieren, falls Datum unlesbar
+  // Optional: einfache Ablaufprüfung (falls du später ein Datum hinterlegen willst)
+  if (status.validUntil) {
+    const now = Date.now();
+    const until = Date.parse(status.validUntil);
+    if (!Number.isNaN(until) && now > until) {
+      // Abgelaufen → zurücksetzen
+      return DEFAULT_STATUS;
     }
   }
 
-  return stored;
+  return status;
 }
 
 /**
- * Convenience: Gibt true zurück, wenn Plus aktiv ist.
+ * Convenience-Flag.
+ * @returns {boolean}
  */
 export function isPlusActive() {
-  const s = getPlusStatus();
-  return !!s.active;
+  return !!getPlusStatus().active;
 }
 
-// ------------------------------------------------------
-// Public: isPlusCategory
-// ------------------------------------------------------
+/**
+ * Formatiert eine kurze Status-Zeile für die UI (Plus-Box).
+ * @param {PlusStatus} [status]
+ * @returns {string}
+ */
+export function formatPlusStatus(status) {
+  const s = status || getPlusStatus();
+  const lang = getCurrentLang();
+
+  if (!s.active) {
+    if (lang === "en") return "Plus not active";
+    if (lang === "da") return "Plus er ikke aktiv";
+    return "Plus ist nicht aktiv";
+  }
+
+  // Plan-Label
+  let planLabel = "Family Spots Plus";
+  if (s.plan && SUBSCRIPTIONS && SUBSCRIPTIONS[s.plan]) {
+    const cfg = SUBSCRIPTIONS[s.plan];
+    planLabel = cfg.label[lang] || cfg.label.de || planLabel;
+  }
+
+  // Add-on-Labels (z. B. ABF-Messe)
+  let addonPart = "";
+  if (Array.isArray(s.addons) && s.addons.length && ADDONS) {
+    const addonLabels = s.addons
+      .map((id) => {
+        const cfg = ADDONS[id];
+        if (!cfg) return null;
+        return cfg.label[lang] || cfg.label.de || null;
+      })
+      .filter(Boolean);
+
+    if (addonLabels.length) {
+      if (lang === "en") {
+        addonPart = " · Add-ons: " + addonLabels.join(", ");
+      } else if (lang === "da") {
+        addonPart = " · Add-ons: " + addonLabels.join(", ");
+      } else {
+        addonPart = " · Add-ons: " + addonLabels.join(", ");
+      }
+    }
+  }
+
+  if (lang === "en") {
+    return `${planLabel} – active${addonPart}`;
+  }
+  if (lang === "da") {
+    return `${planLabel} – aktiv${addonPart}`;
+  }
+  return `${planLabel} – aktiv${addonPart}`;
+}
 
 /**
- * Prüft, ob eine Kategorie (z. B. "abf_exhibitor") prinzipiell
- * Plus/Add-on-pflichtig ist.
- *
+ * Prüft, ob eine Kategorie eine Plus-/Add-on-Kategorie ist.
  * @param {string} slug
  * @returns {boolean}
  */
@@ -294,148 +222,66 @@ export function isPlusCategory(slug) {
   return rule.level === "subscription" || rule.level === "addon";
 }
 
-// ------------------------------------------------------
-// Public: formatPlusStatus
-// ------------------------------------------------------
-
 /**
- * Formatiert den Plus-Status für die UI (Plus-Box in der Sidebar).
+ * Partner-Code einlösen.
  *
- * Nutzt Sprache aus I18N, falls verfügbar.
- * @param {PlusStatus} status
- * @returns {string}
- */
-export function formatPlusStatus(status) {
-  const s = status || getPlusStatus();
-  const lang = getCurrentUiLang();
-
-  const hasAbf =
-    Array.isArray(s.addons) && s.addons.includes("addon_abf");
-
-  const addonLabels = [];
-  if (Array.isArray(s.addons) && s.addons.length) {
-    for (const id of s.addons) {
-      const addon = ADDONS[id];
-      if (!addon) continue;
-      const lbl = addon.label?.[lang] || addon.label?.de || id;
-      addonLabels.push(lbl);
-    }
-  }
-
-  if (!s.active) {
-    if (lang === "en") {
-      return "Enter your ABF or promo code here to unlock Family Spots Plus and the ABF fair map.";
-    }
-    if (lang === "da") {
-      return "Indtast din ABF- eller kampagnekode her for at låse Family Spots Plus og ABF-messekortet op.";
-    }
-    return "Gib hier deinen ABF- oder Promo-Code ein, um Family Spots Plus und die ABF-Messekarte freizuschalten.";
-  }
-
-  const dateStr = s.validUntil
-    ? formatDateForLang(s.validUntil, lang)
-    : "";
-
-  let base;
-  if (lang === "en") {
-    base = "Family Spots Plus is active";
-    if (dateStr) base += ` until ${dateStr}`;
-    if (addonLabels.length) {
-      base += ` · Add-ons: ${addonLabels.join(", ")}`;
-    }
-    if (hasAbf && !addonLabels.length) {
-      base += " · ABF fair add-on unlocked";
-    }
-    return base;
-  }
-
-  if (lang === "da") {
-    base = "Family Spots Plus er aktivt";
-    if (dateStr) base += ` indtil ${dateStr}`;
-    if (addonLabels.length) {
-      base += ` · Add-ons: ${addonLabels.join(", ")}`;
-    }
-    if (hasAbf && !addonLabels.length) {
-      base += " · ABF-messe-add-on låst op";
-    }
-    return base;
-  }
-
-  // Deutsch
-  base = "Family Spots Plus ist aktiv";
-  if (dateStr) base += ` bis ${dateStr}`;
-  if (addonLabels.length) {
-    base += ` · Add-ons: ${addonLabels.join(", ")}`;
-  }
-  if (hasAbf && !addonLabels.length) {
-    base += " · ABF Messe-Add-on freigeschaltet";
-  }
-  return base;
-}
-
-// ------------------------------------------------------
-// Public: redeemPartnerCode
-// ------------------------------------------------------
-
-/**
- * Löst einen Partner-/Promo-Code ein.
- *
+ * Erwartet einen String, der in der UI eingegeben wird.
  * Rückgabe:
- *  - { ok: true, status }
- *  - { ok: false, reason: "empty" | "unknown" | "invalid_days" }
+ *  - { ok: true, status } bei Erfolg
+ *  - { ok: false, reason: "empty" | "invalid_days" | "error" }
+ *
+ * Hinweis: app.js zeigt die passenden Toasts anhand von `reason` an.
  *
  * @param {string} rawCode
- * @returns {Promise<{ok: boolean, status?: PlusStatus, reason?: string}>}
+ * @returns {Promise<{ok: true, status: PlusStatus} | {ok: false, reason: string}>}
  */
 export async function redeemPartnerCode(rawCode) {
-  const code = (rawCode || "").trim();
+  const code = (rawCode || "").trim().toUpperCase();
+
   if (!code) {
     return { ok: false, reason: "empty" };
   }
 
-  // Normalisieren: Großbuchstaben, Leerzeichen raus
-  const normalized = code.toUpperCase().replace(/\s+/g, "");
-  const def = PARTNER_CODES[normalized];
+  // --------------------------------------------------
+  // HIER: gültige Partner-Codes definieren
+  // Du kannst diese Liste jederzeit erweitern.
+  // --------------------------------------------------
+  const PARTNER_CODES = {
+    // ABF 2026: schaltet Plus + ABF-Messe-Add-on frei
+    // → Diesen Code kannst du direkt nutzen / drucken.
+    "ABF2026FAMILY": {
+      plan: "family_plus",
+      addons: ["addon_abf"],
+      partner: "abf"
+    }
 
-  if (!def) {
-    return { ok: false, reason: "unknown" };
-  }
+    // Beispiel: weitere Codes möglich
+    // "ABF2026WATER": {
+    //   plan: "family_plus",
+    //   addons: ["addon_water"],
+    //   partner: "abf"
+    // }
+  };
 
-  const days = typeof def.days === "number" ? def.days : 0;
-  if (!Number.isFinite(days) || days <= 0) {
+  const match = PARTNER_CODES[code];
+
+  if (!match) {
+    // app.js behandelt "invalid_days" als "unbekannt / ungültig"
     return { ok: false, reason: "invalid_days" };
   }
-
-  const now = Date.now();
-  const msPerDay = 24 * 60 * 60 * 1000;
-  const validUntilDate = new Date(now + days * msPerDay);
 
   /** @type {PlusStatus} */
   const newStatus = {
     active: true,
-    plan: def.planId || "family_plus",
-    validUntil: validUntilDate.toISOString(),
-    addons: Array.isArray(def.addons) ? def.addons.slice() : [],
-    partner: def.partner || null,
-    source: "partner_code",
-    code: normalized
+    plan: match.plan,
+    addons: Array.isArray(match.addons) ? match.addons.slice() : [],
+    validUntil: null, // optional: später z. B. "2026-12-31T23:59:59Z"
+    partner: match.partner || "abf",
+    source: "partner_code"
   };
 
-  saveStatusToStorage(newStatus);
+  // In Storage persistieren
+  writeStatusToStorage(newStatus);
 
   return { ok: true, status: newStatus };
 }
-
-// ------------------------------------------------------
-// Default-Export (optional)
-// ------------------------------------------------------
-
-const PlusApi = {
-  getPlusStatus,
-  isPlusActive,
-  formatPlusStatus,
-  redeemPartnerCode,
-  isPlusCategory
-};
-
-export default PlusApi;
