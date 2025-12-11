@@ -1,133 +1,184 @@
 /* =========================================
-   theme.css — Design‑Variablen (Light / Dark Theme)
+   theme.css — Design-Variablen (Light / Dark Theme)
+   Corporate-optimierte Version
    ========================================= */
 
 :root {
-  /* Accent-Variable (Hue) – per Slider anpassbar */
+  /* Accent – bleibt dein Marken-Farbregler, aber etwas „seriöser“ abgestimmt */
   --accent-h: 32;
-  --accent: hsl(var(--accent-h), 92%, 50%);
-  --accent-soft: hsl(var(--accent-h), 92%, 88%);
-  --accent-strong: hsl(var(--accent-h), 85%, 42%);
+  --accent: hsl(var(--accent-h), 85%, 52%);
+  --accent-soft: hsl(var(--accent-h), 85%, 93%);
+  --accent-strong: hsl(var(--accent-h), 80%, 40%);
 
-  --app-bg: radial-gradient(circle at top,
-           #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
+  /* App-Hintergrund – ruhiger, heller, weniger „Postkarten-Gradient“ */
+  --app-bg: linear-gradient(
+    180deg,
+    #f9fafb 0%,
+    #f3f4f6 40%,
+    #eff1f5 100%
+  );
 
-  --text-color: #452213;
-  --text-soft: #6f4224;
-  --text-strong: #2f160b;
+  /* Typische Textfarben – eher neutral als „braun/orange“ */
+  --text-color: #111827;   /* Standard-Text */
+  --text-soft: #6b7280;    /* Sekundär-/Hint-Text */
+  --text-strong: #030712;  /* Überschriften, wichtige Labels */
 
-  --card-bg: rgba(252, 235, 216, 0.98);
-  --card-shadow: 0 10px 26px rgba(163, 95, 36, 0.5);
-  --card-border: rgba(255, 255, 255, 0.9);
+  /* Karten / Panels – flacher, mit klarer Border statt starkem Glow */
+  --card-bg: #ffffff;
+  --card-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --card-border: rgba(148, 163, 184, 0.38);
 
-  --chip-bg: #ffedd5;
-  --chip-color: #6b4124;
-  --chip-shadow: 0 3px 8px rgba(152, 92, 45, 0.3);
+  /* Chips – weniger Candy, mehr SaaS */
+  --chip-bg: #f3f4f6;
+  --chip-color: #374151;
+  --chip-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
 
-  --input-bg: #fff1e0;
-  --input-shadow: 0 4px 9px rgba(147, 90, 45, 0.25);
+  /* Inputs – klar, gut lesbar, ohne starken Farbton */
+  --input-bg: #ffffff;
+  --input-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
 
-  --header-bg-top: var(--accent-strong);
-  --header-bg-bottom: var(--accent);
-  --header-shadow: 0 12px 30px rgba(163, 95, 36, 0.55);
-  --header-text-color: #ffffff;
+  /* Header – wirkt wie Produkt-/Konzernkopf, Accent nur subtil im Verlauf */
+  --header-bg-top: #111827;
+  --header-bg-bottom: #020617;
+  --header-shadow: 0 10px 24px rgba(15, 23, 42, 0.6);
+  --header-text-color: #f9fafb;
 
-  --header-tagline-bg: rgba(255, 245, 222, 0.95);
-  --header-tagline-color: #7c4314;
-  --header-tagline-shadow: 0 4px 12px rgba(141, 73, 15, 0.45);
+  /* Tagline-Pill – hell, aber nicht zu verspielt */
+  --header-tagline-bg: rgba(249, 250, 251, 0.95);
+  --header-tagline-color: #374151;
+  --header-tagline-shadow: 0 3px 8px rgba(15, 23, 42, 0.18);
 
-  --header-icon-bg: radial-gradient(circle at 30% 20%,
-                        #ffe7c2 0, #ffca80 40%, #ffb14d 100%);
-  --header-icon-shadow: 0 3px 8px rgba(156, 76, 16, 0.4);
-  --header-icon-border: rgba(255, 255, 255, 0.6);
+  /* Header-Icons – weniger „Bonbon“, mehr UI-Icon */
+  --header-icon-bg: radial-gradient(
+    circle at 30% 20%,
+    #f9fafb 0,
+    #e5e7eb 40%,
+    #d1d5db 100%
+  );
+  --header-icon-shadow: 0 2px 5px rgba(15, 23, 42, 0.25);
+  --header-icon-border: rgba(209, 213, 219, 0.9);
 
-  --language-pill-bg: rgba(255, 243, 224, 0.94);
-  --language-pill-shadow: 0 3px 9px rgba(132, 70, 18, 0.4);
+  /* Language-Pill – nüchtern, gut lesbar */
+  --language-pill-bg: rgba(243, 244, 246, 0.96);
+  --language-pill-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
 
-  --bottom-nav-backdrop: rgba(255, 212, 170, 0.85);
+  /* Sidebar-Hintergrund (Page) */
+  --sidebar-bg: #f3f4f6;
 
-  --sidebar-bg: #050816;
-  --sidebar-section-bg: rgba(255, 245, 233, 0.98);
-  --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
-  --sidebar-section-border: rgba(255, 255, 255, 0.9);
+  /* Sidebar-Section (Cards in der Sidebar) */
+  --sidebar-section-bg: #ffffff;
+  --sidebar-section-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --sidebar-section-border: rgba(148, 163, 184, 0.38);
 
-  --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
-  --bottom-nav-item-color: #8a5a32;
-  --bottom-nav-item-active-bg: var(--accent);
-  --bottom-nav-item-active-color: #4b280f;
+  /* Bottom-Nav – weg vom „Glas-Lollipop“, hin zu klarer Mobile-Navigation */
+  --bottom-nav-backdrop: rgba(17, 24, 39, 0.95);
+  --bottom-nav-item-bg: transparent;
+  --bottom-nav-item-color: #e5e7eb;
+  --bottom-nav-item-active-bg: rgba(15, 23, 42, 1);
+  --bottom-nav-item-active-color: #ffffff;
 
-  --toast-bg: rgba(55, 35, 21, 0.95);
+  /* Toast – leicht abgedunkelt, gut lesbar */
+  --toast-bg: rgba(15, 23, 42, 0.96);
 
-  --map-card-bg: #fdf4e6;
-  --map-card-shadow: 0 14px 32px rgba(148, 86, 38, 0.55);
-  --map-card-border: rgba(255, 255, 255, 0.95);
+  /* Map-Card – wie eine große, hochwertige Panel-Karte */
+  --map-card-bg: #ffffff;
+  --map-card-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+  --map-card-border: rgba(148, 163, 184, 0.4);
 
-  --radius-circle-stroke: hsla(var(--accent-h), 90%, 55%, 0.6);
-  --radius-circle-fill: hsla(var(--accent-h), 90%, 55%, 0.17);
+  /* Radius-Kreis – etwas subtiler, aber noch erkennbar */
+  --radius-circle-stroke: hsla(var(--accent-h), 80%, 50%, 0.6);
+  --radius-circle-fill: hsla(var(--accent-h), 80%, 50%, 0.12);
 
+  /* Globaler Radius/Shadow – eher „Enterprise“ als verspieltes Neumorphing */
   --radius-pill: 999px;
-  --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
+  --shadow-soft: 0 2px 6px rgba(15, 23, 42, 0.12);
+  --shadow-strong: 0 8px 20px rgba(15, 23, 42, 0.22);
 
-  --map-filter: sepia(0.26) saturate(0.9) brightness(1.04) contrast(1.02)
-                 hue-rotate(-14deg);
+  /* Map-Farbfilter – dezenter, weniger warm/orange */
+  --map-filter: grayscale(0.18) saturate(0.9) brightness(1.02) contrast(1.04);
 }
 
+/* =========================================
+   Dark Theme
+   ========================================= */
+
 [data-theme="dark"] {
-  --app-bg: radial-gradient(circle at top,
-             #111827 0, #020617 55%, #020617 100%);
-  --text-color: #fef3e7;
+  /* Hintergrund – klassischer Dark-Mode, kein starkes Orange */
+  --app-bg: radial-gradient(
+    circle at top,
+    #020617 0,
+    #020617 55%,
+    #000000 100%
+  );
+
+  --text-color: #e5e7eb;
   --text-soft: #9ca3af;
-  --text-strong: #fef3e7;
+  --text-strong: #f9fafb;
 
-  --card-bg: rgba(9, 18, 38, 0.98);
-  --card-shadow: 0 18px 36px rgba(0, 0, 0, 0.8);
-  --card-border: rgba(148, 163, 184, 0.35);
+  /* Cards im Dark Mode – dunkle Flächen mit klarer Border */
+  --card-bg: #020617;
+  --card-shadow: 0 10px 26px rgba(0, 0, 0, 0.9);
+  --card-border: rgba(55, 65, 81, 0.8);
 
-  --chip-bg: rgba(15, 23, 42, 0.98);
+  /* Chips im Dark Mode */
+  --chip-bg: #020617;
   --chip-color: #e5e7eb;
-  --chip-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
+  --chip-shadow: 0 4px 10px rgba(0, 0, 0, 0.85);
 
-  --input-bg: rgba(15, 23, 42, 0.98);
-  --input-shadow: 0 7px 15px rgba(15, 23, 42, 0.9);
+  /* Inputs Dark */
+  --input-bg: #020617;
+  --input-shadow: 0 6px 14px rgba(0, 0, 0, 0.8);
 
-  --header-bg-top: #0b1020;
-  --header-bg-bottom: #050816;
-  --header-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
-  --header-text-color: #fef3e7;
+  /* Header Dark – reine Produkt-Navigation, ohne „Orange-Fläche“ */
+  --header-bg-top: #020617;
+  --header-bg-bottom: #020617;
+  --header-shadow: 0 14px 32px rgba(0, 0, 0, 0.95);
+  --header-text-color: #f9fafb;
 
-  --header-tagline-bg: linear-gradient(135deg, var(--accent), #ff9800);
-  --header-tagline-color: #1a1309;
-  --header-tagline-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
+  /* Tagline-Pill Dark */
+  --header-tagline-bg: rgba(15, 23, 42, 0.98);
+  --header-tagline-color: #e5e7eb;
+  --header-tagline-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
 
-  --header-icon-bg: radial-gradient(circle at 30% 20%,
-                        #111827 0, #020617 45%, #020617 100%);
-  --header-icon-shadow: 0 7px 16px rgba(0, 0, 0, 0.9);
+  /* Header-Icons Dark */
+  --header-icon-bg: radial-gradient(
+    circle at 30% 20%,
+    #111827 0,
+    #020617 60%,
+    #020617 100%
+  );
+  --header-icon-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
   --header-icon-border: rgba(148, 163, 184, 0.9);
 
+  /* Language-Pill Dark */
   --language-pill-bg: rgba(15, 23, 42, 0.98);
-  --language-pill-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
+  --language-pill-shadow: 0 4px 10px rgba(0, 0, 0, 0.85);
 
+  /* Sidebar Dark */
   --sidebar-bg: #020617;
-  --sidebar-section-bg: rgba(9, 18, 38, 0.98);
-  --sidebar-section-shadow: 0 16px 34px rgba(0, 0, 0, 0.9);
-  --sidebar-section-border: rgba(30, 64, 175, 0.35);
+  --sidebar-section-bg: #020617;
+  --sidebar-section-shadow: 0 12px 28px rgba(0, 0, 0, 0.95);
+  --sidebar-section-border: rgba(55, 65, 81, 0.9);
 
-  --bottom-nav-backdrop: rgba(15, 23, 42, 0.92);
-  --bottom-nav-item-bg: rgba(15, 23, 42, 0.98);
-  --bottom-nav-item-color: #e5e7eb;
-  --bottom-nav-item-active-bg: #f59e0b;
-  --bottom-nav-item-active-color: #111827;
+  /* Bottom-Nav Dark */
+  --bottom-nav-backdrop: rgba(0, 0, 0, 0.9);
+  --bottom-nav-item-bg: transparent;
+  --bottom-nav-item-color: #9ca3af;
+  --bottom-nav-item-active-bg: #111827;
+  --bottom-nav-item-active-color: #f9fafb;
 
+  /* Toast Dark */
   --toast-bg: rgba(15, 23, 42, 0.98);
 
+  /* Map-Card Dark */
   --map-card-bg: #020617;
-  --map-card-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
-  --map-card-border: rgba(30, 64, 175, 0.4);
+  --map-card-shadow: 0 16px 34px rgba(0, 0, 0, 0.95);
+  --map-card-border: rgba(55, 65, 81, 0.9);
 
-  --radius-circle-stroke: hsla(var(--accent-h), 90%, 65%, 0.75);
-  --radius-circle-fill: hsla(var(--accent-h), 90%, 65%, 0.15);
+  /* Radius-Kreis Dark */
+  --radius-circle-stroke: hsla(var(--accent-h), 85%, 65%, 0.75);
+  --radius-circle-fill: hsla(var(--accent-h), 85%, 55%, 0.14);
 
-  --map-filter: grayscale(0.35) sepia(0.28) brightness(0.78) contrast(1.05)
-                 saturate(0.9) hue-rotate(-16deg);
+  /* Map Dark – etwas entsättigt, weniger warm/getönt */
+  --map-filter: grayscale(0.35) saturate(0.8) brightness(0.9) contrast(1.06);
 }
