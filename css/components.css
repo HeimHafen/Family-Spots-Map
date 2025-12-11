@@ -74,6 +74,10 @@ select {
   box-shadow: var(--elevation-xs);
 }
 
+[data-theme="dark"] .btn {
+  box-shadow: var(--elevation-md);
+}
+
 .btn-small {
   min-height: 30px;
   padding: 0 0.85rem;
@@ -95,6 +99,13 @@ select {
 
 .btn-secondary:active {
   background-color: #f3f4f6;
+}
+
+[data-theme="dark"] .btn-secondary {
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  border-color: rgba(148, 163, 184, 0.7);
+  box-shadow: var(--elevation-sm);
 }
 
 /* Ghost / „Text“-Button */
@@ -175,6 +186,10 @@ select {
   box-shadow: var(--elevation-xs);
 }
 
+[data-theme="dark"] .btn-play-idea {
+  box-shadow: var(--elevation-md);
+}
+
 @media (max-width: 480px) {
   .btn-play-idea {
     font-size: 12px;
@@ -218,14 +233,14 @@ textarea.input:focus-visible,
   z-index: 1200;
   padding: 10px 14px 14px;
   background: linear-gradient(
-    135deg,
+    180deg,
     var(--header-bg-top),
     var(--header-bg-bottom)
   );
   color: var(--header-text-color);
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
-  box-shadow: var(--elevation-md);
+  box-shadow: var(--header-shadow);
 }
 
 .app-header-top {
@@ -574,8 +589,8 @@ body[data-menu-open="1"] .app-menu {
   background: var(--sidebar-section-bg);
   border-radius: 20px;
   padding: 12px 14px 14px;
-  box-shadow: var(--elevation-sm);
-  border: var(--border-soft);
+  box-shadow: var(--sidebar-section-shadow);
+  border: 1px solid var(--sidebar-section-border);
 }
 
 /* globaler Abstand übereinanderliegende Cards */
@@ -593,8 +608,9 @@ body[data-menu-open="1"] .app-menu {
 .map-section {
   border-radius: 22px;
   overflow: hidden;
-  box-shadow: var(--elevation-md);
+  box-shadow: var(--map-card-shadow);
   background: var(--map-card-bg);
+  border: 1px solid var(--map-card-border);
   min-height: 320px;
   position: relative;
   margin-top: 14px;
@@ -1292,7 +1308,7 @@ select.input:focus {
   margin: 8px 10px 10px;
   max-height: none;
   overflow-y: visible;
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 18px;
   box-shadow: var(--elevation-lg);
   padding: 10px 12px 11px;
@@ -1688,7 +1704,7 @@ body[data-menu-open="1"] {
   right: 0;
   bottom: 0;
   z-index: 30;
-  height: 60px;
+  height: 64px;
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -1699,12 +1715,12 @@ body[data-menu-open="1"] {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 6px;
-  top: 6px;
-  border-radius: 22px;
+  top: 8px;
+  bottom: 8px;
+  border-radius: 999px;
   background: var(--bottom-nav-backdrop);
-  filter: blur(10px);
-  opacity: 0.6;
+  opacity: 0.96;
+  backdrop-filter: blur(14px);
 }
 
 .bottom-nav-indicator {
@@ -1714,44 +1730,37 @@ body[data-menu-open="1"] {
 .bottom-nav-item {
   pointer-events: auto;
   border: none;
-  background: var(--bottom-nav-item-bg);
+  background: transparent;
   border-radius: var(--radius-pill);
-  padding: 5px 12px;
+  padding: 6px 14px;
   margin: 0 4px;
-  min-width: 76px;
+  min-width: 84px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1px;
-  font-size: 11px;
+  gap: 2px;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--bottom-nav-item-color);
-  box-shadow: var(--elevation-sm);
   cursor: pointer;
   transition:
-    transform 0.08s ease-out,
-    box-shadow 0.08s ease-out,
-    background-color 0.14s ease-out;
+    background-color 0.12s ease-out,
+    color 0.12s ease-out,
+    transform 0.08s ease-out;
 }
 
 .bottom-nav-item--active {
   background: var(--bottom-nav-item-active-bg);
   color: var(--bottom-nav-item-active-color);
-  box-shadow: var(--elevation-md);
-}
-
-[data-theme="dark"] .bottom-nav-item--active {
-  box-shadow: var(--elevation-md);
 }
 
 .bottom-nav-item:active {
-  transform: translateY(1px) scale(0.97);
-  box-shadow: var(--elevation-xs);
+  transform: translateY(1px);
 }
 
 .bottom-nav-icon {
-  font-size: 18px;
+  font-size: 1.1rem;
 }
 
 /* =========================================
