@@ -122,7 +122,7 @@ export const SPOTS_CACHE_KEY = "fs_spots_cache_v1";
  *  - In Produktion MUSS dieser Wert false sein.
  *  - Dieser Wert wird ausschließlich gelesen, niemals zur Laufzeit beschrieben.
  */
-export const DEV_FORCE_PLUS = false;
+export const DEV_FORCE_PLUS = true;
 
 // ------------------------------------------------------
 // Sprachen & Theme
