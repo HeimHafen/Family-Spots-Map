@@ -101,12 +101,13 @@
 // ------------------------------------------------------
 
 // Fokus auf Messegelände Hannover (ABF)
-export const DEFAULT_MAP_CENTER = [52.318, 9.805];
-export const DEFAULT_MAP_ZOOM = 13;
+export const DEFAULT_MAP_CENTER = [52.3183, 9.8070];
+export const DEFAULT_MAP_ZOOM = 15;
 
 export const PLUS_STORAGE_KEY = "fs_plus_active";
 export const DAYLOG_STORAGE_KEY = "fs_daylog_last";
-export const SPOTS_CACHE_KEY = "fs_spots_cache_v1";
+// neuer Cache-Key für ABF-Version, damit alte Daten ignoriert werden
+export const SPOTS_CACHE_KEY = "fs_spots_cache_abf2026_v1";
 
 // ------------------------------------------------------
 // Dev / Demo-Konfiguration
