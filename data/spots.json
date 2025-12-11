@@ -12,12 +12,15 @@
       ],
       "visit_minutes": 90,
       "verified": true,
+      "valid_from": "2026-02-11",
+      "valid_to": "2026-02-15",
       "poetry": "In der Familienwelt der ABF wird der Messetag kurz zu einem kleinen Abenteuerland.",
       "tags": [
         "Indoor-Spielbereich",
         "Basteln & Mitmachaktionen",
         "familienfreundlich",
-        "Messe"
+        "Messe",
+        "ABF 2026"
       ],
       "summary_de": "Zentraler Familienbereich der ABF 2026 in Halle 25 mit Spiel- und Mitmachangeboten für Kinder. Ein guter Basis-Spot, von dem aus ihr euren Messetag mit Kindern auf dem Messegelände Hannover plant.",
       "summary_en": "Central family area of ABF 2026 in hall 25 with play and hands-on activities for children. A good base spot to plan your family day at the Hannover fairground.",
@@ -35,11 +38,15 @@
       ],
       "visit_minutes": 45,
       "verified": true,
+      "valid_from": "2026-02-11",
+      "valid_to": "2026-02-15",
       "poetry": "Kurze Shows, große Augen – eine Familienpause mit Programm mitten auf der ABF.",
       "tags": [
         "Bühne",
         "Shows",
-        "Programm für Kinder"
+        "Programm für Kinder",
+        "Messe",
+        "ABF 2026"
       ],
       "summary_de": "Bühne mit wechselndem Kinder- und Familienprogramm auf der ABF 2026. Ideal, um zwischendurch kurz anzukommen, zuzuschauen und neue Energie zu tanken.",
       "summary_en": "Stage with changing shows and activities for children and families at ABF 2026. Ideal for a short break to sit down, watch and recharge.",
@@ -57,16 +64,48 @@
       ],
       "visit_minutes": 20,
       "verified": true,
+      "valid_from": "2026-02-11",
+      "valid_to": "2026-02-15",
       "poetry": "Ein ruhiger Hafen mitten im Messetrubel der ABF 2026.",
       "tags": [
         "Wickeln",
         "Stillen",
         "Ruhebereich",
-        "Baby"
+        "Baby",
+        "Messe",
+        "ABF 2026"
       ],
       "summary_de": "Ruhiger Bereich zum Stillen, Wickeln und kurz Durchatmen mit den Kleinsten auf der ABF 2026. Gut ausgeschildert und nah an den Familienbereichen.",
       "summary_en": "Quiet area for feeding, changing and taking a short break with babies at ABF 2026. Well signposted and close to the main family areas.",
       "summary_da": "Roligt område til amning, bleskift og en lille pause med de mindste på ABF 2026. Godt skiltet og tæt på familieområderne."
+    },
+    {
+      "id": "abf_run_2026_startziel",
+      "title": "ABF RUN & Kids Run – Start- und Zielbereich",
+      "lat": 52.3186,
+      "lon": 9.8025,
+      "country": "DE",
+      "city": "Hannover",
+      "categories": [
+        "abf-run"
+      ],
+      "visit_minutes": 60,
+      "verified": true,
+      "valid_from": "2026-02-14",
+      "valid_to": "2026-02-14",
+      "poetry": "Dein Lauf, dein Ziel, dein ABF RUN – einmal um das Messegelände, angefeuert von der ganzen Familie.",
+      "tags": [
+        "Laufveranstaltung",
+        "ABF RUN 2026",
+        "Kids Run",
+        "Sport",
+        "Event",
+        "Messe",
+        "ABF 2026"
+      ],
+      "summary_de": "Start- und Zielbereich des ABF RUN am 14. Februar 2026 auf dem Messegelände Hannover. Hier starten sowohl der Kinderlauf als auch die 3,5 km Runde, die bis zu dreimal gelaufen werden kann (3,5 km, 7 km oder 10,5 km). Perfekter Treffpunkt für Familien, die laufend über die ABF möchten.",
+      "summary_en": "Start and finish area of the ABF RUN on 14 February 2026 at the Hannover fairground. This is where the kids run and the 3.5 km loop start, which can be completed up to three times (3.5 km, 7 km or 10.5 km). A perfect meeting point for families who want to experience ABF while running.",
+      "summary_da": "Start- og målområde for ABF RUN den 14. februar 2026 på messeområdet i Hannover. Her starter både børneløbet og 3,5 km-ruten, som kan løbes op til tre gange (3,5 km, 7 km eller 10,5 km). Perfekt mødested for familier, der vil opleve ABF i løbesko."
     }
   ]
 }
