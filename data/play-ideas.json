@@ -1,10 +1,10 @@
 [
   {
-    "id": "red-cars-counting",
+    "id": "red-cars-count",
     "texts": {
-      "de": "Zählt unterwegs alle roten Autos. Wer zuerst 10 gesehen hat, darf das nächste Ziel aussuchen.",
-      "en": "Count all the red cars you see. Whoever reaches 10 first may choose the next stop.",
-      "da": "Tæl alle de røde biler, I ser undervejs. Den, der først når 10, må vælge næste stop."
+      "de": "Zählt auf dem Weg zur ABF oder in den Messehallen alle roten Taschen, Jacken oder Luftballons. Wer zuerst 10 gesehen hat, darf entscheiden, welchen Stand ihr als Nächstes besucht.",
+      "en": "On your way to ABF or inside the halls, count all the red bags, jackets or balloons you see. Whoever reaches 10 first may choose which booth you visit next.",
+      "da": "På vej til ABF eller inde i hallerne tæller I alle de røde tasker, jakker eller balloner. Den, der først når 10, må vælge, hvilken stand I går til næste gang."
     },
     "tags": ["Beobachtung", "Zählen", "Aufmerksamkeit", "Unterwegs"],
     "suitableFor": ["Auto", "Stadt", "Autobahn", "Unterwegs"],
@@ -16,9 +16,9 @@
   {
     "id": "story-about-tilla",
     "texts": {
-      "de": "Denkt euch gemeinsam eine Geschichte über Tilla aus – woher kommt sie, wo will sie heute hin?",
-      "en": "Make up a story about Tilla together – where does she come from and where is she going today?",
-      "da": "Find sammen på en historie om Tilla – hvor kommer hun fra, og hvor vil hun hen i dag?"
+      "de": "Denkt euch gemeinsam eine Geschichte über Tilla auf der ABF aus – aus welcher Halle ist sie gerade gekommen und welchen Familien-Spot möchte sie heute noch entdecken?",
+      "en": "Together, make up a story about Tilla at ABF – which hall did she just come from and which family spot does she want to discover next?",
+      "da": "Find sammen på en historie om Tilla på ABF – hvilken hal kommer hun lige fra, og hvilket familiespot vil hun gerne opdage næste gang?"
     },
     "tags": ["Kreativität", "Fantasie", "Sprache", "Verbundenheit"],
     "suitableFor": ["Wiese", "Wald", "Park", "Pause", "Wandern", "Auto", "Zug"],
@@ -30,9 +30,9 @@
   {
     "id": "tree-with-name",
     "texts": {
-      "de": "Sucht einen Baum, der euch besonders gefällt, und gebt ihm einen Namen.",
-      "en": "Find a tree you really like and give it a name.",
-      "da": "Find et træ, I særlig godt kan lide, og giv det et navn."
+      "de": "Draußen auf dem Messegelände oder auf dem Weg zur ABF: Sucht euch einen Baum, der euch gefällt, und gebt ihm einen Namen wie „ABF-Ruhebaum“ oder „Tillas Schattenbaum“.",
+      "en": "Outside on the fairground or on your way to ABF, find a tree you like and give it a name such as “ABF resting tree” or “Tilla’s shade tree”.",
+      "da": "Udenfor på messeområdet eller på vej til ABF: Find et træ, I kan lide, og giv det et navn som „ABF-hviletræet“ eller „Tillas skyggetræ“."
     },
     "tags": ["Natur", "Achtsamkeit", "Fantasie"],
     "suitableFor": ["Wald", "Park", "Wiese", "Wandern"],
@@ -44,9 +44,9 @@
   {
     "id": "mini-photo-walk",
     "texts": {
-      "de": "Macht einen Mini-Fotowalk: Jedes Kind darf 3 Fotos von Dingen machen, die es schön findet.",
-      "en": "Do a tiny photo walk: each child may take 3 photos of things they find beautiful.",
-      "da": "Tag på en mini-fototur: Hvert barn må tage 3 billeder af ting, det synes er smukke."
+      "de": "Macht einen Mini-Fotowalk über die ABF: Jedes Kind darf 3 Fotos von Dingen machen, die es auf der Messe besonders schön findet – vielleicht ein Stand, ein Fahrzeug oder eine bunte Bühne.",
+      "en": "Do a tiny photo walk at ABF: each child may take 3 photos of things they find beautiful at the fair – maybe a booth, a vehicle or a colourful stage.",
+      "da": "Tag på en mini-fototur på ABF: Hvert barn må tage 3 billeder af ting, de synes er særligt flotte på messen – måske en stand, et køretøj eller en farverig scene."
     },
     "tags": ["Kreativität", "Wahrnehmung", "Erinnerungen"],
     "suitableFor": ["Stadt", "Wald", "Wiese", "Unterwegs"],
@@ -58,9 +58,9 @@
   {
     "id": "sound-guessing",
     "texts": {
-      "de": "Spielt Geräusche-Raten: Einer macht ein Geräusch, die anderen müssen erraten, was es ist.",
-      "en": "Play sound guessing: one person makes a sound, the others guess what it is.",
-      "da": "Leg lyd-gæt: Én laver en lyd, de andre skal gætte, hvad det er."
+      "de": "Spielt Geräusche-Raten auf der ABF: Einer macht ein Messe-Geräusch nach – zum Beispiel Mikrofon, Applaus oder fahrendes Fahrzeug – die anderen müssen raten, was es ist.",
+      "en": "Play sound guessing at ABF: one person imitates a fair sound – like a microphone, applause or a moving vehicle – and the others guess what it is.",
+      "da": "Leg lyd-gæt på ABF: Én efterligner en messe-lyd – for eksempel mikrofon, klapsalver eller et køretøj – og de andre skal gætte, hvad det er."
     },
     "tags": ["Sinne", "Hören", "Ratespiel"],
     "suitableFor": ["Auto", "Zug", "Pause", "Drinnen", "Unterwegs"],
@@ -72,9 +72,9 @@
   {
     "id": "rainbow-hunt",
     "texts": {
-      "de": "Sucht unterwegs nach Dingen in Regenbogenfarben – findet ihr alle sieben Farben?",
-      "en": "Hunt for rainbow colours on the way – can you find all seven?",
-      "da": "Kig efter ting i regnbuens farver undervejs – kan I finde alle syv?"
+      "de": "Geht auf Regenbogenjagd in den Hallen: Findet ihr auf der ABF Dinge in allen sieben Regenbogenfarben – vielleicht an Ständen, Plakaten oder Ballons?",
+      "en": "Go on a rainbow hunt in the halls: can you find all seven rainbow colours at ABF – maybe on booths, posters or balloons?",
+      "da": "Gå på regnbuejagt i hallerne: Kan I finde alle syv regnbuefarver på ABF – måske på stande, plakater eller balloner?"
     },
     "tags": ["Farben", "Beobachtung", "Kooperation"],
     "suitableFor": ["Stadt", "Dorf", "Auto", "Zug", "Spaziergang"],
@@ -86,9 +86,9 @@
   {
     "id": "animal-spotting-count",
     "texts": {
-      "de": "Zählt, wie viele Tiere ihr unterwegs entdeckt – echte und als Figuren oder auf Schildern.",
-      "en": "Count how many animals you spot – real ones and those on signs or as statues.",
-      "da": "Tæl, hvor mange dyr I opdager – både rigtige dyr og dem på skilte eller som figurer."
+      "de": "Zählt, wie viele Tiere ihr auf der ABF entdeckt – echte Tiere, Maskottchen, Bilder auf Fahnen oder Figuren an Ständen.",
+      "en": "Count how many animals you spot at ABF – real animals, mascots, pictures on flags or figures at booths.",
+      "da": "Tæl, hvor mange dyr I opdager på ABF – rigtige dyr, maskotter, billeder på flag eller figurer ved stande."
     },
     "tags": ["Tiere", "Zählen", "Aufmerksamkeit"],
     "suitableFor": ["Auto", "Zug", "Stadt", "Zoo", "Wald", "Unterwegs"],
@@ -100,9 +100,9 @@
   {
     "id": "secret-family-sign",
     "texts": {
-      "de": "Erfindet ein Familien-Geheimzeichen, das nur ihr kennt – zum Beispiel für „Ich hab dich lieb“.",
-      "en": "Invent a secret family sign only you know – for example for 'I love you'.",
-      "da": "Find på et hemmeligt familiesignal, som kun I kender – for eksempel for „Jeg elsker dig“."
+      "de": "Erfindet ein Familien-Geheimzeichen nur für die ABF – zum Beispiel ein kleines Handzeichen für „Ich brauche eine Pause“ oder „Das gefällt mir richtig gut“.",
+      "en": "Invent a secret family sign just for ABF – for example a small hand signal for “I need a break” or “I really like this”.",
+      "da": "Find på et hemmeligt familiesignal kun til ABF – for eksempel et lille håndtegn for „Jeg har brug for en pause“ eller „Det her kan jeg rigtig godt lide“."
     },
     "tags": ["Verbundenheit", "Humor", "Nonverbale-Kommunikation"],
     "suitableFor": ["Überall", "Unterwegs", "Zuhause"],
@@ -114,9 +114,9 @@
   {
     "id": "child-navigator",
     "texts": {
-      "de": "Lasst ein Kind den Weg ansagen: „Geradeaus“, „links“, „rechts“ – natürlich nur, wenn es sicher ist.",
-      "en": "Let one child be the navigator: 'straight', 'left', 'right' – as long as it’s safe, of course.",
-      "da": "Lad et barn være navigator: „Ligeud“, „til venstre“, „til højre“ – selvfølgelig kun dér, hvor det er sikkert."
+      "de": "Lasst ein Kind den Weg durch die Messe ansagen: „Bis zum nächsten Schild geradeaus“, „an der Kinderbühne links“ – natürlich nur, wenn es sicher ist.",
+      "en": "Let one child be the navigator through the fair: “straight until the next sign”, “left at the kids’ stage” – as long as it’s safe, of course.",
+      "da": "Lad et barn være navigator gennem messen: „Ligeud til næste skilt“, „til venstre ved børnescenen“ – selvfølgelig kun dér, hvor det er sikkert."
     },
     "tags": ["Mitbestimmung", "Raumgefühl", "Vertrauen"],
     "suitableFor": ["Spaziergang", "Stadt", "Wandern", "Radweg"],
@@ -128,9 +128,9 @@
   {
     "id": "mini-pause-listening",
     "texts": {
-      "de": "Macht eine Mini-Pause und legt euch für eine Minute ins Gras oder setzt euch auf eine Bank und lauscht.",
-      "en": "Take a tiny break: lie down in the grass or sit on a bench for a minute and just listen.",
-      "da": "Hold en mini-pause og læg jer i græsset eller sæt jer på en bænk i et minut og lyt."
+      "de": "Macht eine Mini-Pause in einer ruhigen Ecke der ABF: Setzt euch für eine Minute hin und hört, welche Geräusche ihr wahrnehmt – ohne zu reden.",
+      "en": "Take a tiny break in a quiet corner of ABF: sit down for one minute and listen to all the sounds you can hear – without talking.",
+      "da": "Hold en mini-pause i et roligt hjørne på ABF: Sæt jer ned i ét minut og lyt til alle de lyde, I kan høre – uden at tale."
     },
     "tags": ["Achtsamkeit", "Entspannung", "Sinne"],
     "suitableFor": ["Wiese", "Park", "Wald", "Rastplatz"],
@@ -142,9 +142,9 @@
   {
     "id": "memory-marker-stone",
     "texts": {
-      "de": "Sucht einen Ort, an dem ihr gemeinsam einen kleinen Stein oder Zapfen als „Erinnerungszeichen“ ablegt.",
-      "en": "Find a spot where you place a small stone or cone together as a little memory marker.",
-      "da": "Find et sted, hvor I sammen lægger en lille sten eller kogle som „minde-tegn“."
+      "de": "Sucht draußen auf dem Messegelände einen Ort, an dem ihr gemeinsam einen kleinen Stein oder Zapfen als „ABF-Erinnerungszeichen“ ablegt – nur dort, wo es erlaubt ist.",
+      "en": "Outside on the fairground, find a place where you can put down a little stone or cone as an “ABF memory marker” – only where it is allowed.",
+      "da": "Find et sted udenfor på messeområdet, hvor I lægger en lille sten eller kogle som et „ABF-mindetegn“ – kun dér, hvor det er tilladt."
     },
     "tags": ["Ritual", "Erinnerung", "Natur"],
     "suitableFor": ["Wald", "Wiese", "Strand", "Park"],
@@ -156,9 +156,9 @@
   {
     "id": "i-spy-seasonal",
     "texts": {
-      "de": "Spielt „Ich sehe was, was du nicht siehst“ mit Dingen, die typisch für euren Ort oder die Jahreszeit sind.",
-      "en": "Play 'I spy with my little eye' using things typical for your area or the current season.",
-      "da": "Leg „Jeg ser noget, som du ikke ser“ med ting, der er typiske for stedet eller årstiden."
+      "de": "Spielt „Ich sehe was, was du nicht siehst“ mit Dingen, die typisch für die ABF sind: z. B. Wohnmobile, Fahrräder, Bühnen oder Messebecher.",
+      "en": "Play “I spy with my little eye” using things that are typical for ABF: for example motorhomes, bikes, stages or fair cups.",
+      "da": "Leg „Jeg ser noget, som du ikke ser“ med ting, der er typiske for ABF: f.eks. autocampere, cykler, scener eller krus fra messen."
     },
     "tags": ["Beobachtung", "Sprache", "Jahreszeiten"],
     "suitableFor": ["Stadt", "Wald", "Auto", "Zug", "Unterwegs"],
@@ -170,9 +170,9 @@
   {
     "id": "same-letter-hunt",
     "texts": {
-      "de": "Jede Person sucht etwas, das mit demselben Buchstaben beginnt wie ihr Vorname.",
-      "en": "Each person finds something that starts with the same letter as their first name.",
-      "da": "Hver person finder noget, der begynder med samme bogstav som deres fornavn."
+      "de": "Jede Person sucht auf der ABF etwas, das mit demselben Buchstaben beginnt wie ihr Vorname – z. B. „L“ wie Luftballon oder „M“ wie Messestand.",
+      "en": "Each person looks for something at ABF that starts with the same letter as their first name – like “B” for balloon or “S” for stand.",
+      "da": "Hver person finder noget på ABF, der begynder med samme bogstav som deres fornavn – f.eks. „B“ som ballon eller „S“ som stand."
     },
     "tags": ["Sprache", "Buchstaben", "Beobachtung"],
     "suitableFor": ["Stadt", "Wald", "Park", "Auto", "Zug"],
@@ -184,9 +184,9 @@
   {
     "id": "rhyme-game",
     "texts": {
-      "de": "Erfindet ein Reimspiel: Einer sagt ein Wort, die anderen denken sich passende Reime dazu aus.",
-      "en": "Play a rhyming game: one person says a word, the others think of words that rhyme with it.",
-      "da": "Lav en rim-leg: Én siger et ord, de andre finder på ord, der rimer på det."
+      "de": "Erfindet ein Reimspiel mit Messe-Wörtern: Einer sagt ein Wort wie „Halle“, die anderen denken sich passende Reime dazu aus.",
+      "en": "Play a rhyming game with fair words: one says a word like “hall” and the others think of words that rhyme with it.",
+      "da": "Lav en rim-leg med messeord: Én siger et ord som „hal“, og de andre finder på ord, der rimer på det."
     },
     "tags": ["Sprache", "Kreativität", "Humor"],
     "suitableFor": ["Auto", "Zug", "Pause", "Zuhause"],
@@ -198,9 +198,9 @@
   {
     "id": "soft-and-hard-hunt",
     "texts": {
-      "de": "Sucht unterwegs drei Dinge, die weich sind, und drei, die sich hart anfühlen.",
-      "en": "Look for three things that feel soft and three that feel hard.",
-      "da": "Find tre ting, der føles bløde, og tre, der føles hårde."
+      "de": "Sucht auf dem Messegelände drei Dinge, die sich weich anfühlen, und drei, die eher hart sind – zum Beispiel Sitzpolster, Plüschtiere, Geländer oder Bodenplatten.",
+      "en": "On the fairground, look for three things that feel soft and three that feel hard – for example cushions, soft toys, railings or floor panels.",
+      "da": "Find tre ting på messeområdet, der føles bløde, og tre, der føles hårde – f.eks. puder, plysdyr, gelændere eller gulvplader."
     },
     "tags": ["Sinne", "Tastsinn", "Beobachtung"],
     "suitableFor": ["Wald", "Wiese", "Park", "Strand"],
@@ -212,9 +212,9 @@
   {
     "id": "superhero-family",
     "texts": {
-      "de": "Denkt euch eine kleine Superhelden-Familie aus. Welche Kräfte hat jede Person?",
-      "en": "Invent a superhero family. What special power does each person have?",
-      "da": "Find på en lille superheltefamilie. Hvilken superkraft har hver person?"
+      "de": "Denkt euch eine kleine Superhelden-Familie für die ABF aus. Welche Messe-Superkraft hat jede Person – z. B. „Beste Standfinderin“ oder „Mutiger Fragensteller“?",
+      "en": "Invent a superhero family for ABF. What fair superpower does each person have – like “best booth finder” or “bravest question asker”?",
+      "da": "Find på en lille superheltefamilie til ABF. Hvilken messe-superkraft har hver person – f.eks. „bedste standfinder“ eller „modigste spørger“?"
     },
     "tags": ["Fantasie", "Rollen", "Selbstbild"],
     "suitableFor": ["Auto", "Zug", "Pause", "Zuhause"],
@@ -226,9 +226,9 @@
   {
     "id": "yes-and-story",
     "texts": {
-      "de": "Spielt „Ja und…“: Einer beginnt eine Geschichte, jeder Satz der anderen muss mit „Ja und…“ weitergehen.",
-      "en": "Play 'Yes, and…': one starts a story, every new sentence from the others has to begin with 'Yes, and…'.",
-      "da": "Leg „Ja, og…“: Én begynder en historie, og alle nye sætninger skal starte med „Ja, og…“."
+      "de": "Spielt „Ja und…“ mit einer ABF-Geschichte: Einer beginnt mit „Heute hat Tilla in Halle 25…“, jeder weitere Satz muss mit „Ja und…“ weitergehen.",
+      "en": "Play “Yes, and…” with an ABF story: one begins with “Today Tilla was in hall 25…” and every new sentence must start with “Yes, and…”.",
+      "da": "Leg „Ja, og…“ med en ABF-historie: Én begynder med „I dag var Tilla i hal 25…“, og alle nye sætninger skal starte med „Ja, og…“."
     },
     "tags": ["Kreativität", "Kooperation", "Humor", "Improvisation"],
     "suitableFor": ["Auto", "Zug", "Abendrunde", "Zuhause"],
@@ -240,9 +240,9 @@
   {
     "id": "moving-things-count",
     "texts": {
-      "de": "Zählt Dinge, die sich bewegen: Autos, Fahrräder, Blätter im Wind, Wolken…",
-      "en": "Count things that are moving: cars, bikes, leaves in the wind, clouds…",
-      "da": "Tæl ting, der bevæger sig: biler, cykler, blade i vinden, skyer …"
+      "de": "Zählt Dinge, die sich auf der ABF bewegen: Fahrzeuge, rollende Koffer, Fahrstühle, Kinderwagen oder Drehbühnen.",
+      "en": "Count things that are moving at ABF: vehicles, rolling suitcases, lifts, pushchairs or rotating stages.",
+      "da": "Tæl ting, der bevæger sig på ABF: køretøjer, rullende kufferter, elevatorer, barnevogne eller drejescener."
     },
     "tags": ["Beobachtung", "Achtsamkeit", "Zählen"],
     "suitableFor": ["Auto", "Zug", "Wiese", "Park"],
@@ -254,9 +254,9 @@
   {
     "id": "cloud-shapes",
     "texts": {
-      "de": "Sucht Formen in den Wolken und gebt ihnen Namen oder kleine Geschichten.",
-      "en": "Look for shapes in the clouds and give them names or little stories.",
-      "da": "Kig efter former i skyerne og giv dem navne eller små historier."
+      "de": "Wenn ihr draußen auf dem Messegelände eine Pause macht: Sucht Formen in den Wolken über der ABF und gebt ihnen Namen oder kleine Geschichten.",
+      "en": "When you take a break outside on the fairground, look for shapes in the clouds above ABF and give them names or little stories.",
+      "da": "Når I holder pause udenfor på messeområdet: Kig efter former i skyerne over ABF og giv dem navne eller små historier."
     },
     "tags": ["Fantasie", "Entspannung", "Beobachtung"],
     "suitableFor": ["Wiese", "Strand", "Park", "Rastplatz"],
@@ -268,9 +268,9 @@
   {
     "id": "animal-abc",
     "texts": {
-      "de": "Spielt ein Tier-ABC: Für jeden Buchstaben des Alphabets nennt ihr ein Tier.",
-      "en": "Play an animal ABC: for each letter of the alphabet, name an animal.",
-      "da": "Leg dyre-ABC: For hvert bogstav i alfabetet nævner I et dyr."
+      "de": "Spielt ein Tier-ABC mit Tieren, die es auf der ABF geben könnte – vom Ausstellungs-Hund bis zum Campingplatz-Igel.",
+      "en": "Play an animal ABC with animals that could appear at ABF – from exhibition dogs to hedgehogs on the campsite.",
+      "da": "Leg dyre-ABC med dyr, der kunne dukke op i forbindelse med ABF – fra udstillingshunde til pindsvin på campingpladsen."
     },
     "tags": ["Tiere", "Sprache", "Buchstaben"],
     "suitableFor": ["Auto", "Zug", "Pause", "Zuhause"],
@@ -282,9 +282,9 @@
   {
     "id": "playground-superpower",
     "texts": {
-      "de": "Überlegt euch für jeden unterwegs gesehenen Spielplatz eine besondere Superkraft: Was ist hier das Beste?",
-      "en": "For every playground you see, think of its superpower: what is the very best thing about it?",
-      "da": "Find på en superkraft til hver legeplads, I ser: Hvad er det allerbedste ved lige præcis den?"
+      "de": "Für jeden Spielbereich oder Bewegungs-Spot auf der ABF überlegt ihr eine Superkraft: „Beste Kletterwand“, „Schnellste Rutsche“ oder „Ruhigste Sitzecke“.",
+      "en": "For every play area or movement spot at ABF, think of a superpower: “best climbing wall”, “fastest slide” or “calmest seating corner”.",
+      "da": "Find på en superkraft til hvert lege- eller bevægelsesområde på ABF: „bedste klatrevæg“, „hurtigste rutsjebane“ eller „roligste siddested“."
     },
     "tags": ["Fantasie", "Spielplatz", "Ressourcenblick"],
     "suitableFor": ["Stadt", "Dorf", "Radweg", "Auto"],
@@ -296,9 +296,9 @@
   {
     "id": "one-colour-hunt",
     "texts": {
-      "de": "Wählt eine Farbe und sucht alle Dinge unterwegs, die diese Farbe haben.",
-      "en": "Pick one colour and look for everything along the way that has this colour.",
-      "da": "Vælg én farve og kig efter alle ting undervejs, som har den farve."
+      "de": "Wählt eine Farbe und sucht überall auf dem Messegelände Dinge in genau dieser Farbe – Stände, Flyer, Jacken, Teppiche…",
+      "en": "Pick one colour and look all over the fairground for things in exactly that colour – booths, flyers, jackets, carpets…",
+      "da": "Vælg én farve og kig rundt på hele messeområdet efter ting i netop den farve – stande, flyers, jakker, tæpper …"
     },
     "tags": ["Farben", "Beobachtung", "Fokus"],
     "suitableFor": ["Stadt", "Wald", "Auto", "Zug", "Spaziergang"],
@@ -310,9 +310,9 @@
   {
     "id": "sound-bingo",
     "texts": {
-      "de": "Macht ein Geräusche-Bingo: Jede Person denkt sich ein Geräusch aus, das sie heute gern hören würde.",
-      "en": "Create a sound bingo: each person chooses a sound they’d like to hear today.",
-      "da": "Lav lyd-bingo: Hver person vælger en lyd, de gerne vil høre i dag."
+      "de": "Macht ein ABF-Geräusche-Bingo: Jede Person überlegt sich ein Geräusch, das sie heute noch hören möchte – z. B. Applaus, Mikrofon-Ansage oder Motorensound.",
+      "en": "Create an ABF sound bingo: each person chooses a sound they would like to hear today – for example applause, a microphone announcement or an engine sound.",
+      "da": "Lav ABF-lyd-bingo: Hver person vælger en lyd, de gerne vil høre i dag – f.eks. klapsalver, en mikrofonmeddelelse eller en motors lyd."
     },
     "tags": ["Hören", "Achtsamkeit", "Humor"],
     "suitableFor": ["Stadt", "Wald", "Strand", "Auto", "Zug"],
@@ -324,9 +324,9 @@
   {
     "id": "bridges-and-tunnels-count",
     "texts": {
-      "de": "Zählt, wie viele Brücken, Tunnel oder Unterführungen ihr auf der Tour entdeckt.",
-      "en": "Count how many bridges, tunnels or underpasses you find on your trip.",
-      "da": "Tæl, hvor mange broer, tunneller eller underføringer I opdager på turen."
+      "de": "Zählt auf der Anreise zur ABF, wie viele Brücken, Tunnel oder Unterführungen ihr passiert – der Start ins Messe-Abenteuer.",
+      "en": "On your way to ABF, count how many bridges, tunnels or underpasses you pass – the start of your fair adventure.",
+      "da": "På vej til ABF tæller I, hvor mange broer, tunneller eller underføringer I kommer igennem – starten på messeeventyret."
     },
     "tags": ["Beobachtung", "Zählen", "Reiseroute"],
     "suitableFor": ["Auto", "Zug", "Radweg"],
@@ -338,9 +338,9 @@
   {
     "id": "if-i-were-an-animal",
     "texts": {
-      "de": "Spielt „Wenn ich ein Tier wäre…“: Jede Person sagt, welches Tier sie heute wäre und warum.",
-      "en": "Play 'If I were an animal…': everyone says which animal they would be today and why.",
-      "da": "Leg „Hvis jeg var et dyr…“: Hver person fortæller, hvilket dyr de ville være i dag – og hvorfor."
+      "de": "Spielt „Wenn ich ein Tier auf der ABF wäre…“: Wärt ihr heute eher ein neugieriger Messe-Fuchs, eine gemütliche Schildkröte wie Tilla oder ein lauter Messe-Papagei?",
+      "en": "Play “If I were an animal at ABF…”: would you be a curious fair fox today, a calm turtle like Tilla or a loud fair parrot?",
+      "da": "Leg „Hvis jeg var et dyr på ABF…“: Ville du i dag være en nysgerrig messe-ræv, en rolig skildpadde som Tilla eller en larmende messe-papegøje?"
     },
     "tags": ["Selbstwahrnehmung", "Fantasie", "Gespräch"],
     "suitableFor": ["Auto", "Zug", "Abendrunde", "Zuhause"],
@@ -352,9 +352,9 @@
   {
     "id": "letter-hunt-word",
     "texts": {
-      "de": "Sucht unterwegs nach Buchstaben, aus denen ihr gemeinsam ein Wort legen könnt (z. B. auf Schildern).",
-      "en": "Hunt for letters on signs that you can combine to form a word together.",
-      "da": "Led efter bogstaver på skilte, som I kan sætte sammen til et ord."
+      "de": "Sucht auf Schildern und Plakaten der ABF nach Buchstaben, aus denen ihr gemeinsam ein Wort legen könnt – vielleicht „ABF“, „TILLA“ oder „SPAß“.",
+      "en": "Hunt for letters on ABF signs and posters that you can combine to form a word together – maybe “ABF”, “TILLA” or “FUN”.",
+      "da": "Led efter bogstaver på skilte og plakater på ABF, som I kan sætte sammen til et ord – måske „ABF“, „TILLA“ eller „SJOV“."
     },
     "tags": ["Lesen", "Buchstaben", "Kooperation"],
     "suitableFor": ["Stadt", "Dorf", "Auto", "Zug"],
@@ -366,9 +366,9 @@
   {
     "id": "family-song",
     "texts": {
-      "de": "Erfindet ein kleines Familien-Lied mit einer einfachen Melodie, die ihr unterwegs summen könnt.",
-      "en": "Invent a little family song with a simple melody you can hum on the way.",
-      "da": "Find på en lille familiesang med en enkel melodi, som I kan nynne undervejs."
+      "de": "Erfindet ein kleines ABF-Familienlied mit einer einfachen Melodie, das ihr beim Wechsel von Halle zu Halle summen könnt.",
+      "en": "Invent a small ABF family song with a simple melody you can hum while walking from hall to hall.",
+      "da": "Find på en lille ABF-familiesang med en enkel melodi, som I kan nynne, når I går fra hal til hal."
     },
     "tags": ["Musik", "Kreativität", "Gemeinschaft"],
     "suitableFor": ["Spaziergang", "Wald", "Auto", "Zug", "Zuhause"],
@@ -380,9 +380,9 @@
   {
     "id": "step-count-guess",
     "texts": {
-      "de": "Zählt eure Schritte bis zum nächsten Ziel und schätzt vorher, wie viele es wohl sein werden.",
-      "en": "Count your steps to the next stop and guess beforehand how many it will be.",
-      "da": "Tæl jeres skridt til det næste mål og gæt på forhånd, hvor mange det mon bliver."
+      "de": "Schätzt, wie viele Schritte es von eurem aktuellen Stand bis zum nächsten Familien-Spot sind – und zählt dann gemeinsam nach.",
+      "en": "Guess how many steps it is from your current booth to the next family spot – then count together.",
+      "da": "Gæt, hvor mange skridt der er fra jeres nuværende stand til næste familiespot – og tæl så sammen."
     },
     "tags": ["Zählen", "Körpergefühl", "Schätzen"],
     "suitableFor": ["Wandern", "Spaziergang", "Stadt", "Wald"],
@@ -394,9 +394,9 @@
   {
     "id": "gratitude-game",
     "texts": {
-      "de": "Spielt ein Dankbarkeits-Spiel: Jede Person nennt drei Dinge, für die sie heute dankbar ist.",
-      "en": "Play a gratitude game: each person names three things they are thankful for today.",
-      "da": "Leg et taknemmeligheds-spil: Hver person nævner tre ting, de er taknemmelige for i dag."
+      "de": "Spielt ein Dankbarkeits-Spiel nach eurem Messetag: Jede Person nennt drei Dinge auf der ABF, für die sie heute dankbar ist.",
+      "en": "Play a gratitude game after your day at the fair: each person names three things at ABF they are thankful for today.",
+      "da": "Leg et taknemmeligheds-spil efter messedagen: Hver person nævner tre ting på ABF, de er taknemmelige for i dag."
     },
     "tags": ["Achtsamkeit", "Gefühle", "Reflexion"],
     "suitableFor": ["Abendrunde", "Rastplatz", "Zuhause"],
@@ -408,9 +408,9 @@
   {
     "id": "reporter-game",
     "texts": {
-      "de": "Stellt euch vor, ihr seid Reporter. Was würdet ihr über den Ort schreiben, an dem ihr gerade seid?",
-      "en": "Pretend you are reporters. What would you write about the place you are in right now?",
-      "da": "Forestil jer, at I er reportere. Hvad ville I skrive om stedet, hvor I er lige nu?"
+      "de": "Stellt euch vor, ihr seid Messe-Reporter. Was würdet ihr über die Halle oder den Stand schreiben, an dem ihr gerade seid?",
+      "en": "Pretend you are fair reporters. What would you write about the hall or booth you are in right now?",
+      "da": "Forestil jer, at I er messe-reportere. Hvad ville I skrive om den hal eller stand, hvor I er lige nu?"
     },
     "tags": ["Sprache", "Beobachtung", "Kreativität"],
     "suitableFor": ["Stadt", "Sehenswürdigkeit", "Museum", "Wald"],
@@ -422,9 +422,9 @@
   {
     "id": "favourite-smell",
     "texts": {
-      "de": "Sucht einen „Lieblingsgeruch des Tages“ – vielleicht Wald, Meer, Regen oder frische Luft.",
-      "en": "Find your 'favourite smell of the day' – maybe forest, sea, rain or just fresh air.",
-      "da": "Find dagens „yndlingsduft“ – måske skov, hav, regn eller bare frisk luft."
+      "de": "Sucht einen „Lieblingsgeruch des Tages“ auf der ABF – vielleicht Popcorn, frische Luft draußen oder der Duft in der Familienwelt.",
+      "en": "Find your “favourite smell of the day” at ABF – maybe popcorn, fresh air outside or the smell in the family area.",
+      "da": "Find dagens „yndlingsduft“ på ABF – måske popcorn, frisk luft udenfor eller duften i familieområdet."
     },
     "tags": ["Sinne", "Geruchssinn", "Achtsamkeit"],
     "suitableFor": ["Wald", "Meer", "Stadt", "Wiese"],
@@ -436,9 +436,9 @@
   {
     "id": "statue-game",
     "texts": {
-      "de": "Spielt Statue: Einer ruft „Stopp!“, alle bleiben wie eingefroren stehen, bis jemand „Weiter!“ sagt.",
-      "en": "Play statue: one shouts 'Stop!', everyone freezes like a statue until someone says 'Go!'.",
-      "da": "Leg statue: Én råber „Stop!“, alle fryser som statuer, indtil nogen siger „Fortsæt!“."
+      "de": "Spielt Statue im Gang: Einer ruft „Stopp!“, alle bleiben wie eingefroren stehen, bis jemand „Weiter zur ABF!“ sagt – natürlich so, dass ihr niemanden behindert.",
+      "en": "Play statue in a corridor: one shouts “Stop!” and everyone freezes like a statue until someone says “On to ABF!” – of course without blocking anyone.",
+      "da": "Leg statue i gangen: Én råber „Stop!“, alle fryser som statuer, indtil nogen siger „Videre på ABF!“ – selvfølgelig uden at stå i vejen for andre."
     },
     "tags": ["Bewegung", "Impulskontrolle", "Humor"],
     "suitableFor": ["Park", "Wiese", "Wald", "Spielplatz"],
@@ -450,9 +450,9 @@
   {
     "id": "tiny-courage-challenge",
     "texts": {
-      "de": "Überlegt euch für jeden eine kleine Mutaufgabe, die sich gut anfühlt – z. B. kurz barfuß gehen.",
-      "en": "Think of a tiny courage challenge for each person that feels good – like walking barefoot for a moment.",
-      "da": "Find på en lille mod-udfordring til hver, som føles rar – for eksempel at gå lidt barfodet."
+      "de": "Überlegt euch für jede Person eine kleine Mutaufgabe, die zur ABF passt – z. B. an einem Stand etwas fragen oder ein neues Fahrzeug von innen anschauen.",
+      "en": "Think of a tiny courage challenge for each person that fits ABF – for example asking a question at a booth or looking inside a new vehicle.",
+      "da": "Find på en lille mod-udfordring til hver, der passer til ABF – f.eks. at stille et spørgsmål ved en stand eller se ind i et nyt køretøj."
     },
     "tags": ["Mut", "Körpererfahrung", "Selbstvertrauen"],
     "suitableFor": ["Wiese", "Wald", "Strand", "Park"],
@@ -464,9 +464,9 @@
   {
     "id": "nature-floor-art",
     "texts": {
-      "de": "Sucht drei verschiedene Blätter oder Steine und legt daraus ein kleines Bodenbild.",
-      "en": "Find three different leaves or stones and create a tiny artwork on the ground.",
-      "da": "Find tre forskellige blade eller sten og lav et lille kunstværk på jorden."
+      "de": "Wenn ihr draußen auf dem Messegelände seid: Sucht drei verschiedene Natur-Funde und legt daraus ein kleines Bodenbild als „ABF-Kunstwerk“.",
+      "en": "When you are outside on the fairground, find three different natural objects and create a tiny artwork on the ground as your “ABF artwork”.",
+      "da": "Når I er udenfor på messeområdet: Find tre forskellige naturfund og lav et lille kunstværk på jorden som jeres „ABF-kunstværk“."
     },
     "tags": ["Kreativität", "Natur", "Gestalten"],
     "suitableFor": ["Wald", "Wiese", "Park", "Strand"],
@@ -478,9 +478,9 @@
   {
     "id": "time-travel-forward",
     "texts": {
-      "de": "Spielt „Vorwärts-Zeitreise“: Wie könnte dieser Ort in 10 Jahren aussehen?",
-      "en": "Play 'time travel forward': how might this place look in 10 years?",
-      "da": "Leg „tidsrejse fremad“: Hvordan kunne dette sted se ud om 10 år?"
+      "de": "Spielt „Vorwärts-Zeitreise“: Wie könnte die ABF hier in 10 Jahren aussehen – welche Stände, Fahrzeuge oder Familienbereiche wünscht ihr euch?",
+      "en": "Play “time travel forward”: how might ABF look here in 10 years – which booths, vehicles or family areas would you like to see?",
+      "da": "Leg „tidsrejse fremad“: Hvordan kunne ABF se ud her om 10 år – hvilke stande, køretøjer eller familieområder ville I ønske jer?"
     },
     "tags": ["Fantasie", "Zukunft", "Gespräch"],
     "suitableFor": ["Stadt", "Dorf", "Wald", "Strand"],
@@ -492,9 +492,9 @@
   {
     "id": "birdsong-count",
     "texts": {
-      "de": "Zählt, wie viele verschiedene Vogelstimmen ihr hören könnt – ihr müsst sie nicht kennen, nur wahrnehmen.",
-      "en": "Count how many different birdsongs you can hear – no need to know them, just notice them.",
-      "da": "Tæl, hvor mange forskellige fuglestemmer I kan høre – I behøver ikke kende dem, bare lægge mærke til dem."
+      "de": "Wenn ihr draußen eine Pause macht: Zählt, wie viele verschiedene Vogelstimmen ihr rund um das Messegelände hören könnt – ihr müsst sie nicht kennen, nur wahrnehmen.",
+      "en": "When you take a break outside, count how many different birdsongs you can hear around the fairground – you don’t have to know them, just notice them.",
+      "da": "Når I holder pause udenfor, tæller I, hvor mange forskellige fuglestemmer I kan høre omkring messeområdet – I behøver ikke kende dem, bare lægge mærke til dem."
     },
     "tags": ["Hören", "Natur", "Achtsamkeit"],
     "suitableFor": ["Wald", "Park", "Wiese", "See"],
@@ -506,9 +506,9 @@
   {
     "id": "family-motto",
     "texts": {
-      "de": "Erfindet für die Familie ein gemeinsames Motto für diesen Ausflug und sprecht es laut aus.",
-      "en": "Invent a shared family motto for this trip and say it out loud together.",
-      "da": "Find på et fælles familiemotto for denne tur og sig det højt sammen."
+      "de": "Erfindet ein gemeinsames Motto für euren ABF-Tag – z. B. „Wir entdecken in Ruhe“ oder „Heute trauen wir uns Fragen zu stellen“ – und sprecht es laut aus.",
+      "en": "Invent a shared motto for your ABF day – for example “We explore calmly” or “Today we dare to ask questions” – and say it out loud together.",
+      "da": "Find på et fælles motto for jeres ABF-dag – f.eks. „Vi udforsker i ro“ eller „I dag tør vi stille spørgsmål“ – og sig det højt sammen."
     },
     "tags": ["Gemeinschaft", "Ritual", "Motivation"],
     "suitableFor": ["Start-des-Tages", "Rastplatz", "Zuhause"],
@@ -520,9 +520,9 @@
   {
     "id": "swap-places-sign",
     "texts": {
-      "de": "Spielt „Wechsel den Platz“: Immer wenn ihr ein bestimmtes Zeichen seht (z. B. ein rotes Schild), tauschen zwei Personen die Plätze.",
-      "en": "Play 'swap places': whenever you see a certain sign (for example a red sign), two people swap places.",
-      "da": "Leg „Byt plads“: Hver gang I ser et bestemt tegn (for eksempel et rødt skilt), bytter to personer plads."
+      "de": "Spielt „Wechsel den Platz“ auf dem Weg durch die Hallen: Immer wenn ihr ein bestimmtes Zeichen seht (z. B. ein grünes Notausgangsschild), tauschen zwei Personen die Plätze – nur, wenn es gerade gut passt.",
+      "en": "Play “swap places” while walking through the halls: whenever you see a certain sign (for example a green exit sign), two people swap places – only when it fits and is safe.",
+      "da": "Leg „Byt plads“ på vej gennem hallerne: Hver gang I ser et bestemt tegn (f.eks. et grønt nødudgangsskilt), bytter to personer plads – kun når det passer og er sikkert."
     },
     "tags": ["Bewegung", "Humor", "Aufmerksamkeit"],
     "suitableFor": ["Spaziergang", "Wandern", "Spielplatz"],
@@ -534,9 +534,9 @@
   {
     "id": "favourite-moment-of-day",
     "texts": {
-      "de": "Zum Abschluss: Jede Person erzählt einen Lieblingsmoment des Tages – groß oder ganz winzig.",
-      "en": "At the end: each person tells one favourite moment of the day – big or very small.",
-      "da": "Til sidst: Hver person fortæller om ét yndlingsøjeblik fra dagen – stort eller bitte lille."
+      "de": "Zum Abschluss eures ABF-Tages: Jede Person erzählt einen Lieblingsmoment – eine Begegnung, ein Stand oder eine ruhige Pause.",
+      "en": "At the end of your ABF day, each person shares one favourite moment – a meeting, a booth or a quiet break.",
+      "da": "Til sidst på jeres ABF-dag fortæller hver person om ét yndlingsøjeblik – et møde, en stand eller en rolig pause."
     },
     "tags": ["Reflexion", "Dankbarkeit", "Tagesabschluss"],
     "suitableFor": ["Abendrunde", "Zelt", "Zuhause"],
@@ -548,9 +548,9 @@
   {
     "id": "tilla-postcard",
     "texts": {
-      "de": "Stellt euch vor, ihr schreibt Tilla eine Postkarte von diesem Ort: Was würdet ihr ihr erzählen?",
-      "en": "Imagine you are writing Tilla a postcard from this place: what would you tell her?",
-      "da": "Forestil jer, at I skriver et postkort til Tilla fra dette sted: Hvad ville I fortælle hende?"
+      "de": "Stellt euch vor, ihr schreibt Tilla eine Postkarte von der ABF: Aus welcher Halle schreibt ihr, was habt ihr entdeckt und was sollte Tilla sich unbedingt ansehen?",
+      "en": "Imagine you are writing Tilla a postcard from ABF: which hall are you writing from, what did you discover and what should Tilla definitely see?",
+      "da": "Forestil jer, at I skriver et postkort til Tilla fra ABF: Fra hvilken hal skriver I, hvad har I opdaget, og hvad bør Tilla helt sikkert se?"
     },
     "tags": ["Sprache", "Reflexion", "Verbundenheit"],
     "suitableFor": ["Wiese", "Park", "Stadt", "Abendrunde", "Zuhause"],
@@ -562,9 +562,9 @@
   {
     "id": "mini-treasure-map",
     "texts": {
-      "de": "Zeichnet gemeinsam eine Mini-Schatzkarte von dem Ort, an dem ihr seid, und versteckt einen kleinen Schatz (z. B. einen Stein oder Stock).",
-      "en": "Draw a tiny treasure map of the place you are in and hide a little treasure (for example a stone or stick).",
-      "da": "Tegn et lille skattekort over stedet, hvor I er, og gem en lille skat (for eksempel en sten eller en pind)."
+      "de": "Zeichnet gemeinsam eine Mini-Schatzkarte von eurem Lieblingsbereich der ABF und versteckt einen kleinen „Erinnerungsschatz“ (z. B. eine Eintrittskarte oder einen schönen Prospekt) in eurer Tasche.",
+      "en": "Draw a tiny treasure map of your favourite area at ABF and hide a small “memory treasure” (for example a ticket or a nice leaflet) in your bag.",
+      "da": "Tegn et lille skattekort over jeres yndlingsområde på ABF og gem en lille „mindeskat“ (f.eks. en billet eller en fin brochure) i jeres taske."
     },
     "tags": ["Kreativität", "Orientierung", "Natur"],
     "suitableFor": ["Wald", "Park", "Spielplatz", "Wiese", "Strand"],
@@ -576,9 +576,9 @@
   {
     "id": "weather-report-game",
     "texts": {
-      "de": "Spielt Wetterbericht: Eine Person ist Reporter und beschreibt das Wetter so, als wäre es eine spannende Nachrichtensendung.",
-      "en": "Play weather report: one person is the reporter and describes the weather as if it were breaking news.",
-      "da": "Leg vejrudsendelse: Én er reporter og beskriver vejret, som om det var en vigtig nyhedsudsendelse."
+      "de": "Spielt Wetterbericht für die ABF: Eine Person ist Reporterin und beschreibt das Wetter und die Stimmung auf dem Messegelände, als wäre es eine spannende Nachrichtensendung.",
+      "en": "Play weather report for ABF: one person is the reporter and describes the weather and mood on the fairground as if it were breaking news.",
+      "da": "Leg vejrudsendelse for ABF: Én er reporter og beskriver vejret og stemningen på messeområdet, som om det var en vigtig nyhedsudsendelse."
     },
     "tags": ["Sprache", "Humor", "Beobachtung"],
     "suitableFor": ["Wiese", "Stadt", "Strand", "Wald", "Unterwegs"],
@@ -590,9 +590,9 @@
   {
     "id": "shadow-shapes",
     "texts": {
-      "de": "Spielt mit euren Schatten: Könnt ihr Tiere, Buchstaben oder lustige Figuren nur mit euren Schatten formen?",
-      "en": "Play with your shadows: can you make animals, letters or funny shapes using only your shadows?",
-      "da": "Leg med jeres skygger: Kan I lave dyr, bogstaver eller sjove figurer kun med jeres skygger?"
+      "de": "Wenn draußen die Sonne scheint: Spielt mit euren Schatten vor den Hallen – könnt ihr Messe-Tiere, Buchstaben oder lustige Figuren nur mit euren Schatten formen?",
+      "en": "When the sun is shining outside, play with your shadows in front of the halls – can you make fair animals, letters or funny shapes using only your shadows?",
+      "da": "Når solen skinner udenfor: Leg med jeres skygger foran hallerne – kan I lave messe-dyr, bogstaver eller sjove figurer kun med jeres skygger?"
     },
     "tags": ["Bewegung", "Fantasie", "Sinne"],
     "suitableFor": ["Wiese", "Park", "Spielplatz", "Strand"],
@@ -604,9 +604,9 @@
   {
     "id": "kindness-missions",
     "texts": {
-      "de": "Erfindet kleine Freundlichkeits-Missionen: Jemand lächelt drei Menschen an, jemand sagt „Danke“ besonders bewusst.",
-      "en": "Create tiny kindness missions: one person smiles at three people, another says 'thank you' especially consciously.",
-      "da": "Find på små venligheds-missioner: Én smiler til tre mennesker, en anden siger „tak“ ekstra bevidst."
+      "de": "Erfindet kleine Freundlichkeits-Missionen für die ABF: Jemand lächelt drei Menschen im Gang an, jemand bedankt sich extra bewusst bei einer Standperson.",
+      "en": "Create tiny kindness missions for ABF: one person smiles at three people in the corridor, another says a very conscious “thank you” to a booth staff member.",
+      "da": "Find på små venligheds-missioner til ABF: Én smiler til tre mennesker i gangen, en anden siger ekstra bevidst „tak“ til en person ved en stand."
     },
     "tags": ["Achtsamkeit", "Verbundenheit", "Soziales"],
     "suitableFor": ["Stadt", "Dorf", "Unterwegs", "Zuhause"],
@@ -618,9 +618,9 @@
   {
     "id": "backpack-oracle",
     "texts": {
-      "de": "Spielt Rucksack-Orakel: Jede Person zieht einen Gegenstand aus dem Rucksack und erzählt, warum er heute wichtig war oder noch wichtig werden könnte.",
-      "en": "Play backpack oracle: each person takes one item out of the backpack and tells why it was important today or might still become important.",
-      "da": "Leg rygsæk-orakel: Hver person tager én ting op af rygsækken og fortæller, hvorfor den var vigtig i dag, eller kan blive det."
+      "de": "Spielt Rucksack-Orakel im Sitzbereich: Jede Person zieht einen Gegenstand aus dem Messe-Rucksack und erzählt, warum er heute wichtig war oder noch wichtig werden könnte.",
+      "en": "Play backpack oracle in a seating area: each person takes one item out of the fair backpack and tells why it was important today or might still become important.",
+      "da": "Leg rygsæk-orakel i et siddeområde: Hver person tager én ting op af messe-rygsækken og fortæller, hvorfor den var vigtig i dag eller kan blive det."
     },
     "tags": ["Reflexion", "Humor", "Sprache"],
     "suitableFor": ["Rastplatz", "Wiese", "Zug", "Zuhause"],
@@ -632,9 +632,9 @@
   {
     "id": "three-sounds-memory",
     "texts": {
-      "de": "Sammelt drei Geräusche dieses Ortes, die ihr euch merken wollt, und sprecht sie später am Tag noch einmal gemeinsam nach.",
-      "en": "Collect three sounds of this place that you want to remember and imitate them together again later in the day.",
-      "da": "Saml tre lyde fra dette sted, som I gerne vil huske, og efterlign dem sammen senere på dagen."
+      "de": "Sammelt drei typische ABF-Geräusche, die ihr euch merken wollt – vielleicht Musik, Stimmengewirr und ein Fahrzeug – und macht sie abends gemeinsam noch einmal nach.",
+      "en": "Collect three typical ABF sounds you want to remember – maybe music, crowd noise and a vehicle – and imitate them together again in the evening.",
+      "da": "Saml tre typiske ABF-lyde, som I gerne vil huske – måske musik, menneskesummen og et køretøj – og efterlign dem sammen igen om aftenen."
     },
     "tags": ["Hören", "Erinnerung", "Achtsamkeit"],
     "suitableFor": ["Wald", "Park", "Stadt", "Strand", "See"],
@@ -646,9 +646,9 @@
   {
     "id": "slow-motion-race",
     "texts": {
-      "de": "Macht ein Zeitlupen-Rennen: Wer kann am langsamsten bis zu einem vereinbarten Punkt gehen, ohne stehenzubleiben?",
-      "en": "Do a slow-motion race: who can walk to an agreed point the slowest without stopping?",
-      "da": "Lav et langsom-løb: Hvem kan gå langsomst hen til et aftalt punkt uden at stoppe?"
+      "de": "Macht ein Zeitlupen-Rennen auf einem freien Gangstück: Wer kommt am langsamsten bis zu einem markierten Punkt, ohne stehenzubleiben und ohne andere zu behindern?",
+      "en": "Do a slow-motion race in a free corridor area: who can walk to a marked point the slowest without stopping and without blocking anyone?",
+      "da": "Lav et langsom-løb på et frit stykke gang: Hvem kan gå langsomst hen til et markeret punkt uden at stoppe og uden at stå i vejen for andre?"
     },
     "tags": ["Bewegung", "Humor", "Körpergefühl"],
     "suitableFor": ["Wiese", "Spielplatz", "Park", "Strand"],
@@ -660,9 +660,9 @@
   {
     "id": "tiny-museum",
     "texts": {
-      "de": "Eröffnet ein Mini-Museum: Jedes Kind sucht einen Fund (Stein, Blatt, Ticket) und erklärt, warum er in die Ausstellung kommt.",
-      "en": "Open a tiny museum: each child finds one object (stone, leaf, ticket) and explains why it belongs in the exhibition.",
-      "da": "Åbn et mini-museum: Hvert barn finder en ting (sten, blad, billet) og forklarer, hvorfor den skal med i udstillingen."
+      "de": "Eröffnet ein Mini-ABF-Museum in eurer Tasche: Jedes Kind sucht einen Fund des Tages (z. B. Ticket, Sticker, Prospekt) und erklärt, warum er in die Ausstellung kommt.",
+      "en": "Open a tiny ABF museum in your bag: each child chooses one find of the day (for example a ticket, sticker or leaflet) and explains why it belongs in the exhibition.",
+      "da": "Åbn et mini-ABF-museum i jeres taske: Hvert barn vælger én dagens ting (f.eks. billet, sticker eller brochure) og forklarer, hvorfor den skal med i udstillingen."
     },
     "tags": ["Kreativität", "Sprache", "Natur", "Erinnerung"],
     "suitableFor": ["Wald", "Wiese", "Park", "Stadt", "Strand"],
@@ -674,9 +674,9 @@
   {
     "id": "feeling-check-in-weather",
     "texts": {
-      "de": "Macht einen Gefühls-Check-in mit Wettersprache: „In mir ist gerade Sonnenschein, leichter Regen oder Wind“ – ohne zu werten.",
-      "en": "Do a feelings check-in using weather words: 'inside me it’s sunny, light rain or windy' – without judging.",
-      "da": "Lav et følelses-tjek med vejr-ord: „Inde i mig er der sol, let regn eller blæst“ – uden at dømme."
+      "de": "Macht einen Gefühls-Check-in mit Wettersprache extra für die ABF: „In mir ist gerade Messe-Sonnenschein, leichter Hallenregen oder etwas Wind im Kopf“ – ohne zu werten.",
+      "en": "Do a feelings check-in using weather words just for ABF: “inside me it’s fairground sunshine, light hall rain or a bit of wind in my head” – without judging.",
+      "da": "Lav et følelses-tjek med vejr-ord særligt til ABF: „Inde i mig er der messe-solskin, let hal-regn eller lidt blæst i hovedet“ – uden at dømme."
     },
     "tags": ["Gefühle", "Achtsamkeit", "Gespräch"],
     "suitableFor": ["Abendrunde", "Auto", "Zug", "Zuhause"],
@@ -688,9 +688,9 @@
   {
     "id": "future-self-message",
     "texts": {
-      "de": "Sprecht eine kurze Botschaft an euer Zukunfts-Ich: Was soll es sich von diesem Tag merken?",
-      "en": "Speak a short message to your future self: what should it remember from this day?",
-      "da": "Sig en kort besked til jeres fremtidige jeg: Hvad skal det huske fra denne dag?"
+      "de": "Sprecht eine kurze Botschaft an euer Zukunfts-Ich nach dem ABF-Besuch: Was soll es sich von diesem Messetag merken?",
+      "en": "Speak a short message to your future self after visiting ABF: what should it remember from this day at the fair?",
+      "da": "Sig en kort besked til jeres fremtidige jeg efter ABF-besøget: Hvad skal det huske fra denne messedag?"
     },
     "tags": ["Reflexion", "Erinnerung", "Gefühle"],
     "suitableFor": ["Abendrunde", "Zelt", "Zuhause", "Rastplatz"],
@@ -702,9 +702,9 @@
   {
     "id": "tilla-route-name",
     "texts": {
-      "de": "Gebt eurer heutigen Route einen Namen, so als wäre sie ein offizieller Tilla-Weg – wie würde er heißen?",
-      "en": "Give today’s route a name as if it were an official Tilla trail – what would it be called?",
-      "da": "Giv dagens rute et navn, som om det var en officiel Tilla-sti – hvad skulle den hedde?"
+      "de": "Gebt eurer heutigen Tour über die ABF einen Namen, so als wäre sie ein offizieller Tilla-Weg – wie würde dieser Messeweg heißen?",
+      "en": "Give today’s tour across ABF a name as if it were an official Tilla trail – what would this fair route be called?",
+      "da": "Giv dagens tur over ABF et navn, som om det var en officiel Tilla-sti – hvad skulle denne messe-rute hedde?"
     },
     "tags": ["Fantasie", "Orientierung", "Gemeinschaft"],
     "suitableFor": ["Wandern", "Spaziergang", "Radweg", "Stadt"],
