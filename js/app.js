@@ -3,6 +3,8 @@
 // Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
 // Map- und Filterlogik ist in map.js / filters.js ausgelagert.
 // Daten & Plus-Logik sind in data.js / features/plus.js ausgelagert.
+// ABF 2026 Sonderedition – Texte und Logik sind auf das Messegelände
+// Hannover und die ABF Partner-Spots abgestimmt.
 // ======================================================
 
 "use strict";
@@ -126,7 +128,7 @@ const t = (key) =>
     ? I18N.t(key)
     : key;
 
-/** Spielideen aus I18N abholen – mit statischem Fallback */
+/** Spielideen aus I18N abholen – mit statischem Fallback (ABF-Edition) */
 function getRandomPlayIdea() {
   // 1. Wenn I18N eigene Ideen liefert, diese bevorzugen
   if (
@@ -137,28 +139,28 @@ function getRandomPlayIdea() {
     if (ideaFromI18n) return ideaFromI18n;
   }
 
-  // 2. Statische Fallback-Ideen je Sprache
+  // 2. ABF-spezifische Fallback-Ideen je Sprache
   const FALLBACK_PLAY_IDEAS = {
     de: [
-      "Macht eine Mini-Schatzsuche: Jedes Kind denkt sich eine Sache aus, die alle finden sollen.",
-      "Sammelt drei Dinge in der Natur mit derselben Farbe und baut daraus ein kleines Kunstwerk.",
-      "Findet fünf runde und fünf eckige Dinge und legt daraus ein Bild auf dem Boden.",
-      "Spielt „Ich sehe was, was du nicht siehst“ nur mit Dingen in einer bestimmten Farbe.",
-      "Erfindet gemeinsam eine kleine Geschichte zu einem Baum, Stein oder Haus, an dem ihr gerade vorbeikommt."
+      "Zählt, wie viele Hallen ihr heute schon besucht habt. In welcher Halle hat sich euer Lieblingsmoment versteckt?",
+      "Sucht gemeinsam einen Ort auf der ABF, an dem ihr kurz durchschnaufen könnt – und gebt ihm einen Namen wie „Tillas Ruhe-Ecke“.",
+      "Spielt Messe-Bingo: Findet einen Luftballon, ein Tier, etwas, das glitzert, und einen Platz zum Sitzen.",
+      "Lasst ein Kind für ein paar Minuten den Weg bestimmen: Welche Halle schauen wir uns als Nächstes an?",
+      "Überlegt euch ein kleines Familien-Motto nur für diesen ABF-Tag und sprecht es gemeinsam laut aus."
     ],
     en: [
-      "Do a tiny treasure hunt: each child thinks of one thing everyone has to find.",
-      "Collect three things in nature with the same colour and build a tiny artwork from them.",
-      "Look for five round and five square objects and arrange them as a little picture on the ground.",
-      "Play “I spy with my little eye” but only with things of one colour.",
-      "Make up a short story together about a tree, rock or house you can see right now."
+      "Count how many halls you have already visited today. In which hall did your favourite moment hide?",
+      "Look for a quiet corner at ABF where you can take a breath – and give it a name like “Tilla’s calm corner”.",
+      "Play fairground bingo: find a balloon, an animal, something that sparkles and a place to sit down.",
+      "Let one child decide the route for a few minutes: which hall shall we visit next?",
+      "Invent a tiny family motto just for this ABF day and say it out loud together."
     ],
     da: [
-      "Lav en mini-skattejagt: Hvert barn finder på én ting, som alle skal finde.",
-      "Saml tre ting i naturen med samme farve og lav et lille kunstværk ud af dem.",
-      "Find fem runde og fem kantede ting og læg dem som et lille billede på jorden.",
-      "Leg „Jeg ser noget, som du ikke ser“ – men kun med ting i én bestemt farve.",
-      "Find på en lille historie sammen om et træ, en sten eller et hus, som I kan se lige nu."
+      "Tæl, hvor mange haller I allerede har været i i dag. I hvilken hal gemte yndlingsøjeblikket sig?",
+      "Find sammen et roligt hjørne på ABF, hvor I kan puste ud – og giv det et navn som „Tillas pauseplads“.",
+      "Leg messe-bingo: Find en ballon, et dyr, noget der glimter, og et sted at sidde.",
+      "Lad et barn bestemme ruten i et par minutter: Hvilken hal skal vi se som den næste?",
+      "Find på et lille familiemotto kun til denne ABF-dag og sig det højt sammen."
     ]
   };
 
@@ -680,19 +682,20 @@ function setLanguage(lang, { initial = false } = {}) {
   if (filterSearchEl) {
     filterSearchEl.placeholder =
       currentLang === LANG_EN
-        ? "Place, spot, keywords …"
+        ? "Hall, spot, keywords …"
         : currentLang === LANG_DA
-        ? "Sted, spot, søgeord …"
-        : "Ort, Spot, Stichwörter …";
+        ? "Hal, spot, søgeord …"
+        : "Halle, Spot, Stichwort …";
   }
 
+  // ABF-spezifisches Beispiel für „Mein ABF-Tag“
   if (daylogTextEl && FEATURES.daylog) {
     daylogTextEl.placeholder =
       currentLang === LANG_EN
-        ? "Today we went to the wildlife park – the goats were sooo cute!"
+        ? "Today we were at ABF – our favourite spot was …"
         : currentLang === LANG_DA
-        ? "I dag var vi i dyreparken – gederne var såå søde!"
-        : "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
+        ? "I dag var vi på ABF – vores yndlingssted var …"
+        : "Heute waren wir auf der ABF – unser Lieblingsplatz war …";
   }
 
   if (FEATURES.daylog) {
@@ -1414,7 +1417,7 @@ function isSpotCurrentlyValid(spot, now = new Date()) {
  * @returns {boolean}
  */
 function userCanSeeSpot(spot) {
-  // 1. Datum (z. B. ABF 2026: 11.–15.02.2026)
+  // 1. Datum (z. B. ABF 2026)
   if (!isSpotCurrentlyValid(spot)) {
     return false;
   }
