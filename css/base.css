@@ -3,17 +3,14 @@
    Corporate Refine
    ========================================= */
 
-/* -----------------------------------------
-   Reset & Box-Sizing
-   ----------------------------------------- */
-
+/* Reset & Box-Sizing */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/* Grund-HTML-Setup */
+/* Grundsetup für HTML & Body */
 html,
 body {
   margin: 0;
@@ -21,24 +18,22 @@ body {
   min-height: 100%;
 }
 
-/* Etwas stabilere Basis für Textskalierung */
+/* Basiseinstellungen für HTML:
+   - bessere Skalierung
+   - sanftes Scrollen für Anker (z. B. „Zur Spot-Liste springen“) */
 html {
+  font-size: 100%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  font-size: 16px;
 }
 
-/* -----------------------------------------
-   Grundlegende Typografie & Body Styling
-   ----------------------------------------- */
-
+/* Grundlegende Typografie & Body Styling */
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "Segoe UI", sans-serif;
-  font-size: 0.9375rem; /* ~15px – gut lesbar, aber nicht zu groß */
+  font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   background: var(--app-bg);
   color: var(--text-color, #452213);
   transition:
@@ -46,74 +41,31 @@ body {
     color 0.3s ease;
 }
 
-/* Überschriften – klare, moderne Hierarchie */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: 700;
-  line-height: 1.2;
-  margin: 0 0 0.35em;
-  color: var(--text-strong, #2f160b);
+/* Ab mittleren Viewports etwas größere Grundschrift
+   – besonders für den About-Text angenehm */
+@media (min-width: 900px) {
+  body {
+    font-size: 16px;
+  }
 }
 
-h1 {
-  font-size: clamp(2rem, 4.4vw, 2.6rem);
-  letter-spacing: 0.02em;
-}
-
-h2 {
-  font-size: clamp(1.4rem, 2.6vw, 1.6rem);
-}
-
-h3 {
-  font-size: 1.1rem;
-}
-
-/* Grund-Textabstände für Fließtext (Detail-Overrides z. B. in .page-about) */
-p {
-  margin: 0 0 0.75em;
-}
-
-/* Listen etwas kompakter, aber klar strukturiert */
-ul,
-ol {
-  margin: 0 0 0.75em;
-  padding-left: 1.25rem;
-}
-
-/* Bilder: nie aus dem Layout „ausbrechen“ lassen */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* -----------------------------------------
-   Form Controls
-   ----------------------------------------- */
-
-/* Form Controls erben die Schrift-Eigenschaften des Body */
+/* Form Controls erben gleiche Schriftart */
 button,
 input,
 textarea,
 select {
   font-family: inherit;
-  font-size: 100%;
 }
 
-/* -----------------------------------------
-   Links
-   ----------------------------------------- */
-
-/* Links: neutral im UI, aber im Fließtext trotzdem erkennbar */
+/* Links: keine Unterstreichung, Farbe vererben
+   – Hover-Status übernehmen die Komponenten bei Bedarf */
 a {
   color: inherit;
   text-decoration: none;
 }
 
+/* Dezente Unterstreichung nur bei explizitem Hover/Fokus
+   in Fließtexten (z. B. Mail-Link im About) */
 a:hover,
 a:focus-visible {
   text-decoration: underline;
@@ -121,22 +73,102 @@ a:focus-visible {
   text-underline-offset: 2px;
 }
 
-/* -----------------------------------------
-   Grund-Layout
-   ----------------------------------------- */
-
+/* Grund-Layout der App-Wrapper */
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* -----------------------------------------
-   Fokus-Outline (global)
-   Komponenten können das bei Bedarf überschreiben
-   ----------------------------------------- */
+/* =========================================
+   TYPOGRAFIE-GRUNDBASIS
+   (Komponenten-spezifische Größen bleiben unberührt)
+   ========================================= */
 
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+  color: var(--text-strong, #2f160b);
+  line-height: 1.25;
+}
+
+/* H1 wird in der Regel per .header-title überschrieben,
+   hier nur ein sauberer Default */
+h1 {
+  font-size: 1.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+h3 {
+  font-size: 1.15rem;
+}
+
+h4 {
+  font-size: 1rem;
+}
+
+p {
+  margin: 0 0 0.75rem;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+small {
+  font-size: 0.875em;
+}
+
+strong {
+  font-weight: 600;
+}
+
+/* Listen etwas luftiger, aber kompakt genug für mobile */
+ul,
+ol {
+  margin: 0 0 0.75rem 1.25rem;
+  padding: 0;
+}
+
+li + li {
+  margin-top: 0.15rem;
+}
+
+/* Bilder sollen nie „aus dem Layout laufen“ */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* =========================================
+   FOKUS & SELECTION
+   ========================================= */
+
+/* Globale Fokus-Outline (Element-spezifische Styles
+   aus components.css können diese überschreiben) */
 :focus-visible {
-  outline: 2px solid #ffb54f;
+  outline: 2px solid rgba(245, 158, 11, 0.9); /* warmes, klares Orange */
   outline-offset: 2px;
+}
+
+/* Auswahlfarbe passend zum Brand */
+::selection {
+  background: var(--accent-soft, #ffe0b2);
+  color: var(--text-strong, #2f160b);
+}
+
+/* =========================================
+   MISC
+   ========================================= */
+
+/* Verhindert horizontales Scrollen durch kleine Offsets */
+body {
+  overflow-x: hidden;
 }
