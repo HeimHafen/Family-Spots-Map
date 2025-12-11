@@ -243,6 +243,18 @@ textarea.input:focus-visible,
   box-shadow: var(--header-shadow);
 }
 
+/* Light-Mode-Variante: hell, cremig, kein „Nachtbrett“ */
+html[data-theme="light"] .app-header {
+  background: radial-gradient(
+      circle at top left,
+      #fff7ed 0,
+      #f9fafb 46%,
+      #e5f0ff 100%
+    );
+  color: var(--text-strong, #111827);
+  box-shadow: var(--elevation-md);
+}
+
 .app-header-top {
   display: flex;
   justify-content: space-between;
@@ -327,7 +339,12 @@ textarea.input:focus-visible,
   justify-content: center;
   gap: 6px;
   text-shadow: none;
-  color: var(--header-text-color); /* überschreibt h1-Default, fix für Light-Mode */
+  color: var(--header-text-color);
+}
+
+/* im Light-Mode immer klar dunkel */
+html[data-theme="light"] .header-title {
+  color: var(--text-strong, #111827);
 }
 
 .header-title:focus-visible {
@@ -1967,7 +1984,7 @@ body[data-menu-open="1"] {
 
 .popup-actions {
   margin-top: 4px;
-  display: flex;
+ 	display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
