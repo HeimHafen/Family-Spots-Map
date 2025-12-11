@@ -1072,26 +1072,31 @@ function renderTagFilterChips() {
 // Kompakte Filter-Zusammenfassung (unter Basis-Filtern)
 // ------------------------------------------------------
 
-function getMoodLabelForSummary() {
-  if (!moodFilter) return "";
+function getMoodLabel(moodKey) {
+  if (!moodKey) return "";
 
   if (currentLang === LANG_EN) {
-    if (moodFilter === "relaxed") return "Relaxed";
-    if (moodFilter === "action") return "Active";
-    if (moodFilter === "water") return "Water & sand";
-    if (moodFilter === "animals") return "Animal day";
+    if (moodKey === "relaxed") return "Relaxed";
+    if (moodKey === "action") return "Active";
+    if (moodKey === "water") return "Water & sand";
+    if (moodKey === "animals") return "Animal day";
   } else if (currentLang === LANG_DA) {
-    if (moodFilter === "relaxed") return "Afslappet";
-    if (moodFilter === "action") return "Aktiv";
-    if (moodFilter === "water") return "Vand & sand";
-    if (moodFilter === "animals") return "Dyredag";
+    if (moodKey === "relaxed") return "Afslappet";
+    if (moodKey === "action") return "Aktiv";
+    if (moodKey === "water") return "Vand & sand";
+    if (moodKey === "animals") return "Dyredag";
   } else {
-    if (moodFilter === "relaxed") return "Entspannt";
-    if (moodFilter === "action") return "Bewegung";
-    if (moodFilter === "water") return "Wasser & Sand";
-    if (moodFilter === "animals") return "Tier-Tag";
+    if (moodKey === "relaxed") return "Entspannt";
+    if (moodKey === "action") return "Bewegung";
+    if (moodKey === "water") return "Wasser & Sand";
+    if (moodKey === "animals") return "Tier-Tag";
   }
   return "";
+}
+
+function getMoodLabelForSummary() {
+  if (!moodFilter) return "";
+  return getMoodLabel(moodFilter);
 }
 
 function updateFilterSummary() {
@@ -1607,35 +1612,261 @@ function applyFiltersAndRender() {
 }
 
 // ------------------------------------------------------
-// Marker-Liste & Meta
+// Marker-Liste & Meta + Badges
 // ------------------------------------------------------
 
 function isSpotVerified(spot) {
   return !!spot.verified || !!spot.isVerified;
 }
 
+function isBigAdventureSpot(spot) {
+  return !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
+}
+
+function isPlusSpot(spot) {
+  if (!FEATURES.plus) return false;
+  if (spot.plusOnly || spot.plus) return true;
+
+  const slugs = Array.isArray(spot.categories)
+    ? spot.categories
+    : spot.category
+    ? [spot.category]
+    : [];
+
+  if (!slugs.length) return false;
+  return slugs.some((slug) => {
+    if (!slug) return false;
+    if (typeof isPlusCategory === "function") {
+      return isPlusCategory(slug);
+    }
+    return false;
+  });
+}
+
+function getSpotPrimaryMoodKey(spot) {
+  const src =
+    spot._moods ||
+    spot.moods ||
+    spot.moodTags ||
+    spot.mood;
+
+  let arr = [];
+  if (Array.isArray(src)) {
+    arr = src;
+  } else if (typeof src === "string" && src.trim()) {
+    arr = src
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+
+  return arr.length ? arr[0] : null;
+}
+
+function getSpotAgeLabel(spot) {
+  const src =
+    spot._ageGroups ||
+    spot.ageGroups ||
+    spot.age ||
+    spot.ages;
+
+  let arr = [];
+  if (Array.isArray(src)) {
+    arr = src;
+  } else if (typeof src === "string" && src.trim()) {
+    arr = src
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+
+  const key = arr.length ? arr[0] : null;
+  if (!key) return "";
+
+  const lang = currentLang;
+  if (lang === LANG_EN) {
+    if (key === "0-3") return "0–3 yrs";
+    if (key === "4-9") return "4–9 yrs";
+    if (key === "10+") return "10+ yrs";
+    return key;
+  }
+  if (lang === LANG_DA) {
+    if (key === "0-3") return "0–3 år";
+    if (key === "4-9") return "4–9 år";
+    if (key === "10+") return "10+ år";
+    return key;
+  }
+  // Deutsch
+  if (key === "0-3") return "0–3 Jahre";
+  if (key === "4-9") return "4–9 Jahre";
+  if (key === "10+") return "10+ Jahre";
+  return key;
+}
+
+function getSpotVisitTimeLabel(spot) {
+  const minutes = spot.visit_minutes;
+  if (!minutes || !Number.isFinite(minutes)) return "";
+  if (minutes < 60) {
+    if (currentLang === LANG_EN || currentLang === LANG_DA) {
+      return `~${minutes} min`;
+    }
+    return `~${minutes} Min.`;
+  }
+
+  const hours = minutes / 60;
+  const rounded = Math.round(hours * 10) / 10;
+  const formatter = new Intl.NumberFormat(
+    currentLang === LANG_DA ? "da-DK" : currentLang === LANG_EN ? "en-GB" : "de-DE",
+    { maximumFractionDigits: 1 }
+  );
+  const hoursLabel = formatter.format(rounded);
+
+  if (currentLang === LANG_EN) {
+    return `~${hoursLabel} h`;
+  }
+  if (currentLang === LANG_DA) {
+    return `~${hoursLabel} t`;
+  }
+  return `~${hoursLabel} Std.`;
+}
+
+function getSpotDistanceKm(spot) {
+  try {
+    if (!map || typeof map.getCenter !== "function") return null;
+    if (typeof L === "undefined" || typeof L.latLng !== "function") return null;
+    if (!hasValidLatLng(spot)) return null;
+
+    const center = map.getCenter();
+    const centerLatLng = L.latLng(center.lat, center.lng);
+    const spotLatLng = L.latLng(spot.lat, spot.lng);
+    const distanceMeters = centerLatLng.distanceTo(spotLatLng);
+    const km = distanceMeters / 1000;
+    if (!Number.isFinite(km)) return null;
+
+    const rounded = Math.max(0.1, Math.round(km * 10) / 10);
+    return rounded;
+  } catch {
+    return null;
+  }
+}
+
+function formatKmBadgeLabel(km) {
+  if (!km || !Number.isFinite(km)) return "";
+  const formatter = new Intl.NumberFormat(
+    currentLang === LANG_DA ? "da-DK" : currentLang === LANG_EN ? "en-GB" : "de-DE",
+    { maximumFractionDigits: 1 }
+  );
+  const value = formatter.format(km);
+  return `${value} km`;
+}
+
 function getSpotMetaParts(spot) {
   const parts = [];
   if (spot.category) parts.push(getCategoryLabel(spot.category));
-  if (isSpotVerified(spot)) {
-    parts.push(
-      currentLang === LANG_EN
-        ? "verified"
-        : currentLang === LANG_DA
-        ? "verificeret"
-        : "verifiziert"
-    );
-  }
-  if (spot.visit_minutes) {
-    parts.push(
-      currentLang === LANG_EN
-        ? `~${spot.visit_minutes} min`
-        : currentLang === LANG_DA
-        ? `~${spot.visit_minutes} min`
-        : `~${spot.visit_minutes} Min.`
-    );
-  }
+  if (spot.city) parts.push(spot.city);
+  const timeLabel = getSpotVisitTimeLabel(spot);
+  if (timeLabel) parts.push(timeLabel);
   return parts;
+}
+
+/**
+ * Baut eine strukturierte Badge-Liste für einen Spot
+ * (wird in Liste + Detail verwendet).
+ */
+function buildSpotBadges(spot) {
+  const badges = [];
+
+  // Distanz
+  const distanceKm = getSpotDistanceKm(spot);
+  if (distanceKm != null) {
+    badges.push({
+      type: "distance",
+      className: "badge badge--distance",
+      icon: "📍",
+      label: formatKmBadgeLabel(distanceKm)
+    });
+  }
+
+  // Zeit / Aufenthaltsdauer
+  const timeLabel = getSpotVisitTimeLabel(spot);
+  if (timeLabel) {
+    badges.push({
+      type: "time",
+      className: "badge badge--time",
+      icon: "⏱️",
+      label: timeLabel
+    });
+  }
+
+  // Alters-Match
+  const ageLabel = getSpotAgeLabel(spot);
+  if (ageLabel) {
+    badges.push({
+      type: "age",
+      className: "badge badge--age",
+      icon: "👶",
+      label: ageLabel
+    });
+  }
+
+  // Stimmung
+  const moodKey = getSpotPrimaryMoodKey(spot);
+  const moodLabel = getMoodLabel(moodKey);
+  if (moodLabel) {
+    badges.push({
+      type: "mood",
+      className: "badge badge--soft",
+      icon: "🎈",
+      label: moodLabel
+    });
+  }
+
+  // Verifiziert
+  if (isSpotVerified(spot)) {
+    badges.push({
+      type: "verified",
+      className: "badge badge--verified",
+      icon: "✔︎",
+      label:
+        currentLang === LANG_EN
+          ? "Verified"
+          : currentLang === LANG_DA
+          ? "Verificeret"
+          : "Verifiziert"
+    });
+  }
+
+  // Plus / Partner / Add-on
+  if (isPlusSpot(spot)) {
+    badges.push({
+      type: "plus",
+      className: "badge badge--plus",
+      icon: "⭐",
+      label:
+        currentLang === LANG_EN
+          ? "Plus"
+          : currentLang === LANG_DA
+          ? "Plus"
+          : "Plus"
+    });
+  }
+
+  // Großes Abenteuer
+  if (isBigAdventureSpot(spot)) {
+    badges.push({
+      type: "big",
+      className: "badge badge--big",
+      icon: "🎒",
+      label:
+        currentLang === LANG_EN
+          ? "Big adventure"
+          : currentLang === LANG_DA
+          ? "Stort eventyr"
+          : "Großes Abenteuer"
+    });
+  }
+
+  return badges;
 }
 
 function renderSpotList() {
@@ -1750,9 +1981,6 @@ function renderSpotList() {
     metaEl.className = "spot-card-meta";
 
     const metaParts = getSpotMetaParts(spot);
-    if (Array.isArray(spot.tags)) {
-      metaParts.push(spot.tags.join(", "));
-    }
     metaEl.textContent = metaParts.join(" · ");
 
     const headerRow = document.createElement("div");
@@ -1782,6 +2010,43 @@ function renderSpotList() {
     card.appendChild(headerRow);
     if (subtitleText) card.appendChild(subtitleEl);
     if (metaParts.length) card.appendChild(metaEl);
+
+    // Badges unterhalb der Meta-Infos
+    const badgesRow = document.createElement("div");
+    badgesRow.className = "spot-card-badges";
+
+    const badges = buildSpotBadges(spot);
+    badges.forEach((badge) => {
+      const badgeEl = document.createElement("span");
+      badgeEl.className = badge.className;
+
+      if (badge.icon) {
+        const iconEl = document.createElement("span");
+        iconEl.className = "badge__icon";
+        iconEl.textContent = badge.icon;
+        badgeEl.appendChild(iconEl);
+      }
+
+      const labelEl = document.createElement("span");
+      labelEl.textContent = badge.label;
+      badgeEl.appendChild(labelEl);
+
+      badgesRow.appendChild(badgeEl);
+    });
+
+    // Tags als weiche Badges anhängen
+    if (Array.isArray(spot.tags) && spot.tags.length) {
+      spot.tags.forEach((tag) => {
+        const tagEl = document.createElement("span");
+        tagEl.className = "badge badge--soft";
+        tagEl.textContent = tag;
+        badgesRow.appendChild(tagEl);
+      });
+    }
+
+    if (badgesRow.children.length) {
+      card.appendChild(badgesRow);
+    }
 
     card.addEventListener("click", () => {
       lastSpotTriggerEl = card;
@@ -1947,7 +2212,7 @@ function showSpotDetails(spot) {
   tagsEl.className = "spot-details-tags";
   tags.forEach((tag) => {
     const span = document.createElement("span");
-    span.className = "badge";
+    span.className = "badge badge--soft";
     span.textContent = tag;
     tagsEl.appendChild(span);
   });
@@ -1969,6 +2234,33 @@ function showSpotDetails(spot) {
     addrEl.className = "spot-details-address";
     addrEl.textContent = addressText;
     spotDetailEl.appendChild(addrEl);
+  }
+
+  // Badges im Detail (gleiche Logik wie in der Liste, aber in eigener Zeile)
+  const detailBadgesContainer = document.createElement("div");
+  detailBadgesContainer.className = "spot-details-scores";
+
+  const detailBadges = buildSpotBadges(spot);
+  detailBadges.forEach((badge) => {
+    const badgeEl = document.createElement("span");
+    badgeEl.className = badge.className;
+
+    if (badge.icon) {
+      const iconEl = document.createElement("span");
+      iconEl.className = "badge__icon";
+      iconEl.textContent = badge.icon;
+      badgeEl.appendChild(iconEl);
+    }
+
+    const labelEl = document.createElement("span");
+    labelEl.textContent = badge.label;
+    badgeEl.appendChild(labelEl);
+
+    detailBadgesContainer.appendChild(badgeEl);
+  });
+
+  if (detailBadgesContainer.children.length) {
+    spotDetailEl.appendChild(detailBadgesContainer);
   }
 
   const routeUrls = getRouteUrlsForSpot(spot);
