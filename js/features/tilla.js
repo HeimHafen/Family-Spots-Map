@@ -1,6 +1,6 @@
 // js/tilla.js
 // ------------------------------------------------------
-// Tilla – eure Schildkröten-Begleiterin für Familien-Abenteuer 🐢
+// Tilla – eure Schildkröten-Begleiterin auf der ABF 🐢
 //
 // Integration (in app.js):
 //
@@ -13,7 +13,7 @@
 // Öffentliche API (von app.js genutzt):
 //  - onLanguageChanged()
 //  - setTravelMode(mode)
-//  - onPlusActivated()
+//  - onPlusActivated()        // ABF Partner-Spots (ehemals Plus)
 //  - onDaylogSaved()
 //  - onFavoriteAdded()
 //  - onFavoriteRemoved()
@@ -32,90 +32,95 @@
  *
  * Struktur:
  * FALLBACK_TEXTS[lang][key] = string | string[]
+ *
+ * ABF-Edition:
+ *  - Fokus liegt auf dem Messegelände Hannover & der ABF 2026
+ *  - "everyday" ≈ eher in der Nähe / in der eigenen Halle bleiben
+ *  - "trip"     ≈ große Runde über das gesamte Messegelände
  */
 const FALLBACK_TEXTS = Object.freeze({
   de: {
     turtle_intro_1: [
-      "Hallo, ich bin Tilla – eure kleine Schildkröten-Begleiterin für Familien-Abenteuer.",
-      "Ich bin Tilla. Mit mir wird eure Karte zu einer Schatzkarte voller Familienmomente."
+      "Hallo, ich bin Tilla – eure kleine Schildkröten-Begleiterin auf der ABF.",
+      "Ich bin Tilla. Zusammen machen wir aus dem Messegelände eure Familienkarte."
     ],
     turtle_intro_2: [
-      "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein Spaziergang ganz in der Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢",
-      "Mit diesen Filtern ist die Karte gerade leer. Probiert einen größeren Radius oder eine andere Kategorie – irgendwo wartet ein guter Ort auf euch. 🐢"
+      "Mit diesen Filtern finde ich gerade keinen passenden Spot auf der ABF. Vielleicht hilft ein anderer Radius oder eine andere Stimmung. 🐢",
+      "Im Moment bleibt die Karte leer. Probiert eine andere Kategorie oder dreht den Radius ein Stück weiter – irgendwo auf der Messe wartet ein guter Ort auf euch. 🐢"
     ],
     turtle_after_daylog_save: [
-      "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛",
-      "Ein paar Zeilen heute – viele Erinnerungen morgen. Danke, dass ihr euren Tag teilt. 💛"
+      "Schön, dass ihr euren ABF-Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛",
+      "Ein paar Zeilen zu eurem Messebesuch – viele Erinnerungen morgen. Danke, dass ihr euren ABF-Tag teilt. 💛"
     ],
     turtle_after_fav_added: [
-      "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer Familienkarte. ⭐",
-      "Gut gewählt! Dieser Spot ist jetzt Teil eurer persönlichen Schatzkarte. ⭐"
+      "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer ABF-Familienkarte. ⭐",
+      "Gut gewählt! Dieser Spot ist jetzt Teil eurer persönlichen ABF-Schatzkarte. ⭐"
     ],
     turtle_after_fav_removed: [
-      "Alles gut – manchmal passen Orte nur zu bestimmten Phasen. Ich helfe euch, neue zu finden. 🐢",
-      "Manche Spots dürfen gehen, damit Platz für neue Highlights ist. Wir finden gemeinsam frische Lieblingsorte. 🐢"
+      "Alles gut – manche Orte passen nur zu bestimmten Momenten auf der Messe. Ich helfe euch, neue zu finden. 🐢",
+      "Manche Spots dürfen gehen, damit Platz für neue ABF-Highlights ist. Wir finden gemeinsam frische Lieblingsorte. 🐢"
     ],
     turtle_trip_mode: [
-      "Ihr seid unterwegs – ich halte Ausschau nach guten Zwischenstopps für euch. 🚐",
-      "Roadtrip-Tag? Dann suchen wir jetzt nach Orten zum Toben, Auftanken und Durchatmen. 🚐"
+      "Ihr seid auf Entdeckungstour über die ABF – ich halte Ausschau nach guten Pausen-Spots auf dem ganzen Messegelände. 🗺️",
+      "Große Runde über die Messe? Dann suchen wir jetzt nach Orten zum Toben, Auftanken und Durchatmen auf dem Gelände. 🗺️"
     ],
     turtle_everyday_mode: [
-      "Alltag darf auch leicht sein. Lass uns schauen, was in eurer Nähe ein Lächeln zaubert. 🌿",
-      "Vielleicht reicht heute ein kleiner Ausflug um die Ecke. Ich zeige euch, was nah dran gut tut. 🌿"
+      "Heute bleibt ihr eher in eurer Halle oder ganz in der Nähe – ich schaue nach kleinen Pausen-Spots rund um euch. 🌿",
+      "Vielleicht reicht heute eine kurze Auszeit in eurer Nähe. Ich zeige euch, welche ABF-Spots sich dafür anbieten. 🌿"
     ],
     turtle_plus_activated: [
-      "Family Spots Plus ist aktiv – jetzt entdecke ich auch Rastplätze, Stellplätze und Camping-Spots für euch. ✨",
-      "Plus ist an Bord! Ab jetzt achte ich extra auf Spots für WoMo, Camping und große Abenteuer. ✨"
+      "ABF Partner-Spots sind aktiviert – ich blende euch jetzt zusätzliche familienfreundliche Angebote dieses Partners auf dem Messegelände ein. ✨",
+      "Partner-Modus an! Ab jetzt achte ich extra auf die ABF-Spots dieses Partners, die euch mit Kindern helfen können. ✨"
     ],
     turtle_compass_everyday: [
-      "Ich habe den Radius auf eure Alltagslaune eingestellt – wir bleiben in eurer Nähe. 🌿",
-      "Kompass sagt: Heute reicht ein kleines Abenteuer in eurer Umgebung – schaut mal, was ich gefunden habe."
+      "Ich habe den Radius auf „nah dran“ gestellt – wir bleiben in eurer Hallen-Nachbarschaft. 🌿",
+      "Kompass sagt: Heute reicht ein kleines Abenteuer in eurer Ecke der Messe – schaut mal, was ich gefunden habe."
     ],
     turtle_compass_trip: [
-      "Kompass ist gesetzt – ich schaue jetzt in einem größeren Radius nach Zwischenstopps für eure Tour. 🚐",
-      "Für euren Unterwegs-Tag habe ich den Radius großzügig gestellt. Wir suchen nach guten Pausenplätzen für euch. 🚐"
+      "Kompass gesetzt – ich suche jetzt in einem größeren Radius über das Messegelände nach passenden Spots für euch. 🗺️",
+      "Für eure ABF-Erkundung habe ich den Radius weit geöffnet. Wir suchen nach guten Orten für Pausen und Spiel auf dem gesamten Gelände. 🗺️"
     ]
   },
   en: {
     turtle_intro_1: [
-      "Hi, I’m Tilla – your little turtle companion for family adventures.",
-      "I’m Tilla. Together we’ll turn this map into a treasure map of family moments."
+      "Hi, I’m Tilla – your little turtle companion at ABF.",
+      "I’m Tilla. Together we’ll turn the fairground into your family map."
     ],
     turtle_intro_2: [
-      "Right now I can’t find a fitting spot. Maybe a small walk nearby is perfect today – or you widen the radius a little. 🐢",
-      "With these filters the map is empty. Try a wider radius or a different category – somewhere a good place is waiting for you. 🐢"
+      "With these filters I can’t find a matching spot on the ABF map right now. Maybe try a different radius or mood. 🐢",
+      "Right now the map stays empty. Try another category or widen the radius a bit – somewhere on the fairground a good place is waiting for you. 🐢"
     ],
     turtle_after_daylog_save: [
-      "Nice that you captured your day. These small notes turn into big memories later. 💛",
-      "A few lines today – many memories tomorrow. Thanks for sharing your day. 💛"
+      "Nice that you captured your ABF day. These small notes turn into big memories later. 💛",
+      "A few lines about your day at the fair – many memories tomorrow. Thanks for sharing your ABF day. 💛"
     ],
     turtle_after_fav_added: [
-      "You’ve saved this place – a small gem on your family map. ⭐",
-      "Great choice! This spot is now part of your personal treasure map. ⭐"
+      "You’ve saved this place – a small gem on your ABF family map. ⭐",
+      "Great choice! This spot is now part of your personal ABF treasure map. ⭐"
     ],
     turtle_after_fav_removed: [
-      "All good – some places only fit certain phases. I’ll help you find new ones. 🐢",
-      "Some spots leave so new highlights can arrive. We’ll find fresh favourites together. 🐢"
+      "All good – some places only fit certain moments at the fair. I’ll help you find new ones. 🐢",
+      "Some spots leave so new ABF highlights can arrive. We’ll find fresh favourites together. 🐢"
     ],
     turtle_trip_mode: [
-      "You’re on the road – I’ll watch out for good stopovers for you. 🚐",
-      "Roadtrip day? Let’s look for places to play, recharge and breathe deeply. 🚐"
+      "You’re exploring the whole ABF – I’ll watch out for good pause spots all across the fairground. 🗺️",
+      "Big tour across the fair today? Let’s look for places to play, recharge and catch your breath around the site. 🗺️"
     ],
     turtle_everyday_mode: [
-      "Everyday life can feel light, too. Let’s see what nearby spot can bring a smile today. 🌿",
-      "Maybe today a small trip around the corner is just right. I’ll show you what feels good nearby. 🌿"
+      "Today you’re staying mostly around your hall – I’ll look for small break spots close by. 🌿",
+      "Maybe a short break near your current hall is just right today. I’ll show you which ABF spots work well for that. 🌿"
     ],
     turtle_plus_activated: [
-      "Family Spots Plus is active – I can now highlight rest areas, RV spots and campgrounds for you. ✨",
-      "Plus is on board! From now on I’ll pay special attention to RV, camping and big adventure spots. ✨"
+      "ABF partner spots are active – I can now highlight additional family offers from this partner on the fairground. ✨",
+      "Partner mode on! From now on I’ll pay extra attention to this partner’s ABF spots that can help you with kids. ✨"
     ],
     turtle_compass_everyday: [
-      "I’ve set the radius to match your everyday mood – we’ll stay close to home. 🌿",
-      "Compass says: today a small nearby adventure is enough – let’s see what I’ve found for you."
+      "I’ve set the compass to ‘nearby’ – we’ll stay close to your current area of the fair. 🌿",
+      "Compass says: today a small adventure in your corner of the fair is enough – here’s what I’ve found for you."
     ],
     turtle_compass_trip: [
-      "Compass set – I’m now looking in a wider radius for good stopovers on your trip. 🚐",
-      "For your travel day I’ve opened up the radius. We’ll look for great places to pause and recharge. 🚐"
+      "Compass set – I’m now looking in a wider radius across the fairground for good spots for you. 🗺️",
+      "For your ABF exploration I’ve opened up the radius. We’ll look for great places to pause and play all across the site. 🗺️"
     ]
   }
 });
@@ -163,13 +168,16 @@ function getActiveLang() {
  *         |"play-idea"} TillaState
  *
  * @typedef {"everyday"|"trip"} TravelMode
+ *   // ABF-Edition:
+ *   //  - "everyday": eher in der Nähe / in der eigenen Halle
+ *   //  - "trip":     größere Runde über das Messegelände
  */
 
 /**
  * TillaCompanion
  *
  * Steuert die Texte im Tilla-Sidebar-Widget (#tilla-sidebar-text) abhängig von
- * App-Zuständen (Reisemodus, Filter, Plus, Favoriten, Daylog, Kompass, etc.).
+ * App-Zuständen (Reisemodus, Filter, Partner-Spots, Favoriten, Daylog, Kompass, etc.).
  *
  * Optionen:
  *  - getText(key): optionaler Übersetzer, z. B. (key) => I18N.t(key)
@@ -231,9 +239,9 @@ export class TillaCompanion {
   }
 
   /**
-   * Setzt den Reisemodus:
-   *  - "everyday"  → Alltagsmodus
-   *  - "trip"      → Unterwegs / Roadtrip
+   * Setzt den „Erkundungsmodus“ auf der ABF:
+   *  - "everyday"  → eher nah an eurer Halle
+   *  - "trip"      → große Runde über das Messegelände
    *  - null/undef  → zurück zum Intro
    * @param {TravelMode | null | undefined} mode
    */
@@ -259,7 +267,7 @@ export class TillaCompanion {
   }
 
   /**
-   * Wird aufgerufen, wenn Plus aktiviert wurde.
+   * Wird aufgerufen, wenn ABF Partner-Spots (Plus) aktiviert wurden.
    */
   onPlusActivated() {
     if (!this.textEl) return;
