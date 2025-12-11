@@ -1,6 +1,7 @@
 // js/config.js
 // ------------------------------------------------------
 // Family Spots Map – zentrale Konfiguration & Labels
+// ABF 2026 Edition (Messegelände Hannover)
 // ------------------------------------------------------
 
 "use strict";
@@ -99,8 +100,9 @@
 // Map & Storage Keys
 // ------------------------------------------------------
 
-export const DEFAULT_MAP_CENTER = [52.4, 9.7];
-export const DEFAULT_MAP_ZOOM = 7;
+// Fokus auf Messegelände Hannover (ABF)
+export const DEFAULT_MAP_CENTER = [52.318, 9.805];
+export const DEFAULT_MAP_ZOOM = 13;
 
 export const PLUS_STORAGE_KEY = "fs_plus_active";
 export const DAYLOG_STORAGE_KEY = "fs_daylog_last";
@@ -253,8 +255,12 @@ export const CATEGORY_GROUPS = {
   ],
   // ➕ NEU: Messe & Events (ABF)
   "Messen & Events": [
-    "abf_exhibitor",   // einzelne Aussteller-Stände
-    "abf_family_area"  // Familien-/Kinderbereiche, Bühnen etc.
+    "abf_exhibitor",        // einzelne Aussteller-Stände
+    "abf_family_area",      // generelle Familienbereiche
+    "messe-familienbereich",
+    "messe-kinderprogramm",
+    "messe-ruhezonen",
+    "abf-run"
   ]
 };
 
@@ -376,7 +382,11 @@ export const CATEGORY_LABELS_DE = {
 
   // ➕ NEU: ABF-Messe-Kategorien
   abf_exhibitor: "ABF Messe · Aussteller",
-  abf_family_area: "ABF Messe · Familienbereich"
+  abf_family_area: "ABF Messe · Familienbereich",
+  "messe-familienbereich": "ABF Familienwelt & Kinderbereiche",
+  "messe-kinderprogramm": "ABF Kinderprogramm & Bühne",
+  "messe-ruhezonen": "ABF Ruhezonen & Baby-Lounges",
+  "abf-run": "ABF RUN & Kids Run"
 };
 
 /** @type {Record<string, string>} */
@@ -450,7 +460,11 @@ export const CATEGORY_LABELS_EN = {
 
   // ➕ NEU: ABF-Messe-Kategorien
   abf_exhibitor: "ABF fair · exhibitors",
-  abf_family_area: "ABF fair · family area"
+  abf_family_area: "ABF fair · family area",
+  "messe-familienbereich": "ABF family world & kids areas",
+  "messe-kinderprogramm": "ABF kids stage & programme",
+  "messe-ruhezonen": "ABF quiet zones & baby lounges",
+  "abf-run": "ABF RUN & Kids Run"
 };
 
 /** @type {Record<string, string>} */
@@ -523,7 +537,11 @@ export const CATEGORY_LABELS_DA = {
 
   // ➕ NEU: ABF-Messe-Kategorien
   abf_exhibitor: "ABF-messe · udstillere",
-  abf_family_area: "ABF-messe · familieområde"
+  abf_family_area: "ABF-messe · familieområde",
+  "messe-familienbereich": "ABF familieområde & børnezoner",
+  "messe-kinderprogramm": "ABF børnescene & program",
+  "messe-ruhezonen": "ABF stillezoner & baby-lounges",
+  "abf-run": "ABF RUN & Kids Run"
 };
 
 // ------------------------------------------------------
@@ -889,6 +907,44 @@ export const CATEGORY_TAGS = {
     "indoor",
     "temporary",
     "family-friendly"
+  ],
+  "messe-familienbereich": [
+    "abf",
+    "expo",
+    "family",
+    "kids-area",
+    "indoor",
+    "temporary",
+    "family-friendly"
+  ],
+  "messe-kinderprogramm": [
+    "abf",
+    "expo",
+    "family",
+    "kids-area",
+    "stage",
+    "event",
+    "temporary",
+    "family-friendly"
+  ],
+  "messe-ruhezonen": [
+    "abf",
+    "expo",
+    "baby-changing",
+    "quiet",
+    "indoor",
+    "temporary",
+    "family-friendly"
+  ],
+  "abf-run": [
+    "abf",
+    "expo",
+    "run",
+    "event",
+    "sport",
+    "outdoor",
+    "temporary",
+    "family-friendly"
   ]
 };
 
@@ -1015,6 +1071,16 @@ export const FILTERS = [
       en: "Low budget / free",
       da: "Billigt / gratis"
     }
+  },
+  // ➕ NEU: ABF-spezifischer Filter
+  {
+    id: "abf-onsite",
+    tags: ["abf", "expo"],
+    label: {
+      de: "Auf dem ABF-Gelände",
+      en: "On the ABF fairgrounds",
+      da: "På ABF-messeområdet"
+    }
   }
 ];
 
@@ -1024,9 +1090,9 @@ export const FILTERS = [
 
 /** @type {Record<LangCode, string>} */
 export const HEADER_TAGLINE_TEXT = {
-  de: "Heute ist Zeit für Familie.",
-  en: "Make today a family day.",
-  da: "I dag er der tid til familien."
+  de: "ABF 2026 · Familienkarte für das Messegelände Hannover.",
+  en: "ABF 2026 · Family map for the Hannover fairgrounds.",
+  da: "ABF 2026 · Familiekort til messeområdet i Hannover."
 };
 
 // Onboarding-Hint (Spots / Plus / Mein Tag)
@@ -1158,7 +1224,14 @@ export const ADDONS = Object.freeze({
       en: "ABF fairgrounds with halls, exhibitors and family areas directly in your Family Spots Map.",
       da: "ABF-messeområde med haller, udstillere og familieområder direkte i din Family Spots Map."
     },
-    categories: ["abf_exhibitor", "abf_family_area"]
+    categories: [
+      "abf_exhibitor",
+      "abf_family_area",
+      "messe-familienbereich",
+      "messe-kinderprogramm",
+      "messe-ruhezonen",
+      "abf-run"
+    ]
   }
 });
 
@@ -1245,6 +1318,26 @@ export const CATEGORY_ACCESS = Object.freeze({
       addonId: "addon_abf"
     },
     abf_family_area: {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_abf"
+    },
+    "messe-familienbereich": {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_abf"
+    },
+    "messe-kinderprogramm": {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_abf"
+    },
+    "messe-ruhezonen": {
+      level: "addon",
+      subscriptionId: "family_plus",
+      addonId: "addon_abf"
+    },
+    "abf-run": {
       level: "addon",
       subscriptionId: "family_plus",
       addonId: "addon_abf"
