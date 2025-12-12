@@ -11,3 +11,19 @@
 
 /* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
 @import url("./components.css");
+
+/* =========================================
+   Override: Header im Light-Theme wärmer
+   (überschreibt ggf. feste Farben aus components.css)
+   ========================================= */
+html[data-theme="light"] .app-header {
+  background:
+    radial-gradient(900px 420px at 18% -10%,
+      rgba(243, 162, 58, 0.32) 0%,
+      rgba(243, 162, 58, 0.00) 60%),
+    linear-gradient(180deg,
+      #FFF7EE 0%,
+      #FFE7D1 55%,
+      #F6C79D 100%);
+  border-bottom: 1px solid rgba(243, 162, 58, 0.18);
+}
