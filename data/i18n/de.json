@@ -8,31 +8,25 @@
   "btn_locate_aria": "Standort zentrieren",
   "alt_tilla_image": "Tilla die Schildkröte – eure Familienbegleiterin",
   "header_tagline": "Heute ist Zeit für Familie, und der Weg zum nächsten Abenteuer ist nur einen Atemzug entfernt.",
-
   "btn_show_filters": "Filter aufklappen",
   "btn_hide_filters": "Filter zuklappen",
   "btn_only_map": "Nur Karte",
   "btn_show_list": "Liste zeigen",
-
   "toast_location_ok": "Euer Standort ist gesetzt – das nächste Abenteuer wartet schon. 🌍",
   "toast_location_error": "Wir können euren Standort gerade nicht finden – aber kein Abenteuer bleibt verborgen. Vielleicht seid ihr offline oder die Freigabe blockiert.",
   "toast_fav_added": "Zu euren Lieblingsorten gelegt – ein funkelnder Moment, den ihr nie vergessen werdet. 💛",
   "toast_fav_removed": "Aus den Favoriten entfernt – doch die Reise ist lang, neue Schätze warten bereits. 🌿",
-
   "filter_category_all": "Alle Kategorien",
-
   "plus_code_empty": "Bitte gib zuerst den Schlüssel zu neuen Erlebnissen ein – deinen Partner-Code.",
   "plus_code_unknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
   "plus_code_activated": "Family Spots Plus wurde aktiviert – gute Fahrt & viel Freude auf euren Touren!",
   "plus_code_failed": "Der Code konnte gerade nicht geprüft werden. Versuch es später noch einmal.",
-
   "filter_radius_max_label": "Alle Spots",
   "filter_radius_description_step0": "Mini-Microabenteuer – nur einen Atemzug entfernt, perfekt für eine kleine Pause im Alltag.",
   "filter_radius_description_step1": "Kurze Ausflüge – für kleine Abenteuer, die schnell da und schnell wieder zurück sind.",
   "filter_radius_description_step2": "Eine kleine Familientour – der perfekte Ausgleich für einen halben Tag voller Entdeckungen.",
   "filter_radius_description_step3": "Große Abenteuer warten – entdeckt neue Ziele für einen ganzen Tag voller magischer Momente.",
   "filter_radius_description_all": "Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.",
-
   "turtle_intro_1": "Ich bin Tilla, die kleine Schildkröte, die mit euch an den Orten verweilt, die Erinnerungen weben und Abenteuer bringen. Gemeinsam gehen wir den Weg eurer Familie.",
   "turtle_intro_2": "Gerade finde ich keinen passenden Spot. Vielleicht passt heute ein kleiner Spaziergang in eurer Nähe – oder ihr dreht den Radius ein Stück weiter auf. 🐢",
   "turtle_after_daylog_save": "Euer Tag ist jetzt festgehalten. Kleine Momente, die zu großen Erinnerungen werden – jeder Schritt ein Schatz, den wir nie vergessen werden. 💛",
@@ -41,19 +35,9 @@
   "turtle_trip_mode": "Ihr seid auf dem Weg – ich halte Ausschau nach Momenten, die das Herz erwärmen. 🚐",
   "turtle_everyday_mode": "Alltag darf auch magisch sein. Lass uns gemeinsam kleine Wunder in eurer Nähe entdecken. 🌿",
   "turtle_plus_activated": "Family Spots Plus ist nun aktiv – neue Wege warten darauf, entdeckt zu werden. Die Reise geht weiter, mit mehr Orten und Abenteuern, die euch begleiten. ✨",
-
   "daylog_saved": "Euer Tagesmoment ist gespeichert 💾 – später könnt ihr euch daran erinnern.",
-
   "nav_map": "Karte",
   "nav_about": "Über Family Spots Map",
-
   "route_apple": "In Apple Karten öffnen",
-  "route_google": "In Google Maps öffnen",
-
-  "abf_addon_label": "ABF 2026 Messe-Add-on",
-  "abf_addon_activated_toast": "ABF Messe-Add-on aktiviert – alle Familien-Spots auf dem Messegelände sind jetzt freigeschaltet.",
-  "abf_addon_hint": "Mit dem ABF Messe-Add-on seht ihr zusätzliche Spots direkt auf dem Messegelände in Hannover – Spielbereiche, Aktionen für Kinder und ruhigere Ecken zum Durchatmen.",
-  "abf_about_title": "ABF 2026: So nutzt du die Messe-Karte",
-  "abf_about_body": "Mit der Family Spots Map kannst du während der ABF 2026 schnell familienfreundliche Bereiche auf dem Messegelände finden: Spielzonen, Aktionen für Kinder, ruhigere Orte zum Verschnaufen und praktische Punkte wie Wickelräume. Aktiviere einfach dein ABF Messe-Add-on und zoome auf das Gelände, um alle Messe-Spots zu sehen.",
-  "abf_dates_hint": "Hinweis: Die ABF 2026 findet vom 11.02. bis 15.02.2026 auf dem Messegelände in Hannover statt."
+  "route_google": "In Google Maps öffnen"
 }
