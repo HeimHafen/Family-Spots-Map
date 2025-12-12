@@ -2045,3 +2045,24 @@ hr {
 .tilla-sidebar-avatar img {
   animation: tilla-bob 3.5s ease-in-out infinite !important;
 }
+
+/* Moss als ruhige Secondary-Akzente (sichtbar, aber nicht laut) */
+
+/* 1) “Entspannt”-Mood bekommt Moss (passt thematisch) */
+.mood-chip[data-mood="relaxed"].mood-chip--active{
+  background: var(--moss-soft);
+  border-color: var(--moss);
+  color: var(--on-moss);
+}
+
+/* 2) Ghost-Buttons (z.B. “Filter anzeigen”, “Nur Karte”) bekommen Moss-Hover */
+.btn-ghost:hover{
+  background-color: var(--moss-soft);
+  border-color: color-mix(in srgb, var(--moss) 35%, transparent);
+  color: var(--on-moss);
+}
+
+/* 3) Unterstreichung “Spots” leicht moosig (kleines Premium-Detail) */
+.header-title-spots{
+  text-decoration-color: color-mix(in srgb, var(--moss) 65%, var(--accent));
+}
