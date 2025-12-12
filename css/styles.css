@@ -14,7 +14,6 @@
 
 /* =========================================
    Override: Header im Light-Theme wärmer
-   (überschreibt ggf. feste Farben aus components.css)
    ========================================= */
 html[data-theme="light"] .app-header {
   background:
@@ -28,76 +27,94 @@ html[data-theme="light"] .app-header {
   border-bottom: 1px solid rgba(243, 162, 58, 0.18);
 }
 
-/* =========================================================
-   FIX 1: Menü (☰) wieder kompakt (nicht fullscreen-hoch)
-   ========================================================= */
+/* =========================================
+   Highest-Level UI Fixes (passgenau zu deinem Markup)
+   1) Bottom Nav entfernen (Karte/Über)
+   2) Menü-Panel (☰) kompakt halten (kein riesiges Fenster)
+   ========================================= */
 
-/* Overlay bleibt fullscreen (Backdrops sollen den Rest abdunkeln),
-   aber das Panel selbst wird "content-sized" + max-height + scroll. */
-.app-menu {
-  position: fixed;
-  inset: 0;
-  z-index: 2600;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-
-  /* Abstand zu Rändern + Safe Area */
-  padding:
-    calc(env(safe-area-inset-top, 0px) + 10px)
-    10px
-    calc(env(safe-area-inset-bottom, 0px) + 10px)
-    10px;
+/* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
+:root {
+  --bottom-nav-height: 0px;
+  --bottom-nav-safearea: 0px;
 }
 
-/* Backdrop darf gern den ganzen Screen abdecken */
-.app-menu-backdrop {
-  position: fixed;
-  inset: 0;
-}
-
-/* Panel: NICHT mehr height:100% / flex:1, sondern kompakt */
-.app-menu-panel {
-  /* verhindert "mitwachsen" in manchen Layouts */
-  flex: 0 0 auto;
-
-  /* kompakte Sheet-Größe */
-  width: min(420px, calc(100vw - 20px));
-
-  /* entscheidend: Höhe begrenzen */
-  max-height: min(
-    520px,
-    calc(100vh - 20px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))
-  );
-
-  overflow: auto;
-
-  /* optisch sauber */
-  -webkit-overflow-scrolling: touch;
-  border-radius: 22px;
-}
-
-/* Optional: etwas weniger "Luft" unter dem Sprachbereich,
-   falls components.css dort zu aggressive min-heights setzt */
-.app-menu-languages {
-  margin-bottom: 0;
-  padding-bottom: 6px;
-}
-
-/* =========================================================
-   FIX 2: Bottom Nav "Karte / Über" entfernen
-   ========================================================= */
-
-/* Falls Bottom-Nav im HTML oder via anderer Datei existiert: hart ausblenden */
-.bottom-nav,
-.bottom-nav-item,
-.bottom-nav-wrapper {
+.bottom-nav {
   display: none !important;
 }
 
-/* Falls irgendwo Layout-Padding für eine Bottom-Nav reserviert wird */
+/* Falls irgendwo padding für Bottom-Nav reserviert wird */
 body,
 .app,
-.app-main {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+.app-main,
+#main-content {
+  padding-bottom: 0 !important;
+}
+
+/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet, nicht vollflächig ---------- */
+/* Overlay */
+#app-menu.app-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  /* Flex-Overlay, Panel oben/zentriert */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  /* Safe Area & angenehmes Atmen */
+  padding-top: max(14px, env(safe-area-inset-top));
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+}
+
+/* Backdrop bleibt vollflächig klickbar */
+#app-menu .app-menu-backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+/* Panel: content-sized + max-height, scrollt nur wenn nötig */
+#app-menu .app-menu-panel {
+  position: relative;
+  width: min(520px, 100%);
+  height: auto !important;
+  min-height: 0 !important;
+
+  /* Das ist der entscheidende Fix gegen „riesig“ */
+  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+  overflow: auto !important;
+
+  /* Optional: weichere iOS-Scroll-Physics */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Innenliste soll nicht „strecken“ */
+#app-menu .app-menu-list,
+#app-menu .app-menu-languages {
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+/* Sprache-Bereich optisch kompakt halten (falls in components.css zu viel Abstand ist) */
+#app-menu .app-menu-languages {
+  margin-top: 12px !important;
+}
+
+/* Wenn dein components.css das Panel irgendwo mit 100vh/100% versieht, neutralisieren */
+#app-menu .app-menu-panel,
+#app-menu .app-menu-panel * {
+  max-height: unset;
+}
+#app-menu .app-menu-panel {
+  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+}
+
+/* Optional: wenn einzelne Buttons zu groß werden, auf mobile etwas kompakter */
+@media (max-width: 720px) {
+  #app-menu .app-menu-panel {
+    width: min(560px, 100%);
+  }
 }
