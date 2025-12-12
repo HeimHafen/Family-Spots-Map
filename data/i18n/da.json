@@ -9,8 +9,8 @@
   "alt_tilla_image": "Tilla skildpadden – jeres familieledsager",
   "header_tagline": "I dag er der tid til familie, og vejen til næste eventyr er kun ét åndedrag væk.",
 
-  "btn_show_filters": "Vis filtre",
-  "btn_hide_filters": "Skjul filtre",
+  "btn_show_filters": "Filtre fold ud",
+  "btn_hide_filters": "Filtre fold sammen",
   "btn_only_map": "Kun kort",
   "btn_show_list": "Vis liste",
 
