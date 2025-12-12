@@ -30,9 +30,9 @@
   --dur-slow: 220ms;
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  /* Focus ring (prefer theme.css) */
+  /* Focus ring (prefer theme.css) — warmer fallback */
   --focus-inner: var(--focus-inner, #ffffff);
-  --focus-outer: var(--focus-outer, hsla(var(--accent-h, 32), 72%, 52%, 0.55));
+  --focus-outer: var(--focus-outer, hsla(var(--accent-h, 30), 72%, 52%, 0.55));
   --focus-ring: var(--focus-ring, 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer));
 
   /* Neutral surfaces derived from semantic surfaces (no overriding) */
@@ -48,7 +48,7 @@
 /* Dark focus inner should not be white (prefer theme.css) */
 [data-theme="dark"] {
   --focus-inner: var(--focus-inner, rgba(2, 6, 23, 0.9));
-  --focus-outer: var(--focus-outer, hsla(var(--accent-h, 32), 72%, 55%, 0.45));
+  --focus-outer: var(--focus-outer, hsla(var(--accent-h, 30), 72%, 55%, 0.45));
 }
 
 /* Universal interactive ergonomics (mobile) */
@@ -113,8 +113,8 @@ select {
 }
 
 .btn:hover {
-  /* Pastel: weniger Sättigung als vorher */
-  background-color: hsl(var(--accent-h, 32), 72%, 54%);
+  /* Wärmer/pastelliger: fallback hue etwas orangiger */
+  background-color: hsl(var(--accent-h, 30), 72%, 54%);
   box-shadow: var(--elevation-md);
 }
 
@@ -233,7 +233,7 @@ select {
 }
 
 .btn-play-idea:hover {
-  background-color: hsl(var(--accent-h, 32), 72%, 54%);
+  background-color: hsl(var(--accent-h, 30), 72%, 54%);
   box-shadow: var(--elevation-md);
 }
 
@@ -314,13 +314,13 @@ select {
   box-shadow: var(--header-shadow);
 }
 
-/* Light-Mode-Variante: warm, pastellig (weniger knallig als vorher) */
+/* Light-Mode-Variante: warm, pastellig (wärmer/orangiger) */
 :where(html, body, :root)[data-theme="light"] .app-header {
   background: radial-gradient(
       circle at top left,
-      #fff4ec 0,
-      #f7e0d2 55%,
-      #ecc4a4 100%
+      #fff1e7 0,
+      #f6d9c7 55%,
+      #eab890 100%
     );
   color: var(--text-strong, #111827);
   box-shadow: var(--elevation-md);
@@ -780,7 +780,7 @@ body[data-menu-open="1"] .app-menu {
   margin-top: 4px;
   padding: 10px 10px 12px;
   border-radius: 16px;
-  background: var(--card-bg, #fff4ec);
+  background: var(--card-bg, #fff1e7);
   box-shadow: var(--elevation-sm);
   border: var(--border-soft);
 }
@@ -878,8 +878,8 @@ textarea.input {
 textarea.input:focus,
 select.input:focus {
   outline: none;
-  border-color: hsla(var(--accent-h, 32), 72%, 52%, 0.65);
-  box-shadow: 0 0 0 1px hsla(var(--accent-h, 32), 72%, 52%, 0.45);
+  border-color: hsla(var(--accent-h, 30), 72%, 52%, 0.65);
+  box-shadow: 0 0 0 1px hsla(var(--accent-h, 30), 72%, 52%, 0.45);
 }
 
 /* Select — crisp chevron */
@@ -1239,7 +1239,7 @@ select.input {
   box-shadow: var(--elevation-md);
 }
 
-/* Timeline am linken Rand (pastellig via Tokens) */
+/* Timeline am linken Rand */
 .daylog-entry::before {
   content: "";
   position: absolute;
@@ -1260,7 +1260,7 @@ select.input {
   height: 9px;
   border-radius: 999px;
   background: var(--accent-light);
-  box-shadow: 0 0 0 3px hsla(var(--accent-h, 32), 72%, 58%, 0.22);
+  box-shadow: 0 0 0 3px hsla(var(--accent-h, 30), 72%, 58%, 0.22);
 }
 
 .daylog-entry-header {
@@ -2099,7 +2099,7 @@ body[data-menu-open="1"] {
   border-radius: inherit;
   background: radial-gradient(
     circle,
-    hsla(var(--accent-h, 32), 72%, 60%, 0.28),
+    hsla(var(--accent-h, 30), 72%, 60%, 0.28),
     transparent 60%
   );
 }
@@ -2191,7 +2191,7 @@ body[data-menu-open="1"] {
 
 hr {
   border: none;
-  border-bottom: 1px solid hsla(28, 35%, 45%, 0.28);
+  border-bottom: 1px solid hsla(26, 42%, 45%, 0.28);
   margin: 16px 0;
 }
 
