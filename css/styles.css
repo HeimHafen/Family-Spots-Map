@@ -12,18 +12,83 @@
 /* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
 @import url("./components.css");
 
+
 /* =========================================
-   Override: Header im Light-Theme wärmer
-   (überschreibt ggf. feste Farben aus components.css)
+   Add-ons/Overrides (CSP-sicher, ohne Inline)
    ========================================= */
-html[data-theme="light"] .app-header {
-  background:
-    radial-gradient(900px 420px at 18% -10%,
-      rgba(243, 162, 58, 0.32) 0%,
-      rgba(243, 162, 58, 0.00) 60%),
-    linear-gradient(180deg,
-      #FFF7EE 0%,
-      #FFE7D1 55%,
-      #F6C79D 100%);
-  border-bottom: 1px solid rgba(243, 162, 58, 0.18);
+
+/* Skip-Link (A11y) */
+.skip-link {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  z-index: 3000;
+
+  padding: 10px 16px;
+  border-radius: 999px;
+
+  background: rgba(15, 23, 42, 0.96);
+  color: #fff7eb;
+
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity 160ms ease-out, transform 160ms ease-out;
 }
+
+html[data-theme="light"] .skip-link {
+  background: #3b2313;
+  color: #fff7eb;
+}
+
+.skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Header-Titel: etwas mehr “Brand”-Präsenz, aber responsiv */
+.header-title {
+  font-size: clamp(2.1rem, 6vw, 2.8rem);
+}
+
+/* Scroll-Lock: Filter-Modal + Menü */
+body[data-filter-modal-open="1"],
+body[data-menu-open="1"] {
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+/* =========================================
+   App-Menu (☰) – Overlay / Panel / Items
+   ========================================= */
+.app-menu[hidden] {
+  display: none !important;
+}
+
+.app-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+}
+
+.app-menu-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.app-menu-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: min(92vw, 420px);
