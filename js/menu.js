@@ -1,10 +1,17 @@
 // js/menu.js
-// Menü-Dialog + Sprachchips + "Zur Spot-Liste springen" (ohne Inline-JS)
+"use strict";
 
-(function () {
-  const menuToggle = document.getElementById("menu-toggle");
-  const menu = document.getElementById("app-menu");
-  const backdrop = menu && menu.querySelector(".app-menu-backdrop");
+function qs(sel, root = document) {
+  return root.querySelector(sel);
+}
+function qsa(sel, root = document) {
+  return Array.from(root.querySelectorAll(sel));
+}
+
+(function initMenu() {
+  const menuToggle = qs("#menu-toggle");
+  const menu = qs("#app-menu");
+  const backdrop = menu ? qs(".app-menu-backdrop", menu) : null;
 
   function openMenu() {
     if (!menu) return;
@@ -22,19 +29,21 @@
 
   if (menuToggle) {
     menuToggle.addEventListener("click", () => {
-      if (menu && menu.hidden) openMenu();
+      if (!menu) return;
+      if (menu.hidden) openMenu();
       else closeMenu();
     });
   }
 
-  if (backdrop) backdrop.addEventListener("click", closeMenu);
+  if (backdrop) {
+    backdrop.addEventListener("click", closeMenu);
+  }
 
   if (menu) {
     menu.addEventListener("click", (event) => {
       const target = event.target;
-      if (target && target.closest("[data-menu-close]")) {
-        closeMenu();
-      }
+      if (!target) return;
+      if (target.closest("[data-menu-close]")) closeMenu();
     });
   }
 
@@ -42,60 +51,67 @@
     if (event.key === "Escape") closeMenu();
   });
 
-  // "Zur Spot-Liste springen"
-  const skipBtn = document.getElementById("btn-skip-spots");
-  if (skipBtn) {
-    skipBtn.addEventListener("click", () => {
-      const sel = skipBtn.getAttribute("data-scroll-target") || "#spots-title";
-      const el = document.querySelector(sel);
-      if (el && typeof el.scrollIntoView === "function") {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-  }
+  // "Zur Spot-Liste springen" (ohne onclick)
+  const btnSkipSpots = qs("#btn-skip-spots");
+  btnSkipSpots?.addEventListener("click", () => {
+    const spotsTitle = qs("#spots-title");
+    if (spotsTitle) {
+      spotsTitle.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Fokus nachziehen (A11y)
+      if (typeof spotsTitle.focus === "function") spotsTitle.focus({ preventScroll: true });
+    }
+    closeMenu();
+  });
 
-  // Sprachchips → bestehenden (versteckten) Language-Switcher benutzen
+  // Sprachchips -> Legacy language-switcher klicken (de -> da -> en)
   const langOrder = ["de", "da", "en"];
+  const legacyBtn = qs("#language-switcher");
 
   function getCurrentLang() {
-    const html = document.documentElement;
-    return html.getAttribute("lang") || html.dataset.lang || "de";
+    return (document.documentElement.getAttribute("lang") || "de").toLowerCase().slice(0, 2);
   }
 
   function syncActiveLangChip() {
     const current = getCurrentLang();
-    document.querySelectorAll(".app-menu-lang-chip").forEach((btn) => {
+    qsa(".app-menu-lang-chip").forEach((btn) => {
       const isActive = btn.dataset.langTarget === current;
       btn.classList.toggle("app-menu-lang-chip--active", isActive);
+      btn.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
   }
 
   function cycleLanguageTo(targetLang) {
-    const legacyButton = document.getElementById("language-switcher");
-    if (!legacyButton) return;
-
+    if (!legacyBtn) return;
     if (getCurrentLang() === targetLang) {
       syncActiveLangChip();
       return;
     }
 
+    // Safety-Guard
     let guard = 0;
-    const guardMax = langOrder.length + 1;
+    const max = langOrder.length + 2;
 
-    while (getCurrentLang() !== targetLang && guard < guardMax) {
-      legacyButton.click();
+    while (getCurrentLang() !== targetLang && guard < max) {
+      legacyBtn.click();
       guard += 1;
     }
+
     syncActiveLangChip();
   }
 
-  document.querySelectorAll(".app-menu-lang-chip").forEach((btn) => {
+  qsa(".app-menu-lang-chip").forEach((btn) => {
+    btn.setAttribute("aria-pressed", "false");
     btn.addEventListener("click", () => {
-      const targetLang = btn.dataset.langTarget;
-      if (!targetLang) return;
-      cycleLanguageTo(targetLang);
+      const target = btn.dataset.langTarget;
+      if (!target) return;
+      cycleLanguageTo(target);
     });
   });
+
+  // Reagiere auf Sprachwechsel (MutationObserver auf <html lang>)
+  const htmlEl = document.documentElement;
+  const obs = new MutationObserver(() => syncActiveLangChip());
+  obs.observe(htmlEl, { attributes: true, attributeFilter: ["lang"] });
 
   window.addEventListener("load", syncActiveLangChip);
 })();
