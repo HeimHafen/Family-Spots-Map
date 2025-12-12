@@ -248,8 +248,8 @@ html[data-theme="light"] .app-header {
   background: radial-gradient(
       circle at top left,
       #fff7ed 0,
-      #f9fafb 46%,
-      #e5f0ff 100%
+      #ffe7d1 55%,
+      #f6c79d 100%
     );
   color: var(--text-strong, #111827);
   box-shadow: var(--elevation-md);
