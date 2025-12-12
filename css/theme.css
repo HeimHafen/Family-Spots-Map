@@ -1,6 +1,5 @@
 /* =========================================
    theme.css — Design-Variablen (Light / Dark Theme)
-   Family Spots Map – warme Familienwelt (optimiert)
    ========================================= */
 
 :root {
@@ -8,7 +7,7 @@
   --accent-h: 32;
   --accent: hsl(var(--accent-h), 92%, 50%);
   --accent-soft: hsl(var(--accent-h), 92%, 88%);
-  /* NEU: leicht dunkleres Soft für Hover-Zustände */
+  /* Neu: etwas dunklerer Soft-Ton für Hover-Zustände */
   --accent-soft-hover: hsl(var(--accent-h), 92%, 82%);
   --accent-strong: hsl(var(--accent-h), 85%, 42%);
 
@@ -67,8 +66,9 @@
   --bottom-nav-item-active-bg: var(--accent);
   --bottom-nav-item-active-color: #4b280f;
 
-  /* Optimierter Toast: warme Orange-Tönung statt tiefbraun */
-  --toast-bg: hsla(var(--accent-h), 85%, 38%, 0.98);
+  /* Etwas freundlicherer Toast: warmes, leicht dunkles Orange-Braun
+     statt sehr tiefem Braun */
+  --toast-bg: hsla(var(--accent-h), 80%, 24%, 0.96);
 
   --map-card-bg: #fdf4e6;
   --map-card-shadow: 0 14px 32px rgba(148, 86, 38, 0.55);
@@ -83,11 +83,19 @@
 
   --map-filter: sepia(0.26) saturate(0.9) brightness(1.04) contrast(1.02)
     hue-rotate(-14deg);
-}
 
-/* =========================================
-   Dark Theme
-   ========================================= */
+  /* ======================================================
+     Interaktive Tokens – einheitliche Zustände für UI-Elemente
+     ====================================================== */
+
+  /* Primäre Buttons (z.B. „Spielideen für unterwegs“) */
+  --button-bg: var(--accent-soft);
+  --button-hover-bg: var(--accent-soft-hover);
+  --button-text-color: #4b280f;
+
+  /* Hover-Effekt für Chips / Filter */
+  --chip-hover-shadow: 0 4px 10px rgba(152, 92, 45, 0.4);
+}
 
 [data-theme="dark"] {
   --app-bg: radial-gradient(
@@ -144,8 +152,7 @@
   --bottom-nav-item-active-bg: #f59e0b;
   --bottom-nav-item-active-color: #111827;
 
-  /* Toast Dark – leicht in Richtung Accent getönt */
-  --toast-bg: hsla(var(--accent-h), 80%, 32%, 0.98);
+  --toast-bg: rgba(15, 23, 42, 0.98);
 
   --map-card-bg: #020617;
   --map-card-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
@@ -156,4 +163,11 @@
 
   --map-filter: grayscale(0.35) sepia(0.28) brightness(0.78) contrast(1.05)
     saturate(0.9) hue-rotate(-16deg);
+
+  /* Interaktive Tokens im Dark Mode */
+  --button-bg: var(--accent-soft);
+  --button-hover-bg: var(--accent-soft-hover);
+  --button-text-color: #111827;
+
+  --chip-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
 }
