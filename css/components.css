@@ -143,7 +143,6 @@ select {
 }
 
 :where(.btn, .btn-play-idea):hover {
-  /* Wärmer/pastelliger: fallback hue etwas orangiger */
   background-color: hsl(var(--accent-h, 30), 72%, 54%);
   box-shadow: var(--elevation-md);
 }
@@ -265,7 +264,7 @@ select {
    Fokus für interaktive Komponenten
    ========================================= */
 
-/* Base focus ring (low/no elevation elements, especially inputs) */
+/* Base focus ring (low/no elevation elements, especially inputs/chips) */
 :where(
     .language-switcher,
     .mood-chip,
@@ -873,12 +872,18 @@ textarea.input {
   border-color: rgba(148, 163, 184, 0.55);
 }
 
+/* Baseline focus (mouse/touch) */
 .input:focus,
 textarea.input:focus,
 select.input:focus {
   outline: none;
   border-color: hsla(var(--accent-h, 30), 72%, 52%, 0.65);
   box-shadow: 0 0 0 1px hsla(var(--accent-h, 30), 72%, 52%, 0.45);
+}
+
+/* Keyboard focus should use theme token ring (must override .input:focus specificity) */
+:is(.input, textarea.input, select.input):focus-visible {
+  box-shadow: var(--focus-ring, var(--focus-ring-fallback));
 }
 
 /* Select — crisp chevron */
