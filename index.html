@@ -14,29 +14,6 @@
   <meta name="color-scheme" content="light dark" />
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
   <meta name="format-detection" content="telephone=no" />
-  <meta name="referrer" content="strict-origin-when-cross-origin" />
-
-  <!-- CSP (inkl. Hashes für Inline-Style + Inline-Script) -->
-  <meta
-    http-equiv="Content-Security-Policy"
-    content="
-      default-src 'self';
-      base-uri 'self';
-      object-src 'none';
-      form-action 'self';
-      script-src 'self' https://unpkg.com 'sha256-AzZ7ksZjmg0aGa7sBKkQ4b5PQTTO9TfGt8tAlV95/As=';
-      style-src 'self' https://unpkg.com 'sha256-f0zYFicTlZOubczcpsJqnZqE8vBRP2Nl+TVDWhXYkHo=';
-      img-src 'self' data: blob: https://unpkg.com https://*.tile.openstreetmap.org;
-      font-src 'self' data: https://unpkg.com;
-      connect-src 'self';
-      manifest-src 'self';
-      worker-src 'self' blob:;
-      frame-src 'none';
-      frame-ancestors 'none';
-      upgrade-insecure-requests;
-      block-all-mixed-content;
-    "
-  />
 
   <!-- Canonical & hreflang -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
@@ -52,10 +29,7 @@
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heimhafen.github.io/Family-Spots-Map/" />
-  <meta
-    property="og:image"
-    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
-  />
+  <meta property="og:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="de_DE" />
@@ -68,10 +42,7 @@
     name="twitter:description"
     content="Entdecke ausgewählte Spielplätze, Wildparks, Wasser-Spots u.v.m. – ideal für Familienabenteuer."
   />
-  <meta
-    name="twitter:image"
-    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
-  />
+  <meta name="twitter:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
 
   <!-- Structured Data: WebApplication -->
   <script type="application/ld+json">
@@ -106,61 +77,15 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
 
   <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
   <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/badges.css" />
-
-  <!-- Skip-Link (Rest ist im CSS) -->
-  <style>
-    .skip-link {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%) translateY(-4px);
-      top: calc(env(safe-area-inset-top, 0px) + 8px);
-      z-index: 3000;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.96);
-      color: #fef3e7;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.75);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.16s ease-out, transform 0.16s ease-out;
-    }
-
-    [data-theme="light"] .skip-link {
-      background: #3b2313;
-      color: #fff7eb;
-    }
-
-    .skip-link:focus-visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* Titel-Größe angepasst */
-    .header-title {
-      font-size: clamp(2.1rem, 6vw, 2.8rem);
-    }
-  </style>
 </head>
+
 <body>
   <!-- Globaler Skip-Link -->
   <a
@@ -216,6 +141,7 @@
             />
           </button>
         </div>
+
         <div class="app-header-right">
           <button
             id="menu-toggle"
@@ -244,6 +170,7 @@
           Family <span class="header-title-spots">Spots</span> Map
           <span class="header-flag" aria-hidden="true">🇩🇰</span>
         </h1>
+
         <p
           class="header-tagline"
           id="header-tagline"
@@ -268,6 +195,7 @@
       hidden
     >
       <div class="app-menu-backdrop" data-menu-close="1"></div>
+
       <div class="app-menu-panel">
         <div class="app-menu-list" role="menu">
           <!-- Info -->
@@ -352,11 +280,7 @@
         </div>
 
         <!-- Sprache: Flaggen-Chips -->
-        <div
-          class="app-menu-languages"
-          role="group"
-          aria-labelledby="menu-language-label"
-        >
+        <div class="app-menu-languages" role="group" aria-labelledby="menu-language-label">
           <p
             id="menu-language-label"
             class="app-menu-languages-label"
@@ -366,28 +290,17 @@
           >
             Sprache
           </p>
+
           <div class="app-menu-languages-row">
-            <button
-              type="button"
-              class="app-menu-lang-chip"
-              data-lang-target="de"
-            >
+            <button type="button" class="app-menu-lang-chip" data-lang-target="de">
               <span class="app-menu-lang-flag" aria-hidden="true">🇩🇪</span>
               <span class="app-menu-lang-code">DE</span>
             </button>
-            <button
-              type="button"
-              class="app-menu-lang-chip"
-              data-lang-target="da"
-            >
+            <button type="button" class="app-menu-lang-chip" data-lang-target="da">
               <span class="app-menu-lang-flag" aria-hidden="true">🇩🇰</span>
               <span class="app-menu-lang-code">DA</span>
             </button>
-            <button
-              type="button"
-              class="app-menu-lang-chip"
-              data-lang-target="en"
-            >
+            <button type="button" class="app-menu-lang-chip" data-lang-target="en">
               <span class="app-menu-lang-flag" aria-hidden="true">🇬🇧</span>
               <span class="app-menu-lang-code">EN</span>
             </button>
@@ -423,6 +336,7 @@
                 Familien-Begleiterin Tilla
               </h2>
             </header>
+
             <div class="tilla-sidebar-card">
               <div class="tilla-sidebar-avatar">
                 <img
@@ -434,6 +348,7 @@
                   height="512"
                 />
               </div>
+
               <div class="tilla-sidebar-text">
                 <p
                   id="tilla-sidebar-text"
@@ -444,6 +359,7 @@
                   Ich bin Tilla, eure kleine Schildkröte. Alltag darf auch leicht sein. Lass uns schauen, welcher Ort
                   in eurer Nähe euch heute ein Lächeln zaubert. 🌿
                 </p>
+
                 <div class="tilla-sidebar-actions">
                   <button id="btn-play-idea" type="button" class="btn btn-small btn-play-idea">
                     <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
@@ -460,7 +376,7 @@
             </div>
           </section>
 
-          <!-- Onboarding-Hinweis: erster Einstieg (VOR den Filtern verschoben) -->
+          <!-- Onboarding-Hinweis (VOR den Filtern) -->
           <section
             class="sidebar-section fsm-onboarding-hint"
             data-onboarding-hint
@@ -499,13 +415,8 @@
                 3. Auf einen Spot tippen – los geht’s.
               </span>
             </p>
-            <button
-              type="button"
-              class="fsm-onboarding-hint__close"
-              aria-label="Hinweis schließen"
-            >
-              ×
-            </button>
+
+            <button type="button" class="fsm-onboarding-hint__close" aria-label="Hinweis schließen">×</button>
           </section>
 
           <!-- Kompakter Filter -->
@@ -520,6 +431,7 @@
               >
                 Filter
               </h2>
+
               <button
                 id="btn-toggle-filters"
                 class="btn-ghost btn-small"
@@ -583,6 +495,7 @@
               >
                 Stimmung
               </label>
+
               <p
                 class="filter-group-helper filter-group-helper--compact"
                 id="filter-mood-helper"
@@ -592,6 +505,7 @@
               >
                 Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?
               </p>
+
               <div
                 class="mood-row"
                 role="group"
@@ -600,48 +514,35 @@
               >
                 <button type="button" class="mood-chip" data-mood="relaxed" aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-relaxed-label"
-                    data-i18n-de="Entspannt"
-                    data-i18n-en="Relaxed"
-                    data-i18n-da="Afslappet"
+                  <span class="mood-chip-label" id="mood-relaxed-label"
+                    data-i18n-de="Entspannt" data-i18n-en="Relaxed" data-i18n-da="Afslappet"
                   >
                     Entspannt
                   </span>
                 </button>
+
                 <button type="button" class="mood-chip" data-mood="action" aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-action-label"
-                    data-i18n-de="Bewegung"
-                    data-i18n-en="Active"
-                    data-i18n-da="Aktiv"
+                  <span class="mood-chip-label" id="mood-action-label"
+                    data-i18n-de="Bewegung" data-i18n-en="Active" data-i18n-da="Aktiv"
                   >
                     Bewegung
                   </span>
                 </button>
+
                 <button type="button" class="mood-chip" data-mood="water" aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">💧</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-water-label"
-                    data-i18n-de="Wasser &amp; Sand"
-                    data-i18n-en="Water &amp; sand"
-                    data-i18n-da="Vand &amp; sand"
+                  <span class="mood-chip-label" id="mood-water-label"
+                    data-i18n-de="Wasser &amp; Sand" data-i18n-en="Water &amp; sand" data-i18n-da="Vand &amp; sand"
                   >
                     Wasser &amp; Sand
                   </span>
                 </button>
+
                 <button type="button" class="mood-chip" data-mood="animals" aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-animals-label"
-                    data-i18n-de="Tier-Tag"
-                    data-i18n-en="Animal day"
-                    data-i18n-da="Dyredag"
+                  <span class="mood-chip-label" id="mood-animals-label"
+                    data-i18n-de="Tier-Tag" data-i18n-en="Animal day" data-i18n-da="Dyredag"
                   >
                     Tier-Tag
                   </span>
@@ -661,6 +562,7 @@
               >
                 Micro-Abenteuer-Radius
               </label>
+
               <p
                 class="filter-group-helper filter-group-helper--compact"
                 id="filter-radius-helper"
@@ -670,6 +572,7 @@
               >
                 Wie weit darf euer Abenteuer heute gehen?
               </p>
+
               <div class="radius-row">
                 <input
                   id="filter-radius"
@@ -691,6 +594,7 @@
                   Alle Spots
                 </span>
               </div>
+
               <p
                 id="filter-radius-description"
                 class="radius-description"
@@ -705,11 +609,7 @@
             <!-- Zusammenfassung & Button "Alle Filter öffnen" -->
             <div class="filter-footer">
               <button id="btn-open-filter-modal" class="btn btn-small" type="button">
-                <span
-                  data-i18n-de="Alle Filter öffnen"
-                  data-i18n-en="Open all filters"
-                  data-i18n-da="Åbn alle filtre"
-                >
+                <span data-i18n-de="Alle Filter öffnen" data-i18n-en="Open all filters" data-i18n-da="Åbn alle filtre">
                   Alle Filter öffnen
                 </span>
               </button>
@@ -727,12 +627,10 @@
           </section>
 
           <!-- Spot-Liste -->
-          <section
-            class="sidebar-section sidebar-section--grow"
-            aria-labelledby="spots-title"
-          >
+          <section class="sidebar-section sidebar-section--grow" aria-labelledby="spots-title">
             <header class="sidebar-section-header">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
+
               <button
                 id="btn-toggle-view"
                 class="btn-ghost btn-small"
@@ -740,15 +638,12 @@
                 aria-pressed="false"
                 aria-controls="sidebar"
               >
-                <span
-                  data-i18n-de="Nur Karte"
-                  data-i18n-en="Map only"
-                  data-i18n-da="Kun kort"
-                >
+                <span data-i18n-de="Nur Karte" data-i18n-en="Map only" data-i18n-da="Kun kort">
                   Nur Karte
                 </span>
               </button>
             </header>
+
             <div id="spot-list" class="spot-list"><!-- Karten via JS --></div>
           </section>
         </aside>
@@ -764,29 +659,14 @@
         </section>
 
         <!-- Family Spots Plus -->
-        <details
-          class="sidebar-section"
-          id="plus-section"
-          aria-labelledby="plus-section-title"
-        >
+        <details class="sidebar-section" id="plus-section" aria-labelledby="plus-section-title">
           <summary class="sidebar-section-header">
-            <h2 class="sidebar-section-title" id="plus-section-title">
-              Family Spots Plus
-            </h2>
-            <button
-              id="btn-toggle-plus"
-              class="btn-ghost btn-small"
-              type="button"
-            >
-              <span
-                data-i18n-de="Anzeigen"
-                data-i18n-en="Show"
-                data-i18n-da="Vis"
-              >
-                Anzeigen
-              </span>
+            <h2 class="sidebar-section-title" id="plus-section-title">Family Spots Plus</h2>
+            <button id="btn-toggle-plus" class="btn-ghost btn-small" type="button">
+              <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
             </button>
           </summary>
+
           <div class="filter-group">
             <p
               id="plus-status-text"
@@ -797,6 +677,7 @@
               Family Spots Plus ist nicht aktiviert.
             </p>
           </div>
+
           <div class="plus-code-form">
             <label
               for="plus-code-input"
@@ -806,24 +687,16 @@
             >
               Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):
             </label>
+
             <div class="plus-code-row">
-              <input
-                id="plus-code-input"
-                name="plus-code"
-                class="input"
-                type="text"
-                autocomplete="off"
-              />
+              <input id="plus-code-input" name="plus-code" class="input" type="text" autocomplete="off" />
               <button id="plus-code-submit" class="btn" type="button">
-                <span
-                  data-i18n-de="Code aktivieren"
-                  data-i18n-en="Activate code"
-                  data-i18n-da="Aktivér kode"
-                >
+                <span data-i18n-de="Code aktivieren" data-i18n-en="Activate code" data-i18n-da="Aktivér kode">
                   Code aktivieren
                 </span>
               </button>
             </div>
+
             <p
               class="plus-note"
               data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
@@ -836,35 +709,19 @@
         </details>
 
         <!-- Mein Tag -->
-        <details
-          class="sidebar-section"
-          id="daylog-section"
-          aria-labelledby="daylog-section-title"
-        >
+        <details class="sidebar-section" id="daylog-section" aria-labelledby="daylog-section-title">
           <summary class="sidebar-section-header">
-            <h2
-              class="sidebar-section-title"
-              id="daylog-section-title"
-              data-i18n-de="Mein Tag 💛"
-              data-i18n-en="My day 💛"
-              data-i18n-da="Min dag 💛"
+            <h2 class="sidebar-section-title" id="daylog-section-title"
+              data-i18n-de="Mein Tag 💛" data-i18n-en="My day 💛" data-i18n-da="Min dag 💛"
             >
               Mein Tag 💛
             </h2>
-            <button
-              id="btn-toggle-daylog"
-              class="btn-ghost btn-small"
-              type="button"
-            >
-              <span
-                data-i18n-de="Anzeigen"
-                data-i18n-en="Show"
-                data-i18n-da="Vis"
-              >
-                Anzeigen
-              </span>
+
+            <button id="btn-toggle-daylog" class="btn-ghost btn-small" type="button">
+              <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
             </button>
           </summary>
+
           <div class="filter-group">
             <label
               for="daylog-text"
@@ -874,6 +731,7 @@
             >
               Wie war euer Tag?
             </label>
+
             <p
               class="filter-group-helper"
               data-i18n-de="Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß an Tilla."
@@ -893,16 +751,9 @@
             ></textarea>
 
             <button id="daylog-save" class="btn btn-small" type="button">
-              <span
-                data-i18n-de="Speichern 💾"
-                data-i18n-en="Save 💾"
-                data-i18n-da="Gem 💾"
-              >
-                Speichern 💾
-              </span>
+              <span data-i18n-de="Speichern 💾" data-i18n-en="Save 💾" data-i18n-da="Gem 💾">Speichern 💾</span>
             </button>
 
-            <!-- Status + Löschen-Button in einer Zeile -->
             <div class="daylog-meta-row">
               <p
                 id="daylog-last-saved"
@@ -913,38 +764,25 @@
               >
                 Noch nichts gespeichert.
               </p>
-              <button
-                id="daylog-clear"
-                class="btn-ghost btn-small daylog-clear-btn hidden"
-                type="button"
-              >
-                <span
-                  data-i18n-de="Eintrag löschen"
-                  data-i18n-en="Delete entry"
-                  data-i18n-da="Slet notat"
-                >
+
+              <button id="daylog-clear" class="btn-ghost btn-small daylog-clear-btn hidden" type="button">
+                <span data-i18n-de="Eintrag löschen" data-i18n-en="Delete entry" data-i18n-da="Slet notat">
                   Eintrag löschen
                 </span>
               </button>
             </div>
 
-            <!-- NEU: Liste der gespeicherten Einträge -->
             <div id="daylog-list" class="daylog-list"></div>
           </div>
         </details>
       </section>
 
       <!-- =========================================
-           ABOUT VIEW
+           ABOUT VIEW (DE / DA / EN)
            ========================================= -->
       <section id="view-about" class="view" aria-label="Über Family Spots Map">
         <!-- Deutsch -->
-        <article
-          id="page-about-de"
-          class="page page-about"
-          lang="de"
-          aria-hidden="false"
-        >
+        <article id="page-about-de" class="page page-about" lang="de" aria-hidden="false">
           <h2>Über Family Spots Map</h2>
           <p>
             Family Spots Map ist eine Karte, behutsam gezeichnet für Familienabenteuer –<br />
@@ -1140,12 +978,7 @@
         </article>
 
         <!-- Dansk -->
-        <article
-          id="page-about-da"
-          class="page page-about hidden"
-          lang="da"
-          aria-hidden="true"
-        >
+        <article id="page-about-da" class="page page-about hidden" lang="da" aria-hidden="true">
           <h2>Om Family Spots Map</h2>
           <p>
             Family Spots Map er et kort, tegnet med omtanke til familieeventyr –<br />
@@ -1343,12 +1176,7 @@
         </article>
 
         <!-- Englisch -->
-        <article
-          id="page-about-en"
-          class="page page-about hidden"
-          lang="en"
-          aria-hidden="true"
-        >
+        <article id="page-about-en" class="page page-about hidden" lang="en" aria-hidden="true">
           <h2>About Family Spots Map</h2>
           <p>
             Family Spots Map is a carefully curated map for family adventures –<br />
@@ -1539,6 +1367,7 @@
             >
               Alle Filter
             </h2>
+
             <button
               id="filter-modal-close"
               class="btn-ghost btn-small filter-modal-close-btn"
@@ -1564,16 +1393,8 @@
               Hier kannst du Schnellfilter, Kategorien, Alter der Kinder und besondere Spots feinjustieren.
             </p>
 
-            <details
-              class="filter-advanced"
-              id="advanced-filters"
-              aria-labelledby="advanced-filters-label"
-              open
-            >
-              <summary
-                class="filter-advanced-summary"
-                id="advanced-filters-summary"
-              >
+            <details class="filter-advanced" id="advanced-filters" aria-labelledby="advanced-filters-label" open>
+              <summary class="filter-advanced-summary" id="advanced-filters-summary">
                 <span
                   class="filter-group-label"
                   id="advanced-filters-label"
@@ -1606,6 +1427,7 @@
                 >
                   Schnellfilter
                 </label>
+
                 <p
                   class="filter-group-helper"
                   id="filter-tags-helper"
@@ -1615,6 +1437,7 @@
                 >
                   Ein Tipp genügt – „mit Wasser“, „ruhig“, „Action“ oder „Naturpfad“. Die Karte sortiert für euch vor.
                 </p>
+
                 <div
                   id="filter-tags"
                   class="tag-filter-row"
@@ -1638,13 +1461,9 @@
                 >
                   Kategorie
                 </label>
+
                 <select id="filter-category" name="category" class="input">
-                  <option
-                    value=""
-                    data-i18n-de="Alle Kategorien"
-                    data-i18n-en="All categories"
-                    data-i18n-da="Alle kategorier"
-                  >
+                  <option value="" data-i18n-de="Alle Kategorien" data-i18n-en="All categories" data-i18n-da="Alle kategorier">
                     Alle Kategorien
                   </option>
                 </select>
@@ -1662,41 +1481,18 @@
                 >
                   Alter der Kinder
                 </label>
+
                 <select id="filter-age" name="age" class="input">
-                  <option
-                    value="all"
-                    id="filter-age-all"
-                    data-i18n-de="Alle Altersstufen"
-                    data-i18n-en="All age groups"
-                    data-i18n-da="Alle aldersgrupper"
-                  >
+                  <option value="all" id="filter-age-all" data-i18n-de="Alle Altersstufen" data-i18n-en="All age groups" data-i18n-da="Alle aldersgrupper">
                     Alle Altersstufen
                   </option>
-                  <option
-                    value="0-3"
-                    id="filter-age-0-3"
-                    data-i18n-de="0–3 Jahre"
-                    data-i18n-en="0–3 years"
-                    data-i18n-da="0–3 år"
-                  >
+                  <option value="0-3" id="filter-age-0-3" data-i18n-de="0–3 Jahre" data-i18n-en="0–3 years" data-i18n-da="0–3 år">
                     0–3 Jahre
                   </option>
-                  <option
-                    value="4-9"
-                    id="filter-age-4-9"
-                    data-i18n-de="4–9 Jahre"
-                    data-i18n-en="4–9 years"
-                    data-i18n-da="4–9 år"
-                  >
+                  <option value="4-9" id="filter-age-4-9" data-i18n-de="4–9 Jahre" data-i18n-en="4–9 years" data-i18n-da="4–9 år">
                     4–9 Jahre
                   </option>
-                  <option
-                    value="10+"
-                    id="filter-age-10-plus"
-                    data-i18n-de="10+ Jahre"
-                    data-i18n-en="10+ years"
-                    data-i18n-da="10+ år"
-                  >
+                  <option value="10+" id="filter-age-10-plus" data-i18n-de="10+ Jahre" data-i18n-en="10+ years" data-i18n-da="10+ år">
                     10+ Jahre
                   </option>
                 </select>
@@ -1706,11 +1502,7 @@
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-verified-label">
                   <input id="filter-verified" name="verified" type="checkbox" />
-                  <span
-                    data-i18n-de="Nur verifizierte Spots"
-                    data-i18n-en="Only verified spots"
-                    data-i18n-da="Kun verificerede spots"
-                  >
+                  <span data-i18n-de="Nur verifizierte Spots" data-i18n-en="Only verified spots" data-i18n-da="Kun verificerede spots">
                     Nur verifizierte Spots
                   </span>
                 </label>
@@ -1719,16 +1511,8 @@
               <!-- Große Abenteuer -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-big-label">
-                  <input
-                    id="filter-big-adventures"
-                    name="big-adventures"
-                    type="checkbox"
-                  />
-                  <span
-                    data-i18n-de="Große Abenteuer"
-                    data-i18n-en="Big adventures"
-                    data-i18n-da="Store eventyr"
-                  >
+                  <input id="filter-big-adventures" name="big-adventures" type="checkbox" />
+                  <span data-i18n-de="Große Abenteuer" data-i18n-en="Big adventures" data-i18n-da="Store eventyr">
                     Große Abenteuer
                   </span>
                 </label>
@@ -1737,16 +1521,8 @@
               <!-- Nur Favoriten -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-favorites-label">
-                  <input
-                    id="filter-favorites"
-                    name="favorites"
-                    type="checkbox"
-                  />
-                  <span
-                    data-i18n-de="Nur Favoriten"
-                    data-i18n-en="Favourites only"
-                    data-i18n-da="Kun favoritter"
-                  >
+                  <input id="filter-favorites" name="favorites" type="checkbox" />
+                  <span data-i18n-de="Nur Favoriten" data-i18n-en="Favourites only" data-i18n-da="Kun favoritter">
                     Nur Favoriten
                   </span>
                 </label>
@@ -1755,25 +1531,14 @@
           </div>
 
           <footer class="filter-modal-footer">
-            <button
-              id="filter-modal-reset"
-              class="btn-ghost"
-              type="button"
-            >
-              <span
-                data-i18n-de="Filter zurücksetzen"
-                data-i18n-en="Reset filters"
-                data-i18n-da="Nulstil filtre"
-              >
+            <button id="filter-modal-reset" class="btn-ghost" type="button">
+              <span data-i18n-de="Filter zurücksetzen" data-i18n-en="Reset filters" data-i18n-da="Nulstil filtre">
                 Filter zurücksetzen
               </span>
             </button>
+
             <button id="filter-modal-apply" class="btn" type="button">
-              <span
-                data-i18n-de="Filter anwenden"
-                data-i18n-en="Apply filters"
-                data-i18n-da="Brug filtre"
-              >
+              <span data-i18n-de="Filter anwenden" data-i18n-en="Apply filters" data-i18n-da="Brug filtre">
                 Filter anwenden
               </span>
             </button>
@@ -1781,6 +1546,16 @@
         </div>
       </div>
     </main>
+
+    <!-- Bottom Navigation (Router benötigt diese IDs) -->
+    <nav class="bottom-nav" aria-label="Navigation">
+      <button class="bottom-nav-item" type="button" data-route="map" aria-pressed="true">
+        <span id="bottom-nav-map-label" data-i18n-de="Karte" data-i18n-en="Map" data-i18n-da="Kort">Karte</span>
+      </button>
+      <button class="bottom-nav-item" type="button" data-route="about" aria-pressed="false">
+        <span id="bottom-nav-about-label" data-i18n-de="Über" data-i18n-en="About" data-i18n-da="Om">Über</span>
+      </button>
+    </nav>
 
     <!-- Toast -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -1816,11 +1591,8 @@
 
       if (menuToggle) {
         menuToggle.addEventListener("click", () => {
-          if (menu && menu.hidden) {
-            openMenu();
-          } else {
-            closeMenu();
-          }
+          if (menu && menu.hidden) openMenu();
+          else closeMenu();
         });
       }
 
@@ -1838,9 +1610,7 @@
       }
 
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          closeMenu();
-        }
+        if (event.key === "Escape") closeMenu();
       });
 
       // Sprachchips → bestehenden Language-Switcher benutzen
