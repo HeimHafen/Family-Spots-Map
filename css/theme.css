@@ -1,10 +1,19 @@
 /* =========================================
    theme.css — Light & Dark Design Tokens
+   (Improved: semantic layer, unified elevations,
+   correct color-scheme priority, OS fallback)
    ========================================= */
 
-/* ======= Global Design Tokens (Light Base) ======= */
+/* =========================================================
+   1) Global Design Tokens (Light Base)
+   ========================================================= */
 :root {
-  /* ===== Farb-System: Akzent & Varianten ===== */
+  /* --- Native form controls / scrollbars (default light) --- */
+  color-scheme: light;
+
+  /* ================================
+     Brand / Accent System
+     ================================ */
   --accent-h: 32;
   --accent: hsl(var(--accent-h), 92%, 50%);
   --accent-light: hsl(var(--accent-h), 92%, 65%);
@@ -13,41 +22,100 @@
   --accent-soft-hover: hsl(var(--accent-h), 92%, 82%);
   --accent-strong: hsl(var(--accent-h), 85%, 42%);
 
-  /* ===== Textfarben ===== */
-  --text-color: hsl(20, 60%, 17%);
-  --text-soft: hsl(25, 45%, 29%);
-  --text-strong: hsl(18, 58%, 12%);
+  /* ================================
+     Semantic Color Tokens
+     (preferred for scaling)
+     ================================ */
+  /* Text */
+  --text-1: hsl(20, 60%, 17%); /* primary */
+  --text-2: hsl(25, 45%, 29%); /* secondary */
+  --text-3: hsl(18, 58%, 12%); /* strong/heading */
 
-  /* ===== Layout & Card ===== */
-  --app-bg: radial-gradient(
+  /* On-color (text on colored surfaces) */
+  --on-accent: hsl(22, 65%, 18%);
+  --on-dark: hsl(32, 100%, 95%);
+  --on-light: hsl(222, 47%, 11%);
+
+  /* Surfaces */
+  --surface-0: hsl(34, 100%, 96%); /* app base (flat fallback) */
+  --surface-1: hsla(30, 76%, 91%, 0.98); /* cards/sections */
+  --surface-2: hsl(36, 100%, 95%); /* elevated/featured */
+  --surface-3: hsl(34, 100%, 92%); /* subtle chips/pills */
+
+  /* Borders */
+  --border-1: hsla(0, 0%, 100%, 0.90);
+  --border-2: hsla(0, 0%, 100%, 0.60);
+
+  /* ================================
+     Elevation (Unified Shadows)
+     ================================ */
+  --elev-1: 0 3px 8px hsla(0, 0%, 0%, 0.25);
+  --elev-2: 0 10px 26px hsla(28, 64%, 39%, 0.50);
+  --elev-3: 0 14px 32px hsla(26, 59%, 36%, 0.55);
+
+  /* ================================
+     Radii / Motion / Typography
+     ================================ */
+  --radius-pill: 999px;
+  --border-radius: 0.5rem;
+
+  --transition-fast: 150ms ease;
+
+  --font-stack: "Segoe UI", Roboto, sans-serif;
+  --font-size-base: 1rem;
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 3px hsla(var(--accent-h), 92%, 50%, 0.35);
+
+  /* ================================
+     Backgrounds / Effects
+     ================================ */
+  --bg-app: radial-gradient(
     circle at top,
     hsl(34, 100%, 70%) 0%,
     hsl(34, 100%, 91%) 32%,
     hsl(34, 85%, 89%) 70%
   );
 
-  --card-bg: hsla(30, 76%, 91%, 0.98);
-  --card-shadow: 0 10px 26px hsla(28, 64%, 39%, 0.5);
-  --card-border: hsla(0, 0%, 100%, 0.9);
+  /* Filters (effects, not pure tokens) */
+  --filter-map: sepia(0.26) saturate(0.9) brightness(1.04)
+    contrast(1.02) hue-rotate(-14deg);
 
-  /* ===== UI-Komponenten ===== */
-  --chip-bg: hsl(34, 100%, 92%);
+  /* =========================================================
+     2) Legacy / Component Tokens
+     (kept for compatibility; prefer semantic tokens above)
+     ========================================================= */
+
+  /* --- Text (legacy names) --- */
+  --text-color: var(--text-1);
+  --text-soft: var(--text-2);
+  --text-strong: var(--text-3);
+
+  /* --- Layout & Card --- */
+  --app-bg: var(--bg-app);
+
+  --card-bg: var(--surface-1);
+  --card-shadow: var(--elev-2);
+  --card-border: var(--border-1);
+
+  /* --- UI Components --- */
+  --chip-bg: var(--surface-3);
   --chip-color: hsl(25, 45%, 28%);
-  --chip-shadow: 0 3px 8px hsla(26, 54%, 39%, 0.3);
-  --chip-hover-shadow: 0 4px 10px hsla(26, 54%, 39%, 0.4);
+  --chip-shadow: var(--elev-1);
+  --chip-hover-shadow: 0 4px 10px hsla(26, 54%, 39%, 0.40);
 
   --input-bg: hsl(34, 100%, 94%);
   --input-shadow: 0 4px 9px hsla(26, 52%, 38%, 0.25);
 
   --button-bg: var(--accent-soft);
   --button-hover-bg: var(--accent-soft-hover);
-  --button-text-color: hsl(22, 65%, 18%);
+  --button-text-color: var(--on-accent);
 
   --toast-bg: hsla(var(--accent-h), 80%, 24%, 0.96);
 
   --header-bg-top: var(--accent-strong);
   --header-bg-bottom: var(--accent);
-  --header-shadow: 0 12px 30px hsla(28, 64%, 39%, 0.55);
+  --header-shadow: var(--elev-3);
   --header-text-color: hsl(0, 0%, 100%);
 
   --header-tagline-bg: hsla(36, 100%, 94%, 0.95);
@@ -60,89 +128,118 @@
     hsl(34, 100%, 75%) 40%,
     hsl(32, 100%, 65%) 100%
   );
-
-  --header-icon-shadow: 0 3px 8px hsla(26, 81%, 34%, 0.4);
-  --header-icon-border: hsla(0, 0%, 100%, 0.6);
+  --header-icon-shadow: var(--elev-1);
+  --header-icon-border: var(--border-2);
 
   --language-pill-bg: hsla(34, 100%, 94%, 0.94);
-  --language-pill-shadow: 0 3px 9px hsla(26, 63%, 29%, 0.4);
+  --language-pill-shadow: var(--elev-1);
 
   --sidebar-bg: hsl(228, 58%, 6%);
   --sidebar-section-bg: hsla(34, 100%, 95%, 0.98);
-  --sidebar-section-shadow: 0 10px 24px hsla(28, 64%, 39%, 0.42);
-  --sidebar-section-border: hsla(0, 0%, 100%, 0.9);
+  --sidebar-section-shadow: var(--elev-2);
+  --sidebar-section-border: var(--border-1);
 
   --bottom-nav-backdrop: hsla(32, 100%, 83%, 0.85);
   --bottom-nav-item-bg: hsla(34, 100%, 95%, 0.98);
   --bottom-nav-item-color: hsl(28, 44%, 37%);
   --bottom-nav-item-active-bg: var(--accent);
-  --bottom-nav-item-active-color: hsl(22, 65%, 18%);
+  --bottom-nav-item-active-color: var(--on-accent);
 
-  --map-card-bg: hsl(36, 100%, 95%);
-  --map-card-shadow: 0 14px 32px hsla(26, 59%, 36%, 0.55);
+  --map-card-bg: var(--surface-2);
+  --map-card-shadow: var(--elev-3);
   --map-card-border: hsla(0, 0%, 100%, 0.95);
 
-  /* ===== Radii, Schatten, Filter ===== */
-  --radius-pill: 999px;
+  /* --- Legacy shadow names (mapped) --- */
+  --shadow-soft: var(--elev-1);
+  --shadow-strong: var(--elev-2);
 
+  /* --- Legacy radius circle effect tokens --- */
   --radius-circle-stroke: hsla(var(--accent-h), 90%, 55%, 0.6);
   --radius-circle-fill: hsla(var(--accent-h), 90%, 55%, 0.17);
 
-  --shadow-soft: 0 3px 8px hsla(0, 0%, 0%, 0.35);
-  --shadow-strong: 0 10px 26px hsla(28, 64%, 39%, 0.5);
-
-  --map-filter: sepia(0.26) saturate(0.9) brightness(1.04)
-    contrast(1.02) hue-rotate(-14deg);
-
-  /* ===== Utility Tokens ===== */
-  --border-radius: 0.5rem;
-  --transition-fast: 150ms ease;
-  --font-stack: "Segoe UI", Roboto, sans-serif;
-  --font-size-base: 1rem;
+  /* --- Legacy effect token (mapped) --- */
+  --map-filter: var(--filter-map);
 }
 
-/* ======= Dark Theme Overrides ======= */
+/* =========================================================
+   3) Theme Selectors (manual override)
+   These must be the source of truth for color-scheme.
+   ========================================================= */
+[data-theme="light"] {
+  color-scheme: light;
+  /* Light theme = :root defaults */
+}
+
 [data-theme="dark"] {
-  --app-bg: radial-gradient(
+  color-scheme: dark;
+
+  /* ================================
+     Semantic Overrides (Dark)
+     ================================ */
+  --text-1: hsl(32, 100%, 95%);
+  --text-2: hsl(215, 16%, 72%);
+  --text-3: hsl(32, 100%, 95%);
+
+  --surface-0: hsl(229, 84%, 6%);
+  --surface-1: hsla(222, 44%, 9%, 0.98);
+  --surface-2: hsla(222, 44%, 11%, 0.98);
+  --surface-3: hsla(222, 44%, 11%, 0.98);
+
+  --border-1: hsla(215, 19%, 65%, 0.35);
+  --border-2: hsla(215, 19%, 65%, 0.90);
+
+  --elev-1: 0 6px 14px hsla(0, 0%, 0%, 0.70);
+  --elev-2: 0 18px 36px hsla(0, 0%, 0%, 0.80);
+  --elev-3: 0 18px 38px hsla(0, 0%, 0%, 0.90);
+
+  --focus-ring: 0 0 0 3px hsla(var(--accent-h), 92%, 60%, 0.30);
+
+  --bg-app: radial-gradient(
     circle at top,
     hsl(222, 47%, 11%) 0%,
     hsl(229, 84%, 6%) 55%,
     hsl(229, 84%, 6%) 100%
   );
 
-  --text-color: hsl(32, 100%, 95%);
-  --text-soft: hsl(215, 16%, 72%);
-  --text-strong: hsl(32, 100%, 95%);
+  --filter-map: grayscale(0.35) sepia(0.28) brightness(0.78)
+    contrast(1.05) saturate(0.9) hue-rotate(-16deg);
 
-  --card-bg: hsla(222, 44%, 9%, 0.98);
-  --card-shadow: 0 18px 36px hsla(0, 0%, 0%, 0.8);
-  --card-border: hsla(215, 19%, 65%, 0.35);
+  /* ================================
+     Legacy / Component Overrides (Dark)
+     (most map automatically via semantic vars)
+     ================================ */
 
-  --chip-bg: hsla(222, 44%, 11%, 0.98);
+  --card-bg: var(--surface-1);
+  --card-shadow: var(--elev-2);
+  --card-border: var(--border-1);
+
+  --chip-bg: var(--surface-3);
   --chip-color: hsl(220, 14%, 90%);
-  --chip-shadow: 0 6px 14px hsla(0, 0%, 0%, 0.7);
-  --chip-hover-shadow: 0 6px 14px hsla(0, 0%, 0%, 0.9);
+  --chip-shadow: var(--elev-1);
+  --chip-hover-shadow: var(--elev-2);
 
   --input-bg: hsla(222, 44%, 11%, 0.98);
-  --input-shadow: 0 7px 15px hsla(222, 44%, 11%, 0.9);
+  --input-shadow: 0 7px 15px hsla(222, 44%, 11%, 0.90);
 
-  --button-text-color: hsl(222, 47%, 11%);
+  /* Keep button using warm accent even in dark */
+  --button-bg: var(--accent-soft);
+  --button-hover-bg: var(--accent-soft-hover);
+  --button-text-color: var(--on-light);
 
   --toast-bg: hsla(222, 44%, 11%, 0.98);
 
   --header-bg-top: hsl(228, 45%, 8%);
   --header-bg-bottom: hsl(228, 58%, 6%);
-  --header-shadow: 0 18px 38px hsla(0, 0%, 0%, 0.9);
-  --header-text-color: hsl(32, 100%, 95%);
+  --header-shadow: var(--elev-3);
+  --header-text-color: var(--on-dark);
 
   --header-tagline-bg: linear-gradient(
     135deg,
     var(--accent),
     hsl(36, 100%, 50%)
   );
-
   --header-tagline-color: hsl(30, 40%, 10%);
-  --header-tagline-shadow: 0 6px 18px hsla(0, 0%, 0%, 0.8);
+  --header-tagline-shadow: var(--elev-2);
 
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
@@ -150,36 +247,99 @@
     hsl(229, 84%, 6%) 45%,
     hsl(229, 84%, 6%) 100%
   );
+  --header-icon-shadow: var(--elev-1);
+  --header-icon-border: var(--border-2);
 
-  --header-icon-shadow: 0 7px 16px hsla(0, 0%, 0%, 0.9);
-  --header-icon-border: hsla(215, 19%, 65%, 0.9);
-
-  --language-pill-bg: hsla(222, 44%, 11%, 0.98);
-  --language-pill-shadow: 0 6px 14px hsla(0, 0%, 0%, 0.9);
+  --language-pill-bg: var(--surface-3);
+  --language-pill-shadow: var(--elev-1);
 
   --sidebar-bg: hsl(229, 84%, 6%);
-  --sidebar-section-bg: hsla(222, 44%, 9%, 0.98);
-  --sidebar-section-shadow: 0 16px 34px hsla(0, 0%, 0%, 0.9);
+  --sidebar-section-bg: var(--surface-1);
+  --sidebar-section-shadow: var(--elev-2);
   --sidebar-section-border: hsla(220, 70%, 40%, 0.35);
 
   --bottom-nav-backdrop: hsla(222, 44%, 11%, 0.92);
-  --bottom-nav-item-bg: hsla(222, 44%, 11%, 0.98);
+  --bottom-nav-item-bg: var(--surface-3);
   --bottom-nav-item-color: hsl(220, 14%, 90%);
   --bottom-nav-item-active-bg: hsl(38, 92%, 52%);
-  --bottom-nav-item-active-color: hsl(222, 47%, 11%);
+  --bottom-nav-item-active-color: var(--on-light);
 
-  --map-card-bg: hsl(229, 84%, 6%);
-  --map-card-shadow: 0 18px 38px hsla(0, 0%, 0%, 0.9);
-  --map-card-border: hsla(220, 70%, 40%, 0.4);
+  --map-card-bg: var(--surface-0);
+  --map-card-shadow: var(--elev-3);
+  --map-card-border: hsla(220, 70%, 40%, 0.40);
 
   --radius-circle-stroke: hsla(var(--accent-h), 90%, 65%, 0.75);
   --radius-circle-fill: hsla(var(--accent-h), 90%, 65%, 0.15);
 
-  --map-filter: grayscale(0.35) sepia(0.28) brightness(0.78)
-    contrast(1.05) saturate(0.9) hue-rotate(-16deg);
+  /* Legacy effect token mapping */
+  --map-filter: var(--filter-map);
 }
 
-/* Optional: Light Theme Selector */
-[data-theme="light"] {
-  /* root = light theme */
+/* =========================================================
+   4) OS Preference Fallback (only if no manual theme set)
+   - Applies dark tokens automatically when the user has
+     prefers-color-scheme: dark AND no [data-theme] is present.
+   ========================================================= */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    /* Mirror the dark theme overrides */
+    --text-1: hsl(32, 100%, 95%);
+    --text-2: hsl(215, 16%, 72%);
+    --text-3: hsl(32, 100%, 95%);
+
+    --surface-0: hsl(229, 84%, 6%);
+    --surface-1: hsla(222, 44%, 9%, 0.98);
+    --surface-2: hsla(222, 44%, 11%, 0.98);
+    --surface-3: hsla(222, 44%, 11%, 0.98);
+
+    --border-1: hsla(215, 19%, 65%, 0.35);
+    --border-2: hsla(215, 19%, 65%, 0.90);
+
+    --elev-1: 0 6px 14px hsla(0, 0%, 0%, 0.70);
+    --elev-2: 0 18px 36px hsla(0, 0%, 0%, 0.80);
+    --elev-3: 0 18px 38px hsla(0, 0%, 0%, 0.90);
+
+    --focus-ring: 0 0 0 3px hsla(var(--accent-h), 92%, 60%, 0.30);
+
+    --bg-app: radial-gradient(
+      circle at top,
+      hsl(222, 47%, 11%) 0%,
+      hsl(229, 84%, 6%) 55%,
+      hsl(229, 84%, 6%) 100%
+    );
+
+    --filter-map: grayscale(0.35) sepia(0.28) brightness(0.78)
+      contrast(1.05) saturate(0.9) hue-rotate(-16deg);
+
+    /* Component mappings that do not automatically follow semantics */
+    --chip-color: hsl(220, 14%, 90%);
+    --input-bg: hsla(222, 44%, 11%, 0.98);
+    --input-shadow: 0 7px 15px hsla(222, 44%, 11%, 0.90);
+
+    --button-text-color: var(--on-light);
+
+    --header-bg-top: hsl(228, 45%, 8%);
+    --header-bg-bottom: hsl(228, 58%, 6%);
+    --header-tagline-bg: linear-gradient(
+      135deg,
+      var(--accent),
+      hsl(36, 100%, 50%)
+    );
+    --header-tagline-color: hsl(30, 40%, 10%);
+
+    --bottom-nav-backdrop: hsla(222, 44%, 11%, 0.92);
+    --bottom-nav-item-color: hsl(220, 14%, 90%);
+    --bottom-nav-item-active-bg: hsl(38, 92%, 52%);
+    --bottom-nav-item-active-color: var(--on-light);
+
+    --map-filter: var(--filter-map);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+  }
 }
