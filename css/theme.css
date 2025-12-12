@@ -1,16 +1,17 @@
 /* =========================================
    theme.css — Design-Variablen (Light / Dark Theme)
-   Family Spots – warme, familiäre Farbwelt (optimiert)
+   Family Spots Map – warme Familienwelt (optimiert)
    ========================================= */
 
 :root {
-  /* Accent-Variable (Hue) – bleibt dein Marken-Orange */
+  /* Accent-Variable (Hue) – per Slider anpassbar */
   --accent-h: 32;
   --accent: hsl(var(--accent-h), 92%, 50%);
   --accent-soft: hsl(var(--accent-h), 92%, 88%);
+  /* NEU: leicht dunkleres Soft für Hover-Zustände */
+  --accent-soft-hover: hsl(var(--accent-h), 92%, 82%);
   --accent-strong: hsl(var(--accent-h), 85%, 42%);
 
-  /* Hintergrund: warmes, sonniges Gradient wie vorher */
   --app-bg: radial-gradient(
     circle at top,
     #ffcc80 0,
@@ -18,37 +19,30 @@
     #f8dfc0 70%
   );
 
-  /* Typografie – warmes Braun, gut lesbar */
   --text-color: #452213;
   --text-soft: #6f4224;
   --text-strong: #2f160b;
 
-  /* Karten / Panels – leicht aufgehellt, etwas weniger hart im Schatten */
-  --card-bg: rgba(252, 239, 224, 0.98); /* etwas heller als vorher */
-  --card-shadow: 0 10px 24px rgba(163, 95, 36, 0.45);
-  --card-border: rgba(255, 255, 255, 0.95);
+  --card-bg: rgba(252, 235, 216, 0.98);
+  --card-shadow: 0 10px 26px rgba(163, 95, 36, 0.5);
+  --card-border: rgba(255, 255, 255, 0.9);
 
-  /* Chips – wie vorher, leicht angepasst */
   --chip-bg: #ffedd5;
   --chip-color: #6b4124;
   --chip-shadow: 0 3px 8px rgba(152, 92, 45, 0.3);
 
-  /* Inputs – cremig, nicht reinweiß */
   --input-bg: #fff1e0;
   --input-shadow: 0 4px 9px rgba(147, 90, 45, 0.25);
 
-  /* Header – dein sattes Orange bleibt */
   --header-bg-top: var(--accent-strong);
   --header-bg-bottom: var(--accent);
   --header-shadow: 0 12px 30px rgba(163, 95, 36, 0.55);
   --header-text-color: #ffffff;
 
-  /* Tagline-Pill – warmes Creme mit weichem Schatten */
-  --header-tagline-bg: rgba(255, 245, 222, 0.96);
+  --header-tagline-bg: rgba(255, 245, 222, 0.95);
   --header-tagline-color: #7c4314;
   --header-tagline-shadow: 0 4px 12px rgba(141, 73, 15, 0.45);
 
-  /* Header-Icons (Menu / etc.) */
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
     #ffe7c2 0,
@@ -56,51 +50,43 @@
     #ffb14d 100%
   );
   --header-icon-shadow: 0 3px 8px rgba(156, 76, 16, 0.4);
-  --header-icon-border: rgba(255, 255, 255, 0.7);
+  --header-icon-border: rgba(255, 255, 255, 0.6);
 
-  /* Sprach-Pill */
-  --language-pill-bg: rgba(255, 243, 224, 0.96);
+  --language-pill-bg: rgba(255, 243, 224, 0.94);
   --language-pill-shadow: 0 3px 9px rgba(132, 70, 18, 0.4);
 
-  /* Bottom-Nav – leicht transparent über der warmen Fläche */
-  --bottom-nav-backdrop: rgba(255, 212, 170, 0.88);
+  --bottom-nav-backdrop: rgba(255, 212, 170, 0.85);
 
-  /* *** Wichtig: Sidebar jetzt auch warm statt Nachtblau *** */
-  --sidebar-bg: #f8dfc0; /* vorher #050816 */
+  --sidebar-bg: #050816;
   --sidebar-section-bg: rgba(255, 245, 233, 0.98);
   --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
-  --sidebar-section-border: rgba(255, 255, 255, 0.95);
+  --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
-  /* Bottom-Nav-Items – kissenartig, warm */
   --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
   --bottom-nav-item-color: #8a5a32;
   --bottom-nav-item-active-bg: var(--accent);
   --bottom-nav-item-active-color: #4b280f;
 
-  /* Toast – dunkles Karamell */
-  --toast-bg: rgba(55, 35, 21, 0.95);
+  /* Optimierter Toast: warme Orange-Tönung statt tiefbraun */
+  --toast-bg: hsla(var(--accent-h), 85%, 38%, 0.98);
 
-  /* Map-Card – große, helle Karte vor der Map */
   --map-card-bg: #fdf4e6;
   --map-card-shadow: 0 14px 32px rgba(148, 86, 38, 0.55);
-  --map-card-border: rgba(255, 255, 255, 0.96);
+  --map-card-border: rgba(255, 255, 255, 0.95);
 
-  /* Radius-Kreis – sonniges Orange */
   --radius-circle-stroke: hsla(var(--accent-h), 90%, 55%, 0.6);
   --radius-circle-fill: hsla(var(--accent-h), 90%, 55%, 0.17);
 
-  /* Globale Kissen-Optik */
   --radius-pill: 999px;
-  --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.3);
+  --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
   --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
 
-  /* Map-Farbfilter – warm, aber nicht zu extrem */
-  --map-filter: sepia(0.24) saturate(0.9) brightness(1.03) contrast(1.02)
-                hue-rotate(-12deg);
+  --map-filter: sepia(0.26) saturate(0.9) brightness(1.04) contrast(1.02)
+    hue-rotate(-14deg);
 }
 
 /* =========================================
-   Dark Theme – gemütlicher Abendmodus
+   Dark Theme
    ========================================= */
 
 [data-theme="dark"] {
@@ -131,7 +117,6 @@
   --header-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
   --header-text-color: #fef3e7;
 
-  /* Tagline im Dark Mode – warm leuchtende Pill */
   --header-tagline-bg: linear-gradient(135deg, var(--accent), #ff9800);
   --header-tagline-color: #1a1309;
   --header-tagline-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
@@ -159,7 +144,8 @@
   --bottom-nav-item-active-bg: #f59e0b;
   --bottom-nav-item-active-color: #111827;
 
-  --toast-bg: rgba(15, 23, 42, 0.98);
+  /* Toast Dark – leicht in Richtung Accent getönt */
+  --toast-bg: hsla(var(--accent-h), 80%, 32%, 0.98);
 
   --map-card-bg: #020617;
   --map-card-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
@@ -169,5 +155,5 @@
   --radius-circle-fill: hsla(var(--accent-h), 90%, 65%, 0.15);
 
   --map-filter: grayscale(0.35) sepia(0.28) brightness(0.78) contrast(1.05)
-                saturate(0.9) hue-rotate(-16deg);
+    saturate(0.9) hue-rotate(-16deg);
 }
