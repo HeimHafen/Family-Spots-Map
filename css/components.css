@@ -1,4 +1,3 @@
-
 /* =========================================
    components.css — Layout & Komponenten
    Corporate Refine (Playful Warm / Premium Dark aligned)
@@ -33,7 +32,7 @@
 
   /* Focus ring (prefer theme.css) */
   --focus-inner: var(--focus-inner, #ffffff);
-  --focus-outer: var(--focus-outer, rgba(245, 158, 11, 0.92));
+  --focus-outer: var(--focus-outer, hsla(var(--accent-h, 32), 72%, 52%, 0.55));
   --focus-ring: var(--focus-ring, 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer));
 
   /* Neutral surfaces derived from semantic surfaces (no overriding) */
@@ -49,7 +48,7 @@
 /* Dark focus inner should not be white (prefer theme.css) */
 [data-theme="dark"] {
   --focus-inner: var(--focus-inner, rgba(2, 6, 23, 0.9));
-  --focus-outer: var(--focus-outer, rgba(245, 158, 11, 0.85));
+  --focus-outer: var(--focus-outer, hsla(var(--accent-h, 32), 72%, 55%, 0.45));
 }
 
 /* Universal interactive ergonomics (mobile) */
@@ -114,7 +113,8 @@ select {
 }
 
 .btn:hover {
-  background-color: hsl(var(--accent-h, 32), 92%, 54%);
+  /* Pastel: weniger Sättigung als vorher */
+  background-color: hsl(var(--accent-h, 32), 72%, 54%);
   box-shadow: var(--elevation-md);
 }
 
@@ -233,7 +233,7 @@ select {
 }
 
 .btn-play-idea:hover {
-  background-color: hsl(var(--accent-h, 32), 92%, 54%);
+  background-color: hsl(var(--accent-h, 32), 72%, 54%);
   box-shadow: var(--elevation-md);
 }
 
@@ -314,13 +314,13 @@ select {
   box-shadow: var(--header-shadow);
 }
 
-/* Light-Mode-Variante: hell, cremig */
+/* Light-Mode-Variante: warm, pastellig (weniger knallig als vorher) */
 :where(html, body, :root)[data-theme="light"] .app-header {
   background: radial-gradient(
       circle at top left,
-      #fff7ed 0,
-      #ffe7d1 55%,
-      #f6c79d 100%
+      #fff4ec 0,
+      #f7e0d2 55%,
+      #ecc4a4 100%
     );
   color: var(--text-strong, #111827);
   box-shadow: var(--elevation-md);
@@ -780,7 +780,7 @@ body[data-menu-open="1"] .app-menu {
   margin-top: 4px;
   padding: 10px 10px 12px;
   border-radius: 16px;
-  background: var(--card-bg, #fff7ed);
+  background: var(--card-bg, #fff4ec);
   box-shadow: var(--elevation-sm);
   border: var(--border-soft);
 }
@@ -878,8 +878,8 @@ textarea.input {
 textarea.input:focus,
 select.input:focus {
   outline: none;
-  border-color: rgba(245, 158, 11, 0.7);
-  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.7);
+  border-color: hsla(var(--accent-h, 32), 72%, 52%, 0.65);
+  box-shadow: 0 0 0 1px hsla(var(--accent-h, 32), 72%, 52%, 0.45);
 }
 
 /* Select — crisp chevron */
@@ -919,9 +919,9 @@ select.input {
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  background: #f3f4f6;
-  color: #374151;
-  border: 1px solid rgba(209, 213, 219, 0.9);
+  background: var(--chip-bg, #f7efe8);
+  color: var(--text-1, #374151);
+  border: 1px solid var(--border-2, rgba(209, 213, 219, 0.9));
   box-shadow: none;
   cursor: pointer;
   transition:
@@ -1239,7 +1239,7 @@ select.input {
   box-shadow: var(--elevation-md);
 }
 
-/* Timeline am linken Rand */
+/* Timeline am linken Rand (pastellig via Tokens) */
 .daylog-entry::before {
   content: "";
   position: absolute;
@@ -1248,7 +1248,7 @@ select.input {
   bottom: 0.75rem;
   width: 2px;
   border-radius: 999px;
-  background: linear-gradient(to bottom, #fb923c, #f97316);
+  background: linear-gradient(to bottom, var(--accent-light), var(--accent-dark));
 }
 
 .daylog-entry::after {
@@ -1259,8 +1259,8 @@ select.input {
   width: 9px;
   height: 9px;
   border-radius: 999px;
-  background: #fb923c;
-  box-shadow: 0 0 0 3px rgba(248, 153, 72, 0.25);
+  background: var(--accent-light);
+  box-shadow: 0 0 0 3px hsla(var(--accent-h, 32), 72%, 58%, 0.22);
 }
 
 .daylog-entry-header {
@@ -2099,7 +2099,7 @@ body[data-menu-open="1"] {
   border-radius: inherit;
   background: radial-gradient(
     circle,
-    rgba(255, 183, 77, 0.35),
+    hsla(var(--accent-h, 32), 72%, 60%, 0.28),
     transparent 60%
   );
 }
@@ -2191,7 +2191,7 @@ body[data-menu-open="1"] {
 
 hr {
   border: none;
-  border-bottom: 1px solid rgba(193, 137, 91, 0.35);
+  border-bottom: 1px solid hsla(28, 35%, 45%, 0.28);
   margin: 16px 0;
 }
 
