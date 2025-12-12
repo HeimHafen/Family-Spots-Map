@@ -8,31 +8,25 @@
   "btn_locate_aria": "Centrér position",
   "alt_tilla_image": "Tilla skildpadden – jeres familieledsager",
   "header_tagline": "I dag er der tid til familie, og vejen til næste eventyr er kun ét åndedrag væk.",
-
   "btn_show_filters": "Filtre fold ud",
   "btn_hide_filters": "Filtre fold sammen",
   "btn_only_map": "Kun kort",
   "btn_show_list": "Vis liste",
-
   "toast_location_ok": "Jeres position er sat – næste eventyr venter allerede. 🌍",
   "toast_location_error": "Vi kan ikke finde jeres position lige nu – men intet eventyr bliver væk. Måske er I offline, eller deling af position er blokeret.",
   "toast_fav_added": "Lagt til jeres yndlingssteder – et glimtende øjeblik, I aldrig vil glemme. 💛",
   "toast_fav_removed": "Fjernet fra favoritter – rejsen er lang, og nye skatte venter allerede. 🌿",
-
   "filter_category_all": "Alle kategorier",
-
   "plus_code_empty": "Skriv først nøglen til nye oplevelser – jeres partnerkode.",
   "plus_code_unknown": "Denne kode er ukendt eller ikke længere gyldig.",
   "plus_code_activated": "Family Spots Plus er aktiveret – god tur og rigtig god fornøjelse på jeres ture!",
   "plus_code_failed": "Koden kunne ikke kontrolleres lige nu. Prøv igen senere.",
-
   "filter_radius_max_label": "Alle spots",
   "filter_radius_description_step0": "Mini-mikroeventyr – kun et åndedrag væk, perfekt til en lille pause i hverdagen.",
   "filter_radius_description_step1": "Korte ture – til små eventyr, der er hurtigt nået og hurtigt hjemme igen.",
   "filter_radius_description_step2": "En lille familietur – den perfekte balance for en halv dag fuld af oplevelser.",
   "filter_radius_description_step3": "Store eventyr venter – opdag nye mål til en hel dag fyldt med magiske øjeblikke.",
   "filter_radius_description_all": "Alle spots – uden radiusbegrænsning. Kortet er helt jeres.",
-
   "turtle_intro_1": "Jeg er Tilla, den lille skildpadde, der bliver hos jer på de steder, hvor minder væves, og eventyr begynder. Sammen går vi familiens vej.",
   "turtle_intro_2": "Lige nu finder jeg ingen passende spot. Måske passer en lille gåtur i nærheden i dag – eller I skruer radius et lille stykke op. 🐢",
   "turtle_after_daylog_save": "Jeres dag er nu gemt. Små øjeblikke, der bliver til store minder – hvert skridt en skat, vi altid kan vende tilbage til. 💛",
@@ -41,22 +35,11 @@
   "turtle_trip_mode": "I er på vej – jeg holder øje med øjeblikke, der varmer hjertet. 🚐",
   "turtle_everyday_mode": "Hverdagen må også gerne være magisk. Lad os sammen finde små mirakler i nærheden af jer. 🌿",
   "turtle_plus_activated": "Family Spots Plus er nu aktiv – nye veje venter på at blive opdaget. Rejsen fortsætter med flere steder og eventyr, der følger jer. ✨",
-
   "daylog_saved": "Dagens øjeblik er gemt 💾 – senere kan I vende tilbage til det.",
-
   "nav_map": "Kort",
   "nav_about": "Om Family Spots Map",
-
   "route_apple": "Åbn i Apple Maps",
   "route_google": "Åbn i Google Maps",
-
-  "abf_addon_label": "ABF 2026 messe-add-on",
-  "abf_addon_activated_toast": "ABF messe-add-on er aktiveret – alle familiespots på messeområdet er nu låst op.",
-  "abf_addon_hint": "Med ABF messe-add-on ser I ekstra spots direkte på messeområdet i Hannover – legeområder, aktiviteter for børn og roligere hjørner til et pusterum.",
-  "abf_about_title": "ABF 2026: Sådan bruger du messekortet",
-  "abf_about_body": "Med Family Spots Map kan du under ABF 2026 hurtigt finde familievenlige områder på messeområdet: legezoner, aktiviteter for børn, roligere steder til en pause og praktiske punkter som puslerum. Aktivér bare dit ABF messe-add-on og zoom ind på området for at se alle messespots.",
-  "abf_dates_hint": "Bemærk: ABF 2026 finder sted fra 11.02. til 15.02.2026 på messeområdet i Hannover.",
-
   "category_spielplatz": "Legeplads",
   "category_abenteuerspielplatz": "Eventyrlegeplads",
   "category_indoor-spielplatz": "Indendørs legeplads",
@@ -70,7 +53,6 @@
   "category_skatepark": "Skatepark",
   "category_verkehrsgarten": "Trafiklegeplads",
   "category_toddler-barfuss-motorik": "Tumling / barfod / motorik",
-
   "category_zoo": "Zoo",
   "category_tierpark": "Dyrepark",
   "category_wildpark": "Dyrepark & safari",
@@ -78,13 +60,11 @@
   "category_naturerlebnispfad": "Natursti",
   "category_walderlebnisroute": "Skovoplevelsesrute",
   "category_freilichtmuseum": "Frilandsmuseum",
-
   "category_schwimmbad": "Svømmebad",
   "category_badesee": "Badesø",
   "category_strand": "Familiestrand",
   "category_eisbahn": "Skøjtebane",
   "category_rodelhuegel": "Kælkebakke",
-
   "category_freizeitpark": "Forlystelsespark",
   "category_trampolinpark": "Trampolinpark",
   "category_kletterhalle": "Klatrehal",
@@ -92,7 +72,6 @@
   "category_kletterwald-hochseilgarten": "Klatreskov / højdebane",
   "category_boulderpark": "Boulderpark",
   "category_minigolf": "Minigolf",
-
   "category_hoehle": "Hule / klippevandring",
   "category_felsenwanderung": "Klippevandring",
   "category_aussichtspunkt": "Udsigtspunkt / panorama",
@@ -104,30 +83,23 @@
   "category_streetball-platz": "Streetball / basketballbane",
   "category_waldbaden-ort": "Skovbadning / roligt naturspot",
   "category_natur-aussichtspunkt": "Naturligt udsigtspunkt",
-
   "category_wanderweg-kinderwagen": "Vandrerute (barnevognsvenlig)",
   "category_radweg-family": "Familievenlig cykelrute",
-
   "category_familiencafe": "Familiecafé",
   "category_kinder-familiencafe": "Børne- & familiecafé",
   "category_familien-restaurant": "Familierestaurant",
-
   "category_museum-kinder": "Museum (børn)",
   "category_kinder-museum": "Børnemuseum",
   "category_kinder_museum": "Børnemuseum",
   "category_bibliothek": "Børne- & familiebibliotek",
-
   "category_oeffentliche-toilette": "Offentligt toilet",
   "category_wickelraum": "Puslerum",
-
   "category_familien-event": "Familieevent",
-
   "category_stellplatz-spielplatz-naehe-kostenlos": "Gratis autocamperplads (tæt på legeplads)",
   "category_wohnmobil-service-station": "Autocamper serviceplads",
   "category_rastplatz-spielplatz-dusche": "Rasteplads (legeplads & bruser)",
   "category_bikepacking-spot": "Bikepacking-spot",
   "category_campingplatz-familien": "Familievenlig campingplads",
-
   "category_park-garten": "Park / have",
   "category_picknickwiese": "Picniceng"
 }
