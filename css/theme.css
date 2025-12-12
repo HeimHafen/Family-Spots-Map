@@ -1,62 +1,63 @@
-
 /* =========================================
    theme.css — Light & Dark Design Tokens
-   Playful Warm v2 (Premium Dark)
-   - semantic tokens as source of truth
-   - warm neutral ramp (light)
-   - stroke-first dark materials (no white cards)
-   - compatible legacy mappings
-   - OS fallback when no manual theme is set
+   (Earth + Moss, premium/ruhig + verspielt/freundlich)
+   + Palette Switch via data-palette
    ========================================= */
 
 /* =========================================================
    1) Global Design Tokens (Light Base)
    ========================================================= */
 :root {
+  /* --- Native form controls / scrollbars (default light) --- */
   color-scheme: light;
 
   /* ================================
-     Brand / Accent System
+     Brand / Accent System (DEFAULT = balanced)
      ================================ */
-  --accent-h: 32;
+  --accent-h: 32; /* warm amber/orange */
   --accent: hsl(var(--accent-h), 92%, 50%);
-  --accent-light: hsl(var(--accent-h), 92%, 62%);
+  --accent-light: hsl(var(--accent-h), 92%, 65%);
   --accent-dark: hsl(var(--accent-h), 92%, 38%);
-
-  /* Accent surfaces (light uses real HSL, dark overrides to alpha) */
   --accent-soft: hsl(var(--accent-h), 92%, 88%);
   --accent-soft-hover: hsl(var(--accent-h), 92%, 82%);
   --accent-strong: hsl(var(--accent-h), 85%, 42%);
 
+  /* Secondary: Moss (calm counterweight) */
+  --moss-h: 112;
+  --moss: hsl(var(--moss-h), 28%, 34%);
+  --moss-soft: hsl(var(--moss-h), 36%, 88%);
+  --moss-soft-hover: hsl(var(--moss-h), 36%, 82%);
+  --on-moss: hsl(110, 26%, 16%);
+
   /* ================================
      Semantic Color Tokens
      ================================ */
-  /* Text (warm, readable) */
-  --text-3: hsl(22, 55%, 14%); /* headings/strong */
-  --text-1: hsl(24, 45%, 18%); /* body */
-  --text-2: hsl(24, 25%, 32%); /* secondary/meta */
+  /* Text */
+  --text-1: hsl(20, 35%, 14%); /* primary (warm neutral) */
+  --text-2: hsl(22, 18%, 32%); /* secondary */
+  --text-3: hsl(20, 45%, 10%); /* strong/heading */
 
   /* On-color (text on colored surfaces) */
-  --on-accent: hsl(24, 45%, 14%);
+  --on-accent: hsl(22, 65%, 18%);
   --on-dark: hsl(32, 100%, 95%);
   --on-light: hsl(222, 47%, 11%);
 
-  /* Surfaces (cream -> biscuit) */
-  --surface-0: hsl(34, 100%, 97%);             /* app base */
-  --surface-1: hsla(33, 100%, 95%, 0.98);      /* cards/sections */
-  --surface-2: hsla(33, 100%, 92%, 0.98);      /* elevated */
-  --surface-3: hsla(32, 100%, 89%, 0.98);      /* chips/pills */
+  /* Surfaces (Earthy, but not “skin”) */
+  --surface-0: hsl(32, 55%, 96%); /* app base */
+  --surface-1: hsla(30, 46%, 94%, 0.98); /* cards/sections */
+  --surface-2: hsl(30, 55%, 95%); /* elevated */
+  --surface-3: hsl(32, 42%, 92%); /* chips/pills */
 
-  /* Borders (warm tinted, NOT white) */
-  --border-1: hsla(28, 55%, 35%, 0.14);
-  --border-2: hsla(28, 55%, 35%, 0.20);
+  /* Borders */
+  --border-1: hsla(0, 0%, 100%, 0.90);
+  --border-2: hsla(0, 0%, 100%, 0.60);
 
   /* ================================
-     Elevation (Unified Shadows) — warm tint
+     Elevation (Unified Shadows)
      ================================ */
-  --elev-1: 0 1px 2px hsla(26, 35%, 20%, 0.10);
-  --elev-2: 0 8px 22px hsla(26, 40%, 22%, 0.16);
-  --elev-3: 0 16px 46px hsla(26, 45%, 24%, 0.20);
+  --elev-1: 0 3px 8px hsla(0, 0%, 0%, 0.20);
+  --elev-2: 0 10px 26px hsla(28, 64%, 39%, 0.42);
+  --elev-3: 0 14px 32px hsla(26, 59%, 36%, 0.50);
 
   /* ================================
      Radii / Motion / Typography
@@ -69,25 +70,25 @@
   --font-stack: "Segoe UI", Roboto, sans-serif;
   --font-size-base: 1rem;
 
-  /* Focus ring (brand-warm + crisp) */
-  --focus-inner: #ffffff;
-  --focus-outer: hsla(var(--accent-h), 92%, 50%, 0.55);
-  --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px hsla(var(--accent-h), 92%, 52%, 0.85);
 
   /* ================================
      Backgrounds / Effects
      ================================ */
-  --bg-app:
-    radial-gradient(circle at 20% 0%, hsla(var(--accent-h), 92%, 58%, 0.26), transparent 55%),
-    radial-gradient(circle at 85% 20%, hsla(34, 100%, 70%, 0.18), transparent 50%),
-    linear-gradient(180deg, hsl(34, 100%, 97%), hsl(34, 90%, 92%));
+  --bg-app: radial-gradient(
+    circle at top,
+    hsl(32, 85%, 78%) 0%,
+    hsl(32, 55%, 95%) 40%,
+    hsl(30, 45%, 92%) 100%
+  );
 
-  /* Filters */
-  --filter-map: sepia(0.26) saturate(0.92) brightness(1.04)
-    contrast(1.02) hue-rotate(-14deg);
+  /* Filters (effects, not pure tokens) */
+  --filter-map: sepia(0.22) saturate(0.9) brightness(1.03)
+    contrast(1.02) hue-rotate(-10deg);
 
   /* =========================================================
-     2) Legacy / Component Tokens (compat)
+     2) Legacy / Component Tokens
      ========================================================= */
 
   /* Text (legacy names) */
@@ -104,170 +105,192 @@
 
   /* UI Components */
   --chip-bg: var(--surface-3);
-  --chip-color: var(--text-2);
+  --chip-color: hsl(22, 18%, 28%);
   --chip-shadow: var(--elev-1);
-  --chip-hover-shadow: 0 10px 26px hsla(26, 45%, 24%, 0.18);
+  --chip-hover-shadow: 0 4px 10px hsla(26, 54%, 39%, 0.32);
 
-  --input-bg: hsl(34, 100%, 94%);
-  --input-shadow: 0 4px 10px hsla(26, 45%, 24%, 0.14);
+  --input-bg: hsl(32, 40%, 94%);
+  --input-shadow: 0 4px 9px hsla(26, 52%, 38%, 0.20);
 
   --button-bg: var(--accent-soft);
   --button-hover-bg: var(--accent-soft-hover);
   --button-text-color: var(--on-accent);
 
-  --toast-bg: hsla(var(--accent-h), 80%, 24%, 0.96);
+  --toast-bg: hsla(var(--accent-h), 70%, 22%, 0.96);
 
-  /* Header */
-  --header-bg-top: hsl(34, 100%, 96%);
-  --header-bg-bottom: hsl(32, 100%, 90%);
+  /* Header (LIGHT) — more orange, less “skin” */
+  --header-bg-top: hsl(34, 95%, 92%);
+  --header-bg-bottom: hsl(30, 98%, 78%);
   --header-shadow: var(--elev-3);
   --header-text-color: var(--text-3);
 
-  --header-tagline-bg: hsla(36, 100%, 94%, 0.95);
-  --header-tagline-color: hsl(26, 55%, 22%);
-  --header-tagline-shadow: var(--elev-2);
+  --header-tagline-bg: hsla(34, 90%, 94%, 0.96);
+  --header-tagline-color: hsl(22, 45%, 18%);
+  --header-tagline-shadow: 0 4px 12px hsla(26, 55%, 28%, 0.28);
 
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
-    hsl(35, 100%, 92%) 0%,
-    hsl(34, 100%, 78%) 45%,
-    hsl(32, 100%, 66%) 100%
+    hsl(34, 100%, 90%) 0%,
+    hsl(32, 100%, 78%) 40%,
+    hsl(30, 100%, 68%) 100%
   );
   --header-icon-shadow: var(--elev-1);
   --header-icon-border: var(--border-2);
 
-  --language-pill-bg: hsla(34, 100%, 94%, 0.94);
+  --language-pill-bg: hsla(32, 55%, 94%, 0.94);
   --language-pill-shadow: var(--elev-1);
 
-  --sidebar-bg: hsl(34, 90%, 92%);
-  --sidebar-section-bg: var(--surface-1);
+  --sidebar-bg: hsl(228, 58%, 6%);
+  --sidebar-section-bg: hsla(30, 46%, 94%, 0.98);
   --sidebar-section-shadow: var(--elev-2);
   --sidebar-section-border: var(--border-1);
 
-  --bottom-nav-backdrop: hsla(32, 100%, 83%, 0.85);
-  --bottom-nav-item-bg: var(--surface-1);
-  --bottom-nav-item-color: hsl(26, 28%, 30%);
+  --bottom-nav-backdrop: hsla(30, 85%, 86%, 0.86);
+  --bottom-nav-item-bg: hsla(30, 46%, 94%, 0.98);
+  --bottom-nav-item-color: hsl(22, 18%, 34%);
   --bottom-nav-item-active-bg: var(--accent);
-  --bottom-nav-item-active-color: #ffffff;
+  --bottom-nav-item-active-color: var(--on-accent);
 
   --map-card-bg: var(--surface-2);
   --map-card-shadow: var(--elev-3);
-  --map-card-border: hsla(28, 55%, 35%, 0.16);
+  --map-card-border: hsla(0, 0%, 100%, 0.95);
 
   /* Legacy shadow names (mapped) */
   --shadow-soft: var(--elev-1);
   --shadow-strong: var(--elev-2);
 
   /* Legacy radius circle effect tokens */
-  --radius-circle-stroke: hsla(var(--accent-h), 90%, 55%, 0.6);
-  --radius-circle-fill: hsla(var(--accent-h), 90%, 55%, 0.17);
+  --radius-circle-stroke: hsla(var(--accent-h), 90%, 55%, 0.55);
+  --radius-circle-fill: hsla(var(--accent-h), 90%, 55%, 0.14);
 
   /* Legacy effect token (mapped) */
   --map-filter: var(--filter-map);
 }
 
 /* =========================================================
-   3) Theme Selectors (manual override)
-   - supports data-theme on html OR body OR any root container
+   1b) Palette Switches (optional)
+   Add on <html>: data-palette="..."
    ========================================================= */
-:root[data-theme="light"],
-html[data-theme="light"],
-body[data-theme="light"] {
+
+/* Calm / premium: earth + stronger moss presence */
+:root[data-palette="earth-moss"] {
+  --accent-h: 31;
+  --moss-h: 112;
+
+  --surface-0: hsl(34, 35%, 96%);
+  --surface-1: hsla(30, 32%, 94%, 0.98);
+  --surface-2: hsl(32, 34%, 95%);
+  --surface-3: hsl(30, 26%, 92%);
+
+  --header-bg-top: hsl(34, 85%, 92%);
+  --header-bg-bottom: hsl(28, 95%, 76%);
+
+  --header-tagline-bg: hsla(34, 70%, 94%, 0.96);
+  --header-tagline-color: hsl(22, 35%, 18%);
+}
+
+/* More playful/friendly: brighter warm, lighter moss */
+:root[data-palette="playful"] {
+  --accent-h: 34;
+  --moss-h: 105;
+
+  --accent: hsl(var(--accent-h), 96%, 52%);
+  --accent-soft: hsl(var(--accent-h), 92%, 90%);
+  --accent-soft-hover: hsl(var(--accent-h), 92%, 84%);
+
+  --moss: hsl(var(--moss-h), 28%, 38%);
+  --moss-soft: hsl(var(--moss-h), 38%, 90%);
+
+  --bg-app: radial-gradient(
+    circle at top,
+    hsl(34, 95%, 80%) 0%,
+    hsl(32, 55%, 95%) 42%,
+    hsl(30, 40%, 92%) 100%
+  );
+
+  --header-bg-top: hsl(34, 98%, 93%);
+  --header-bg-bottom: hsl(30, 100%, 80%);
+}
+
+/* =========================================================
+   3) Theme Selectors (manual override)
+   ========================================================= */
+[data-theme="light"] {
   color-scheme: light;
 }
 
-:root[data-theme="dark"],
-html[data-theme="dark"],
-body[data-theme="dark"],
+/* -------------------- DARK -------------------- */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* ================================
-     Semantic Overrides (Dark) — Premium
-     ================================ */
-  --text-3: hsl(32, 100%, 96%);
-  --text-1: hsla(32, 100%, 96%, 0.92);
-  --text-2: hsla(215, 18%, 82%, 0.74);
+  /* Semantic Overrides (Dark) */
+  --text-1: hsl(32, 40%, 92%);
+  --text-2: hsl(215, 14%, 72%);
+  --text-3: hsl(32, 40%, 94%);
 
-  /* Warm navy surfaces (no white cards) */
-  --surface-0: hsl(228, 50%, 6%);
-  --surface-1: hsla(222, 40%, 10%, 0.92);
-  --surface-2: hsla(222, 38%, 13%, 0.92);
-  --surface-3: hsla(222, 34%, 16%, 0.92);
+  --surface-0: hsl(229, 84%, 6%);
+  --surface-1: hsla(222, 44%, 9%, 0.98);
+  --surface-2: hsla(222, 44%, 11%, 0.98);
+  --surface-3: hsla(222, 44%, 11%, 0.98);
 
-  /* Stroke-first borders */
-  --border-1: hsla(0, 0%, 100%, 0.08);
-  --border-2: hsla(0, 0%, 100%, 0.14);
+  --border-1: hsla(215, 19%, 65%, 0.35);
+  --border-2: hsla(215, 19%, 65%, 0.90);
 
-  /* Shadows: tighter, darker, premium */
-  --elev-1: 0 8px 22px hsla(0, 0%, 0%, 0.55);
-  --elev-2: 0 16px 46px hsla(0, 0%, 0%, 0.62);
-  --elev-3: 0 24px 70px hsla(0, 0%, 0%, 0.70);
+  --elev-1: 0 6px 14px hsla(0, 0%, 0%, 0.70);
+  --elev-2: 0 18px 36px hsla(0, 0%, 0%, 0.80);
+  --elev-3: 0 18px 38px hsla(0, 0%, 0%, 0.90);
 
-  /* Focus ring for dark */
-  --focus-inner: rgba(2, 6, 23, 0.92);
-  --focus-outer: hsla(var(--accent-h), 92%, 55%, 0.45);
-  --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
+  --focus-ring: 0 0 0 2px hsla(229, 84%, 6%, 0.92),
+    0 0 0 4px hsla(var(--accent-h), 92%, 60%, 0.75);
 
-  /* Dark background with controlled warm glow */
-  --bg-app:
-    radial-gradient(circle at 35% -10%, hsla(var(--accent-h), 92%, 55%, 0.18), transparent 55%),
-    radial-gradient(circle at 90% 20%, hsla(34, 100%, 70%, 0.08), transparent 50%),
-    linear-gradient(180deg, hsl(228, 50%, 6%), hsl(229, 60%, 5%));
+  --bg-app: radial-gradient(
+    circle at top,
+    hsl(222, 47%, 11%) 0%,
+    hsl(229, 84%, 6%) 55%,
+    hsl(229, 84%, 6%) 100%
+  );
 
-  /* Accent surfaces in dark should be alpha-based (avoid “chalky” blocks) */
-  --accent-soft: hsla(var(--accent-h), 92%, 50%, 0.18);
-  --accent-soft-hover: hsla(var(--accent-h), 92%, 50%, 0.24);
+  --filter-map: grayscale(0.32) sepia(0.22) brightness(0.78)
+    contrast(1.06) saturate(0.9) hue-rotate(-14deg);
 
-  /* Map filter */
-  --filter-map: grayscale(0.35) sepia(0.28) brightness(0.78)
-    contrast(1.05) saturate(0.9) hue-rotate(-16deg);
-
-  /* ================================
-     Legacy / Component Overrides (Dark)
-     ================================ */
-  --text-color: var(--text-1);
-  --text-soft: var(--text-2);
-  --text-strong: var(--text-3);
-
+  /* Component mappings */
   --card-bg: var(--surface-1);
   --card-shadow: var(--elev-2);
   --card-border: var(--border-1);
 
   --chip-bg: var(--surface-3);
-  --chip-color: hsla(32, 100%, 96%, 0.86);
+  --chip-color: hsl(220, 14%, 90%);
   --chip-shadow: var(--elev-1);
   --chip-hover-shadow: var(--elev-2);
 
-  --input-bg: var(--surface-2);
-  --input-shadow: var(--elev-1);
+  --input-bg: hsla(222, 44%, 11%, 0.98);
+  --input-shadow: 0 7px 15px hsla(222, 44%, 11%, 0.90);
 
-  /* Keep primary buttons warm in dark */
   --button-bg: var(--accent-soft);
   --button-hover-bg: var(--accent-soft-hover);
-  --button-text-color: hsl(32, 100%, 96%);
+  --button-text-color: var(--on-light);
 
-  --toast-bg: hsla(222, 40%, 10%, 0.96);
+  --toast-bg: hsla(222, 44%, 11%, 0.98);
 
+  /* Header (Dark) */
   --header-bg-top: hsl(228, 45%, 8%);
-  --header-bg-bottom: hsl(228, 50%, 6%);
+  --header-bg-bottom: hsl(228, 58%, 6%);
   --header-shadow: var(--elev-3);
   --header-text-color: var(--on-dark);
 
-  /* Tagline: playful but controlled */
   --header-tagline-bg: linear-gradient(
     135deg,
-    hsla(var(--accent-h), 92%, 52%, 0.92),
-    hsla(36, 100%, 54%, 0.90)
+    var(--accent),
+    hsl(36, 100%, 50%)
   );
-  --header-tagline-color: hsl(24, 45%, 14%);
+  --header-tagline-color: hsl(30, 40%, 10%);
   --header-tagline-shadow: var(--elev-2);
 
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
-    hsla(222, 40%, 14%, 0.95) 0%,
-    hsla(228, 50%, 6%, 0.98) 55%,
-    hsla(228, 50%, 6%, 0.98) 100%
+    hsl(222, 47%, 11%) 0%,
+    hsl(229, 84%, 6%) 45%,
+    hsl(229, 84%, 6%) 100%
   );
   --header-icon-shadow: var(--elev-1);
   --header-icon-border: var(--border-2);
@@ -275,20 +298,20 @@ body[data-theme="dark"],
   --language-pill-bg: var(--surface-3);
   --language-pill-shadow: var(--elev-1);
 
-  --sidebar-bg: var(--surface-0);
+  --sidebar-bg: hsl(229, 84%, 6%);
   --sidebar-section-bg: var(--surface-1);
   --sidebar-section-shadow: var(--elev-2);
-  --sidebar-section-border: var(--border-1);
+  --sidebar-section-border: hsla(220, 70%, 40%, 0.35);
 
-  --bottom-nav-backdrop: hsla(222, 40%, 10%, 0.92);
+  --bottom-nav-backdrop: hsla(222, 44%, 11%, 0.92);
   --bottom-nav-item-bg: var(--surface-3);
-  --bottom-nav-item-color: hsla(32, 100%, 96%, 0.78);
+  --bottom-nav-item-color: hsl(220, 14%, 90%);
   --bottom-nav-item-active-bg: hsl(38, 92%, 52%);
-  --bottom-nav-item-active-color: hsl(24, 45%, 14%);
+  --bottom-nav-item-active-color: var(--on-light);
 
   --map-card-bg: var(--surface-0);
   --map-card-shadow: var(--elev-3);
-  --map-card-border: var(--border-1);
+  --map-card-border: hsla(220, 70%, 40%, 0.40);
 
   --radius-circle-stroke: hsla(var(--accent-h), 90%, 65%, 0.70);
   --radius-circle-fill: hsla(var(--accent-h), 90%, 65%, 0.14);
@@ -303,37 +326,54 @@ body[data-theme="dark"],
   :root:not([data-theme]) {
     color-scheme: dark;
 
-    /* Minimal semantic overrides (rest follows mappings above) */
-    --text-3: hsl(32, 100%, 96%);
-    --text-1: hsla(32, 100%, 96%, 0.92);
-    --text-2: hsla(215, 18%, 82%, 0.74);
+    --text-1: hsl(32, 40%, 92%);
+    --text-2: hsl(215, 14%, 72%);
+    --text-3: hsl(32, 40%, 94%);
 
-    --surface-0: hsl(228, 50%, 6%);
-    --surface-1: hsla(222, 40%, 10%, 0.92);
-    --surface-2: hsla(222, 38%, 13%, 0.92);
-    --surface-3: hsla(222, 34%, 16%, 0.92);
+    --surface-0: hsl(229, 84%, 6%);
+    --surface-1: hsla(222, 44%, 9%, 0.98);
+    --surface-2: hsla(222, 44%, 11%, 0.98);
+    --surface-3: hsla(222, 44%, 11%, 0.98);
 
-    --border-1: hsla(0, 0%, 100%, 0.08);
-    --border-2: hsla(0, 0%, 100%, 0.14);
+    --border-1: hsla(215, 19%, 65%, 0.35);
+    --border-2: hsla(215, 19%, 65%, 0.90);
 
-    --elev-1: 0 8px 22px hsla(0, 0%, 0%, 0.55);
-    --elev-2: 0 16px 46px hsla(0, 0%, 0%, 0.62);
-    --elev-3: 0 24px 70px hsla(0, 0%, 0%, 0.70);
+    --elev-1: 0 6px 14px hsla(0, 0%, 0%, 0.70);
+    --elev-2: 0 18px 36px hsla(0, 0%, 0%, 0.80);
+    --elev-3: 0 18px 38px hsla(0, 0%, 0%, 0.90);
 
-    --focus-inner: rgba(2, 6, 23, 0.92);
-    --focus-outer: hsla(var(--accent-h), 92%, 55%, 0.45);
-    --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
+    --focus-ring: 0 0 0 2px hsla(229, 84%, 6%, 0.92),
+      0 0 0 4px hsla(var(--accent-h), 92%, 60%, 0.75);
 
-    --bg-app:
-      radial-gradient(circle at 35% -10%, hsla(var(--accent-h), 92%, 55%, 0.18), transparent 55%),
-      radial-gradient(circle at 90% 20%, hsla(34, 100%, 70%, 0.08), transparent 50%),
-      linear-gradient(180deg, hsl(228, 50%, 6%), hsl(229, 60%, 5%));
+    --bg-app: radial-gradient(
+      circle at top,
+      hsl(222, 47%, 11%) 0%,
+      hsl(229, 84%, 6%) 55%,
+      hsl(229, 84%, 6%) 100%
+    );
 
-    --accent-soft: hsla(var(--accent-h), 92%, 50%, 0.18);
-    --accent-soft-hover: hsla(var(--accent-h), 92%, 50%, 0.24);
+    --filter-map: grayscale(0.32) sepia(0.22) brightness(0.78)
+      contrast(1.06) saturate(0.9) hue-rotate(-14deg);
 
-    --filter-map: grayscale(0.35) sepia(0.28) brightness(0.78)
-      contrast(1.05) saturate(0.9) hue-rotate(-16deg);
+    --chip-color: hsl(220, 14%, 90%);
+    --input-bg: hsla(222, 44%, 11%, 0.98);
+    --input-shadow: 0 7px 15px hsla(222, 44%, 11%, 0.90);
+
+    --button-text-color: var(--on-light);
+
+    --header-bg-top: hsl(228, 45%, 8%);
+    --header-bg-bottom: hsl(228, 58%, 6%);
+    --header-tagline-bg: linear-gradient(
+      135deg,
+      var(--accent),
+      hsl(36, 100%, 50%)
+    );
+    --header-tagline-color: hsl(30, 40%, 10%);
+
+    --bottom-nav-backdrop: hsla(222, 44%, 11%, 0.92);
+    --bottom-nav-item-color: hsl(220, 14%, 90%);
+    --bottom-nav-item-active-bg: hsl(38, 92%, 52%);
+    --bottom-nav-item-active-color: var(--on-light);
 
     --map-filter: var(--filter-map);
   }
