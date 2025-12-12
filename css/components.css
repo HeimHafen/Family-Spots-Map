@@ -4,6 +4,15 @@
    ========================================= */
 
 /* -----------------------------------------
+   Global Safety
+   ----------------------------------------- */
+
+/* Ensure the HTML hidden attribute is never accidentally overridden */
+[hidden] {
+  display: none !important;
+}
+
+/* -----------------------------------------
    Basis-Tokens (Komponenten-Ebene)
    - Keine Überschreibung von theme.css Semantik-Tokens
    - Mapping/Defaults nur als Fallback
@@ -30,10 +39,13 @@
   --dur-slow: 220ms;
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  /* Focus ring (prefer theme.css) — warmer fallback */
-  --focus-inner: var(--focus-inner, #ffffff);
-  --focus-outer: var(--focus-outer, hsla(var(--accent-h, 30), 72%, 52%, 0.55));
-  --focus-ring: var(--focus-ring, 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer));
+  /* Focus ring (prefer theme.css tokens if present)
+     IMPORTANT: avoid self-referential custom properties (cycles).
+     We only define fallbacks here and consume theme tokens via var() at usage sites. */
+  --focus-inner-fallback: #ffffff;
+  --focus-outer-fallback: hsla(var(--accent-h, 30), 72%, 52%, 0.55);
+  --focus-ring-fallback: 0 0 0 2px var(--focus-inner-fallback),
+    0 0 0 4px var(--focus-outer-fallback);
 
   /* Neutral surfaces derived from semantic surfaces (no overriding) */
   --neutral-0: var(--surface-1, #ffffff);
@@ -56,28 +68,28 @@
   --fsm-warm-3: #c98655; /* tieferes Tan (gedämpft) */
 
   --fsm-surface-warm: #f5e3d4; /* Card/Panel warm, aber nicht zu hell */
-  --fsm-chip-warm: #f1dfcf;    /* Chips warm-neutral */
+  --fsm-chip-warm: #f1dfcf; /* Chips warm-neutral */
   --fsm-divider-warm: hsla(28, 24%, 40%, 0.22); /* Divider weniger “orange” */
 }
 
-/* Dark focus inner should not be white (prefer theme.css) */
+/* Dark focus fallback: inner should not be white */
 [data-theme="dark"] {
-  --focus-inner: var(--focus-inner, rgba(2, 6, 23, 0.9));
-  --focus-outer: var(--focus-outer, hsla(var(--accent-h, 30), 72%, 55%, 0.45));
+  --focus-inner-fallback: rgba(2, 6, 23, 0.9);
+  --focus-outer-fallback: hsla(var(--accent-h, 30), 72%, 55%, 0.45);
 }
 
 /* Universal interactive ergonomics (mobile) */
 :where(
-  button,
-  .btn,
-  .btn-ghost,
-  .btn-play-idea,
-  .btn-icon,
-  .mood-chip,
-  .travel-chip,
-  .compass-mode-chip,
-  .tag-filter-chip
-) {
+    button,
+    .btn,
+    .btn-ghost,
+    .btn-play-idea,
+    .btn-icon,
+    .mood-chip,
+    .travel-chip,
+    .compass-mode-chip,
+    .tag-filter-chip
+  ) {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -102,50 +114,53 @@ select {
    Buttons
    ========================================= */
 
-.btn {
+/* Shared base for primary buttons (.btn + .btn-play-idea) to avoid drift */
+:where(.btn, .btn-play-idea) {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.375rem;
-  min-height: var(--btn-height);
-  padding: 0 1rem;
-  border-radius: var(--btn-radius);
   border: none;
-  font-size: 14px;
-  font-weight: 650;
+  border-radius: var(--btn-radius);
   font-family: inherit;
+  font-weight: 650;
   letter-spacing: 0.01em;
   background-color: var(--accent);
   color: #ffffff;
   box-shadow: var(--elevation-sm);
   cursor: pointer;
-  transition:
-    background-color var(--dur) var(--ease-out),
+  transition: background-color var(--dur) var(--ease-out),
     box-shadow var(--dur) var(--ease-out),
     transform var(--dur-fast) var(--ease-out),
     opacity var(--dur-fast) var(--ease-out);
 }
 
-.btn:hover {
+.btn {
+  gap: 0.375rem;
+  min-height: var(--btn-height);
+  padding: 0 1rem;
+  font-size: 14px;
+}
+
+:where(.btn, .btn-play-idea):hover {
   /* Wärmer/pastelliger: fallback hue etwas orangiger */
   background-color: hsl(var(--accent-h, 30), 72%, 54%);
   box-shadow: var(--elevation-md);
 }
 
 @supports (background-color: color-mix(in oklab, white, black)) {
-  .btn:hover {
+  :where(.btn, .btn-play-idea):hover {
     background-color: color-mix(in oklab, var(--accent), white 10%);
   }
 }
 
-.btn:active {
+:where(.btn, .btn-play-idea):active {
   transform: translateY(1px);
   opacity: 0.98;
   box-shadow: var(--elevation-xs);
 }
 
-[data-theme="dark"] .btn {
+[data-theme="dark"] :where(.btn, .btn-play-idea) {
   box-shadow: var(--elevation-md);
 }
 
@@ -195,8 +210,7 @@ select {
   font-weight: 650;
   box-shadow: none;
   cursor: pointer;
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
+  transition: background-color var(--dur-fast) var(--ease-out),
     color var(--dur-fast) var(--ease-out),
     border-color var(--dur-fast) var(--ease-out);
 }
@@ -223,49 +237,12 @@ select {
 
 /* Spezielle Tilla-Button-Variante – basiert auf Primary-Button */
 .btn-play-idea {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   gap: 6px;
   max-width: 100%;
   padding: 0.3rem 0.85rem;
   min-height: 34px;
-  border-radius: var(--btn-radius);
-  border: none;
   font-size: 13px;
-  font-weight: 650;
-  font-family: inherit;
-  background-color: var(--accent);
-  color: #ffffff;
-  box-shadow: var(--elevation-sm);
-  cursor: pointer;
   white-space: normal;
-  transition:
-    background-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out),
-    opacity var(--dur-fast) var(--ease-out);
-}
-
-.btn-play-idea:hover {
-  background-color: hsl(var(--accent-h, 30), 72%, 54%);
-  box-shadow: var(--elevation-md);
-}
-
-@supports (background-color: color-mix(in oklab, white, black)) {
-  .btn-play-idea:hover {
-    background-color: color-mix(in oklab, var(--accent), white 10%);
-  }
-}
-
-.btn-play-idea:active {
-  transform: translateY(1px);
-  opacity: 0.98;
-  box-shadow: var(--elevation-xs);
-}
-
-[data-theme="dark"] .btn-play-idea {
-  box-shadow: var(--elevation-md);
 }
 
 @media (max-width: 480px) {
@@ -288,25 +265,40 @@ select {
    Fokus für interaktive Komponenten
    ========================================= */
 
+/* Base focus ring (low/no elevation elements, especially inputs) */
 :where(
-  button,
-  .language-switcher,
-  .btn-icon,
-  .btn,
-  .btn-ghost,
-  .btn-play-idea,
-  .mood-chip,
-  .travel-chip,
-  .compass-mode-chip,
-  .tag-filter-chip,
-  .bottom-nav-item,
-  .input,
-  select.input,
-  textarea.input,
-  .filter-group--checkbox input[type="checkbox"]
-):focus-visible {
+    .language-switcher,
+    .mood-chip,
+    .travel-chip,
+    .compass-mode-chip,
+    .tag-filter-chip,
+    .bottom-nav-item,
+    .input,
+    select.input,
+    textarea.input,
+    .filter-group--checkbox input[type="checkbox"]
+  ):focus-visible {
   outline: none;
-  box-shadow: var(--focus-ring);
+  box-shadow: var(--focus-ring, var(--focus-ring-fallback));
+}
+
+/* Elevated focus ring (buttons / clickable elements that already have elevation)
+   Keep both ring and depth. */
+:where(
+    button,
+    .btn,
+    .btn-ghost,
+    .btn-play-idea,
+    .btn-icon,
+    .app-menu-item,
+    .app-menu-lang-chip,
+    .sidebar-section-close,
+    .popup-link,
+    .spot-details-route-link,
+    .favorite-toggle
+  ):focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring, var(--focus-ring-fallback)), var(--elevation-sm);
 }
 
 /* =========================================
@@ -318,11 +310,7 @@ select {
   top: 0;
   z-index: 1200;
   padding: 10px 14px 14px;
-  background: linear-gradient(
-    180deg,
-    var(--header-bg-top),
-    var(--header-bg-bottom)
-  );
+  background: linear-gradient(180deg, var(--header-bg-top), var(--header-bg-bottom));
   color: var(--header-text-color);
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
@@ -331,12 +319,7 @@ select {
 
 /* Light-Mode-Variante: warm, gedämpft (zwischen Bild 1 & 2) */
 :where(html, body, :root)[data-theme="light"] .app-header {
-  background: radial-gradient(
-      circle at top left,
-      var(--fsm-warm-0) 0,
-      var(--fsm-warm-1) 52%,
-      var(--fsm-warm-2) 100%
-    );
+  background: radial-gradient(circle at top left, var(--fsm-warm-0) 0, var(--fsm-warm-1) 52%, var(--fsm-warm-2) 100%);
   color: var(--text-strong, #111827);
   box-shadow: var(--elevation-md);
 
@@ -389,10 +372,8 @@ select {
   box-shadow: var(--elevation-sm);
   font-size: 20px;
   cursor: pointer;
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
-    box-shadow var(--dur-fast) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out),
+  transition: background-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out),
     opacity var(--dur-fast) var(--ease-out);
 }
 
@@ -478,6 +459,7 @@ select {
   display: none;
 }
 
+/* NOTE: [hidden] is globally enforced; this is kept for clarity */
 .app-menu[hidden] {
   display: none;
 }
@@ -534,10 +516,8 @@ body[data-menu-open="1"] .app-menu {
   border: var(--stroke-1);
   box-shadow: var(--elevation-sm);
   cursor: pointer;
-  transition:
-    background-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 
 .app-menu-item:hover {
@@ -615,8 +595,7 @@ body[data-menu-open="1"] .app-menu {
   font-weight: 650;
   box-shadow: var(--elevation-xs);
   cursor: pointer;
-  transition:
-    background-color var(--dur) var(--ease-out),
+  transition: background-color var(--dur) var(--ease-out),
     box-shadow var(--dur) var(--ease-out);
 }
 
@@ -690,7 +669,11 @@ body[data-menu-open="1"] .app-menu {
 }
 
 [data-theme="dark"] #view-map {
-  background: linear-gradient(to bottom, rgba(2, 6, 23, 0.88) 0, rgba(2, 6, 23, 0.88) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(2, 6, 23, 0.88) 0,
+    rgba(2, 6, 23, 0.88) 100%
+  );
   border-radius: 0 0 28px 28px;
 }
 
@@ -761,10 +744,8 @@ body[data-menu-open="1"] .app-menu {
   font-size: 14px;
   font-weight: 650;
   cursor: pointer;
-  transition:
-    background-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 
 .sidebar-section-close:hover {
@@ -880,8 +861,7 @@ select.input {
   box-shadow: none;
   color: var(--text-color, #111827);
   transition: border-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    background-color var(--dur) var(--ease-out);
+    box-shadow var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
 }
 
 textarea.input {
@@ -904,19 +884,15 @@ select.input:focus {
 /* Select — crisp chevron */
 select.input {
   padding-right: 2.35rem;
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(15, 23, 42, 0.55) 50%),
+  background-image: linear-gradient(45deg, transparent 50%, rgba(15, 23, 42, 0.55) 50%),
     linear-gradient(135deg, rgba(15, 23, 42, 0.55) 50%, transparent 50%);
-  background-position:
-    calc(100% - 18px) 50%,
-    calc(100% - 12px) 50%;
+  background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
   background-size: 6px 6px;
   background-repeat: no-repeat;
 }
 
 [data-theme="dark"] select.input {
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(229, 231, 235, 0.7) 50%),
+  background-image: linear-gradient(45deg, transparent 50%, rgba(229, 231, 235, 0.7) 50%),
     linear-gradient(135deg, rgba(229, 231, 235, 0.7) 50%, transparent 50%);
 }
 
@@ -943,10 +919,8 @@ select.input {
   border: 1px solid var(--border-2, rgba(209, 213, 219, 0.9));
   box-shadow: none;
   cursor: pointer;
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
-    border-color var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out),
+  transition: background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out),
     transform var(--dur-fast) var(--ease-out);
 }
 
@@ -1013,8 +987,7 @@ select.input {
   border: var(--stroke-1);
   box-shadow: none;
   cursor: pointer;
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
+  transition: background-color var(--dur-fast) var(--ease-out),
     border-color var(--dur-fast) var(--ease-out);
 }
 
@@ -1233,10 +1206,8 @@ select.input {
   border-radius: 0.9rem;
   font-size: 0.9rem;
   line-height: 1.6;
-  transition:
-    transform var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    background-color var(--dur) var(--ease-out),
+  transition: transform var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out),
     border-color var(--dur) var(--ease-out);
 }
 
@@ -1405,10 +1376,8 @@ select.input {
   box-shadow: var(--elevation-xs);
   border: var(--border-soft);
   cursor: pointer;
-  transition:
-    transform var(--dur-fast) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    border-color var(--dur) var(--ease-out),
+  transition: transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out),
     background-color var(--dur) var(--ease-out);
 }
 
@@ -1591,10 +1560,8 @@ select.input {
   color: var(--text-strong, #1f2933);
   border: var(--stroke-2);
   box-shadow: var(--elevation-xs);
-  transition:
-    background-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 
 .spot-details-route-link:hover {
@@ -1634,10 +1601,8 @@ select.input {
   font-weight: 650;
   border: var(--stroke-2);
   box-shadow: var(--elevation-xs);
-  transition:
-    background-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 
 .favorite-toggle:hover {
@@ -1773,10 +1738,8 @@ select.input {
   border: var(--stroke-2);
   box-shadow: var(--elevation-xs);
   cursor: pointer;
-  transition:
-    background-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 
 #filter-modal-close:hover {
@@ -1832,6 +1795,19 @@ body[data-menu-open="1"] {
   }
   100% {
     transform: translateY(0) rotate(0);
+  }
+}
+
+/* Reduced-motion friendly variant: smaller amplitude */
+@keyframes tilla-bob-reduced {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-1px) rotate(0.8deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
   }
 }
 
@@ -1972,10 +1948,8 @@ body[data-menu-open="1"] {
   font-weight: 650;
   color: var(--bottom-nav-item-color);
   cursor: pointer;
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 
 .bottom-nav-item--active {
@@ -2009,9 +1983,7 @@ body[data-menu-open="1"] {
   box-shadow: var(--elevation-lg);
   opacity: 0;
   pointer-events: none;
-  transition:
-    opacity var(--dur) var(--ease-out),
-    transform var(--dur) var(--ease-out);
+  transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
   z-index: 1100;
 }
 
@@ -2078,15 +2050,8 @@ body[data-menu-open="1"] {
   width: 18px;
   height: 18px;
   border-radius: var(--radius-pill);
-  background: radial-gradient(
-    circle at 30% 20%,
-    #fff8e1 0,
-    var(--accent-soft) 40%,
-    var(--accent) 100%
-  );
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.9),
-    0 6px 14px rgba(0, 0, 0, 0.55);
+  background: radial-gradient(circle at 30% 20%, #fff8e1 0, var(--accent-soft) 40%, var(--accent) 100%);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 6px 14px rgba(0, 0, 0, 0.55);
   position: relative;
 }
 
@@ -2116,11 +2081,7 @@ body[data-menu-open="1"] {
   position: absolute;
   inset: -5px;
   border-radius: inherit;
-  background: radial-gradient(
-    circle,
-    hsla(var(--accent-h, 30), 72%, 60%, 0.28),
-    transparent 60%
-  );
+  background: radial-gradient(circle, hsla(var(--accent-h, 30), 72%, 60%, 0.28), transparent 60%);
 }
 
 .pin-pop {
@@ -2174,10 +2135,8 @@ body[data-menu-open="1"] {
   color: var(--text-strong, #1f2933);
   border: var(--stroke-2);
   box-shadow: var(--elevation-xs);
-  transition:
-    background-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
+  transition: background-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 
 .popup-link:hover {
@@ -2215,7 +2174,7 @@ hr {
 }
 
 [data-theme="dark"] hr {
-  border-bottom-color: rgba(255, 255, 255, 0.10);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 /* =========================================
@@ -2321,9 +2280,12 @@ hr {
   .onboarding-slide {
     animation: none !important;
   }
-}
 
-/* Tilla soll sich immer bewegen – auch bei reduced motion */
-.tilla-sidebar-avatar img {
-  animation: tilla-bob 3.5s ease-in-out infinite !important;
+  /* Tilla: reduced motion instead of forced full motion */
+  .tilla-sidebar-avatar img {
+    animation-name: tilla-bob-reduced !important;
+    animation-duration: 8s !important;
+    animation-iteration-count: infinite !important;
+    animation-timing-function: ease-in-out !important;
+  }
 }
