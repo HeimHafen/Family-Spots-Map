@@ -1,110 +1,94 @@
 /* =========================================
-   theme.css — Design-Variablen (Light / Dark Theme)
+   theme.css — Light & Dark Design Tokens
    ========================================= */
 
+/* ======= Global Design Tokens (Light Base) ======= */
 :root {
-  /* Accent-Variable (Hue) – per Slider anpassbar */
+  /* ===== Farb-System: Akzent & Varianten ===== */
   --accent-h: 32;
   --accent: hsl(var(--accent-h), 92%, 50%);
+  --accent-light: hsl(var(--accent-h), 92%, 65%);
+  --accent-dark: hsl(var(--accent-h), 92%, 38%);
   --accent-soft: hsl(var(--accent-h), 92%, 88%);
-  /* Neu: etwas dunklerer Soft-Ton für Hover-Zustände */
   --accent-soft-hover: hsl(var(--accent-h), 92%, 82%);
   --accent-strong: hsl(var(--accent-h), 85%, 42%);
 
-  --app-bg: radial-gradient(
-    circle at top,
-    #ffcc80 0,
-    #ffe9c7 32%,
-    #f8dfc0 70%
-  );
-
+  /* ===== Textfarben ===== */
   --text-color: #452213;
   --text-soft: #6f4224;
   --text-strong: #2f160b;
 
+  /* ===== Layout & Card ===== */
+  --app-bg: radial-gradient(circle at top, #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
   --card-bg: rgba(252, 235, 216, 0.98);
   --card-shadow: 0 10px 26px rgba(163, 95, 36, 0.5);
   --card-border: rgba(255, 255, 255, 0.9);
 
+  /* ===== UI-Komponenten ===== */
   --chip-bg: #ffedd5;
   --chip-color: #6b4124;
   --chip-shadow: 0 3px 8px rgba(152, 92, 45, 0.3);
+  --chip-hover-shadow: 0 4px 10px rgba(152, 92, 45, 0.4);
 
   --input-bg: #fff1e0;
   --input-shadow: 0 4px 9px rgba(147, 90, 45, 0.25);
+
+  --button-bg: var(--accent-soft);
+  --button-hover-bg: var(--accent-soft-hover);
+  --button-text-color: #4b280f;
+
+  --toast-bg: hsla(var(--accent-h), 80%, 24%, 0.96);
 
   --header-bg-top: var(--accent-strong);
   --header-bg-bottom: var(--accent);
   --header-shadow: 0 12px 30px rgba(163, 95, 36, 0.55);
   --header-text-color: #ffffff;
-
   --header-tagline-bg: rgba(255, 245, 222, 0.95);
   --header-tagline-color: #7c4314;
   --header-tagline-shadow: 0 4px 12px rgba(141, 73, 15, 0.45);
-
-  --header-icon-bg: radial-gradient(
-    circle at 30% 20%,
-    #ffe7c2 0,
-    #ffca80 40%,
-    #ffb14d 100%
-  );
+  --header-icon-bg: radial-gradient(circle at 30% 20%, #ffe7c2 0, #ffca80 40%, #ffb14d 100%);
   --header-icon-shadow: 0 3px 8px rgba(156, 76, 16, 0.4);
   --header-icon-border: rgba(255, 255, 255, 0.6);
 
   --language-pill-bg: rgba(255, 243, 224, 0.94);
   --language-pill-shadow: 0 3px 9px rgba(132, 70, 18, 0.4);
 
-  --bottom-nav-backdrop: rgba(255, 212, 170, 0.85);
-
   --sidebar-bg: #050816;
   --sidebar-section-bg: rgba(255, 245, 233, 0.98);
   --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
   --sidebar-section-border: rgba(255, 255, 255, 0.9);
 
+  --bottom-nav-backdrop: rgba(255, 212, 170, 0.85);
   --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
   --bottom-nav-item-color: #8a5a32;
   --bottom-nav-item-active-bg: var(--accent);
   --bottom-nav-item-active-color: #4b280f;
 
-  /* Etwas freundlicherer Toast: warmes, leicht dunkles Orange-Braun
-     statt sehr tiefem Braun */
-  --toast-bg: hsla(var(--accent-h), 80%, 24%, 0.96);
-
   --map-card-bg: #fdf4e6;
   --map-card-shadow: 0 14px 32px rgba(148, 86, 38, 0.55);
   --map-card-border: rgba(255, 255, 255, 0.95);
 
+  /* ===== Radii, Schatten, Filter ===== */
+  --radius-pill: 999px;
   --radius-circle-stroke: hsla(var(--accent-h), 90%, 55%, 0.6);
   --radius-circle-fill: hsla(var(--accent-h), 90%, 55%, 0.17);
 
-  --radius-pill: 999px;
   --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
   --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
 
   --map-filter: sepia(0.26) saturate(0.9) brightness(1.04) contrast(1.02)
     hue-rotate(-14deg);
 
-  /* ======================================================
-     Interaktive Tokens – einheitliche Zustände für UI-Elemente
-     ====================================================== */
-
-  /* Primäre Buttons (z.B. „Spielideen für unterwegs“) */
-  --button-bg: var(--accent-soft);
-  --button-hover-bg: var(--accent-soft-hover);
-  --button-text-color: #4b280f;
-
-  /* Hover-Effekt für Chips / Filter */
-  --chip-hover-shadow: 0 4px 10px rgba(152, 92, 45, 0.4);
+  /* ===== Utility Tokens ===== */
+  --border-radius: 0.5rem;
+  --transition-fast: 150ms ease;
+  --font-stack: "Segoe UI", Roboto, sans-serif;
+  --font-size-base: 1rem;
 }
 
+/* ======= Dark Theme Overrides ======= */
 [data-theme="dark"] {
-  --app-bg: radial-gradient(
-    circle at top,
-    #111827 0,
-    #020617 55%,
-    #020617 100%
-  );
-
+  --app-bg: radial-gradient(circle at top, #111827 0, #020617 55%, #020617 100%);
   --text-color: #fef3e7;
   --text-soft: #9ca3af;
   --text-strong: #fef3e7;
@@ -116,25 +100,25 @@
   --chip-bg: rgba(15, 23, 42, 0.98);
   --chip-color: #e5e7eb;
   --chip-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
+  --chip-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
 
   --input-bg: rgba(15, 23, 42, 0.98);
   --input-shadow: 0 7px 15px rgba(15, 23, 42, 0.9);
+
+  --button-bg: var(--accent-soft);
+  --button-hover-bg: var(--accent-soft-hover);
+  --button-text-color: #111827;
+
+  --toast-bg: rgba(15, 23, 42, 0.98);
 
   --header-bg-top: #0b1020;
   --header-bg-bottom: #050816;
   --header-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
   --header-text-color: #fef3e7;
-
   --header-tagline-bg: linear-gradient(135deg, var(--accent), #ff9800);
   --header-tagline-color: #1a1309;
   --header-tagline-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
-
-  --header-icon-bg: radial-gradient(
-    circle at 30% 20%,
-    #111827 0,
-    #020617 45%,
-    #020617 100%
-  );
+  --header-icon-bg: radial-gradient(circle at 30% 20%, #111827 0, #020617 45%, #020617 100%);
   --header-icon-shadow: 0 7px 16px rgba(0, 0, 0, 0.9);
   --header-icon-border: rgba(148, 163, 184, 0.9);
 
@@ -152,8 +136,6 @@
   --bottom-nav-item-active-bg: #f59e0b;
   --bottom-nav-item-active-color: #111827;
 
-  --toast-bg: rgba(15, 23, 42, 0.98);
-
   --map-card-bg: #020617;
   --map-card-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
   --map-card-border: rgba(30, 64, 175, 0.4);
@@ -163,11 +145,9 @@
 
   --map-filter: grayscale(0.35) sepia(0.28) brightness(0.78) contrast(1.05)
     saturate(0.9) hue-rotate(-16deg);
+}
 
-  /* Interaktive Tokens im Dark Mode */
-  --button-bg: var(--accent-soft);
-  --button-hover-bg: var(--accent-soft-hover);
-  --button-text-color: #111827;
-
-  --chip-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
+/* Optional: Light Theme Selector (für explizite Anwendung) */
+[data-theme="light"] {
+  /* bleibt leer, weil root = light theme */
 }
