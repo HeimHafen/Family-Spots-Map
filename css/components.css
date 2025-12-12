@@ -452,9 +452,7 @@ select {
 }
 
 .header-title-spots {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 
 .header-tagline {
