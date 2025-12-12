@@ -318,9 +318,9 @@ select {
 :where(html, body, :root)[data-theme="light"] .app-header {
   background: radial-gradient(
       circle at top left,
-      #fff1e7 0,
-      #f6d9c7 55%,
-      #eab890 100%
+      #ffeede 0,
+      #ffd2ad 55%,
+      #f2b073 100%
     );
   color: var(--text-strong, #111827);
   box-shadow: var(--elevation-md);
