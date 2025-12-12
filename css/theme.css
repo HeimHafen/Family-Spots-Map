@@ -1,185 +1,173 @@
 /* =========================================
-   theme.css — Design-Variablen (Light / Dark)
-   Family-Spots-Welt (warm, familiär)
+   theme.css — Design-Variablen (Light / Dark Theme)
+   Family Spots – warme, familiäre Farbwelt (optimiert)
    ========================================= */
 
 :root {
-  /* Basis-Akzent: dein Familien-Orange */
+  /* Accent-Variable (Hue) – bleibt dein Marken-Orange */
   --accent-h: 32;
-  --accent: hsl(var(--accent-h), 95%, 52%);
-  --accent-soft: hsl(var(--accent-h), 100%, 93%);
-  --accent-strong: hsl(var(--accent-h), 96%, 42%);
+  --accent: hsl(var(--accent-h), 92%, 50%);
+  --accent-soft: hsl(var(--accent-h), 92%, 88%);
+  --accent-strong: hsl(var(--accent-h), 85%, 42%);
 
-  /* App-Hintergrund: warmes, weiches Peach-Orange */
-  --app-bg: linear-gradient(
-    180deg,
-    #fff7ee 0%,
-    #ffe3c5 35%,
-    #ffd4a3 100%
+  /* Hintergrund: warmes, sonniges Gradient wie vorher */
+  --app-bg: radial-gradient(
+    circle at top,
+    #ffcc80 0,
+    #ffe9c7 32%,
+    #f8dfc0 70%
   );
 
-  /* Typo – warmes Braun statt kühlem Grau */
-  --text-color: #4b2a16;   /* Standard-Text */
-  --text-soft: #a3734b;    /* Sekundär-/Hint-Text */
-  --text-strong: #2f160b;  /* Überschriften, Labels */
+  /* Typografie – warmes Braun, gut lesbar */
+  --text-color: #452213;
+  --text-soft: #6f4224;
+  --text-strong: #2f160b;
 
-  /* Karten / Panels – cremig, leicht neumorph, warmes Licht */
-  --card-bg: #fff8ef;
-  --card-shadow: 0 10px 26px rgba(191, 120, 60, 0.25);
+  /* Karten / Panels – leicht aufgehellt, etwas weniger hart im Schatten */
+  --card-bg: rgba(252, 239, 224, 0.98); /* etwas heller als vorher */
+  --card-shadow: 0 10px 24px rgba(163, 95, 36, 0.45);
   --card-border: rgba(255, 255, 255, 0.95);
 
-  /* Chips – warme Pills */
-  --chip-bg: #ffe8cf;
-  --chip-color: #5a3117;
-  --chip-shadow: 0 3px 8px rgba(191, 120, 60, 0.35);
+  /* Chips – wie vorher, leicht angepasst */
+  --chip-bg: #ffedd5;
+  --chip-color: #6b4124;
+  --chip-shadow: 0 3px 8px rgba(152, 92, 45, 0.3);
 
-  /* Inputs – leicht angecremt, nicht reinweiß */
-  --input-bg: #fff8f0;
-  --input-shadow: 0 4px 10px rgba(191, 120, 60, 0.25);
+  /* Inputs – cremig, nicht reinweiß */
+  --input-bg: #fff1e0;
+  --input-shadow: 0 4px 9px rgba(147, 90, 45, 0.25);
 
-  /* Header – knüpft direkt an dein Voll-Orange an */
-  --header-bg-top: #f79c34;
-  --header-bg-bottom: #f2811d;
-  --header-shadow: 0 14px 32px rgba(191, 120, 60, 0.7);
-  --header-text-color: #fffaf5;
+  /* Header – dein sattes Orange bleibt */
+  --header-bg-top: var(--accent-strong);
+  --header-bg-bottom: var(--accent);
+  --header-shadow: 0 12px 30px rgba(163, 95, 36, 0.55);
+  --header-text-color: #ffffff;
 
-  /* Tagline-Pill – cremig & weich */
-  --header-tagline-bg: rgba(255, 248, 238, 0.96);
-  --header-tagline-color: #5a2f16;
-  --header-tagline-shadow: 0 6px 16px rgba(191, 120, 60, 0.45);
+  /* Tagline-Pill – warmes Creme mit weichem Schatten */
+  --header-tagline-bg: rgba(255, 245, 222, 0.96);
+  --header-tagline-color: #7c4314;
+  --header-tagline-shadow: 0 4px 12px rgba(141, 73, 15, 0.45);
 
-  /* Header-Icons (Menu / Language etc.) */
+  /* Header-Icons (Menu / etc.) */
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
-    #fff3e2 0,
-    #ffd39e 50%,
-    #f59a31 100%
+    #ffe7c2 0,
+    #ffca80 40%,
+    #ffb14d 100%
   );
-  --header-icon-shadow: 0 6px 12px rgba(191, 120, 60, 0.55);
-  --header-icon-border: rgba(255, 255, 255, 0.95);
+  --header-icon-shadow: 0 3px 8px rgba(156, 76, 16, 0.4);
+  --header-icon-border: rgba(255, 255, 255, 0.7);
 
-  /* Language-Pill – helles, leichtes Peach */
-  --language-pill-bg: rgba(255, 246, 234, 0.98);
-  --language-pill-shadow: 0 4px 10px rgba(191, 120, 60, 0.45);
+  /* Sprach-Pill */
+  --language-pill-bg: rgba(255, 243, 224, 0.96);
+  --language-pill-shadow: 0 3px 9px rgba(132, 70, 18, 0.4);
 
-  /* Sidebar-Hintergrund (Page) – leicht dunkler Peach */
-  --sidebar-bg: #ffe1c3;
+  /* Bottom-Nav – leicht transparent über der warmen Fläche */
+  --bottom-nav-backdrop: rgba(255, 212, 170, 0.88);
 
-  /* Sidebar-Section (Cards in der Sidebar) */
-  --sidebar-section-bg: #fff8ef;
-  --sidebar-section-shadow: 0 10px 26px rgba(191, 120, 60, 0.35);
-  --sidebar-section-border: rgba(255, 255, 255, 0.96);
+  /* *** Wichtig: Sidebar jetzt auch warm statt Nachtblau *** */
+  --sidebar-bg: #f8dfc0; /* vorher #050816 */
+  --sidebar-section-bg: rgba(255, 245, 233, 0.98);
+  --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
+  --sidebar-section-border: rgba(255, 255, 255, 0.95);
 
-  /* Bottom-Nav – warmes Braun, gut lesbar auf Orange-Hintergrund */
-  --bottom-nav-backdrop: rgba(79, 49, 27, 0.96);
-  --bottom-nav-item-bg: transparent;
-  --bottom-nav-item-color: #f5e9df;
-  --bottom-nav-item-active-bg: rgba(255, 248, 240, 0.14);
-  --bottom-nav-item-active-color: #ffffff;
+  /* Bottom-Nav-Items – kissenartig, warm */
+  --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
+  --bottom-nav-item-color: #8a5a32;
+  --bottom-nav-item-active-bg: var(--accent);
+  --bottom-nav-item-active-color: #4b280f;
 
   /* Toast – dunkles Karamell */
-  --toast-bg: rgba(63, 36, 19, 0.98);
+  --toast-bg: rgba(55, 35, 21, 0.95);
 
-  /* Map-Card – große warme Karte vor der Map */
-  --map-card-bg: #fff8ef;
-  --map-card-shadow: 0 16px 34px rgba(191, 120, 60, 0.55);
-  --map-card-border: rgba(255, 255, 255, 0.98);
+  /* Map-Card – große, helle Karte vor der Map */
+  --map-card-bg: #fdf4e6;
+  --map-card-shadow: 0 14px 32px rgba(148, 86, 38, 0.55);
+  --map-card-border: rgba(255, 255, 255, 0.96);
 
-  /* Radius-Kreis – sonniger Orange-Ton */
-  --radius-circle-stroke: hsla(var(--accent-h), 96%, 55%, 0.8);
-  --radius-circle-fill: hsla(var(--accent-h), 96%, 55%, 0.18);
+  /* Radius-Kreis – sonniges Orange */
+  --radius-circle-stroke: hsla(var(--accent-h), 90%, 55%, 0.6);
+  --radius-circle-fill: hsla(var(--accent-h), 90%, 55%, 0.17);
 
-  /* Globaler Radius/Shadow – weich & „kissenartig“ */
+  /* Globale Kissen-Optik */
   --radius-pill: 999px;
-  --shadow-soft: 0 3px 8px rgba(191, 120, 60, 0.25);
-  --shadow-strong: 0 16px 34px rgba(191, 120, 60, 0.55);
+  --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.3);
+  --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
 
-  /* Map-Farbfilter – leicht warm, etwas weicher */
-  --map-filter: sepia(0.12) saturate(1.05) brightness(1.02) contrast(1.02);
+  /* Map-Farbfilter – warm, aber nicht zu extrem */
+  --map-filter: sepia(0.24) saturate(0.9) brightness(1.03) contrast(1.02)
+                hue-rotate(-12deg);
 }
 
 /* =========================================
    Dark Theme – gemütlicher Abendmodus
-   (weniger Orangefläche, aber mit warmem Akzent)
    ========================================= */
 
 [data-theme="dark"] {
-  /* Hintergrund – dunkles Night-Navy mit ganz leichtem Warmstich */
   --app-bg: radial-gradient(
     circle at top,
-    #020617 0,
+    #111827 0,
     #020617 55%,
-    #000000 100%
+    #020617 100%
   );
 
-  --text-color: #e5e7eb;
+  --text-color: #fef3e7;
   --text-soft: #9ca3af;
-  --text-strong: #fef9c3;
+  --text-strong: #fef3e7;
 
-  /* Cards im Dark Mode – dunkle Fläche mit warmer Outline */
-  --card-bg: #020617;
-  --card-shadow: 0 18px 40px rgba(0, 0, 0, 0.95);
-  --card-border: rgba(248, 180, 96, 0.5);
+  --card-bg: rgba(9, 18, 38, 0.98);
+  --card-shadow: 0 18px 36px rgba(0, 0, 0, 0.8);
+  --card-border: rgba(148, 163, 184, 0.35);
 
-  /* Chips Dark */
-  --chip-bg: #020617;
-  --chip-color: #fef3c7;
-  --chip-shadow: 0 6px 16px rgba(0, 0, 0, 0.9);
+  --chip-bg: rgba(15, 23, 42, 0.98);
+  --chip-color: #e5e7eb;
+  --chip-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
 
-  /* Inputs Dark */
-  --input-bg: #020617;
-  --input-shadow: 0 10px 26px rgba(0, 0, 0, 0.9);
+  --input-bg: rgba(15, 23, 42, 0.98);
+  --input-shadow: 0 7px 15px rgba(15, 23, 42, 0.9);
 
-  /* Header Dark – Navy mit warmem Orange-Glühen */
-  --header-bg-top: #020617;
-  --header-bg-bottom: #020617;
-  --header-shadow: 0 20px 40px rgba(0, 0, 0, 0.98);
-  --header-text-color: #fefce8;
+  --header-bg-top: #0b1020;
+  --header-bg-bottom: #050816;
+  --header-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
+  --header-text-color: #fef3e7;
 
-  /* Tagline-Pill Dark – dunkles Navy mit warmem Text */
-  --header-tagline-bg: rgba(15, 23, 42, 0.98);
-  --header-tagline-color: #fef3c7;
-  --header-tagline-shadow: 0 8px 20px rgba(0, 0, 0, 0.95);
+  /* Tagline im Dark Mode – warm leuchtende Pill */
+  --header-tagline-bg: linear-gradient(135deg, var(--accent), #ff9800);
+  --header-tagline-color: #1a1309;
+  --header-tagline-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
 
-  /* Header-Icons Dark – dunkle Kapsel mit Orange-Glow */
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
     #111827 0,
-    #020617 60%,
+    #020617 45%,
     #020617 100%
   );
-  --header-icon-shadow: 0 10px 24px rgba(0, 0, 0, 0.95);
-  --header-icon-border: rgba(248, 180, 96, 0.7);
+  --header-icon-shadow: 0 7px 16px rgba(0, 0, 0, 0.9);
+  --header-icon-border: rgba(148, 163, 184, 0.9);
 
-  /* Language-Pill Dark */
   --language-pill-bg: rgba(15, 23, 42, 0.98);
-  --language-pill-shadow: 0 8px 18px rgba(0, 0, 0, 0.9);
+  --language-pill-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
 
-  /* Sidebar Dark */
   --sidebar-bg: #020617;
-  --sidebar-section-bg: #020617;
-  --sidebar-section-shadow: 0 18px 40px rgba(0, 0, 0, 0.98);
-  --sidebar-section-border: rgba(55, 65, 81, 0.95);
+  --sidebar-section-bg: rgba(9, 18, 38, 0.98);
+  --sidebar-section-shadow: 0 16px 34px rgba(0, 0, 0, 0.9);
+  --sidebar-section-border: rgba(30, 64, 175, 0.35);
 
-  /* Bottom-Nav Dark */
-  --bottom-nav-backdrop: rgba(0, 0, 0, 0.9);
-  --bottom-nav-item-bg: transparent;
-  --bottom-nav-item-color: #9ca3af;
-  --bottom-nav-item-active-bg: #111827;
-  --bottom-nav-item-active-color: #fefce8;
+  --bottom-nav-backdrop: rgba(15, 23, 42, 0.92);
+  --bottom-nav-item-bg: rgba(15, 23, 42, 0.98);
+  --bottom-nav-item-color: #e5e7eb;
+  --bottom-nav-item-active-bg: #f59e0b;
+  --bottom-nav-item-active-color: #111827;
 
-  /* Toast Dark */
   --toast-bg: rgba(15, 23, 42, 0.98);
 
-  /* Map-Card Dark */
   --map-card-bg: #020617;
-  --map-card-shadow: 0 20px 44px rgba(0, 0, 0, 0.98);
-  --map-card-border: rgba(248, 180, 96, 0.55);
+  --map-card-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
+  --map-card-border: rgba(30, 64, 175, 0.4);
 
-  /* Radius-Kreis Dark – helleres Orange, damit es „leuchtet“ */
-  --radius-circle-stroke: hsla(var(--accent-h), 96%, 68%, 0.85);
-  --radius-circle-fill: hsla(var(--accent-h), 96%, 60%, 0.16);
+  --radius-circle-stroke: hsla(var(--accent-h), 90%, 65%, 0.75);
+  --radius-circle-fill: hsla(var(--accent-h), 90%, 65%, 0.15);
 
-  /* Map Dark – leicht entsättigt, minimal wärmer */
-  --map-filter: grayscale(0.35) sepia(0.12) saturate(0.9) brightness(0.92) contrast(1.06);
+  --map-filter: grayscale(0.35) sepia(0.28) brightness(0.78) contrast(1.05)
+                saturate(0.9) hue-rotate(-16deg);
 }
