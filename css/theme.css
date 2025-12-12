@@ -72,9 +72,9 @@
      ================================ */
   --bg-app: radial-gradient(
     circle at top,
-    hsl(28, 100%, 74%) 0%,
-    hsl(30, 100%, 93%) 32%,
-    hsl(32, 90%, 90%) 70%
+    hsl(34, 100%, 70%) 0%,
+    hsl(34, 100%, 91%) 32%,
+    hsl(34, 85%, 89%) 70%
   );
 
   /* Filters (effects, not pure tokens) */
@@ -113,10 +113,11 @@
 
   --toast-bg: hsla(var(--accent-h), 80%, 24%, 0.96);
 
-  --header-bg-top: var(--accent-strong);
-  --header-bg-bottom: var(--accent);
+  /* ✅ NUR HIER angepasst: Header wärmer + Text passend dunkel */
+  --header-bg-top: hsl(34, 100%, 95%);
+  --header-bg-bottom: hsl(32, 100%, 88%);
   --header-shadow: var(--elev-3);
-  --header-text-color: hsl(0, 0%, 100%);
+  --header-text-color: var(--text-3);
 
   --header-tagline-bg: hsla(36, 100%, 94%, 0.95);
   --header-tagline-color: hsl(26, 68%, 28%);
