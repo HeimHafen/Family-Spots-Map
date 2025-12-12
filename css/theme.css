@@ -14,70 +14,85 @@
   --accent-strong: hsl(var(--accent-h), 85%, 42%);
 
   /* ===== Textfarben ===== */
-  --text-color: #452213;
-  --text-soft: #6f4224;
-  --text-strong: #2f160b;
+  --text-color: hsl(20, 60%, 17%);
+  --text-soft: hsl(25, 45%, 29%);
+  --text-strong: hsl(18, 58%, 12%);
 
   /* ===== Layout & Card ===== */
-  --app-bg: radial-gradient(circle at top, #ffcc80 0, #ffe9c7 32%, #f8dfc0 70%);
-  --card-bg: rgba(252, 235, 216, 0.98);
-  --card-shadow: 0 10px 26px rgba(163, 95, 36, 0.5);
-  --card-border: rgba(255, 255, 255, 0.9);
+  --app-bg: radial-gradient(
+    circle at top,
+    hsl(34, 100%, 70%) 0%,
+    hsl(34, 100%, 91%) 32%,
+    hsl(34, 85%, 89%) 70%
+  );
+
+  --card-bg: hsla(30, 76%, 91%, 0.98);
+  --card-shadow: 0 10px 26px hsla(28, 64%, 39%, 0.5);
+  --card-border: hsla(0, 0%, 100%, 0.9);
 
   /* ===== UI-Komponenten ===== */
-  --chip-bg: #ffedd5;
-  --chip-color: #6b4124;
-  --chip-shadow: 0 3px 8px rgba(152, 92, 45, 0.3);
-  --chip-hover-shadow: 0 4px 10px rgba(152, 92, 45, 0.4);
+  --chip-bg: hsl(34, 100%, 92%);
+  --chip-color: hsl(25, 45%, 28%);
+  --chip-shadow: 0 3px 8px hsla(26, 54%, 39%, 0.3);
+  --chip-hover-shadow: 0 4px 10px hsla(26, 54%, 39%, 0.4);
 
-  --input-bg: #fff1e0;
-  --input-shadow: 0 4px 9px rgba(147, 90, 45, 0.25);
+  --input-bg: hsl(34, 100%, 94%);
+  --input-shadow: 0 4px 9px hsla(26, 52%, 38%, 0.25);
 
   --button-bg: var(--accent-soft);
   --button-hover-bg: var(--accent-soft-hover);
-  --button-text-color: #4b280f;
+  --button-text-color: hsl(22, 65%, 18%);
 
   --toast-bg: hsla(var(--accent-h), 80%, 24%, 0.96);
 
   --header-bg-top: var(--accent-strong);
   --header-bg-bottom: var(--accent);
-  --header-shadow: 0 12px 30px rgba(163, 95, 36, 0.55);
-  --header-text-color: #ffffff;
-  --header-tagline-bg: rgba(255, 245, 222, 0.95);
-  --header-tagline-color: #7c4314;
-  --header-tagline-shadow: 0 4px 12px rgba(141, 73, 15, 0.45);
-  --header-icon-bg: radial-gradient(circle at 30% 20%, #ffe7c2 0, #ffca80 40%, #ffb14d 100%);
-  --header-icon-shadow: 0 3px 8px rgba(156, 76, 16, 0.4);
-  --header-icon-border: rgba(255, 255, 255, 0.6);
+  --header-shadow: 0 12px 30px hsla(28, 64%, 39%, 0.55);
+  --header-text-color: hsl(0, 0%, 100%);
 
-  --language-pill-bg: rgba(255, 243, 224, 0.94);
-  --language-pill-shadow: 0 3px 9px rgba(132, 70, 18, 0.4);
+  --header-tagline-bg: hsla(36, 100%, 94%, 0.95);
+  --header-tagline-color: hsl(26, 68%, 28%);
+  --header-tagline-shadow: 0 4px 12px hsla(26, 63%, 31%, 0.45);
 
-  --sidebar-bg: #050816;
-  --sidebar-section-bg: rgba(255, 245, 233, 0.98);
-  --sidebar-section-shadow: 0 10px 24px rgba(163, 95, 36, 0.42);
-  --sidebar-section-border: rgba(255, 255, 255, 0.9);
+  --header-icon-bg: radial-gradient(
+    circle at 30% 20%,
+    hsl(35, 100%, 88%) 0%,
+    hsl(34, 100%, 75%) 40%,
+    hsl(32, 100%, 65%) 100%
+  );
 
-  --bottom-nav-backdrop: rgba(255, 212, 170, 0.85);
-  --bottom-nav-item-bg: rgba(255, 245, 233, 0.98);
-  --bottom-nav-item-color: #8a5a32;
+  --header-icon-shadow: 0 3px 8px hsla(26, 81%, 34%, 0.4);
+  --header-icon-border: hsla(0, 0%, 100%, 0.6);
+
+  --language-pill-bg: hsla(34, 100%, 94%, 0.94);
+  --language-pill-shadow: 0 3px 9px hsla(26, 63%, 29%, 0.4);
+
+  --sidebar-bg: hsl(228, 58%, 6%);
+  --sidebar-section-bg: hsla(34, 100%, 95%, 0.98);
+  --sidebar-section-shadow: 0 10px 24px hsla(28, 64%, 39%, 0.42);
+  --sidebar-section-border: hsla(0, 0%, 100%, 0.9);
+
+  --bottom-nav-backdrop: hsla(32, 100%, 83%, 0.85);
+  --bottom-nav-item-bg: hsla(34, 100%, 95%, 0.98);
+  --bottom-nav-item-color: hsl(28, 44%, 37%);
   --bottom-nav-item-active-bg: var(--accent);
-  --bottom-nav-item-active-color: #4b280f;
+  --bottom-nav-item-active-color: hsl(22, 65%, 18%);
 
-  --map-card-bg: #fdf4e6;
-  --map-card-shadow: 0 14px 32px rgba(148, 86, 38, 0.55);
-  --map-card-border: rgba(255, 255, 255, 0.95);
+  --map-card-bg: hsl(36, 100%, 95%);
+  --map-card-shadow: 0 14px 32px hsla(26, 59%, 36%, 0.55);
+  --map-card-border: hsla(0, 0%, 100%, 0.95);
 
   /* ===== Radii, Schatten, Filter ===== */
   --radius-pill: 999px;
+
   --radius-circle-stroke: hsla(var(--accent-h), 90%, 55%, 0.6);
   --radius-circle-fill: hsla(var(--accent-h), 90%, 55%, 0.17);
 
-  --shadow-soft: 0 3px 8px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 10px 26px rgba(163, 95, 36, 0.5);
+  --shadow-soft: 0 3px 8px hsla(0, 0%, 0%, 0.35);
+  --shadow-strong: 0 10px 26px hsla(28, 64%, 39%, 0.5);
 
-  --map-filter: sepia(0.26) saturate(0.9) brightness(1.04) contrast(1.02)
-    hue-rotate(-14deg);
+  --map-filter: sepia(0.26) saturate(0.9) brightness(1.04)
+    contrast(1.02) hue-rotate(-14deg);
 
   /* ===== Utility Tokens ===== */
   --border-radius: 0.5rem;
@@ -88,66 +103,83 @@
 
 /* ======= Dark Theme Overrides ======= */
 [data-theme="dark"] {
-  --app-bg: radial-gradient(circle at top, #111827 0, #020617 55%, #020617 100%);
-  --text-color: #fef3e7;
-  --text-soft: #9ca3af;
-  --text-strong: #fef3e7;
+  --app-bg: radial-gradient(
+    circle at top,
+    hsl(222, 47%, 11%) 0%,
+    hsl(229, 84%, 6%) 55%,
+    hsl(229, 84%, 6%) 100%
+  );
 
-  --card-bg: rgba(9, 18, 38, 0.98);
-  --card-shadow: 0 18px 36px rgba(0, 0, 0, 0.8);
-  --card-border: rgba(148, 163, 184, 0.35);
+  --text-color: hsl(32, 100%, 95%);
+  --text-soft: hsl(215, 16%, 72%);
+  --text-strong: hsl(32, 100%, 95%);
 
-  --chip-bg: rgba(15, 23, 42, 0.98);
-  --chip-color: #e5e7eb;
-  --chip-shadow: 0 6px 14px rgba(0, 0, 0, 0.7);
-  --chip-hover-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
+  --card-bg: hsla(222, 44%, 9%, 0.98);
+  --card-shadow: 0 18px 36px hsla(0, 0%, 0%, 0.8);
+  --card-border: hsla(215, 19%, 65%, 0.35);
 
-  --input-bg: rgba(15, 23, 42, 0.98);
-  --input-shadow: 0 7px 15px rgba(15, 23, 42, 0.9);
+  --chip-bg: hsla(222, 44%, 11%, 0.98);
+  --chip-color: hsl(220, 14%, 90%);
+  --chip-shadow: 0 6px 14px hsla(0, 0%, 0%, 0.7);
+  --chip-hover-shadow: 0 6px 14px hsla(0, 0%, 0%, 0.9);
 
-  --button-bg: var(--accent-soft);
-  --button-hover-bg: var(--accent-soft-hover);
-  --button-text-color: #111827;
+  --input-bg: hsla(222, 44%, 11%, 0.98);
+  --input-shadow: 0 7px 15px hsla(222, 44%, 11%, 0.9);
 
-  --toast-bg: rgba(15, 23, 42, 0.98);
+  --button-text-color: hsl(222, 47%, 11%);
 
-  --header-bg-top: #0b1020;
-  --header-bg-bottom: #050816;
-  --header-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
-  --header-text-color: #fef3e7;
-  --header-tagline-bg: linear-gradient(135deg, var(--accent), #ff9800);
-  --header-tagline-color: #1a1309;
-  --header-tagline-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
-  --header-icon-bg: radial-gradient(circle at 30% 20%, #111827 0, #020617 45%, #020617 100%);
-  --header-icon-shadow: 0 7px 16px rgba(0, 0, 0, 0.9);
-  --header-icon-border: rgba(148, 163, 184, 0.9);
+  --toast-bg: hsla(222, 44%, 11%, 0.98);
 
-  --language-pill-bg: rgba(15, 23, 42, 0.98);
-  --language-pill-shadow: 0 6px 14px rgba(0, 0, 0, 0.9);
+  --header-bg-top: hsl(228, 45%, 8%);
+  --header-bg-bottom: hsl(228, 58%, 6%);
+  --header-shadow: 0 18px 38px hsla(0, 0%, 0%, 0.9);
+  --header-text-color: hsl(32, 100%, 95%);
 
-  --sidebar-bg: #020617;
-  --sidebar-section-bg: rgba(9, 18, 38, 0.98);
-  --sidebar-section-shadow: 0 16px 34px rgba(0, 0, 0, 0.9);
-  --sidebar-section-border: rgba(30, 64, 175, 0.35);
+  --header-tagline-bg: linear-gradient(
+    135deg,
+    var(--accent),
+    hsl(36, 100%, 50%)
+  );
 
-  --bottom-nav-backdrop: rgba(15, 23, 42, 0.92);
-  --bottom-nav-item-bg: rgba(15, 23, 42, 0.98);
-  --bottom-nav-item-color: #e5e7eb;
-  --bottom-nav-item-active-bg: #f59e0b;
-  --bottom-nav-item-active-color: #111827;
+  --header-tagline-color: hsl(30, 40%, 10%);
+  --header-tagline-shadow: 0 6px 18px hsla(0, 0%, 0%, 0.8);
 
-  --map-card-bg: #020617;
-  --map-card-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
-  --map-card-border: rgba(30, 64, 175, 0.4);
+  --header-icon-bg: radial-gradient(
+    circle at 30% 20%,
+    hsl(222, 47%, 11%) 0%,
+    hsl(229, 84%, 6%) 45%,
+    hsl(229, 84%, 6%) 100%
+  );
+
+  --header-icon-shadow: 0 7px 16px hsla(0, 0%, 0%, 0.9);
+  --header-icon-border: hsla(215, 19%, 65%, 0.9);
+
+  --language-pill-bg: hsla(222, 44%, 11%, 0.98);
+  --language-pill-shadow: 0 6px 14px hsla(0, 0%, 0%, 0.9);
+
+  --sidebar-bg: hsl(229, 84%, 6%);
+  --sidebar-section-bg: hsla(222, 44%, 9%, 0.98);
+  --sidebar-section-shadow: 0 16px 34px hsla(0, 0%, 0%, 0.9);
+  --sidebar-section-border: hsla(220, 70%, 40%, 0.35);
+
+  --bottom-nav-backdrop: hsla(222, 44%, 11%, 0.92);
+  --bottom-nav-item-bg: hsla(222, 44%, 11%, 0.98);
+  --bottom-nav-item-color: hsl(220, 14%, 90%);
+  --bottom-nav-item-active-bg: hsl(38, 92%, 52%);
+  --bottom-nav-item-active-color: hsl(222, 47%, 11%);
+
+  --map-card-bg: hsl(229, 84%, 6%);
+  --map-card-shadow: 0 18px 38px hsla(0, 0%, 0%, 0.9);
+  --map-card-border: hsla(220, 70%, 40%, 0.4);
 
   --radius-circle-stroke: hsla(var(--accent-h), 90%, 65%, 0.75);
   --radius-circle-fill: hsla(var(--accent-h), 90%, 65%, 0.15);
 
-  --map-filter: grayscale(0.35) sepia(0.28) brightness(0.78) contrast(1.05)
-    saturate(0.9) hue-rotate(-16deg);
+  --map-filter: grayscale(0.35) sepia(0.28) brightness(0.78)
+    contrast(1.05) saturate(0.9) hue-rotate(-16deg);
 }
 
-/* Optional: Light Theme Selector (für explizite Anwendung) */
+/* Optional: Light Theme Selector */
 [data-theme="light"] {
-  /* bleibt leer, weil root = light theme */
+  /* root = light theme */
 }
