@@ -1,6 +1,6 @@
 /* =========================================
    components.css — Layout & Komponenten
-   Corporate Refine
+   Corporate Refine (token-driven header + no surface overrides)
    ========================================= */
 
 /* -----------------------------------------
@@ -150,8 +150,7 @@ select {
   border-color: rgba(148, 163, 184, 0.5);
 }
 
-/* Spezielle Tilla-Button-Variante – basiert auf Primary-Button,
-   etwas kompakter und mit Icon-Gap */
+/* Spezielle Tilla-Button-Variante */
 .btn-play-idea {
   display: inline-flex;
   align-items: center;
@@ -198,33 +197,32 @@ select {
 }
 
 /* =========================================
-   Fokus für interaktive Komponenten
+   Fokus für interaktive Komponenten (token-driven)
    ========================================= */
 
-button:focus-visible,
-.language-switcher:focus-visible,
-.btn-icon:focus-visible,
-.btn:focus-visible,
-.btn-ghost:focus-visible,
-.btn-play-idea:focus-visible,
-.mood-chip:focus-visible,
-.travel-chip:focus-visible,
-.compass-mode-chip:focus-visible,
-.tag-filter-chip:focus-visible,
-.bottom-nav-item:focus-visible,
-.input:focus-visible,
-select.input:focus-visible,
-textarea.input:focus-visible,
-.filter-group--checkbox input[type="checkbox"]:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 0;
-  box-shadow:
-    0 0 0 2px #ffffff,
-    0 0 0 4px rgba(245, 158, 11, 0.9);
+:where(
+  button,
+  .language-switcher,
+  .btn-icon,
+  .btn,
+  .btn-ghost,
+  .btn-play-idea,
+  .mood-chip,
+  .travel-chip,
+  .compass-mode-chip,
+  .tag-filter-chip,
+  .bottom-nav-item,
+  .input,
+  select.input,
+  textarea.input,
+  .filter-group--checkbox input[type="checkbox"]
+):focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 /* =========================================
-   HEADER
+   HEADER (token-driven; no hard-coded light override)
    ========================================= */
 
 .app-header {
@@ -241,18 +239,6 @@ textarea.input:focus-visible,
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
   box-shadow: var(--header-shadow);
-}
-
-/* Light-Mode-Variante: weniger „Haut“, mehr Apricot/Orange (sichtbar!) */
-html[data-theme="light"] .app-header {
-  background: radial-gradient(
-    circle at top left,
-    hsl(34, 100%, 92%) 0%,
-    hsl(32, 100%, 82%) 55%,
-    hsl(29, 100%, 72%) 100%
-  );
-  color: var(--text-strong, #111827);
-  box-shadow: var(--header-shadow, var(--elevation-md));
 }
 
 .app-header-top {
@@ -305,7 +291,6 @@ html[data-theme="light"] .app-header {
 }
 
 .btn-icon:hover {
-  background-color: rgba(255, 255, 255, 0.85);
   box-shadow: var(--elevation-md);
 }
 
@@ -319,8 +304,6 @@ html[data-theme="light"] .app-header {
   font-size: 20px;
 }
 
-/* alte language-switcher-Optik wird nicht mehr genutzt,
-   Klasse darf aber für JS noch existieren */
 .language-switcher {
   display: none;
 }
@@ -340,11 +323,6 @@ html[data-theme="light"] .app-header {
   gap: 6px;
   text-shadow: none;
   color: var(--header-text-color);
-}
-
-/* im Light-Mode immer klar dunkel */
-html[data-theme="light"] .header-title {
-  color: var(--text-strong, #111827);
 }
 
 .header-title:focus-visible {
@@ -592,12 +570,7 @@ body[data-menu-open="1"] .app-menu {
 }
 
 [data-theme="dark"] #view-map {
-  background: linear-gradient(
-    to bottom,
-    #020617 0,
-    #020617 35%,
-    #020617 100%
-  );
+  background: linear-gradient(to bottom, #020617 0, #020617 100%);
   border-radius: 0 0 28px 28px;
 }
 
@@ -730,7 +703,6 @@ body[data-menu-open="1"] .app-menu {
   color: var(--text-soft);
 }
 
-/* kompaktere Variante für erklärende Texte innerhalb des Filter-Blocks */
 .filter-group-helper--compact {
   margin-top: 4px;
   margin-bottom: 6px;
@@ -738,17 +710,14 @@ body[data-menu-open="1"] .app-menu {
   color: var(--text-soft);
 }
 
-/* Abstand für Filter-Toggle-Button */
 #btn-toggle-filters {
   margin-bottom: 0;
 }
 
-/* mehr Luft über dem ersten Helper-Text unterhalb des Headers */
 .sidebar-section-header + .filter-group-helper {
   margin-top: 1rem;
 }
 
-/* Footer unter den Basis-Filtern: Button + Zusammenfassung */
 .filter-footer {
   display: flex;
   align-items: center;
@@ -775,11 +744,21 @@ select.input {
   background: var(--input-bg);
   box-shadow: none;
   color: var(--text-color, #111827);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
 }
 
 textarea.input {
   border-radius: 16px;
   resize: vertical;
+}
+
+.input:hover,
+textarea.input:hover,
+select.input:hover {
+  border-color: rgba(148, 163, 184, 0.55);
 }
 
 .input:focus,
@@ -788,6 +767,25 @@ select.input:focus {
   outline: none;
   border-color: rgba(245, 158, 11, 0.7);
   box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.7);
+}
+
+/* Select — Chevron (iOS-friendly) */
+select.input {
+  padding-right: 2.35rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(15, 23, 42, 0.55) 50%),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.55) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+
+[data-theme="dark"] select.input {
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(229, 231, 235, 0.7) 50%),
+    linear-gradient(135deg, rgba(229, 231, 235, 0.7) 50%, transparent 50%);
 }
 
 /* Mood & Travel & Tag Chips */
@@ -814,10 +812,10 @@ select.input:focus {
   box-shadow: none;
   cursor: pointer;
   transition:
-    background-color 0.12s ease-out,
-    border-color 0.12s ease-out,
-    color 0.12s ease-out,
-    transform 0.06s ease-out;
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    transform 80ms ease;
 }
 
 [data-theme="dark"] .mood-chip,
@@ -868,7 +866,6 @@ select.input:focus {
   gap: 6px;
 }
 
-/* generische Chip-Variante für das Modal */
 .btn-chip {
   border-radius: var(--radius-pill);
   padding: 5px 10px;
@@ -880,8 +877,8 @@ select.input:focus {
   box-shadow: none;
   cursor: pointer;
   transition:
-    background-color 0.12s ease-out,
-    border-color 0.12s ease-out;
+    background-color 120ms ease,
+    border-color 120ms ease;
 }
 
 [data-theme="dark"] .btn-chip {
@@ -901,13 +898,11 @@ select.input:focus {
   color: #111827;
 }
 
-/* Basiszustand – wird für Schnellfilter weiter spezifiziert */
 .tag-filter-chip--active {
   background: var(--accent-soft);
   color: #1f2937;
 }
 
-/* Schnellfilter-Chips im Modal */
 .tag-filter-row .tag-filter-chip--active,
 .tag-filter-row .btn-chip[aria-pressed="true"] {
   background: var(--accent-soft);
@@ -957,7 +952,6 @@ select.input:focus {
   border-top-color: rgba(148, 163, 184, 0.28);
 }
 
-/* „Weitere Filter“-Pill AUSBLENDEN */
 .filter-advanced-summary {
   display: none;
 }
@@ -979,7 +973,6 @@ select.input:focus {
   font-size: 14px;
 }
 
-/* Custom-Checkbox im Corporate-Stil */
 .filter-group--checkbox input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
@@ -1012,7 +1005,6 @@ select.input:focus {
   background: #ffffff;
 }
 
-/* Tap-Feedback */
 .filter-group--checkbox input[type="checkbox"]:active {
   filter: brightness(0.96);
 }
@@ -1036,7 +1028,7 @@ select.input:focus {
   color: var(--text-soft);
 }
 
-/* Mein Tag – extra Luft zum Button */
+/* Mein Tag */
 
 #daylog-section .filter-group label {
   display: block;
@@ -1069,7 +1061,6 @@ select.input:focus {
   scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
 }
 
-/* Scrollbar */
 .daylog-list::-webkit-scrollbar,
 #daylog-list::-webkit-scrollbar {
   width: 6px;
@@ -1090,8 +1081,6 @@ select.input:focus {
 [data-theme="dark"] #daylog-list::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.7);
 }
-
-/* Einzelner Tagebuch-Eintrag */
 
 .daylog-entry {
   position: relative;
@@ -1124,7 +1113,6 @@ select.input:focus {
   box-shadow: var(--elevation-md);
 }
 
-/* Timeline am linken Rand */
 .daylog-entry::before {
   content: "";
   position: absolute;
@@ -1225,7 +1213,6 @@ select.input:focus {
   background: rgba(148, 163, 184, 0.7);
 }
 
-/* Empty-State für leere Filterergebnisse */
 .empty-state {
   padding: 12px 12px 14px;
   border-radius: 16px;
@@ -1494,7 +1481,7 @@ select.input:focus {
   box-shadow: var(--elevation-sm);
 }
 
-/* Map-Container (Karte selbst) */
+/* Map-Container */
 
 .map-container {
   width: 100%;
@@ -1502,17 +1489,13 @@ select.input:focus {
   min-height: 320px;
 }
 
-/* Map-Tiles farblich an App anpassen */
 .leaflet-container .leaflet-tile {
   filter: var(--map-filter);
   transition: filter 0.25s ease-out;
 }
 
 @media (max-width: 899px) {
-  .map-section {
-    min-height: 60vh;
-  }
-
+  .map-section,
   .map-container {
     min-height: 60vh;
   }
@@ -1553,7 +1536,7 @@ select.input:focus {
 }
 
 /* =========================================
-   FILTER MODAL (BOTTOM SHEET OVERLAY)
+   FILTER MODAL
    ========================================= */
 
 .filter-modal {
@@ -1583,7 +1566,6 @@ select.input:focus {
   padding: 16px 20px 20px;
 }
 
-/* Header im Filter-Modal inkl. Close-Button */
 .filter-modal-header {
   display: flex;
   align-items: center;
@@ -1597,7 +1579,6 @@ select.input:focus {
   font-size: 20px;
 }
 
-/* Close-Button */
 #filter-modal-close {
   border-radius: var(--radius-pill);
   padding: 6px 16px;
@@ -1621,7 +1602,6 @@ select.input:focus {
   box-shadow: var(--elevation-sm);
 }
 
-/* Footer des Filtermodals */
 .filter-modal-footer {
   margin-top: 14px;
   display: flex;
@@ -1630,7 +1610,6 @@ select.input:focus {
   gap: 10px;
 }
 
-/* Hintergrund nicht scrollen, wenn Filter-Modal ODER Menü offen ist */
 body[data-filter-modal-open="1"],
 body[data-menu-open="1"] {
   overflow: hidden;
@@ -1642,32 +1621,16 @@ body[data-menu-open="1"] {
    ========================================= */
 
 @keyframes tilla-bob {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-2px) rotate(-2deg);
-  }
-  50% {
-    transform: translateY(-3px) rotate(2.5deg);
-  }
-  75% {
-    transform: translateY(-2px) rotate(-1.5deg);
-  }
-  100% {
-    transform: translateY(0) rotate(0);
-  }
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(-2deg); }
+  50% { transform: translateY(-3px) rotate(2.5deg); }
+  75% { transform: translateY(-2px) rotate(-1.5deg); }
+  100% { transform: translateY(0) rotate(0); }
 }
 
 @keyframes tilla-card-in {
-  0% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .tilla-sidebar-section {
@@ -1693,9 +1656,7 @@ body[data-menu-open="1"] {
   border-color: rgba(148, 163, 184, 0.45);
 }
 
-.tilla-sidebar-avatar {
-  flex: 0 0 auto;
-}
+.tilla-sidebar-avatar { flex: 0 0 auto; }
 
 .tilla-sidebar-avatar img {
   display: block;
@@ -1705,9 +1666,7 @@ body[data-menu-open="1"] {
   animation: tilla-bob 3.5s ease-in-out infinite;
 }
 
-.tilla-sidebar-text {
-  flex: 1 1 auto;
-}
+.tilla-sidebar-text { flex: 1 1 auto; }
 
 #tilla-sidebar-text {
   margin: 0;
@@ -1775,9 +1734,7 @@ body[data-menu-open="1"] {
   backdrop-filter: blur(14px);
 }
 
-.bottom-nav-indicator {
-  display: none;
-}
+.bottom-nav-indicator { display: none; }
 
 .bottom-nav-item {
   pointer-events: auto;
@@ -1807,13 +1764,9 @@ body[data-menu-open="1"] {
   color: var(--bottom-nav-item-active-color);
 }
 
-.bottom-nav-item:active {
-  transform: translateY(1px);
-}
+.bottom-nav-item:active { transform: translateY(1px); }
 
-.bottom-nav-icon {
-  font-size: 1.1rem;
-}
+.bottom-nav-icon { font-size: 1.1rem; }
 
 /* =========================================
    TOAST
@@ -1894,9 +1847,7 @@ body[data-menu-open="1"] {
   line-height: 1;
 }
 
-.spot-marker {
-  border-radius: var(--radius-pill);
-}
+.spot-marker { border-radius: var(--radius-pill); }
 
 .spot-marker-inner {
   width: 18px;
@@ -1914,10 +1865,7 @@ body[data-menu-open="1"] {
   position: relative;
 }
 
-/* Cluster-Variante des Spot-Markers (mit Zähler) */
-.spot-marker--cluster {
-  position: relative;
-}
+.spot-marker--cluster { position: relative; }
 
 .spot-marker--cluster .spot-marker-inner {
   width: 28px;
@@ -1947,40 +1895,22 @@ body[data-menu-open="1"] {
   );
 }
 
-.pin-pop {
-  animation: pin-pop 0.22s ease-out;
-}
+.pin-pop { animation: pin-pop 0.22s ease-out; }
 
 @keyframes pin-pop {
-  0% {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-  80% {
-    transform: scale(1.08);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(0.6); opacity: 0; }
+  80% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
 }
 
-/* Attribution – leicht nach links und etwas vom Rand weg */
 .leaflet-control-attribution {
   bottom: 4px !important;
   right: 12px !important;
   font-size: 10px;
 }
 
-/* Popup */
-
-.popup strong {
-  font-size: 14px;
-}
-
-.popup small {
-  font-size: 13px;
-}
+.popup strong { font-size: 14px; }
+.popup small { font-size: 13px; }
 
 .popup-actions {
   margin-top: 4px;
@@ -1999,7 +1929,6 @@ body[data-menu-open="1"] {
   box-shadow: var(--elevation-xs);
 }
 
-/* Radius-Kreis auf Accent */
 .radius-circle {
   stroke: var(--radius-circle-stroke);
   stroke-width: 2;
@@ -2037,9 +1966,7 @@ hr {
   color: var(--text-soft);
 }
 
-.fsm-onboarding-hint__text {
-  margin: 0;
-}
+.fsm-onboarding-hint__text { margin: 0; }
 
 [data-theme="dark"] .fsm-onboarding-hint {
   background: rgba(15, 23, 42, 0.98);
@@ -2063,24 +1990,15 @@ hr {
   list-style-type: decimal;
 }
 
-.fsm-onboarding-hint__list li {
-  margin: 0 0 2px;
-}
+.fsm-onboarding-hint__list li { margin: 0 0 2px; }
+.fsm-onboarding-hint__list li:last-child { margin-bottom: 0; }
 
-.fsm-onboarding-hint__list li:last-child {
-  margin-bottom: 0;
-}
-
-/* Close-Button im Hinweis komplett ausblenden */
 .fsm-onboarding-hint__close,
 .fsm-onboarding-hint-close {
   display: none !important;
 }
 
-/* Wenn der Hinweis per JS versteckt wird */
-.fsm-onboarding-hint--hidden {
-  display: none;
-}
+.fsm-onboarding-hint--hidden { display: none; }
 
 /* =========================================
    LANDSCAPE-WARNUNG (MOBILE)
@@ -2101,9 +2019,7 @@ hr {
 }
 
 @media (orientation: landscape) and (max-width: 900px) {
-  .landscape-warning {
-    display: block;
-  }
+  .landscape-warning { display: block; }
 }
 
 /* =========================================
@@ -2128,245 +2044,4 @@ hr {
 /* Tilla soll sich immer bewegen – auch bei reduced motion */
 .tilla-sidebar-avatar img {
   animation: tilla-bob 3.5s ease-in-out infinite !important;
-}
-
-/* ============================================================
-   Corporate Refine — Drop-in Overrides (PERFEKTIONIERUNG)
-   (bewusst am Ende: überschreibt sauber ohne Breaking Changes)
-   ============================================================ */
-
-:root {
-  /* Interaction / Motion tokens */
-  --dur-fast: 120ms;
-  --dur: 160ms;
-  --dur-slow: 220ms;
-  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
-
-  /* Unified focus ring */
-  --focus-inner: #ffffff;
-  --focus-outer: rgba(245, 158, 11, 0.92);
-  --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
-
-  /* Neutral border */
-  --border-neutral: 1px solid rgba(148, 163, 184, 0.36);
-  --border-neutral-soft: 1px solid rgba(148, 163, 184, 0.24);
-}
-
-[data-theme="dark"] {
-  --focus-inner: rgba(2, 6, 23, 0.9);
-  --focus-outer: rgba(245, 158, 11, 0.85);
-  --border-neutral: 1px solid rgba(148, 163, 184, 0.6);
-  --border-neutral-soft: 1px solid rgba(148, 163, 184, 0.45);
-}
-
-/* Universal interactive ergonomics (mobile) */
-:where(
-  button,
-  .btn,
-  .btn-ghost,
-  .btn-play-idea,
-  .btn-icon,
-  .mood-chip,
-  .travel-chip,
-  .compass-mode-chip,
-  .tag-filter-chip
-) {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-/* Focus Visible — consistent everywhere */
-:where(
-  button,
-  .language-switcher,
-  .btn-icon,
-  .btn,
-  .btn-ghost,
-  .btn-play-idea,
-  .mood-chip,
-  .travel-chip,
-  .compass-mode-chip,
-  .tag-filter-chip,
-  .bottom-nav-item,
-  .input,
-  select.input,
-  textarea.input,
-  .filter-group--checkbox input[type="checkbox"]
-):focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
-/* Buttons — unify primary + play-idea behavior */
-:where(.btn, .btn-play-idea) {
-  line-height: 1;
-  text-decoration: none;
-  font-weight: 650;
-
-  transition:
-    background-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out),
-    opacity var(--dur-fast) var(--ease-out);
-}
-
-@supports (background-color: color-mix(in oklab, white, black)) {
-  :where(.btn, .btn-play-idea):hover {
-    background-color: color-mix(in oklab, var(--accent), white 10%);
-  }
-}
-
-:where(.btn, .btn-play-idea):active {
-  opacity: 0.98;
-}
-
-/* Disabled states */
-:where(.btn, .btn-play-idea, .btn-ghost, .btn-icon):disabled,
-:where(.btn, .btn-play-idea, .btn-ghost, .btn-icon)[aria-disabled="true"] {
-  cursor: not-allowed;
-  opacity: 0.55;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* Neutral pill buttons — consolidate */
-:where(
-  .btn-secondary,
-  .sidebar-section-close,
-  #filter-modal-close,
-  .spot-details-route-link,
-  .favorite-toggle,
-  .popup-link,
-  .app-menu-item
-) {
-  background: var(--surface-0);
-  color: var(--text-strong, #111827);
-  border: var(--border-neutral);
-  box-shadow: var(--elevation-xs);
-
-  transition:
-    background-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
-}
-
-:where(
-  .btn-secondary,
-  .sidebar-section-close,
-  #filter-modal-close,
-  .spot-details-route-link,
-  .favorite-toggle,
-  .popup-link,
-  .app-menu-item
-):hover {
-  background: var(--surface-1);
-  box-shadow: var(--elevation-sm);
-}
-
-:where(
-  .btn-secondary,
-  .sidebar-section-close,
-  #filter-modal-close,
-  .spot-details-route-link,
-  .favorite-toggle,
-  .popup-link,
-  .app-menu-item
-):active {
-  background: var(--surface-2);
-  transform: translateY(1px);
-  box-shadow: var(--elevation-xs);
-}
-
-[data-theme="dark"]
-  :where(
-    .btn-secondary,
-    .sidebar-section-close,
-    #filter-modal-close,
-    .spot-details-route-link,
-    .favorite-toggle,
-    .popup-link,
-    .app-menu-item
-  ) {
-  background: rgba(15, 23, 42, 0.98);
-  color: #e5e7eb;
-  border: var(--border-neutral);
-  box-shadow: var(--elevation-sm);
-}
-
-[data-theme="dark"]
-  :where(
-    .btn-secondary,
-    .sidebar-section-close,
-    #filter-modal-close,
-    .spot-details-route-link,
-    .favorite-toggle,
-    .popup-link,
-    .app-menu-item
-  ):hover {
-  background: rgba(30, 41, 59, 0.92);
-}
-
-/* Ghost: slightly clearer hover */
-.btn-ghost:hover {
-  background-color: rgba(15, 23, 42, 0.05);
-  border-color: rgba(148, 163, 184, 0.34);
-}
-
-/* Inputs — hover + consistent transitions */
-:where(.input, textarea.input, select.input) {
-  transition:
-    border-color var(--dur) var(--ease-out),
-    box-shadow var(--dur) var(--ease-out),
-    background-color var(--dur) var(--ease-out);
-}
-
-:where(.input, textarea.input, select.input):hover {
-  border-color: rgba(148, 163, 184, 0.55);
-}
-
-/* Select — add a crisp chevron (iOS-friendly) */
-select.input {
-  padding-right: 2.35rem;
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(15, 23, 42, 0.55) 50%),
-    linear-gradient(135deg, rgba(15, 23, 42, 0.55) 50%, transparent 50%);
-  background-position:
-    calc(100% - 18px) 50%,
-    calc(100% - 12px) 50%;
-  background-size: 6px 6px;
-  background-repeat: no-repeat;
-}
-
-[data-theme="dark"] select.input {
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(229, 231, 235, 0.7) 50%),
-    linear-gradient(135deg, rgba(229, 231, 235, 0.7) 50%, transparent 50%);
-}
-
-/* Chips — slightly more premium feedback */
-:where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip) {
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
-    border-color var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
-}
-
-:where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip):hover {
-  border-color: rgba(148, 163, 184, 0.65);
-}
-
-:where(
-  .mood-chip--active,
-  .travel-chip--active,
-  .compass-mode-chip--active,
-  .tag-filter-chip--active
-) {
-  box-shadow: var(--elevation-xs);
-}
-
-/* Cards — unify hover elevation */
-:where(.spot-card, .daylog-entry):hover,
-:where(.spot-card, .daylog-entry):focus-within {
-  box-shadow: var(--elevation-md);
 }
