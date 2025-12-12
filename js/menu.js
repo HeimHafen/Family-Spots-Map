@@ -1,3 +1,6 @@
+// js/menu.js
+// Menü-Dialog + Sprachchips + "Zur Spot-Liste springen" (ohne Inline-JS)
+
 (function () {
   const menuToggle = document.getElementById("menu-toggle");
   const menu = document.getElementById("app-menu");
@@ -29,7 +32,9 @@
   if (menu) {
     menu.addEventListener("click", (event) => {
       const target = event.target;
-      if (target && target.closest("[data-menu-close]")) closeMenu();
+      if (target && target.closest("[data-menu-close]")) {
+        closeMenu();
+      }
     });
   }
 
@@ -37,7 +42,19 @@
     if (event.key === "Escape") closeMenu();
   });
 
-  // Sprachchips → bestehenden Language-Switcher benutzen
+  // "Zur Spot-Liste springen"
+  const skipBtn = document.getElementById("btn-skip-spots");
+  if (skipBtn) {
+    skipBtn.addEventListener("click", () => {
+      const sel = skipBtn.getAttribute("data-scroll-target") || "#spots-title";
+      const el = document.querySelector(sel);
+      if (el && typeof el.scrollIntoView === "function") {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+
+  // Sprachchips → bestehenden (versteckten) Language-Switcher benutzen
   const langOrder = ["de", "da", "en"];
 
   function getCurrentLang() {
@@ -50,7 +67,6 @@
     document.querySelectorAll(".app-menu-lang-chip").forEach((btn) => {
       const isActive = btn.dataset.langTarget === current;
       btn.classList.toggle("app-menu-lang-chip--active", isActive);
-      btn.setAttribute("aria-pressed", String(isActive));
     });
   }
 
