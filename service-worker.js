@@ -1,8 +1,12 @@
 // service-worker.js
 
-const CACHE_VERSION = "2";
+const CACHE_VERSION = "3";
 const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
+
+// OPTIONAL: Wenn du components/theme nutzt, ergänzen:
+// "css/components.css",
+// "css/theme.css",
 
 const ASSETS = [
   "./",
@@ -30,87 +34,156 @@ const ASSETS = [
   "data/partner-codes.json",
   "assets/logo.svg",
   "assets/icons/icon-192.png",
-  "assets/icons/icon-512.png"
+  "assets/icons/icon-512.png",
 ];
+
+function isSameOrigin(url) {
+  return url.origin === self.location.origin;
+}
+
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), ms)),
+  ]);
+}
 
 // 📦 Install: Pre-cache App Shell
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) =>
-      Promise.all(
-        ASSETS.map((asset) =>
-          cache.add(asset).catch((err) => {
-            console.warn("[SW] Asset konnte nicht geladen werden:", asset);
-          })
-        )
-      )
-    )
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
+      // addAll bricht beim ersten Fehler ab -> wir machen “best effort”
+      await Promise.allSettled(
+        ASSETS.map((asset) => cache.add(asset))
+      );
+
+      // Stelle sicher, dass offline.html wirklich drin ist
+      await cache.add(OFFLINE_URL).catch(() => {});
+    })()
   );
+
   self.skipWaiting();
 });
 
-// 🔄 Activate: Clean up old caches
+// 🔄 Activate: Clean up old caches + enable navigation preload
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
-      )
-    )
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)));
+
+      if (self.registration.navigationPreload) {
+        await self.registration.navigationPreload.enable();
+      }
+
+      await self.clients.claim();
+    })()
   );
-  self.clients.claim();
+});
+
+// Optional: per postMessage sofort aktivieren
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 // 🌐 Fetch handler
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
-  const { request } = event;
+  const request = event.request;
   const url = new URL(request.url);
 
   // Nur gleiche Origin cachen
-  if (url.origin !== location.origin) return;
+  if (!isSameOrigin(url)) return;
 
-  // 🔄 JSON: Network first
-  if (url.pathname.endsWith(".json")) {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          return caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, response.clone());
-            return response;
-          });
-        })
-        .catch(() => caches.match(request))
-    );
-    return;
-  }
-
-  // 🧭 Navigations-Anfragen → offline.html fallback
+  // 🧭 Navigation → network first + offline fallback (+ preload)
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request).catch(() => caches.match(OFFLINE_URL))
+      (async () => {
+        try {
+          const preload = await event.preloadResponse;
+          if (preload) return preload;
+
+          const res = await fetch(request);
+          return res;
+        } catch {
+          const cachedOffline = await caches.match(OFFLINE_URL);
+          return (
+            cachedOffline ||
+            new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } })
+          );
+        }
+      })()
     );
     return;
   }
 
-  // 📁 Andere Assets: Cache first + stale-while-revalidate
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      const fetchAndUpdate = fetch(request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, response.clone());
-            });
-          }
-          return response;
-        })
-        .catch(() => null); // still return cached
+  // 🔄 JSON: network first (mit Fallback)
+  if (url.pathname.endsWith(".json")) {
+    event.respondWith(
+      (async () => {
+        try {
+          // optional: Timeout, damit es sich offline nicht “aufhängt”
+          const res = await withTimeout(fetch(request), 3500);
 
-      return cached || fetchAndUpdate;
-    })
+          if (res && res.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(request, res.clone());
+          }
+          return res;
+        } catch {
+          const cached = await caches.match(request);
+          return (
+            cached ||
+            new Response("Offline / JSON not cached", {
+              status: 503,
+              headers: { "Content-Type": "text/plain" },
+            })
+          );
+        }
+      })()
+    );
+    return;
+  }
+
+  // 📁 Andere Assets: stale-while-revalidate (Cache first + Update im Hintergrund)
+  event.respondWith(
+    (async () => {
+      const cached = await caches.match(request);
+
+      const updatePromise = (async () => {
+        try {
+          const res = await fetch(request);
+          if (res && res.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            await cache.put(request, res.clone());
+          }
+        } catch {
+          // ignore
+        }
+      })();
+
+      // wichtig: Update darf im Hintergrund fertig laufen
+      event.waitUntil(updatePromise);
+
+      // niemals null zurückgeben
+      if (cached) return cached;
+
+      // wenn nichts im Cache: versuch network, sonst fallback response
+      try {
+        const res = await fetch(request);
+        if (res && res.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put(request, res.clone());
+        }
+        return res;
+      } catch {
+        return new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } });
+      }
+    })()
   );
 });
