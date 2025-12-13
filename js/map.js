@@ -25,6 +25,64 @@ export function hasValidLatLng(spot) {
 }
 
 /**
+ * Liefert einen sinnvollen a11y-Label-Text für Marker (ohne externe Imports).
+ */
+function getSpotA11yLabel(spot) {
+  return String(
+    spot?.title ||
+      spot?.name ||
+      spot?.spotName ||
+      (spot?.id != null ? spot.id : "Spot")
+  );
+}
+
+/**
+ * Macht einen Marker per Tastatur erreichbar und bindet Click/Keyboard-Action.
+ * - setzt tabindex, role, aria-label sobald das DOM-Element existiert
+ * - Enter/Space triggert focusSpotOnMap(spot)
+ */
+function makeMarkerAccessible(marker, spot, focusSpotOnMap) {
+  // Click bleibt auf Leaflet-Ebene (funktioniert mit Cluster/LayerGroup sauber)
+  if (typeof focusSpotOnMap === "function") {
+    marker.on("click", () => focusSpotOnMap(spot));
+  }
+
+  marker.on("add", () => {
+    const el = marker.getElement?.();
+    if (!el) return;
+
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("role", "button");
+    el.setAttribute("aria-label", getSpotA11yLabel(spot));
+
+    // Keydown direkt am DOM-Element (robuster als Leaflet-"keypress")
+    if (typeof focusSpotOnMap === "function") {
+      const onKeyDown = (e) => {
+        const key = e?.key;
+        if (key === "Enter" || key === " " || key === "Space" || key === "Spacebar") {
+          // Space würde sonst bei vielen Browsern scrollen
+          e.preventDefault?.();
+          focusSpotOnMap(spot);
+        }
+      };
+
+      // Handler merken, damit wir ihn beim Entfernen wieder lösen können
+      marker._a11yKeyDownHandler = onKeyDown;
+      el.addEventListener("keydown", onKeyDown);
+    }
+  });
+
+  marker.on("remove", () => {
+    const el = marker.getElement?.();
+    const h = marker._a11yKeyDownHandler;
+    if (el && h) {
+      el.removeEventListener("keydown", h);
+    }
+    marker._a11yKeyDownHandler = null;
+  });
+}
+
+/**
  * Initialisiert die Leaflet-Karte und den Marker-Layer.
  * Wenn das MarkerCluster-Plugin verfügbar ist, wird ein Cluster-Layer genutzt,
  * sonst fällt die Funktion auf ein einfaches LayerGroup zurück.
@@ -74,7 +132,7 @@ export function initMap({ center, zoom }) {
  * - nutzt den übergebenen markersLayer (Cluster oder LayerGroup)
  * - maxMarkers dient nur noch als Schwellenwert für einen Hinweis-Toast,
  *   es werden aber trotzdem alle Spots gerendert
- * - ruft bei Klick/Enter focusSpotOnMap(spot) auf
+ * - ruft bei Klick/Enter/Space focusSpotOnMap(spot) auf
  * - gibt zurück, ob der Marker-Limit-Toast bereits gezeigt wurde
  */
 export function renderMarkers({
@@ -116,21 +174,18 @@ export function renderMarkers({
 
     const marker = L.marker([spot.lat, spot.lng], { icon });
 
-    if (typeof focusSpotOnMap === "function") {
-      marker.on("click", () => focusSpotOnMap(spot));
-      marker.on("keypress", (ev) => {
-        const key = ev.originalEvent && ev.originalEvent.key;
-        if (key === "Enter" || key === " " || key === "Spacebar") {
-          focusSpotOnMap(spot);
-        }
-      });
-    }
+    // NEU: a11y + Interaktion kapseln
+    makeMarkerAccessible(marker, spot, focusSpotOnMap);
 
     markersLayer.addLayer(marker);
   });
 
   // Hinweis-Toast, wenn sehr viele Marker gerendert werden
-  if (tooManyMarkers && !hasShownMarkerLimitToast && typeof showToast === "function") {
+  if (
+    tooManyMarkers &&
+    !hasShownMarkerLimitToast &&
+    typeof showToast === "function"
+  ) {
     showToast("toast_marker_limit");
     hasShownMarkerLimitToast = true;
   }
