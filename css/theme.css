@@ -1,6 +1,7 @@
 /* =========================================
    theme.css — Light & Dark Design Tokens
-   Playful Warm v2 (Premium Dark) — muted warm, a bit darker (Menu-Button bleibt wie bisher)
+   Playful Warm v2 (Premium Dark) — muted warm
+   Tilla-aligned: Primary = Tilla-Orange, Secondary = Tilla-Grün
    ========================================= */
 
 /* =========================================================
@@ -10,12 +11,16 @@
   color-scheme: light;
 
   /* ================================
-     Brand / Accent System (muted warm)
+     Tilla Brand Pair (Primary + Secondary)
      ================================ */
-  /* Warm, aber nicht knallig */
-  --accent-h: 26;
+  --tilla-orange-h: 26; /* Primary (Orange) */
+  --tilla-green-h: 145; /* Secondary (Green) */
 
-  /* Pastel/Muted: Sättigung moderat, Lightness etwas reduziert */
+  /* ================================
+     Brand / Accent System (Primary = Tilla Orange)
+     ================================ */
+  --accent-h: var(--tilla-orange-h);
+
   --accent: hsl(var(--accent-h), 72%, 50%);
   --accent-light: hsl(var(--accent-h), 68%, 60%);
   --accent-dark: hsl(var(--accent-h), 70%, 38%);
@@ -24,6 +29,29 @@
   --accent-soft: hsl(var(--accent-h), 58%, 90%);
   --accent-soft-hover: hsl(var(--accent-h), 56%, 84%);
   --accent-strong: hsl(var(--accent-h), 62%, 42%);
+
+  /* ================================
+     Secondary (Tilla Green) — for Verified/Success/Nature accents
+     ================================ */
+  --tilla-green: hsl(var(--tilla-green-h), 46%, 42%);
+  --tilla-green-light: hsl(var(--tilla-green-h), 46%, 52%);
+  --tilla-green-soft: hsl(var(--tilla-green-h), 44%, 90%);
+
+  /* Semantic helpers */
+  --success: var(--tilla-green);
+  --success-soft: var(--tilla-green-soft);
+
+  /* ================================
+     Warm tokens for header/chips/dividers (drives components.css mapping)
+     ================================ */
+  --tilla-warm-0: #f7e1d0; /* helles Sand/Creme */
+  --tilla-warm-1: #e7bf9f; /* muted Peach/Sand */
+  --tilla-warm-2: #d49a6a; /* warmes Tan (gedämpft) */
+  --tilla-warm-3: #c98655; /* tieferes Tan (gedämpft) */
+
+  --tilla-surface-warm: #f5e3d4; /* Card/Panel warm */
+  --tilla-chip-warm: #f1dfcf; /* Chips warm-neutral */
+  --tilla-divider-warm: hsla(28, 24%, 40%, 0.22);
 
   /* ================================
      Semantic Color Tokens
@@ -36,13 +64,13 @@
   --on-dark: hsl(32, 100%, 95%);
   --on-light: hsl(222, 47%, 11%);
 
-  /* Surfaces (warm cream -> biscuit) — dunkler als vorher, ohne orange zu pushen */
+  /* Surfaces (warm cream -> biscuit) */
   --surface-0: hsl(32, 68%, 93%);
   --surface-1: hsla(32, 64%, 91%, 0.98);
   --surface-2: hsla(32, 60%, 88%, 0.98);
   --surface-3: hsla(31, 56%, 85%, 0.98);
 
-  /* Borders (minimal kräftiger für mehr Tiefe) */
+  /* Borders */
   --border-1: hsla(28, 40%, 28%, 0.18);
   --border-2: hsla(28, 40%, 28%, 0.24);
 
@@ -65,7 +93,7 @@
   --focus-outer: hsla(var(--accent-h), 72%, 50%, 0.55);
   --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
 
-  /* Backgrounds / Effects — insgesamt dunkler/ruhiger (weniger “heller Schleier”) */
+  /* Backgrounds / Effects */
   --bg-app:
     radial-gradient(circle at 18% 0%, hsla(var(--accent-h), 72%, 54%, 0.18), transparent 58%),
     radial-gradient(circle at 88% 22%, hsla(30, 70%, 58%, 0.10), transparent 54%),
@@ -93,7 +121,7 @@
   --chip-shadow: var(--elev-1);
   --chip-hover-shadow: 0 10px 26px hsla(26, 45%, 24%, 0.18);
 
-  /* Inputs etwas dunkler, damit weniger “weiß/hell” wirkt */
+  /* Inputs etwas dunkler */
   --input-bg: hsl(32, 58%, 88%);
   --input-shadow: 0 4px 10px hsla(26, 45%, 24%, 0.14);
 
@@ -103,19 +131,18 @@
 
   --toast-bg: hsla(var(--accent-h), 52%, 24%, 0.96);
 
-  /* Header tokens (Menu-Button-Farbe/Optik bleibt aus components.css) */
+  /* Header tokens (Menu-Button-Farbe/Optik bleibt wie bisher) */
   --header-bg-top: hsl(32, 64%, 92%);
   --header-bg-bottom: hsl(28, 60%, 86%);
   --header-shadow: var(--elev-3);
   --header-text-color: var(--text-3);
 
-  /* Tagline warm, aber etwas weniger “hell” */
   --header-tagline-bg: hsla(26, 52%, 88%, 0.92);
   --header-tagline-color: hsl(26, 40%, 22%);
   --header-tagline-shadow: var(--elev-2);
 
   /* WICHTIG: nicht anfassen, Menu-Button soll so bleiben.
-     (In deinem components.css wird --header-icon-bg im Light-Header sowieso lokal überschrieben.) */
+     (In components.css wird --header-icon-bg im Light-Header lokal überschrieben.) */
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
     hsl(30, 80%, 90%) 0%,
@@ -128,13 +155,13 @@
   --language-pill-bg: hsla(32, 60%, 90%, 0.92);
   --language-pill-shadow: var(--elev-1);
 
-  /* Sidebar insgesamt etwas dunkler */
+  /* Sidebar */
   --sidebar-bg: hsl(32, 44%, 86%);
   --sidebar-section-bg: var(--surface-1);
   --sidebar-section-shadow: var(--elev-2);
   --sidebar-section-border: var(--border-1);
 
-  /* Bottom nav weniger hell/leuchtend */
+  /* Bottom nav */
   --bottom-nav-backdrop: hsla(var(--accent-h), 54%, 74%, 0.62);
   --bottom-nav-item-bg: var(--surface-1);
   --bottom-nav-item-color: hsl(26, 22%, 30%);
@@ -198,6 +225,14 @@ body[data-theme="dark"],
   /* Dark accent surfaces alpha-based (muted) */
   --accent-soft: hsla(var(--accent-h), 72%, 50%, 0.18);
   --accent-soft-hover: hsla(var(--accent-h), 72%, 50%, 0.24);
+
+  /* Secondary (Tilla Green) in Dark */
+  --tilla-green: hsl(var(--tilla-green-h), 46%, 52%);
+  --tilla-green-light: hsl(var(--tilla-green-h), 46%, 62%);
+  --tilla-green-soft: hsla(var(--tilla-green-h), 46%, 52%, 0.18);
+
+  --success: var(--tilla-green);
+  --success-soft: var(--tilla-green-soft);
 
   --filter-map: grayscale(0.35) sepia(0.26) brightness(0.78)
     contrast(1.05) saturate(0.9) hue-rotate(-14deg);
@@ -305,6 +340,14 @@ body[data-theme="dark"],
 
     --accent-soft: hsla(var(--accent-h), 72%, 50%, 0.18);
     --accent-soft-hover: hsla(var(--accent-h), 72%, 50%, 0.24);
+
+    /* Secondary (Tilla Green) in Dark fallback */
+    --tilla-green: hsl(var(--tilla-green-h), 46%, 52%);
+    --tilla-green-light: hsl(var(--tilla-green-h), 46%, 62%);
+    --tilla-green-soft: hsla(var(--tilla-green-h), 46%, 52%, 0.18);
+
+    --success: var(--tilla-green);
+    --success-soft: var(--tilla-green-soft);
 
     --filter-map: grayscale(0.35) sepia(0.26) brightness(0.78)
       contrast(1.05) saturate(0.9) hue-rotate(-14deg);
