@@ -78,6 +78,10 @@ export function renderSpotList(spots, options) {
     title.className = "spot-card-title";
     title.textContent = spot.name || spot.title || "Spot";
 
+    // NEU: a11y für Card
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", title.textContent || "Spot");
+
     const meta = document.createElement("div");
     meta.className = "spot-card-meta";
 
@@ -138,6 +142,11 @@ export function renderSpotList(spots, options) {
     const favIcon = document.createElement("span");
     favIcon.className = "spot-card-fav-icon";
     favIcon.textContent = isFav ? "★" : "☆";
+
+    // NEU: a11y für Fav-Icon
+    favIcon.setAttribute("role", "button");
+    favIcon.setAttribute("aria-pressed", isFav ? "true" : "false");
+
     actionsRow.appendChild(favIcon);
 
     const detailLabel = document.createElement("span");
@@ -161,7 +170,13 @@ export function renderSpotList(spots, options) {
       }
     };
 
-    card.addEventListener("click", onCardSelect);
+    // NEU: keine Doppel-Aktion, wenn innerhalb ein Button geklickt wird
+    card.addEventListener("click", (ev) => {
+      const target = ev.target;
+      if (target.closest("button")) return; // keine Doppel-Aktion
+      onCardSelect();
+    });
+
     card.addEventListener("keypress", (ev) => {
       if (ev.key === "Enter" || ev.key === " ") {
         ev.preventDefault();
@@ -207,14 +222,10 @@ export function renderSpotDetails(spot, options) {
     const mins = Number(spot.visit_minutes);
     if (isDe) {
       visitTimeText =
-        mins >= 180
-          ? `${Math.round(mins / 60)}+ Stunden`
-          : `${mins} Minuten`;
+        mins >= 180 ? `${Math.round(mins / 60)}+ Stunden` : `${mins} Minuten`;
     } else {
       visitTimeText =
-        mins >= 180
-          ? `${Math.round(mins / 60)}+ hours`
-          : `${mins} minutes`;
+        mins >= 180 ? `${Math.round(mins / 60)}+ hours` : `${mins} minutes`;
     }
   }
 
@@ -252,24 +263,10 @@ export function renderSpotDetails(spot, options) {
       <div>
         <h2 class="spot-details-title">${escapeHtml(title)}</h2>
         <div class="spot-details-meta">
-          ${
-            spot.city ? `<span>${escapeHtml(spot.city)}</span>` : ""
-          }
-          ${
-            categoriesText
-              ? `<span>${escapeHtml(categoriesText)}</span>`
-              : ""
-          }
-          ${
-            visitTimeText
-              ? `<span>${escapeHtml(visitTimeText)}</span>`
-              : ""
-          }
-          ${
-            spot.verified
-              ? `<span>${isDe ? "Verifiziert" : "Verified"}</span>`
-              : ""
-          }
+          ${spot.city ? `<span>${escapeHtml(spot.city)}</span>` : ""}
+          ${categoriesText ? `<span>${escapeHtml(categoriesText)}</span>` : ""}
+          ${visitTimeText ? `<span>${escapeHtml(visitTimeText)}</span>` : ""}
+          ${spot.verified ? `<span>${isDe ? "Verifiziert" : "Verified"}</span>` : ""}
         </div>
       </div>
       <div class="spot-details-actions">
@@ -309,25 +306,19 @@ export function renderSpotDetails(spot, options) {
 
     ${
       description
-        ? `<p class="spot-details-description">${escapeHtml(
-            description
-          )}</p>`
+        ? `<p class="spot-details-description">${escapeHtml(description)}</p>`
         : ""
     }
 
     ${
       spot.poetry
-        ? `<p class="spot-details-poetry">„${escapeHtml(
-            spot.poetry
-          )}“</p>`
+        ? `<p class="spot-details-poetry">„${escapeHtml(spot.poetry)}“</p>`
         : ""
     }
 
     ${
       spot.address
-        ? `<p class="spot-details-address">${escapeHtml(
-            spot.address
-          )}</p>`
+        ? `<p class="spot-details-address">${escapeHtml(spot.address)}</p>`
         : ""
     }
 
