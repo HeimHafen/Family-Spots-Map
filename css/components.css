@@ -2179,3 +2179,58 @@ body[data-menu-open="1"] {
 
 @supports (background-color: color-mix(in oklab, white, black)) {
   .spot-marker-inner::after {
+  
+  /* =========================================================
+   TILLA BOOST v4 — Komponenten sichtbar auf Tilla abgestimmt
+   ========================================================= */
+
+/* Tilla-Card: klarer grüner “Signature”-Rand */
+:where(html, body, :root)[data-theme="light"] .tilla-sidebar-card {
+  border-left: 6px solid var(--tilla-green);
+}
+
+/* Play-Idee Button: leichter Green-Accent (ohne Orange zu verlieren) */
+:where(html, body, :root)[data-theme="light"] .btn-play-idea {
+  box-shadow:
+    var(--elevation-sm),
+    0 0 0 2px hsla(var(--tilla-green-h, 145), 46%, 42%, 0.25);
+}
+
+@supports (background: color-mix(in oklab, white, black)) {
+  :where(html, body, :root)[data-theme="light"] .btn-play-idea {
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--accent), var(--tilla-green) 18%),
+      var(--accent)
+    );
+    box-shadow:
+      var(--elevation-md),
+      0 0 0 2px color-mix(in oklab, var(--tilla-green), white 65%);
+  }
+}
+
+/* Section-Titel: kleiner Tilla-Akzent links (wirkt sofort “designed”) */
+:where(html, body, :root)[data-theme="light"] .sidebar-section-title {
+  position: relative;
+  padding-left: 12px;
+}
+
+:where(html, body, :root)[data-theme="light"] .sidebar-section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.22em;
+  bottom: 0.22em;
+  width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, var(--tilla-green), var(--accent));
+  opacity: 0.95;
+}
+
+/* Spot-Cards: Hover bekommt einen Tilla-grünen “Trust”-Touch */
+@supports (background: color-mix(in oklab, white, black)) {
+  :where(html, body, :root)[data-theme="light"] .spot-card:hover,
+  :where(html, body, :root)[data-theme="light"] .spot-card:focus-within {
+    border-color: color-mix(in oklab, var(--tilla-green), rgba(148, 163, 184, 0.4) 55%);
+  }
+}
