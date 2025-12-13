@@ -1,7 +1,7 @@
 /* =========================================
    theme.css — Light & Dark Design Tokens
-   Playful Warm v2 (Premium Dark) — muted warm
    Tilla-aligned: Primary = Tilla-Orange, Secondary = Tilla-Grün
+   Playful Warm v3 (Premium Dark)
    ========================================= */
 
 /* =========================================================
@@ -31,15 +31,21 @@
   --accent-strong: hsl(var(--accent-h), 62%, 42%);
 
   /* ================================
-     Secondary (Tilla Green) — for Verified/Success/Nature accents
+     Secondary (Tilla Green) — Nature/Verified/Trust accents
      ================================ */
   --tilla-green: hsl(var(--tilla-green-h), 46%, 42%);
   --tilla-green-light: hsl(var(--tilla-green-h), 46%, 52%);
+  --tilla-green-dark: hsl(var(--tilla-green-h), 46%, 34%);
   --tilla-green-soft: hsl(var(--tilla-green-h), 44%, 90%);
+  --tilla-green-soft-hover: hsl(var(--tilla-green-h), 42%, 84%);
 
   /* Semantic helpers */
   --success: var(--tilla-green);
   --success-soft: var(--tilla-green-soft);
+
+  /* Soft glows used for “Tilla vibe” (subtle, premium) */
+  --tilla-glow-orange: hsla(var(--tilla-orange-h), 78%, 56%, 0.16);
+  --tilla-glow-green: hsla(var(--tilla-green-h), 52%, 52%, 0.18);
 
   /* ================================
      Warm tokens for header/chips/dividers (drives components.css mapping)
@@ -93,10 +99,11 @@
   --focus-outer: hsla(var(--accent-h), 72%, 50%, 0.55);
   --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
 
-  /* Backgrounds / Effects */
+  /* Backgrounds / Effects — with Tilla green + orange glow */
   --bg-app:
-    radial-gradient(circle at 18% 0%, hsla(var(--accent-h), 72%, 54%, 0.18), transparent 58%),
-    radial-gradient(circle at 88% 22%, hsla(30, 70%, 58%, 0.10), transparent 54%),
+    radial-gradient(circle at 14% -6%, var(--tilla-glow-orange), transparent 58%),
+    radial-gradient(circle at 88% 10%, var(--tilla-glow-green), transparent 56%),
+    radial-gradient(circle at 90% 32%, hsla(30, 70%, 58%, 0.10), transparent 54%),
     linear-gradient(180deg, hsl(32, 68%, 93%), hsl(32, 46%, 84%));
 
   /* Filters */
@@ -142,7 +149,7 @@
   --header-tagline-shadow: var(--elev-2);
 
   /* WICHTIG: nicht anfassen, Menu-Button soll so bleiben.
-     (In components.css wird --header-icon-bg im Light-Header lokal überschrieben.) */
+     (In components.css wird --header-icon-bg im Light-Header sowieso lokal überschrieben.) */
   --header-icon-bg: radial-gradient(
     circle at 30% 20%,
     hsl(30, 80%, 90%) 0%,
@@ -217,8 +224,13 @@ body[data-theme="dark"],
   --focus-outer: hsla(var(--accent-h), 72%, 54%, 0.45);
   --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
 
+  /* Glows (dark) */
+  --tilla-glow-orange: hsla(var(--tilla-orange-h), 78%, 56%, 0.16);
+  --tilla-glow-green: hsla(var(--tilla-green-h), 52%, 52%, 0.16);
+
   --bg-app:
-    radial-gradient(circle at 35% -10%, hsla(var(--accent-h), 78%, 54%, 0.18), transparent 55%),
+    radial-gradient(circle at 35% -10%, var(--tilla-glow-orange), transparent 55%),
+    radial-gradient(circle at 88% 10%, var(--tilla-glow-green), transparent 55%),
     radial-gradient(circle at 90% 20%, hsla(34, 80%, 66%, 0.07), transparent 50%),
     linear-gradient(180deg, hsl(228, 50%, 6%), hsl(229, 60%, 5%));
 
@@ -229,7 +241,9 @@ body[data-theme="dark"],
   /* Secondary (Tilla Green) in Dark */
   --tilla-green: hsl(var(--tilla-green-h), 46%, 52%);
   --tilla-green-light: hsl(var(--tilla-green-h), 46%, 62%);
+  --tilla-green-dark: hsl(var(--tilla-green-h), 46%, 40%);
   --tilla-green-soft: hsla(var(--tilla-green-h), 46%, 52%, 0.18);
+  --tilla-green-soft-hover: hsla(var(--tilla-green-h), 46%, 52%, 0.24);
 
   --success: var(--tilla-green);
   --success-soft: var(--tilla-green-soft);
@@ -333,18 +347,23 @@ body[data-theme="dark"],
     --focus-outer: hsla(var(--accent-h), 72%, 54%, 0.45);
     --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
 
+    --tilla-glow-orange: hsla(var(--tilla-orange-h), 78%, 56%, 0.16);
+    --tilla-glow-green: hsla(var(--tilla-green-h), 52%, 52%, 0.16);
+
     --bg-app:
-      radial-gradient(circle at 35% -10%, hsla(var(--accent-h), 78%, 54%, 0.18), transparent 55%),
+      radial-gradient(circle at 35% -10%, var(--tilla-glow-orange), transparent 55%),
+      radial-gradient(circle at 88% 10%, var(--tilla-glow-green), transparent 55%),
       radial-gradient(circle at 90% 20%, hsla(34, 80%, 66%, 0.07), transparent 50%),
       linear-gradient(180deg, hsl(228, 50%, 6%), hsl(229, 60%, 5%));
 
     --accent-soft: hsla(var(--accent-h), 72%, 50%, 0.18);
     --accent-soft-hover: hsla(var(--accent-h), 72%, 50%, 0.24);
 
-    /* Secondary (Tilla Green) in Dark fallback */
     --tilla-green: hsl(var(--tilla-green-h), 46%, 52%);
     --tilla-green-light: hsl(var(--tilla-green-h), 46%, 62%);
+    --tilla-green-dark: hsl(var(--tilla-green-h), 46%, 40%);
     --tilla-green-soft: hsla(var(--tilla-green-h), 46%, 52%, 0.18);
+    --tilla-green-soft-hover: hsla(var(--tilla-green-h), 46%, 52%, 0.24);
 
     --success: var(--tilla-green);
     --success-soft: var(--tilla-green-soft);
