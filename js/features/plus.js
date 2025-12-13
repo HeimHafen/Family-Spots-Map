@@ -31,7 +31,7 @@ void SUBSCRIPTIONS;
  * @property {boolean} active          - Ist Plus aktuell aktiv (unter Berücksichtigung Ablauf)?
  * @property {string|null} plan        - z. B. "family_plus"
  * @property {string|null} validUntil  - ISO-String (Ende der Laufzeit)
- * @property {string[]|null} addons    - optionale Add-ons (IDs, z. B. ["addon_rv", "addon_abf"])
+ * @property {string[]|null} addons    - optionale Add-ons (IDs, z. B. ["addon_rv", "addon_water"])
  * @property {string|null} partner     - z. B. "Campingplatz XY"
  * @property {string|null} source      - z. B. "partner", "store", "dev"
  */
@@ -44,8 +44,8 @@ void SUBSCRIPTIONS;
  * @property {string} [partner]
  * @property {string} [source]
  * @property {boolean} [enabled]
- * @property {string[]} [addons]      - z. B. ["addon_rv", "addon_abf"]
- * @property {string} [addonId]       - Single-Add-on-ID, z. B. "addon_abf"
+ * @property {string[]} [addons]      - z. B. ["addon_rv", "addon_water"]
+ * @property {string} [addonId]       - Single-Add-on-ID, z. B. "addon_water"
  * @property {string} [validUntil]    - ISO-String (falls feste Laufzeit)
  */
 
@@ -277,7 +277,7 @@ export function isPlusCategory(slug) {
 
 /**
  * Prüft, ob ein bestimmtes Add-on beim aktuellen Nutzer aktiv ist,
- * z. B. "addon_abf" für dein Messe-Add-on.
+ * z. B. "addon_water".
  *
  * @param {string} addonId
  * @param {NormalizedPlusStatus} [status]
@@ -322,10 +322,7 @@ export function hasAddonForCategory(slug, status = getPlusStatus()) {
  */
 export function formatPlusStatus(status = getPlusStatus()) {
   if (!status) {
-    return t(
-      "plus_status_inactive",
-      "Family Spots Plus ist nicht aktiviert."
-    );
+    return t("plus_status_inactive", "Family Spots Plus ist nicht aktiviert.");
   }
 
   const untilIso = status.validUntil;
@@ -341,16 +338,10 @@ export function formatPlusStatus(status = getPlusStatus()) {
         day: "2-digit"
       });
 
-      return t(
-        "plus_status_expired",
-        `Family Spots Plus ist abgelaufen am ${dateStr}.`
-      );
+      return t("plus_status_expired", `Family Spots Plus ist abgelaufen am ${dateStr}.`);
     }
 
-    return t(
-      "plus_status_inactive",
-      "Family Spots Plus ist nicht aktiviert."
-    );
+    return t("plus_status_inactive", "Family Spots Plus ist nicht aktiviert.");
   }
 
   // Aktiv, aber ohne sinnvolles Datum
@@ -365,10 +356,7 @@ export function formatPlusStatus(status = getPlusStatus()) {
     day: "2-digit"
   });
 
-  return t(
-    "plus_status_active_until",
-    `Family Spots Plus ist aktiv bis ${dateStr}.`
-  );
+  return t("plus_status_active_until", `Family Spots Plus ist aktiv bis ${dateStr}.`);
 }
 
 // ---------------------------------------
@@ -387,8 +375,8 @@ export function formatPlusStatus(status = getPlusStatus()) {
  *       "plan": "family_plus",
  *       "partner": "Dev",
  *       "source": "partner",
- *       "addons": ["addon_rv", "addon_water", "addon_abf"], // optional
- *       "validUntil": "2026-12-31T23:59:59.000Z",           // optional
+ *       "addons": ["addon_rv", "addon_water"],             // optional
+ *       "validUntil": "2026-12-31T23:59:59.000Z",          // optional
  *       "enabled": true                                     // optional
  *     }
  *   ]
@@ -439,12 +427,6 @@ async function loadPartnerCodes() {
  *  - "not_found"    → Code unbekannt oder deaktiviert
  *  - "invalid_days" → Weder gültiges validUntil noch gültige days
  *
- * Typische Beispiele:
- *  - Voller Plus-Zeitraum:
- *      { code: "ABF2025", days: 14, plan: "family_plus" }
- *  - Nur Messe-Add-on (ABF):
- *      { code: "ABFHALLE25", days: 7, addons: ["addon_abf"] }
- *
  * @param {string} rawCode
  * @returns {Promise<PartnerCodeResult>}
  */
@@ -492,10 +474,7 @@ export async function redeemPartnerCode(rawCode) {
   const validUntilIso = validUntilDate.toISOString();
 
   // optionale Add-ons aus dem Code übernehmen (inkl. Filterung auf bekannte IDs)
-  const normalizedAddons = normalizeAndFilterAddons(
-    entry.addons,
-    entry.addonId
-  );
+  const normalizedAddons = normalizeAndFilterAddons(entry.addons, entry.addonId);
 
   // Im Storage-Format speichern
   const statusForStorage = {
