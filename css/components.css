@@ -65,6 +65,36 @@
     0 0 0 4px hsla(var(--accent-h, 30), 72%, 55%, 0.45);
 }
 
+/* =========================================
+   FIX: Global App Background + iOS Safe Area
+   - verhindert “weiße Balken” (oben/unten) in iOS WebView/PWA
+   - sorgt dafür, dass der Seitenhintergrund auch in Safe Areas stimmt
+   ========================================= */
+
+:root {
+  --app-bg-fallback-light: var(--fsm-warm-0);
+  --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
+}
+
+html {
+  height: 100%;
+  background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-light)));
+}
+
+body {
+  min-height: 100dvh;
+  margin: 0;
+  background: inherit;
+}
+
+[data-theme="dark"] html {
+  background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-dark)));
+}
+
+[data-theme="dark"] body {
+  background: inherit;
+}
+
 /* Universal interactive ergonomics (mobile) */
 :where(
   button,
@@ -310,7 +340,7 @@ select {
   position: sticky;
   top: 0;
   z-index: 1200;
-  padding: 10px 14px 14px;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 14px 14px;
   background: linear-gradient(
     180deg,
     var(--header-bg-top),
@@ -698,7 +728,7 @@ body[data-menu-open="1"] .app-menu {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 16px 12px 96px;
+  padding: 16px 12px calc(96px + env(safe-area-inset-bottom, 0px));
 }
 
 .view {
@@ -1974,7 +2004,7 @@ body[data-menu-open="1"] {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
   z-index: 30;
   height: 64px;
   pointer-events: none;
@@ -2044,7 +2074,7 @@ body[data-menu-open="1"] {
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 90px;
+  bottom: calc(90px + env(safe-area-inset-bottom, 0px));
   transform: translateX(-50%);
   max-width: 90%;
   background: var(--toast-bg);
