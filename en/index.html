@@ -4,16 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
+  <!-- IMPORTANT for /en/: makes relative paths resolve from the project root -->
+  <base href="../" />
+
   <title>Family Spots Map – The most beautiful map for family adventures</title>
   <meta
     name="description"
     content="Family Spots Map: curated playgrounds, zoos, wildlife parks, water spots & family-friendly places – for your next adventures with kids."
   />
-  <meta name="theme-color" content="#fb8c00" />
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
   <meta name="format-detection" content="telephone=no" />
+
+  <!-- Theme color (light/dark) -->
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#d49a6a" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b1220" />
 
   <!-- Canonical & hreflang -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/en/" />
@@ -44,7 +50,7 @@
   />
   <meta name="twitter:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
 
-  <!-- Structured Data: WebApplication -->
+  <!-- Structured Data: WebApplication (no prices to avoid drift/inconsistencies) -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -54,18 +60,12 @@
       "applicationCategory": "TravelApplication",
       "url": "https://heimhafen.github.io/Family-Spots-Map/en/",
       "inLanguage": ["en", "de", "da"],
-      "description": "Family Spots Map: curated playgrounds, zoos, wildlife parks, water spots & family-friendly places – for your next adventures with kids.",
-      "offers": {
-        "@type": "Offer",
-        "price": "19.90",
-        "priceCurrency": "EUR",
-        "description": "Yearly subscription for the base map"
-      }
+      "description": "Family Spots Map: curated playgrounds, zoos, wildlife parks, water spots & family-friendly places – for your next adventures with kids."
     }
   </script>
 
   <!-- PWA / Apple -->
-  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
@@ -73,8 +73,8 @@
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
 
   <!-- Favicon / Icons -->
-  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icons/icon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -82,8 +82,8 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
   <!-- App Styles -->
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="../css/badges.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/badges.css" />
 </head>
 
 <body>
@@ -132,7 +132,7 @@
             <img
               id="language-switcher-flag"
               class="language-switcher-flag"
-              src="../assets/flags/flag-gb.svg"
+              src="assets/flags/flag-gb.svg"
               alt=""
               width="24"
               height="24"
@@ -339,7 +339,7 @@
             <div class="tilla-sidebar-card">
               <div class="tilla-sidebar-avatar">
                 <img
-                  src="../assets/tilla/tilla-hero.png"
+                  src="assets/tilla/tilla-hero.png"
                   alt="Tilla the turtle – your calm family companion"
                   loading="lazy"
                   decoding="async"
@@ -780,6 +780,7 @@
       <section id="view-about" class="view" aria-label="About Family Spots Map">
         <!-- Deutsch -->
         <article id="page-about-de" class="page page-about hidden" lang="de" aria-hidden="true">
+          <!-- (Kept in sync with root index.html) -->
           <h2>Über Family Spots Map</h2>
           <p>
             Family Spots Map ist eine Karte, behutsam gezeichnet für Familienabenteuer –<br />
@@ -976,6 +977,7 @@
 
         <!-- Dansk -->
         <article id="page-about-da" class="page page-about hidden" lang="da" aria-hidden="true">
+          <!-- (Kept in sync with root index.html) -->
           <h2>Om Family Spots Map</h2>
           <p>
             Family Spots Map er et kort, tegnet med omtanke til familieeventyr –<br />
@@ -1172,7 +1174,7 @@
           </p>
         </article>
 
-        <!-- English -->
+        <!-- English (visible on /en/) -->
         <article id="page-about-en" class="page page-about" lang="en" aria-hidden="false">
           <h2>About Family Spots Map</h2>
           <p>
@@ -1495,7 +1497,7 @@
                 </select>
               </div>
 
-              <!-- Only verified -->
+              <!-- Verified only -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-verified-label">
                   <input id="filter-verified" name="verified" type="checkbox" />
@@ -1515,7 +1517,7 @@
                 </label>
               </div>
 
-              <!-- Favourites -->
+              <!-- Favourites only -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-favorites-label">
                   <input id="filter-favorites" name="favorites" type="checkbox" />
@@ -1679,9 +1681,9 @@
   ></script>
 
   <!-- Onboarding hint -->
-  <script type="module" src="../js/onboarding-hint.js"></script>
+  <script type="module" src="js/onboarding-hint.js"></script>
 
   <!-- App -->
-  <script type="module" src="../js/app.js"></script>
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
