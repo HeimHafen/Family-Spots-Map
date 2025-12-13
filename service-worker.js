@@ -12,7 +12,7 @@ const ASSETS = [
   "./",
   "index.html",
   OFFLINE_URL,
-  "css/styles.css",
+  "css/styles.css",6
   "css/badges.css",
   "css/tilla.css",
   "js/app.js",
