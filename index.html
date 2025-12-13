@@ -224,7 +224,6 @@
             type="button"
             role="menuitem"
             data-menu-close="1"
-            onclick="document.getElementById('spots-title').scrollIntoView({behavior: 'smooth'});"
           >
             <span class="app-menu-item-icon" aria-hidden="true">🗺️</span>
             <span
@@ -1547,8 +1546,8 @@
       </div>
     </main>
 
-    <!-- Bottom Navigation (Router benötigt diese IDs) -->
-    <nav class="bottom-nav" aria-label="Navigation">
+    <!-- Bottom Navigation: im UI entfernt (hidden), bleibt aber im DOM für Router/JS -->
+    <nav class="bottom-nav" aria-label="Navigation" hidden aria-hidden="true">
       <button class="bottom-nav-item" type="button" data-route="map" aria-pressed="true">
         <span id="bottom-nav-map-label" data-i18n-de="Karte" data-i18n-en="Map" data-i18n-da="Kort">Karte</span>
       </button>
@@ -1574,6 +1573,7 @@
       const menuToggle = document.getElementById("menu-toggle");
       const menu = document.getElementById("app-menu");
       const backdrop = menu && menu.querySelector(".app-menu-backdrop");
+      const btnSkipSpots = document.getElementById("btn-skip-spots");
 
       function openMenu() {
         if (!menu) return;
@@ -1612,6 +1612,16 @@
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") closeMenu();
       });
+
+      // Zur Spot-Liste springen (ohne inline onclick)
+      if (btnSkipSpots) {
+        btnSkipSpots.addEventListener("click", () => {
+          const el = document.getElementById("spots-title");
+          if (el && typeof el.scrollIntoView === "function") {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      }
 
       // Sprachchips → bestehenden Language-Switcher benutzen
       const langOrder = ["de", "da", "en"];
