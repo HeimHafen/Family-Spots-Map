@@ -178,35 +178,23 @@ function getRandomPlayIdea() {
 function getInitialLang() {
   try {
     const stored = localStorage.getItem("fs_lang");
-    if (
-      stored === LANG_DE ||
-      stored === LANG_EN ||
-      stored === LANG_DA
-    ) {
+    if (stored === LANG_DE || stored === LANG_EN || stored === LANG_DA) {
       return stored;
     }
   } catch {
     // ignore
   }
 
-  if (
-    typeof I18N !== "undefined" &&
-    typeof I18N.getLanguage === "function"
-  ) {
+  if (typeof I18N !== "undefined" && typeof I18N.getLanguage === "function") {
     const fromI18n = I18N.getLanguage();
-    if (
-      fromI18n === LANG_DE ||
-      fromI18n === LANG_EN ||
-      fromI18n === LANG_DA
-    ) {
+    if (fromI18n === LANG_DE || fromI18n === LANG_EN || fromI18n === LANG_DA) {
       return fromI18n;
     }
   }
 
-  const htmlLang =
-    (document.documentElement.lang || navigator.language || LANG_DE)
-      .toLowerCase()
-      .slice(0, 2);
+  const htmlLang = (document.documentElement.lang || navigator.language || LANG_DE)
+    .toLowerCase()
+    .slice(0, 2);
 
   if (htmlLang === "en") return LANG_EN;
   if (htmlLang === "da" || htmlLang === "dk") return LANG_DA;
@@ -358,11 +346,7 @@ function debounce(fn, delay = 200) {
 
 function activateOnEnterSpace(handler) {
   return (event) => {
-    if (
-      event.key === "Enter" ||
-      event.key === " " ||
-      event.key === "Spacebar"
-    ) {
+    if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
       event.preventDefault();
       handler(event);
     }
@@ -417,26 +401,17 @@ function updateMetaAndA11yFromI18n() {
   const metaDescEl = document.querySelector('meta[name="description"]');
   if (metaDescEl) {
     const currentDesc = metaDescEl.getAttribute("content") || "";
-    metaDescEl.setAttribute(
-      "content",
-      I18N.t("meta_description", currentDesc)
-    );
+    metaDescEl.setAttribute("content", I18N.t("meta_description", currentDesc));
   }
 
   if (themeToggleEl) {
     const fallback = themeToggleEl.getAttribute("aria-label") || "";
-    themeToggleEl.setAttribute(
-      "aria-label",
-      I18N.t("btn_theme_toggle_aria", fallback)
-    );
+    themeToggleEl.setAttribute("aria-label", I18N.t("btn_theme_toggle_aria", fallback));
   }
 
   if (btnLocateEl) {
     const fallback = btnLocateEl.getAttribute("aria-label") || "";
-    btnLocateEl.setAttribute(
-      "aria-label",
-      I18N.t("btn_locate_aria", fallback)
-    );
+    btnLocateEl.setAttribute("aria-label", I18N.t("btn_locate_aria", fallback));
   }
 
   if (btnHelpEl) {
@@ -514,13 +489,6 @@ function getCategoryLabelWithAccess(slug) {
           : currentLang === LANG_DA
           ? " · autocamper-add-on (Plus)"
           : " · WoMo-Add-on (Plus)";
-    } else if (access.addonId === "addon_abf") {
-      suffix =
-        currentLang === LANG_EN
-          ? " · ABF fair add-on"
-          : currentLang === LANG_DA
-          ? " · ABF-messe-add-on"
-          : " · ABF Messe-Add-on";
     } else {
       suffix =
         currentLang === LANG_EN
@@ -601,8 +569,7 @@ function updatePlusStatusText(status) {
  * Setzt Sprache, aktualisiert UI & speichert in localStorage.
  */
 function setLanguage(lang, { initial = false } = {}) {
-  currentLang =
-    lang === LANG_EN ? LANG_EN : lang === LANG_DA ? LANG_DA : LANG_DE;
+  currentLang = lang === LANG_EN ? LANG_EN : lang === LANG_DA ? LANG_DA : LANG_DE;
 
   try {
     localStorage.setItem("fs_lang", currentLang);
@@ -613,10 +580,7 @@ function setLanguage(lang, { initial = false } = {}) {
   document.documentElement.lang = currentLang;
 
   try {
-    if (
-      typeof I18N !== "undefined" &&
-      typeof I18N.setLanguage === "function"
-    ) {
+    if (typeof I18N !== "undefined" && typeof I18N.setLanguage === "function") {
       let i18nLang = LANG_DE;
       if (currentLang === LANG_EN) i18nLang = LANG_EN;
       else if (currentLang === LANG_DA) i18nLang = "da";
@@ -656,9 +620,7 @@ function setLanguage(lang, { initial = false } = {}) {
   if (btnToggleFiltersEl) {
     const span = btnToggleFiltersEl.querySelector("span");
     if (span) {
-      span.textContent = filtersCollapsed
-        ? t("btn_show_filters")
-        : t("btn_hide_filters");
+      span.textContent = filtersCollapsed ? t("btn_show_filters") : t("btn_hide_filters");
     }
   }
 
@@ -722,11 +684,7 @@ function setLanguage(lang, { initial = false } = {}) {
 
   document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
     btn.textContent =
-      currentLang === LANG_EN
-        ? "Close"
-        : currentLang === LANG_DA
-        ? "Luk"
-        : "Schließen";
+      currentLang === LANG_EN ? "Close" : currentLang === LANG_DA ? "Luk" : "Schließen";
   });
 
   if (!initial) {
@@ -760,11 +718,7 @@ function showSpotsLoadErrorUI() {
   retryBtn.type = "button";
   retryBtn.className = "btn btn-small";
   retryBtn.textContent =
-    currentLang === LANG_EN
-      ? "Try again"
-      : currentLang === LANG_DA
-      ? "Prøv igen"
-      : "Erneut versuchen";
+    currentLang === LANG_EN ? "Try again" : currentLang === LANG_DA ? "Prøv igen" : "Erneut versuchen";
 
   retryBtn.addEventListener("click", () => {
     showToast(
@@ -869,8 +823,7 @@ function populateCategoryOptions() {
   if (!filterCategoryEl) return;
 
   const firstOption =
-    filterCategoryEl.querySelector("option[value='']") ||
-    document.createElement("option");
+    filterCategoryEl.querySelector("option[value='']") || document.createElement("option");
   firstOption.value = "";
   firstOption.textContent = t("filter_category_all");
 
@@ -883,8 +836,7 @@ function populateCategoryOptions() {
     if (!Array.isArray(slugs) || !slugs.length) return;
 
     const groupLabel =
-      (CATEGORY_GROUP_LABELS[currentLang] &&
-        CATEGORY_GROUP_LABELS[currentLang][groupKey]) ||
+      (CATEGORY_GROUP_LABELS[currentLang] && CATEGORY_GROUP_LABELS[currentLang][groupKey]) ||
       groupKey;
 
     const optgroup = document.createElement("optgroup");
@@ -930,11 +882,7 @@ function populateCategoryOptions() {
           .toLowerCase()
           .localeCompare(
             getCategoryLabel(b).toLowerCase(),
-            currentLang === LANG_DE
-              ? "de"
-              : currentLang === LANG_DA
-              ? "da"
-              : "en"
+            currentLang === LANG_DE ? "de" : currentLang === LANG_DA ? "da" : "en"
           )
       )
       .forEach((slug) => {
@@ -955,8 +903,7 @@ function populateCategoryOptions() {
 // ------------------------------------------------------
 
 function updateRadiusTexts() {
-  if (!filterRadiusEl || !filterRadiusMaxLabelEl || !filterRadiusDescriptionEl)
-    return;
+  if (!filterRadiusEl || !filterRadiusMaxLabelEl || !filterRadiusDescriptionEl) return;
 
   let value = parseInt(filterRadiusEl.value, 10);
   if (Number.isNaN(value)) {
@@ -1048,9 +995,7 @@ function renderTagFilterChips() {
       btn.setAttribute("aria-pressed", "false");
     }
 
-    const label =
-      (filter.label && (filter.label[currentLang] || filter.label.de)) ||
-      filter.id;
+    const label = (filter.label && (filter.label[currentLang] || filter.label.de)) || filter.id;
     btn.textContent = label;
 
     btn.addEventListener("click", () => {
@@ -1143,9 +1088,7 @@ function updateFilterSummary() {
   // Kategorie
   if (categoryFilter && filterCategoryEl) {
     const selected = filterCategoryEl.selectedOptions[0];
-    const label =
-      (selected && selected.textContent.trim()) ||
-      getCategoryLabel(categoryFilter);
+    const label = (selected && selected.textContent.trim()) || getCategoryLabel(categoryFilter);
     if (label) {
       if (currentLang === LANG_EN) {
         parts.push(`Category: ${label}`);
@@ -1226,11 +1169,7 @@ function updateFilterSummary() {
     }
   } else {
     const prefix =
-      currentLang === LANG_EN
-        ? "Active filters: "
-        : currentLang === LANG_DA
-        ? "Aktive filtre: "
-        : "Aktive Filter: ";
+      currentLang === LANG_EN ? "Active filters: " : currentLang === LANG_DA ? "Aktive filtre: " : "Aktive Filter: ";
     text = prefix + parts.join(" · ");
   }
 
@@ -1273,9 +1212,7 @@ function getFilterContext() {
     onlyFavorites,
     activeTagFilters: Array.from(activeTagFilters),
     center:
-      centerLat != null && centerLng != null
-        ? { lat: centerLat, lng: centerLng }
-        : null
+      centerLat != null && centerLng != null ? { lat: centerLat, lng: centerLng } : null
   };
 }
 
@@ -1316,11 +1253,7 @@ function closeFilterModal(options = {}) {
     document.body.removeAttribute("data-filter-modal-open");
   }
 
-  if (
-    returnFocus &&
-    lastFocusBeforeFilterModal &&
-    typeof lastFocusBeforeFilterModal.focus === "function"
-  ) {
+  if (returnFocus && lastFocusBeforeFilterModal && typeof lastFocusBeforeFilterModal.focus === "function") {
     lastFocusBeforeFilterModal.focus();
   }
 }
@@ -1412,14 +1345,14 @@ function isSpotCurrentlyValid(spot, now = new Date()) {
 
 /**
  * Prüft, ob ein Spot grundsätzlich sichtbar sein darf:
- *  - Datum ist im Gültigkeitsfenster (z. B. ABF 2026)
+ *  - Datum ist im Gültigkeitsfenster
  *  - Plus-/Add-on-Regeln aus CATEGORY_ACCESS werden erfüllt
  *
  * @param {Spot} spot
  * @returns {boolean}
  */
 function userCanSeeSpot(spot) {
-  // 1. Datum (z. B. ABF 2026: 11.–15.02.2026)
+  // 1. Datum (Gültigkeitsfenster)
   if (!isSpotCurrentlyValid(spot)) {
     return false;
   }
@@ -1465,12 +1398,11 @@ function userCanSeeSpot(spot) {
       return plan === rule.subscriptionId;
     }
 
-    // Add-on nötig (z. B. addon_abf, addon_water, addon_rv)
+    // Add-on nötig (z. B. addon_water, addon_rv)
     if (rule.level === "addon") {
       const hasBase = plan === rule.subscriptionId;
-      const hasAddon = Array.isArray(addons) && rule.addonId
-        ? addons.includes(rule.addonId)
-        : false;
+      const hasAddon =
+        Array.isArray(addons) && rule.addonId ? addons.includes(rule.addonId) : false;
       return hasBase && hasAddon;
     }
 
@@ -1546,10 +1478,8 @@ function applyFiltersAndRender() {
     activeFilterIds: activeTagFilters
   });
 
-  // NEU: Plus-/Add-on- und Datumslogik (z. B. ABF 2026)
-  const visibilityFiltered = nonGeoFiltered.filter((spot) =>
-    userCanSeeSpot(spot)
-  );
+  // NEU: Plus-/Add-on- und Datumslogik
+  const visibilityFiltered = nonGeoFiltered.filter((spot) => userCanSeeSpot(spot));
 
   let center = null;
   if (map && typeof map.getCenter === "function") {
@@ -1644,11 +1574,7 @@ function isPlusSpot(spot) {
 }
 
 function getSpotPrimaryMoodKey(spot) {
-  const src =
-    spot._moods ||
-    spot.moods ||
-    spot.moodTags ||
-    spot.mood;
+  const src = spot._moods || spot.moods || spot.moodTags || spot.mood;
 
   let arr = [];
   if (Array.isArray(src)) {
@@ -1664,11 +1590,7 @@ function getSpotPrimaryMoodKey(spot) {
 }
 
 function getSpotAgeLabel(spot) {
-  const src =
-    spot._ageGroups ||
-    spot.ageGroups ||
-    spot.age ||
-    spot.ages;
+  const src = spot._ageGroups || spot.ageGroups || spot.age || spot.ages;
 
   let arr = [];
   if (Array.isArray(src)) {
@@ -1828,11 +1750,7 @@ function buildSpotBadges(spot) {
       className: "badge badge--verified",
       icon: "✔︎",
       label:
-        currentLang === LANG_EN
-          ? "Verified"
-          : currentLang === LANG_DA
-          ? "Verificeret"
-          : "Verifiziert"
+        currentLang === LANG_EN ? "Verified" : currentLang === LANG_DA ? "Verificeret" : "Verifiziert"
     });
   }
 
@@ -1842,12 +1760,7 @@ function buildSpotBadges(spot) {
       type: "plus",
       className: "badge badge--plus",
       icon: "⭐",
-      label:
-        currentLang === LANG_EN
-          ? "Plus"
-          : currentLang === LANG_DA
-          ? "Plus"
-          : "Plus"
+      label: currentLang === LANG_EN ? "Plus" : currentLang === LANG_DA ? "Plus" : "Plus"
     });
   }
 
@@ -2106,11 +2019,7 @@ function closeSpotDetails(options = {}) {
   spotDetailEl.classList.add("spot-details--hidden");
   spotDetailEl.innerHTML = "";
 
-  if (
-    returnFocus &&
-    lastSpotTriggerEl &&
-    typeof lastSpotTriggerEl.focus === "function"
-  ) {
+  if (returnFocus && lastSpotTriggerEl && typeof lastSpotTriggerEl.focus === "function") {
     lastSpotTriggerEl.focus();
   }
 }
@@ -2126,19 +2035,12 @@ function showSpotDetails(spot) {
 
   let description = "";
   if (currentLang === LANG_EN) {
-    description =
-      spot.summary_en || spot.poetry || spot.description || spot.text || "";
+    description = spot.summary_en || spot.poetry || spot.description || spot.text || "";
   } else if (currentLang === LANG_DA) {
     description =
-      spot.summary_da ||
-      spot.summary_de ||
-      spot.poetry ||
-      spot.description ||
-      spot.text ||
-      "";
+      spot.summary_da || spot.summary_de || spot.poetry || spot.description || spot.text || "";
   } else {
-    description =
-      spot.summary_de || spot.poetry || spot.description || spot.text || "";
+    description = spot.summary_de || spot.poetry || spot.description || spot.text || "";
   }
 
   const addressParts = [];
@@ -2186,12 +2088,7 @@ function showSpotDetails(spot) {
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
   closeBtn.className = "btn-ghost btn-small";
-  closeBtn.textContent =
-    currentLang === LANG_EN
-      ? "Close"
-      : currentLang === LANG_DA
-      ? "Luk"
-      : "Schließen";
+  closeBtn.textContent = currentLang === LANG_EN ? "Close" : currentLang === LANG_DA ? "Luk" : "Schließen";
   closeBtn.addEventListener("click", () => {
     closeSpotDetails({ returnFocus: true });
   });
@@ -2416,12 +2313,7 @@ async function handlePlusCodeSubmit() {
 function formatDaylogTimestamp(ts) {
   try {
     const date = new Date(ts);
-    const locale =
-      currentLang === LANG_EN
-        ? "en-GB"
-        : currentLang === LANG_DA
-        ? "da-DK"
-        : "de-DE";
+    const locale = currentLang === LANG_EN ? "en-GB" : currentLang === LANG_DA ? "da-DK" : "de-DE";
     const options = {
       year: "numeric",
       month: "2-digit",
@@ -2476,9 +2368,7 @@ function updateDaylogUI() {
     } else if (currentLang === LANG_DA) {
       label = formatted ? `Sidst gemt: ${formatted}` : "Sidst gemt.";
     } else {
-      label = formatted
-        ? `Zuletzt gespeichert: ${formatted}`
-        : "Zuletzt gespeichert.";
+      label = formatted ? `Zuletzt gespeichert: ${formatted}` : "Zuletzt gespeichert.";
     }
     daylogLastSavedEl.textContent = label;
   }
@@ -2665,15 +2555,10 @@ function handleToggleFilters() {
 
   const span = btnToggleFiltersEl.querySelector("span");
   if (span) {
-    span.textContent = filtersCollapsed
-      ? t("btn_show_filters")
-      : t("btn_hide_filters");
+    span.textContent = filtersCollapsed ? t("btn_show_filters") : t("btn_hide_filters");
   }
 
-  btnToggleFiltersEl.setAttribute(
-    "aria-expanded",
-    isExpanded ? "true" : "false"
-  );
+  btnToggleFiltersEl.setAttribute("aria-expanded", isExpanded ? "true" : "false");
 }
 
 function handleToggleView() {
@@ -2700,8 +2585,7 @@ function handleToggleView() {
 async function init() {
   try {
     languageSwitcherEl =
-      document.getElementById("language-switcher") ||
-      document.getElementById("language-toggle");
+      document.getElementById("language-switcher") || document.getElementById("language-toggle");
     languageSwitcherFlagEl = document.getElementById("language-switcher-flag");
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
@@ -2716,9 +2600,7 @@ async function init() {
 
     sidebarEl = document.querySelector(".sidebar");
     const filterTitleEl = document.getElementById("filter-title");
-    filterSectionEl = filterTitleEl
-      ? filterTitleEl.closest(".sidebar-section")
-      : null;
+    filterSectionEl = filterTitleEl ? filterTitleEl.closest(".sidebar-section") : null;
 
     if (filterSectionEl) {
       filterBodyEls = Array.from(filterSectionEl.children).filter(
@@ -2738,9 +2620,7 @@ async function init() {
     filterAgeEl = document.getElementById("filter-age");
     filterRadiusEl = document.getElementById("filter-radius");
     filterRadiusMaxLabelEl = document.getElementById("filter-radius-max-label");
-    filterRadiusDescriptionEl = document.getElementById(
-      "filter-radius-description"
-    );
+    filterRadiusDescriptionEl = document.getElementById("filter-radius-description");
     filterBigEl = document.getElementById("filter-big-adventures");
     filterVerifiedEl = document.getElementById("filter-verified");
     filterFavoritesEl = document.getElementById("filter-favorites");
@@ -2756,9 +2636,7 @@ async function init() {
 
     spotListEl = document.getElementById("spot-list");
     spotDetailEl = document.getElementById("spot-detail");
-    spotsSectionEl = spotListEl
-      ? spotListEl.closest(".sidebar-section--grow")
-      : null;
+    spotsSectionEl = spotListEl ? spotListEl.closest(".sidebar-section--grow") : null;
 
     plusSectionEl = document.getElementById("plus-section");
     btnTogglePlusEl = document.getElementById("btn-toggle-plus");
@@ -2828,12 +2706,7 @@ async function init() {
 
     if (languageSwitcherEl) {
       languageSwitcherEl.addEventListener("click", () => {
-        const nextLang =
-          currentLang === LANG_DE
-            ? LANG_DA
-            : currentLang === LANG_DA
-            ? LANG_EN
-            : LANG_DE;
+        const nextLang = currentLang === LANG_DE ? LANG_DA : currentLang === LANG_DA ? LANG_EN : LANG_DE;
         setLanguage(nextLang);
       });
       updateLanguageSwitcherVisual();
@@ -2841,8 +2714,7 @@ async function init() {
 
     if (themeToggleEl) {
       themeToggleEl.addEventListener("click", () => {
-        const nextTheme =
-          currentTheme === THEME_LIGHT ? THEME_DARK : THEME_LIGHT;
+        const nextTheme = currentTheme === THEME_LIGHT ? THEME_DARK : THEME_LIGHT;
         currentTheme = applyTheme(nextTheme);
       });
     }
@@ -2986,10 +2858,7 @@ async function init() {
       };
 
       btnTogglePlusEl.addEventListener("click", togglePlusHandler);
-      btnTogglePlusEl.addEventListener(
-        "keydown",
-        activateOnEnterSpace(togglePlusHandler)
-      );
+      btnTogglePlusEl.addEventListener("keydown", activateOnEnterSpace(togglePlusHandler));
 
       plusSectionEl.addEventListener("toggle", () => {
         updateGenericSectionToggleLabel(btnTogglePlusEl, plusSectionEl.open);
@@ -3010,16 +2879,10 @@ async function init() {
       };
 
       btnToggleDaylogEl.addEventListener("click", toggleDaylogHandler);
-      btnToggleDaylogEl.addEventListener(
-        "keydown",
-        activateOnEnterSpace(toggleDaylogHandler)
-      );
+      btnToggleDaylogEl.addEventListener("keydown", activateOnEnterSpace(toggleDaylogHandler));
 
       daylogSectionEl.addEventListener("toggle", () => {
-        updateGenericSectionToggleLabel(
-          btnToggleDaylogEl,
-          daylogSectionEl.open
-        );
+        updateGenericSectionToggleLabel(btnToggleDaylogEl, daylogSectionEl.open);
       });
 
       updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
@@ -3159,8 +3022,7 @@ async function init() {
       // 2. Dann ggf. das Spot-Detail
       if (!spotDetailEl) return;
 
-      const isOpen =
-        !spotDetailEl.classList.contains("spot-details--hidden");
+      const isOpen = !spotDetailEl.classList.contains("spot-details--hidden");
       if (!isOpen) return;
 
       event.preventDefault();
