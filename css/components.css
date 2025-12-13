@@ -45,18 +45,20 @@
 
   /* =========================================
      Warm Light Palette (zwischen Bild 1 & 2)
-     - etwas satter/dunkler als Bild 1
-     - deutlich weniger “knallig orange” als Bild 2
+     - Werte kommen jetzt aus theme.css (Tilla-Tokens)
      - nur als Fallback/Component-Akzent (keine Semantik-Token-Überschreibung)
      ========================================= */
-  --fsm-warm-0: #f7e1d0; /* helles Sand/Creme */
-  --fsm-warm-1: #e7bf9f; /* muted Peach/Sand */
-  --fsm-warm-2: #d49a6a; /* warmes Tan (gedämpft) */
-  --fsm-warm-3: #c98655; /* tieferes Tan (gedämpft) */
+  --fsm-warm-0: var(--tilla-warm-0, #f7e1d0); /* helles Sand/Creme */
+  --fsm-warm-1: var(--tilla-warm-1, #e7bf9f); /* muted Peach/Sand */
+  --fsm-warm-2: var(--tilla-warm-2, #d49a6a); /* warmes Tan (gedämpft) */
+  --fsm-warm-3: var(--tilla-warm-3, #c98655); /* tieferes Tan (gedämpft) */
 
-  --fsm-surface-warm: #f5e3d4; /* Card/Panel warm, aber nicht zu hell */
-  --fsm-chip-warm: #f1dfcf; /* Chips warm-neutral */
-  --fsm-divider-warm: hsla(28, 24%, 40%, 0.22); /* Divider weniger “orange” */
+  --fsm-surface-warm: var(--tilla-surface-warm, #f5e3d4); /* Card/Panel warm */
+  --fsm-chip-warm: var(--tilla-chip-warm, #f1dfcf); /* Chips warm-neutral */
+  --fsm-divider-warm: var(
+    --tilla-divider-warm,
+    hsla(28, 24%, 40%, 0.22)
+  ); /* Divider weniger “orange” */
 }
 
 /* Dark fallback focus ring (prefer theme.css) */
@@ -727,7 +729,11 @@ body[data-menu-open="1"] .app-menu {
 }
 
 [data-theme="dark"] #view-map {
-  background: linear-gradient(to bottom, rgba(2, 6, 23, 0.88) 0, rgba(2, 6, 23, 0.88) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(2, 6, 23, 0.88) 0,
+    rgba(2, 6, 23, 0.88) 100%
+  );
   border-radius: 0 0 28px 28px;
 }
 
