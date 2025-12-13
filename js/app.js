@@ -8,6 +8,12 @@
 "use strict";
 
 import "./i18n.js"; // Modul führt sich selbst aus und setzt globales I18N
+
+// NEU (wie von dir gewünscht)
+import { initMenu } from "./ui/menu.js";
+import { initLanguageSwitcher } from "./ui/language.js";
+import { initSkipToSpots } from "./ui/skip-to-spots.js";
+
 import { TillaCompanion } from "./features/tilla.js";
 import {
   DEFAULT_MAP_CENTER,
@@ -57,6 +63,11 @@ import {
   redeemPartnerCode,
   isPlusCategory
 } from "./features/plus.js";
+
+// NEU (wie von dir gewünscht)
+const { closeMenu } = initMenu();
+initLanguageSwitcher();
+initSkipToSpots(closeMenu);
 
 // ------------------------------------------------------
 // Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
