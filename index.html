@@ -10,8 +10,17 @@
     content="Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern."
   />
 
+  <!-- Critical Background (verhindert weiße Ränder/Flash bevor CSS lädt) -->
+  <style>
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #f7e1d0;
+    }
+  </style>
+
   <!-- Theme color (Light / Dark) -->
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#d07a3c" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7e1d0" />
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617" />
 
   <meta name="robots" content="index,follow" />
@@ -64,9 +73,10 @@
   </script>
 
   <!-- PWA / Apple -->
-  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="manifest" href="/Family-Spots-Map/manifest.webmanifest" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <!-- Performance hints -->
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
