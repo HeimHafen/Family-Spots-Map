@@ -7,7 +7,7 @@
   <title>Family Spots Map – Det smukkeste kort til familieeventyr</title>
   <meta
     name="description"
-    content="Family Spots Map: Udvalgte legepladser, zoologiske haver, dyreparker, vandspots og familievenlige steder – til jeres næste familieeventyr med børn."
+    content="Family Spots Map: udvalgte legepladser, zoologiske haver, dyreparker, vandsteder og familievenlige steder – til jeres næste eventyr med børn."
   />
   <meta name="theme-color" content="#fb8c00" />
   <meta name="robots" content="index,follow" />
@@ -17,16 +17,15 @@
 
   <!-- Canonical & hreflang -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/da/" />
-  <link rel="alternate" hreflang="x-default" href="https://heimhafen.github.io/Family-Spots-Map/" />
   <link rel="alternate" hreflang="de" href="https://heimhafen.github.io/Family-Spots-Map/" />
   <link rel="alternate" hreflang="en" href="https://heimhafen.github.io/Family-Spots-Map/en/" />
   <link rel="alternate" hreflang="da" href="https://heimhafen.github.io/Family-Spots-Map/da/" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Family Spots Map – familievenligt eventyrkort" />
+  <meta property="og:title" content="Family Spots Map – udvalgt kort til familieeventyr" />
   <meta
     property="og:description"
-    content="Find udvalgte legepladser, dyreparker, vandspots & mere – perfekt til familieeventyr med børn."
+    content="Find udvalgte legepladser, dyreparker, vandsteder og meget mere – perfekt til familieeventyr med børn."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heimhafen.github.io/Family-Spots-Map/da/" />
@@ -34,16 +33,14 @@
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="da_DK" />
-  <meta property="og:locale:alternate" content="de_DE" />
-  <meta property="og:locale:alternate" content="en_GB" />
   <meta property="og:site_name" content="Family Spots Map" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Family Spots Map – familievenligt eventyrkort" />
+  <meta name="twitter:title" content="Family Spots Map – udvalgt kort til familieeventyr" />
   <meta
     name="twitter:description"
-    content="Find udvalgte legepladser, dyreparker, vandspots & mere – perfekt til familieeventyr."
+    content="Find udvalgte legepladser, dyreparker, vandsteder og meget mere – perfekt til familieeventyr."
   />
   <meta name="twitter:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
 
@@ -56,8 +53,8 @@
       "operatingSystem": "iOS, Android, Web",
       "applicationCategory": "TravelApplication",
       "url": "https://heimhafen.github.io/Family-Spots-Map/da/",
-      "inLanguage": ["de", "en", "da"],
-      "description": "Family Spots Map: Udvalgte legepladser, zoologiske haver, dyreparker, vandspots og familievenlige steder – til jeres næste familieeventyr med børn.",
+      "inLanguage": ["da", "de", "en"],
+      "description": "Family Spots Map: udvalgte legepladser, zoologiske haver, dyreparker, vandsteder og familievenlige steder – til jeres næste eventyr med børn.",
       "offers": {
         "@type": "Offer",
         "price": "19.90",
@@ -104,7 +101,7 @@
   <noscript>
     <div class="noscript-warning">
       Family Spots Map kræver JavaScript for at fungere korrekt.
-      Aktivér JavaScript for at bruge det interaktive kort og filtrene.
+      Slå venligst JavaScript til i din browser for at bruge det interaktive kort og filtrene.
     </div>
   </noscript>
 
@@ -113,7 +110,7 @@
          HEADER
          ========================================= -->
     <header class="app-header" role="banner">
-      <nav class="app-header-top" aria-label="App-indstillinger og hurtige handlinger">
+      <nav class="app-header-top" aria-label="App-indstillinger og hurtige genveje">
         <div class="app-header-left">
           <span
             class="sr-only"
@@ -125,7 +122,7 @@
             Skift sprog
           </span>
 
-          <!-- Invisible but functional legacy language switcher -->
+          <!-- Skjult men funktionel legacy language switcher -->
           <button
             id="language-switcher"
             class="btn-icon language-switcher sr-only"
@@ -135,7 +132,7 @@
             <img
               id="language-switcher-flag"
               class="language-switcher-flag"
-              src="../assets/flags/flag-da.svg"
+              src="../assets/flags/flag-dk.svg"
               alt=""
               width="24"
               height="24"
@@ -194,7 +191,7 @@
       class="app-menu"
       role="dialog"
       aria-modal="true"
-      aria-label="Hurtige handlinger og indstillinger"
+      aria-label="Hurtige genveje og indstillinger"
       hidden
     >
       <div class="app-menu-backdrop" data-menu-close="1"></div>
@@ -220,7 +217,7 @@
             </span>
           </button>
 
-          <!-- Jump to Spot List -->
+          <!-- Gå til spotlisten -->
           <button
             id="btn-skip-spots"
             class="app-menu-item"
@@ -240,7 +237,7 @@
             </span>
           </button>
 
-          <!-- Theme Toggle -->
+          <!-- Theme toggle -->
           <button
             id="theme-toggle"
             class="app-menu-item"
@@ -281,7 +278,7 @@
           </button>
         </div>
 
-        <!-- Language: Flag Chips -->
+        <!-- Language chips -->
         <div class="app-menu-languages" role="group" aria-labelledby="menu-language-label">
           <p
             id="menu-language-label"
@@ -321,7 +318,7 @@
       <section id="view-map" class="view view--active" aria-label="Kort">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar" aria-labelledby="spots-title">
-          <!-- Tilla Companion -->
+          <!-- Tilla companion -->
           <section
             id="tilla-section"
             class="sidebar-section tilla-sidebar-section"
@@ -358,8 +355,8 @@
                   data-i18n-en="I’m Tilla, your little turtle companion. Everyday life can feel light, too. Let’s see which nearby place might bring a smile to you today. 🌿"
                   data-i18n-da="Jeg er Tilla, jeres lille skildpadde. Hverdagen må også gerne føles let. Lad os se, hvilket sted i nærheden der i dag kan trylle et smil frem hos jer. 🌿"
                 >
-                  Jeg er Tilla, jeres lille skildpadde. Hverdagen må også gerne føles let.
-                  Lad os se, hvilket sted i nærheden der i dag kan trylle et smil frem hos jer. 🌿
+                  Jeg er Tilla, jeres lille skildpadde. Hverdagen må også gerne føles let. Lad os se, hvilket sted i
+                  nærheden der i dag kan trylle et smil frem hos jer. 🌿
                 </p>
 
                 <div class="tilla-sidebar-actions">
@@ -378,7 +375,7 @@
             </div>
           </section>
 
-          <!-- Onboarding Hint (before filters) -->
+          <!-- Onboarding hint -->
           <section
             class="sidebar-section fsm-onboarding-hint"
             data-onboarding-hint
@@ -421,7 +418,7 @@
             <button type="button" class="fsm-onboarding-hint__close" aria-label="Luk hint">×</button>
           </section>
 
-          <!-- Compact Filters -->
+          <!-- Compact filters -->
           <section class="sidebar-section" id="filter-section" aria-labelledby="filter-title">
             <header class="sidebar-section-header">
               <h2
@@ -515,12 +512,8 @@
               >
                 <button type="button" class="mood-chip" data-mood="relaxed" aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-relaxed-label"
-                    data-i18n-de="Entspannt"
-                    data-i18n-en="Relaxed"
-                    data-i18n-da="Afslappet"
+                  <span class="mood-chip-label" id="mood-relaxed-label"
+                    data-i18n-de="Entspannt" data-i18n-en="Relaxed" data-i18n-da="Afslappet"
                   >
                     Afslappet
                   </span>
@@ -528,12 +521,8 @@
 
                 <button type="button" class="mood-chip" data-mood="action" aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-action-label"
-                    data-i18n-de="Bewegung"
-                    data-i18n-en="Active"
-                    data-i18n-da="Aktiv"
+                  <span class="mood-chip-label" id="mood-action-label"
+                    data-i18n-de="Bewegung" data-i18n-en="Active" data-i18n-da="Aktiv"
                   >
                     Aktiv
                   </span>
@@ -541,12 +530,8 @@
 
                 <button type="button" class="mood-chip" data-mood="water" aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">💧</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-water-label"
-                    data-i18n-de="Wasser &amp; Sand"
-                    data-i18n-en="Water &amp; sand"
-                    data-i18n-da="Vand &amp; sand"
+                  <span class="mood-chip-label" id="mood-water-label"
+                    data-i18n-de="Wasser &amp; Sand" data-i18n-en="Water &amp; sand" data-i18n-da="Vand &amp; sand"
                   >
                     Vand &amp; sand
                   </span>
@@ -554,12 +539,8 @@
 
                 <button type="button" class="mood-chip" data-mood="animals" aria-pressed="false">
                   <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
-                  <span
-                    class="mood-chip-label"
-                    id="mood-animals-label"
-                    data-i18n-de="Tier-Tag"
-                    data-i18n-en="Animal day"
-                    data-i18n-da="Dyredag"
+                  <span class="mood-chip-label" id="mood-animals-label"
+                    data-i18n-de="Tier-Tag" data-i18n-en="Animal day" data-i18n-da="Dyredag"
                   >
                     Dyredag
                   </span>
@@ -567,7 +548,7 @@
               </div>
             </div>
 
-            <!-- Micro-adventure radius -->
+            <!-- Radius -->
             <div class="filter-group">
               <label
                 class="filter-group-label"
@@ -623,14 +604,10 @@
               </p>
             </div>
 
-            <!-- Summary & Button -->
+            <!-- Summary & open modal -->
             <div class="filter-footer">
               <button id="btn-open-filter-modal" class="btn btn-small" type="button">
-                <span
-                  data-i18n-de="Alle Filter öffnen"
-                  data-i18n-en="Open all filters"
-                  data-i18n-da="Åbn alle filtre"
-                >
+                <span data-i18n-de="Alle Filter öffnen" data-i18n-en="Open all filters" data-i18n-da="Åbn alle filtre">
                   Åbn alle filtre
                 </span>
               </button>
@@ -647,7 +624,7 @@
             </div>
           </section>
 
-          <!-- Spot List -->
+          <!-- Spot list -->
           <section class="sidebar-section sidebar-section--grow" aria-labelledby="spots-title">
             <header class="sidebar-section-header">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
@@ -665,11 +642,11 @@
               </button>
             </header>
 
-            <div id="spot-list" class="spot-list"><!-- Cards via JS --></div>
+            <div id="spot-list" class="spot-list"><!-- rendered via JS --></div>
           </section>
         </aside>
 
-        <!-- Map + Details -->
+        <!-- Map + details -->
         <section class="map-section" aria-label="Kort med spots">
           <div id="map" class="map-container"></div>
           <aside
@@ -732,12 +709,8 @@
         <!-- My day -->
         <details class="sidebar-section" id="daylog-section" aria-labelledby="daylog-section-title">
           <summary class="sidebar-section-header">
-            <h2
-              class="sidebar-section-title"
-              id="daylog-section-title"
-              data-i18n-de="Mein Tag 💛"
-              data-i18n-en="My day 💛"
-              data-i18n-da="Min dag 💛"
+            <h2 class="sidebar-section-title" id="daylog-section-title"
+              data-i18n-de="Mein Tag 💛" data-i18n-en="My day 💛" data-i18n-da="Min dag 💛"
             >
               Min dag 💛
             </h2>
@@ -771,7 +744,7 @@
               name="daylog"
               class="input"
               rows="3"
-              placeholder="I dag fandt vi et sted, hvor tiden blev lidt langsommere."
+              placeholder="I dag fandt vi et sted, hvor tiden gik lidt langsommere."
             ></textarea>
 
             <button id="daylog-save" class="btn btn-small" type="button">
@@ -805,7 +778,203 @@
            ABOUT VIEW (DE / DA / EN)
            ========================================= -->
       <section id="view-about" class="view" aria-label="Om Family Spots Map">
-        <!-- Dansk -->
+        <!-- Deutsch -->
+        <article id="page-about-de" class="page page-about hidden" lang="de" aria-hidden="true">
+          <h2>Über Family Spots Map</h2>
+          <p>
+            Family Spots Map ist eine Karte, behutsam gezeichnet für Familienabenteuer –<br />
+            von Eltern für Eltern.<br />
+            Nicht Ströme aus Listen, nicht anonyme Sterne,<br />
+            sondern handverlesene Spielplätze, Zoos und Wildparks,<br />
+            Wasser-Spots, Museen, Bewegungsparks<br />
+            und all die Orte, an denen Kinder wirklich schon gelacht, gestaunt und gespielt haben.
+          </p>
+          <p>
+            Im Mittelpunkt stehen Qualität, Sicherheit und echte, geerdete Erlebnisse mit Kindern –<br />
+            keine Karte, die am größten sein will,<br />
+            sondern eine, auf die ihr euch verlassen könnt,<br />
+            wenn ihr mit Rucksäcken, Snacks und ein bisschen Hoffnung im Gepäck loszieht.
+          </p>
+          <p>
+            Family Spots Map wächst aus dem Blick einer jungen Familie,<br />
+            die selbst mit Kindern unterwegs ist –<br />
+            manchmal übermüdet, manchmal voller Tatendrang,<br />
+            doch immer auf der Suche nach einem guten Ort<br />
+            für ein paar leuchtende Stunden zwischendurch.
+          </p>
+          <p>
+            <strong>Tilla, unsere kleine Schildkröte, flüstert uns zu, wie kostbar gemeinsame Zeit ist.</strong><br />
+            Sie lädt euch ein, das Tempo herauszunehmen,<br />
+            kurz durchzuatmen<br />
+            und den einen Ort zu finden, an dem aus Minuten<br />
+            ein Familienmoment wird, der bleibt.
+          </p>
+
+          <hr />
+          <h3>So funktioniert Family Spots Map</h3>
+          <p>
+            <strong>Karte &amp; Filter:</strong> Zoome in eure Region,<br />
+            streif mit den Fingern über die Karte<br />
+            und lass dir zeigen, was heute zu euch passt –<br />
+            Spielplatz, Wildpark, Pumptrack<br />
+            oder ein Spot, den dein Stichwort herbeiruft.
+          </p>
+          <p>
+            <strong>Spot-Karten:</strong> Jeder Spot bekommt eine kleine Bühne –<br />
+            eine kurze Beschreibung, besondere Hinweise<br />
+            wie „Autosafari“, „barrierefrei“ oder „mit Wasser in der Nähe“<br />
+            und – wo möglich – das Zeichen, dass wir ihn für euch verifiziert haben.
+          </p>
+          <p>
+            <strong>Favoriten:</strong> Gebt euren Lieblingsorten einen Stern,<br />
+            damit sie euch unterwegs auf einen Blick wiederfinden –<br />
+            auch dann, wenn das Netz gerade leiser wird<br />
+            und ihr euch auf euren eigenen Kompass verlasst.
+          </p>
+          <p>
+            <strong>Offline-Grundfunktion:</strong> Die wichtigsten Daten ruhen auf eurem Gerät,<br />
+            damit ihr eure Spots wiederentdeckt,<br />
+            selbst wenn der Empfang nur flüstert<br />
+            oder unterwegs kurz ganz verschwindet.
+          </p>
+
+          <hr />
+          <h3>Kuratiert &amp; verifiziert – unser Qualitätsversprechen</h3>
+          <p>
+            Family Spots Map ist keine anonyme Sammelplattform,<br />
+            sondern eine lebendige Karte,<br />
+            in der jeder Spot bewusst gewählt<br />
+            und immer wieder neu angesehen wird.
+          </p>
+          <p>
+            <strong>Verifizierte Spots</strong> tragen ein kleines Versprechen als Label.<br />
+            Das heißt zum Beispiel:<br />
+            Der Ort wurde persönlich besucht oder gründlich recherchiert,<br />
+            Lage, Kategorie und Eckdaten sind geprüft<br />
+            und besondere Hinweise zu Eintritt, Saison oder Parken<br />
+            werden – wo immer möglich – ergänzt.
+          </p>
+          <p>
+            Und doch bleibt die Welt in Bewegung:<br />
+            Spielgeräte werden erneuert, Wege gesperrt, Regeln angepasst –<br />
+            prüft deshalb bitte immer auch die Schilder vor Ort,<br />
+            die aktuellen Informationen der Betreiber<br />
+            und euren eigenen Eindruck.
+          </p>
+
+          <hr />
+          <h3>Family Spots Plus – mehr für Camping, WoMo &amp; Abenteuer</h3>
+          <p>
+            Neben den Basis-Kategorien öffnet <strong>Family Spots Plus</strong> die Tür<br />
+            zu besonderen Spezial-Kategorien –<br />
+            Rastplätze mit Spielplatz &amp; Dusche,<br />
+            kostenlose Stellplätze in Spielplatznähe,<br />
+            Wohnmobil-Service-Stationen,<br />
+            familienfreundliche Campingplätze,<br />
+            Bikepacking-Spots und Wege,<br />
+            die sich wie kleine Abenteuer-Routen anfühlen.
+          </p>
+          <p>
+            Die Karte selbst ist als kleines Jahresabo gedacht,<br />
+            für <strong>19,90&nbsp;€/Jahr</strong> – für alle, die sie gern nutzen<br />
+            und dieses Herzensprojekt mittragen wollen.<br />
+            Die Plus-Kategorien sind optionale Zusätze<br />
+            für besondere Wünsche und kosten<br />
+            <strong>2,99&nbsp;€/Jahr</strong> pro Plus-Paket extra.<br />
+            Nach dem Kauf erhältst du einen Plus-Code,<br />
+            den du in der App eingibst –<br />
+            und die Plus-Kategorien öffnen sich für dich.
+          </p>
+          <p>
+            <strong>Wie erkenne ich Plus-Kategorien?</strong><br />
+            In der Kategorien-Liste tragen Plus-Inhalte ein klares Zeichen –<br />
+            zum Beispiel „· Plus“, „· Wasser-Add-on (Plus)“<br />
+            oder „· WoMo-Add-on (Plus)“.<br />
+            Was keinen Zusatz trägt, gehört zur Basis<br />
+            und ist Teil der Grundkarte.
+          </p>
+
+          <hr />
+          <h3>Für Kommunen, Destinationen &amp; Campingplätze</h3>
+          <p>
+            Family Spots Map ist nicht nur eine Karte für Familien,<br />
+            sondern auch ein Werkzeug für Orte, die bewusst familienfreundlich auftreten möchten –<br />
+            Städte, Gemeinden, Tourismusregionen, Campingplätze und Ferienanlagen.
+          </p>
+          <p>Als Partner könnt ihr:</p>
+          <ul>
+            <li>eure Region oder Anlage mit kuratierten Familien-Spots sichtbar machen,</li>
+            <li>eigene Plus-Codes an Gäste, Bürgerinnen und Bürger ausgeben,</li>
+            <li>eure familienfreundlichen Angebote klar markieren und hervorheben,</li>
+            <li>Rückmeldungen aus der Nutzung der Karte nutzen, um Angebote weiterzuentwickeln.</li>
+          </ul>
+          <p>
+            So entsteht aus einer Karte ein Service-Baustein für eure Familienstrategie –<br />
+            vom familienfreundlichen Campingplatz bis zur „Kinder &amp; Familien“-Schwerpunktregion.
+          </p>
+          <p>
+            Interesse an einer Pilotregion oder Kooperation? Schreibe gern an
+            <a href="mailto:hallo@familyspotsmap.de?subject=Partneranfrage">hallo@familyspotsmap.de</a>.
+          </p>
+
+          <hr />
+          <h3>Mitmachen – hilf, die Karte besser zu machen</h3>
+          <p>
+            Du kennst einen Spot, der hier noch fehlt –<br />
+            einen besonderen Spielplatz,<br />
+            ein verstecktes Natur-Highlight<br />
+            oder einen Campingplatz, der sich mit Kindern genau richtig anfühlt?
+          </p>
+          <p>
+            Dann melde dich mit den wichtigsten Infos:<br />
+            Ort, Kategorie und kurz, warum dieser Platz<br />
+            für Familien besonders gut funktioniert.<br />
+            Vielleicht ist es der Blick, die Ruhe,<br />
+            die eine Schaukel oder das freundliche „Hallo“ vor Ort.
+          </p>
+          <p>
+            Gemeinsam machen wir die Karte Schritt für Schritt besser –<br />
+            so, wie Familien sie wirklich brauchen.
+          </p>
+
+          <hr />
+          <h3>Nutzung, Verantwortung &amp; Sicherheit</h3>
+          <p>
+            Family Spots Map stellt Informationen nach bestem Wissen bereit,<br />
+            kann aber keine Garantie für Vollständigkeit,<br />
+            Sicherheit oder die Einhaltung aller lokalen Regeln geben.
+          </p>
+          <p>Bitte achte vor Ort immer auf:</p>
+          <ul>
+            <li>Beschilderung und alle Hinweise, die der Ort dir gibt,</li>
+            <li>Naturschutz-Regeln, Badeaufsicht und das aktuelle Wetter,</li>
+            <li>Alter, Mut und Fähigkeiten deiner Kinder.</li>
+          </ul>
+          <p>
+            Die Nutzung erfolgt in eigener Verantwortung –<br />
+            ihr kennt eure Kinder<br />
+            und eure Situation am besten.
+          </p>
+
+          <hr />
+          <h3>Projektstatus &amp; Version</h3>
+          <p>
+            Family Spots Map ist ein wachsendes Herzensprojekt.<br />
+            Neue Spots, Regionen und Kategorien kommen Schritt für Schritt dazu –<br />
+            zuerst dort, wo wir selbst mit unseren Kindern unterwegs sind,<br />
+            dann gemeinsam mit Partnern und der Community.
+          </p>
+          <p>Aktuelle Karten-Version: <strong>2025-12-01</strong></p>
+          <p>
+            Wenn dir die Karte geholfen hat,<br />
+            einen guten Tag mit deiner Familie zu verbringen,<br />
+            einen Moment der Leichtigkeit zu finden<br />
+            oder einen Ort, an den ihr gern zurückdenkt,<br />
+            dann hat sie ihren Zweck erfüllt.
+          </p>
+        </article>
+
+        <!-- Dansk (DEFAULT VISIBLE) -->
         <article id="page-about-da" class="page page-about" lang="da" aria-hidden="false">
           <h2>Om Family Spots Map</h2>
           <p>
@@ -914,15 +1083,264 @@
             som du indtaster i appen –<br />
             og så åbner Plus-kategorierne sig for dig.
           </p>
+          <p>
+            <strong>Hvordan genkender jeg Plus-kategorier?</strong><br />
+            I kategorilisten har Plus-indhold et tydeligt mærke –<br />
+            for eksempel „· Plus“, „· vand-tilføjelse (Plus)“<br />
+            eller „· autocamper-tilføjelse (Plus)“.<br />
+            Det, der ikke har ekstra mærke, hører til grundkortet.
+          </p>
+
+          <hr />
+          <h3>For kommuner, destinationer &amp; campingpladser</h3>
+          <p>
+            Family Spots Map er ikke kun et kort til familier,<br />
+            men også et værktøj for steder, der ønsker at være tydeligt familievenlige –<br />
+            byer, kommuner, destinationer, campingpladser og ferieanlæg.
+          </p>
+          <p>Som partner kan I:</p>
+          <ul>
+            <li>gøre jeres område eller anlæg synligt for familier gennem kuraterede spots,</li>
+            <li>udlevere egne Plus-koder til gæster og borgere,</li>
+            <li>markere jeres familievenlige tilbud tydeligt i kortet,</li>
+            <li>bruge indsigter fra brugen af kortet til at udvikle jeres tilbud videre.</li>
+          </ul>
+          <p>
+            På den måde bliver kortet en del af jeres familieindsats –<br />
+            fra den familievenlige campingplads til hele familie-destinationer.
+          </p>
+          <p>
+            Interesseret i et pilotprojekt eller samarbejde? Skriv til
+            <a href="mailto:hallo@familyspotsmap.de?subject=Partneranfrage">hallo@familyspotsmap.de</a>.
+          </p>
+
+          <hr />
+          <h3>Vær med – hjælp kortet med at blive bedre</h3>
+          <p>
+            Kender du et spot, der mangler her –<br />
+            en særlig legeplads,<br />
+            et skjult naturhighlight<br />
+            eller en campingplads, der føles helt rigtig med børn?
+          </p>
+          <p>
+            Så skriv med de vigtigste oplysninger:<br />
+            Sted, kategori og kort, hvorfor stedet<br />
+            fungerer ekstra godt for familier.<br />
+            Måske er det udsigten, roen,<br />
+            den ene gynge eller det venlige „hej“ på stedet.
+          </p>
+          <p>
+            Sammen gør vi kortet lidt bedre trin for trin –<br />
+            sådan som familier virkelig har brug for det.
+          </p>
+
+          <hr />
+          <h3>Anvendelse, ansvar &amp; sikkerhed</h3>
+          <p>
+            Family Spots Map stiller informationer til rådighed<br />
+            efter bedste viden,<br />
+            men kan ikke garantere fuldstændighed,<br />
+            sikkerhed eller overholdelse af alle lokale regler.
+          </p>
+          <p>Vær altid opmærksom på:</p>
+          <ul>
+            <li>skilte og alle lokale henvisninger,</li>
+            <li>naturbeskyttelse, badeopsyn og vejret,</li>
+            <li>jeres børns alder, mod og kunnen.</li>
+          </ul>
+          <p>
+            Brug af appen sker på eget ansvar –<br />
+            I kender jeres børn<br />
+            og jeres situation bedst.
+          </p>
 
           <hr />
           <h3>Projektstatus &amp; version</h3>
+          <p>
+            Family Spots Map er et voksende hjerteprojekt.<br />
+            Nye spots, regioner og kategorier kommer til skridt for skridt –<br />
+            først dér, hvor vi selv er på tur med vores børn,<br />
+            senere sammen med partnere and community.
+          </p>
           <p>Aktuel kortversion: <strong>2025-12-01</strong></p>
+          <p>
+            Hvis kortet har hjulpet jer<br />
+            til en god dag som familie,<br />
+            et øjeblik af lethed<br />
+            eller et sted, I tænker varmt tilbage på,<br />
+            så har det opfyldt sit formål.
+          </p>
         </article>
 
-        <!-- Deutsch + English placeholders -->
-        <article id="page-about-de" class="page page-about hidden" lang="de" aria-hidden="true"></article>
-        <article id="page-about-en" class="page page-about hidden" lang="en" aria-hidden="true"></article>
+        <!-- English -->
+        <article id="page-about-en" class="page page-about hidden" lang="en" aria-hidden="true">
+          <h2>About Family Spots Map</h2>
+          <p>
+            Family Spots Map is a carefully curated map for family adventures –<br />
+            drawn by parents for parents.<br />
+            Instead of endless lists or faceless ratings,<br />
+            you’ll find handpicked playgrounds, zoos and wildlife parks,<br />
+            water spots, museums, movement parks<br />
+            and many more places that have proven themselves with real kids.
+          </p>
+          <p>
+            The focus is simple:<br />
+            quality, safety and real experiences with children –<br />
+            not the biggest map,<br />
+            but the one you can rely on.
+          </p>
+          <p>
+            Family Spots Map is created from the perspective<br />
+            of a young family travelling with kids themselves –<br />
+            often short on time, sometimes tired,<br />
+            yet always searching for a good place<br />
+            to spend a few bright hours together.
+          </p>
+          <p>
+            <strong>Tilla, our little turtle, reminds us how precious shared time is.</strong><br />
+            She invites you to slow down, take a breath<br />
+            and discover a place where minutes<br />
+            quietly turn into family memories.
+          </p>
+
+          <hr />
+          <h3>How Family Spots Map works</h3>
+          <p>
+            <strong>Map &amp; filters:</strong> Zoom into your region,<br />
+            move gently across the map<br />
+            and filter for what you need –<br />
+            playground, wildlife park, pumptrack<br />
+            or a spot summoned by your keywords.
+          </p>
+          <p>
+            <strong>Spot cards:</strong> Each spot offers a short story –<br />
+            a compact description, special features<br />
+            such as "drive-through safari" or "accessible"<br />
+            and a note on whether we have verified it.
+          </p>
+          <p>
+            <strong>Favourites:</strong> Mark your favourite places with the star,<br />
+            so they stay close at hand while you travel –<br />
+            even when the connection fades.
+          </p>
+          <p>
+            <strong>Offline basics:</strong> Key data is stored locally,<br />
+            helping you to rediscover your spots<br />
+            even with poor reception.
+          </p>
+
+          <hr />
+          <h3>Curated &amp; verified – our quality promise</h3>
+          <p>
+            Family Spots Map isn’t an anonymous dumping ground for pins.<br />
+            Every spot is chosen consciously<br />
+            and cared for over time.
+          </p>
+          <p>
+            <strong>Verified spots</strong> carry a small promise in the form of a label.<br />
+            That usually means:<br />
+            the place has been personally visited or researched in depth,<br />
+            location, category and key facts have been checked,<br />
+            and special notes – entry fee, season, parking –<br />
+            are added where possible.
+          </p>
+          <p>
+            Still, the world keeps changing.<br />
+            Conditions on site may shift –<br />
+            so please always check local information,<br />
+            signs and operator updates,<br />
+            and trust your own judgement.
+          </p>
+
+          <hr />
+          <h3>Family Spots Plus – more for RV &amp; adventures</h3>
+          <p>
+            Besides the core categories,<br />
+            <strong>Family Spots Plus</strong> opens the door to extra specialty categories –<br />
+            rest areas with playground &amp; shower,<br />
+            free overnight RV spots near playgrounds,<br />
+            RV service stations,<br />
+            family-friendly campgrounds,<br />
+            bikepacking spots and special routes<br />
+            that feel like small adventures.
+          </p>
+          <p>
+            The map itself is planned as a small yearly subscription<br />
+            for <strong>€19.90/year</strong> – for everyone who enjoys using the app<br />
+            and wants to support the project.<br />
+            Additional Plus categories are optional add-ons<br />
+            for specific wishes and cost<br />
+            <strong>€2.99/year</strong> per Plus package.<br />
+            After purchase you receive a Plus code;<br />
+            enter it in the app<br />
+            and the Plus categories unlock for you.
+          </p>
+          <p>
+            <strong>How do I recognise Plus categories?</strong><br />
+            In the category picker, Plus content carries a clear marker –<br />
+            for example “· Plus”, “· water add-on (Plus)”<br />
+            or “· RV add-on (Plus)”.<br />
+            Categories without a suffix belong to the base map.
+          </p>
+
+          <hr />
+          <h3>For municipalities, destinations &amp; partners</h3>
+          <p>
+            Family Spots Map is not only designed for families,<br />
+            but also for destinations that want to position themselves as family friendly –<br />
+            cities, municipalities, regions, campgrounds and holiday parks.
+          </p>
+          <p>As a partner you can:</p>
+          <ul>
+            <li>highlight your region or site with curated family spots,</li>
+            <li>provide Plus codes to guests, citizens or customers,</li>
+            <li>showcase your family-friendly services directly on the map,</li>
+            <li>use insights from app usage to improve your offering over time.</li>
+          </ul>
+          <p>
+            This turns the map into a building block of your family strategy –<br />
+            from a single family-friendly campground to a full family destination.
+          </p>
+          <p>
+            Interested in a pilot region or partnership? Feel free to reach out to
+            <a href="mailto:hallo@familyspotsmap.de?subject=Partneranfrage">hallo@familyspotsmap.de</a>.
+          </p>
+
+          <hr />
+          <h3>Usage, responsibility &amp; safety</h3>
+          <p>
+            Family Spots Map provides information<br />
+            to the best of our knowledge,<br />
+            but cannot guarantee completeness, safety<br />
+            or compliance with every local regulation.
+          </p>
+          <p>On site, please always pay attention to:</p>
+          <ul>
+            <li>signage and the local rules that guide you,</li>
+            <li>nature protection rules, lifeguards and the weather,</li>
+            <li>your children’s age, courage and abilities.</li>
+          </ul>
+          <p>
+            Use of the app is at your own responsibility —<br />
+            you know your children<br />
+            and your situation best.
+          </p>
+
+          <hr />
+          <h3>Project status &amp; version</h3>
+          <p>
+            Family Spots Map is a growing passion project.<br />
+            New spots, regions and categories are added step by step —<br />
+            first where we travel with our own children,<br />
+            then together with partners and community.
+          </p>
+          <p>Current map version: <strong>2025-12-01</strong></p>
+          <p>
+            If this map helped you spend<br />
+            a good day with your family,<br />
+            then it has fulfilled its purpose.
+          </p>
+        </article>
       </section>
 
       <!-- =========================================
@@ -985,6 +1403,16 @@
                 </span>
               </summary>
 
+              <p
+                class="filter-group-helper"
+                data-i18n-de="Hier findest du Schnellfilter, Kategorien, Alter &amp; besondere Spots – für genau das, was heute zu euch passt."
+                data-i18n-en="Here you can fine-tune quick filters, categories, age and special spots – for exactly what fits your family today."
+                data-i18n-da="Her finder du hurtigfiltre, kategorier, alder og særlige spots – så du kan ramme lige det, der passer til jer i dag."
+              >
+                Her finder du hurtigfiltre, kategorier, alder og særlige spots – så du kan ramme lige det, der passer
+                til jer i dag.
+              </p>
+
               <!-- Quick filters -->
               <div class="filter-group" id="filter-tags-group">
                 <label
@@ -1014,7 +1442,7 @@
                   aria-labelledby="filter-tags-label"
                   aria-describedby="filter-tags-helper"
                 >
-                  <!-- Chips rendered by JS -->
+                  <!-- rendered by JS -->
                 </div>
               </div>
 
@@ -1067,7 +1495,7 @@
                 </select>
               </div>
 
-              <!-- Verified only -->
+              <!-- Only verified -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-verified-label">
                   <input id="filter-verified" name="verified" type="checkbox" />
@@ -1087,7 +1515,7 @@
                 </label>
               </div>
 
-              <!-- Favourites only -->
+              <!-- Favourites -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-favorites-label">
                   <input id="filter-favorites" name="favorites" type="checkbox" />
@@ -1116,7 +1544,7 @@
       </div>
     </main>
 
-    <!-- Bottom Navigation kept for router/JS -->
+    <!-- Bottom Navigation (kept for router/JS) -->
     <nav class="bottom-nav" aria-label="Navigation" hidden aria-hidden="true">
       <button class="bottom-nav-item" type="button" data-route="map" aria-pressed="true">
         <span id="bottom-nav-map-label" data-i18n-de="Karte" data-i18n-en="Map" data-i18n-da="Kort">Kort</span>
@@ -1133,7 +1561,7 @@
   <!-- Landscape warning -->
   <div class="landscape-warning" aria-hidden="true">
     <span aria-hidden="true">
-      Vend venligst enheden 📱🔄 – i portrætformat føler Tilla sig lidt mere hjemme i Family Spots Map.
+      Vend venligst din enhed 📱🔄 – Tilla har det bedst i portrætformat.
     </span>
   </div>
 
@@ -1183,7 +1611,6 @@
         if (event.key === "Escape") closeMenu();
       });
 
-      // Jump to spot list
       if (btnSkipSpots) {
         btnSkipSpots.addEventListener("click", () => {
           const el = document.getElementById("spots-title");
@@ -1193,7 +1620,6 @@
         });
       }
 
-      // Language chips -> use legacy switcher
       const langOrder = ["de", "da", "en"];
 
       function getCurrentLang() {
