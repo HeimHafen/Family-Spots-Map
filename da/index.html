@@ -4,16 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
+  <!-- Wichtig für /da/: sorgt dafür, dass data/i18n/*.json etc. korrekt aus dem Root geladen wird -->
+  <base href="../" />
+
   <title>Family Spots Map – Det smukkeste kort til familieeventyr</title>
   <meta
     name="description"
-    content="Family Spots Map: udvalgte legepladser, zoologiske haver, dyreparker, vandsteder og familievenlige steder – til jeres næste eventyr med børn."
+    content="Family Spots Map: udvalgte legepladser, zoologiske haver, dyreparker, vandsteder & familievenlige steder – til jeres næste eventyr med børn."
   />
-  <meta name="theme-color" content="#fb8c00" />
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
   <meta name="format-detection" content="telephone=no" />
+
+  <!-- Theme color (light/dark) -->
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#d49a6a" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b1220" />
 
   <!-- Canonical & hreflang -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/da/" />
@@ -22,10 +28,10 @@
   <link rel="alternate" hreflang="da" href="https://heimhafen.github.io/Family-Spots-Map/da/" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Family Spots Map – udvalgt kort til familieeventyr" />
+  <meta property="og:title" content="Family Spots Map – kurateret familieeventyr-kort" />
   <meta
     property="og:description"
-    content="Find udvalgte legepladser, dyreparker, vandsteder og meget mere – perfekt til familieeventyr med børn."
+    content="Find udvalgte legepladser, dyreparker, vandsteder & meget mere – perfekt til familieeventyr med børn."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heimhafen.github.io/Family-Spots-Map/da/" />
@@ -37,14 +43,14 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Family Spots Map – udvalgt kort til familieeventyr" />
+  <meta name="twitter:title" content="Family Spots Map – kurateret familieeventyr-kort" />
   <meta
     name="twitter:description"
-    content="Find udvalgte legepladser, dyreparker, vandsteder og meget mere – perfekt til familieeventyr."
+    content="Find udvalgte legepladser, dyreparker, vandsteder & meget mere – ideelt til familieeventyr."
   />
   <meta name="twitter:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
 
-  <!-- Structured Data: WebApplication -->
+  <!-- Structured Data: WebApplication (ohne Preisangaben, um keine Inkonsistenzen zu riskieren) -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -54,18 +60,12 @@
       "applicationCategory": "TravelApplication",
       "url": "https://heimhafen.github.io/Family-Spots-Map/da/",
       "inLanguage": ["da", "de", "en"],
-      "description": "Family Spots Map: udvalgte legepladser, zoologiske haver, dyreparker, vandsteder og familievenlige steder – til jeres næste eventyr med børn.",
-      "offers": {
-        "@type": "Offer",
-        "price": "19.90",
-        "priceCurrency": "EUR",
-        "description": "Årsabonnement for grundkortet"
-      }
+      "description": "Family Spots Map: udvalgte legepladser, zoologiske haver, dyreparker, vandsteder & familievenlige steder – til jeres næste eventyr med børn."
     }
   </script>
 
   <!-- PWA / Apple -->
-  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
@@ -73,8 +73,8 @@
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
 
   <!-- Favicon / Icons -->
-  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icons/icon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -82,8 +82,8 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
   <!-- App Styles -->
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="../css/badges.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/badges.css" />
 </head>
 
 <body>
@@ -101,7 +101,7 @@
   <noscript>
     <div class="noscript-warning">
       Family Spots Map kræver JavaScript for at fungere korrekt.
-      Slå venligst JavaScript til i din browser for at bruge det interaktive kort og filtrene.
+      Aktivér JavaScript i din browser for at bruge det interaktive kort og filtrene.
     </div>
   </noscript>
 
@@ -110,7 +110,7 @@
          HEADER
          ========================================= -->
     <header class="app-header" role="banner">
-      <nav class="app-header-top" aria-label="App-indstillinger og hurtige genveje">
+      <nav class="app-header-top" aria-label="App-indstillinger og hurtige handlinger">
         <div class="app-header-left">
           <span
             class="sr-only"
@@ -122,7 +122,7 @@
             Skift sprog
           </span>
 
-          <!-- Skjult men funktionel legacy language switcher -->
+          <!-- Hidden but functional legacy language switcher -->
           <button
             id="language-switcher"
             class="btn-icon language-switcher sr-only"
@@ -132,7 +132,7 @@
             <img
               id="language-switcher-flag"
               class="language-switcher-flag"
-              src="../assets/flags/flag-dk.svg"
+              src="assets/flags/flag-dk.svg"
               alt=""
               width="24"
               height="24"
@@ -191,7 +191,7 @@
       class="app-menu"
       role="dialog"
       aria-modal="true"
-      aria-label="Hurtige genveje og indstillinger"
+      aria-label="Hurtige handlinger og indstillinger"
       hidden
     >
       <div class="app-menu-backdrop" data-menu-close="1"></div>
@@ -217,7 +217,7 @@
             </span>
           </button>
 
-          <!-- Gå til spotlisten -->
+          <!-- Jump to spot list -->
           <button
             id="btn-skip-spots"
             class="app-menu-item"
@@ -339,7 +339,7 @@
             <div class="tilla-sidebar-card">
               <div class="tilla-sidebar-avatar">
                 <img
-                  src="../assets/tilla/tilla-hero.png"
+                  src="assets/tilla/tilla-hero.png"
                   alt="Tilla skildpadden – jeres rolige familieledsager"
                   loading="lazy"
                   decoding="async"
@@ -744,7 +744,7 @@
               name="daylog"
               class="input"
               rows="3"
-              placeholder="I dag fandt vi et sted, hvor tiden gik lidt langsommere."
+              placeholder="I dag fandt vi et sted, hvor tiden blev lidt langsommere."
             ></textarea>
 
             <button id="daylog-save" class="btn btn-small" type="button">
@@ -974,7 +974,7 @@
           </p>
         </article>
 
-        <!-- Dansk (DEFAULT VISIBLE) -->
+        <!-- Dansk (sichtbar auf /da/) -->
         <article id="page-about-da" class="page page-about" lang="da" aria-hidden="false">
           <h2>Om Family Spots Map</h2>
           <p>
@@ -1172,7 +1172,7 @@
           </p>
         </article>
 
-        <!-- English -->
+        <!-- Englisch -->
         <article id="page-about-en" class="page page-about hidden" lang="en" aria-hidden="true">
           <h2>About Family Spots Map</h2>
           <p>
@@ -1495,7 +1495,7 @@
                 </select>
               </div>
 
-              <!-- Only verified -->
+              <!-- Verified only -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-verified-label">
                   <input id="filter-verified" name="verified" type="checkbox" />
@@ -1515,7 +1515,7 @@
                 </label>
               </div>
 
-              <!-- Favourites -->
+              <!-- Favourites only -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-favorites-label">
                   <input id="filter-favorites" name="favorites" type="checkbox" />
@@ -1561,7 +1561,7 @@
   <!-- Landscape warning -->
   <div class="landscape-warning" aria-hidden="true">
     <span aria-hidden="true">
-      Vend venligst din enhed 📱🔄 – Tilla har det bedst i portrætformat.
+      Vend venligst enheden 📱🔄 – Tilla har det lidt bedre i portrætformat.
     </span>
   </div>
 
@@ -1679,9 +1679,9 @@
   ></script>
 
   <!-- Onboarding hint -->
-  <script type="module" src="../js/onboarding-hint.js"></script>
+  <script type="module" src="js/onboarding-hint.js"></script>
 
   <!-- App -->
-  <script type="module" src="../js/app.js"></script>
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
