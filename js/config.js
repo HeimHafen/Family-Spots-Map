@@ -37,7 +37,6 @@
  *  "Praktisches" |
  *  "Unterwegs mit WoMo & Rad" |
  *  "Entspannung & Naturorte" |
- *  "Messen & Events"
  * } CategoryGroupKey
  */
 
@@ -210,8 +209,6 @@ export const CATEGORY_GROUPS = {
     "kletterwald-hochseilgarten",
     "boulderpark",
     "minigolf",
-    "familien-event",
-
     // ➕ NEU
     "hoehle",
     "felsenwanderung",
@@ -250,13 +247,7 @@ export const CATEGORY_GROUPS = {
     // ➕ NEU
     "waldbaden-ort",
     "natur-aussichtspunkt"
-  ],
-  // ➕ NEU: Messe & Events (ABF)
-  "Messen & Events": [
-    "abf_exhibitor",   // einzelne Aussteller-Stände
-    "abf_family_area"  // Familien-/Kinderbereiche, Bühnen etc.
-  ]
-};
+  ]};
 
 /**
  * Labels für Kategorie-Gruppen in verschiedenen Sprachen.
@@ -274,9 +265,7 @@ export const CATEGORY_GROUP_LABELS = {
     "Lernen & Kultur": "Lernen & Kultur",
     "Praktisches": "Praktisches",
     "Unterwegs mit WoMo & Rad": "Unterwegs mit WoMo & Rad",
-    "Entspannung & Naturorte": "Entspannung & Naturorte",
-    "Messen & Events": "ABF Messe"
-  },
+    "Entspannung & Naturorte": "Entspannung & Naturorte"},
   en: {
     "Spiel & Bewegung": "Play & movement",
     "Tiere & Natur": "Animals & nature",
@@ -287,9 +276,7 @@ export const CATEGORY_GROUP_LABELS = {
     "Lernen & Kultur": "Learning & culture",
     "Praktisches": "Useful on the way",
     "Unterwegs mit WoMo & Rad": "On the road (RV & bike)",
-    "Entspannung & Naturorte": "Relax & nature",
-    "Messen & Events": "ABF fair"
-  },
+    "Entspannung & Naturorte": "Relax & nature"},
   da: {
     "Spiel & Bewegung": "Leg & bevægelse",
     "Tiere & Natur": "Dyr & natur",
@@ -300,9 +287,7 @@ export const CATEGORY_GROUP_LABELS = {
     "Lernen & Kultur": "Læring & kultur",
     "Praktisches": "Praktisk på tur",
     "Unterwegs mit WoMo & Rad": "På farten (autocamper & cykel)",
-    "Entspannung & Naturorte": "Afslapning & natursteder",
-    "Messen & Events": "ABF-messe"
-  }
+    "Entspannung & Naturorte": "Afslapning & natursteder"}
 };
 
 /** @type {Record<string, string>} */
@@ -364,7 +349,6 @@ export const CATEGORY_LABELS_DE = {
   bibliothek: "Bibliothek",
   "oeffentliche-toilette": "Öffentliche Toilette",
   wickelraum: "Wickelraum",
-  "familien-event": "Familien-Event",
   "stellplatz-spielplatz-naehe-kostenlos":
     "Kostenloser Stellplatz (Spielplatznähe)",
   "wohnmobil-service-station": "Wohnmobil-Service-Station",
@@ -372,12 +356,7 @@ export const CATEGORY_LABELS_DE = {
   "bikepacking-spot": "Bikepacking-Spot",
   "campingplatz-familien": "Familien-Campingplatz",
   "park-garten": "Park / Garten",
-  picknickwiese: "Picknickwiese",
-
-  // ➕ NEU: ABF-Messe-Kategorien
-  abf_exhibitor: "ABF Messe · Aussteller",
-  abf_family_area: "ABF Messe · Familienbereich"
-};
+  picknickwiese: "Picknickwiese"};
 
 /** @type {Record<string, string>} */
 export const CATEGORY_LABELS_EN = {
@@ -438,7 +417,6 @@ export const CATEGORY_LABELS_EN = {
   bibliothek: "Library",
   "oeffentliche-toilette": "Public toilet",
   wickelraum: "Baby changing room",
-  "familien-event": "Family event",
   "stellplatz-spielplatz-naehe-kostenlos":
     "Free RV spot (near playground)",
   "wohnmobil-service-station": "RV service station",
@@ -446,12 +424,7 @@ export const CATEGORY_LABELS_EN = {
   "bikepacking-spot": "Bikepacking spot",
   "campingplatz-familien": "Family campground",
   "park-garten": "Park / garden",
-  picknickwiese: "Picnic meadow",
-
-  // ➕ NEU: ABF-Messe-Kategorien
-  abf_exhibitor: "ABF fair · exhibitors",
-  abf_family_area: "ABF fair · family area"
-};
+  picknickwiese: "Picnic meadow"};
 
 /** @type {Record<string, string>} */
 export const CATEGORY_LABELS_DA = {
@@ -511,7 +484,6 @@ export const CATEGORY_LABELS_DA = {
   bibliothek: "Børne- & familiebibliotek",
   "oeffentliche-toilette": "Offentligt toilet",
   wickelraum: "Puslerum",
-  "familien-event": "Familieevent",
   "stellplatz-spielplatz-naehe-kostenlos":
     "Gratis autocamperplads (tæt på legeplads)",
   "wohnmobil-service-station": "Autocamper serviceplads",
@@ -519,12 +491,7 @@ export const CATEGORY_LABELS_DA = {
   "bikepacking-spot": "Bikepacking-spot",
   "campingplatz-familien": "Familievenlig campingplads",
   "park-garten": "Park / have",
-  picknickwiese: "Picniceng",
-
-  // ➕ NEU: ABF-Messe-Kategorien
-  abf_exhibitor: "ABF-messe · udstillere",
-  abf_family_area: "ABF-messe · familieområde"
-};
+  picknickwiese: "Picniceng"};
 
 // ------------------------------------------------------
 // Kategorie-Tags (für Filter-Logik)
@@ -817,8 +784,6 @@ export const CATEGORY_TAGS = {
   "oeffentliche-toilette": ["infrastructure", "toilet"],
   wickelraum: ["infrastructure", "baby-changing", "indoor"],
 
-  "familien-event": ["event", "temporary", "family-friendly"],
-
   "stellplatz-spielplatz-naehe-kostenlos": [
     "rv",
     "free",
@@ -869,28 +834,7 @@ export const CATEGORY_TAGS = {
     "picnic-possible",
     "family-friendly"
   ],
-  picknickwiese: ["picnic", "nature", "relax", "outdoor", "family-friendly"],
-
-  // ➕ NEU: ABF-Messe-Kategorien
-  abf_exhibitor: [
-    "abf",
-    "expo",
-    "indoor",
-    "fair",
-    "navigation",
-    "temporary",
-    "family-friendly"
-  ],
-  abf_family_area: [
-    "abf",
-    "expo",
-    "family",
-    "kids-area",
-    "indoor",
-    "temporary",
-    "family-friendly"
-  ]
-};
+  picknickwiese: ["picnic", "nature", "relax", "outdoor", "family-friendly"]};
 
 // ------------------------------------------------------
 // Filter-Chips (Mapping Filter → Tags)
@@ -1139,29 +1083,6 @@ export const ADDONS = Object.freeze({
       "campingplatz-familien"
     ]
   },
-
-  // ➕ NEU: ABF-Messe-Add-on
-  addon_abf: {
-    id: "addon_abf",
-    type: "addon",
-    requiresSubscriptionId: "family_plus",
-    // Preis kann 0 sein – Freischaltung über Partner-/Messe-Code
-    pricePerYear: 0,
-    currency: "EUR",
-    label: {
-      de: "ABF Messe Add-on",
-      en: "ABF fair add-on",
-      da: "ABF-messe-add-on"
-    },
-    description: {
-      de: "ABF-Gelände mit Hallen, Ausstellern und Familienbereichen direkt in deiner Family Spots Map.",
-      en: "ABF fairgrounds with halls, exhibitors and family areas directly in your Family Spots Map.",
-      da: "ABF-messeområde med haller, udstillere og familieområder direkte i din Family Spots Map."
-    },
-    categories: ["abf_exhibitor", "abf_family_area"]
-  }
-});
-
 /**
  * Zugriffsregeln pro Kategorie:
  *
@@ -1172,6 +1093,8 @@ export const ADDONS = Object.freeze({
  * Default ist "free", falls Kategorie hier nicht eingetragen ist.
  * @type {CategoryAccessConfig}
  */
+});
+
 export const CATEGORY_ACCESS = Object.freeze({
   defaultLevel: "free",
   perCategory: {
@@ -1237,18 +1160,6 @@ export const CATEGORY_ACCESS = Object.freeze({
       subscriptionId: "family_plus",
       addonId: "addon_rv"
     },
-
-    // ---------- Add-on: ABF Messe ----------
-    abf_exhibitor: {
-      level: "addon",
-      subscriptionId: "family_plus",
-      addonId: "addon_abf"
-    },
-    abf_family_area: {
-      level: "addon",
-      subscriptionId: "family_plus",
-      addonId: "addon_abf"
-    }
 
     // ➕ weitere Kategorien kannst du hier jederzeit ergänzen
   }
