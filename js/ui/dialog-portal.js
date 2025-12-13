@@ -1,73 +1,87 @@
-// Family Spots Map — Dialog Portal & Z-Index Fix (stable)
+// js/ui/dialog-portal.js
+// Family Spots Map – Dialog-Portal + Backdrop-Z-Index-Fix
+
+"use strict";
 
 (function () {
+  /**
+   * Verschiebt alle [role="dialog"]-Elemente direkt unter <body>,
+   * damit Z-Index und Backdrop korrekt funktionieren.
+   */
   function portalizeDialogs() {
-    var dialogs = document.querySelectorAll('[role="dialog"]');
-    for (var i = 0; i < dialogs.length; i++) {
-      var el = dialogs[i];
+    const dialogs = document.querySelectorAll('[role="dialog"]');
+    dialogs.forEach((el) => {
       if (el.parentElement !== document.body) {
-        document.body.appendChild(el); // an Body-Ende verschieben
+        document.body.appendChild(el);
       }
-    }
+    });
+
     ensureBackdrop();
     updateBodyLock();
   }
 
+  /**
+   * Erstellt bei Bedarf ein zentrales Backdrop-Element.
+   * Klick auf den Backdrop schließt Dialoge mit data-backdrop-close="true".
+   */
   function ensureBackdrop() {
-    var backdrop = document.getElementById('dialog-backdrop');
+    let backdrop = document.getElementById("dialog-backdrop");
+
     if (!backdrop) {
-      backdrop = document.createElement('div');
-      backdrop.id = 'dialog-backdrop';
+      backdrop = document.createElement("div");
+      backdrop.id = "dialog-backdrop";
       document.body.appendChild(backdrop);
     }
-    backdrop.addEventListener('click', function () {
-      // sichtbare Dialoge schließen, wenn erlaubt
-      var open = visibleDialogs();
-      for (var i = 0; i < open.length; i++) {
-        if (open[i].getAttribute('data-backdrop-close') === 'true') {
-          open[i].setAttribute('hidden', '');
+
+    backdrop.addEventListener("click", () => {
+      visibleDialogs().forEach((dialog) => {
+        if (dialog.getAttribute("data-backdrop-close") === "true") {
+          dialog.setAttribute("hidden", "");
         }
-      }
+      });
       updateBodyLock();
     });
   }
 
+  /**
+   * Liefert alle aktuell sichtbaren Dialoge.
+   * @returns {Element[]}
+   */
   function visibleDialogs() {
-    var out = [];
-    var dialogs = document.querySelectorAll('[role="dialog"]');
-    for (var i = 0; i < dialogs.length; i++) {
-      var el = dialogs[i];
-      if (!el.hasAttribute('hidden') && el.style.display !== 'none') {
-        out.push(el);
-      }
-    }
-    return out;
+    return Array.from(document.querySelectorAll('[role="dialog"]')).filter(
+      (el) =>
+        !el.hasAttribute("hidden") &&
+        el.style.display !== "none" &&
+        el.offsetParent !== null // sichtbar im Layout
+    );
   }
 
+  /**
+   * Sperrt Body-Scroll & zeigt Backdrop an, wenn mindestens 1 Dialog offen ist.
+   */
   function updateBodyLock() {
-    var backdrop = document.getElementById('dialog-backdrop');
-    var anyOpen = visibleDialogs().length > 0;
-    if (anyOpen) {
-      document.body.classList.add('body--dialog-open');
-      if (backdrop) backdrop.classList.add('is-visible');
-    } else {
-      document.body.classList.remove('body--dialog-open');
-      if (backdrop) backdrop.classList.remove('is-visible');
-    }
+    const anyOpen = visibleDialogs().length > 0;
+    const backdrop = document.getElementById("dialog-backdrop");
+
+    document.body.classList.toggle("body--dialog-open", anyOpen);
+    backdrop?.classList.toggle("is-visible", anyOpen);
   }
 
-  // Änderungen beobachten (hidden/style/class) -> Body-Lock & Backdrop aktualisieren
+  /**
+   * Beobachtet Dialog-Veränderungen (z. B. hidden/class/style) und
+   * aktualisiert Body-Lock & Backdrop-Zustand.
+   */
   function observeMutations() {
-    var observer = new MutationObserver(function () { updateBodyLock(); });
+    const observer = new MutationObserver(updateBodyLock);
     observer.observe(document.body, {
       subtree: true,
       attributes: true,
-      attributeFilter: ['hidden', 'style', 'class']
+      attributeFilter: ["hidden", "style", "class"]
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
       portalizeDialogs();
       observeMutations();
     });
