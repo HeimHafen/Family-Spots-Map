@@ -367,6 +367,35 @@ select {
   white-space: nowrap;
 }
 
+/* =========================================
+   FIX: Skip-Link – nur bei Fokus sichtbar
+   (entfernt „Zum Hauptinhalt springen“ aus der UI)
+   ========================================= */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 3000;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  left: 12px;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  width: auto;
+  height: auto;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111827;
+  box-shadow: var(--elevation-lg);
+  outline: none;
+}
+
 /* Header-Icons & Menü-Button */
 
 .btn-icon {
@@ -474,8 +503,14 @@ select {
   display: none;
 }
 
+/* FIX: Hidden muss IMMER gewinnen (auch wenn sonst display gesetzt wird) */
 .app-menu[hidden] {
-  display: none;
+  display: none !important;
+}
+
+/* FIX: Ohne data-menu-open darf das Menü niemals sichtbar sein */
+body:not([data-menu-open="1"]) .app-menu {
+  display: none !important;
 }
 
 body[data-menu-open="1"] .app-menu {
@@ -500,6 +535,12 @@ body[data-menu-open="1"] .app-menu {
   background: var(--card-bg, rgba(255, 255, 255, 0.98));
   border: 1px solid var(--card-border, rgba(148, 163, 184, 0.16));
   box-shadow: var(--elevation-lg);
+
+  /* FIX: Panel nicht unnötig groß + sauber scrollen */
+  height: auto;
+  max-height: min(70vh, calc(100vh - env(safe-area-inset-top, 0px) - 84px));
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 [data-theme="dark"] .app-menu-panel {
