@@ -380,3 +380,29 @@ body[data-theme="dark"],
     color-scheme: light;
   }
 }
+
+/* =========================================================
+   TILLA BOOST v4 — sichtbarer Tilla-Look (ohne Primary zu zerstören)
+   ========================================================= */
+
+@supports (background: color-mix(in oklab, white, black)) {
+  :root {
+    /* Tagline bekommt Tilla-Grün-Note */
+    --header-tagline-bg: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--accent-soft), var(--tilla-green-soft) 45%),
+      var(--accent-soft)
+    );
+
+    /* Chips / Inputs leicht grünlicher (sehr “Tilla”) */
+    --chip-bg: color-mix(in oklab, var(--surface-3), var(--tilla-green-soft) 22%);
+    --input-bg: color-mix(in oklab, hsl(32, 58%, 88%), var(--tilla-green-soft) 10%);
+
+    /* Bottom-Nav Backdrop etwas “Nature” */
+    --bottom-nav-backdrop: color-mix(
+      in oklab,
+      hsla(var(--accent-h), 54%, 74%, 0.62),
+      var(--tilla-glow-green) 55%
+    );
+  }
+}
