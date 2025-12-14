@@ -2,6 +2,7 @@
    components.css — Layout & Komponenten
    Highest-Level Refine: Robustheit, Konsistenz,
    iOS Safe Area, A11y Focus, weniger Redundanz
+   + Kontrast-Refine & Sekundär-Akzent (Info/Success)
    ========================================= */
 
 /* -----------------------------------------
@@ -53,6 +54,12 @@
   /* App background fallbacks */
   --app-bg-fallback-light: var(--fsm-warm-0);
   --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
+
+  /* Secondary accent fallbacks (theme.css provides --info/--success tokens) */
+  --info-fallback: hsl(210, 60%, 38%);
+  --info-soft-fallback: hsla(210, 60%, 38%, 0.12);
+  --success-fallback: hsl(146, 45%, 36%);
+  --success-soft-fallback: hsla(146, 45%, 36%, 0.14);
 }
 
 /* Dark fallback focus ring (prefer theme.css) */
@@ -98,6 +105,33 @@ body {
 ) {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+}
+
+/* =========================================
+   Links (Sekundär-Akzent: Info/Blau)
+   ========================================= */
+:where(a, .link) {
+  color: var(--info, var(--info-fallback));
+  text-decoration: none;
+  font-weight: 650;
+  text-underline-offset: 2px;
+}
+
+:where(a, .link):hover {
+  text-decoration: underline;
+}
+
+:where(a, .link):focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring, var(--focus-ring-default));
+}
+
+[data-theme="dark"] :where(a, .link) {
+  color: color-mix(
+    in oklab,
+    var(--info, var(--info-fallback)),
+    white 12%
+  );
 }
 
 /* =========================================
@@ -181,7 +215,7 @@ select {
   box-shadow: var(--elevation-md);
 }
 
-/* Secondary buttons */
+/* Secondary buttons (Kontrast/Clickability verbessert) */
 .btn-secondary {
   background-color: var(--neutral-0);
   color: var(--text-strong, #111827);
@@ -191,11 +225,13 @@ select {
 
 .btn-secondary:hover {
   background-color: var(--neutral-1);
-  box-shadow: var(--elevation-sm);
+  border-color: var(--border-2, rgba(148, 163, 184, 0.32));
+  box-shadow: var(--elevation-md);
 }
 
 .btn-secondary:active {
   background-color: var(--neutral-2);
+  box-shadow: var(--elevation-xs);
 }
 
 [data-theme="dark"] .btn-secondary {
@@ -205,7 +241,29 @@ select {
   box-shadow: var(--elevation-sm);
 }
 
-/* Ghost buttons */
+[data-theme="dark"] .btn-secondary:hover {
+  box-shadow: var(--elevation-md);
+}
+
+/* Info button (Sekundär-Akzent: Blau) */
+.btn-info {
+  background: var(--info-soft, var(--info-soft-fallback));
+  color: var(--info, var(--info-fallback));
+  border: 1px solid color-mix(in oklab, var(--info, var(--info-fallback)), transparent 70%);
+  box-shadow: var(--elevation-xs);
+}
+
+.btn-info:hover {
+  box-shadow: var(--elevation-md);
+  background: color-mix(in oklab, var(--info-soft, var(--info-soft-fallback)), white 12%);
+}
+
+.btn-info:active {
+  box-shadow: var(--elevation-xs);
+  transform: translateY(1px);
+}
+
+/* Ghost buttons (Kontrast/States verbessert) */
 .btn-ghost {
   display: inline-flex;
   align-items: center;
@@ -231,7 +289,7 @@ select {
 
 .btn-ghost:hover {
   background-color: rgba(15, 23, 42, 0.05);
-  border-color: rgba(148, 163, 184, 0.34);
+  border-color: var(--border-2, rgba(148, 163, 184, 0.34));
   color: var(--text-strong, #111827);
 }
 
@@ -246,7 +304,7 @@ select {
 
 [data-theme="dark"] .btn-ghost:hover {
   background-color: rgba(148, 163, 184, 0.14);
-  border-color: rgba(148, 163, 184, 0.36);
+  border-color: var(--border-2, rgba(148, 163, 184, 0.36));
 }
 
 /* Tilla / Compact primary button */
@@ -1421,7 +1479,7 @@ select.input {
 .spot-card:focus-within {
   transform: translateY(-1px);
   box-shadow: var(--elevation-md);
-  border-color: rgba(148, 163, 184, 0.4);
+  border-color: var(--border-2, rgba(148, 163, 184, 0.4));
 }
 
 .spot-card-title {
@@ -1429,6 +1487,7 @@ select.input {
   font-weight: 700;
   margin: 0 0 3px;
   letter-spacing: 0.01em;
+  color: var(--text-strong);
 }
 
 .spot-card-subtitle {
@@ -1489,6 +1548,32 @@ select.input {
   font-weight: 650;
 }
 
+/* Badges (Sekundär-Akzent: Info/Success) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill, 999px);
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--border-1, rgba(148, 163, 184, 0.22));
+  background: var(--neutral-0);
+  color: var(--text-strong);
+}
+
+.badge--info {
+  background: var(--info-soft, var(--info-soft-fallback));
+  color: var(--info, var(--info-fallback));
+  border-color: color-mix(in oklab, var(--info, var(--info-fallback)), transparent 70%);
+}
+
+.badge--success {
+  background: var(--success-soft, var(--success-soft-fallback));
+  color: var(--success, var(--success-fallback));
+  border-color: color-mix(in oklab, var(--success, var(--success-fallback)), transparent 70%);
+}
+
 /* Spot details */
 .spot-details--hidden {
   display: none;
@@ -1525,6 +1610,7 @@ select.input {
   margin: 0 0 2px;
   font-size: 16px;
   font-weight: 700;
+  color: var(--text-strong);
 }
 
 .spot-details-meta {
@@ -2164,6 +2250,31 @@ body[data-menu-open="1"] {
   stroke: var(--radius-circle-stroke);
   stroke-width: 2;
   fill: var(--radius-circle-fill);
+}
+
+/* =========================================
+   Contrast Refinements (Text-Hierarchie)
+   - mehr Outdoor-Lesbarkeit ohne “schwer” zu wirken
+   ========================================= */
+@supports (color: color-mix(in oklab, white, black)) {
+  :where(
+    .spot-card-subtitle,
+    .spot-card-meta,
+    .filter-group-helper,
+    .filter-group-helper--compact,
+    .radius-description,
+    .empty-state-text,
+    .spot-details-meta,
+    .spot-details-poetry,
+    .spot-details-address,
+    .spot-card-description,
+    .spot-card-actions,
+    .plus-note,
+    .filter-summary,
+    .fsm-onboarding-hint
+  ) {
+    color: color-mix(in oklab, var(--text-soft), var(--text-color) 18%);
+  }
 }
 
 /* =========================================
