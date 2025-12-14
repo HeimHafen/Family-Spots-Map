@@ -23,9 +23,6 @@
   --accent-light: hsl(var(--accent-h), 70%, 58%);
   --accent-dark: hsl(var(--accent-h), 76%, 34%);
 
-  /* Solid-Akzent für Flächen mit weißem Text (AA-konformer als --accent) */
-  --accent-solid: hsl(var(--accent-h), 64%, 40%);
-
   /* Accent surfaces (muted) */
   --accent-soft: hsl(var(--accent-h), 56%, 92%);
   --accent-soft-hover: hsl(var(--accent-h), 56%, 86%);
@@ -161,7 +158,7 @@
   --bottom-nav-backdrop: hsla(var(--accent-h), 40%, 76%, 0.50);
   --bottom-nav-item-bg: var(--surface-1);
   --bottom-nav-item-color: hsl(24, 22%, 26%);
-  --bottom-nav-item-active-bg: var(--accent-solid);
+  --bottom-nav-item-active-bg: var(--accent);
   --bottom-nav-item-active-color: #ffffff;
 
   --map-card-bg: var(--surface-2);
