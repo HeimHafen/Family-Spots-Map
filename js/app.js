@@ -3,19 +3,12 @@
 // Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
 // Map- und Filterlogik ist in map.js / filters.js ausgelagert.
 // Daten & Plus-Logik sind in data.js / features/plus.js ausgelagert.
-//
-// WICHTIG (Fix):
-// - Distanz-Badges UND Radius-Filter werden IMMER vom realen Nutzerstandort berechnet.
-// - Niemals vom Kartenmittelpunkt (map.getCenter()).
-// - Wenn kein Standort verfügbar ist: keine Distanz-Badges + Radius-Filter wird nicht angewendet,
-//   damit nie falsche Entfernungen angezeigt werden.
 // ======================================================
 
 "use strict";
 
 import "./i18n.js"; // Modul führt sich selbst aus und setzt globales I18N
 
-// NEU (wie von dir gewünscht)
 import { initMenu } from "./ui/menu.js";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
@@ -54,7 +47,6 @@ import {
 import {
   initMap,
   renderMarkers,
-  getRouteUrlsForSpot,
   hasValidLatLng
 } from "./map.js";
 
@@ -64,7 +56,6 @@ import { initToast, showToast } from "./toast.js";
 import { loadData } from "./data.js";
 import {
   getPlusStatus,
-  isPlusActive,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
@@ -145,7 +136,6 @@ const t = (key) =>
 
 /** Spielideen aus I18N abholen – mit statischem Fallback */
 function getRandomPlayIdea() {
-  // 1. Wenn I18N eigene Ideen liefert, diese bevorzugen
   if (
     typeof I18N !== "undefined" &&
     typeof I18N.getRandomPlayIdea === "function"
@@ -154,7 +144,6 @@ function getRandomPlayIdea() {
     if (ideaFromI18n) return ideaFromI18n;
   }
 
-  // 2. Statische Fallback-Ideen je Sprache
   const FALLBACK_PLAY_IDEAS = {
     de: [
       "Macht eine Mini-Schatzsuche: Jedes Kind denkt sich eine Sache aus, die alle finden sollen.",
@@ -277,6 +266,132 @@ let filtersCollapsed = true;
 /** Aktive Tag-Filter (IDs aus FILTERS) */
 let activeTagFilters = new Set();
 
+// ------------------------------------------------------
+// NEU: „Real Location“-State (Entfernung/Radius/Route immer vom echten Standort)
+// ------------------------------------------------------
+
+/**
+ * @type {{lat:number,lng:number,accuracy?:number,ts?:number}|null}
+ */
+let userLocation = null;
+
+/** @type {number|null} */
+let geoWatchId = null;
+
+/**
+ * Setzt/aktualisiert den echten Nutzerstandort.
+ * Wir übernehmen den Wert auch bei wiederholten Updates (watchPosition).
+ */
+function setUserLocation(lat, lng, accuracy) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+  userLocation = {
+    lat,
+    lng,
+    accuracy: Number.isFinite(accuracy) ? accuracy : undefined,
+    ts: Date.now()
+  };
+}
+
+/**
+ * Liefert die „Origin“-LatLng (echter Standort), oder null wenn nicht verfügbar.
+ * Wichtig: Für Vertrauen zeigen wir keine „Pseudo-Entfernungen“ vom Karten-Center.
+ */
+function getUserOriginLatLng() {
+  if (!userLocation) return null;
+  if (typeof L === "undefined" || typeof L.latLng !== "function") return null;
+  return L.latLng(userLocation.lat, userLocation.lng);
+}
+
+/**
+ * Holt den echten Standort (einmalig).
+ * Wird bewusst nur bei User-Aktion genutzt (Locate-Button / Radius-Interaktion),
+ * damit iOS/Safari keinen unerwarteten Prompt bei App-Start zeigt.
+ */
+function requestUserLocationOnce(options = {}) {
+  const {
+    enableHighAccuracy = true,
+    timeout = 8000,
+    maximumAge = 0
+  } = options;
+
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error("geolocation_unavailable"));
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude, accuracy } = pos.coords || {};
+        setUserLocation(latitude, longitude, accuracy);
+        resolve(userLocation);
+      },
+      (err) => reject(err),
+      { enableHighAccuracy, timeout, maximumAge }
+    );
+  });
+}
+
+/**
+ * Startet optional ein watchPosition (damit Entfernungen/Radius aktuell bleiben),
+ * wird erst nach erfolgreichem Locate gestartet.
+ */
+function startLocationWatch() {
+  if (!navigator.geolocation) return;
+  if (geoWatchId != null) return;
+
+  try {
+    geoWatchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const { latitude, longitude, accuracy } = pos.coords || {};
+        setUserLocation(latitude, longitude, accuracy);
+
+        // UI aktualisieren (Distanzen/Filter) ohne die Karte zwangsweise zu verschieben
+        applyFiltersAndRender();
+      },
+      () => {
+        // Watch-Fehler ignorieren (User kann jederzeit erneut „Locate“ drücken)
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 15000 }
+    );
+  } catch {
+    geoWatchId = null;
+  }
+}
+
+/**
+ * Baut Routing-Links immer vom echten Standort (wenn verfügbar).
+ * Fallback: Ziel-only (Apple/Google öffnen ohne explizites Origin).
+ */
+function getRouteUrlsForSpotFromUserLocation(spot) {
+  if (!hasValidLatLng(spot)) return null;
+
+  const destLat = spot.lat;
+  const destLng = spot.lng;
+
+  const origin = userLocation
+    ? { lat: userLocation.lat, lng: userLocation.lng }
+    : null;
+
+  // Apple Maps: saddr/daddr
+  const apple = origin
+    ? `https://maps.apple.com/?saddr=${encodeURIComponent(
+        origin.lat + "," + origin.lng
+      )}&daddr=${encodeURIComponent(destLat + "," + destLng)}`
+    : `https://maps.apple.com/?daddr=${encodeURIComponent(destLat + "," + destLng)}`;
+
+  // Google Maps: dir/?api=1
+  const google = origin
+    ? `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
+        origin.lat + "," + origin.lng
+      )}&destination=${encodeURIComponent(destLat + "," + destLng)}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        destLat + "," + destLng
+      )}`;
+
+  return { apple, google };
+}
+
 // DOM-Referenzen
 let languageSwitcherEl;
 let languageSwitcherFlagEl;
@@ -304,7 +419,7 @@ let filterFavoritesEl;
 let spotListEl;
 let spotDetailEl;
 let spotsSectionEl;
-let tagFilterContainerEl; // Container für Tag-Filter-Chips
+let tagFilterContainerEl;
 
 // Plus & Mein Tag – Sections + Toggle-Buttons
 let plusSectionEl;
@@ -350,136 +465,6 @@ let lastFocusBeforeFilterModal = null;
 let skipLinkEl;
 
 // ------------------------------------------------------
-// Geolocation – REAL USER LOCATION as single source of truth
-// ------------------------------------------------------
-
-/**
- * Leaflet LatLng des realen Nutzerstandorts (nur gesetzt, wenn wir eine valide Fix haben).
- * WICHTIG: Wir berechnen Distanz & Radius NUR mit dieser Position – nie mit map.getCenter().
- * @type {any|null}
- */
-let userLatLng = null;
-
-/** Watch-ID (wenn aktiv) */
-let userLocationWatchId = null;
-
-/** Merker, damit wir nicht spammen, falls Radius gewählt ist aber kein Standort verfügbar */
-let hasShownRadiusNeedsLocationToast = false;
-
-/** Distanz-/Radius-Updates entprellen (z. B. bei watchPosition) */
-const scheduleRecomputeFromLocation = (() => {
-  let timeoutId = null;
-  return () => {
-    if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => {
-      timeoutId = null;
-      // Re-rendern, damit Badges + Radius sofort korrekt sind
-      applyFiltersAndRender();
-    }, 200);
-  };
-})();
-
-/**
- * Setzt userLatLng aus einer Position (Geolocation API).
- * - recenterMap: Karte optional auf Standort zentrieren (z. B. beim Klick auf "Locate")
- * - returns: true, wenn userLatLng gesetzt/aktualisiert wurde
- */
-function setUserLocationFromPosition(pos, { recenterMap = false } = {}) {
-  try {
-    if (!pos || !pos.coords) return false;
-    const { latitude, longitude } = pos.coords;
-
-    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return false;
-    if (typeof L === "undefined" || typeof L.latLng !== "function") return false;
-
-    // Leaflet LatLng als Quelle für distanceTo()
-    const next = L.latLng(latitude, longitude);
-
-    // Nur updaten, wenn wir keine Position hatten oder sich merklich etwas geändert hat
-    const wasNull = !userLatLng;
-    const shouldUpdate =
-      wasNull ||
-      (userLatLng && typeof userLatLng.distanceTo === "function" && userLatLng.distanceTo(next) > 10);
-
-    if (!shouldUpdate) {
-      // Karte evtl. trotzdem zentrieren, wenn gewünscht
-      if (recenterMap && map) {
-        map.setView([latitude, longitude], 13);
-      }
-      return false;
-    }
-
-    userLatLng = next;
-
-    if (recenterMap && map) {
-      map.setView([latitude, longitude], 13);
-    }
-
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Optionaler "stiller" Versuch, einen vorhandenen (bereits erlaubten) Standort abzurufen,
- * ohne die Karte zu bewegen. Wenn keine Berechtigung vorliegt oder abgelehnt wird, ignorieren wir es.
- */
-function tryWarmupUserLocation() {
-  if (!navigator.geolocation) return;
-
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const changed = setUserLocationFromPosition(pos, { recenterMap: false });
-      if (changed) scheduleRecomputeFromLocation();
-    },
-    () => {
-      // Absichtlich ignorieren: Kein falsches Fallback auf map.getCenter()
-    },
-    {
-      enableHighAccuracy: false,
-      timeout: 4000,
-      maximumAge: 5 * 60 * 1000
-    }
-  );
-}
-
-/**
- * Startet watchPosition, um die echte Position aktuell zu halten (nur nach User-Interaktion sinnvoll).
- */
-function startUserLocationWatch() {
-  if (!navigator.geolocation) return;
-  if (userLocationWatchId != null) return;
-
-  userLocationWatchId = navigator.geolocation.watchPosition(
-    (pos) => {
-      const changed = setUserLocationFromPosition(pos, { recenterMap: false });
-      if (changed) scheduleRecomputeFromLocation();
-    },
-    () => {
-      // Watch kann fehlschlagen (z. B. Permission entzogen). Dann sauber stoppen.
-      stopUserLocationWatch();
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0
-    }
-  );
-}
-
-function stopUserLocationWatch() {
-  try {
-    if (navigator.geolocation && userLocationWatchId != null) {
-      navigator.geolocation.clearWatch(userLocationWatchId);
-    }
-  } catch {
-    // ignore
-  }
-  userLocationWatchId = null;
-}
-
-// ------------------------------------------------------
 // Utilities
 // ------------------------------------------------------
 
@@ -500,10 +485,6 @@ function activateOnEnterSpace(handler) {
   };
 }
 
-/**
- * Statisches Fallback-i18n über data-i18n-de / -en / -da
- * (z. B. für Tilla-Text im HTML)
- */
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
     let attrName;
@@ -517,7 +498,6 @@ function applyStaticI18n() {
 
     let text = el.getAttribute(attrName);
     if (!text) {
-      // Fallback: erst de, dann en
       text = el.getAttribute("data-i18n-de") || el.getAttribute("data-i18n-en");
     }
     if (text) el.textContent = text;
@@ -533,10 +513,6 @@ function initLazyLoadImages() {
   });
 }
 
-/**
- * Meta-Title, Meta-Description, ARIA-Labels & Tilla-Alt aus i18n setzen.
- * Wird bei jedem Sprachwechsel aufgerufen.
- */
 function updateMetaAndA11yFromI18n() {
   if (typeof I18N === "undefined" || typeof I18N.t !== "function") return;
 
@@ -590,7 +566,6 @@ function getCategoryLabel(slug) {
     langMap = CATEGORY_LABELS_DA;
     fallbackMap = CATEGORY_LABELS_DE;
   } else {
-    // Standard: Deutsch
     langMap = CATEGORY_LABELS_DE;
     fallbackMap = CATEGORY_LABELS_EN;
   }
@@ -602,10 +577,6 @@ function getCategoryLabel(slug) {
   );
 }
 
-/**
- * Liefert das Kategorien-Label inkl. Hinweis auf Plus / Add-ons.
- * Basis-Kategorien bleiben unverändert.
- */
 function getCategoryLabelWithAccess(slug) {
   const base = getCategoryLabel(slug);
   if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) return base;
@@ -650,9 +621,6 @@ function getCategoryLabelWithAccess(slug) {
   return base;
 }
 
-/**
- * Sprach-Badge (Flagge) aktualisieren
- */
 function updateLanguageSwitcherVisual() {
   if (!languageSwitcherEl) return;
 
@@ -671,14 +639,12 @@ function updateLanguageSwitcherVisual() {
     languageSwitcherFlagEl.src = src;
     languageSwitcherFlagEl.alt = alt;
   } else {
-    // Fallback: falls das Bild fehlt, zeige Kürzel als Text
     let label = "DE";
     if (currentLang === LANG_EN) label = "EN";
     else if (currentLang === LANG_DA) label = "DA";
     languageSwitcherEl.textContent = label;
   }
 
-  // Aria-Label aktualisieren
   let ariaLabel;
   if (currentLang === LANG_DE) {
     ariaLabel = "Sprache: Deutsch (Tippen für Dansk)";
@@ -712,9 +678,6 @@ function updatePlusStatusText(status) {
   plusStatusTextEl.textContent = formatPlusStatus(s);
 }
 
-/**
- * Setzt Sprache, aktualisiert UI & speichert in localStorage.
- */
 function setLanguage(lang, { initial = false } = {}) {
   currentLang = lang === LANG_EN ? LANG_EN : lang === LANG_DA ? LANG_DA : LANG_DE;
 
@@ -1087,8 +1050,23 @@ function initRadiusSliderA11y() {
   filterRadiusEl.setAttribute("aria-valuemax", max);
   filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value);
 
-  filterRadiusEl.addEventListener("input", () => {
+  filterRadiusEl.addEventListener("input", async () => {
     updateRadiusTexts();
+
+    // NEU: Wenn Radius begrenzt ist, versuchen wir den echten Standort zu holen,
+    // damit der Radius wirklich „um mich herum“ gilt.
+    const maxIndex = RADIUS_STEPS_KM.length - 1;
+    if (radiusStep !== maxIndex && !userLocation && navigator.geolocation) {
+      try {
+        await requestUserLocationOnce({ enableHighAccuracy: true, timeout: 9000 });
+        startLocationWatch();
+      } catch {
+        // Wenn der User ablehnt, filtern wir nicht „falsch um Karten-Center herum“,
+        // sondern lassen den Radius für diesen Lauf praktisch „unbegrenzt“ wirken
+        // (isSpotInRadius gibt dann true zurück, weil centerLatLng null sein kann).
+      }
+    }
+
     applyFiltersAndRender();
   });
 
@@ -1096,21 +1074,20 @@ function initRadiusSliderA11y() {
 }
 
 /**
- * Distanz-Check für einen Spot relativ zu userLatLng / radiusKm.
- * WICHTIG:
- * - Wenn userLatLng fehlt: KEIN Radius-Filter (return true),
- *   damit wir niemals falsche Filterung aufgrund map.getCenter() machen.
+ * Distanz-Check für einen Spot relativ zu originLatLng / radiusKm.
+ * Origin ist der echte Nutzerstandort, nicht das Map-Center.
  */
-function isSpotInRadius(spot, radiusKm) {
-  if (!userLatLng || typeof userLatLng.distanceTo !== "function") {
+function isSpotInRadius(spot, originLatLng, radiusKm) {
+  if (!originLatLng || typeof originLatLng.distanceTo !== "function") {
     return true;
   }
   if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
   if (!hasValidLatLng(spot)) return true;
+
   if (typeof L === "undefined" || typeof L.latLng !== "function") return true;
 
   const spotLatLng = L.latLng(spot.lat, spot.lng);
-  const distanceMeters = userLatLng.distanceTo(spotLatLng);
+  const distanceMeters = originLatLng.distanceTo(spotLatLng);
   const distanceKm = distanceMeters / 1000;
   return distanceKm <= radiusKm;
 }
@@ -1199,7 +1176,6 @@ function updateFilterSummary() {
   const parts = [];
   const maxRadiusIndex = RADIUS_STEPS_KM.length - 1;
 
-  // Suche
   if (searchTerm) {
     if (currentLang === LANG_EN) {
       parts.push(`Search: “${searchTerm}”`);
@@ -1210,7 +1186,6 @@ function updateFilterSummary() {
     }
   }
 
-  // Stimmung
   const moodLabel = getMoodLabelForSummary();
   if (moodLabel) {
     if (currentLang === LANG_EN) {
@@ -1222,25 +1197,11 @@ function updateFilterSummary() {
     }
   }
 
-  // Radius
   if (radiusStep !== maxRadiusIndex) {
     const km = RADIUS_STEPS_KM[radiusStep];
-
-    // Wenn Radius aktiv ist aber kein Standort existiert: transparent machen (ohne falsche Zahlen)
-    if (!userLatLng) {
-      if (currentLang === LANG_EN) {
-        parts.push(`Radius: ${km} km (needs location)`);
-      } else if (currentLang === LANG_DA) {
-        parts.push(`Radius: ${km} km (kræver placering)`);
-      } else {
-        parts.push(`Radius: ${km} km (benötigt Standort)`);
-      }
-    } else {
-      parts.push(`Radius: ${km} km`);
-    }
+    parts.push(`Radius: ${km} km`);
   }
 
-  // Kategorie
   if (categoryFilter && filterCategoryEl) {
     const selected = filterCategoryEl.selectedOptions[0];
     const label = (selected && selected.textContent.trim()) || getCategoryLabel(categoryFilter);
@@ -1255,7 +1216,6 @@ function updateFilterSummary() {
     }
   }
 
-  // Alter
   if (ageFilter !== "all" && filterAgeEl) {
     const selected = filterAgeEl.selectedOptions[0];
     const label = selected ? selected.textContent.trim() : ageFilter;
@@ -1268,7 +1228,6 @@ function updateFilterSummary() {
     }
   }
 
-  // Schnellfilter (Tag-Filter)
   if (activeTagFilters && activeTagFilters.size > 0) {
     const count = activeTagFilters.size;
     if (currentLang === LANG_EN) {
@@ -1280,7 +1239,6 @@ function updateFilterSummary() {
     }
   }
 
-  // Nur verifizierte
   if (onlyVerified) {
     if (currentLang === LANG_EN) {
       parts.push("Only verified spots");
@@ -1291,7 +1249,6 @@ function updateFilterSummary() {
     }
   }
 
-  // Nur Favoriten
   if (onlyFavorites) {
     if (currentLang === LANG_EN) {
       parts.push("Favourites only");
@@ -1302,7 +1259,6 @@ function updateFilterSummary() {
     }
   }
 
-  // Große Abenteuer
   if (onlyBigAdventures) {
     if (currentLang === LANG_EN) {
       parts.push("Big adventures");
@@ -1336,16 +1292,13 @@ function updateFilterSummary() {
 // ------------------------------------------------------
 
 function getFilterContext() {
-  // aktuelle Radius-Kilometer (oder Infinity)
   const maxIndex = RADIUS_STEPS_KM.length - 1;
   const radiusKm =
     radiusStep >= 0 && radiusStep <= maxIndex
       ? RADIUS_STEPS_KM[radiusStep]
       : RADIUS_STEPS_KM[maxIndex];
 
-  // REALER Standort (Single source of truth)
-  const centerLat = userLatLng ? userLatLng.lat : null;
-  const centerLng = userLatLng ? userLatLng.lng : null;
+  const origin = userLocation ? { lat: userLocation.lat, lng: userLocation.lng } : null;
 
   return {
     lang: currentLang,
@@ -1361,8 +1314,7 @@ function getFilterContext() {
     onlyVerified,
     onlyFavorites,
     activeTagFilters: Array.from(activeTagFilters),
-    center:
-      centerLat != null && centerLng != null ? { lat: centerLat, lng: centerLng } : null
+    origin
   };
 }
 
@@ -1376,7 +1328,6 @@ function openFilterModal() {
   lastFocusBeforeFilterModal = document.activeElement;
   filterModalEl.hidden = false;
 
-  // Body-Scroll sperren, solange das Filter-Modal geöffnet ist
   if (document && document.body) {
     document.body.setAttribute("data-filter-modal-open", "1");
   }
@@ -1398,7 +1349,6 @@ function closeFilterModal(options = {}) {
   isFilterModalOpen = false;
   filterModalEl.hidden = true;
 
-  // Body-Scroll wieder freigeben
   if (document && document.body) {
     document.body.removeAttribute("data-filter-modal-open");
   }
@@ -1419,9 +1369,7 @@ function resetAllFilters() {
   onlyFavorites = false;
   activeTagFilters.clear();
 
-  // Radius auf Maximum (alle Spots)
   radiusStep = RADIUS_STEPS_KM.length - 1;
-  hasShownRadiusNeedsLocationToast = false;
 
   if (filterSearchEl) filterSearchEl.value = "";
   if (filterAgeEl) filterAgeEl.value = "all";
@@ -1436,13 +1384,11 @@ function resetAllFilters() {
   if (filterVerifiedEl) filterVerifiedEl.checked = false;
   if (filterFavoritesEl) filterFavoritesEl.checked = false;
 
-  // Mood-Chips zurücksetzen
   document.querySelectorAll(".mood-chip").forEach((chip) => {
     chip.classList.remove("mood-chip--active");
     chip.setAttribute("aria-pressed", "false");
   });
 
-  // Travel-Mode-Chips zurücksetzen
   document.querySelectorAll(".travel-chip").forEach((chip) => {
     chip.classList.remove("travel-chip--active");
     chip.setAttribute("aria-pressed", "false");
@@ -1452,7 +1398,6 @@ function resetAllFilters() {
     tilla.setTravelMode(null);
   }
 
-  // Tag-Filter-Chips neu zeichnen
   if (tagFilterContainerEl) {
     renderTagFilterChips();
   }
@@ -1464,15 +1409,6 @@ function resetAllFilters() {
 // Sichtbarkeit: Datum (validFrom/validTo) + Plus/Add-ons
 // ------------------------------------------------------
 
-/**
- * Prüft, ob ein Spot im aktuellen Zeitpunkt gültig ist.
- * Unterstützt sowohl validFrom/validTo als auch valid_from/valid_to.
- * Wenn keine Felder gesetzt sind, gilt der Spot immer als gültig.
- *
- * @param {Spot} spot
- * @param {Date} [now]
- * @returns {boolean}
- */
 function isSpotCurrentlyValid(spot, now = new Date()) {
   const fromStr = spot.validFrom || spot.valid_from;
   const toStr = spot.validTo || spot.valid_to;
@@ -1494,28 +1430,17 @@ function isSpotCurrentlyValid(spot, now = new Date()) {
   return true;
 }
 
-/**
- * Prüft, ob ein Spot grundsätzlich sichtbar sein darf:
- *  - Datum ist im Gültigkeitsfenster
- *  - Plus-/Add-on-Regeln aus CATEGORY_ACCESS werden erfüllt
- *
- * @param {Spot} spot
- * @returns {boolean}
- */
 function userCanSeeSpot(spot) {
-  // 1. Datum (Gültigkeitsfenster)
   if (!isSpotCurrentlyValid(spot)) {
     return false;
   }
 
-  // 2. Kategorien → Plus/Add-on prüfen
   const slugs = Array.isArray(spot.categories)
     ? spot.categories
     : spot.category
     ? [spot.category]
     : [];
 
-  // Spots ohne Kategorie werden nicht eingeschränkt
   if (!slugs.length) {
     return true;
   }
@@ -1525,7 +1450,6 @@ function userCanSeeSpot(spot) {
   const addons = status.addons || [];
 
   return slugs.every((slug) => {
-    // Keine Plus-/Add-on-Kategorie laut Config → immer sichtbar
     if (!isPlusCategory(slug)) {
       return true;
     }
@@ -1539,17 +1463,14 @@ function userCanSeeSpot(spot) {
       return true;
     }
 
-    // Für alle Plus-/Add-on-Kategorien muss Plus aktiv sein
     if (!status.active) {
       return false;
     }
 
-    // Basis-Abo nötig?
     if (rule.level === "subscription") {
       return plan === rule.subscriptionId;
     }
 
-    // Add-on nötig (z. B. addon_water, addon_rv)
     if (rule.level === "addon") {
       const hasBase = plan === rule.subscriptionId;
       const hasAddon =
@@ -1589,7 +1510,6 @@ function applyFiltersAndRender() {
 
     updateFilterSummary();
 
-    // Kontext auch im "keine Spots"-Fall für Tilla bereitstellen
     if (tilla && typeof tilla.onFiltersUpdated === "function") {
       tilla.onFiltersUpdated({
         totalSpots: spots.length,
@@ -1600,20 +1520,6 @@ function applyFiltersAndRender() {
 
     return;
   }
-
-  console.log("[Family Spots] applyFiltersAndRender BEFORE radius:", {
-    plusActive,
-    radiusStep,
-    searchTerm,
-    categoryFilter,
-    ageFilter,
-    moodFilter,
-    travelMode,
-    onlyBigAdventures,
-    onlyVerified,
-    onlyFavorites,
-    activeTagFilters: Array.from(activeTagFilters)
-  });
 
   const nonGeoFiltered = filterSpots(spots, {
     plusActive,
@@ -1629,43 +1535,21 @@ function applyFiltersAndRender() {
     activeFilterIds: activeTagFilters
   });
 
-  // NEU: Plus-/Add-on- und Datumslogik
   const visibilityFiltered = nonGeoFiltered.filter((spot) => userCanSeeSpot(spot));
+
+  // NEU: Radius-Filter verwendet den echten Standort als Origin.
+  // Wenn kein Standort verfügbar ist, wird (für Vertrauen) kein „Pseudo-Radius“
+  // um das Karten-Center angewendet.
+  const originLatLng = getUserOriginLatLng();
 
   const radiusKm =
     RADIUS_STEPS_KM[radiusStep] ??
     RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ??
     Infinity;
 
-  // Wenn Radius < Infinity gewählt ist, aber wir keinen Standort haben:
-  // nicht falsch filtern, sondern transparent informieren (einmalig) und ohne Radius weiter.
-  const radiusIsLimited = Number.isFinite(radiusKm) && radiusKm !== Infinity;
-
-  if (radiusIsLimited && !userLatLng && !hasShownRadiusNeedsLocationToast) {
-    hasShownRadiusNeedsLocationToast = true;
-    showToast(
-      currentLang === LANG_EN
-        ? "Location is needed to apply the radius filter."
-        : currentLang === LANG_DA
-        ? "Placering er nødvendig for radius-filteret."
-        : "Für den Radius-Filter wird dein Standort benötigt."
-    );
-  }
-
-  filteredSpots =
-    userLatLng && radiusIsLimited
-      ? visibilityFiltered.filter((spot) => isSpotInRadius(spot, radiusKm))
-      : userLatLng && !radiusIsLimited
-      ? visibilityFiltered
-      : visibilityFiltered; // ohne Standort: keine Radius-Filterung (aber auch keine falschen Distanzen)
-
-  console.log("[Family Spots] applyFiltersAndRender AFTER radius:", {
-    totalSpots: spots.length,
-    afterNonGeo: nonGeoFiltered.length,
-    afterVisibility: visibilityFiltered.length,
-    afterRadius: filteredSpots.length,
-    hasUserLocation: !!userLatLng
-  });
+  filteredSpots = originLatLng
+    ? visibilityFiltered.filter((spot) => isSpotInRadius(spot, originLatLng, radiusKm))
+    : visibilityFiltered;
 
   renderSpotList();
 
@@ -1684,18 +1568,7 @@ function applyFiltersAndRender() {
 
   updateFilterSummary();
 
-  if (!tilla) return;
-
-  if (filteredSpots.length === 0) {
-    if (typeof tilla.onNoSpotsFound === "function") {
-      tilla.onNoSpotsFound();
-    }
-  } else if (typeof tilla.onSpotsFound === "function") {
-    tilla.onSpotsFound();
-  }
-
-  // NEU: Tilla bekommt immer den aktuellen Filter-/Kartenkontext
-  if (typeof tilla.onFiltersUpdated === "function") {
+  if (tilla && typeof tilla.onFiltersUpdated === "function") {
     tilla.onFiltersUpdated({
       totalSpots: spots.length,
       filteredSpotsCount: filteredSpots.length,
@@ -1781,7 +1654,6 @@ function getSpotAgeLabel(spot) {
     if (key === "10+") return "10+ år";
     return key;
   }
-  // Deutsch
   if (key === "0-3") return "0–3 Jahre";
   if (key === "4-9") return "4–9 Jahre";
   if (key === "10+") return "10+ Jahre";
@@ -1816,17 +1688,20 @@ function getSpotVisitTimeLabel(spot) {
 }
 
 /**
- * Distanz immer vom REALEN Nutzerstandort (userLatLng).
- * Wenn userLatLng fehlt: null (keine Distanz anzeigen, statt falsche).
+ * NEU: Distanz wird ausschließlich vom echten Standort berechnet.
+ * Wenn kein Standort verfügbar ist, zeigen wir keine Distanz (null).
+ * Außerdem: Das ist Luftlinie (nicht Fahrstrecke) – wird per Label „≈“ gekennzeichnet.
  */
 function getSpotDistanceKm(spot) {
   try {
-    if (!userLatLng || typeof userLatLng.distanceTo !== "function") return null;
     if (typeof L === "undefined" || typeof L.latLng !== "function") return null;
     if (!hasValidLatLng(spot)) return null;
 
+    const originLatLng = getUserOriginLatLng();
+    if (!originLatLng) return null;
+
     const spotLatLng = L.latLng(spot.lat, spot.lng);
-    const distanceMeters = userLatLng.distanceTo(spotLatLng);
+    const distanceMeters = originLatLng.distanceTo(spotLatLng);
     const km = distanceMeters / 1000;
     if (!Number.isFinite(km)) return null;
 
@@ -1844,7 +1719,7 @@ function formatKmBadgeLabel(km) {
     { maximumFractionDigits: 1 }
   );
   const value = formatter.format(km);
-  return `${value} km`;
+  return `≈ ${value} km`;
 }
 
 function getSpotMetaParts(spot) {
@@ -1856,25 +1731,25 @@ function getSpotMetaParts(spot) {
   return parts;
 }
 
-/**
- * Baut eine strukturierte Badge-Liste für einen Spot
- * (wird in Liste + Detail verwendet).
- */
 function buildSpotBadges(spot) {
   const badges = [];
 
-  // Distanz (immer realer Standort, sonst nichts)
   const distanceKm = getSpotDistanceKm(spot);
   if (distanceKm != null) {
     badges.push({
       type: "distance",
       className: "badge badge--distance",
       icon: "📍",
-      label: formatKmBadgeLabel(distanceKm)
+      label: formatKmBadgeLabel(distanceKm),
+      title:
+        currentLang === LANG_EN
+          ? "Approx. straight-line distance from your location"
+          : currentLang === LANG_DA
+          ? "Ca. luftlinje-afstand fra din placering"
+          : "Ca. Luftlinie ab deinem Standort"
     });
   }
 
-  // Zeit / Aufenthaltsdauer
   const timeLabel = getSpotVisitTimeLabel(spot);
   if (timeLabel) {
     badges.push({
@@ -1885,7 +1760,6 @@ function buildSpotBadges(spot) {
     });
   }
 
-  // Alters-Match
   const ageLabel = getSpotAgeLabel(spot);
   if (ageLabel) {
     badges.push({
@@ -1896,7 +1770,6 @@ function buildSpotBadges(spot) {
     });
   }
 
-  // Stimmung
   const moodKey = getSpotPrimaryMoodKey(spot);
   const moodLabel = getMoodLabel(moodKey);
   if (moodLabel) {
@@ -1908,7 +1781,6 @@ function buildSpotBadges(spot) {
     });
   }
 
-  // Verifiziert
   if (isSpotVerified(spot)) {
     badges.push({
       type: "verified",
@@ -1919,17 +1791,15 @@ function buildSpotBadges(spot) {
     });
   }
 
-  // Plus / Partner / Add-on
   if (isPlusSpot(spot)) {
     badges.push({
       type: "plus",
       className: "badge badge--plus",
       icon: "⭐",
-      label: currentLang === LANG_EN ? "Plus" : currentLang === LANG_DA ? "Plus" : "Plus"
+      label: "Plus"
     });
   }
 
-  // Großes Abenteuer
   if (isBigAdventureSpot(spot)) {
     badges.push({
       type: "big",
@@ -1951,7 +1821,6 @@ function renderSpotList() {
   if (!spotListEl) return;
   spotListEl.innerHTML = "";
 
-  // Neuer, reichhaltiger Empty State
   if (!filteredSpots.length) {
     const wrapper = document.createElement("div");
     wrapper.className = "empty-state";
@@ -1965,7 +1834,6 @@ function renderSpotList() {
     const actionsEl = document.createElement("div");
     actionsEl.className = "empty-state-actions";
 
-    // Texte nach Sprache
     if (currentLang === LANG_EN) {
       titleEl.textContent = "No spots for your selection right now";
       textEl.textContent =
@@ -1980,33 +1848,11 @@ function renderSpotList() {
         "Vielleicht ist euer Radius zu klein oder es sind viele Filter aktiv. Ihr könnt es so versuchen:";
     }
 
-    // Button: Standort holen (für Radius/Distanz)
-    const btnLocate = document.createElement("button");
-    btnLocate.type = "button";
-    btnLocate.className = "btn btn-small";
-    btnLocate.textContent =
-      currentLang === LANG_EN
-        ? "Use my location"
-        : currentLang === LANG_DA
-        ? "Brug min placering"
-        : "Meinen Standort nutzen";
-
-    btnLocate.addEventListener("click", () => {
-      handleLocateClick();
-    });
-
-    // Button: Radius vergrößern
     const btnRadius = document.createElement("button");
     btnRadius.type = "button";
     btnRadius.className = "btn btn-small";
-
-    if (currentLang === LANG_EN) {
-      btnRadius.textContent = "Increase radius";
-    } else if (currentLang === LANG_DA) {
-      btnRadius.textContent = "Større radius";
-    } else {
-      btnRadius.textContent = "Radius vergrößern";
-    }
+    btnRadius.textContent =
+      currentLang === LANG_EN ? "Increase radius" : currentLang === LANG_DA ? "Større radius" : "Radius vergrößern";
 
     btnRadius.addEventListener("click", () => {
       if (!filterRadiusEl) return;
@@ -2023,24 +1869,16 @@ function renderSpotList() {
       }
     });
 
-    // Button: Filter zurücksetzen
     const btnReset = document.createElement("button");
     btnReset.type = "button";
     btnReset.className = "btn btn-small btn-secondary";
-
-    if (currentLang === LANG_EN) {
-      btnReset.textContent = "Reset all filters";
-    } else if (currentLang === LANG_DA) {
-      btnReset.textContent = "Nulstil alle filtre";
-    } else {
-      btnReset.textContent = "Alle Filter zurücksetzen";
-    }
+    btnReset.textContent =
+      currentLang === LANG_EN ? "Reset all filters" : currentLang === LANG_DA ? "Nulstil alle filtre" : "Alle Filter zurücksetzen";
 
     btnReset.addEventListener("click", () => {
       resetAllFilters();
     });
 
-    actionsEl.appendChild(btnLocate);
     actionsEl.appendChild(btnRadius);
     actionsEl.appendChild(btnReset);
 
@@ -2105,7 +1943,6 @@ function renderSpotList() {
     if (subtitleText) card.appendChild(subtitleEl);
     if (metaParts.length) card.appendChild(metaEl);
 
-    // Badges unterhalb der Meta-Infos
     const badgesRow = document.createElement("div");
     badgesRow.className = "spot-card-badges";
 
@@ -2113,6 +1950,7 @@ function renderSpotList() {
     badges.forEach((badge) => {
       const badgeEl = document.createElement("span");
       badgeEl.className = badge.className;
+      if (badge.title) badgeEl.title = badge.title;
 
       if (badge.icon) {
         const iconEl = document.createElement("span");
@@ -2128,7 +1966,6 @@ function renderSpotList() {
       badgesRow.appendChild(badgeEl);
     });
 
-    // Tags als weiche Badges anhängen
     if (Array.isArray(spot.tags) && spot.tags.length) {
       spot.tags.forEach((tag) => {
         const tagEl = document.createElement("span");
@@ -2314,7 +2151,6 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(addrEl);
   }
 
-  // Badges im Detail
   const detailBadgesContainer = document.createElement("div");
   detailBadgesContainer.className = "spot-details-scores";
 
@@ -2322,6 +2158,7 @@ function showSpotDetails(spot) {
   detailBadges.forEach((badge) => {
     const badgeEl = document.createElement("span");
     badgeEl.className = badge.className;
+    if (badge.title) badgeEl.title = badge.title;
 
     if (badge.icon) {
       const iconEl = document.createElement("span");
@@ -2341,7 +2178,8 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(detailBadgesContainer);
   }
 
-  const routeUrls = getRouteUrlsForSpot(spot);
+  // NEU: Route immer vom echten Standort (wenn vorhanden).
+  const routeUrls = getRouteUrlsForSpotFromUserLocation(spot);
   if (routeUrls) {
     const routesEl = document.createElement("div");
     routesEl.className = "spot-details-routes";
@@ -2668,38 +2506,35 @@ function handleDaylogClear() {
 }
 
 // ------------------------------------------------------
-// Geolocation (UI Action) – button "Locate"
+// Geolocation
 // ------------------------------------------------------
 
-function handleLocateClick() {
+async function handleLocateClick() {
   if (!navigator.geolocation || !map) {
     showToast("toast_location_error");
     return;
   }
 
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const changed = setUserLocationFromPosition(pos, { recenterMap: true });
+  try {
+    const loc = await requestUserLocationOnce({
+      enableHighAccuracy: true,
+      timeout: 9000,
+      maximumAge: 0
+    });
 
-      // Watch aktivieren, damit Entfernung/Radius dauerhaft "real" bleiben
-      startUserLocationWatch();
-
-      // Wenn wir neu/anders sind: sofort neu rechnen
-      if (changed) {
-        hasShownRadiusNeedsLocationToast = false;
-        applyFiltersAndRender();
-      } else {
-        // auch wenn unverändert: UI konsistent halten
-        applyFiltersAndRender();
-      }
-
+    if (loc && Number.isFinite(loc.lat) && Number.isFinite(loc.lng)) {
+      map.setView([loc.lat, loc.lng], 13);
       showToast("toast_location_ok");
-    },
-    () => {
-      showToast("toast_location_error");
-    },
-    { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-  );
+
+      // NEU: Entfernungen/Radius sofort korrekt vom echten Standort
+      applyFiltersAndRender();
+
+      // Optional live-updates
+      startLocationWatch();
+    }
+  } catch {
+    showToast("toast_location_error");
+  }
 }
 
 // ------------------------------------------------------
@@ -2831,7 +2666,6 @@ async function init() {
     const initialTheme = getInitialTheme();
     currentTheme = applyTheme(initialTheme);
 
-    // Toast-System initialisieren
     initToast({ element: toastEl, t });
 
     const mapResult = initMap({
@@ -2848,10 +2682,15 @@ async function init() {
         });
       }
 
-      // WICHTIG:
-      // Früher wurde bei moveend/zoomend neu gefiltert (weil map.getCenter() als Radius-Basis diente).
-      // Jetzt ist Radius/Distanz IMMER userLatLng → also NICHT mehr an Kartenbewegung koppeln.
-      // (Performance + keine UX-Überraschungen)
+      // NEU: Panning/Zooming ändert nicht mehr „Entfernung vom echten Standort“,
+      // aber wir lassen die Re-Renders (Marker/Listen) trotzdem laufen (UI bleibt frisch).
+      map.on(
+        "moveend zoomend",
+        debounce(() => {
+          applyFiltersAndRender();
+        }, 200)
+      );
+
       window.addEventListener(
         "resize",
         debounce(() => {
@@ -2859,9 +2698,6 @@ async function init() {
         }, 200)
       );
     }
-
-    // Stiller Standort-Warmup (falls Permission bereits existiert)
-    tryWarmupUserLocation();
 
     tilla = new TillaCompanion({
       getText: (key) => t(key)
@@ -2883,10 +2719,11 @@ async function init() {
     }
 
     if (btnLocateEl) {
-      btnLocateEl.addEventListener("click", handleLocateClick);
+      btnLocateEl.addEventListener("click", () => {
+        handleLocateClick();
+      });
     }
 
-    // Router initialisieren (Map <-> About)
     initRouter({
       viewMapEl,
       viewAboutEl,
@@ -3086,7 +2923,6 @@ async function init() {
       });
     }
 
-    // Filter-Modal öffnen / schließen / anwenden / zurücksetzen
     if (btnOpenFilterModalEl && filterModalEl) {
       btnOpenFilterModalEl.addEventListener("click", () => {
         openFilterModal();
@@ -3112,7 +2948,6 @@ async function init() {
       });
     }
 
-    // Klick auf den Overlay-Hintergrund schließt das Modal
     if (filterModalEl) {
       filterModalEl.addEventListener("click", (event) => {
         if (event.target === filterModalEl) {
@@ -3121,7 +2956,6 @@ async function init() {
       });
     }
 
-    // Skip-Link „Zum Hauptinhalt springen“
     if (skipLinkEl) {
       skipLinkEl.addEventListener("click", (event) => {
         const href = skipLinkEl.getAttribute("href") || "";
@@ -3175,14 +3009,12 @@ async function init() {
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
 
-      // 1. Erst das Filter-Modal schließen, falls offen
       if (isFilterModalOpen && filterModalEl && !filterModalEl.hidden) {
         event.preventDefault();
         closeFilterModal({ returnFocus: true });
         return;
       }
 
-      // 2. Dann ggf. das Spot-Detail
       if (!spotDetailEl) return;
 
       const isOpen = !spotDetailEl.classList.contains("spot-details--hidden");
