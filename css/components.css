@@ -2057,35 +2057,34 @@
     font-size: 14px;
   }
 
-  /* -----------------------------------------
+    /* -----------------------------------------
      MAP MARKER & ATTRIBUTION
      ----------------------------------------- */
-  .marker-cluster-small,
-  .marker-cluster-medium,
-  .marker-cluster-large {
-    background: transparent;
-    box-shadow: none;
-    border-radius: 999px;
+  :where(.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large) {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 999px !important;
   }
 
-  .marker-cluster-small div,
-  .marker-cluster-medium div,
-  .marker-cluster-large div {
-    background-color: #5f7a2b; /* Waldgrün/Olive */
-    border-radius: 999px;
-    border: 2px solid #cfe0b4; /* helles Olive für sauberen Rand */
-    color: #1f2a10;
-    font-weight: 650;
-    font-family: inherit;
-    width: 34px;
-    height: 34px;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: var(--elevation-sm);
-    box-sizing: border-box;
+  :where(.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large) > div {
+    background-color: #5f7a2b !important; /* Waldgrün/Olive */
+    border-radius: 999px !important;
+    border: 2px solid #cfe0b4 !important; /* helles Olive für Rand */
+    color: #1f2a10 !important;
+    font-weight: 650 !important;
+    font-family: inherit !important;
+
+    width: 34px !important;
+    height: 34px !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+
+    box-shadow: var(--elevation-sm) !important;
+    box-sizing: border-box !important;
   }
 
   .marker-cluster span {
