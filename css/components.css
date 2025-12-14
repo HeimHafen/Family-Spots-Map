@@ -5,6 +5,8 @@
 
 /* -----------------------------------------
    Basis-Tokens (Komponenten-Ebene)
+   - Keine Überschreibung von theme.css Semantik-Tokens
+   - Mapping/Defaults nur als Fallback
    ----------------------------------------- */
 
 :root {
@@ -32,7 +34,7 @@
   --focus-ring-default: 0 0 0 2px #ffffff,
     0 0 0 4px hsla(var(--accent-h, 30), 72%, 52%, 0.55);
 
-  /* Neutral surfaces derived from semantic surfaces */
+  /* Neutral surfaces derived from semantic surfaces (no overriding) */
   --neutral-0: var(--surface-1, #ffffff);
   --neutral-1: var(--surface-2, #f9fafb);
   --neutral-2: var(--surface-3, #f3f4f6);
@@ -41,15 +43,20 @@
   --stroke-1: 1px solid var(--border-1, rgba(148, 163, 184, 0.24));
   --stroke-2: 1px solid var(--border-2, rgba(148, 163, 184, 0.32));
 
-  /* Warm Light Palette (fallback) */
-  --fsm-warm-0: #f7e1d0;
-  --fsm-warm-1: #e7bf9f;
-  --fsm-warm-2: #d49a6a;
-  --fsm-warm-3: #c98655;
+  /* =========================================
+     Warm Light Palette (zwischen Bild 1 & 2)
+     - etwas satter/dunkler als Bild 1
+     - deutlich weniger “knallig orange” als Bild 2
+     - nur als Fallback/Component-Akzent (keine Semantik-Token-Überschreibung)
+     ========================================= */
+  --fsm-warm-0: #f7e1d0; /* helles Sand/Creme */
+  --fsm-warm-1: #e7bf9f; /* muted Peach/Sand */
+  --fsm-warm-2: #d49a6a; /* warmes Tan (gedämpft) */
+  --fsm-warm-3: #c98655; /* tieferes Tan (gedämpft) */
 
-  --fsm-surface-warm: #f5e3d4;
-  --fsm-chip-warm: #f1dfcf;
-  --fsm-divider-warm: hsla(28, 24%, 40%, 0.22);
+  --fsm-surface-warm: #f5e3d4; /* Card/Panel warm, aber nicht zu hell */
+  --fsm-chip-warm: #f1dfcf; /* Chips warm-neutral */
+  --fsm-divider-warm: hsla(28, 24%, 40%, 0.22); /* Divider weniger “orange” */
 }
 
 /* Dark fallback focus ring (prefer theme.css) */
@@ -60,6 +67,8 @@
 
 /* =========================================
    FIX: Global App Background + iOS Safe Area
+   - verhindert “weiße Balken” (oben/unten) in iOS WebView/PWA
+   - sorgt dafür, dass der Seitenhintergrund auch in Safe Areas stimmt
    ========================================= */
 
 :root {
@@ -106,6 +115,7 @@ body {
    Form Controls – Select
    ========================================= */
 
+/* iOS Safari Fix + Baseline für <select> */
 select {
   background-color: var(--input-bg);
   color: var(--text-color, #111827);
@@ -131,7 +141,7 @@ select {
   border: none;
   font-family: inherit;
   letter-spacing: 0.01em;
-  background-color: var(--accent-solid, var(--accent));
+  background-color: var(--accent);
   color: #ffffff;
   box-shadow: var(--elevation-sm);
   cursor: pointer;
@@ -153,17 +163,14 @@ select {
 }
 
 .btn:hover {
+  /* Wärmer/pastelliger: fallback hue etwas orangiger */
+  background-color: hsl(var(--accent-h, 30), 72%, 54%);
   box-shadow: var(--elevation-md);
-  background-color: var(--accent-dark);
 }
 
 @supports (background-color: color-mix(in oklab, white, black)) {
   .btn:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--accent-solid, var(--accent)),
-      black 8%
-    );
+    background-color: color-mix(in oklab, var(--accent), white 10%);
   }
 }
 
@@ -263,17 +270,13 @@ select {
 }
 
 .btn-play-idea:hover {
+  background-color: hsl(var(--accent-h, 30), 72%, 54%);
   box-shadow: var(--elevation-md);
-  background-color: var(--accent-dark);
 }
 
 @supports (background-color: color-mix(in oklab, white, black)) {
   .btn-play-idea:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--accent-solid, var(--accent)),
-      black 8%
-    );
+    background-color: color-mix(in oklab, var(--accent), white 10%);
   }
 }
 
@@ -349,7 +352,7 @@ select {
   box-shadow: var(--header-shadow);
 }
 
-/* Light-Mode-Variante */
+/* Light-Mode-Variante: warm, gedämpft (zwischen Bild 1 & 2) */
 :where(html, body, :root)[data-theme="light"] .app-header {
   background: radial-gradient(
       circle at top left,
@@ -360,7 +363,9 @@ select {
   color: var(--text-strong, #111827);
   box-shadow: var(--elevation-md);
 
+  /* Header-interne Flächen (nur in Header-Kontext, ohne globale Token zu überschreiben) */
   --header-text-color: var(--text-strong, #111827);
+  --header-icon-bg: rgba(255, 255, 255, 0.56);
   --header-tagline-bg: rgba(255, 255, 255, 0.56);
   --header-tagline-color: rgba(17, 24, 39, 0.92);
 }
@@ -383,8 +388,8 @@ select {
 .sr-only {
   border: 0;
   clip: rect(0 0 0 0);
-  height: 0;
-  width: 0;
+  height: 1px;
+  width: 1px;
   margin: -1px;
   padding: 0;
   overflow: hidden;
@@ -392,7 +397,10 @@ select {
   white-space: nowrap;
 }
 
-/* Skip-Link – nur bei Fokus sichtbar */
+/* =========================================
+   FIX: Skip-Link – nur bei Fokus sichtbar
+   (entfernt „Zum Hauptinhalt springen“ aus der UI)
+   ========================================= */
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -419,6 +427,7 @@ select {
 }
 
 /* Header-Icons & Menü-Button */
+
 .btn-icon {
   border: none;
   padding: 0;
@@ -462,6 +471,7 @@ select {
   font-size: 20px;
 }
 
+/* alte language-switcher-Optik wird nicht mehr genutzt */
 .language-switcher {
   display: none;
 }
@@ -523,10 +533,12 @@ select {
   display: none;
 }
 
+/* FIX: Hidden muss IMMER gewinnen (auch wenn sonst display gesetzt wird) */
 .app-menu[hidden] {
   display: none !important;
 }
 
+/* FIX: Ohne data-menu-open darf das Menü niemals sichtbar sein */
 body:not([data-menu-open="1"]) .app-menu {
   display: none !important;
 }
@@ -554,6 +566,7 @@ body[data-menu-open="1"] .app-menu {
   border: 1px solid var(--card-border, rgba(148, 163, 184, 0.16));
   box-shadow: var(--elevation-lg);
 
+  /* FIX: Panel nicht unnötig groß + sauber scrollen */
   height: auto;
   max-height: min(70vh, calc(100vh - env(safe-area-inset-top, 0px) - 84px));
   overflow: auto;
@@ -630,6 +643,7 @@ body[data-menu-open="1"] .app-menu {
 }
 
 /* Sprachchips im Menü */
+
 .app-menu-languages {
   margin-top: 4px;
   padding-top: 6px;
@@ -717,8 +731,13 @@ body[data-menu-open="1"] .app-menu {
   padding: 16px 12px calc(96px + env(safe-area-inset-bottom, 0px));
 }
 
-.view { display: none; }
-.view--active { display: block; }
+.view {
+  display: none;
+}
+
+.view--active {
+  display: block;
+}
 
 /* =========================================
    MAP VIEW & SIDEBAR
@@ -742,6 +761,8 @@ body[data-menu-open="1"] .app-menu {
   border-radius: 0 0 28px 28px;
 }
 
+/* Karten / Sections */
+
 .sidebar-section {
   background: var(--sidebar-section-bg);
   border-radius: 20px;
@@ -750,8 +771,17 @@ body[data-menu-open="1"] .app-menu {
   border: 1px solid var(--sidebar-section-border);
 }
 
-.sidebar-section + .sidebar-section { margin-top: 10px; }
-.sidebar > .sidebar-section + .sidebar-section { margin-top: 0; }
+/* globaler Abstand übereinanderliegende Cards */
+.sidebar-section + .sidebar-section {
+  margin-top: 10px;
+}
+
+/* in der Sidebar übernimmt gap den Abstand */
+.sidebar > .sidebar-section + .sidebar-section {
+  margin-top: 0;
+}
+
+/* Map-Card */
 
 .map-section {
   border-radius: 22px;
@@ -765,9 +795,14 @@ body[data-menu-open="1"] .app-menu {
   margin-bottom: 14px;
 }
 
-#plus-section + #daylog-section { margin-top: 14px; }
+/* plus-section ↔ daylog-section explizit ebenfalls 14px */
+#plus-section + #daylog-section {
+  margin-top: 14px;
+}
 
-.sidebar-section[open] { padding-bottom: 14px; }
+.sidebar-section[open] {
+  padding-bottom: 14px;
+}
 
 .sidebar-section-header {
   display: flex;
@@ -817,10 +852,16 @@ body[data-menu-open="1"] .app-menu {
   box-shadow: var(--elevation-sm);
 }
 
-.sidebar-section--collapsed { padding-bottom: 10px; }
-.sidebar-section--collapsed > .filter-group { display: none; }
+.sidebar-section--collapsed {
+  padding-bottom: 10px;
+}
+
+.sidebar-section--collapsed > .filter-group {
+  display: none;
+}
 
 /* Kompass-Karte */
+
 .compass-card {
   margin-top: 4px;
   padding: 10px 10px 12px;
@@ -840,7 +881,9 @@ body[data-menu-open="1"] .app-menu {
    Form Controls in Sidebar
    ========================================= */
 
-.filter-group { margin-top: 8px; }
+.filter-group {
+  margin-top: 8px;
+}
 
 .filter-group-label {
   display: block;
@@ -858,6 +901,7 @@ body[data-menu-open="1"] .app-menu {
   color: var(--text-soft);
 }
 
+/* kompaktere Variante für erklärende Texte innerhalb des Filter-Blocks */
 .filter-group-helper--compact {
   margin-top: 4px;
   margin-bottom: 6px;
@@ -865,9 +909,17 @@ body[data-menu-open="1"] .app-menu {
   color: var(--text-soft);
 }
 
-#btn-toggle-filters { margin-bottom: 0; }
-.sidebar-section-header + .filter-group-helper { margin-top: 1rem; }
+/* Abstand für Filter-Toggle-Button */
+#btn-toggle-filters {
+  margin-bottom: 0;
+}
 
+/* mehr Luft über dem ersten Helper-Text unterhalb des Headers */
+.sidebar-section-header + .filter-group-helper {
+  margin-top: 1rem;
+}
+
+/* Footer unter den Basis-Filtern: Button + Zusammenfassung */
 .filter-footer {
   display: flex;
   align-items: center;
@@ -938,6 +990,7 @@ select.input {
 }
 
 /* Mood & Travel & Tag Chips */
+
 .mood-row {
   display: flex;
   flex-wrap: wrap;
@@ -955,7 +1008,7 @@ select.input {
   gap: 6px;
   font-size: 13px;
   background: var(--chip-bg, var(--fsm-chip-warm, #f1dfcf));
-  color: var(--chip-color, var(--text-1, #374151));
+  color: var(--text-1, #374151);
   border: 1px solid var(--border-2, rgba(209, 213, 219, 0.9));
   box-shadow: none;
   cursor: pointer;
@@ -977,11 +1030,13 @@ select.input {
 [data-theme="dark"] .compass-mode-chip,
 [data-theme="dark"] .tag-filter-chip {
   background: var(--surface-3, rgba(15, 23, 42, 0.98));
-  color: var(--chip-color, var(--text-color, #e5e7eb));
+  color: var(--text-color, #e5e7eb);
   border-color: rgba(148, 163, 184, 0.35);
 }
 
-.mood-chip-emoji { font-size: 15px; }
+.mood-chip-emoji {
+  font-size: 15px;
+}
 
 .mood-chip--active,
 .travel-chip--active,
@@ -1002,6 +1057,7 @@ select.input {
   color: var(--on-light, #111827);
 }
 
+/* Tap-Feedback */
 .mood-chip:active,
 .travel-chip:active,
 .tag-filter-chip:active,
@@ -1073,8 +1129,16 @@ select.input {
 }
 
 /* Radius */
-.radius-row { display: flex; align-items: center; gap: 8px; }
-#filter-radius { flex: 1; }
+
+.radius-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#filter-radius {
+  flex: 1;
+}
 
 .radius-max-label {
   font-size: 13px;
@@ -1089,6 +1153,7 @@ select.input {
 }
 
 /* Weitere Filter / Advanced */
+
 .filter-advanced {
   margin-top: 4px;
   padding-top: 4px;
@@ -1099,11 +1164,20 @@ select.input {
   border-top-color: rgba(148, 163, 184, 0.22);
 }
 
-.filter-advanced-summary { display: none; }
-.filter-advanced-summary .filter-group-label { margin: 0; }
+/* „Weitere Filter“-Pill AUSBLENDEN */
+.filter-advanced-summary {
+  display: none;
+}
+
+.filter-advanced-summary .filter-group-label {
+  margin: 0;
+}
 
 /* Checkboxen */
-.filter-group--checkbox { margin-top: 4px; }
+
+.filter-group--checkbox {
+  margin-top: 4px;
+}
 
 .checkbox-label {
   display: flex;
@@ -1112,6 +1186,7 @@ select.input {
   font-size: 14px;
 }
 
+/* Custom-Checkbox */
 .filter-group--checkbox input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
@@ -1144,13 +1219,23 @@ select.input {
   background: #ffffff;
 }
 
+/* Tap-Feedback */
 .filter-group--checkbox input[type="checkbox"]:active {
   filter: brightness(0.96);
 }
 
 /* Plus-Code-Form */
-.plus-code-form { margin-top: 6px; font-size: 14px; }
-.plus-code-row { display: flex; gap: 8px; margin: 6px 0; }
+
+.plus-code-form {
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.plus-code-row {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0;
+}
 
 .plus-note {
   margin: 0;
@@ -1158,13 +1243,23 @@ select.input {
   color: var(--text-soft);
 }
 
-/* Mein Tag */
-#daylog-section .filter-group label { display: block; margin-bottom: 6px; }
-#daylog-text { min-height: 70px; }
-#daylog-save { margin-top: 14px; }
+/* Mein Tag – extra Luft zum Button */
+
+#daylog-section .filter-group label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+#daylog-text {
+  min-height: 70px;
+}
+
+#daylog-save {
+  margin-top: 14px;
+}
 
 /* ======================================
-   Mein Tag – Liste & Einträge
+   Mein Tag – Liste & „Tagebuch“-Einträge
    ====================================== */
 
 .daylog-list,
@@ -1181,11 +1276,16 @@ select.input {
   scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
 }
 
+/* Scrollbar */
 .daylog-list::-webkit-scrollbar,
-#daylog-list::-webkit-scrollbar { width: 6px; }
+#daylog-list::-webkit-scrollbar {
+  width: 6px;
+}
 
 .daylog-list::-webkit-scrollbar-track,
-#daylog-list::-webkit-scrollbar-track { background: transparent; }
+#daylog-list::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 .daylog-list::-webkit-scrollbar-thumb,
 #daylog-list::-webkit-scrollbar-thumb {
@@ -1197,6 +1297,8 @@ select.input {
 [data-theme="dark"] #daylog-list::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.55);
 }
+
+/* Einzelner Tagebuch-Eintrag */
 
 .daylog-entry {
   position: relative;
@@ -1229,6 +1331,7 @@ select.input {
   box-shadow: var(--elevation-md);
 }
 
+/* Timeline am linken Rand */
 .daylog-entry::before {
   content: "";
   position: absolute;
@@ -1268,15 +1371,22 @@ select.input {
   opacity: 0.85;
 }
 
-[data-theme="light"] .daylog-entry-date { color: rgba(15, 23, 42, 0.6); }
-[data-theme="dark"] .daylog-entry-date { color: rgba(203, 213, 225, 0.78); }
+[data-theme="light"] .daylog-entry-date {
+  color: rgba(15, 23, 42, 0.6);
+}
+
+[data-theme="dark"] .daylog-entry-date {
+  color: rgba(203, 213, 225, 0.78);
+}
 
 .daylog-entry-text {
   margin: 0.15rem 0 0;
   white-space: pre-wrap;
 }
 
-.daylog-entry:last-child { margin-bottom: 0.1rem; }
+.daylog-entry:last-child {
+  margin-bottom: 0.1rem;
+}
 
 /* =========================================
    Spot-Liste
@@ -1288,8 +1398,13 @@ select.input {
   flex-direction: column;
 }
 
-.sidebar-section--grow.spot-list-collapsed { padding-bottom: 10px; }
-.sidebar-section--grow.spot-list-collapsed #spot-list { display: none; }
+.sidebar-section--grow.spot-list-collapsed {
+  padding-bottom: 10px;
+}
+
+.sidebar-section--grow.spot-list-collapsed #spot-list {
+  display: none;
+}
 
 #spot-list {
   margin-top: 8px;
@@ -1300,8 +1415,14 @@ select.input {
   scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
 }
 
-#spot-list::-webkit-scrollbar { width: 6px; }
-#spot-list::-webkit-scrollbar-track { background: transparent; }
+#spot-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#spot-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 #spot-list::-webkit-scrollbar-thumb {
   border-radius: 999px;
   background: rgba(148, 163, 184, 0.55);
@@ -1311,6 +1432,7 @@ select.input {
   background: rgba(148, 163, 184, 0.55);
 }
 
+/* Empty-State für leere Filterergebnisse */
 .empty-state {
   padding: 12px 12px 14px;
   border-radius: 16px;
@@ -1345,6 +1467,8 @@ select.input {
   border: var(--border-soft);
 }
 
+/* Spot-Karten */
+
 .spot-card {
   position: relative;
   background: var(--card-bg);
@@ -1375,22 +1499,16 @@ select.input {
   letter-spacing: 0.01em;
 }
 
-.spot-card-subtitle,
-.spot-card-meta,
-.spot-card-description,
-.spot-card-actions {
+.spot-card-subtitle {
+  font-size: 13px;
+  margin: 0 0 4px;
   color: var(--text-soft);
 }
 
-.spot-card-subtitle { font-size: 13px; margin: 0 0 4px; }
-.spot-card-meta { font-size: 12px; }
-.spot-card-description { margin: 4px 0 6px; font-size: 13px; line-height: 1.4; }
-
-.spot-card-badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-.spot-card-actions { margin-top: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
-
-.spot-card-fav-icon { font-size: 16px; }
-.spot-card-detail-label { font-weight: 650; }
+.spot-card-meta {
+  font-size: 12px;
+  color: var(--text-soft);
+}
 
 .spot-list-empty {
   padding: 10px 12px;
@@ -1408,8 +1526,42 @@ select.input {
   color: var(--text-color, #e5e7eb);
 }
 
+.spot-card-description {
+  margin: 4px 0 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
+.spot-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.spot-card-actions {
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.spot-card-fav-icon {
+  font-size: 16px;
+}
+
+.spot-card-detail-label {
+  font-weight: 650;
+}
+
 /* Spot-Details */
-.spot-details--hidden { display: none; }
+
+.spot-details--hidden {
+  display: none;
+}
 
 .spot-details {
   position: static;
@@ -1464,8 +1616,18 @@ select.input {
   border: var(--stroke-1);
 }
 
-.spot-details-actions { display: flex; align-items: center; gap: 6px; }
-.spot-details-tags { margin: 4px 0 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+.spot-details-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spot-details-tags {
+  margin: 4px 0 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
 
 .spot-details-description {
   margin: 4px 0 6px;
@@ -1473,15 +1635,25 @@ select.input {
   line-height: 1.5;
 }
 
-.spot-details-poetry,
-.spot-details-address {
+.spot-details-poetry {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-style: italic;
   color: var(--text-soft);
 }
 
-.spot-details-poetry { margin: 0 0 6px; font-size: 14px; font-style: italic; }
-.spot-details-address { margin: 0 0 6px; font-size: 13px; }
+.spot-details-address {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
 
-.spot-details-routes { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 8px; }
+.spot-details-routes {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
 .spot-details-route-link {
   font-size: 13px;
@@ -1515,9 +1687,15 @@ select.input {
   border: var(--stroke-2);
 }
 
-.spot-details-scores { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.spot-details-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
 
 /* Favorite-Toggle */
+
 .favorite-toggle {
   margin-top: 12px;
   border-radius: var(--radius-pill, 999px);
@@ -1554,26 +1732,38 @@ select.input {
 }
 
 /* Map-Container */
+
 .map-container {
   width: 100%;
   height: 100%;
   min-height: 320px;
 }
 
-/* Map-Tiles */
+/* Map-Tiles farblich an App anpassen */
 .leaflet-container .leaflet-tile {
   filter: var(--map-filter);
   transition: filter var(--dur-slow) var(--ease-out);
 }
 
 @media (max-width: 899px) {
-  .map-section { min-height: 60vh; }
-  .map-container { min-height: 60vh; }
+  .map-section {
+    min-height: 60vh;
+  }
+
+  .map-container {
+    min-height: 60vh;
+  }
 }
 
 @media (min-width: 900px) {
-  #view-map { flex-direction: row; align-items: flex-start; }
-  .sidebar { flex: 0 0 320px; }
+  #view-map {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .sidebar {
+    flex: 0 0 320px;
+  }
 
   .map-section {
     flex: 1 1 auto;
@@ -1583,7 +1773,9 @@ select.input {
     margin-left: 14px;
   }
 
-  #spot-list { max-height: 380px; }
+  #spot-list {
+    max-height: 380px;
+  }
 
   .spot-details {
     position: absolute;
@@ -1598,7 +1790,7 @@ select.input {
 }
 
 /* =========================================
-   FILTER MODAL
+   FILTER MODAL (BOTTOM SHEET OVERLAY)
    ========================================= */
 
 .filter-modal {
@@ -1612,7 +1804,9 @@ select.input {
   z-index: 2000;
 }
 
-.filter-modal[hidden] { display: none; }
+.filter-modal[hidden] {
+  display: none;
+}
 
 .filter-modal-inner {
   width: 100%;
@@ -1628,6 +1822,7 @@ select.input {
   padding: 16px 20px 20px;
 }
 
+/* Header im Filter-Modal inkl. Close-Button */
 .filter-modal-header {
   display: flex;
   align-items: center;
@@ -1636,8 +1831,12 @@ select.input {
   margin-bottom: 10px;
 }
 
-#filter-modal-title { margin: 0; font-size: 20px; }
+#filter-modal-title {
+  margin: 0;
+  font-size: 20px;
+}
 
+/* Close-Button */
 #filter-modal-close {
   border-radius: var(--radius-pill, 999px);
   padding: 6px 16px;
@@ -1672,6 +1871,7 @@ select.input {
   box-shadow: var(--elevation-sm);
 }
 
+/* Footer des Filtermodals */
 .filter-modal-footer {
   margin-top: 14px;
   display: flex;
@@ -1680,7 +1880,7 @@ select.input {
   gap: 10px;
 }
 
-/* Hintergrund nicht scrollen */
+/* Hintergrund nicht scrollen, wenn Filter-Modal ODER Menü offen ist */
 body[data-filter-modal-open="1"],
 body[data-menu-open="1"] {
   overflow: hidden;
@@ -1692,19 +1892,38 @@ body[data-menu-open="1"] {
    ========================================= */
 
 @keyframes tilla-bob {
-  0% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-2px) rotate(-2deg); }
-  50% { transform: translateY(-3px) rotate(2.5deg); }
-  75% { transform: translateY(-2px) rotate(-1.5deg); }
-  100% { transform: translateY(0) rotate(0); }
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(2.5deg);
+  }
+  75% {
+    transform: translateY(-2px) rotate(-1.5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
 }
 
 @keyframes tilla-card-in {
-  0% { opacity: 0; transform: translateY(6px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.tilla-sidebar-section { padding-top: 10px; padding-bottom: 10px; }
+.tilla-sidebar-section {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 
 .tilla-sidebar-card {
   display: flex;
@@ -1724,7 +1943,9 @@ body[data-menu-open="1"] {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.tilla-sidebar-avatar { flex: 0 0 auto; }
+.tilla-sidebar-avatar {
+  flex: 0 0 auto;
+}
 
 .tilla-sidebar-avatar img {
   display: block;
@@ -1734,7 +1955,9 @@ body[data-menu-open="1"] {
   animation: tilla-bob 3.5s ease-in-out infinite;
 }
 
-.tilla-sidebar-text { flex: 1 1 auto; }
+.tilla-sidebar-text {
+  flex: 1 1 auto;
+}
 
 #tilla-sidebar-text {
   margin: 0;
@@ -1754,9 +1977,24 @@ body[data-menu-open="1"] {
   border: var(--border-soft);
 }
 
-.page-about h2 { margin-top: 0; margin-bottom: 16px; font-size: 22px; }
-.page-about h3 { margin-top: 18px; margin-bottom: 6px; font-size: 18px; }
-.page-about p { margin-top: 4px; margin-bottom: 8px; line-height: 1.5; font-size: 15px; }
+.page-about h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 22px;
+}
+
+.page-about h3 {
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.page-about p {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+  font-size: 15px;
+}
 
 /* =========================================
    BOTTOM NAV
@@ -1787,7 +2025,9 @@ body[data-menu-open="1"] {
   backdrop-filter: blur(14px);
 }
 
-.bottom-nav-indicator { display: none; }
+.bottom-nav-indicator {
+  display: none;
+}
 
 .bottom-nav-item {
   pointer-events: auto;
@@ -1819,8 +2059,13 @@ body[data-menu-open="1"] {
   color: var(--bottom-nav-item-active-color);
 }
 
-.bottom-nav-item:active { transform: translateY(1px); }
-.bottom-nav-icon { font-size: 1.1rem; }
+.bottom-nav-item:active {
+  transform: translateY(1px);
+}
+
+.bottom-nav-icon {
+  font-size: 1.1rem;
+}
 
 /* =========================================
    TOAST
@@ -1833,7 +2078,7 @@ body[data-menu-open="1"] {
   transform: translateX(-50%);
   max-width: 90%;
   background: var(--toast-bg);
-  color: var(--toast-text, #fff7ec);
+  color: #fff7ec;
   border-radius: var(--radius-pill, 999px);
   padding: 8px 16px;
   font-size: 14px;
@@ -1902,7 +2147,9 @@ body[data-menu-open="1"] {
   line-height: 1;
 }
 
-.spot-marker { border-radius: var(--radius-pill, 999px); }
+.spot-marker {
+  border-radius: var(--radius-pill, 999px);
+}
 
 .spot-marker-inner {
   width: 18px;
@@ -1920,8 +2167,15 @@ body[data-menu-open="1"] {
   position: relative;
 }
 
-.spot-marker--cluster { position: relative; }
-.spot-marker--cluster .spot-marker-inner { width: 28px; height: 28px; }
+/* Cluster-Variante des Spot-Markers (mit Zähler) */
+.spot-marker--cluster {
+  position: relative;
+}
+
+.spot-marker--cluster .spot-marker-inner {
+  width: 28px;
+  height: 28px;
+}
 
 .spot-marker-count {
   position: absolute;
@@ -1946,14 +2200,25 @@ body[data-menu-open="1"] {
   );
 }
 
-.pin-pop { animation: pin-pop 0.22s ease-out; }
-
-@keyframes pin-pop {
-  0% { transform: scale(0.6); opacity: 0; }
-  80% { transform: scale(1.08); opacity: 1; }
-  100% { transform: scale(1); }
+.pin-pop {
+  animation: pin-pop 0.22s ease-out;
 }
 
+@keyframes pin-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Attribution */
 .leaflet-control-attribution {
   bottom: 4px !important;
   right: 12px !important;
@@ -1961,8 +2226,14 @@ body[data-menu-open="1"] {
 }
 
 /* Popup */
-.popup strong { font-size: 14px; }
-.popup small { font-size: 13px; }
+
+.popup strong {
+  font-size: 14px;
+}
+
+.popup small {
+  font-size: 13px;
+}
 
 .popup-actions {
   margin-top: 4px;
@@ -2003,7 +2274,7 @@ body[data-menu-open="1"] {
   border: var(--stroke-2);
 }
 
-/* Radius-Kreis */
+/* Radius-Kreis auf Accent */
 .radius-circle {
   stroke: var(--radius-circle-stroke);
   stroke-width: 2;
@@ -2025,7 +2296,7 @@ hr {
 }
 
 /* =========================================
-   Onboarding-Hint
+   SPOT-LISTE & DETAILS – Onboarding-Hint
    ========================================= */
 
 .fsm-onboarding-hint {
@@ -2041,7 +2312,9 @@ hr {
   color: var(--text-soft);
 }
 
-.fsm-onboarding-hint__text { margin: 0; }
+.fsm-onboarding-hint__text {
+  margin: 0;
+}
 
 [data-theme="dark"] .fsm-onboarding-hint {
   background: var(--card-bg);
@@ -2065,13 +2338,24 @@ hr {
   list-style-type: decimal;
 }
 
-.fsm-onboarding-hint__list li { margin: 0 0 2px; }
-.fsm-onboarding-hint__list li:last-child { margin-bottom: 0; }
+.fsm-onboarding-hint__list li {
+  margin: 0 0 2px;
+}
 
+.fsm-onboarding-hint__list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Close-Button im Hinweis komplett ausblenden */
 .fsm-onboarding-hint__close,
-.fsm-onboarding-hint-close { display: none !important; }
+.fsm-onboarding-hint-close {
+  display: none !important;
+}
 
-.fsm-onboarding-hint--hidden { display: none; }
+/* Wenn der Hinweis per JS versteckt wird */
+.fsm-onboarding-hint--hidden {
+  display: none;
+}
 
 /* =========================================
    LANDSCAPE-WARNUNG (MOBILE)
@@ -2092,7 +2376,9 @@ hr {
 }
 
 @media (orientation: landscape) and (max-width: 900px) {
-  .landscape-warning { display: block; }
+  .landscape-warning {
+    display: block;
+  }
 }
 
 /* =========================================
