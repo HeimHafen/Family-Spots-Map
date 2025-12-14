@@ -53,12 +53,25 @@
   /* App background fallbacks */
   --app-bg-fallback-light: var(--fsm-warm-0);
   --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
+
+  /* Chip look (Bild 3) */
+  --chip-surface: var(--fsm-chip-warm, #f1dfcf);
+  --chip-border: rgba(148, 163, 184, 0.45);
+  --chip-border-hover: rgba(148, 163, 184, 0.65);
+  --chip-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
+  --chip-shadow-hover: 0 2px 0 rgba(15, 23, 42, 0.08);
+  --chip-active-border: hsla(var(--accent-h, 28), 72%, 52%, 0.85);
 }
 
 /* Dark fallback focus ring (prefer theme.css) */
 [data-theme="dark"] {
   --focus-ring-default: 0 0 0 2px rgba(2, 6, 23, 0.92),
     0 0 0 4px hsla(var(--accent-h, 28), 72%, 55%, 0.45);
+
+  --chip-border: rgba(148, 163, 184, 0.40);
+  --chip-border-hover: rgba(148, 163, 184, 0.55);
+  --chip-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+  --chip-shadow-hover: 0 2px 0 rgba(0, 0, 0, 0.28);
 }
 
 /* =========================================
@@ -953,68 +966,14 @@ select.input {
     linear-gradient(135deg, rgba(229, 231, 235, 0.7) 50%, transparent 50%);
 }
 
-/* Mood / Travel / Tag chips */
+/* =========================================
+   Mood / Travel / Tag chips (Bild 3 Look)
+   - aktiv über aria-pressed="true" (A11y)
+   ========================================= */
 .mood-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-
-.mood-chip,
-.travel-chip,
-.compass-mode-chip,
-.tag-filter-chip {
-  border-radius: var(--radius-pill, 999px);
-  padding: 6px 10px 7px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  background: var(--chip-bg, var(--fsm-chip-warm, #f1dfcf));
-  color: var(--text-color, #374151);
-  border: 1px solid var(--border-2, rgba(209, 213, 219, 0.9));
-  box-shadow: none;
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
-    border-color var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out),
-    transform var(--dur-fast) var(--ease-out);
-}
-
-:where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip):hover {
-  border-color: rgba(148, 163, 184, 0.65);
-}
-
-[data-theme="dark"] :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip) {
-  background: var(--surface-3, rgba(15, 23, 42, 0.98));
-  color: var(--text-color, #e5e7eb);
-  border-color: rgba(148, 163, 184, 0.35);
-}
-
-.mood-chip-emoji {
-  font-size: 15px;
-}
-
-:where(.mood-chip--active, .travel-chip--active, .compass-mode-chip--active, .tag-filter-chip--active) {
-  background: var(--accent-soft);
-  color: var(--on-accent, #1f2937);
-  border-color: var(--accent);
-  box-shadow: var(--elevation-xs);
-  transform: translateY(-1px);
-}
-
-[data-theme="dark"] :where(.mood-chip--active, .travel-chip--active, .compass-mode-chip--active, .tag-filter-chip--active) {
-  background: var(--accent);
-  color: var(--on-accent, #111827);
-}
-
-/* Tap feedback */
-:where(.mood-chip, .travel-chip, .tag-filter-chip, .compass-mode-chip):active {
-  transform: translateY(0);
-  box-shadow: none;
 }
 
 .tag-filter-row {
@@ -1023,56 +982,77 @@ select.input {
   gap: 6px;
 }
 
-.btn-chip {
+:where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip) {
   border-radius: var(--radius-pill, 999px);
-  padding: 5px 10px;
+  padding: 6px 12px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
-  font-weight: 500;
-  background: var(--neutral-1);
-  color: var(--text-strong);
-  border: var(--stroke-1);
-  box-shadow: none;
+  font-weight: 650;
+  line-height: 1.1;
+  background: var(--chip-bg, var(--chip-surface));
+  color: var(--text-color, #374151);
+  border: 1px solid var(--chip-border);
+  box-shadow: var(--chip-shadow);
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
   transition:
     background-color var(--dur-fast) var(--ease-out),
-    border-color var(--dur-fast) var(--ease-out);
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 
-[data-theme="dark"] .btn-chip {
-  background: var(--neutral-1);
+:where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip):hover {
+  border-color: var(--chip-border-hover);
+  box-shadow: var(--chip-shadow-hover);
+}
+
+:where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip):active {
+  transform: translateY(1px);
+  box-shadow: var(--chip-shadow);
+}
+
+/* Emoji size stays tidy */
+.mood-chip-emoji {
+  font-size: 15px;
+}
+
+/* Active (A11y-first): aria-pressed=true */
+:where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip)[aria-pressed="true"] {
+  border-color: var(--chip-active-border);
+  box-shadow: none;
+  transform: none;
+}
+
+/* Backward compatibility: existing --active classes */
+:where(.mood-chip--active, .travel-chip--active, .compass-mode-chip--active, .tag-filter-chip--active) {
+  border-color: var(--chip-active-border);
+  box-shadow: none;
+  transform: none;
+}
+
+/* Dark mode chips */
+[data-theme="dark"] :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip) {
+  background: var(--surface-3, rgba(15, 23, 42, 0.98));
   color: var(--text-color, #e5e7eb);
-  border: var(--stroke-1);
+  border-color: var(--chip-border);
+  box-shadow: var(--chip-shadow);
 }
 
-.btn-chip:active {
-  background: var(--accent-soft);
-  color: var(--on-accent, #1f2937);
-  border-color: var(--accent);
+[data-theme="dark"]
+  :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip)[aria-pressed="true"] {
+  border-color: var(--chip-active-border);
+  box-shadow: none;
 }
 
-[data-theme="dark"] .btn-chip:active {
-  background: var(--accent);
-  color: var(--on-accent, #111827);
-}
-
-.tag-filter-chip--active {
-  background: var(--accent-soft);
-  color: var(--on-accent, #1f2937);
-}
-
-.tag-filter-row .tag-filter-chip--active,
-.tag-filter-row .btn-chip[aria-pressed="true"] {
-  background: var(--accent-soft);
-  color: var(--on-accent, #1f2937);
-  border-color: var(--accent);
-}
-
-[data-theme="dark"] .tag-filter-row .tag-filter-chip--active,
-[data-theme="dark"] .tag-filter-row .btn-chip[aria-pressed="true"] {
-  background: var(--accent);
-  color: var(--on-accent, #111827);
+/* Keep legacy "btn-chip" variants compatible */
+.btn-chip {
+  font-weight: 650;
+  padding: 5px 10px;
 }
 
 /* Radius */
