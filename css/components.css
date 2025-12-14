@@ -2071,9 +2071,9 @@
   .marker-cluster-small div,
   .marker-cluster-medium div,
   .marker-cluster-large div {
-    background-color: var(--accent);
+    background-color: #2F6F4E;
     border-radius: 999px;
-    border: 2px solid var(--accent-soft);
+    border: 2px solid #4F6B3A;
     color: #3b2313;
     font-weight: 650;
     font-family: inherit;
@@ -2105,8 +2105,8 @@
     background: radial-gradient(
       circle at 30% 20%,
       #fff8e1 0,
-      var(--accent-soft) 40%,
-      var(--accent) 100%
+      #4F6B3A 40%,
+      #2F6F4E 100%
     );
     box-shadow:
       0 0 0 2px rgba(255, 255, 255, 0.9),
@@ -2141,7 +2141,7 @@
     border-radius: inherit;
     background: radial-gradient(
       circle,
-      hsla(var(--accent-h, 28), 72%, 60%, 0.28),
+      hsla(150, 38%, 38%, 0.28),
       transparent 60%
     );
   }
