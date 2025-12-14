@@ -1,26 +1,36 @@
 /* =========================================
    theme.css — Light & Dark Design Tokens
-   Playful Warm v2.2 (Contrast & Hierarchy Refinements)
+   Playful Warm v2.1 (Improved Contrast & Hierarchy)
+   - bessere Lesbarkeit (Text-Kontrast)
+   - Hintergrund etwas neutraler (Cards heben sich stärker ab)
+   - Statusfarben klarer (Verified/Plus/Info)
+   - Menu-Button bleibt wie bisher (header-icon tokens unverändert)
    ========================================= */
 
+/* =========================================================
+   1) Global Design Tokens (Light Base)
+   ========================================================= */
 :root {
   color-scheme: light;
 
   /* ================================
-     Brand / Accent System
+     Brand / Accent System (muted warm)
      ================================ */
   --accent-h: 26;
+
+  /* Akzent etwas stabiler (minimal weniger “neon”) */
   --accent: hsl(var(--accent-h), 74%, 48%);
   --accent-light: hsl(var(--accent-h), 70%, 58%);
   --accent-dark: hsl(var(--accent-h), 76%, 34%);
-  --accent-strong: hsl(var(--accent-h), 64%, 40%);
-  --accent-solid: var(--accent-strong);
 
+  /* Accent surfaces (muted) */
   --accent-soft: hsl(var(--accent-h), 56%, 92%);
-  --accent-soft-hover: hsl(var(--accent-h), 56%, 82%);
+  --accent-soft-hover: hsl(var(--accent-h), 56%, 86%);
+  --accent-strong: hsl(var(--accent-h), 64%, 40%);
 
   /* ================================
-     Semantic Text Colors
+     Semantic Color Tokens
+     (Kontrast erhöht – v.a. für Mobile/Outdoor)
      ================================ */
   --text-3: hsl(22, 60%, 12%);
   --text-1: hsl(24, 52%, 14%);
@@ -31,14 +41,16 @@
   --on-light: hsl(222, 47%, 11%);
 
   /* ================================
-     Surface Colors (Light Theme)
+     Surfaces (Light)
+     - Hintergrund etwas neutraler (mehr “Canvas”)
+     - Cards bleiben warm/cremig -> bessere Hierarchie
      ================================ */
   --surface-0: hsl(34, 60%, 97%);
   --surface-1: hsla(32, 62%, 92%, 0.98);
   --surface-2: hsla(32, 58%, 89%, 0.98);
   --surface-3: hsla(31, 54%, 86%, 0.98);
 
-  /* Borders */
+  /* Borders (etwas definierter) */
   --border-1: hsla(24, 34%, 20%, 0.18);
   --border-2: hsla(24, 34%, 20%, 0.26);
 
@@ -47,50 +59,62 @@
   --elev-2: 0 10px 26px hsla(26, 40%, 18%, 0.16);
   --elev-3: 0 18px 54px hsla(26, 45%, 18%, 0.20);
 
-  /* Radius / Motion / Typography */
+  /* Radii / Motion / Typography */
   --radius-pill: 999px;
   --border-radius: 0.5rem;
+
   --transition-fast: 150ms ease;
+
   --font-stack: "Segoe UI", Roboto, sans-serif;
   --font-size-base: 1rem;
 
-  /* Focus Ring */
+  /* Focus ring */
   --focus-inner: #ffffff;
   --focus-outer: hsla(var(--accent-h), 74%, 48%, 0.55);
   --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
 
-  /* Background / Effects */
+  /* Backgrounds / Effects
+     - weniger “orange Schleier”
+     - mehr Ruhe, mehr Separation zu Cards
+  */
   --bg-app:
     radial-gradient(circle at 18% 0%, hsla(var(--accent-h), 70%, 54%, 0.14), transparent 58%),
     radial-gradient(circle at 88% 22%, hsla(30, 70%, 58%, 0.08), transparent 54%),
     linear-gradient(180deg, hsl(34, 60%, 97%), hsl(32, 40%, 88%));
 
-  --filter-map: sepia(0.18) saturate(0.92) brightness(1.01) contrast(1.03) hue-rotate(-10deg);
+  /* Filters */
+  --filter-map: sepia(0.18) saturate(0.92) brightness(1.01)
+    contrast(1.03) hue-rotate(-10deg);
 
-  /* Status Colors */
-  --success: hsl(146, 45%, 36%);
+  /* ================================
+     Status / Semantic Badges (optional usage in components.css)
+     ================================ */
+  --success: hsl(146, 45%, 36%);        /* Verified */
   --success-soft: hsla(146, 45%, 36%, 0.14);
-  --info: hsl(210, 60%, 38%);
+  --info: hsl(210, 60%, 38%);           /* Distance / Info */
   --info-soft: hsla(210, 60%, 38%, 0.12);
-  --warning: hsl(38, 84%, 44%);
+  --warning: hsl(38, 84%, 44%);         /* Time / Attention */
   --warning-soft: hsla(38, 84%, 44%, 0.14);
 
-  /* Legacy / Component Mapping */
+  /* =========================================================
+     2) Legacy / Component Tokens (compat)
+     ========================================================= */
   --text-color: var(--text-1);
   --text-soft: var(--text-2);
   --text-strong: var(--text-3);
 
   --app-bg: var(--bg-app);
+
   --card-bg: var(--surface-1);
   --card-shadow: var(--elev-2);
   --card-border: var(--border-1);
 
   --chip-bg: var(--surface-3);
-  --chip-color: var(--text-1);
-  --chip-color-strong: var(--text-3);
+  --chip-color: var(--text-2);
   --chip-shadow: var(--elev-1);
   --chip-hover-shadow: 0 12px 30px hsla(26, 45%, 18%, 0.18);
 
+  /* Inputs: etwas definierter, aber nicht “grau” */
   --input-bg: hsl(33, 52%, 90%);
   --input-shadow: 0 5px 12px hsla(26, 45%, 18%, 0.14);
 
@@ -99,32 +123,42 @@
   --button-text-color: var(--on-accent);
 
   --toast-bg: hsla(var(--accent-h), 50%, 22%, 0.96);
-  --toast-text: var(--on-dark);
 
+  /* Header tokens (Menu-Button-Farbe/Optik bleibt aus components.css) */
   --header-bg-top: hsl(33, 58%, 93%);
   --header-bg-bottom: hsl(30, 52%, 88%);
   --header-shadow: var(--elev-3);
   --header-text-color: var(--text-3);
+
+  /* Tagline: leicht ruhiger + kontrastreicher */
   --header-tagline-bg: hsla(26, 46%, 90%, 0.92);
   --header-tagline-color: hsl(24, 44%, 18%);
   --header-tagline-shadow: var(--elev-2);
 
-  --header-icon-bg: radial-gradient(circle at 30% 20%, hsl(30, 80%, 90%) 0%, hsl(28, 72%, 78%) 45%, hsl(26, 70%, 62%) 100%);
+  /* WICHTIG: nicht anfassen, Menu-Button soll so bleiben. */
+  --header-icon-bg: radial-gradient(
+    circle at 30% 20%,
+    hsl(30, 80%, 90%) 0%,
+    hsl(28, 72%, 78%) 45%,
+    hsl(26, 70%, 62%) 100%
+  );
   --header-icon-shadow: var(--elev-1);
   --header-icon-border: var(--border-2);
 
   --language-pill-bg: hsla(32, 52%, 92%, 0.92);
   --language-pill-shadow: var(--elev-1);
 
+  /* Sidebar etwas neutraler -> bessere Lesbarkeit */
   --sidebar-bg: hsl(32, 38%, 88%);
   --sidebar-section-bg: var(--surface-1);
   --sidebar-section-shadow: var(--elev-2);
   --sidebar-section-border: var(--border-1);
 
+  /* Bottom nav: weniger “glow”, mehr Kontrast */
   --bottom-nav-backdrop: hsla(var(--accent-h), 40%, 76%, 0.50);
   --bottom-nav-item-bg: var(--surface-1);
   --bottom-nav-item-color: hsl(24, 22%, 26%);
-  --bottom-nav-item-active-bg: var(--accent-solid);
+  --bottom-nav-item-active-bg: var(--accent);
   --bottom-nav-item-active-color: #ffffff;
 
   --map-card-bg: var(--surface-2);
@@ -136,17 +170,26 @@
 
   --radius-circle-stroke: hsla(var(--accent-h), 74%, 48%, 0.60);
   --radius-circle-fill: hsla(var(--accent-h), 74%, 48%, 0.13);
+
   --map-filter: var(--filter-map);
 }
 
 /* =========================================================
-   Dark Theme Override
+   3) Theme Selectors (manual override)
    ========================================================= */
-[data-theme="dark"],
+:root[data-theme="light"],
+html[data-theme="light"],
+body[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"],
 html[data-theme="dark"],
-body[data-theme="dark"] {
+body[data-theme="dark"],
+[data-theme="dark"] {
   color-scheme: dark;
 
+  /* Semantic Overrides (Dark) — Premium */
   --text-3: hsl(32, 100%, 96%);
   --text-1: hsla(32, 100%, 96%, 0.92);
   --text-2: hsla(215, 18%, 82%, 0.74);
@@ -172,11 +215,14 @@ body[data-theme="dark"] {
     radial-gradient(circle at 90% 20%, hsla(34, 80%, 66%, 0.07), transparent 50%),
     linear-gradient(180deg, hsl(228, 50%, 6%), hsl(229, 60%, 5%));
 
+  /* Dark accent surfaces alpha-based (muted) */
   --accent-soft: hsla(var(--accent-h), 72%, 50%, 0.18);
   --accent-soft-hover: hsla(var(--accent-h), 72%, 50%, 0.24);
 
-  --filter-map: grayscale(0.35) sepia(0.26) brightness(0.78) contrast(1.05) saturate(0.9) hue-rotate(-14deg);
+  --filter-map: grayscale(0.35) sepia(0.26) brightness(0.78)
+    contrast(1.05) saturate(0.9) hue-rotate(-14deg);
 
+  /* Legacy / Component Overrides (Dark) */
   --text-color: var(--text-1);
   --text-soft: var(--text-2);
   --text-strong: var(--text-3);
@@ -187,7 +233,6 @@ body[data-theme="dark"] {
 
   --chip-bg: var(--surface-3);
   --chip-color: hsla(32, 100%, 96%, 0.86);
-  --chip-color-strong: hsl(32, 100%, 96%);
   --chip-shadow: var(--elev-1);
   --chip-hover-shadow: var(--elev-2);
 
@@ -199,7 +244,6 @@ body[data-theme="dark"] {
   --button-text-color: hsl(32, 100%, 96%);
 
   --toast-bg: hsla(222, 40%, 10%, 0.96);
-  --toast-text: hsl(32, 100%, 96%);
 
   --header-bg-top: hsl(228, 45%, 8%);
   --header-bg-bottom: hsl(228, 50%, 6%);
@@ -247,12 +291,48 @@ body[data-theme="dark"] {
   --map-filter: var(--filter-map);
 }
 
-/* OS Preference Fallbacks */
+/* =========================================================
+   4) OS Preference Fallback (only if no manual theme set)
+   ========================================================= */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
     color-scheme: dark;
+
+    --text-3: hsl(32, 100%, 96%);
+    --text-1: hsla(32, 100%, 96%, 0.92);
+    --text-2: hsla(215, 18%, 82%, 0.74);
+
+    --surface-0: hsl(228, 50%, 6%);
+    --surface-1: hsla(222, 40%, 10%, 0.92);
+    --surface-2: hsla(222, 38%, 13%, 0.92);
+    --surface-3: hsla(222, 34%, 16%, 0.92);
+
+    --border-1: hsla(0, 0%, 100%, 0.08);
+    --border-2: hsla(0, 0%, 100%, 0.14);
+
+    --elev-1: 0 8px 22px hsla(0, 0%, 0%, 0.55);
+    --elev-2: 0 16px 46px hsla(0, 0%, 0%, 0.62);
+    --elev-3: 0 24px 70px hsla(0, 0%, 0%, 0.70);
+
+    --focus-inner: rgba(2, 6, 23, 0.92);
+    --focus-outer: hsla(var(--accent-h), 74%, 52%, 0.45);
+    --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
+
+    --bg-app:
+      radial-gradient(circle at 35% -10%, hsla(var(--accent-h), 78%, 54%, 0.18), transparent 55%),
+      radial-gradient(circle at 90% 20%, hsla(34, 80%, 66%, 0.07), transparent 50%),
+      linear-gradient(180deg, hsl(228, 50%, 6%), hsl(229, 60%, 5%));
+
+    --accent-soft: hsla(var(--accent-h), 72%, 50%, 0.18);
+    --accent-soft-hover: hsla(var(--accent-h), 72%, 50%, 0.24);
+
+    --filter-map: grayscale(0.35) sepia(0.26) brightness(0.78)
+      contrast(1.05) saturate(0.9) hue-rotate(-14deg);
+
+    --map-filter: var(--filter-map);
   }
 }
+
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
     color-scheme: light;
