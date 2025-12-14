@@ -141,7 +141,7 @@ select {
   border: none;
   font-family: inherit;
   letter-spacing: 0.01em;
-  background-color: var(--accent);
+  background-color: var(--accent-solid, var(--accent));
   color: #ffffff;
   box-shadow: var(--elevation-sm);
   cursor: pointer;
@@ -163,14 +163,17 @@ select {
 }
 
 .btn:hover {
-  /* Wärmer/pastelliger: fallback hue etwas orangiger */
-  background-color: hsl(var(--accent-h, 30), 72%, 54%);
   box-shadow: var(--elevation-md);
+  background-color: var(--accent-dark);
 }
 
 @supports (background-color: color-mix(in oklab, white, black)) {
   .btn:hover {
-    background-color: color-mix(in oklab, var(--accent), white 10%);
+    background-color: color-mix(
+      in oklab,
+      var(--accent-solid, var(--accent)),
+      black 8%
+    );
   }
 }
 
@@ -270,13 +273,17 @@ select {
 }
 
 .btn-play-idea:hover {
-  background-color: hsl(var(--accent-h, 30), 72%, 54%);
   box-shadow: var(--elevation-md);
+  background-color: var(--accent-dark);
 }
 
 @supports (background-color: color-mix(in oklab, white, black)) {
   .btn-play-idea:hover {
-    background-color: color-mix(in oklab, var(--accent), white 10%);
+    background-color: color-mix(
+      in oklab,
+      var(--accent-solid, var(--accent)),
+      black 8%
+    );
   }
 }
 
@@ -365,7 +372,6 @@ select {
 
   /* Header-interne Flächen (nur in Header-Kontext, ohne globale Token zu überschreiben) */
   --header-text-color: var(--text-strong, #111827);
-  --header-icon-bg: rgba(255, 255, 255, 0.56);
   --header-tagline-bg: rgba(255, 255, 255, 0.56);
   --header-tagline-color: rgba(17, 24, 39, 0.92);
 }
@@ -388,8 +394,8 @@ select {
 .sr-only {
   border: 0;
   clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
+  height: 0;
+  width: 0;
   margin: -1px;
   padding: 0;
   overflow: hidden;
@@ -1892,32 +1898,16 @@ body[data-menu-open="1"] {
    ========================================= */
 
 @keyframes tilla-bob {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-2px) rotate(-2deg);
-  }
-  50% {
-    transform: translateY(-3px) rotate(2.5deg);
-  }
-  75% {
-    transform: translateY(-2px) rotate(-1.5deg);
-  }
-  100% {
-    transform: translateY(0) rotate(0);
-  }
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(-2deg); }
+  50% { transform: translateY(-3px) rotate(2.5deg); }
+  75% { transform: translateY(-2px) rotate(-1.5deg); }
+  100% { transform: translateY(0) rotate(0); }
 }
 
 @keyframes tilla-card-in {
-  0% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .tilla-sidebar-section {
@@ -2205,17 +2195,9 @@ body[data-menu-open="1"] {
 }
 
 @keyframes pin-pop {
-  0% {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-  80% {
-    transform: scale(1.08);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(0.6); opacity: 0; }
+  80% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
 }
 
 /* Attribution */
