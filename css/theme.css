@@ -1,10 +1,9 @@
 /* =========================================
    theme.css — Light & Dark Design Tokens
-   Playful Warm v2.1 (Improved Contrast & Hierarchy)
-   - bessere Lesbarkeit (Text-Kontrast)
-   - Hintergrund etwas neutraler (Cards heben sich stärker ab)
-   - Statusfarben klarer (Verified/Plus/Info)
-   - Menu-Button bleibt wie bisher (header-icon tokens unverändert)
+   Playful Warm v2.2 (Highest-Level Refinement)
+   - Primary CTA Kontrast sauber via --accent-solid + --on-accent-solid
+   - bestehende Semantik & Legacy Tokens bleiben kompatibel
+   - Header Icon Tokens bleiben unverändert (wie gewünscht)
    ========================================= */
 
 /* =========================================================
@@ -18,10 +17,16 @@
      ================================ */
   --accent-h: 26;
 
-  /* Akzent etwas stabiler (minimal weniger “neon”) */
+  /* Brand accent (für Flächen/Badges/Active-Chips etc.) */
   --accent: hsl(var(--accent-h), 74%, 48%);
   --accent-light: hsl(var(--accent-h), 70%, 58%);
   --accent-dark: hsl(var(--accent-h), 76%, 34%);
+
+  /* NEW: Solid accent for CTAs (AA-kontrastfähig zu weißem Text) */
+  --accent-solid: hsl(var(--accent-h), 74%, 41%);
+  --accent-solid-dark: hsl(var(--accent-h), 76%, 34%);
+  --accent-solid-light: hsl(var(--accent-h), 70%, 52%);
+  --on-accent-solid: #ffffff;
 
   /* Accent surfaces (muted) */
   --accent-soft: hsl(var(--accent-h), 56%, 92%);
@@ -30,7 +35,6 @@
 
   /* ================================
      Semantic Color Tokens
-     (Kontrast erhöht – v.a. für Mobile/Outdoor)
      ================================ */
   --text-3: hsl(22, 60%, 12%);
   --text-1: hsl(24, 52%, 14%);
@@ -42,15 +46,13 @@
 
   /* ================================
      Surfaces (Light)
-     - Hintergrund etwas neutraler (mehr “Canvas”)
-     - Cards bleiben warm/cremig -> bessere Hierarchie
      ================================ */
   --surface-0: hsl(34, 60%, 97%);
   --surface-1: hsla(32, 62%, 92%, 0.98);
   --surface-2: hsla(32, 58%, 89%, 0.98);
   --surface-3: hsla(31, 54%, 86%, 0.98);
 
-  /* Borders (etwas definierter) */
+  /* Borders */
   --border-1: hsla(24, 34%, 20%, 0.18);
   --border-2: hsla(24, 34%, 20%, 0.26);
 
@@ -73,10 +75,7 @@
   --focus-outer: hsla(var(--accent-h), 74%, 48%, 0.55);
   --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
 
-  /* Backgrounds / Effects
-     - weniger “orange Schleier”
-     - mehr Ruhe, mehr Separation zu Cards
-  */
+  /* Backgrounds / Effects */
   --bg-app:
     radial-gradient(circle at 18% 0%, hsla(var(--accent-h), 70%, 54%, 0.14), transparent 58%),
     radial-gradient(circle at 88% 22%, hsla(30, 70%, 58%, 0.08), transparent 54%),
@@ -87,13 +86,13 @@
     contrast(1.03) hue-rotate(-10deg);
 
   /* ================================
-     Status / Semantic Badges (optional usage in components.css)
+     Status / Semantic Badges
      ================================ */
-  --success: hsl(146, 45%, 36%);        /* Verified */
+  --success: hsl(146, 45%, 36%);
   --success-soft: hsla(146, 45%, 36%, 0.14);
-  --info: hsl(210, 60%, 38%);           /* Distance / Info */
+  --info: hsl(210, 60%, 38%);
   --info-soft: hsla(210, 60%, 38%, 0.12);
-  --warning: hsl(38, 84%, 44%);         /* Time / Attention */
+  --warning: hsl(38, 84%, 44%);
   --warning-soft: hsla(38, 84%, 44%, 0.14);
 
   /* =========================================================
@@ -114,7 +113,7 @@
   --chip-shadow: var(--elev-1);
   --chip-hover-shadow: 0 12px 30px hsla(26, 45%, 18%, 0.18);
 
-  /* Inputs: etwas definierter, aber nicht “grau” */
+  /* Inputs */
   --input-bg: hsl(33, 52%, 90%);
   --input-shadow: 0 5px 12px hsla(26, 45%, 18%, 0.14);
 
@@ -124,13 +123,12 @@
 
   --toast-bg: hsla(var(--accent-h), 50%, 22%, 0.96);
 
-  /* Header tokens (Menu-Button-Farbe/Optik bleibt aus components.css) */
+  /* Header tokens (Menu-Button-Farbe/Optik bleibt wie bisher) */
   --header-bg-top: hsl(33, 58%, 93%);
   --header-bg-bottom: hsl(30, 52%, 88%);
   --header-shadow: var(--elev-3);
   --header-text-color: var(--text-3);
 
-  /* Tagline: leicht ruhiger + kontrastreicher */
   --header-tagline-bg: hsla(26, 46%, 90%, 0.92);
   --header-tagline-color: hsl(24, 44%, 18%);
   --header-tagline-shadow: var(--elev-2);
@@ -148,17 +146,15 @@
   --language-pill-bg: hsla(32, 52%, 92%, 0.92);
   --language-pill-shadow: var(--elev-1);
 
-  /* Sidebar etwas neutraler -> bessere Lesbarkeit */
   --sidebar-bg: hsl(32, 38%, 88%);
   --sidebar-section-bg: var(--surface-1);
   --sidebar-section-shadow: var(--elev-2);
   --sidebar-section-border: var(--border-1);
 
-  /* Bottom nav: weniger “glow”, mehr Kontrast */
   --bottom-nav-backdrop: hsla(var(--accent-h), 40%, 76%, 0.50);
   --bottom-nav-item-bg: var(--surface-1);
   --bottom-nav-item-color: hsl(24, 22%, 26%);
-  --bottom-nav-item-active-bg: var(--accent);
+  --bottom-nav-item-active-bg: var(--accent-solid); /* solid for legibility */
   --bottom-nav-item-active-color: #ffffff;
 
   --map-card-bg: var(--surface-2);
@@ -189,7 +185,7 @@ body[data-theme="dark"],
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Semantic Overrides (Dark) — Premium */
+  /* Semantic Overrides (Dark) */
   --text-3: hsl(32, 100%, 96%);
   --text-1: hsla(32, 100%, 96%, 0.92);
   --text-2: hsla(215, 18%, 82%, 0.74);
@@ -215,7 +211,16 @@ body[data-theme="dark"],
     radial-gradient(circle at 90% 20%, hsla(34, 80%, 66%, 0.07), transparent 50%),
     linear-gradient(180deg, hsl(228, 50%, 6%), hsl(229, 60%, 5%));
 
-  /* Dark accent surfaces alpha-based (muted) */
+  /* Dark accent: keep brand accent for surfaces, keep solid for CTAs */
+  --accent: hsl(var(--accent-h), 72%, 52%);
+  --accent-light: hsl(var(--accent-h), 72%, 64%);
+  --accent-dark: hsl(var(--accent-h), 72%, 42%);
+
+  --accent-solid: hsl(var(--accent-h), 74%, 41%);
+  --accent-solid-dark: hsl(var(--accent-h), 76%, 34%);
+  --accent-solid-light: hsl(var(--accent-h), 70%, 52%);
+  --on-accent-solid: #ffffff;
+
   --accent-soft: hsla(var(--accent-h), 72%, 50%, 0.18);
   --accent-soft-hover: hsla(var(--accent-h), 72%, 50%, 0.24);
 
@@ -278,8 +283,8 @@ body[data-theme="dark"],
   --bottom-nav-backdrop: hsla(222, 40%, 10%, 0.92);
   --bottom-nav-item-bg: var(--surface-3);
   --bottom-nav-item-color: hsla(32, 100%, 96%, 0.78);
-  --bottom-nav-item-active-bg: hsl(var(--accent-h), 72%, 52%);
-  --bottom-nav-item-active-color: hsl(24, 45%, 14%);
+  --bottom-nav-item-active-bg: var(--accent-solid);
+  --bottom-nav-item-active-color: #ffffff;
 
   --map-card-bg: var(--surface-0);
   --map-card-shadow: var(--elev-3);
@@ -323,6 +328,15 @@ body[data-theme="dark"],
       radial-gradient(circle at 90% 20%, hsla(34, 80%, 66%, 0.07), transparent 50%),
       linear-gradient(180deg, hsl(228, 50%, 6%), hsl(229, 60%, 5%));
 
+    --accent: hsl(var(--accent-h), 72%, 52%);
+    --accent-light: hsl(var(--accent-h), 72%, 64%);
+    --accent-dark: hsl(var(--accent-h), 72%, 42%);
+
+    --accent-solid: hsl(var(--accent-h), 74%, 41%);
+    --accent-solid-dark: hsl(var(--accent-h), 76%, 34%);
+    --accent-solid-light: hsl(var(--accent-h), 70%, 52%);
+    --on-accent-solid: #ffffff;
+
     --accent-soft: hsla(var(--accent-h), 72%, 50%, 0.18);
     --accent-soft-hover: hsla(var(--accent-h), 72%, 50%, 0.24);
 
@@ -336,5 +350,12 @@ body[data-theme="dark"],
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
     color-scheme: light;
+  }
+}
+
+/* Forced Colors */
+@media (forced-colors: active) {
+  :root {
+    --focus-ring: 0 0 0 2px Highlight;
   }
 }
