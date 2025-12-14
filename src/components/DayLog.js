@@ -18,7 +18,7 @@ export function initDayLog() {
     }
 
     memoryStore.save(text);
-    feedback.textContent = "💛 Gespeichert. Schön, dass du dir Zeit nimmst.";
+    feedback.textContent = "💚 Gespeichert. Schön, dass du dir Zeit nimmst.";
     textarea.value = "";
   });
 
