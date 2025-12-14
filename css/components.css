@@ -35,19 +35,16 @@
     --btn-height: 38px;
     --btn-radius: var(--radius-pill, 999px);
 
-    /* Motion (prefers theme.css if present) */
-    --dur-fast: var(--dur-fast, 120ms);
-    --dur: var(--dur, 160ms);
-    --dur-slow: var(--dur-slow, 220ms);
-    --ease-out: var(--ease-out, cubic-bezier(0.2, 0.8, 0.2, 1));
+    /* Motion fallbacks (do not override theme.css tokens) */
+    --dur-fast-fallback: 120ms;
+    --dur-fallback: 160ms;
+    --dur-slow-fallback: 220ms;
+    --ease-out-fallback: cubic-bezier(0.2, 0.8, 0.2, 1);
 
     /* Focus ring fallback (theme.css preferred) */
     --focus-ring-default:
       0 0 0 2px #ffffff,
       0 0 0 4px hsla(var(--accent-h, 28), 72%, 52%, 0.55);
-
-    /* System ring alias */
-    --ring: var(--focus-ring, var(--focus-ring-default));
 
     /* Warm palette fallbacks (component accents only) */
     --fsm-warm-0: #f7e1d0;
@@ -71,10 +68,11 @@
     --chip-shadow-hover: 0 2px 0 rgba(15, 23, 42, 0.08);
     --chip-active-border: hsla(var(--accent-h, 28), 72%, 52%, 0.85);
 
-    /* CTA aliases (theme.css v2.3) */
-    --cta-bg: var(--cta-bg, var(--accent-solid, var(--accent)));
-    --cta-bg-hover: var(--cta-bg-hover, var(--accent-solid-dark, var(--accent-dark)));
-    --cta-fg: var(--cta-fg, var(--on-accent-solid, #ffffff));
+    /* Tilla shell button color (extracted from screenshot; theme may override) */
+    --tilla-shell: #f3831a;
+    --tilla-shell-hover: #e17112;
+    --tilla-shell-active: #d1630e;
+    --on-tilla-shell: #ffffff;
   }
 
   [data-theme="dark"] {
@@ -94,7 +92,6 @@
    ========================================= */
 @layer base {
   :root {
-    /* native controls follow theme */
     color-scheme: light;
   }
   [data-theme="dark"] {
@@ -109,8 +106,6 @@
   body {
     margin: 0;
     background: inherit;
-
-    /* iOS viewport stability */
     min-height: 100svh;
   }
 
@@ -193,7 +188,9 @@
     .popup-link
   ):focus-visible {
     outline: none;
-    box-shadow: var(--ring), var(--shadow, none);
+    box-shadow:
+      var(--focus-ring, var(--focus-ring-default)),
+      var(--shadow, none);
   }
 
   /* Forced colors: ensure visible focus */
@@ -265,19 +262,19 @@
     font-family: inherit;
     letter-spacing: 0.01em;
 
-    /* CTA wiring (theme.css v2.3): solid background + guaranteed readable text */
-    background-color: var(--cta-bg);
-    color: var(--cta-fg);
+    /* Default CTA wiring (theme.css): solid background + readable text */
+    background-color: var(--cta-bg, var(--accent-solid, var(--accent)));
+    color: var(--cta-fg, var(--on-accent-solid, #ffffff));
 
     box-shadow: var(--shadow);
     cursor: pointer;
     text-decoration: none;
 
     transition:
-      background-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out),
-      opacity var(--dur-fast) var(--ease-out);
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      opacity var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .btn {
@@ -353,9 +350,9 @@
     cursor: pointer;
 
     transition:
-      background-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
+      background-color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      border-color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .btn-ghost:active {
@@ -377,6 +374,10 @@
     white-space: normal;
     gap: 6px;
     line-height: 1.15;
+
+    /* REQUIRED: match Tilla shell color */
+    background-color: var(--tilla-shell);
+    color: var(--on-tilla-shell);
   }
 
   @media (max-width: 480px) {
@@ -474,10 +475,10 @@
     cursor: pointer;
 
     transition:
-      background-color var(--dur-fast) var(--ease-out),
-      box-shadow var(--dur-fast) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out),
-      opacity var(--dur-fast) var(--ease-out);
+      background-color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      opacity var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .btn-icon:active {
@@ -529,6 +530,24 @@
 
   .header-title-spots {
     text-decoration: none;
+  }
+
+  /* REMOVE: frame around "Family Spots Map" */
+  .header-title,
+  .header-title-spots,
+  .header-title-spots:link,
+  .header-title-spots:visited {
+    border: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  .header-title::before,
+  .header-title::after,
+  .header-title-spots::before,
+  .header-title-spots::after {
+    content: none !important;
   }
 
   .header-tagline {
@@ -638,9 +657,9 @@
     cursor: pointer;
 
     transition:
-      background-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .app-menu-item:active {
@@ -726,8 +745,8 @@
     cursor: pointer;
 
     transition:
-      background-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out);
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   [data-theme="dark"] .app-menu-lang-chip {
@@ -874,9 +893,9 @@
     cursor: pointer;
 
     transition:
-      background-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .sidebar-section-close:active {
@@ -989,9 +1008,9 @@
     color: var(--text-color, #111827);
 
     transition:
-      border-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      background-color var(--dur) var(--ease-out);
+      border-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   textarea.input {
@@ -1069,11 +1088,11 @@
     cursor: pointer;
 
     transition:
-      background-color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out),
-      box-shadow var(--dur-fast) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
+      background-color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      border-color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip):active {
@@ -1081,26 +1100,22 @@
     transform: translateY(1px);
   }
 
-  /* Emoji size stays tidy */
   .mood-chip-emoji {
     font-size: 15px;
   }
 
-  /* Active (A11y-first): aria-pressed=true */
   :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip)[aria-pressed="true"] {
     border-color: var(--chip-active-border);
     box-shadow: none;
     transform: none;
   }
 
-  /* Backward compatibility: existing --active classes */
   :where(.mood-chip--active, .travel-chip--active, .compass-mode-chip--active, .tag-filter-chip--active) {
     border-color: var(--chip-active-border);
     box-shadow: none;
     transform: none;
   }
 
-  /* Dark mode chips */
   [data-theme="dark"] :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip) {
     --shadow: var(--chip-shadow);
 
@@ -1116,7 +1131,6 @@
     box-shadow: none;
   }
 
-  /* Keep legacy "btn-chip" variants compatible */
   .btn-chip {
     font-weight: 650;
     padding: 5px 10px;
@@ -1156,7 +1170,6 @@
     border-top-color: rgba(148, 163, 184, 0.22);
   }
 
-  /* Hide "Weitere Filter" pill */
   .filter-advanced-summary {
     display: none;
   }
@@ -1177,7 +1190,6 @@
     font-size: 14px;
   }
 
-  /* Custom checkbox */
   .filter-group--checkbox input[type="checkbox"] {
     -webkit-appearance: none;
     appearance: none;
@@ -1291,10 +1303,10 @@
     font-size: 0.9rem;
     line-height: 1.6;
     transition:
-      transform var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      background-color var(--dur) var(--ease-out),
-      border-color var(--dur) var(--ease-out);
+      transform var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      border-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   [data-theme="light"] .daylog-entry {
@@ -1314,7 +1326,6 @@
     box-shadow: var(--elevation-md);
   }
 
-  /* Timeline left */
   .daylog-entry::before {
     content: "";
     position: absolute;
@@ -1411,7 +1422,6 @@
     background: rgba(148, 163, 184, 0.55);
   }
 
-  /* Empty state */
   .empty-state {
     padding: 12px 12px 14px;
     border-radius: 16px;
@@ -1446,7 +1456,6 @@
     border: var(--border-soft);
   }
 
-  /* Spot cards */
   .spot-card {
     position: relative;
     background: var(--card-bg);
@@ -1457,10 +1466,10 @@
     border: var(--border-soft);
     cursor: pointer;
     transition:
-      transform var(--dur-fast) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      border-color var(--dur) var(--ease-out),
-      background-color var(--dur) var(--ease-out);
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      border-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .spot-card:focus-within {
@@ -1534,7 +1543,6 @@
     font-weight: 650;
   }
 
-  /* Spot details */
   .spot-details--hidden {
     display: none;
   }
@@ -1646,9 +1654,9 @@
     box-shadow: var(--shadow);
 
     transition:
-      background-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .spot-details-route-link:active {
@@ -1663,7 +1671,6 @@
     border: var(--stroke-2);
   }
 
-  /* Favorite toggle */
   .favorite-toggle {
     --shadow: var(--elevation-xs);
 
@@ -1682,9 +1689,9 @@
     box-shadow: var(--shadow);
 
     transition:
-      background-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .favorite-toggle:active {
@@ -1702,17 +1709,15 @@
     box-shadow: var(--shadow);
   }
 
-  /* Map container */
   .map-container {
     width: 100%;
     height: 100%;
     min-height: 320px;
   }
 
-  /* Map tiles style */
   .leaflet-container .leaflet-tile {
     filter: var(--map-filter);
-    transition: filter var(--dur-slow) var(--ease-out);
+    transition: filter var(--dur-slow, var(--dur-slow-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   @media (max-width: 899px) {
@@ -1822,9 +1827,9 @@
     cursor: pointer;
 
     transition:
-      background-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   #filter-modal-close:active {
@@ -1994,9 +1999,9 @@
     cursor: pointer;
 
     transition:
-      background-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
+      background-color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .bottom-nav-item--active {
@@ -2030,8 +2035,8 @@
     opacity: 0;
     pointer-events: none;
     transition:
-      opacity var(--dur) var(--ease-out),
-      transform var(--dur) var(--ease-out);
+      opacity var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback));
     z-index: 1100;
     will-change: transform, opacity;
   }
@@ -2157,7 +2162,6 @@
     font-size: 10px;
   }
 
-  /* Popup */
   .popup strong {
     font-size: 14px;
   }
@@ -2188,9 +2192,9 @@
     box-shadow: var(--shadow);
 
     transition:
-      background-color var(--dur) var(--ease-out),
-      box-shadow var(--dur) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
+      background-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      box-shadow var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
+      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
   .popup-link:active {
@@ -2205,7 +2209,6 @@
     border: var(--stroke-2);
   }
 
-  /* Radius circle */
   .radius-circle {
     stroke: var(--radius-circle-stroke);
     stroke-width: 2;
@@ -2312,7 +2315,6 @@
    UTILITIES — A11y helpers, Skip link, etc.
    ========================================= */
 @layer utilities {
-  /* SR-only (robust standard) */
   .sr-only {
     position: absolute !important;
     width: 1px !important;
@@ -2325,7 +2327,6 @@
     border: 0 !important;
   }
 
-  /* Skip link: only visible on focus */
   .skip-link {
     position: absolute;
     left: -9999px;
@@ -2358,14 +2359,31 @@
 @layer overrides {
   /* Hover only on devices that actually hover */
   @media (hover: hover) and (pointer: fine) {
-    :where(.btn, .btn-play-idea):hover {
+    /* Primary CTA (.btn) uses system CTA tokens */
+    .btn:hover {
       --shadow: var(--elevation-md);
-      background-color: var(--cta-bg-hover);
+      background-color: var(--cta-bg-hover, var(--accent-solid-dark, var(--accent-dark)));
     }
 
     @supports (background-color: color-mix(in oklab, white, black)) {
-      :where(.btn, .btn-play-idea):hover {
-        background-color: color-mix(in oklab, var(--cta-bg), black 8%);
+      .btn:hover {
+        background-color: color-mix(
+          in oklab,
+          var(--cta-bg, var(--accent-solid, var(--accent))),
+          black 8%
+        );
+      }
+    }
+
+    /* Tilla button hover must stay shell-colored */
+    .btn-play-idea:hover {
+      --shadow: var(--elevation-md);
+      background-color: var(--tilla-shell-hover);
+    }
+
+    @supports (background-color: color-mix(in oklab, white, black)) {
+      .btn-play-idea:hover {
+        background-color: color-mix(in oklab, var(--tilla-shell), black 10%);
       }
     }
 
@@ -2430,6 +2448,11 @@
       transform: translateY(-1px);
       box-shadow: var(--elevation-md);
     }
+  }
+
+  /* Ensure Tilla button active color */
+  .btn-play-idea:active {
+    background-color: var(--tilla-shell-active);
   }
 
   /* Prefers Reduced Motion */
