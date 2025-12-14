@@ -5,14 +5,12 @@
    1:1 Replace File
    ========================================= */
 
-/* -----------------------------------------
-   Cascade Layers (deterministische Kaskade)
-   ----------------------------------------- */
 @layer tokens, base, components, utilities, overrides;
 
 /* =========================================
    TOKENS — Component-level Fallback Tokens
-   - keine Überschreibung semantischer theme.css Tokens
+   - bevorzugt theme.css (semantische Tokens)
+   - enthält nur sichere Fallbacks / Aliases
    ========================================= */
 @layer tokens {
   :root {
@@ -37,16 +35,19 @@
     --btn-height: 38px;
     --btn-radius: var(--radius-pill, 999px);
 
-    /* Motion */
-    --dur-fast: 120ms;
-    --dur: 160ms;
-    --dur-slow: 220ms;
-    --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Motion (prefers theme.css if present) */
+    --dur-fast: var(--dur-fast, 120ms);
+    --dur: var(--dur, 160ms);
+    --dur-slow: var(--dur-slow, 220ms);
+    --ease-out: var(--ease-out, cubic-bezier(0.2, 0.8, 0.2, 1));
 
     /* Focus ring fallback (theme.css preferred) */
     --focus-ring-default:
       0 0 0 2px #ffffff,
       0 0 0 4px hsla(var(--accent-h, 28), 72%, 52%, 0.55);
+
+    /* System ring alias */
+    --ring: var(--focus-ring, var(--focus-ring-default));
 
     /* Warm palette fallbacks (component accents only) */
     --fsm-warm-0: #f7e1d0;
@@ -63,15 +64,17 @@
     --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
 
     /* Chip look (Bild 3) */
-    --chip-surface: var(--fsm-chip-warm, #f1dfcf);
+    --chip-surface: var(--chip-bg, var(--fsm-chip-warm, #f1dfcf));
     --chip-border: rgba(148, 163, 184, 0.45);
     --chip-border-hover: rgba(148, 163, 184, 0.65);
     --chip-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
     --chip-shadow-hover: 0 2px 0 rgba(15, 23, 42, 0.08);
     --chip-active-border: hsla(var(--accent-h, 28), 72%, 52%, 0.85);
 
-    /* System-level ring alias (theme.css may override --focus-ring) */
-    --ring: var(--focus-ring, var(--focus-ring-default));
+    /* CTA aliases (theme.css v2.3) */
+    --cta-bg: var(--cta-bg, var(--accent-solid, var(--accent)));
+    --cta-bg-hover: var(--cta-bg-hover, var(--accent-solid-dark, var(--accent-dark)));
+    --cta-fg: var(--cta-fg, var(--on-accent-solid, #ffffff));
   }
 
   [data-theme="dark"] {
@@ -91,7 +94,7 @@
    ========================================= */
 @layer base {
   :root {
-    /* Native controls follow theme */
+    /* native controls follow theme */
     color-scheme: light;
   }
   [data-theme="dark"] {
@@ -142,7 +145,7 @@
     touch-action: manipulation;
   }
 
-  /* Pressable primitive (applied via grouping for 1:1 compatibility) */
+  /* Pressable: prevent selection where it feels wrong */
   :where(
     .btn,
     .btn-ghost,
@@ -262,8 +265,9 @@
     font-family: inherit;
     letter-spacing: 0.01em;
 
-    background-color: var(--accent-solid, var(--accent));
-    color: var(--on-accent, #ffffff);
+    /* CTA wiring (theme.css v2.3): solid background + guaranteed readable text */
+    background-color: var(--cta-bg);
+    color: var(--cta-fg);
 
     box-shadow: var(--shadow);
     cursor: pointer;
@@ -383,13 +387,7 @@
   }
 
   /* Disabled states */
-  :where(.btn, .btn-play-idea, .btn-ghost, .btn-icon):disabled {
-    cursor: not-allowed;
-    opacity: 0.55;
-    transform: none !important;
-    box-shadow: none !important;
-    pointer-events: none;
-  }
+  :where(.btn, .btn-play-idea, .btn-ghost, .btn-icon):disabled,
   :where(.btn, .btn-play-idea, .btn-ghost, .btn-icon)[aria-disabled="true"] {
     cursor: not-allowed;
     opacity: 0.55;
@@ -2362,16 +2360,12 @@
   @media (hover: hover) and (pointer: fine) {
     :where(.btn, .btn-play-idea):hover {
       --shadow: var(--elevation-md);
-      background-color: var(--accent-dark);
+      background-color: var(--cta-bg-hover);
     }
 
     @supports (background-color: color-mix(in oklab, white, black)) {
       :where(.btn, .btn-play-idea):hover {
-        background-color: color-mix(
-          in oklab,
-          var(--accent-solid, var(--accent)),
-          black 8%
-        );
+        background-color: color-mix(in oklab, var(--cta-bg), black 8%);
       }
     }
 
