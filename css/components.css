@@ -374,6 +374,9 @@ select {
   --header-text-color: var(--text-strong, #111827);
   --header-tagline-bg: rgba(255, 255, 255, 0.56);
   --header-tagline-color: rgba(17, 24, 39, 0.92);
+
+  /* FIX (Bild 1): Menü-Button im Header hell/milchig statt orange */
+  --header-icon-bg: rgba(255, 255, 255, 0.72);
 }
 
 .app-header-top {
