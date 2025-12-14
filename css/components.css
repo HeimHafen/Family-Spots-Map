@@ -1,24 +1,30 @@
 /* =========================================
    components.css — Layout & Komponenten
-   Corporate Refine (Playful Warm / Premium Dark aligned)
+   Highest-Level Refine: Robustheit, Konsistenz,
+   iOS Safe Area, A11y Focus, weniger Redundanz
    ========================================= */
 
 /* -----------------------------------------
-   Basis-Tokens (Komponenten-Ebene)
-   - Keine Überschreibung von theme.css Semantik-Tokens
-   - Mapping/Defaults nur als Fallback
+   Component-level Fallback Tokens
+   - keine Überschreibung semantischer theme.css Tokens
    ----------------------------------------- */
-
 :root {
-  /* Elevation: map to theme.css if present */
+  /* Elevation mapping (prefers theme.css) */
   --elevation-xs: var(--elev-1, 0 1px 2px rgba(15, 23, 42, 0.06));
   --elevation-sm: var(--elev-1, 0 1px 3px rgba(15, 23, 42, 0.12));
   --elevation-md: var(--elev-2, 0 4px 10px rgba(15, 23, 42, 0.16));
   --elevation-lg: var(--elev-3, 0 10px 24px rgba(15, 23, 42, 0.22));
 
-  /* Border strings (use theme border colors if available) */
+  /* Borders */
   --border-subtle: 1px solid var(--border-2, rgba(148, 163, 184, 0.22));
   --border-soft: 1px solid var(--border-1, rgba(148, 163, 184, 0.16));
+  --stroke-1: 1px solid var(--border-1, rgba(148, 163, 184, 0.24));
+  --stroke-2: 1px solid var(--border-2, rgba(148, 163, 184, 0.32));
+
+  /* Neutral surfaces derived from semantic surfaces */
+  --neutral-0: var(--surface-1, #ffffff);
+  --neutral-1: var(--surface-2, #f9fafb);
+  --neutral-2: var(--surface-3, #f3f4f6);
 
   /* Button sizing */
   --btn-height: 38px;
@@ -32,50 +38,32 @@
 
   /* Focus ring fallback (theme.css preferred) */
   --focus-ring-default: 0 0 0 2px #ffffff,
-    0 0 0 4px hsla(var(--accent-h, 30), 72%, 52%, 0.55);
+    0 0 0 4px hsla(var(--accent-h, 28), 72%, 52%, 0.55);
 
-  /* Neutral surfaces derived from semantic surfaces (no overriding) */
-  --neutral-0: var(--surface-1, #ffffff);
-  --neutral-1: var(--surface-2, #f9fafb);
-  --neutral-2: var(--surface-3, #f3f4f6);
+  /* Warm palette fallbacks (component accents only) */
+  --fsm-warm-0: #f7e1d0;
+  --fsm-warm-1: #e7bf9f;
+  --fsm-warm-2: #d49a6a;
+  --fsm-warm-3: #c98655;
 
-  /* Neutral strokes derived from semantic borders */
-  --stroke-1: 1px solid var(--border-1, rgba(148, 163, 184, 0.24));
-  --stroke-2: 1px solid var(--border-2, rgba(148, 163, 184, 0.32));
+  --fsm-surface-warm: #f5e3d4;
+  --fsm-chip-warm: #f1dfcf;
+  --fsm-divider-warm: hsla(28, 24%, 40%, 0.22);
 
-  /* =========================================
-     Warm Light Palette (zwischen Bild 1 & 2)
-     - etwas satter/dunkler als Bild 1
-     - deutlich weniger “knallig orange” als Bild 2
-     - nur als Fallback/Component-Akzent (keine Semantik-Token-Überschreibung)
-     ========================================= */
-  --fsm-warm-0: #f7e1d0; /* helles Sand/Creme */
-  --fsm-warm-1: #e7bf9f; /* muted Peach/Sand */
-  --fsm-warm-2: #d49a6a; /* warmes Tan (gedämpft) */
-  --fsm-warm-3: #c98655; /* tieferes Tan (gedämpft) */
-
-  --fsm-surface-warm: #f5e3d4; /* Card/Panel warm, aber nicht zu hell */
-  --fsm-chip-warm: #f1dfcf; /* Chips warm-neutral */
-  --fsm-divider-warm: hsla(28, 24%, 40%, 0.22); /* Divider weniger “orange” */
+  /* App background fallbacks */
+  --app-bg-fallback-light: var(--fsm-warm-0);
+  --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
 }
 
 /* Dark fallback focus ring (prefer theme.css) */
 [data-theme="dark"] {
   --focus-ring-default: 0 0 0 2px rgba(2, 6, 23, 0.92),
-    0 0 0 4px hsla(var(--accent-h, 30), 72%, 55%, 0.45);
+    0 0 0 4px hsla(var(--accent-h, 28), 72%, 55%, 0.45);
 }
 
 /* =========================================
-   FIX: Global App Background + iOS Safe Area
-   - verhindert “weiße Balken” (oben/unten) in iOS WebView/PWA
-   - sorgt dafür, dass der Seitenhintergrund auch in Safe Areas stimmt
+   Global App Background + iOS Safe Area
    ========================================= */
-
-:root {
-  --app-bg-fallback-light: var(--fsm-warm-0);
-  --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
-}
-
 html {
   height: 100%;
   background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-light)));
@@ -105,19 +93,18 @@ body {
   .mood-chip,
   .travel-chip,
   .compass-mode-chip,
-  .tag-filter-chip
+  .tag-filter-chip,
+  .bottom-nav-item
 ) {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
 /* =========================================
-   Form Controls – Select
+   Form Controls – Select baseline
    ========================================= */
-
-/* iOS Safari Fix + Baseline für <select> */
 select {
-  background-color: var(--input-bg);
+  background-color: var(--input-bg, rgba(255, 255, 255, 0.92));
   color: var(--text-color, #111827);
   appearance: none;
   -webkit-appearance: none;
@@ -130,7 +117,6 @@ select {
 /* =========================================
    Buttons
    ========================================= */
-
 :where(.btn, .btn-play-idea) {
   position: relative;
   display: inline-flex;
@@ -142,7 +128,7 @@ select {
   font-family: inherit;
   letter-spacing: 0.01em;
   background-color: var(--accent-solid, var(--accent));
-  color: #ffffff;
+  color: var(--on-accent, #ffffff);
   box-shadow: var(--elevation-sm);
   cursor: pointer;
   user-select: none;
@@ -160,31 +146,7 @@ select {
   padding: 0 1rem;
   font-size: 14px;
   font-weight: 650;
-}
-
-.btn:hover {
-  box-shadow: var(--elevation-md);
-  background-color: var(--accent-dark);
-}
-
-@supports (background-color: color-mix(in oklab, white, black)) {
-  .btn:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--accent-solid, var(--accent)),
-      black 8%
-    );
-  }
-}
-
-.btn:active {
-  transform: translateY(1px);
-  opacity: 0.98;
-  box-shadow: var(--elevation-xs);
-}
-
-[data-theme="dark"] .btn {
-  box-shadow: var(--elevation-md);
+  line-height: 1.1;
 }
 
 .btn-small {
@@ -193,7 +155,33 @@ select {
   font-size: 13px;
 }
 
-/* Sekundäre / neutrale Buttons */
+/* Shared hover/active for primary variants */
+:where(.btn, .btn-play-idea):hover {
+  box-shadow: var(--elevation-md);
+  background-color: var(--accent-dark);
+}
+
+@supports (background-color: color-mix(in oklab, white, black)) {
+  :where(.btn, .btn-play-idea):hover {
+    background-color: color-mix(
+      in oklab,
+      var(--accent-solid, var(--accent)),
+      black 8%
+    );
+  }
+}
+
+:where(.btn, .btn-play-idea):active {
+  transform: translateY(1px);
+  opacity: 0.98;
+  box-shadow: var(--elevation-xs);
+}
+
+[data-theme="dark"] :where(.btn, .btn-play-idea) {
+  box-shadow: var(--elevation-md);
+}
+
+/* Secondary buttons */
 .btn-secondary {
   background-color: var(--neutral-0);
   color: var(--text-strong, #111827);
@@ -217,7 +205,7 @@ select {
   box-shadow: var(--elevation-sm);
 }
 
-/* Ghost / „Text“-Button */
+/* Ghost buttons */
 .btn-ghost {
   display: inline-flex;
   align-items: center;
@@ -261,7 +249,7 @@ select {
   border-color: rgba(148, 163, 184, 0.36);
 }
 
-/* Spezielle Tilla-Button-Variante – basiert auf Primary-Button */
+/* Tilla / Compact primary button */
 .btn-play-idea {
   max-width: 100%;
   padding: 0.3rem 0.85rem;
@@ -270,31 +258,7 @@ select {
   font-weight: 650;
   white-space: normal;
   gap: 6px;
-}
-
-.btn-play-idea:hover {
-  box-shadow: var(--elevation-md);
-  background-color: var(--accent-dark);
-}
-
-@supports (background-color: color-mix(in oklab, white, black)) {
-  .btn-play-idea:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--accent-solid, var(--accent)),
-      black 8%
-    );
-  }
-}
-
-.btn-play-idea:active {
-  transform: translateY(1px);
-  opacity: 0.98;
-  box-shadow: var(--elevation-xs);
-}
-
-[data-theme="dark"] .btn-play-idea {
-  box-shadow: var(--elevation-md);
+  line-height: 1.15;
 }
 
 @media (max-width: 480px) {
@@ -315,9 +279,8 @@ select {
 }
 
 /* =========================================
-   Fokus für interaktive Komponenten
+   Focus for interactive components
    ========================================= */
-
 :where(
   button,
   .language-switcher,
@@ -339,43 +302,54 @@ select {
   box-shadow: var(--focus-ring, var(--focus-ring-default));
 }
 
+/* Forced colors: ensure visible focus */
+@media (forced-colors: active) {
+  :where(
+    button,
+    .btn,
+    .btn-ghost,
+    .btn-play-idea,
+    .btn-icon,
+    .bottom-nav-item,
+    .input,
+    select.input,
+    textarea.input
+  ):focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+}
+
 /* =========================================
    HEADER
    ========================================= */
-
 .app-header {
   position: sticky;
   top: 0;
   z-index: 1200;
   padding: calc(env(safe-area-inset-top, 0px) + 10px) 14px 14px;
-  background: linear-gradient(
-    180deg,
-    var(--header-bg-top),
-    var(--header-bg-bottom)
-  );
+  background: linear-gradient(180deg, var(--header-bg-top), var(--header-bg-bottom));
   color: var(--header-text-color);
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
   box-shadow: var(--header-shadow);
 }
 
-/* Light-Mode-Variante: warm, gedämpft (zwischen Bild 1 & 2) */
+/* Light-mode header: warm muted */
 :where(html, body, :root)[data-theme="light"] .app-header {
   background: radial-gradient(
-      circle at top left,
-      var(--fsm-warm-0) 0,
-      var(--fsm-warm-1) 52%,
-      var(--fsm-warm-2) 100%
-    );
+    circle at top left,
+    var(--fsm-warm-0) 0,
+    var(--fsm-warm-1) 52%,
+    var(--fsm-warm-2) 100%
+  );
   color: var(--text-strong, #111827);
   box-shadow: var(--elevation-md);
 
-  /* Header-interne Flächen (nur in Header-Kontext, ohne globale Token zu überschreiben) */
   --header-text-color: var(--text-strong, #111827);
   --header-tagline-bg: rgba(255, 255, 255, 0.56);
   --header-tagline-color: rgba(17, 24, 39, 0.92);
-
-  /* FIX (Bild 1): Menü-Button im Header hell/milchig statt orange */
   --header-icon-bg: rgba(255, 255, 255, 0.72);
 }
 
@@ -393,7 +367,7 @@ select {
   gap: 8px;
 }
 
-/* unsichtbarer, aber vorhandener Legacy-Language-Switcher */
+/* SR-only */
 .sr-only {
   border: 0;
   clip: rect(0 0 0 0);
@@ -406,10 +380,7 @@ select {
   white-space: nowrap;
 }
 
-/* =========================================
-   FIX: Skip-Link – nur bei Fokus sichtbar
-   (entfernt „Zum Hauptinhalt springen“ aus der UI)
-   ========================================= */
+/* Skip link: only visible on focus */
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -435,8 +406,7 @@ select {
   outline: none;
 }
 
-/* Header-Icons & Menü-Button */
-
+/* Header icons */
 .btn-icon {
   border: none;
   padding: 0;
@@ -480,7 +450,7 @@ select {
   font-size: 20px;
 }
 
-/* alte language-switcher-Optik wird nicht mehr genutzt */
+/* legacy language-switcher is not used */
 .language-switcher {
   display: none;
 }
@@ -532,9 +502,8 @@ select {
 }
 
 /* =========================================
-   HEADER-MENÜ (☰)
+   HEADER MENU (☰)
    ========================================= */
-
 .app-menu {
   position: fixed;
   inset: 0;
@@ -542,12 +511,10 @@ select {
   display: none;
 }
 
-/* FIX: Hidden muss IMMER gewinnen (auch wenn sonst display gesetzt wird) */
 .app-menu[hidden] {
   display: none !important;
 }
 
-/* FIX: Ohne data-menu-open darf das Menü niemals sichtbar sein */
 body:not([data-menu-open="1"]) .app-menu {
   display: none !important;
 }
@@ -575,11 +542,11 @@ body[data-menu-open="1"] .app-menu {
   border: 1px solid var(--card-border, rgba(148, 163, 184, 0.16));
   box-shadow: var(--elevation-lg);
 
-  /* FIX: Panel nicht unnötig groß + sauber scrollen */
   height: auto;
   max-height: min(70vh, calc(100vh - env(safe-area-inset-top, 0px) - 84px));
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 [data-theme="dark"] .app-menu-panel {
@@ -651,8 +618,7 @@ body[data-menu-open="1"] .app-menu {
   text-align: left;
 }
 
-/* Sprachchips im Menü */
-
+/* Language chips */
 .app-menu-languages {
   margin-top: 4px;
   padding-top: 6px;
@@ -709,13 +675,13 @@ body[data-menu-open="1"] .app-menu {
 
 .app-menu-lang-chip--active {
   background: var(--accent-soft);
-  color: var(--on-accent, #1f2937);
+  color: var(--on-accent, #111827);
   box-shadow: var(--elevation-md);
 }
 
 [data-theme="dark"] .app-menu-lang-chip--active {
   background: var(--accent);
-  color: var(--on-light, #111827);
+  color: var(--on-accent, #111827);
 }
 
 .app-menu-lang-flag {
@@ -731,7 +697,6 @@ body[data-menu-open="1"] .app-menu {
 /* =========================================
    MAIN LAYOUT
    ========================================= */
-
 .app-main {
   flex: 1;
   width: 100%;
@@ -751,7 +716,6 @@ body[data-menu-open="1"] .app-menu {
 /* =========================================
    MAP VIEW & SIDEBAR
    ========================================= */
-
 #view-map {
   display: flex;
   flex-direction: column;
@@ -770,8 +734,7 @@ body[data-menu-open="1"] .app-menu {
   border-radius: 0 0 28px 28px;
 }
 
-/* Karten / Sections */
-
+/* Sections / Cards */
 .sidebar-section {
   background: var(--sidebar-section-bg);
   border-radius: 20px;
@@ -780,18 +743,15 @@ body[data-menu-open="1"] .app-menu {
   border: 1px solid var(--sidebar-section-border);
 }
 
-/* globaler Abstand übereinanderliegende Cards */
+/* global stack spacing */
 .sidebar-section + .sidebar-section {
   margin-top: 10px;
 }
-
-/* in der Sidebar übernimmt gap den Abstand */
 .sidebar > .sidebar-section + .sidebar-section {
   margin-top: 0;
 }
 
-/* Map-Card */
-
+/* Map card */
 .map-section {
   border-radius: 22px;
   overflow: hidden;
@@ -804,7 +764,7 @@ body[data-menu-open="1"] .app-menu {
   margin-bottom: 14px;
 }
 
-/* plus-section ↔ daylog-section explizit ebenfalls 14px */
+/* plus-section ↔ daylog-section spacing */
 #plus-section + #daylog-section {
   margin-top: 14px;
 }
@@ -869,8 +829,7 @@ body[data-menu-open="1"] .app-menu {
   display: none;
 }
 
-/* Kompass-Karte */
-
+/* Compass card */
 .compass-card {
   margin-top: 4px;
   padding: 10px 10px 12px;
@@ -889,7 +848,6 @@ body[data-menu-open="1"] .app-menu {
 /* =========================================
    Form Controls in Sidebar
    ========================================= */
-
 .filter-group {
   margin-top: 8px;
 }
@@ -910,7 +868,6 @@ body[data-menu-open="1"] .app-menu {
   color: var(--text-soft);
 }
 
-/* kompaktere Variante für erklärende Texte innerhalb des Filter-Blocks */
 .filter-group-helper--compact {
   margin-top: 4px;
   margin-bottom: 6px;
@@ -918,17 +875,15 @@ body[data-menu-open="1"] .app-menu {
   color: var(--text-soft);
 }
 
-/* Abstand für Filter-Toggle-Button */
 #btn-toggle-filters {
   margin-bottom: 0;
 }
 
-/* mehr Luft über dem ersten Helper-Text unterhalb des Headers */
 .sidebar-section-header + .filter-group-helper {
   margin-top: 1rem;
 }
 
-/* Footer unter den Basis-Filtern: Button + Zusammenfassung */
+/* Footer under base filters */
 .filter-footer {
   display: flex;
   align-items: center;
@@ -952,7 +907,7 @@ select.input {
   padding: 9px 13px;
   font-size: 14px;
   font-family: inherit;
-  background: var(--input-bg);
+  background: var(--input-bg, rgba(255, 255, 255, 0.92));
   box-shadow: none;
   color: var(--text-color, #111827);
   background-clip: padding-box;
@@ -975,11 +930,11 @@ textarea.input {
 textarea.input:focus,
 select.input:focus {
   outline: none;
-  border-color: hsla(var(--accent-h, 30), 72%, 52%, 0.65);
-  box-shadow: 0 0 0 1px hsla(var(--accent-h, 30), 72%, 52%, 0.45);
+  border-color: hsla(var(--accent-h, 28), 72%, 52%, 0.65);
+  box-shadow: 0 0 0 1px hsla(var(--accent-h, 28), 72%, 52%, 0.45);
 }
 
-/* Select — crisp chevron */
+/* Select chevron */
 select.input {
   padding-right: 2.35rem;
   background-image:
@@ -998,8 +953,7 @@ select.input {
     linear-gradient(135deg, rgba(229, 231, 235, 0.7) 50%, transparent 50%);
 }
 
-/* Mood & Travel & Tag Chips */
-
+/* Mood / Travel / Tag chips */
 .mood-row {
   display: flex;
   flex-wrap: wrap;
@@ -1017,7 +971,7 @@ select.input {
   gap: 6px;
   font-size: 13px;
   background: var(--chip-bg, var(--fsm-chip-warm, #f1dfcf));
-  color: var(--text-1, #374151);
+  color: var(--text-color, #374151);
   border: 1px solid var(--border-2, rgba(209, 213, 219, 0.9));
   box-shadow: none;
   cursor: pointer;
@@ -1034,10 +988,7 @@ select.input {
   border-color: rgba(148, 163, 184, 0.65);
 }
 
-[data-theme="dark"] .mood-chip,
-[data-theme="dark"] .travel-chip,
-[data-theme="dark"] .compass-mode-chip,
-[data-theme="dark"] .tag-filter-chip {
+[data-theme="dark"] :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip) {
   background: var(--surface-3, rgba(15, 23, 42, 0.98));
   color: var(--text-color, #e5e7eb);
   border-color: rgba(148, 163, 184, 0.35);
@@ -1047,10 +998,7 @@ select.input {
   font-size: 15px;
 }
 
-.mood-chip--active,
-.travel-chip--active,
-.compass-mode-chip--active,
-.tag-filter-chip--active {
+:where(.mood-chip--active, .travel-chip--active, .compass-mode-chip--active, .tag-filter-chip--active) {
   background: var(--accent-soft);
   color: var(--on-accent, #1f2937);
   border-color: var(--accent);
@@ -1058,31 +1006,23 @@ select.input {
   transform: translateY(-1px);
 }
 
-[data-theme="dark"] .mood-chip--active,
-[data-theme="dark"] .travel-chip--active,
-[data-theme="dark"] .compass-mode-chip--active,
-[data-theme="dark"] .tag-filter-chip--active {
+[data-theme="dark"] :where(.mood-chip--active, .travel-chip--active, .compass-mode-chip--active, .tag-filter-chip--active) {
   background: var(--accent);
-  color: var(--on-light, #111827);
+  color: var(--on-accent, #111827);
 }
 
-/* Tap-Feedback */
-.mood-chip:active,
-.travel-chip:active,
-.tag-filter-chip:active,
-.compass-mode-chip:active {
+/* Tap feedback */
+:where(.mood-chip, .travel-chip, .tag-filter-chip, .compass-mode-chip):active {
   transform: translateY(0);
   box-shadow: none;
 }
 
-/* Tag-Filter-Reihe im Modal */
 .tag-filter-row {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-/* generische Chip-Variante für das Modal */
 .btn-chip {
   border-radius: var(--radius-pill, 999px);
   padding: 5px 10px;
@@ -1114,16 +1054,14 @@ select.input {
 
 [data-theme="dark"] .btn-chip:active {
   background: var(--accent);
-  color: var(--on-light, #111827);
+  color: var(--on-accent, #111827);
 }
 
-/* Basiszustand – wird für Schnellfilter weiter spezifiziert */
 .tag-filter-chip--active {
   background: var(--accent-soft);
   color: var(--on-accent, #1f2937);
 }
 
-/* Schnellfilter-Chips im Modal */
 .tag-filter-row .tag-filter-chip--active,
 .tag-filter-row .btn-chip[aria-pressed="true"] {
   background: var(--accent-soft);
@@ -1134,11 +1072,10 @@ select.input {
 [data-theme="dark"] .tag-filter-row .tag-filter-chip--active,
 [data-theme="dark"] .tag-filter-row .btn-chip[aria-pressed="true"] {
   background: var(--accent);
-  color: var(--on-light, #111827);
+  color: var(--on-accent, #111827);
 }
 
 /* Radius */
-
 .radius-row {
   display: flex;
   align-items: center;
@@ -1161,8 +1098,7 @@ select.input {
   color: var(--text-soft);
 }
 
-/* Weitere Filter / Advanced */
-
+/* Advanced filters */
 .filter-advanced {
   margin-top: 4px;
   padding-top: 4px;
@@ -1173,7 +1109,7 @@ select.input {
   border-top-color: rgba(148, 163, 184, 0.22);
 }
 
-/* „Weitere Filter“-Pill AUSBLENDEN */
+/* Hide "Weitere Filter" pill */
 .filter-advanced-summary {
   display: none;
 }
@@ -1182,8 +1118,7 @@ select.input {
   margin: 0;
 }
 
-/* Checkboxen */
-
+/* Checkbox */
 .filter-group--checkbox {
   margin-top: 4px;
 }
@@ -1195,7 +1130,7 @@ select.input {
   font-size: 14px;
 }
 
-/* Custom-Checkbox */
+/* Custom checkbox */
 .filter-group--checkbox input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
@@ -1228,13 +1163,11 @@ select.input {
   background: #ffffff;
 }
 
-/* Tap-Feedback */
 .filter-group--checkbox input[type="checkbox"]:active {
   filter: brightness(0.96);
 }
 
-/* Plus-Code-Form */
-
+/* Plus-code form */
 .plus-code-form {
   margin-top: 6px;
   font-size: 14px;
@@ -1252,8 +1185,7 @@ select.input {
   color: var(--text-soft);
 }
 
-/* Mein Tag – extra Luft zum Button */
-
+/* Daylog spacing */
 #daylog-section .filter-group label {
   display: block;
   margin-bottom: 6px;
@@ -1268,9 +1200,8 @@ select.input {
 }
 
 /* ======================================
-   Mein Tag – Liste & „Tagebuch“-Einträge
+   Daylog list & entries
    ====================================== */
-
 .daylog-list,
 #daylog-list {
   margin-top: 0.75rem;
@@ -1285,7 +1216,6 @@ select.input {
   scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
 }
 
-/* Scrollbar */
 .daylog-list::-webkit-scrollbar,
 #daylog-list::-webkit-scrollbar {
   width: 6px;
@@ -1306,8 +1236,6 @@ select.input {
 [data-theme="dark"] #daylog-list::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.55);
 }
-
-/* Einzelner Tagebuch-Eintrag */
 
 .daylog-entry {
   position: relative;
@@ -1340,7 +1268,7 @@ select.input {
   box-shadow: var(--elevation-md);
 }
 
-/* Timeline am linken Rand */
+/* Timeline left */
 .daylog-entry::before {
   content: "";
   position: absolute;
@@ -1361,7 +1289,7 @@ select.input {
   height: 9px;
   border-radius: 999px;
   background: var(--accent-light);
-  box-shadow: 0 0 0 3px hsla(var(--accent-h, 30), 72%, 58%, 0.22);
+  box-shadow: 0 0 0 3px hsla(var(--accent-h, 28), 72%, 58%, 0.22);
 }
 
 .daylog-entry-header {
@@ -1398,9 +1326,8 @@ select.input {
 }
 
 /* =========================================
-   Spot-Liste
+   Spot list
    ========================================= */
-
 .sidebar-section--grow {
   flex: 1 1 auto;
   display: flex;
@@ -1427,21 +1354,18 @@ select.input {
 #spot-list::-webkit-scrollbar {
   width: 6px;
 }
-
 #spot-list::-webkit-scrollbar-track {
   background: transparent;
 }
-
 #spot-list::-webkit-scrollbar-thumb {
   border-radius: 999px;
   background: rgba(148, 163, 184, 0.55);
 }
-
 [data-theme="dark"] #spot-list::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.55);
 }
 
-/* Empty-State für leere Filterergebnisse */
+/* Empty state */
 .empty-state {
   padding: 12px 12px 14px;
   border-radius: 16px;
@@ -1476,8 +1400,7 @@ select.input {
   border: var(--border-soft);
 }
 
-/* Spot-Karten */
-
+/* Spot cards */
 .spot-card {
   position: relative;
   background: var(--card-bg);
@@ -1566,8 +1489,7 @@ select.input {
   font-weight: 650;
 }
 
-/* Spot-Details */
-
+/* Spot details */
 .spot-details--hidden {
   display: none;
 }
@@ -1696,15 +1618,7 @@ select.input {
   border: var(--stroke-2);
 }
 
-.spot-details-scores {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0;
-}
-
-/* Favorite-Toggle */
-
+/* Favorite toggle */
 .favorite-toggle {
   margin-top: 12px;
   border-radius: var(--radius-pill, 999px);
@@ -1740,15 +1654,14 @@ select.input {
   box-shadow: var(--elevation-sm);
 }
 
-/* Map-Container */
-
+/* Map container */
 .map-container {
   width: 100%;
   height: 100%;
   min-height: 320px;
 }
 
-/* Map-Tiles farblich an App anpassen */
+/* Map tiles style */
 .leaflet-container .leaflet-tile {
   filter: var(--map-filter);
   transition: filter var(--dur-slow) var(--ease-out);
@@ -1799,9 +1712,8 @@ select.input {
 }
 
 /* =========================================
-   FILTER MODAL (BOTTOM SHEET OVERLAY)
+   FILTER MODAL (BOTTOM SHEET)
    ========================================= */
-
 .filter-modal {
   position: fixed;
   inset: 0;
@@ -1831,7 +1743,6 @@ select.input {
   padding: 16px 20px 20px;
 }
 
-/* Header im Filter-Modal inkl. Close-Button */
 .filter-modal-header {
   display: flex;
   align-items: center;
@@ -1845,7 +1756,6 @@ select.input {
   font-size: 20px;
 }
 
-/* Close-Button */
 #filter-modal-close {
   border-radius: var(--radius-pill, 999px);
   padding: 6px 16px;
@@ -1880,7 +1790,6 @@ select.input {
   box-shadow: var(--elevation-sm);
 }
 
-/* Footer des Filtermodals */
 .filter-modal-footer {
   margin-top: 14px;
   display: flex;
@@ -1889,7 +1798,7 @@ select.input {
   gap: 10px;
 }
 
-/* Hintergrund nicht scrollen, wenn Filter-Modal ODER Menü offen ist */
+/* Prevent background scroll when modal/menu open */
 body[data-filter-modal-open="1"],
 body[data-menu-open="1"] {
   overflow: hidden;
@@ -1899,7 +1808,6 @@ body[data-menu-open="1"] {
 /* =========================================
    TILLA SIDEBAR
    ========================================= */
-
 @keyframes tilla-bob {
   0% { transform: translateY(0) rotate(0deg); }
   25% { transform: translateY(-2px) rotate(-2deg); }
@@ -1961,7 +1869,6 @@ body[data-menu-open="1"] {
 /* =========================================
    ABOUT VIEW
    ========================================= */
-
 .page-about {
   background: var(--card-bg);
   border-radius: 22px;
@@ -1992,7 +1899,6 @@ body[data-menu-open="1"] {
 /* =========================================
    BOTTOM NAV
    ========================================= */
-
 .bottom-nav {
   position: fixed;
   left: 0;
@@ -2063,7 +1969,6 @@ body[data-menu-open="1"] {
 /* =========================================
    TOAST
    ========================================= */
-
 .toast {
   position: fixed;
   left: 50%;
@@ -2093,7 +1998,6 @@ body[data-menu-open="1"] {
 /* =========================================
    NOSCRIPT
    ========================================= */
-
 .noscript-warning {
   padding: 8px 12px;
   background: #d84315;
@@ -2105,7 +2009,6 @@ body[data-menu-open="1"] {
 /* =========================================
    MAP MARKER & ATTRIBUTION
    ========================================= */
-
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
@@ -2160,7 +2063,6 @@ body[data-menu-open="1"] {
   position: relative;
 }
 
-/* Cluster-Variante des Spot-Markers (mit Zähler) */
 .spot-marker--cluster {
   position: relative;
 }
@@ -2188,7 +2090,7 @@ body[data-menu-open="1"] {
   border-radius: inherit;
   background: radial-gradient(
     circle,
-    hsla(var(--accent-h, 30), 72%, 60%, 0.28),
+    hsla(var(--accent-h, 28), 72%, 60%, 0.28),
     transparent 60%
   );
 }
@@ -2203,7 +2105,6 @@ body[data-menu-open="1"] {
   100% { transform: scale(1); }
 }
 
-/* Attribution */
 .leaflet-control-attribution {
   bottom: 4px !important;
   right: 12px !important;
@@ -2211,7 +2112,6 @@ body[data-menu-open="1"] {
 }
 
 /* Popup */
-
 .popup strong {
   font-size: 14px;
 }
@@ -2259,7 +2159,7 @@ body[data-menu-open="1"] {
   border: var(--stroke-2);
 }
 
-/* Radius-Kreis auf Accent */
+/* Radius circle */
 .radius-circle {
   stroke: var(--radius-circle-stroke);
   stroke-width: 2;
@@ -2267,9 +2167,8 @@ body[data-menu-open="1"] {
 }
 
 /* =========================================
-   MISC
+   Misc
    ========================================= */
-
 hr {
   border: none;
   border-bottom: 1px solid var(--fsm-divider-warm);
@@ -2281,9 +2180,8 @@ hr {
 }
 
 /* =========================================
-   SPOT-LISTE & DETAILS – Onboarding-Hint
+   Onboarding hint
    ========================================= */
-
 .fsm-onboarding-hint {
   position: relative;
   margin: 0;
@@ -2331,21 +2229,18 @@ hr {
   margin-bottom: 0;
 }
 
-/* Close-Button im Hinweis komplett ausblenden */
 .fsm-onboarding-hint__close,
 .fsm-onboarding-hint-close {
   display: none !important;
 }
 
-/* Wenn der Hinweis per JS versteckt wird */
 .fsm-onboarding-hint--hidden {
   display: none;
 }
 
 /* =========================================
-   LANDSCAPE-WARNUNG (MOBILE)
+   Landscape warning
    ========================================= */
-
 .landscape-warning {
   position: fixed;
   left: 0;
@@ -2367,9 +2262,8 @@ hr {
 }
 
 /* =========================================
-   PREFERS REDUCED MOTION
+   Prefers Reduced Motion
    ========================================= */
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -2387,7 +2281,7 @@ hr {
   }
 }
 
-/* Tilla soll sich immer bewegen – auch bei reduced motion */
+/* Tilla bleibt animiert (bewusstes Produkt-Branding) */
 .tilla-sidebar-avatar img {
   animation: tilla-bob 3.5s ease-in-out infinite !important;
 }
