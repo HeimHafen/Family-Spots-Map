@@ -86,8 +86,8 @@ const FALLBACK_TEXTS = Object.freeze({
       "With these filters the map is empty. Try a wider radius or a different category – somewhere a good place is waiting for you. 🐢"
     ],
     turtle_after_daylog_save: [
-      "Nice that you captured your day. These small notes turn into big memories later. 💛",
-      "A few lines today – many memories tomorrow. Thanks for sharing your day. 💛"
+      "Nice that you captured your day. These small notes turn into big memories later. 💚",
+      "A few lines today – many memories tomorrow. Thanks for sharing your day. 💚"
     ],
     turtle_after_fav_added: [
       "You’ve saved this place – a small gem on your family map. ⭐",
