@@ -1,5 +1,6 @@
+
 <!doctype html>
-<html lang="de" dir="ltr" data-theme="light">
+<html lang="de" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -10,43 +11,24 @@
     content="Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern."
   />
 
-  <!-- Baseline Privacy / UX -->
-  <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta name="format-detection" content="telephone=no" />
+  <!-- Critical Background (verhindert weiße Ränder/Flash bevor CSS lädt) -->
+  <style>
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #f7e1d0;
+    }
+  </style>
+
+  <!-- Theme color (Light / Dark) -->
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7e1d0" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617" />
+
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
-
-  <!-- PWA / Apple -->
-  <link rel="manifest" href="/Family-Spots-Map/manifest.webmanifest" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
   <meta name="application-name" content="Family Spots Map" />
-
-  <!-- Theme bootstrap (verhindert Flash + setzt Theme-Color korrekt) -->
-  <meta name="theme-color" content="#f7e1d0" id="meta-theme-color" />
-  <script>
-    (() => {
-      const doc = document.documentElement;
-      const KEY = "fsm-theme";
-      const stored = localStorage.getItem(KEY);
-      const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches;
-      const theme = stored || (prefersDark ? "dark" : "light");
-      doc.dataset.theme = theme;
-      doc.style.colorScheme = theme;
-
-      const meta = document.getElementById("meta-theme-color");
-      if (meta) meta.setAttribute("content", theme === "dark" ? "#020617" : "#f7e1d0");
-    })();
-  </script>
-
-  <!-- Critical Background (CSS Custom Properties; verhindert weiße Ränder/Flash bevor CSS lädt) -->
-  <style>
-    :root { --app-bg: #f7e1d0; --app-fg: #0b1220; }
-    html[data-theme="dark"] { --app-bg: #020617; --app-fg: #e5e7eb; }
-    html, body { margin: 0; min-height: 100%; background: var(--app-bg); color: var(--app-fg); }
-  </style>
+  <meta name="format-detection" content="telephone=no" />
 
   <!-- Canonical & hreflang -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
@@ -77,7 +59,7 @@
   />
   <meta name="twitter:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
 
-  <!-- Structured Data: WebApplication -->
+  <!-- Structured Data: WebApplication (ohne Preisangaben, damit nichts “falsch” markiert wird) -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -90,6 +72,12 @@
       "description": "Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern."
     }
   </script>
+
+  <!-- PWA / Apple -->
+  <link rel="manifest" href="/Family-Spots-Map/manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <!-- Performance hints -->
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
@@ -107,73 +95,9 @@
   <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/badges.css" />
-
-  <!-- Optional: Module preload (schnellerer App-Start) -->
-  <link rel="modulepreload" href="./js/app.js" />
-
-  <!-- Mobile UI Slim (Boxen kompakter, Schriftgröße bleibt gleich) -->
-  <style>
-    @media (max-width: 720px) {
-      .sidebar-section-header,
-      summary.sidebar-section-header {
-        padding: 10px 14px !important;
-        min-height: 44px !important;
-      }
-
-      .sidebar-section-title {
-        margin: 0 !important;
-        line-height: 1.2 !important;
-      }
-
-      .btn-ghost.btn-small,
-      .btn.btn-small {
-        padding-top: 6px !important;
-        padding-bottom: 6px !important;
-      }
-
-      .sidebar .sidebar-section {
-        margin-bottom: 10px !important;
-      }
-
-      .app-menu-item {
-        padding-top: 10px !important;
-        padding-bottom: 10px !important;
-      }
-    }
-  </style>
 </head>
 
 <body>
-  <!-- Inline SVG Sprite (weniger Requests, konsistente Icons) -->
-  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
-    <symbol id="i-menu" viewBox="0 0 24 24">
-      <path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="i-info" viewBox="0 0 24 24">
-      <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" fill="none" stroke="currentColor" stroke-width="2"/>
-      <path d="M12 10v7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <path d="M12 7h.01" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="i-map" viewBox="0 0 24 24">
-      <path d="M9 18 3 20V6l6-2 6 2 6-2v14l-6 2-6-2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="i-moon" viewBox="0 0 24 24">
-      <path d="M21 13.2A7.5 7.5 0 0 1 10.8 3 8.5 8.5 0 1 0 21 13.2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-    </symbol>
-    <symbol id="i-pin" viewBox="0 0 24 24">
-      <path d="M12 22s7-5.1 7-12a7 7 0 1 0-14 0c0 6.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="2"/>
-      <path d="M12 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" fill="none" stroke="currentColor" stroke-width="2"/>
-    </symbol>
-    <symbol id="i-close" viewBox="0 0 24 24">
-      <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="i-dice" viewBox="0 0 24 24">
-      <path d="M5 7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2Z" fill="none" stroke="currentColor" stroke-width="2"/>
-      <path d="M9 9h.01M15 15h.01M15 9h.01M9 15h.01M12 12h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-    </symbol>
-  </svg>
-
   <!-- Globaler Skip-Link -->
   <a
     href="#main-content"
@@ -186,7 +110,7 @@
   </a>
 
   <noscript>
-    <div class="noscript-warning" role="alert">
+    <div class="noscript-warning">
       Family Spots Map benötigt JavaScript, um korrekt zu funktionieren.
       Bitte JavaScript im Browser aktivieren, um die interaktive Karte und Filter nutzen zu können.
     </div>
@@ -238,11 +162,7 @@
             aria-expanded="false"
             aria-controls="app-menu"
           >
-            <span class="btn-menu-icon" aria-hidden="true">
-              <svg class="icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-                <use href="#i-menu"></use>
-              </svg>
-            </span>
+            <span class="btn-menu-icon" aria-hidden="true">☰</span>
             <span
               class="sr-only"
               data-i18n-de="Menü öffnen"
@@ -285,13 +205,10 @@
       aria-labelledby="app-menu-title"
       aria-hidden="true"
       hidden
-      data-focus-trap="true"
     >
       <div class="app-menu-backdrop" data-menu-close="1" aria-hidden="true"></div>
 
-      <div class="app-menu-panel" tabindex="-1">
-        <div class="focus-guard" tabindex="0" data-focus-guard="start" aria-hidden="true"></div>
-
+      <div class="app-menu-panel">
         <h2 id="app-menu-title" class="sr-only">Menü</h2>
 
         <div class="app-menu-list">
@@ -302,9 +219,7 @@
             type="button"
             data-menu-close="1"
           >
-            <span class="app-menu-item-icon" aria-hidden="true">
-              <svg class="icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"></use></svg>
-            </span>
+            <span class="app-menu-item-icon" aria-hidden="true">ℹ️</span>
             <span
               class="app-menu-item-label"
               data-i18n-de="Über Family Spots Map"
@@ -315,27 +230,6 @@
             </span>
           </button>
 
-          <!-- Nur Karte (bleibt im Menü) -->
-          <button
-            id="btn-toggle-view"
-            class="app-menu-item"
-            type="button"
-            aria-pressed="false"
-            aria-controls="sidebar"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">
-              <svg class="icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-map"></use></svg>
-            </span>
-            <span
-              class="app-menu-item-label"
-              data-i18n-de="Nur Karte"
-              data-i18n-en="Map only"
-              data-i18n-da="Kun kort"
-            >
-            </span>
-          </button>
-
           <!-- Zur Spot-Liste springen -->
           <button
             id="btn-skip-spots"
@@ -343,9 +237,7 @@
             type="button"
             data-menu-close="1"
           >
-            <span class="app-menu-item-icon" aria-hidden="true">
-              <svg class="icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-map"></use></svg>
-            </span>
+            <span class="app-menu-item-icon" aria-hidden="true">🗺️</span>
             <span
               class="app-menu-item-label"
               id="skip-to-spots-label"
@@ -363,11 +255,8 @@
             class="app-menu-item"
             type="button"
             data-menu-close="1"
-            aria-pressed="false"
           >
-            <span class="app-menu-item-icon" aria-hidden="true">
-              <svg class="icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-moon"></use></svg>
-            </span>
+            <span class="app-menu-item-icon" aria-hidden="true">🌓</span>
             <span
               class="app-menu-item-label"
               id="theme-toggle-label"
@@ -386,9 +275,7 @@
             type="button"
             data-menu-close="1"
           >
-            <span class="app-menu-item-icon" aria-hidden="true">
-              <svg class="icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pin"></use></svg>
-            </span>
+            <span class="app-menu-item-icon" aria-hidden="true">📍</span>
             <span
               class="app-menu-item-label"
               id="btn-locate-label"
@@ -414,22 +301,20 @@
           </p>
 
           <div class="app-menu-languages-row">
-            <button type="button" class="app-menu-lang-chip" data-lang-target="de" aria-pressed="true">
+            <button type="button" class="app-menu-lang-chip" data-lang-target="de">
               <span class="app-menu-lang-flag" aria-hidden="true">🇩🇪</span>
               <span class="app-menu-lang-code">DE</span>
             </button>
-            <button type="button" class="app-menu-lang-chip" data-lang-target="da" aria-pressed="false">
+            <button type="button" class="app-menu-lang-chip" data-lang-target="da">
               <span class="app-menu-lang-flag" aria-hidden="true">🇩🇰</span>
               <span class="app-menu-lang-code">DA</span>
             </button>
-            <button type="button" class="app-menu-lang-chip" data-lang-target="en" aria-pressed="false">
+            <button type="button" class="app-menu-lang-chip" data-lang-target="en">
               <span class="app-menu-lang-flag" aria-hidden="true">🇬🇧</span>
               <span class="app-menu-lang-code">EN</span>
             </button>
           </div>
         </div>
-
-        <div class="focus-guard" tabindex="0" data-focus-guard="end" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -466,9 +351,8 @@
                 <img
                   src="assets/tilla/tilla-hero.png"
                   alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
-                  loading="eager"
+                  loading="lazy"
                   decoding="async"
-                  fetchpriority="high"
                   width="512"
                   height="512"
                 />
@@ -487,9 +371,7 @@
 
                 <div class="tilla-sidebar-actions">
                   <button id="btn-play-idea" type="button" class="btn btn-small btn-play-idea">
-                    <span class="tilla-play-emoji" aria-hidden="true">
-                      <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dice"></use></svg>
-                    </span>
+                    <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
                     <span
                       data-i18n-de="Spielideen für unterwegs"
                       data-i18n-en="Play ideas on the go"
@@ -543,9 +425,7 @@
               </span>
             </p>
 
-            <button type="button" class="fsm-onboarding-hint__close" aria-label="Hinweis schließen">
-              <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"></use></svg>
-            </button>
+            <button type="button" class="fsm-onboarding-hint__close" aria-label="Hinweis schließen">×</button>
           </section>
 
           <!-- Kompakter Filter -->
@@ -607,8 +487,6 @@
                 type="search"
                 placeholder="Ort, Spot, Stichwort …"
                 autocomplete="off"
-                enterkeyhint="search"
-                inputmode="search"
                 data-i18n-de="Ort, Spot, Stichwort …"
                 data-i18n-en="Place, spot, keywords …"
                 data-i18n-da="Sted, spot, søgeord …"
@@ -758,48 +636,34 @@
           </section>
 
           <!-- Spot-Liste -->
-          <details
-            class="sidebar-section sidebar-section--grow"
-            id="spots-section"
-            aria-labelledby="spots-title"
-            open
-          >
-            <summary class="sidebar-section-header">
+          <section class="sidebar-section sidebar-section--grow" aria-labelledby="spots-title">
+            <header class="sidebar-section-header">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
 
-              <div class="sidebar-section-actions" aria-label="Spots Optionen">
-                <button
-                  id="btn-toggle-spots"
-                  class="btn-ghost btn-small"
-                  type="button"
-                  aria-controls="spot-list"
-                  aria-expanded="true"
-                  data-state="open"
-                >
-                  <span class="label-open"
-                    data-i18n-de="Ausblenden" data-i18n-en="Hide" data-i18n-da="Skjul"
-                  >Ausblenden</span>
-                  <span class="label-closed hidden"
-                    data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis"
-                  >Anzeigen</span>
-                </button>
-
-                <!-- ✅ Entfernt: Sidebar "Nur Karte" (damit nix im Menü durchscheint) -->
-              </div>
-            </summary>
+              <button
+                id="btn-toggle-view"
+                class="btn-ghost btn-small"
+                type="button"
+                aria-pressed="false"
+                aria-controls="sidebar"
+              >
+                <span data-i18n-de="Nur Karte" data-i18n-en="Map only" data-i18n-da="Kun kort">
+                  Nur Karte
+                </span>
+              </button>
+            </header>
 
             <div id="spot-list" class="spot-list"><!-- Karten via JS --></div>
-          </details>
+          </section>
         </aside>
 
         <!-- Karte + Details -->
         <section class="map-section" aria-label="Karte mit Spots">
-          <div id="map" class="map-container" role="region" aria-label="Interaktive Karte"></div>
+          <div id="map" class="map-container"></div>
           <aside
             id="spot-detail"
             class="spot-details spot-details--hidden"
             aria-live="polite"
-            aria-atomic="true"
           ></aside>
         </section>
 
@@ -862,7 +726,7 @@
               Mein Tag 💚
             </h2>
 
-            <button type="button" class="btn-ghost btn-small" aria-hidden="true" tabindex="-1">
+            <button id="btn-toggle-daylog" class="btn-ghost btn-small" type="button">
               <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
             </button>
           </summary>
@@ -1501,11 +1365,8 @@
         aria-modal="true"
         aria-labelledby="filter-modal-title"
         hidden
-        data-focus-trap="true"
       >
-        <div class="filter-modal-inner" tabindex="-1">
-          <div class="focus-guard" tabindex="0" data-focus-guard="start" aria-hidden="true"></div>
-
+        <div class="filter-modal-inner">
           <header class="filter-modal-header">
             <h2
               id="filter-modal-title"
@@ -1691,8 +1552,6 @@
               </span>
             </button>
           </footer>
-
-          <div class="focus-guard" tabindex="0" data-focus-guard="end" aria-hidden="true"></div>
         </div>
       </div>
     </main>
@@ -1707,11 +1566,8 @@
       </button>
     </nav>
 
-    <!-- ✅ Dummy für alte JS-Handler: "Alles zurücksetzen" ist für Nutzer komplett weg -->
-    <button id="btn-reset-ui" type="button" hidden aria-hidden="true" tabindex="-1"></button>
-
     <!-- Toast -->
-    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
 
   <!-- Landscape-Warnung -->
@@ -1738,107 +1594,8 @@
 
   <!-- Details/Summary Fix (ES-Modul) -->
   <script type="module" src="./js/ui/details-summary-fix.js"></script>
-  <script type="module" src="./js/ui/spots-collapsible.js"></script>
 
   <!-- App (ES-Modul) -->
   <script type="module" src="./js/app.js"></script>
-
-  <!-- ✅ „Zur Spot-Liste springen“ wird zuverlässig zur Liste führen -->
-  <script>
-    (() => {
-      const btn = document.getElementById("btn-skip-spots");
-      if (!btn) return;
-
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        const mapRouteBtn = document.querySelector('[data-route="map"]');
-        const viewMap = document.getElementById("view-map");
-        const viewAbout = document.getElementById("view-about");
-        const isAboutActive = viewAbout && viewAbout.classList.contains("view--active");
-        const isMapActive = viewMap && viewMap.classList.contains("view--active");
-
-        if ((isAboutActive || !isMapActive) && mapRouteBtn) mapRouteBtn.click();
-
-        const mapOnlyBtn = document.getElementById("btn-toggle-view");
-        if (mapOnlyBtn && mapOnlyBtn.getAttribute("aria-pressed") === "true") mapOnlyBtn.click();
-
-        const spotsDetails = document.getElementById("spots-section");
-        if (spotsDetails && spotsDetails.tagName.toLowerCase() === "details") spotsDetails.open = true;
-
-        const menu = document.getElementById("app-menu");
-        const backdrop = menu ? menu.querySelector(".app-menu-backdrop[data-menu-close]") : null;
-        if (backdrop) backdrop.click();
-
-        const target = document.getElementById("spot-list") || document.getElementById("spots-section") || document.getElementById("spots-title");
-        if (target && typeof target.scrollIntoView === "function") {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-        const focusEl = document.getElementById("spots-title");
-        if (focusEl && typeof focusEl.focus === "function") {
-          setTimeout(() => focusEl.focus({ preventScroll: true }), 250);
-        }
-      }, { capture: true });
-    })();
-  </script>
-
-  <!-- Optional: Fokus-Trap (für Dialoge mit data-focus-trap="true") -->
-  <script type="module">
-    const getFocusable = (root) => {
-      const sel = [
-        'a[href]',
-        'area[href]',
-        'button:not([disabled])',
-        'input:not([disabled]):not([type="hidden"])',
-        'select:not([disabled])',
-        'textarea:not([disabled])',
-        '[tabindex]:not([tabindex="-1"])'
-      ].join(',');
-      return Array.from(root.querySelectorAll(sel)).filter(el => {
-        const style = window.getComputedStyle(el);
-        return style.visibility !== 'hidden' && style.display !== 'none';
-      });
-    };
-
-    const traps = Array.from(document.querySelectorAll('[data-focus-trap="true"]'));
-    traps.forEach((dialog) => {
-      dialog.addEventListener('keydown', (e) => {
-        if (e.key !== 'Tab') return;
-        const focusables = getFocusable(dialog);
-        if (!focusables.length) return;
-
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement;
-
-        if (e.shiftKey && active === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && active === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      });
-
-      dialog.addEventListener('focusin', (e) => {
-        if (dialog.hasAttribute('hidden') || dialog.getAttribute('aria-hidden') === 'true') return;
-        if (dialog.contains(e.target)) return;
-        const focusables = getFocusable(dialog);
-        (focusables[0] || dialog).focus();
-      });
-    });
-  </script>
-
-  <!-- Service Worker Registration (Offline-Caching Hook) -->
-  <script type="module">
-    try {
-      if ("serviceWorker" in navigator) {
-        const scope = "/Family-Spots-Map/";
-        const swUrl = new URL("sw.js", location.origin + scope).toString();
-        navigator.serviceWorker.register(swUrl, { scope });
-      }
-    } catch { /* silent */ }
-  </script>
 </body>
 </html>
