@@ -364,6 +364,13 @@
     color: var(--text-color, #e5e7eb);
   }
 
+  /* OPTIMIZED: ensure btn-small also compacts ghost buttons (Filter anzeigen / Nur Karte / Anzeigen) */
+  .btn-ghost.btn-small {
+    min-height: 28px;
+    padding: 0 0.75rem;
+    font-size: 12px;
+  }
+
   /* Tilla / Compact primary button */
   .btn-play-idea {
     max-width: 100%;
@@ -833,6 +840,19 @@
     border: 1px solid var(--sidebar-section-border);
   }
 
+  /* OPTIMIZED: Compact the three marked header cards (Filter / Plus / Mein Tag) and Spots */
+  #filter-section.sidebar-section,
+  .sidebar-section.sidebar-section--grow,
+  #plus-section.sidebar-section,
+  #daylog-section.sidebar-section {
+    padding: 8px 14px 10px;
+  }
+
+  #plus-section.sidebar-section[open],
+  #daylog-section.sidebar-section[open] {
+    padding-bottom: 10px;
+  }
+
   /* global stack spacing */
   .sidebar-section + .sidebar-section {
     margin-top: 10px;
@@ -868,6 +888,18 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
+  }
+
+  /* OPTIMIZED: Details/Summary headers should not show markers (Plus / Mein Tag) */
+  summary.sidebar-section-header {
+    list-style: none;
+    cursor: pointer;
+  }
+  summary.sidebar-section-header::-webkit-details-marker {
+    display: none;
+  }
+  summary.sidebar-section-header::marker {
+    content: "";
   }
 
   .sidebar-section-title {
@@ -971,8 +1003,9 @@
     margin-bottom: 0;
   }
 
+  /* OPTIMIZED: reduce the extra vertical space under "Filter" header */
   .sidebar-section-header + .filter-group-helper {
-    margin-top: 1rem;
+    margin-top: 0.45rem;
   }
 
   /* Footer under base filters */
@@ -1400,7 +1433,7 @@
   }
 
   #spot-list {
-    margin-top: 8px;
+    margin-top: 6px; /* OPTIMIZED: was 8px */
     max-height: 320px;
     overflow-y: auto;
     padding-right: 4px;
@@ -2057,7 +2090,7 @@
     font-size: 14px;
   }
 
-      /* -----------------------------------------
+  /* -----------------------------------------
      MAP MARKER & ATTRIBUTION
      ----------------------------------------- */
   :where(.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large) {
@@ -2213,6 +2246,7 @@
     stroke-width: 2;
     fill: var(--radius-circle-fill);
   }
+
   /* -----------------------------------------
      Misc
      ----------------------------------------- */
