@@ -2674,3 +2674,88 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await init();
 });
+
+// =====================================================
+// Spots <details>: Zustand merken + Reset Hook + iOS Fix
+// =====================================================
+(() => {
+  const details = document.getElementById("spots-section");
+  const label = document.getElementById("spots-toggle-label");
+  if (!details || !label) return;
+
+  const STORAGE_KEY = "fsm-spots-open"; // "1" | "0"
+
+  const labels = {
+    de: { open: "Ausblenden", closed: "Anzeigen" },
+    en: { open: "Hide",      closed: "Show" },
+    da: { open: "Skjul",     closed: "Vis" },
+  };
+
+  const getLang = () => {
+    const l = (document.documentElement.lang || "de").toLowerCase();
+    return l.startsWith("da") ? "da" : l.startsWith("en") ? "en" : "de";
+  };
+
+  const toast = (msg) => {
+    const el = document.getElementById("toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add("toast--visible");
+    window.clearTimeout(toast._t);
+    toast._t = window.setTimeout(() => el.classList.remove("toast--visible"), 2200);
+  };
+
+  const syncLabel = () => {
+    const dict = labels[getLang()] || labels.de;
+    const isOpen = details.hasAttribute("open");
+    label.textContent = isOpen ? dict.open : dict.closed;
+  };
+
+  const setOpen = (open) => {
+    if (open) details.setAttribute("open", "");
+    else details.removeAttribute("open");
+    syncLabel();
+  };
+
+  // 1) Restore (falls gespeichert), sonst Default: ZU
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === "1") setOpen(true);
+    else if (saved === "0") setOpen(false);
+    else setOpen(false);
+  } catch {
+    setOpen(false);
+  }
+
+  // 2) Toggle => speichern + Label updaten
+  details.addEventListener("toggle", () => {
+    const isOpen = details.hasAttribute("open");
+    syncLabel();
+    try {
+      localStorage.setItem(STORAGE_KEY, isOpen ? "1" : "0");
+    } catch {}
+  });
+
+  // 3) Wenn Sprache per JS umgestellt wird -> Label nachziehen
+  const mo = new MutationObserver(syncLabel);
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+
+  // 4) Reset Button im Menü
+  const btnReset = document.getElementById("btn-reset-ui");
+  if (btnReset) {
+    btnReset.addEventListener("click", () => {
+      try { localStorage.removeItem(STORAGE_KEY); } catch {}
+      setOpen(false);
+      const l = getLang();
+      toast(l === "en" ? "UI reset (Spots)." : l === "da" ? "UI nulstillet (Spots)." : "UI zurückgesetzt (Spots).");
+    });
+  }
+
+  // 5) iOS/Safari: Klick auf "Nur Karte" im <summary> soll NICHT <details> togglen
+  const btnMapOnly = document.getElementById("btn-toggle-view");
+  if (btnMapOnly) {
+    const stop = (e) => e.stopPropagation();
+    btnMapOnly.addEventListener("pointerdown", stop, { passive: true });
+    btnMapOnly.addEventListener("click", stop);
+  }
+})();
