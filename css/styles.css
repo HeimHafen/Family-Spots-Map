@@ -28,9 +28,9 @@ html[data-theme="light"] .app-header {
 }
 
 /* =========================================
-   Highest-Level UI Fixes (passgenau zu deinem Markup)
+   Highest-Level UI Fixes
    1) Bottom Nav entfernen (Karte/Über)
-   2) Menü-Panel (☰) kompakt halten (kein riesiges Fenster)
+   2) Menü-Panel (☰) kompakt halten
    ========================================= */
 
 /* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
@@ -43,7 +43,6 @@ html[data-theme="light"] .app-header {
   display: none !important;
 }
 
-/* Falls irgendwo padding für Bottom-Nav reserviert wird */
 body,
 .app,
 .app-main,
@@ -51,58 +50,49 @@ body,
   padding-bottom: 0 !important;
 }
 
-/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet, nicht vollflächig ---------- */
-/* Overlay */
+/* ---------- 2) App-Menü (☰) als Action-Sheet, nicht vollflächig ---------- */
 #app-menu.app-menu {
   position: fixed;
   inset: 0;
   z-index: 9999;
 
-  /* Flex-Overlay, Panel oben/zentriert */
   display: flex;
   align-items: flex-start;
   justify-content: center;
 
-  /* Safe Area & angenehmes Atmen */
   padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
   padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
-/* Backdrop bleibt vollflächig klickbar */
 #app-menu .app-menu-backdrop {
   position: absolute;
   inset: 0;
 }
 
-/* Panel: content-sized + max-height, scrollt nur wenn nötig */
 #app-menu .app-menu-panel {
   position: relative;
   width: min(520px, 100%);
   height: auto !important;
   min-height: 0 !important;
 
-  /* Fix gegen „riesig“ */
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
 
   -webkit-overflow-scrolling: touch;
 }
 
-/* Innenliste soll nicht „strecken“ */
 #app-menu .app-menu-list,
 #app-menu .app-menu-languages {
   height: auto !important;
   min-height: 0 !important;
 }
 
-/* Sprache-Bereich optisch kompakt halten */
 #app-menu .app-menu-languages {
   margin-top: 12px !important;
 }
 
-/* Wenn dein components.css das Panel irgendwo mit 100vh/100% versieht, neutralisieren */
 #app-menu .app-menu-panel,
 #app-menu .app-menu-panel * {
   max-height: unset;
@@ -111,7 +101,6 @@ body,
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
 }
 
-/* Optional: wenn einzelne Buttons zu groß werden, auf mobile etwas kompakter */
 @media (max-width: 720px) {
   #app-menu .app-menu-panel {
     width: min(560px, 100%);
@@ -119,77 +108,69 @@ body,
 }
 
 /* =========================================
-   Compact & Unified Section Titles
-   (Filter / Spots / Plus / Mein Tag) — gleich groß & schmal
+   Compact + Lighter Cards (Filter / Spots / Plus / Mein Tag)
+   - schmaler: weniger Höhe/Spacing
+   - professioneller: weniger Schatten, feinere Kanten
    ========================================= */
+
+/* Allgemein: Karten etwas leichter */
+.sidebar-section {
+  margin-bottom: 10px !important;
+  border-radius: 18px !important;
+  box-shadow: 0 6px 18px rgba(26, 20, 12, 0.08) !important; /* weniger "wuchtig" */
+  border: 1px solid rgba(24, 18, 12, 0.10) !important;     /* feiner */
+  background: var(--sidebar-section-bg);
+}
+
+/* Dark: Border etwas heller, Shadow subtil */
+html[data-theme="dark"] .sidebar-section,
+body[data-theme="dark"] .sidebar-section,
+[data-theme="dark"] .sidebar-section {
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.40) !important;
+}
+
+/* Header/summary: weniger Innenabstand => weniger „klobig“ */
+.sidebar-section-header {
+  padding: 10px 12px !important;
+}
+
+/* Titel einheitlich, kleiner */
 #filter-title,
 #spots-title,
 #plus-section-title,
 #daylog-section-title {
-  font-size: 16px !important;
+  font-size: 15px !important;
   line-height: 1.15 !important;
   letter-spacing: 0.01em;
 }
 
-/* =========================================
-   Spots Header: professionelles Layout
-   - Action-Buttons als „Segment“-Gruppe rechts
-   - Details/summary bleibt nativ klickbar (außer Buttons)
-   ========================================= */
-#spots-section .sidebar-section-header {
-  align-items: center;
+/* Rechte Buttons (Filter aufklappen / Anzeigen / etc.) kleiner + kompakter */
+.sidebar-section-header .btn-small,
+.sidebar-section-header .btn-ghost.btn-small,
+.sidebar-section-header button.btn-small {
+  font-size: 13px !important;
+  padding: 6px 10px !important;
+  min-height: 30px !important;
 }
 
-/* Action-Group rechts (Segment-Control Look) */
+/* =========================================
+   Spots Header: professionell (nur Toggle rechts)
+   ========================================= */
+#spots-section .sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 #spots-section .sidebar-section-actions {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-
-  padding: 2px;
-  border-radius: 999px;
-
-  background: rgba(255, 255, 255, 0.35);
-  border: 1px solid rgba(148, 163, 184, 0.28);
+  gap: 6px;
 }
 
-/* Buttons innerhalb der Gruppe: kompakt & „pill“ */
-#spots-section .sidebar-section-actions .btn-ghost.btn-small {
-  min-height: 28px;
-  padding: 0 0.75rem;
-
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-/* Active State für "Nur Karte" (wenn aria-pressed="true") */
-#spots-section .sidebar-section-actions #btn-toggle-view[aria-pressed="true"] {
-  background: var(--accent-soft);
-  color: var(--text-strong, #111827);
-}
-
-/* Active State fürs Anzeigen/Ausblenden (optional: bei closed minimal hervorheben) */
-#spots-section .sidebar-section-actions #btn-toggle-spots[data-state="closed"] {
-  background: rgba(15, 23, 42, 0.05);
-}
-
-/* Wenn Spots zugeklappt: Liste weg, Card bleibt kompakt */
+/* Wenn Spots zugeklappt: Liste weg */
 #spots-section:not([open]) #spot-list {
   display: none;
-}
-
-/* Dark Theme Feintuning */
-[data-theme="dark"] #spots-section .sidebar-section-actions {
-  background: rgba(148, 163, 184, 0.10);
-  border-color: rgba(148, 163, 184, 0.25);
-}
-
-[data-theme="dark"] #spots-section .sidebar-section-actions #btn-toggle-view[aria-pressed="true"] {
-  background: rgba(148, 163, 184, 0.18);
-  color: var(--text-color, #e5e7eb);
-}
-
-[data-theme="dark"] #spots-section .sidebar-section-actions #btn-toggle-spots[data-state="closed"] {
-  background: rgba(148, 163, 184, 0.14);
 }
