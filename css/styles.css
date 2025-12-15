@@ -118,3 +118,63 @@ body,
     width: min(560px, 100%);
   }
 }
+
+/* =========================================
+   FIX: Header-Karten wieder kompakt (wie Bild 1)
+   Betrifft: Filter, Spots, Family Spots Plus, Mein Tag
+   ========================================= */
+
+/* Karten-Padding kleiner (weniger “hoch”) */
+#filter-section.sidebar-section,
+.sidebar-section.sidebar-section--grow,
+#plus-section.sidebar-section,
+#daylog-section.sidebar-section {
+  padding: 6px 14px 8px !important; /* vorher z.B. 8px 14px 10px */
+}
+
+/* Headerzeile niedriger (Haupthebel) */
+#filter-section .sidebar-section-header,
+.sidebar-section--grow .sidebar-section-header,
+#plus-section > summary.sidebar-section-header,
+#daylog-section > summary.sidebar-section-header {
+  min-height: 32px !important; /* vorher 40px */
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1.05 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+/* iOS/Safari: summary Defaults killen (Marker/Einrückung) */
+#plus-section > summary.sidebar-section-header,
+#daylog-section > summary.sidebar-section-header {
+  list-style: none !important;
+  -webkit-appearance: none !important;
+}
+#plus-section > summary.sidebar-section-header::-webkit-details-marker,
+#daylog-section > summary.sidebar-section-header::-webkit-details-marker {
+  display: none !important;
+}
+
+/* Titel kompakter */
+#filter-section .sidebar-section-title,
+.sidebar-section--grow .sidebar-section-title,
+#plus-section .sidebar-section-title,
+#daylog-section .sidebar-section-title {
+  margin: 0 !important;
+  line-height: 1.05 !important;
+}
+
+/* Rechter Button (Filter anzeigen / Nur Karte / Anzeigen) kompakter */
+#filter-section .sidebar-section-header > :last-child,
+.sidebar-section--grow .sidebar-section-header > :last-child,
+#plus-section .sidebar-section-header > :last-child,
+#daylog-section .sidebar-section-header > :last-child {
+  min-height: 24px !important;
+  padding: 0 0.6rem !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
