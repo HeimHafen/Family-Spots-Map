@@ -328,6 +328,29 @@
             </span>
           </button>
 
+          <!-- UI Reset (Spots) -->
+          <button
+            id="btn-reset-ui"
+            class="app-menu-item"
+            type="button"
+            data-menu-close="1"
+          >
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg class="icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#i-close"></use>
+              </svg>
+            </span>
+
+            <span
+              class="app-menu-item-label"
+              data-i18n-de="UI zurücksetzen (Spots)"
+              data-i18n-en="Reset UI (Spots)"
+              data-i18n-da="Nulstil UI (Spots)"
+            >
+              UI zurücksetzen (Spots)
+            </span>
+          </button>
+
           <!-- Standort -->
           <button
             id="btn-locate"
@@ -706,26 +729,34 @@
             </div>
           </section>
 
-          <!-- Spot-Liste -->
-          <section class="sidebar-section sidebar-section--grow" aria-labelledby="spots-title">
-            <header class="sidebar-section-header">
+          <!-- Spot-Liste (als <details>, Start = zugeklappt) -->
+          <details class="sidebar-section sidebar-section--grow" id="spots-section" aria-labelledby="spots-title">
+            <summary class="sidebar-section-header" id="spots-summary" aria-controls="spot-list">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
 
-              <button
-                id="btn-toggle-view"
-                class="btn-ghost btn-small"
-                type="button"
-                aria-pressed="false"
-                aria-controls="sidebar"
-              >
-                <span data-i18n-de="Nur Karte" data-i18n-en="Map only" data-i18n-da="Kun kort">
-                  Nur Karte
+              <div class="sidebar-header-actions">
+                <!-- Label (nur optisch, toggelt nativ über <summary>) -->
+                <span id="spots-toggle-label" class="btn-ghost btn-small spots-toggle-label" aria-hidden="true">
+                  Anzeigen
                 </span>
-              </button>
-            </header>
+
+                <!-- Dein bestehender Button bleibt -->
+                <button
+                  id="btn-toggle-view"
+                  class="btn-ghost btn-small"
+                  type="button"
+                  aria-pressed="false"
+                  aria-controls="sidebar"
+                >
+                  <span data-i18n-de="Nur Karte" data-i18n-en="Map only" data-i18n-da="Kun kort">
+                    Nur Karte
+                  </span>
+                </button>
+              </div>
+            </summary>
 
             <div id="spot-list" class="spot-list"><!-- Karten via JS --></div>
-          </section>
+          </details>
         </aside>
 
         <!-- Karte + Details -->
