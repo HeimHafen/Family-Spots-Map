@@ -934,6 +934,28 @@
     justify-content: space-between;
     gap: 8px;
   }
+  
+    /* FIX: Filter/Spots Header wieder kompakt (Höhe reduzieren, keine Full-Width Buttons) */
+  #filter-section .sidebar-section-header,
+  .sidebar-section--grow .sidebar-section-header {
+    align-items: center;
+  }
+
+  #filter-section .sidebar-section-header :where(button, a, .btn, .btn-ghost),
+  .sidebar-section--grow .sidebar-section-header :where(button, a, .btn, .btn-ghost) {
+    width: auto !important;
+    flex: 0 0 auto;
+    min-height: 28px !important;
+    padding: 0 0.75rem !important;
+    line-height: 1 !important;
+    white-space: nowrap;
+  }
+
+  /* Optional, aber meist nötig: Card-Top/Bottom-Padding etwas reduzieren */
+  #filter-section.sidebar-section,
+  .sidebar-section.sidebar-section--grow {
+    padding: 6px 14px 8px;
+  }
 
   /* OPTIMIZED: Details/Summary headers should not show markers (Plus / Mein Tag) */
   summary.sidebar-section-header {
