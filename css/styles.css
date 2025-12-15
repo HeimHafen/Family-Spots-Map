@@ -28,10 +28,9 @@ html[data-theme="light"] .app-header {
 }
 
 /* =========================================
-   Highest-Level UI Fixes
+   Highest-Level UI Fixes (passgenau zu deinem Markup)
    1) Bottom Nav entfernen (Karte/Über)
-   2) Menü-Panel (☰) kompakt halten
-   3) ✅ Fix: Menü darf nicht „durchscheinen“ (Nur Karte doppelt)
+   2) Menü-Panel (☰) kompakt halten (kein riesiges Fenster)
    ========================================= */
 
 /* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
@@ -44,6 +43,7 @@ html[data-theme="light"] .app-header {
   display: none !important;
 }
 
+/* Falls irgendwo padding für Bottom-Nav reserviert wird */
 body,
 .app,
 .app-main,
@@ -51,57 +51,59 @@ body,
   padding-bottom: 0 !important;
 }
 
-/* ---------- 2) App-Menü (☰) als Action-Sheet, nicht vollflächig ---------- */
+/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet, nicht vollflächig ---------- */
+/* Overlay */
 #app-menu.app-menu {
   position: fixed;
   inset: 0;
   z-index: 9999;
 
+  /* Flex-Overlay, Panel oben/zentriert */
   display: flex;
   align-items: flex-start;
   justify-content: center;
 
+  /* Safe Area & angenehmes Atmen */
   padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
   padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
-/* ---------- 3) ✅ Menü-Backdrop & Panel: immer opak genug (kein Text „durch“). ---------- */
+/* Backdrop bleibt vollflächig klickbar */
 #app-menu .app-menu-backdrop {
   position: absolute;
   inset: 0;
-
-  /* wichtig: zuvor war der Backdrop ohne Hintergrund -> Content darunter scheint durch */
-  background: rgba(0, 0, 0, 0.35);
 }
 
+/* Panel: content-sized + max-height, scrollt nur wenn nötig */
 #app-menu .app-menu-panel {
   position: relative;
   width: min(520px, 100%);
   height: auto !important;
   min-height: 0 !important;
 
+  /* Das ist der entscheidende Fix gegen „riesig“ */
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
 
+  /* Optional: weichere iOS-Scroll-Physics */
   -webkit-overflow-scrolling: touch;
-
-  /* wichtig: Panel selbst vollständig opak machen */
-  background: var(--app-bg) !important;
-  opacity: 1 !important;
 }
 
+/* Innenliste soll nicht „strecken“ */
 #app-menu .app-menu-list,
 #app-menu .app-menu-languages {
   height: auto !important;
   min-height: 0 !important;
 }
 
+/* Sprache-Bereich optisch kompakt halten (falls in components.css zu viel Abstand ist) */
 #app-menu .app-menu-languages {
   margin-top: 12px !important;
 }
 
+/* Wenn dein components.css das Panel irgendwo mit 100vh/100% versieht, neutralisieren */
 #app-menu .app-menu-panel,
 #app-menu .app-menu-panel * {
   max-height: unset;
@@ -110,76 +112,9 @@ body,
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
 }
 
+/* Optional: wenn einzelne Buttons zu groß werden, auf mobile etwas kompakter */
 @media (max-width: 720px) {
   #app-menu .app-menu-panel {
     width: min(560px, 100%);
   }
-}
-
-/* =========================================
-   Compact + Lighter Cards (Filter / Spots / Plus / Mein Tag)
-   - schmaler: weniger Höhe/Spacing
-   - professioneller: weniger Schatten, feinere Kanten
-   ========================================= */
-
-/* Allgemein: Karten etwas leichter */
-.sidebar-section {
-  margin-bottom: 10px !important;
-  border-radius: 18px !important;
-  box-shadow: 0 6px 18px rgba(26, 20, 12, 0.08) !important; /* weniger "wuchtig" */
-  border: 1px solid rgba(24, 18, 12, 0.10) !important;     /* feiner */
-  background: var(--sidebar-section-bg);
-}
-
-/* Dark: Border etwas heller, Shadow subtil */
-html[data-theme="dark"] .sidebar-section,
-body[data-theme="dark"] .sidebar-section,
-[data-theme="dark"] .sidebar-section {
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.40) !important;
-}
-
-/* Header/summary: weniger Innenabstand => weniger „klobig“ */
-.sidebar-section-header {
-  padding: 10px 12px !important;
-}
-
-/* Titel einheitlich, kleiner */
-#filter-title,
-#spots-title,
-#plus-section-title,
-#daylog-section-title {
-  font-size: 15px !important;
-  line-height: 1.15 !important;
-  letter-spacing: 0.01em;
-}
-
-/* Rechte Buttons (Filter aufklappen / Anzeigen / etc.) kleiner + kompakter */
-.sidebar-section-header .btn-small,
-.sidebar-section-header .btn-ghost.btn-small,
-.sidebar-section-header button.btn-small {
-  font-size: 13px !important;
-  padding: 6px 10px !important;
-  min-height: 30px !important;
-}
-
-/* =========================================
-   Spots Header: professionell (nur Toggle rechts)
-   ========================================= */
-#spots-section .sidebar-section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-#spots-section .sidebar-section-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Wenn Spots zugeklappt: Liste weg */
-#spots-section:not([open]) #spot-list {
-  display: none;
 }
