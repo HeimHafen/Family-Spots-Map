@@ -83,11 +83,10 @@ body,
   height: auto !important;
   min-height: 0 !important;
 
-  /* Das ist der entscheidende Fix gegen „riesig“ */
+  /* Fix gegen „riesig“ */
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
 
-  /* Optional: weichere iOS-Scroll-Physics */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -98,7 +97,7 @@ body,
   min-height: 0 !important;
 }
 
-/* Sprache-Bereich optisch kompakt halten (falls in components.css zu viel Abstand ist) */
+/* Sprache-Bereich optisch kompakt halten */
 #app-menu .app-menu-languages {
   margin-top: 12px !important;
 }
@@ -120,170 +119,77 @@ body,
 }
 
 /* =========================================
-   FIX: Markierte Header-Karten schmal + EINHEITLICH
-   Betrifft: Filter, Spots, Family Spots Plus, Mein Tag
+   Compact & Unified Section Titles
+   (Filter / Spots / Plus / Mein Tag) — gleich groß & schmal
    ========================================= */
-
-/* Karten-Padding kleiner (weniger “hoch”) */
-#filter-section.sidebar-section,
-.sidebar-section.sidebar-section--grow,
-#plus-section.sidebar-section,
-#daylog-section.sidebar-section {
-  padding: 6px 14px 8px !important;
-}
-
-/* Headerzeile niedriger */
-#filter-section .sidebar-section-header,
-.sidebar-section--grow .sidebar-section-header,
-#plus-section > summary.sidebar-section-header,
-#daylog-section > summary.sidebar-section-header {
-  min-height: 32px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 8px !important;
-
-  line-height: 1.05 !important;
-}
-
-/* iOS/Safari: summary Defaults killen (Marker/Einrückung) */
-#plus-section > summary.sidebar-section-header,
-#daylog-section > summary.sidebar-section-header {
-  list-style: none !important;
-  -webkit-appearance: none !important;
-}
-#plus-section > summary.sidebar-section-header::-webkit-details-marker,
-#daylog-section > summary.sidebar-section-header::-webkit-details-marker {
-  display: none !important;
-}
-
-/* ✅ EINHEITLICHE SCHRIFTGRÖSSE für alle 4 markierten Titel */
-#filter-section .sidebar-section-title,
-.sidebar-section--grow .sidebar-section-title,
-#plus-section .sidebar-section-title,
-#daylog-section .sidebar-section-title {
-  font-size: 16px !important;   /* vorher 18px */
-  line-height: 1.05 !important;
-  margin: 0 !important;
+#filter-title,
+#spots-title,
+#plus-section-title,
+#daylog-section-title {
+  font-size: 16px !important;
+  line-height: 1.15 !important;
   letter-spacing: 0.01em;
-}
-
-/* Rechter Button (Filter anzeigen / Nur Karte / Anzeigen) kompakter */
-#filter-section .sidebar-section-header > :last-child,
-.sidebar-section--grow .sidebar-section-header > :last-child,
-#plus-section .sidebar-section-header > :last-child,
-#daylog-section .sidebar-section-header > :last-child {
-  min-height: 24px !important;
-  padding: 0 0.6rem !important;
-  font-size: 12px !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-}
-
-/* Optional: super-kleine Geräte noch einen Tick kompakter */
-@media (max-width: 380px) {
-  #filter-section .sidebar-section-title,
-  .sidebar-section--grow .sidebar-section-title,
-  #plus-section .sidebar-section-title,
-  #daylog-section .sidebar-section-title {
-    font-size: 15px !important;
-  }
 }
 
 /* =========================================
-   FIX: Markierte Header-Karten schmal + EINHEITLICH
-   Filter, Spots, Family Spots Plus, Mein Tag
+   Spots Header: professionelles Layout
+   - Action-Buttons als „Segment“-Gruppe rechts
+   - Details/summary bleibt nativ klickbar (außer Buttons)
    ========================================= */
-
-/* Karten-Padding kleiner */
-#filter-section.sidebar-section,
-#spots-section.sidebar-section--grow,
-#plus-section.sidebar-section,
-#daylog-section.sidebar-section {
-  padding: 6px 14px 8px !important;
+#spots-section .sidebar-section-header {
+  align-items: center;
 }
 
-/* Headerzeile niedriger */
-#filter-section .sidebar-section-header,
-#spots-section > summary.sidebar-section-header,
-#plus-section > summary.sidebar-section-header,
-#daylog-section > summary.sidebar-section-header {
-  min-height: 32px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 8px !important;
-
-  line-height: 1.05 !important;
-}
-
-/* iOS/Safari: summary Defaults killen (Marker/Einrückung) */
-#spots-section > summary.sidebar-section-header,
-#plus-section > summary.sidebar-section-header,
-#daylog-section > summary.sidebar-section-header {
-  list-style: none !important;
-  -webkit-appearance: none !important;
-}
-#spots-section > summary.sidebar-section-header::-webkit-details-marker,
-#plus-section > summary.sidebar-section-header::-webkit-details-marker,
-#daylog-section > summary.sidebar-section-header::-webkit-details-marker {
-  display: none !important;
-}
-
-/* ✅ Einheitliche Schriftgröße für alle 4 Titel */
-#filter-section .sidebar-section-title,
-#spots-section .sidebar-section-title,
-#plus-section .sidebar-section-title,
-#daylog-section .sidebar-section-title {
-  font-size: 16px !important;
-  line-height: 1.05 !important;
-  margin: 0 !important;
-  letter-spacing: 0.01em;
-}
-
-/* rechte Buttons kompakter */
-#filter-section .sidebar-section-header > :last-child,
-#spots-section .sidebar-section-header > :last-child,
-#plus-section .sidebar-section-header > :last-child,
-#daylog-section .sidebar-section-header > :last-child {
-  min-height: 24px !important;
-  padding: 0 0.6rem !important;
-  font-size: 12px !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-}
-
-/* Spots: rechts Label + "Nur Karte" nebeneinander */
-.sidebar-header-actions {
+/* Action-Group rechts (Segment-Control Look) */
+#spots-section .sidebar-section-actions {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
+
+  padding: 2px;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.28);
 }
 
-/* Label wie Button, aber nativ toggled über summary */
-.spots-toggle-label {
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
+/* Buttons innerhalb der Gruppe: kompakt & „pill“ */
+#spots-section .sidebar-section-actions .btn-ghost.btn-small {
+  min-height: 28px;
+  padding: 0 0.75rem;
+
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
-/* Optional: wenn Spots zu ist, unten nicht “leer” wirken */
-#spots-section:not([open]) {
-  padding-bottom: 8px !important;
+/* Active State für "Nur Karte" (wenn aria-pressed="true") */
+#spots-section .sidebar-section-actions #btn-toggle-view[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--text-strong, #111827);
 }
 
-/* Optional: super-kleine Geräte */
-@media (max-width: 380px) {
-  #filter-section .sidebar-section-title,
-  #spots-section .sidebar-section-title,
-  #plus-section .sidebar-section-title,
-  #daylog-section .sidebar-section-title {
-    font-size: 15px !important;
-  }
+/* Active State fürs Anzeigen/Ausblenden (optional: bei closed minimal hervorheben) */
+#spots-section .sidebar-section-actions #btn-toggle-spots[data-state="closed"] {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+/* Wenn Spots zugeklappt: Liste weg, Card bleibt kompakt */
+#spots-section:not([open]) #spot-list {
+  display: none;
+}
+
+/* Dark Theme Feintuning */
+[data-theme="dark"] #spots-section .sidebar-section-actions {
+  background: rgba(148, 163, 184, 0.10);
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+[data-theme="dark"] #spots-section .sidebar-section-actions #btn-toggle-view[aria-pressed="true"] {
+  background: rgba(148, 163, 184, 0.18);
+  color: var(--text-color, #e5e7eb);
+}
+
+[data-theme="dark"] #spots-section .sidebar-section-actions #btn-toggle-spots[data-state="closed"] {
+  background: rgba(148, 163, 184, 0.14);
 }
