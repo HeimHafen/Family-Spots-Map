@@ -44,8 +44,8 @@ const FALLBACK_TEXTS = Object.freeze({
       "Mit diesen Filtern ist die Karte gerade leer. Probiert einen größeren Radius oder eine andere Kategorie – irgendwo wartet ein guter Ort auf euch. 🐢"
     ],
     turtle_after_daylog_save: [
-      "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💛",
-      "Ein paar Zeilen heute – viele Erinnerungen morgen. Danke, dass ihr euren Tag teilt. 💛"
+      "Schön, dass ihr euren Tag festhaltet. Solche kleinen Notizen werden später zu großen Erinnerungen. 💚",
+      "Ein paar Zeilen heute – viele Erinnerungen morgen. Danke, dass ihr euren Tag teilt. 💚"
     ],
     turtle_after_fav_added: [
       "Diesen Ort merkt ihr euch – eine kleine Perle auf eurer Familienkarte. ⭐",
