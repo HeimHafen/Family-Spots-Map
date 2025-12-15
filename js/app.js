@@ -2508,7 +2508,6 @@ async function init() {
   DOM.btnToggleViewEl.addEventListener("click", handleToggleView);
   const span = DOM.btnToggleViewEl.querySelector("span");
   if (span && !span.textContent.trim()) {
-    span.textContent = t("btn_only_map");
   }
   setAriaPressed(DOM.btnToggleViewEl, false);
 }
