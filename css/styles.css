@@ -120,7 +120,7 @@ body,
 }
 
 /* =========================================
-   FIX: Header-Karten wieder kompakt (wie Bild 1)
+   FIX: Markierte Header-Karten schmal + EINHEITLICH
    Betrifft: Filter, Spots, Family Spots Plus, Mein Tag
    ========================================= */
 
@@ -129,22 +129,24 @@ body,
 .sidebar-section.sidebar-section--grow,
 #plus-section.sidebar-section,
 #daylog-section.sidebar-section {
-  padding: 6px 14px 8px !important; /* vorher z.B. 8px 14px 10px */
+  padding: 6px 14px 8px !important;
 }
 
-/* Headerzeile niedriger (Haupthebel) */
+/* Headerzeile niedriger */
 #filter-section .sidebar-section-header,
 .sidebar-section--grow .sidebar-section-header,
 #plus-section > summary.sidebar-section-header,
 #daylog-section > summary.sidebar-section-header {
-  min-height: 32px !important; /* vorher 40px */
+  min-height: 32px !important;
   padding: 0 !important;
   margin: 0 !important;
-  line-height: 1.05 !important;
+
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 8px !important;
+
+  line-height: 1.05 !important;
 }
 
 /* iOS/Safari: summary Defaults killen (Marker/Einrückung) */
@@ -158,13 +160,15 @@ body,
   display: none !important;
 }
 
-/* Titel kompakter */
+/* ✅ EINHEITLICHE SCHRIFTGRÖSSE für alle 4 markierten Titel */
 #filter-section .sidebar-section-title,
 .sidebar-section--grow .sidebar-section-title,
 #plus-section .sidebar-section-title,
 #daylog-section .sidebar-section-title {
-  margin: 0 !important;
+  font-size: 16px !important;   /* vorher 18px */
   line-height: 1.05 !important;
+  margin: 0 !important;
+  letter-spacing: 0.01em;
 }
 
 /* Rechter Button (Filter anzeigen / Nur Karte / Anzeigen) kompakter */
@@ -177,4 +181,14 @@ body,
   font-size: 12px !important;
   line-height: 1 !important;
   white-space: nowrap !important;
+}
+
+/* Optional: super-kleine Geräte noch einen Tick kompakter */
+@media (max-width: 380px) {
+  #filter-section .sidebar-section-title,
+  .sidebar-section--grow .sidebar-section-title,
+  #plus-section .sidebar-section-title,
+  #daylog-section .sidebar-section-title {
+    font-size: 15px !important;
+  }
 }
