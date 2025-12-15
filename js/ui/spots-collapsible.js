@@ -2,7 +2,6 @@
 (() => {
   const details = document.getElementById("spots-section");
   const btnToggleSpots = document.getElementById("btn-toggle-spots");
-  const btnMapOnly = document.getElementById("btn-toggle-view");
 
   if (!details || !btnToggleSpots) return;
 
@@ -23,24 +22,18 @@
 
     try {
       localStorage.setItem(KEY, isOpen ? "1" : "0");
-    } catch {
-      /* ignore */
-    }
+    } catch {}
   };
 
-  // Restore state (falls schon mal umgeschaltet wurde)
+  // Restore
   try {
     const stored = localStorage.getItem(KEY);
     if (stored === "0") details.open = false;
     if (stored === "1") details.open = true;
-  } catch {
-    /* ignore */
-  }
+  } catch {}
 
-  // Wenn Nutzer auf Summary (Titel/Fläche) tippt
   details.addEventListener("toggle", sync);
 
-  // Button: Anzeigen/Ausblenden (soll NICHT das native summary-click toggle „doppeln“)
   btnToggleSpots.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -48,13 +41,5 @@
     sync();
   });
 
-  // Wichtig: "Nur Karte" darf NICHT nebenbei details togglen
-  if (btnMapOnly) {
-    btnMapOnly.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-  }
-
-  // initial
   sync();
 })();
