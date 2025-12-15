@@ -371,51 +371,6 @@
     font-size: 12px;
   }
 
-  /* FIX: Header-Action Buttons (Filter/Spots/Plus/Mein Tag) wie im Screenshot:
-     rechts als Text-Action, nicht als breite Pill */
-  :where(
-    #btn-toggle-filters,
-    #btn-toggle-view,
-    #btn-toggle-plus,
-    #btn-toggle-daylog
-  ).btn-ghost {
-    min-height: 32px;
-    padding: 6px 8px;
-
-    width: auto;
-    flex: 0 0 auto;
-
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-
-    color: var(--text-soft, #6b7280);
-    font-size: 13px;
-    font-weight: 650;
-    line-height: 1.1;
-    white-space: nowrap;
-  }
-
-  :where(
-    #btn-toggle-filters,
-    #btn-toggle-view,
-    #btn-toggle-plus,
-    #btn-toggle-daylog
-  ).btn-ghost:active {
-    background: rgba(15, 23, 42, 0.06) !important;
-    border-radius: 10px;
-  }
-
-  [data-theme="dark"]
-    :where(
-      #btn-toggle-filters,
-      #btn-toggle-view,
-      #btn-toggle-plus,
-      #btn-toggle-daylog
-    ).btn-ghost:active {
-    background: rgba(148, 163, 184, 0.16) !important;
-  }
-
   /* Tilla / Compact primary button */
   .btn-play-idea {
     max-width: 100%;
@@ -933,28 +888,60 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-  }
-  
-    /* FIX: Filter/Spots Header wieder kompakt (Höhe reduzieren, keine Full-Width Buttons) */
-  #filter-section .sidebar-section-header,
-  .sidebar-section--grow .sidebar-section-header {
-    align-items: center;
+
+    /* FIX: header should span full card width (no left/right shrink) */
+    width: 100%;
+    min-width: 0;
+    flex-wrap: nowrap;
   }
 
-  #filter-section .sidebar-section-header :where(button, a, .btn, .btn-ghost),
-  .sidebar-section--grow .sidebar-section-header :where(button, a, .btn, .btn-ghost) {
+  /* FIX: allow title to shrink/truncate instead of pushing action / shrinking container */
+  .sidebar-section-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-strong);
+
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* FIX: compact the header action buttons (height), keep natural width */
+  #btn-toggle-filters,
+  #btn-toggle-spots {
+    flex: 0 0 auto !important;
     width: auto !important;
-    flex: 0 0 auto;
-    min-height: 28px !important;
-    padding: 0 0.75rem !important;
-    line-height: 1 !important;
+    max-width: 100%;
+
+    /* make it compact vertically (von oben nach unten) */
+    min-height: 28px;
+    padding: 4px 10px;
+
+    /* keep it “link-like” as in the screenshot */
+    background: transparent;
+    border: 1px solid transparent;
+    box-shadow: none;
+
+    border-radius: var(--btn-radius);
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1;
     white-space: nowrap;
   }
 
-  /* Optional, aber meist nötig: Card-Top/Bottom-Padding etwas reduzieren */
-  #filter-section.sidebar-section,
-  .sidebar-section.sidebar-section--grow {
-    padding: 6px 14px 8px;
+  #btn-toggle-filters:active,
+  #btn-toggle-spots:active {
+    background-color: rgba(15, 23, 42, 0.07);
+  }
+
+  [data-theme="dark"] #btn-toggle-filters,
+  [data-theme="dark"] #btn-toggle-spots {
+    color: var(--text-color, #e5e7eb);
+  }
+
+  [data-theme="dark"] #btn-toggle-filters:active,
+  [data-theme="dark"] #btn-toggle-spots:active {
+    background-color: rgba(148, 163, 184, 0.14);
   }
 
   /* OPTIMIZED: Details/Summary headers should not show markers (Plus / Mein Tag) */
@@ -967,13 +954,6 @@
   }
   summary.sidebar-section-header::marker {
     content: "";
-  }
-
-  .sidebar-section-title {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-strong);
   }
 
   .sidebar-section-close {
@@ -2500,21 +2480,6 @@
     [data-theme="dark"] .btn-ghost:hover {
       background-color: rgba(148, 163, 184, 0.14);
       border-color: rgba(148, 163, 184, 0.36);
-    }
-
-    /* Keep header actions as text-only even on hover-capable devices */
-    :where(
-      #btn-toggle-filters,
-      #btn-toggle-view,
-      #btn-toggle-plus,
-      #btn-toggle-daylog
-    ).btn-ghost:hover {
-      background: transparent !important;
-      border-color: transparent !important;
-      box-shadow: none !important;
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 2px;
     }
 
     .btn-icon:hover {
