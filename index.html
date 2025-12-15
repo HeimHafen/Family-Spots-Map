@@ -285,6 +285,28 @@
             </span>
           </button>
 
+          <!-- Nur Karte (aus der Spots-Zeile ins Menü verschoben; ID bleibt gleich für deine bestehende JS-Logik) -->
+          <button
+            id="btn-toggle-view"
+            class="app-menu-item"
+            type="button"
+            data-menu-close="1"
+            aria-pressed="false"
+            aria-controls="sidebar"
+          >
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg class="icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-map"></use></svg>
+            </span>
+            <span
+              class="app-menu-item-label"
+              data-i18n-de="Nur Karte"
+              data-i18n-en="Map only"
+              data-i18n-da="Kun kort"
+            >
+              Nur Karte
+            </span>
+          </button>
+
           <!-- Zur Spot-Liste springen -->
           <button
             id="btn-skip-spots"
@@ -520,8 +542,8 @@
             </button>
           </section>
 
-          <!-- Kompakter Filter -->
-          <section class="sidebar-section" id="filter-section" aria-labelledby="filter-title">
+          <!-- Kompakter Filter (SLIM) -->
+          <section class="sidebar-section sidebar-section--slim" id="filter-section" aria-labelledby="filter-title">
             <header class="sidebar-section-header">
               <h2
                 class="sidebar-section-title"
@@ -729,47 +751,26 @@
             </div>
           </section>
 
-          <!-- Spot-Liste (NEU: <details> + Anzeigen/Ausblenden Button) -->
+          <!-- Spots (SLIM + professionell: native Details/Summary, kein extra Button neben "Nur Karte") -->
           <details
-            class="sidebar-section sidebar-section--grow"
+            class="sidebar-section sidebar-section--grow sidebar-section--slim"
             id="spots-section"
             aria-labelledby="spots-title"
             open
+            data-details-toggle-labels
           >
             <summary class="sidebar-section-header">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
 
-              <div class="sidebar-section-actions" aria-label="Spots Optionen">
-                <!-- Anzeigen/Ausblenden (klappt nur die Liste auf/zu) -->
-                <button
-                  id="btn-toggle-spots"
-                  class="btn-ghost btn-small"
-                  type="button"
-                  aria-controls="spot-list"
-                  aria-expanded="true"
-                  data-state="open"
-                >
-                  <span class="label-open"
-                    data-i18n-de="Ausblenden" data-i18n-en="Hide" data-i18n-da="Skjul"
-                  >Ausblenden</span>
-                  <span class="label-closed hidden"
-                    data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis"
-                  >Anzeigen</span>
-                </button>
-
-                <!-- Nur Karte (dein bestehender Toggle bleibt) -->
-                <button
-                  id="btn-toggle-view"
-                  class="btn-ghost btn-small"
-                  type="button"
-                  aria-pressed="false"
-                  aria-controls="sidebar"
-                >
-                  <span data-i18n-de="Nur Karte" data-i18n-en="Map only" data-i18n-da="Kun kort">
-                    Nur Karte
-                  </span>
-                </button>
-              </div>
+              <!-- Label wechselt automatisch (Script unten) -->
+              <span class="details-toggle-label" aria-hidden="true">
+                <span class="label-open"
+                  data-i18n-de="Ausblenden" data-i18n-en="Hide" data-i18n-da="Skjul"
+                >Ausblenden</span>
+                <span class="label-closed hidden"
+                  data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis"
+                >Anzeigen</span>
+              </span>
             </summary>
 
             <div id="spot-list" class="spot-list"><!-- Karten via JS --></div>
@@ -787,13 +788,15 @@
           ></aside>
         </section>
 
-        <!-- Family Spots Plus -->
-        <details class="sidebar-section" id="plus-section" aria-labelledby="plus-section-title">
+        <!-- Family Spots Plus (SLIM + native Details/Summary) -->
+        <details class="sidebar-section sidebar-section--slim" id="plus-section" aria-labelledby="plus-section-title" data-details-toggle-labels>
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title" id="plus-section-title">Family Spots Plus</h2>
-            <button id="btn-toggle-plus" class="btn-ghost btn-small" type="button">
-              <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-            </button>
+
+            <span class="details-toggle-label" aria-hidden="true">
+              <span class="label-open" data-i18n-de="Ausblenden" data-i18n-en="Hide" data-i18n-da="Skjul">Ausblenden</span>
+              <span class="label-closed hidden" data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
+            </span>
           </summary>
 
           <div class="filter-group">
@@ -837,8 +840,8 @@
           </div>
         </details>
 
-        <!-- Mein Tag -->
-        <details class="sidebar-section" id="daylog-section" aria-labelledby="daylog-section-title">
+        <!-- Mein Tag (SLIM + native Details/Summary) -->
+        <details class="sidebar-section sidebar-section--slim" id="daylog-section" aria-labelledby="daylog-section-title" data-details-toggle-labels>
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title" id="daylog-section-title"
               data-i18n-de="Mein Tag 💚" data-i18n-en="My day 💚" data-i18n-da="Min dag 💚"
@@ -846,9 +849,10 @@
               Mein Tag 💚
             </h2>
 
-            <button type="button" class="btn-ghost btn-small" aria-hidden="true" tabindex="-1">
-              <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-            </button>
+            <span class="details-toggle-label" aria-hidden="true">
+              <span class="label-open" data-i18n-de="Ausblenden" data-i18n-en="Hide" data-i18n-da="Skjul">Ausblenden</span>
+              <span class="label-closed hidden" data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
+            </span>
           </summary>
 
           <div class="filter-group">
@@ -1720,7 +1724,29 @@
 
   <!-- Details/Summary Fix (ES-Modul) -->
   <script type="module" src="./js/ui/details-summary-fix.js"></script>
-  <script type="module" src="./js/ui/spots-collapsible.js"></script>
+
+  <!-- Label-Sync für Details (Anzeigen/Ausblenden) -->
+  <script type="module">
+    const sync = (detailsEl) => {
+      const openLabel = detailsEl.querySelector(".label-open");
+      const closedLabel = detailsEl.querySelector(".label-closed");
+      if (!openLabel || !closedLabel) return;
+
+      if (detailsEl.open) {
+        openLabel.classList.remove("hidden");
+        closedLabel.classList.add("hidden");
+      } else {
+        openLabel.classList.add("hidden");
+        closedLabel.classList.remove("hidden");
+      }
+    };
+
+    const all = Array.from(document.querySelectorAll("details[data-details-toggle-labels]"));
+    all.forEach((d) => {
+      sync(d);
+      d.addEventListener("toggle", () => sync(d));
+    });
+  </script>
 
   <!-- App (ES-Modul) -->
   <script type="module" src="./js/app.js"></script>
