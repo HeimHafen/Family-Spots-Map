@@ -23,7 +23,7 @@
       min-height: 100%;
       background: #f7e1d0;
     }
-    /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem wie "Liste zeigen" */
+    /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem */
     .app-menu-item-icon svg {
       display: block;
     }
@@ -217,7 +217,6 @@
       <div class="app-menu-panel">
         <h2 id="app-menu-title" class="sr-only">Menü</h2>
 
-        <!-- Menü-Liste (optimiert: Inline-SVG statt Emojis/IMG, dadurch einheitlicher Look + kein "Liste zeigen") -->
         <div class="app-menu-list">
           <!-- Info -->
           <button id="btn-help" class="app-menu-item" type="button" data-menu-close="1">
@@ -260,27 +259,6 @@
               data-i18n-da="Kun kort"
             >
               Nur Karte
-            </span>
-          </button>
-
-          <!-- Zur Spot-Liste springen -->
-          <button id="btn-skip-spots" class="app-menu-item" type="button" data-menu-close="1">
-            <span class="app-menu-item-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3z"></path>
-                <line x1="9" y1="3" x2="9" y2="18"></line>
-                <line x1="15" y1="6" x2="15" y2="21"></line>
-              </svg>
-            </span>
-            <span
-              class="app-menu-item-label"
-              id="skip-to-spots-label"
-              data-i18n-de="Zur Spot-Liste springen"
-              data-i18n-en="Jump to spot list"
-              data-i18n-da="Gå til spotlisten"
-            >
-              Zur Spot-Liste springen
             </span>
           </button>
 
@@ -946,7 +924,7 @@
           <h3>Für Kommunen, Destinationen &amp; Campingplätze</h3>
           <p>
             Family Spots Map ist nicht nur eine Karte für Familien,<br />
-            sondern auch ein Werkzeug für Orte, die bewusst familienfreundlich auftreten möchten –<br />
+            sondern auch ein Werkzeug für Orte, die bewusst familienfreundliche auftreten möchten –<br />
             Städte, Gemeinden, Tourismusregionen, Campingplätze und Ferienanlagen.
           </p>
           <p>Als Partner könnt ihr:</p>
