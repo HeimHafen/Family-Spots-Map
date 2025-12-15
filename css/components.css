@@ -371,6 +371,51 @@
     font-size: 12px;
   }
 
+  /* FIX: Header-Action Buttons (Filter/Spots/Plus/Mein Tag) wie im Screenshot:
+     rechts als Text-Action, nicht als breite Pill */
+  :where(
+    #btn-toggle-filters,
+    #btn-toggle-view,
+    #btn-toggle-plus,
+    #btn-toggle-daylog
+  ).btn-ghost {
+    min-height: 32px;
+    padding: 6px 8px;
+
+    width: auto;
+    flex: 0 0 auto;
+
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+
+    color: var(--text-soft, #6b7280);
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  :where(
+    #btn-toggle-filters,
+    #btn-toggle-view,
+    #btn-toggle-plus,
+    #btn-toggle-daylog
+  ).btn-ghost:active {
+    background: rgba(15, 23, 42, 0.06) !important;
+    border-radius: 10px;
+  }
+
+  [data-theme="dark"]
+    :where(
+      #btn-toggle-filters,
+      #btn-toggle-view,
+      #btn-toggle-plus,
+      #btn-toggle-daylog
+    ).btn-ghost:active {
+    background: rgba(148, 163, 184, 0.16) !important;
+  }
+
   /* Tilla / Compact primary button */
   .btn-play-idea {
     max-width: 100%;
@@ -2433,6 +2478,21 @@
     [data-theme="dark"] .btn-ghost:hover {
       background-color: rgba(148, 163, 184, 0.14);
       border-color: rgba(148, 163, 184, 0.36);
+    }
+
+    /* Keep header actions as text-only even on hover-capable devices */
+    :where(
+      #btn-toggle-filters,
+      #btn-toggle-view,
+      #btn-toggle-plus,
+      #btn-toggle-daylog
+    ).btn-ghost:hover {
+      background: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
     }
 
     .btn-icon:hover {
