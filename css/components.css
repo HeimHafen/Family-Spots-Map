@@ -2511,42 +2511,5 @@
   }
 }
 
-/* =========================================
-   FIX: Buttons nicht über volle Breite strecken
-   Ursache: Flex-Column + align-items:stretch (Default)
-   ========================================= */
-@layer overrides {
-  /* 1) In Flex-Columns Buttons NICHT stretchen */
-  :where(.app-menu-list, .app-menu-panel, .sidebar, .sidebar-section, .filter-modal-inner) {
-    align-items: flex-start;
-  }
 
-  /* 2) Sicherheitsnetz: Alle wichtigen Button-Typen sollen nie "stretch" sein */
-  :where(
-    .btn,
-    .btn-secondary,
-    .btn-ghost,
-    .btn-icon,
-    .btn-play-idea,
-    .sidebar-section-close,
-    .app-menu-item,
-    .app-menu-lang-chip,
-    .spot-details-route-link,
-    .popup-link,
-    .favorite-toggle,
-    #filter-modal-close
-  ) {
-    align-self: flex-start;
-    width: auto;
-    max-width: 100%;
-  }
-
-  /* 3) Plus-Code: Input darf wachsen, Button bleibt kompakt */
-  .plus-code-row > :where(input, .input, select.input, textarea.input) {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-  .plus-code-row > :where(button, .btn) {
-    flex: 0 0 auto;
-  }
-}
+  
