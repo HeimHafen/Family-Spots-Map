@@ -31,6 +31,7 @@ html[data-theme="light"] .app-header {
    Highest-Level UI Fixes
    1) Bottom Nav entfernen (Karte/Über)
    2) Menü-Panel (☰) kompakt halten
+   3) ✅ Fix: Menü darf nicht „durchscheinen“ (Nur Karte doppelt)
    ========================================= */
 
 /* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
@@ -66,9 +67,13 @@ body,
   padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
+/* ---------- 3) ✅ Menü-Backdrop & Panel: immer opak genug (kein Text „durch“). ---------- */
 #app-menu .app-menu-backdrop {
   position: absolute;
   inset: 0;
+
+  /* wichtig: zuvor war der Backdrop ohne Hintergrund -> Content darunter scheint durch */
+  background: rgba(0, 0, 0, 0.35);
 }
 
 #app-menu .app-menu-panel {
@@ -81,6 +86,10 @@ body,
   overflow: auto !important;
 
   -webkit-overflow-scrolling: touch;
+
+  /* wichtig: Panel selbst vollständig opak machen */
+  background: var(--app-bg) !important;
+  opacity: 1 !important;
 }
 
 #app-menu .app-menu-list,
