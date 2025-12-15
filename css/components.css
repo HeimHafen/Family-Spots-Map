@@ -883,19 +883,35 @@
     padding-bottom: 14px;
   }
 
+  /* ================================
+     FIX: Header row (Filter / Spots)
+     - wieder kompakt (oben/unten)
+     - Action rechts bleibt „textig“
+     ================================ */
   .sidebar-section-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
 
-    /* FIX: header should span full card width (no left/right shrink) */
     width: 100%;
     min-width: 0;
     flex-wrap: nowrap;
+
+    /* NEW: verhindert „hohe“ Header-Zeilen */
+    min-height: 40px;
   }
 
-  /* FIX: allow title to shrink/truncate instead of pushing action / shrinking container */
+  /* NEW: rechter Bereich darf nicht wachsen / umbrechen */
+  .sidebar-section-header > :last-child {
+    margin-left: auto;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+
+  /* FIX: allow title to shrink/truncate instead of pushing action / increasing height */
   .sidebar-section-title {
     margin: 0;
     font-size: 18px;
@@ -904,20 +920,58 @@
 
     flex: 1 1 auto;
     min-width: 0;
+
+    /* NEW: kompakter wie im alten Screenshot */
+    line-height: 1.15;
   }
 
-  /* FIX: compact the header action buttons (height), keep natural width */
+  /* FIX (robust): Action im Header generell kompakt halten (egal ob Button/Link/Span) */
+  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
+  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 28px;
+    padding: 0 0.75rem;
+
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1;
+
+    background: transparent;
+    border: 1px solid transparent;
+    box-shadow: none;
+
+    border-radius: var(--btn-radius);
+    white-space: nowrap;
+  }
+
+  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child:active,
+  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
+    background-color: rgba(15, 23, 42, 0.07);
+  }
+
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
+    color: var(--text-color, #e5e7eb);
+  }
+
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child:active,
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
+    background-color: rgba(148, 163, 184, 0.14);
+  }
+
+  /* (falls IDs existieren) zusätzliche Absicherung */
   #btn-toggle-filters,
   #btn-toggle-spots {
     flex: 0 0 auto !important;
     width: auto !important;
     max-width: 100%;
 
-    /* make it compact vertically (von oben nach unten) */
     min-height: 28px;
-    padding: 4px 10px;
+    padding: 0 0.75rem;
 
-    /* keep it “link-like” as in the screenshot */
     background: transparent;
     border: 1px solid transparent;
     box-shadow: none;
@@ -2556,4 +2610,28 @@
   .tilla-sidebar-avatar img {
     animation: tilla-bob 3.5s ease-in-out infinite !important;
   }
+}
+
+/* =========================================================
+   SAFETY OVERRIDES (UNLAYERED)
+   - gewinnt gegen unlayered theme/button defaults
+   - behebt den „es ändert nichts“-Fall zuverlässig
+   ========================================================= */
+#filter-section .sidebar-section-header > :last-child,
+.sidebar-section--grow .sidebar-section-header > :last-child {
+  width: auto !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+}
+
+#filter-section .sidebar-section-header > :last-child,
+#filter-section .sidebar-section-header > :last-child :where(button, a),
+.sidebar-section--grow .sidebar-section-header > :last-child,
+.sidebar-section--grow .sidebar-section-header > :last-child :where(button, a) {
+  min-height: 28px !important;
+  padding: 0 0.75rem !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  line-height: 1 !important;
 }
