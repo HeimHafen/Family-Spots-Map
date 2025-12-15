@@ -2505,12 +2505,13 @@ async function init() {
 
     // View toggle
     if (DOM.btnToggleViewEl) {
-      DOM.btnToggleViewEl.addEventListener("click", handleToggleView);
-      const span = DOM.btnToggleViewEl.querySelector("span");
-      if (span) span.textContent = t("btn_only_map");
-      setAriaPressed(DOM.btnToggleViewEl, false);
-    }
-
+  DOM.btnToggleViewEl.addEventListener("click", handleToggleView);
+  const span = DOM.btnToggleViewEl.querySelector("span");
+  if (span && !span.textContent.trim()) {
+    span.textContent = t("btn_only_map");
+  }
+  setAriaPressed(DOM.btnToggleViewEl, false);
+}
     // Plus / Daylog section toggles
     if (DOM.plusSectionEl && DOM.btnTogglePlusEl) {
       DOM.plusSectionEl.id = DOM.plusSectionEl.id || "plus-section";
