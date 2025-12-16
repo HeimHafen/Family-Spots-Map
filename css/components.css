@@ -1,4 +1,3 @@
-
 /* =========================================
    components.css — Layout & Komponenten
    Highest-Level: Robustheit, Konsistenz,
@@ -841,17 +840,19 @@
     border: 1px solid var(--sidebar-section-border);
   }
 
-  /* OPTIMIZED: Compact the three marked header cards (Filter / Plus / Mein Tag) and Spots */
+  /* FIX: Alle markierten Boxen (Bild 2 & 3) auf die kompakte Größe von Bild 1 bringen */
   #filter-section.sidebar-section,
   .sidebar-section.sidebar-section--grow,
   #plus-section.sidebar-section,
   #daylog-section.sidebar-section {
-    padding: 8px 14px 10px;
+    padding: 6px 14px 8px;
   }
 
+  /* Open state: etwas Luft für Inhalt – aber weiterhin kompakt */
+  #filter-section.sidebar-section[open],
   #plus-section.sidebar-section[open],
   #daylog-section.sidebar-section[open] {
-    padding-bottom: 10px;
+    padding: 8px 14px 12px;
   }
 
   /* global stack spacing */
@@ -885,9 +886,8 @@
   }
 
   /* ================================
-     FIX: Header row (Filter / Spots)
-     - wieder kompakt (oben/unten)
-     - Action rechts bleibt „textig“
+     FIX: Header row (Filter / Spots / Plus / Mein Tag)
+     - exakt kompakt wie Bild 1
      ================================ */
   .sidebar-section-header {
     display: flex;
@@ -898,9 +898,11 @@
     width: 100%;
     min-width: 0;
     flex-wrap: nowrap;
+  }
 
-    /* NEW: verhindert „hohe“ Header-Zeilen */
-    min-height: 40px;
+  /* Ziel-Header kompakter: Filter/Spots/Plus/Mein Tag */
+  :where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header {
+    min-height: 34px;
   }
 
   /* NEW: rechter Bereich darf nicht wachsen / umbrechen */
@@ -922,13 +924,12 @@
     flex: 1 1 auto;
     min-width: 0;
 
-    /* NEW: kompakter wie im alten Screenshot */
     line-height: 1.15;
   }
 
   /* FIX (robust): Action im Header generell kompakt halten (egal ob Button/Link/Span) */
-  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
-  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
+  :where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header > :last-child,
+  :where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header > :last-child :where(button, a) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -948,18 +949,18 @@
     white-space: nowrap;
   }
 
-  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child:active,
-  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
+  :where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header > :last-child:active,
+  :where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header > :last-child :where(button, a):active {
     background-color: rgba(15, 23, 42, 0.07);
   }
 
-  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
-  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header > :last-child,
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header > :last-child :where(button, a) {
     color: var(--text-color, #e5e7eb);
   }
 
-  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child:active,
-  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header > :last-child:active,
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header > :last-child :where(button, a):active {
     background-color: rgba(148, 163, 184, 0.14);
   }
 
@@ -2635,4 +2636,22 @@
   border: 1px solid transparent !important;
   box-shadow: none !important;
   line-height: 1 !important;
+}
+
+/* NEW: Safety override für die markierten Boxen (Bild 2 & 3) => exakt wie Bild 1 */
+#filter-section.sidebar-section,
+.sidebar-section.sidebar-section--grow,
+#plus-section.sidebar-section,
+#daylog-section.sidebar-section {
+  padding: 6px 14px 8px !important;
+}
+
+#filter-section.sidebar-section[open],
+#plus-section.sidebar-section[open],
+#daylog-section.sidebar-section[open] {
+  padding: 8px 14px 12px !important;
+}
+
+:where(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) .sidebar-section-header {
+  min-height: 34px !important;
 }
