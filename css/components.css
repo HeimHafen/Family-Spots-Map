@@ -1,3 +1,4 @@
+
 /* =========================================
    components.css — Layout & Komponenten
    Highest-Level: Robustheit, Konsistenz,
@@ -840,132 +841,16 @@
     border: 1px solid var(--sidebar-section-border);
   }
 
-  /* =========================================================
-     WUNSCH: Filter / Plus / Mein Tag als Menü-Pills (volle Breite)
-     - geschlossen: nur Pill-Header (kein großer Card-Block)
-     - geöffnet: Card-Fläche für Inhalt, Header bleibt Pill
-     ========================================================= */
-  #filter-section.sidebar-section:not([open]),
-  #plus-section.sidebar-section:not([open]),
-  #daylog-section.sidebar-section:not([open]) {
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-    padding: 0;
-  }
-
-  /* Wenn geöffnet: wieder Card-Fläche, damit Inhalte hübsch sind */
-  #filter-section.sidebar-section[open],
-  #plus-section.sidebar-section[open],
-  #daylog-section.sidebar-section[open] {
-    background: var(--sidebar-section-bg);
-    border-radius: 20px;
-    border: 1px solid var(--sidebar-section-border);
-    box-shadow: var(--sidebar-section-shadow);
-    padding: 12px 14px 14px;
-  }
-
-  /* Pill-Header wie Menü-Boxen – aber volle Breite */
-  #filter-section .sidebar-section-header,
-  #plus-section .sidebar-section-header,
-  #daylog-section .sidebar-section-header {
-    --shadow: var(--elevation-sm);
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-
-    width: 100%;
-    max-width: 100%;
-
-    padding: 7px 14px;
-    border-radius: 999px;
-
-    background: var(--neutral-0);
-    color: var(--text-strong);
-
-    border: var(--stroke-1);
-    box-shadow: var(--shadow);
-  }
-
-  [data-theme="dark"] #filter-section .sidebar-section-header,
-  [data-theme="dark"] #plus-section .sidebar-section-header,
-  [data-theme="dark"] #daylog-section .sidebar-section-header {
-    --shadow: var(--elevation-md);
-    background: var(--neutral-0);
-    color: var(--text-color, #e5e7eb);
-    border: var(--stroke-1);
-    box-shadow: var(--shadow);
-  }
-
-  /* Titel groß lassen */
-  #filter-section .sidebar-section-title,
-  #plus-section .sidebar-section-title,
-  #daylog-section .sidebar-section-title {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-strong);
-    line-height: 1.1;
-
-    flex: 1 1 auto;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Action rechts: NICHT klein, wie Menü */
-  #filter-section .sidebar-section-header > :last-child,
-  #plus-section .sidebar-section-header > :last-child,
-  #daylog-section .sidebar-section-header > :last-child,
-  #filter-section .sidebar-section-header > :last-child :where(button, a),
-  #plus-section .sidebar-section-header > :last-child :where(button, a),
-  #daylog-section .sidebar-section-header > :last-child :where(button, a) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 32px;
-    padding: 0 0.9rem;
-
-    font-size: 14px;
-    font-weight: 650;
-    line-height: 1;
-
-    background: transparent;
-    border: 1px solid transparent;
-    box-shadow: none;
-
-    border-radius: var(--btn-radius);
-    white-space: nowrap;
-  }
-
-  #filter-section .sidebar-section-header > :last-child:active,
-  #plus-section .sidebar-section-header > :last-child:active,
-  #daylog-section .sidebar-section-header > :last-child:active,
-  #filter-section .sidebar-section-header > :last-child :where(button, a):active,
-  #plus-section .sidebar-section-header > :last-child :where(button, a):active,
-  #daylog-section .sidebar-section-header > :last-child :where(button, a):active {
-    background-color: rgba(15, 23, 42, 0.07);
-  }
-
-  [data-theme="dark"] #filter-section .sidebar-section-header > :last-child:active,
-  [data-theme="dark"] #plus-section .sidebar-section-header > :last-child:active,
-  [data-theme="dark"] #daylog-section .sidebar-section-header > :last-child:active,
-  [data-theme="dark"] #filter-section .sidebar-section-header > :last-child :where(button, a):active,
-  [data-theme="dark"] #plus-section .sidebar-section-header > :last-child :where(button, a):active,
-  [data-theme="dark"] #daylog-section .sidebar-section-header > :last-child :where(button, a):active {
-    background-color: rgba(148, 163, 184, 0.14);
-  }
-
-  /* OPTIMIZED: Compact Spots-Card (wie vorher gedacht) */
-  .sidebar-section.sidebar-section--grow {
+  /* OPTIMIZED: Compact the three marked header cards (Filter / Plus / Mein Tag) and Spots */
+  #filter-section.sidebar-section,
+  .sidebar-section.sidebar-section--grow,
+  #plus-section.sidebar-section,
+  #daylog-section.sidebar-section {
     padding: 8px 14px 10px;
   }
 
-  .sidebar-section.sidebar-section--grow[open] {
+  #plus-section.sidebar-section[open],
+  #daylog-section.sidebar-section[open] {
     padding-bottom: 10px;
   }
 
@@ -1000,8 +885,9 @@
   }
 
   /* ================================
-     Header row (Filter / Spots)
-     - kompakt, aber ohne harte Mindesthöhe
+     FIX: Header row (Filter / Spots)
+     - wieder kompakt (oben/unten)
+     - Action rechts bleibt „textig“
      ================================ */
   .sidebar-section-header {
     display: flex;
@@ -1012,9 +898,12 @@
     width: 100%;
     min-width: 0;
     flex-wrap: nowrap;
+
+    /* NEW: verhindert „hohe“ Header-Zeilen */
+    min-height: 40px;
   }
 
-  /* rechter Bereich darf nicht wachsen / umbrechen */
+  /* NEW: rechter Bereich darf nicht wachsen / umbrechen */
   .sidebar-section-header > :last-child {
     margin-left: auto;
     flex: 0 0 auto;
@@ -1023,7 +912,7 @@
     white-space: nowrap;
   }
 
-  /* Default title (z.B. Spots) */
+  /* FIX: allow title to shrink/truncate instead of pushing action / increasing height */
   .sidebar-section-title {
     margin: 0;
     font-size: 18px;
@@ -1033,12 +922,13 @@
     flex: 1 1 auto;
     min-width: 0;
 
+    /* NEW: kompakter wie im alten Screenshot */
     line-height: 1.15;
   }
 
-  /* ONLY Spots header action compact (nicht Filter/Plus/Daylog) */
-  :where(.sidebar-section--grow) .sidebar-section-header > :last-child,
-  :where(.sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
+  /* FIX (robust): Action im Header generell kompakt halten (egal ob Button/Link/Span) */
+  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
+  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1058,53 +948,23 @@
     white-space: nowrap;
   }
 
-  :where(.sidebar-section--grow) .sidebar-section-header > :last-child:active,
-  :where(.sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
+  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child:active,
+  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
     background-color: rgba(15, 23, 42, 0.07);
   }
 
-  [data-theme="dark"] :where(.sidebar-section--grow) .sidebar-section-header > :last-child,
-  [data-theme="dark"] :where(.sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
     color: var(--text-color, #e5e7eb);
   }
 
-  [data-theme="dark"] :where(.sidebar-section--grow) .sidebar-section-header > :last-child:active,
-  [data-theme="dark"] :where(.sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child:active,
+  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
     background-color: rgba(148, 163, 184, 0.14);
   }
 
   /* (falls IDs existieren) zusätzliche Absicherung */
-  #btn-toggle-filters {
-    flex: 0 0 auto !important;
-    width: auto !important;
-    max-width: 100%;
-
-    min-height: 32px;
-    padding: 0 0.9rem;
-
-    background: transparent;
-    border: 1px solid transparent;
-    box-shadow: none;
-
-    border-radius: var(--btn-radius);
-    font-size: 14px;
-    font-weight: 650;
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  #btn-toggle-filters:active {
-    background-color: rgba(15, 23, 42, 0.07);
-  }
-
-  [data-theme="dark"] #btn-toggle-filters {
-    color: var(--text-color, #e5e7eb);
-  }
-
-  [data-theme="dark"] #btn-toggle-filters:active {
-    background-color: rgba(148, 163, 184, 0.14);
-  }
-
+  #btn-toggle-filters,
   #btn-toggle-spots {
     flex: 0 0 auto !important;
     width: auto !important;
@@ -1124,14 +984,17 @@
     white-space: nowrap;
   }
 
+  #btn-toggle-filters:active,
   #btn-toggle-spots:active {
     background-color: rgba(15, 23, 42, 0.07);
   }
 
+  [data-theme="dark"] #btn-toggle-filters,
   [data-theme="dark"] #btn-toggle-spots {
     color: var(--text-color, #e5e7eb);
   }
 
+  [data-theme="dark"] #btn-toggle-filters:active,
   [data-theme="dark"] #btn-toggle-spots:active {
     background-color: rgba(148, 163, 184, 0.14);
   }
@@ -2752,15 +2615,18 @@
 
 /* =========================================================
    SAFETY OVERRIDES (UNLAYERED)
-   - Spots kompakt absichern
-   - Filter/Plus/Daylog NICHT mehr klein drücken
+   - gewinnt gegen unlayered theme/button defaults
+   - behebt den „es ändert nichts“-Fall zuverlässig
    ========================================================= */
+#filter-section .sidebar-section-header > :last-child,
 .sidebar-section--grow .sidebar-section-header > :last-child {
   width: auto !important;
   max-width: 100% !important;
   white-space: nowrap !important;
 }
 
+#filter-section .sidebar-section-header > :last-child,
+#filter-section .sidebar-section-header > :last-child :where(button, a),
 .sidebar-section--grow .sidebar-section-header > :last-child,
 .sidebar-section--grow .sidebar-section-header > :last-child :where(button, a) {
   min-height: 28px !important;
