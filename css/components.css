@@ -831,7 +831,7 @@
     border-radius: 0 0 28px 28px;
   }
 
-  /* Sections / Cards (default for “real” cards like Spots, hint cards etc.) */
+  /* Sections / Cards */
   .sidebar-section {
     background: var(--sidebar-section-bg);
     border-radius: 20px;
@@ -841,31 +841,42 @@
   }
 
   /* =========================================================
-     MENU-STYLE “PILL ROWS” (Filter / Plus / Mein Tag)
-     - Wunsch: Box schmaler wie im Menü
-     - Filter Titel bleibt groß (keine Font-Reduktion)
+     WUNSCH: Filter / Plus / Mein Tag als Menü-Pills (volle Breite)
+     - geschlossen: nur Pill-Header (kein großer Card-Block)
+     - geöffnet: Card-Fläche für Inhalt, Header bleibt Pill
      ========================================================= */
-  #filter-section.sidebar-section,
-  #plus-section.sidebar-section,
-  #daylog-section.sidebar-section {
+  #filter-section.sidebar-section:not([open]),
+  #plus-section.sidebar-section:not([open]),
+  #daylog-section.sidebar-section:not([open]) {
     background: transparent;
     border: 0;
     box-shadow: none;
     padding: 0;
   }
 
-  /* Header-Zeile als Pill wie Menü-Items – UND schmal (shrink-to-content) */
+  /* Wenn geöffnet: wieder Card-Fläche, damit Inhalte hübsch sind */
+  #filter-section.sidebar-section[open],
+  #plus-section.sidebar-section[open],
+  #daylog-section.sidebar-section[open] {
+    background: var(--sidebar-section-bg);
+    border-radius: 20px;
+    border: 1px solid var(--sidebar-section-border);
+    box-shadow: var(--sidebar-section-shadow);
+    padding: 12px 14px 14px;
+  }
+
+  /* Pill-Header wie Menü-Boxen – aber volle Breite */
   #filter-section .sidebar-section-header,
   #plus-section .sidebar-section-header,
   #daylog-section .sidebar-section-header {
     --shadow: var(--elevation-sm);
 
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
 
-    width: auto;
+    width: 100%;
     max-width: 100%;
 
     padding: 7px 14px;
@@ -878,12 +889,9 @@
     box-shadow: var(--shadow);
   }
 
-  [data-theme="dark"]
-    #filter-section .sidebar-section-header,
-  [data-theme="dark"]
-    #plus-section .sidebar-section-header,
-  [data-theme="dark"]
-    #daylog-section .sidebar-section-header {
+  [data-theme="dark"] #filter-section .sidebar-section-header,
+  [data-theme="dark"] #plus-section .sidebar-section-header,
+  [data-theme="dark"] #daylog-section .sidebar-section-header {
     --shadow: var(--elevation-md);
     background: var(--neutral-0);
     color: var(--text-color, #e5e7eb);
@@ -891,20 +899,24 @@
     box-shadow: var(--shadow);
   }
 
-  /* Titel in diesen Pill-Rows: groß lassen, nicht “flex:1” aufblasen */
+  /* Titel groß lassen */
   #filter-section .sidebar-section-title,
   #plus-section .sidebar-section-title,
   #daylog-section .sidebar-section-title {
     margin: 0;
-    font-size: 18px;      /* Wunsch: “Filter” nicht kleiner */
+    font-size: 18px;
     font-weight: 700;
+    color: var(--text-strong);
     line-height: 1.1;
 
-    flex: 0 0 auto;
+    flex: 1 1 auto;
+    min-width: 0;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  /* Action rechts in Pill-Rows: nicht 12px, sondern wie Menü */
+  /* Action rechts: NICHT klein, wie Menü */
   #filter-section .sidebar-section-header > :last-child,
   #plus-section .sidebar-section-header > :last-child,
   #daylog-section .sidebar-section-header > :last-child,
@@ -915,12 +927,12 @@
     align-items: center;
     justify-content: center;
 
+    min-height: 32px;
+    padding: 0 0.9rem;
+
     font-size: 14px;
     font-weight: 650;
     line-height: 1;
-
-    min-height: 32px;
-    padding: 0 0.9rem;
 
     background: transparent;
     border: 1px solid transparent;
@@ -939,26 +951,22 @@
     background-color: rgba(15, 23, 42, 0.07);
   }
 
-  [data-theme="dark"]
-    #filter-section .sidebar-section-header > :last-child:active,
-  [data-theme="dark"]
-    #plus-section .sidebar-section-header > :last-child:active,
-  [data-theme="dark"]
-    #daylog-section .sidebar-section-header > :last-child:active,
-  [data-theme="dark"]
-    #filter-section .sidebar-section-header > :last-child :where(button, a):active,
-  [data-theme="dark"]
-    #plus-section .sidebar-section-header > :last-child :where(button, a):active,
-  [data-theme="dark"]
-    #daylog-section .sidebar-section-header > :last-child :where(button, a):active {
+  [data-theme="dark"] #filter-section .sidebar-section-header > :last-child:active,
+  [data-theme="dark"] #plus-section .sidebar-section-header > :last-child:active,
+  [data-theme="dark"] #daylog-section .sidebar-section-header > :last-child:active,
+  [data-theme="dark"] #filter-section .sidebar-section-header > :last-child :where(button, a):active,
+  [data-theme="dark"] #plus-section .sidebar-section-header > :last-child :where(button, a):active,
+  [data-theme="dark"] #daylog-section .sidebar-section-header > :last-child :where(button, a):active {
     background-color: rgba(148, 163, 184, 0.14);
   }
 
-  /* Entfernt Padding-Änderungen für open-state dieser Bereiche (sie sind Pill-Rows) */
-  #filter-section.sidebar-section[open],
-  #plus-section.sidebar-section[open],
-  #daylog-section.sidebar-section[open] {
-    padding: 0;
+  /* OPTIMIZED: Compact Spots-Card (wie vorher gedacht) */
+  .sidebar-section.sidebar-section--grow {
+    padding: 8px 14px 10px;
+  }
+
+  .sidebar-section.sidebar-section--grow[open] {
+    padding-bottom: 10px;
   }
 
   /* global stack spacing */
@@ -992,8 +1000,8 @@
   }
 
   /* ================================
-     Header row (general)
-     - keine künstliche Mindesthöhe (verhindert “zu große” Zeilen nicht zuverlässig)
+     Header row (Filter / Spots)
+     - kompakt, aber ohne harte Mindesthöhe
      ================================ */
   .sidebar-section-header {
     display: flex;
@@ -1028,7 +1036,7 @@
     line-height: 1.15;
   }
 
-  /* Spots/Listen-Header: Action kompakt lassen (wie vorher), aber NICHT für Filter/Plus/Daylog */
+  /* ONLY Spots header action compact (nicht Filter/Plus/Daylog) */
   :where(.sidebar-section--grow) .sidebar-section-header > :last-child,
   :where(.sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
     display: inline-flex;
@@ -1065,39 +1073,7 @@
     background-color: rgba(148, 163, 184, 0.14);
   }
 
-  /* (falls IDs existieren) zusätzliche Absicherung – Filter/Spots getrennt */
-  #btn-toggle-spots {
-    flex: 0 0 auto !important;
-    width: auto !important;
-    max-width: 100%;
-
-    min-height: 28px;
-    padding: 0 0.75rem;
-
-    background: transparent;
-    border: 1px solid transparent;
-    box-shadow: none;
-
-    border-radius: var(--btn-radius);
-    font-size: 12px;
-    font-weight: 650;
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  #btn-toggle-spots:active {
-    background-color: rgba(15, 23, 42, 0.07);
-  }
-
-  [data-theme="dark"] #btn-toggle-spots {
-    color: var(--text-color, #e5e7eb);
-  }
-
-  [data-theme="dark"] #btn-toggle-spots:active {
-    background-color: rgba(148, 163, 184, 0.14);
-  }
-
-  /* Filter-Button (falls ID existiert): bewusst NICHT 12px */
+  /* (falls IDs existieren) zusätzliche Absicherung */
   #btn-toggle-filters {
     flex: 0 0 auto !important;
     width: auto !important;
@@ -1126,6 +1102,37 @@
   }
 
   [data-theme="dark"] #btn-toggle-filters:active {
+    background-color: rgba(148, 163, 184, 0.14);
+  }
+
+  #btn-toggle-spots {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: 100%;
+
+    min-height: 28px;
+    padding: 0 0.75rem;
+
+    background: transparent;
+    border: 1px solid transparent;
+    box-shadow: none;
+
+    border-radius: var(--btn-radius);
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  #btn-toggle-spots:active {
+    background-color: rgba(15, 23, 42, 0.07);
+  }
+
+  [data-theme="dark"] #btn-toggle-spots {
+    color: var(--text-color, #e5e7eb);
+  }
+
+  [data-theme="dark"] #btn-toggle-spots:active {
     background-color: rgba(148, 163, 184, 0.14);
   }
 
@@ -2745,7 +2752,8 @@
 
 /* =========================================================
    SAFETY OVERRIDES (UNLAYERED)
-   - nur noch für “Spots”-Header (nicht Filter/Plus/Daylog)
+   - Spots kompakt absichern
+   - Filter/Plus/Daylog NICHT mehr klein drücken
    ========================================================= */
 .sidebar-section--grow .sidebar-section-header > :last-child {
   width: auto !important;
