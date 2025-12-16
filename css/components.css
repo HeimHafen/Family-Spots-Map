@@ -1,3 +1,4 @@
+
 /* =========================================
    components.css — Layout & Komponenten
    Highest-Level: Robustheit, Konsistenz,
@@ -73,21 +74,6 @@
     --tilla-shell-hover: #e17112;
     --tilla-shell-active: #d1630e;
     --on-tilla-shell: #ffffff;
-
-    /* =========================================================
-       NEW: Box/Pill sizing so:
-       Filter / Spots / Family Spots Plus / Mein Tag
-       match the menu items from Bild 1 (.app-menu-item)
-       ========================================================= */
-    --fsm-box-min-height: 40px;
-    --fsm-box-pad-y: 7px;
-    --fsm-box-pad-x: 14px;
-    --fsm-box-font-size: 14px;
-    --fsm-box-font-weight: 650;
-    --fsm-box-radius: 999px;
-    --fsm-box-bg: var(--neutral-0);
-    --fsm-box-border: var(--stroke-1);
-    --fsm-box-shadow: var(--elevation-sm);
   }
 
   [data-theme="dark"] {
@@ -1025,49 +1011,6 @@
     content: "";
   }
 
-  /* =========================================================
-     NEW: Header-“Box” Look für:
-     Filter / Spots / Family Spots Plus / Mein Tag
-     -> gleiche Größe & Schrift wie Bild 1 Menü-Kästen
-     ========================================================= */
-
-  :where(#filter-section, .sidebar-section--grow) > .sidebar-section-header,
-  #plus-section > summary.sidebar-section-header,
-  #daylog-section > summary.sidebar-section-header {
-    --shadow: var(--fsm-box-shadow);
-
-    min-height: var(--fsm-box-min-height);
-    padding: var(--fsm-box-pad-y) var(--fsm-box-pad-x);
-    border-radius: var(--fsm-box-radius);
-
-    background: var(--fsm-box-bg);
-    border: var(--fsm-box-border);
-    box-shadow: var(--shadow);
-  }
-
-  :where(#filter-section, .sidebar-section--grow) .sidebar-section-title,
-  #plus-section .sidebar-section-title,
-  #daylog-section .sidebar-section-title {
-    font-size: var(--fsm-box-font-size);
-    font-weight: var(--fsm-box-font-weight);
-    line-height: 1.15;
-  }
-
-  :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
-  #plus-section summary.sidebar-section-header > :last-child,
-  #daylog-section summary.sidebar-section-header > :last-child {
-    font-size: var(--fsm-box-font-size);
-    font-weight: var(--fsm-box-font-weight);
-    line-height: 1.1;
-  }
-
-  [data-theme="dark"]
-    :where(#filter-section, .sidebar-section--grow) > .sidebar-section-header,
-  [data-theme="dark"] #plus-section > summary.sidebar-section-header,
-  [data-theme="dark"] #daylog-section > summary.sidebar-section-header {
-    --shadow: var(--elevation-md);
-  }
-
   .sidebar-section-close {
     --shadow: var(--elevation-xs);
 
@@ -1109,26 +1052,6 @@
   }
 
   .sidebar-section--collapsed > .filter-group {
-    display: none;
-  }
-
-  /* =========================================================
-     NEW: Wenn die Sektionen “eingeklappt” sind:
-     -> nur die Pill-Box sichtbar (wie Menü),
-        ohne äußere Card-Fläche
-     ========================================================= */
-
-  #filter-section.sidebar-section--collapsed,
-  .sidebar-section--grow.spot-list-collapsed,
-  #plus-section.sidebar-section:not([open]),
-  #daylog-section.sidebar-section:not([open]) {
-    padding: 0 !important;
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-  }
-
-  .sidebar-section--grow.spot-list-collapsed #spot-list {
     display: none;
   }
 
@@ -1605,6 +1528,10 @@
 
   .sidebar-section--grow.spot-list-collapsed {
     padding-bottom: 10px;
+  }
+
+  .sidebar-section--grow.spot-list-collapsed #spot-list {
+    display: none;
   }
 
   #spot-list {
