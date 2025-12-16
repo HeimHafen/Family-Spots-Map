@@ -15,8 +15,6 @@
   <meta name="format-detection" content="telephone=no" />
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
-  <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
-  <meta name="application-name" content="Family Spots Map" />
 
   <!-- Critical Background (verhindert weiße Ränder/Flash bevor CSS lädt) -->
   <style>
@@ -25,11 +23,18 @@
       min-height: 100%;
       background: #f7e1d0;
     }
+    /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem */
+    .app-menu-item-icon svg {
+      display: block;
+    }
   </style>
 
   <!-- Theme color (Light / Dark) -->
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7e1d0" />
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617" />
+
+  <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
+  <meta name="application-name" content="Family Spots Map" />
 
   <!-- Canonical & hreflang -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
@@ -214,13 +219,15 @@
 
         <div class="app-menu-list">
           <!-- Info -->
-          <button
-            id="btn-help"
-            class="app-menu-item"
-            type="button"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">ℹ️</span>
+          <button id="btn-help" class="app-menu-item" type="button" data-menu-close="1">
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="10" x2="12" y2="16"></line>
+                <circle cx="12" cy="7" r="1"></circle>
+              </svg>
+            </span>
             <span
               class="app-menu-item-label"
               data-i18n-de="Über Family Spots Map"
@@ -231,14 +238,19 @@
             </span>
           </button>
 
-          <!-- Nur Karte (Icon als Emoji, verhindert sichtbaren ALT-Text) -->
-          <button
-            id="btn-toggle-view-menu"
-            class="app-menu-item"
-            type="button"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">🧾</span>
+          <!-- Nur Karte -->
+          <button id="btn-toggle-view-menu" class="app-menu-item" type="button" data-menu-close="1">
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <circle cx="4" cy="6" r="1"></circle>
+                <circle cx="4" cy="12" r="1"></circle>
+                <circle cx="4" cy="18" r="1"></circle>
+              </svg>
+            </span>
             <span
               class="app-menu-item-label"
               id="menu-toggle-view-label"
@@ -250,35 +262,14 @@
             </span>
           </button>
 
-          <!-- Zur Spot-Liste springen (UI entfernt; bleibt nur als versteckter Stub, damit ggf. bestehendes JS nicht crasht) -->
-          <button
-            id="btn-skip-spots"
-            class="app-menu-item"
-            type="button"
-            hidden
-            aria-hidden="true"
-            tabindex="-1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">🗺️</span>
-            <span
-              class="app-menu-item-label"
-              id="skip-to-spots-label"
-              data-i18n-de="Zur Spot-Liste springen"
-              data-i18n-en="Jump to spot list"
-              data-i18n-da="Gå til spotlisten"
-            >
-              Zur Spot-Liste springen
+          <!-- Designmodus wechseln -->
+          <button id="theme-toggle" class="app-menu-item" type="button" data-menu-close="1">
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+              </svg>
             </span>
-          </button>
-
-          <!-- Theme-Toggle -->
-          <button
-            id="theme-toggle"
-            class="app-menu-item"
-            type="button"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">🌓</span>
             <span
               class="app-menu-item-label"
               id="theme-toggle-label"
@@ -291,13 +282,14 @@
           </button>
 
           <!-- Standort -->
-          <button
-            id="btn-locate"
-            class="app-menu-item"
-            type="button"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">📍</span>
+          <button id="btn-locate" class="app-menu-item" type="button" data-menu-close="1">
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"></path>
+                <circle cx="12" cy="10" r="2"></circle>
+              </svg>
+            </span>
             <span
               class="app-menu-item-label"
               id="btn-locate-label"
@@ -932,7 +924,7 @@
           <h3>Für Kommunen, Destinationen &amp; Campingplätze</h3>
           <p>
             Family Spots Map ist nicht nur eine Karte für Familien,<br />
-            sondern auch ein Werkzeug für Orte, die bewusst familienfreundlich auftreten möchten –<br />
+            sondern auch ein Werkzeug für Orte, die bewusst familienfreundliche auftreten möchten –<br />
             Städte, Gemeinden, Tourismusregionen, Campingplätze und Ferienanlagen.
           </p>
           <p>Als Partner könnt ihr:</p>
@@ -1628,74 +1620,6 @@
     if (menuToggle && sidebarToggle) {
       menuToggle.addEventListener("click", () => sidebarToggle.click());
     }
-  </script>
-
-  <!-- Tilla: zufälliger Begrüßungstext bei jedem neuen Öffnen -->
-  <script type="module">
-    const TILLA_LINES = {
-      de: [
-        "Ich bin Tilla. Heute reicht auch ein kleines Abenteuer um die Ecke. 🌿",
-        "Manchmal ist der beste Spot der, der euch kurz durchatmen lässt. 🐢",
-        "Ein paar Minuten draußen können den ganzen Tag drehen. Wollen wir suchen? ✨",
-        "Snack einpacken, tief durchatmen – ich begleite euch. 🌿",
-        "Heute lieber ruhig oder Action? Ich halte das Tempo mit euch. 🐢",
-        "Wenn ihr mögt: Zoomt in eure Region – ich zeige euch kleine Wunder. 🌿",
-        "Ein Ort zum Staunen ist oft näher, als man denkt. ✨",
-        "Lasst uns einen Spot finden, an dem die Zeit kurz langsamer wird. 🌿"
-      ],
-      en: [
-        "I’m Tilla. A tiny adventure nearby can remind you how good today can be. 🌿",
-        "Sometimes the best spot is the one that lets you breathe for a moment. 🐢",
-        "A few minutes outside can change the whole day. Shall we look? ✨",
-        "Pack a snack, take a breath — I’m with you. 🌿",
-        "Calm or active today? I’ll match your pace. 🐢",
-        "Zoom into your area — let’s find a little wonder. 🌿",
-        "The next good place is often closer than you think. ✨",
-        "Let’s find a spot where time slows down a little. 🌿"
-      ],
-      da: [
-        "Jeg er Tilla. Et lille eventyr i nærheden kan gøre dagen lettere. 🌿",
-        "Nogle gange er det bedste sted dér, hvor I kan trække vejret roligt. 🐢",
-        "Få minutter udenfor kan vende hele dagen. Skal vi finde et spot? ✨",
-        "Pak en snack, tag en dyb indånding — jeg er med jer. 🌿",
-        "Ro eller action i dag? Jeg følger jeres tempo. 🐢",
-        "Zoom ind på jeres område — lad os finde et lille mirakel. 🌿",
-        "Det næste gode sted er ofte tættere på, end man tror. ✨",
-        "Lad os finde et spot, hvor tiden bliver en smule langsommere. 🌿"
-      ]
-    };
-
-    function pickRandom(arr) {
-      if (!arr || !arr.length) return "";
-      try {
-        const x = new Uint32Array(1);
-        crypto.getRandomValues(x);
-        return arr[x[0] % arr.length];
-      } catch {
-        return arr[Math.floor(Math.random() * arr.length)];
-      }
-    }
-
-    function applyRandomTillaText() {
-      const el = document.getElementById("tilla-sidebar-text");
-      if (!el) return;
-
-      const de = pickRandom(TILLA_LINES.de);
-      const en = pickRandom(TILLA_LINES.en);
-      const da = pickRandom(TILLA_LINES.da);
-
-      // i18n-Attribute befüllen (damit Language-Switching konsistent bleibt)
-      el.setAttribute("data-i18n-de", de);
-      el.setAttribute("data-i18n-en", en);
-      el.setAttribute("data-i18n-da", da);
-
-      // sofort für aktuelle Sprache anzeigen
-      const lang = (document.documentElement.lang || "de").slice(0, 2);
-      const shown = (lang === "en" ? en : lang === "da" ? da : de) || de;
-      el.textContent = shown;
-    }
-
-    window.addEventListener("DOMContentLoaded", applyRandomTillaText, { once: true });
   </script>
 </body>
 </html>
