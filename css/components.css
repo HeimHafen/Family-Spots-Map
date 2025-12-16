@@ -2683,3 +2683,42 @@
     font-size: 15px !important;
   }
 }
+
+/* =========================================================
+   PERFECT V-CENTER: Titel in Header-Karten exakt mittig
+   (Filter / Spots / Family Spots Plus / Mein Tag)
+   ========================================================= */
+
+/* Header-Zeile bekommt feste Höhe, keine vertikale Innenluft */
+#filter-section .sidebar-section-header,
+.sidebar-section--grow .sidebar-section-header,
+#plus-section .sidebar-section-header,
+#daylog-section .sidebar-section-header {
+  height: 32px !important;
+  min-height: 32px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  align-items: center !important;
+}
+
+/* Titel und rechter Action-Bereich „füllen“ die Header-Höhe und zentrieren ihren Inhalt */
+#filter-section .sidebar-section-title,
+.sidebar-section--grow .sidebar-section-title,
+#plus-section .sidebar-section-title,
+#daylog-section .sidebar-section-title,
+#filter-section .sidebar-section-header > :last-child,
+.sidebar-section--grow .sidebar-section-header > :last-child,
+#plus-section .sidebar-section-header > :last-child,
+#daylog-section .sidebar-section-header > :last-child {
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Optional: Baseline-Effekte minimieren */
+#filter-section .sidebar-section-title,
+.sidebar-section--grow .sidebar-section-title,
+#plus-section .sidebar-section-title,
+#daylog-section .sidebar-section-title {
+  line-height: 1 !important;
+}
