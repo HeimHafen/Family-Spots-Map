@@ -14,13 +14,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="robots" content="index,follow" />
-
-  <!-- iOS/Browser: erzwingt konsistente UI-Farben (Safari soll NICHT “automatisch” darken, wenn dein Theme light ist) -->
-  <meta id="meta-color-scheme" name="color-scheme" content="light" />
-  <meta id="meta-theme-color" name="theme-color" content="#f7e1d0" />
-
-  <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
-  <meta name="application-name" content="Family Spots Map" />
+  <meta name="color-scheme" content="light dark" />
 
   <!-- Critical Background (verhindert weiße Ränder/Flash bevor CSS lädt) -->
   <style>
@@ -29,7 +23,18 @@
       min-height: 100%;
       background: #f7e1d0;
     }
+    /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem */
+    .app-menu-item-icon svg {
+      display: block;
+    }
   </style>
+
+  <!-- Theme color (Light / Dark) -->
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7e1d0" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617" />
+
+  <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
+  <meta name="application-name" content="Family Spots Map" />
 
   <!-- Canonical & hreflang -->
   <link rel="canonical" href="https://heimhafen.github.io/Family-Spots-Map/" />
@@ -214,13 +219,15 @@
 
         <div class="app-menu-list">
           <!-- Info -->
-          <button
-            id="btn-help"
-            class="app-menu-item"
-            type="button"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">ℹ️</span>
+          <button id="btn-help" class="app-menu-item" type="button" data-menu-close="1">
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="10" x2="12" y2="16"></line>
+                <circle cx="12" cy="7" r="1"></circle>
+              </svg>
+            </span>
             <span
               class="app-menu-item-label"
               data-i18n-de="Über Family Spots Map"
@@ -231,14 +238,19 @@
             </span>
           </button>
 
-          <!-- Nur Karte (Emoji-Icon: verhindert sichtbaren ALT-Text wie "Liste zeigen") -->
-          <button
-            id="btn-toggle-view-menu"
-            class="app-menu-item"
-            type="button"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">🗺️</span>
+          <!-- Nur Karte -->
+          <button id="btn-toggle-view-menu" class="app-menu-item" type="button" data-menu-close="1">
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <circle cx="4" cy="6" r="1"></circle>
+                <circle cx="4" cy="12" r="1"></circle>
+                <circle cx="4" cy="18" r="1"></circle>
+              </svg>
+            </span>
             <span
               class="app-menu-item-label"
               id="menu-toggle-view-label"
@@ -250,14 +262,14 @@
             </span>
           </button>
 
-          <!-- Theme-Toggle -->
-          <button
-            id="theme-toggle"
-            class="app-menu-item"
-            type="button"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">🌓</span>
+          <!-- Designmodus wechseln -->
+          <button id="theme-toggle" class="app-menu-item" type="button" data-menu-close="1">
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+              </svg>
+            </span>
             <span
               class="app-menu-item-label"
               id="theme-toggle-label"
@@ -270,13 +282,14 @@
           </button>
 
           <!-- Standort -->
-          <button
-            id="btn-locate"
-            class="app-menu-item"
-            type="button"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">📍</span>
+          <button id="btn-locate" class="app-menu-item" type="button" data-menu-close="1">
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"></path>
+                <circle cx="12" cy="10" r="2"></circle>
+              </svg>
+            </span>
             <span
               class="app-menu-item-label"
               id="btn-locate-label"
@@ -287,16 +300,6 @@
               Eigenen Standort auf der Karte anzeigen
             </span>
           </button>
-
-          <!-- (UI entfernt) Zur Spot-Liste springen: bleibt unsichtbar im DOM, damit bestehende JS-Logik nicht bricht -->
-          <button
-            id="btn-skip-spots"
-            class="app-menu-item"
-            type="button"
-            hidden
-            aria-hidden="true"
-            tabindex="-1"
-          ></button>
         </div>
 
         <!-- Sprache: Flaggen-Chips -->
@@ -921,7 +924,7 @@
           <h3>Für Kommunen, Destinationen &amp; Campingplätze</h3>
           <p>
             Family Spots Map ist nicht nur eine Karte für Familien,<br />
-            sondern auch ein Werkzeug für Orte, die bewusst familienfreundlich auftreten möchten –<br />
+            sondern auch ein Werkzeug für Orte, die bewusst familienfreundliche auftreten möchten –<br />
             Städte, Gemeinden, Tourismusregionen, Campingplätze und Ferienanlagen.
           </p>
           <p>Als Partner könnt ihr:</p>
@@ -1609,107 +1612,14 @@
   <!-- App (ES-Modul) -->
   <script type="module" src="./js/app.js"></script>
 
-  <!-- Optimierungen (ES-Modul):
-       1) "Nur Karte" im Menü triggert die bestehende Toggle-Logik
-       2) Tilla sagt bei jedem Öffnen zufällig etwas anderes (DE/EN/DA)
-       3) Meta-Farben werden streng an dein App-Theme gekoppelt (stabiler bei iOS Dark Mode) -->
+  <!-- Bridge: Menüpunkt "Nur Karte" nutzt die bestehende Toggle-Logik -->
   <script type="module">
-    // 1) Bridge: Menüpunkt "Nur Karte" nutzt die bestehende Toggle-Logik
     const menuToggle = document.getElementById("btn-toggle-view-menu");
     const sidebarToggle = document.getElementById("btn-toggle-view");
+
     if (menuToggle && sidebarToggle) {
       menuToggle.addEventListener("click", () => sidebarToggle.click());
     }
-
-    // 2) Tilla: Zufälliger Text pro App-Öffnen
-    const tillaEl = document.getElementById("tilla-sidebar-text");
-    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-    const tillaLines = {
-      de: [
-        "Ich bin Tilla. Heute reicht schon ein kleiner Ortswechsel, um den Kopf frei zu bekommen. 🌿",
-        "Ich bin Tilla. Lass uns einen Platz finden, an dem Kinderlachen ganz von selbst passiert. 🌿",
-        "Ich bin Tilla. Manchmal ist das beste Abenteuer nur zehn Minuten entfernt. 🌿",
-        "Ich bin Tilla. Ein kurzer Weg, ein tiefer Atemzug – und schon fühlt sich alles leichter an. 🌿",
-        "Ich bin Tilla. Sollen wir heute Wasser, Wald oder Bewegung entdecken? 🌿",
-        "Ich bin Tilla. Ihr bringt die Zeit mit – ich helfe euch beim Ort. 🌿",
-        "Ich bin Tilla. Heute darf es unkompliziert sein: hinfahren, loslassen, genießen. 🌿",
-        "Ich bin Tilla. Ein neuer Spot kann ein ganzer Familienmoment werden. 🌿",
-        "Ich bin Tilla. Lass uns schauen, wo eure Energie heute am besten hinpasst. 🌿",
-        "Ich bin Tilla. Kleine Schritte – große Erinnerungen. 🌿"
-      ],
-      en: [
-        "I’m Tilla. A small change of scenery can make today feel lighter. 🌿",
-        "I’m Tilla. Let’s find a place where laughter happens naturally. 🌿",
-        "I’m Tilla. Sometimes the best adventure is just around the corner. 🌿",
-        "I’m Tilla. A short walk, a deep breath — and the day opens up. 🌿",
-        "I’m Tilla. Water, woods, or movement — what fits your family today? 🌿",
-        "I’m Tilla. You bring the time — I’ll help with the place. 🌿",
-        "I’m Tilla. Keep it simple today: arrive, unwind, enjoy. 🌿",
-        "I’m Tilla. One new spot can turn into a lasting family memory. 🌿",
-        "I’m Tilla. Let’s match today’s mood with the right nearby place. 🌿",
-        "I’m Tilla. Small steps — big memories. 🌿"
-      ],
-      da: [
-        "Jeg er Tilla. Et lille sceneskift kan gøre dagen lettere. 🌿",
-        "Jeg er Tilla. Lad os finde et sted, hvor grin kommer helt af sig selv. 🌿",
-        "Jeg er Tilla. Nogle gange er det bedste eventyr lige i nærheden. 🌿",
-        "Jeg er Tilla. En kort tur, et dybt åndedrag — så føles alt roligere. 🌿",
-        "Jeg er Tilla. Vand, skov eller bevægelse — hvad passer til jer i dag? 🌿",
-        "Jeg er Tilla. I har tiden — jeg hjælper med stedet. 🌿",
-        "Jeg er Tilla. I dag må det gerne være enkelt: afsted, sænk tempoet, nyd. 🌿",
-        "Jeg er Tilla. Et nyt spot kan blive et minde, der bliver hos jer. 🌿",
-        "Jeg er Tilla. Lad os finde et sted, der passer til jeres stemning i dag. 🌿",
-        "Jeg er Tilla. Små skridt — store minder. 🌿"
-      ]
-    };
-
-    function getCurrentLang() {
-      // bevorzugt: <html lang="...">, fallback: DE
-      const lang = (document.documentElement.getAttribute("lang") || "de").toLowerCase();
-      if (lang.startsWith("da")) return "da";
-      if (lang.startsWith("en")) return "en";
-      return "de";
-    }
-
-    if (tillaEl) {
-      // Pro Öffnen einmal neu würfeln – und gleichzeitig i18n-Attribute mitsetzen,
-      // damit das Ergebnis stabil bleibt, auch wenn später die Sprache gewechselt wird.
-      const deLine = pick(tillaLines.de);
-      const enLine = pick(tillaLines.en);
-      const daLine = pick(tillaLines.da);
-
-      tillaEl.setAttribute("data-i18n-de", deLine);
-      tillaEl.setAttribute("data-i18n-en", enLine);
-      tillaEl.setAttribute("data-i18n-da", daLine);
-
-      const lang = getCurrentLang();
-      tillaEl.textContent = (lang === "en" ? enLine : lang === "da" ? daLine : deLine);
-    }
-
-    // 3) iOS-Farbstabilität: Meta-Infos an App-Theme koppeln
-    // Hinweis: Night Shift / True Tone sind Display-Filter des iPhones und können Webseiten nicht “abschalten”.
-    // Aber: Safari auto-dunkelt sonst gern UI-Elemente, wenn "color-scheme: light dark" aktiv ist.
-    const metaTheme = document.getElementById("meta-theme-color");
-    const metaScheme = document.getElementById("meta-color-scheme");
-
-    const THEME = {
-      light: { themeColor: "#f7e1d0", scheme: "light" },
-      dark:  { themeColor: "#020617", scheme: "dark" }
-    };
-
-    function applyMetaByTheme() {
-      const dt = (document.documentElement.getAttribute("data-theme") || "light").toLowerCase();
-      const cfg = (dt === "dark") ? THEME.dark : THEME.light;
-      if (metaTheme) metaTheme.setAttribute("content", cfg.themeColor);
-      if (metaScheme) metaScheme.setAttribute("content", cfg.scheme);
-    }
-
-    applyMetaByTheme();
-
-    // Reagiere auf Theme-Umschaltungen (z.B. über deinen "Designmodus wechseln"-Button)
-    const obs = new MutationObserver(() => applyMetaByTheme());
-    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   </script>
 </body>
 </html>
