@@ -1,4 +1,3 @@
-
 /* =========================================
    components.css — Layout & Komponenten
    Highest-Level: Robustheit, Konsistenz,
@@ -2635,4 +2634,52 @@
   border: 1px solid transparent !important;
   box-shadow: none !important;
   line-height: 1 !important;
+}
+
+/* =========================================================
+   COMPACT OVERRIDES (UNLAYERED)
+   - Filter / Spots / Family Spots Plus / Mein Tag
+   - kleinere Titel + weniger Luft in den Cards
+   ========================================================= */
+
+/* 1) Karten-Padding reduzieren (weniger "Luft" oben/unten) */
+#filter-section.sidebar-section,
+.sidebar-section.sidebar-section--grow,
+#plus-section.sidebar-section,
+#daylog-section.sidebar-section {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+/* Falls Plus/Mein Tag (details[open]) unten wieder dicker werden */
+#plus-section.sidebar-section[open],
+#daylog-section.sidebar-section[open] {
+  padding-bottom: 6px !important;
+}
+
+/* 2) Header-Zeile flacher machen */
+#filter-section .sidebar-section-header,
+.sidebar-section--grow .sidebar-section-header,
+#plus-section .sidebar-section-header,
+#daylog-section .sidebar-section-header {
+  min-height: 32px !important; /* war 40px */
+}
+
+/* 3) Überschrift kleiner + kompaktere Line-Height */
+#filter-section .sidebar-section-title,
+.sidebar-section--grow .sidebar-section-title,
+#plus-section .sidebar-section-title,
+#daylog-section .sidebar-section-title {
+  font-size: 16px !important;  /* war 18px */
+  line-height: 1.05 !important;
+}
+
+/* Optional: auf sehr kleinen Screens noch etwas kleiner */
+@media (max-width: 480px) {
+  #filter-section .sidebar-section-title,
+  .sidebar-section--grow .sidebar-section-title,
+  #plus-section .sidebar-section-title,
+  #daylog-section .sidebar-section-title {
+    font-size: 15px !important;
+  }
 }
