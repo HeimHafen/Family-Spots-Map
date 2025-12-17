@@ -58,9 +58,7 @@
 
     /* App background fallbacks */
     --app-bg-fallback-light: var(--fsm-warm-0);
-
-    /* CHANGED: solid dark to avoid iOS/Safari “light shimmer” from translucency */
-    --app-bg-fallback-dark: #0b1220;
+    --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
 
     /* Chip look (Bild 3) */
     --chip-surface: var(--chip-bg, var(--fsm-chip-warm, #f1dfcf));
@@ -2706,18 +2704,4 @@
 #plus-section summary.sidebar-section-header > button *,
 #daylog-section summary.sidebar-section-header > button * {
   line-height: 1 !important;
-}
-
-/* =========================================================
-   iOS Safari Bottom Bar — reduce “white shimmer” at bottom
-   - Safari UI (unten) blurt den Page-Background.
-   - Wir erzwingen im Dark Mode einen voll-opaken, konstant dunklen Background.
-   ========================================================= */
-html[data-theme="dark"],
-body[data-theme="dark"],
-[data-theme="dark"] html,
-[data-theme="dark"] body {
-  background: #0b1220 !important;
-  background-color: #0b1220 !important;
-  background-image: none !important;
 }
