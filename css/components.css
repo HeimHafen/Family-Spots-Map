@@ -92,20 +92,33 @@
    ========================================= */
 @layer base {
   :root {
-    color-scheme: light;
+    /* Match <meta name="color-scheme" content="light dark"> */
+    color-scheme: light dark;
+
+    /* Single source of truth for the app/page background (prevents iOS “white shimmer” at bottom) */
+    --app-bg-effective: var(--app-bg, var(--page-bg, var(--app-bg-fallback-light)));
   }
+
+  [data-theme="light"] {
+    color-scheme: light;
+    --app-bg-effective: var(--app-bg, var(--page-bg, var(--app-bg-fallback-light)));
+  }
+
   [data-theme="dark"] {
     color-scheme: dark;
+    --app-bg-effective: var(--app-bg, var(--page-bg, var(--app-bg-fallback-dark)));
   }
 
   html {
     height: 100%;
-    background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-light)));
+    background: var(--app-bg-effective);
+    background-color: var(--app-bg-effective);
   }
 
   body {
     margin: 0;
-    background: inherit;
+    background: var(--app-bg-effective);
+    background-color: var(--app-bg-effective);
     min-height: 100svh;
   }
 
@@ -115,12 +128,24 @@
     }
   }
 
-  [data-theme="dark"] html {
-    background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-dark)));
+  /* iOS Safe-Area Bottom: paint the inset area explicitly to avoid the “white shimmer” */
+  body::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: env(safe-area-inset-bottom, 0px);
+    background: var(--app-bg-effective);
+    background-color: var(--app-bg-effective);
+    pointer-events: none;
+    z-index: 1; /* under bottom-nav (z-index: 30) */
   }
 
-  [data-theme="dark"] body {
-    background: inherit;
+  /* Reduce scroll rubber-band artefacts on supporting browsers */
+  html,
+  body {
+    overscroll-behavior-y: none;
   }
 
   /* Universal interactive ergonomics (mobile) */
