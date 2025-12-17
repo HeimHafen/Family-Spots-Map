@@ -58,7 +58,9 @@
 
     /* App background fallbacks */
     --app-bg-fallback-light: var(--fsm-warm-0);
-    --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
+
+    /* CHANGED: solid dark to avoid iOS/Safari “light shimmer” from translucency */
+    --app-bg-fallback-dark: #0b1220;
 
     /* Chip look (Bild 3) */
     --chip-surface: var(--chip-bg, var(--fsm-chip-warm, #f1dfcf));
@@ -2707,18 +2709,15 @@
 }
 
 /* =========================================================
-   FIX: iOS „weißes Schimmern“ unten im Dark Mode (UNLAYERED)
-   - Bottom-Nav deckt Safe-Area ab (kein heller Streifen)
+   iOS Safari Bottom Bar — reduce “white shimmer” at bottom
+   - Safari UI (unten) blurt den Page-Background.
+   - Wir erzwingen im Dark Mode einen voll-opaken, konstant dunklen Background.
    ========================================================= */
-[data-theme="dark"] .bottom-nav {
-  bottom: 0 !important;
-  padding-bottom: env(safe-area-inset-bottom, 0px) !important;
-  height: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
-}
-
-[data-theme="dark"] .bottom-nav-background {
-  bottom: 0 !important; /* deckt Safe-Area mit ab */
-  opacity: 1 !important; /* keine Aufhellung durch Transparenz */
-  background: rgba(2, 6, 23, 0.96) !important; /* sattes Dark */
-  backdrop-filter: blur(14px);
+html[data-theme="dark"],
+body[data-theme="dark"],
+[data-theme="dark"] html,
+[data-theme="dark"] body {
+  background: #0b1220 !important;
+  background-color: #0b1220 !important;
+  background-image: none !important;
 }
