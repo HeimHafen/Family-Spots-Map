@@ -60,6 +60,9 @@
     --app-bg-fallback-light: var(--fsm-warm-0);
     --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
 
+    /* Map tiles filter (prevents bright “glow” under iOS blur areas) */
+    --map-filter: none;
+
     /* Chip look (Bild 3) */
     --chip-surface: var(--chip-bg, var(--fsm-chip-warm, #f1dfcf));
     --chip-border: rgba(148, 163, 184, 0.45);
@@ -84,6 +87,9 @@
     --chip-border-hover: rgba(148, 163, 184, 0.55);
     --chip-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
     --chip-shadow-hover: 0 2px 0 rgba(0, 0, 0, 0.28);
+
+    /* NEW: darken Leaflet tiles in dark mode to remove “white shimmer” */
+    --map-filter: brightness(0.72) saturate(0.90) contrast(1.06);
   }
 }
 
@@ -1849,6 +1855,11 @@
     min-height: 320px;
   }
 
+  /* NEW: ensure Leaflet base is dark in dark mode (prevents light gaps/loading shimmer) */
+  [data-theme="dark"] .leaflet-container {
+    background: rgba(2, 6, 23, 0.96) !important;
+  }
+
   .leaflet-container .leaflet-tile {
     filter: var(--map-filter);
     transition: filter var(--dur-slow, var(--dur-slow-fallback)) var(--ease-out, var(--ease-out-fallback));
@@ -2704,4 +2715,15 @@
 #plus-section summary.sidebar-section-header > button *,
 #daylog-section summary.sidebar-section-header > button * {
   line-height: 1 !important;
+}
+
+/* =========================================================
+   FIX: iOS “weißer Schimmer” unten (Map unter Blur/Translucency)
+   - macht Bottom-Nav in Dark Mode deckend (kein Karten-Glow durch Blur)
+   ========================================================= */
+[data-theme="dark"] .bottom-nav-background {
+  background: rgba(2, 6, 23, 0.92) !important;
+  opacity: 1 !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
