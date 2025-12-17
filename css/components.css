@@ -2093,15 +2093,9 @@
     position: fixed;
     left: 0;
     right: 0;
-
-    /* CHANGED: cover iOS safe-area to remove “white shimmer” at the very bottom */
-    bottom: 0;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    box-sizing: content-box;
-
+    bottom: env(safe-area-inset-bottom, 0px);
     z-index: 30;
     height: 64px;
-
     pointer-events: none;
     display: flex;
     align-items: center;
@@ -2113,16 +2107,11 @@
     left: 10px;
     right: 10px;
     top: 8px;
-
-    /* CHANGED: extend backdrop all the way down (incl. safe-area) */
-    bottom: 0;
-
+    bottom: 8px;
     border-radius: 999px;
     background: var(--bottom-nav-backdrop);
     opacity: 0.96;
-
     backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
   }
 
   .bottom-nav-indicator {
