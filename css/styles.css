@@ -28,6 +28,15 @@ html[data-theme="light"] .app-header {
 }
 
 /* =========================================
+   UI Fix: „Nur Karte“ im Spots-Header entfernen
+   - Der Toggle bleibt im DOM (Bridge/JS bleibt intakt),
+     wird aber nicht mehr angezeigt.
+   ========================================= */
+#btn-toggle-view {
+  display: none !important;
+}
+
+/* =========================================
    Highest-Level UI Fixes (passgenau zu deinem Markup)
    1) Bottom Nav entfernen (Karte/Über)
    2) Menü-Panel (☰) kompakt halten (kein riesiges Fenster)
