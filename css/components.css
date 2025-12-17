@@ -1,4 +1,3 @@
-
 /* =========================================
    components.css — Layout & Komponenten
    Highest-Level: Robustheit, Konsistenz,
@@ -74,6 +73,17 @@
     --tilla-shell-hover: #e17112;
     --tilla-shell-active: #d1630e;
     --on-tilla-shell: #ffffff;
+
+    /* -----------------------------------------
+       Tilla sizing tokens (optimized)
+       - bigger avatar, but tighter card so the box stays compact
+       ----------------------------------------- */
+    --tilla-avatar-size: 124px;
+    --tilla-card-gap: 10px;
+    --tilla-card-pad-y: 8px;
+    --tilla-card-pad-x: 10px;
+    --tilla-text-size: 13px;
+    --tilla-text-line: 1.45;
   }
 
   [data-theme="dark"] {
@@ -2006,16 +2016,17 @@
     100% { opacity: 1; transform: translateY(0); }
   }
 
+  /* tighter section padding -> less “box height” without losing presence */
   .tilla-sidebar-section {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 
   .tilla-sidebar-card {
     display: flex;
-    align-items: center; /* CHANGED: true vertical centering of avatar vs text */
-    gap: 12px;
-    padding: 10px 12px;
+    align-items: center; /* true vertical centering of avatar vs text */
+    gap: var(--tilla-card-gap);
+    padding: var(--tilla-card-pad-y) var(--tilla-card-pad-x);
     border-radius: 18px;
     background: var(--card-bg);
     box-shadow: var(--elevation-sm);
@@ -2030,9 +2041,10 @@
   }
 
   .tilla-sidebar-avatar {
-    flex: 0 0 auto;
+    /* fixed column -> bigger turtle, predictable text area */
+    flex: 0 0 var(--tilla-avatar-size);
+    width: var(--tilla-avatar-size);
 
-    /* NEW: ensure avatar block fills card height and centers content */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2041,20 +2053,32 @@
 
   .tilla-sidebar-avatar img {
     display: block;
-    width: 110px;
+    width: 100%;
     height: auto;
+    max-width: none;
     transform-origin: center bottom;
     animation: tilla-bob 3.5s ease-in-out infinite;
   }
 
   .tilla-sidebar-text {
     flex: 1 1 auto;
+    min-width: 0;
   }
 
   #tilla-sidebar-text {
     margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: var(--tilla-text-size);
+    line-height: var(--tilla-text-line);
+  }
+
+  /* Keep it stable on very small screens */
+  @media (max-width: 420px) {
+    :root {
+      --tilla-avatar-size: 110px;
+      --tilla-card-gap: 10px;
+      --tilla-card-pad-y: 8px;
+      --tilla-card-pad-x: 10px;
+    }
   }
 
   /* -----------------------------------------
@@ -2664,11 +2688,13 @@
   align-items: center !important;
 }
 
-/* Titel: mittig im Header (nicht baseline), kompakt */
+/* Titel: mittig im Header (nicht baseline), kompakt
+   + NEW: #tilla-title auf gleiche Größe wie Filter */
 #filter-title,
 #spots-title,
 #plus-section-title,
-#daylog-section-title {
+#daylog-section-title,
+#tilla-title {
   margin: 0 !important;
   font-size: 16px !important;
   line-height: 1.15 !important;
@@ -2683,7 +2709,8 @@
   #filter-title,
   #spots-title,
   #plus-section-title,
-  #daylog-section-title {
+  #daylog-section-title,
+  #tilla-title {
     font-size: 15px !important;
   }
 }
