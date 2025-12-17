@@ -2613,36 +2613,23 @@
 }
 
 /* =========================================================
-   SAFETY OVERRIDES (UNLAYERED)
+   SAFETY + ALIGNMENT OVERRIDES (UNLAYERED)
    - gewinnt gegen unlayered theme/button defaults
-   - behebt den „es ändert nichts“-Fall zuverlässig
+   - sorgt für echte vertikale Zentrierung (oben/unten gleich)
+   - behält deine Kompaktheit (Padding/Font) bei
    ========================================================= */
+
+/* Action rechts: niemals umbrechen / nicht wachsen */
 #filter-section .sidebar-section-header > :last-child,
-.sidebar-section--grow .sidebar-section-header > :last-child {
+.sidebar-section--grow .sidebar-section-header > :last-child,
+#plus-section .sidebar-section-header > :last-child,
+#daylog-section .sidebar-section-header > :last-child {
   width: auto !important;
   max-width: 100% !important;
   white-space: nowrap !important;
 }
 
-#filter-section .sidebar-section-header > :last-child,
-#filter-section .sidebar-section-header > :last-child :where(button, a),
-.sidebar-section--grow .sidebar-section-header > :last-child,
-.sidebar-section--grow .sidebar-section-header > :last-child :where(button, a) {
-  min-height: 28px !important;
-  padding: 0 0.75rem !important;
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  box-shadow: none !important;
-  line-height: 1 !important;
-}
-
-/* =========================================================
-   COMPACT OVERRIDES (UNLAYERED)
-   - Filter / Spots / Family Spots Plus / Mein Tag
-   - kleinere Titel + weniger Luft in den Cards
-   ========================================================= */
-
-/* 1) Karten-Padding reduzieren (weniger "Luft" oben/unten) */
+/* Kompaktes Card-Padding (wie vorher) */
 #filter-section.sidebar-section,
 .sidebar-section.sidebar-section--grow,
 #plus-section.sidebar-section,
@@ -2657,68 +2644,58 @@
   padding-bottom: 6px !important;
 }
 
-/* 2) Header-Zeile flacher machen */
-#filter-section .sidebar-section-header,
-.sidebar-section--grow .sidebar-section-header,
-#plus-section .sidebar-section-header,
-#daylog-section .sidebar-section-header {
-  min-height: 32px !important; /* war 40px */
-}
-
-/* 3) Überschrift kleiner + kompaktere Line-Height */
-#filter-section .sidebar-section-title,
-.sidebar-section--grow .sidebar-section-title,
-#plus-section .sidebar-section-title,
-#daylog-section .sidebar-section-title {
-  font-size: 16px !important;  /* war 18px */
-  line-height: 1.05 !important;
-}
-
-/* Optional: auf sehr kleinen Screens noch etwas kleiner */
-@media (max-width: 480px) {
-  #filter-section .sidebar-section-title,
-  .sidebar-section--grow .sidebar-section-title,
-  #plus-section .sidebar-section-title,
-  #daylog-section .sidebar-section-title {
-    font-size: 15px !important;
-  }
-}
-
-/* =========================================================
-   PERFECT V-CENTER: Titel in Header-Karten exakt mittig
-   (Filter / Spots / Family Spots Plus / Mein Tag)
-   ========================================================= */
-
-/* Header-Zeile bekommt feste Höhe, keine vertikale Innenluft */
-#filter-section .sidebar-section-header,
-.sidebar-section--grow .sidebar-section-header,
-#plus-section .sidebar-section-header,
-#daylog-section .sidebar-section-header {
+/* Header-Zeile: feste Höhe + echtes Centering */
+#filter-section > .sidebar-section-header,
+.sidebar-section--grow > .sidebar-section-header,
+#plus-section > summary.sidebar-section-header,
+#daylog-section > summary.sidebar-section-header {
   height: 32px !important;
   min-height: 32px !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+  display: flex !important;
   align-items: center !important;
 }
 
-/* Titel und rechter Action-Bereich „füllen“ die Header-Höhe und zentrieren ihren Inhalt */
-#filter-section .sidebar-section-title,
-.sidebar-section--grow .sidebar-section-title,
-#plus-section .sidebar-section-title,
-#daylog-section .sidebar-section-title,
-#filter-section .sidebar-section-header > :last-child,
-.sidebar-section--grow .sidebar-section-header > :last-child,
-#plus-section .sidebar-section-header > :last-child,
-#daylog-section .sidebar-section-header > :last-child {
+/* Titel: mittig im Header (nicht baseline), kompakt */
+#filter-title,
+#spots-title,
+#plus-section-title,
+#daylog-section-title {
+  margin: 0 !important;
+  font-size: 16px !important;
+  line-height: 1.15 !important;
+
   height: 100% !important;
   display: flex !important;
   align-items: center !important;
 }
 
-/* Optional: Baseline-Effekte minimieren */
-#filter-section .sidebar-section-title,
-.sidebar-section--grow .sidebar-section-title,
-#plus-section .sidebar-section-title,
-#daylog-section .sidebar-section-title {
+/* Optional: auf sehr kleinen Screens noch etwas kleiner */
+@media (max-width: 480px) {
+  #filter-title,
+  #spots-title,
+  #plus-section-title,
+  #daylog-section-title {
+    font-size: 15px !important;
+  }
+}
+
+/* Buttons rechts: ebenfalls sauber vertikal zentriert */
+#filter-section .sidebar-section-header > button,
+.sidebar-section--grow .sidebar-section-header > button,
+#plus-section summary.sidebar-section-header > button,
+#daylog-section summary.sidebar-section-header > button {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Button-Text: kein “vertikales Wandern” */
+#filter-section .sidebar-section-header > button *,
+.sidebar-section--grow .sidebar-section-header > button *,
+#plus-section summary.sidebar-section-header > button *,
+#daylog-section summary.sidebar-section-header > button * {
   line-height: 1 !important;
 }
