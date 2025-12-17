@@ -2012,7 +2012,7 @@
 
   .tilla-sidebar-card {
     display: flex;
-    align-items: flex-start;
+    align-items: center; /* CHANGED: true vertical centering of avatar vs text */
     gap: 12px;
     padding: 10px 12px;
     border-radius: 18px;
@@ -2030,6 +2030,12 @@
 
   .tilla-sidebar-avatar {
     flex: 0 0 auto;
+
+    /* NEW: ensure avatar block fills card height and centers content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
   }
 
   .tilla-sidebar-avatar img {
