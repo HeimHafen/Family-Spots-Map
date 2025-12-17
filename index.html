@@ -654,12 +654,43 @@
             <header class="sidebar-section-header">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
 
+              <!-- NEU: Spots anzeigen/ausblenden -->
+              <button
+                id="btn-toggle-spots"
+                class="btn-ghost btn-small"
+                type="button"
+                aria-controls="spot-list"
+                aria-expanded="true"
+              >
+                <span
+                  data-state="hide"
+                  data-i18n-de="Spots ausblenden"
+                  data-i18n-en="Hide spots"
+                  data-i18n-da="Skjul spots"
+                >
+                  Spots ausblenden
+                </span>
+
+                <span
+                  data-state="show"
+                  class="hidden"
+                  data-i18n-de="Spots anzeigen"
+                  data-i18n-en="Show spots"
+                  data-i18n-da="Vis spots"
+                >
+                  Spots anzeigen
+                </span>
+              </button>
+
+              <!-- Bestehender Toggle (Nur Karte) bleibt für die JS-Logik/Bridge im DOM,
+                   wird aber nicht mehr als UI-Button genutzt. -->
               <button
                 id="btn-toggle-view"
-                class="btn-ghost btn-small"
+                class="btn-ghost btn-small sr-only"
                 type="button"
                 aria-pressed="false"
                 aria-controls="sidebar"
+                tabindex="-1"
               >
                 <span data-i18n-de="Nur Karte" data-i18n-en="Map only" data-i18n-da="Kun kort">
                   Nur Karte
@@ -1619,6 +1650,45 @@
 
     if (menuToggle && sidebarToggle) {
       menuToggle.addEventListener("click", () => sidebarToggle.click());
+    }
+  </script>
+
+  <!-- NEU: Spots-Liste anzeigen/ausblenden + Zustand merken -->
+  <script type="module">
+    const btn = document.getElementById("btn-toggle-spots");
+    const list = document.getElementById("spot-list");
+
+    const showLabel = btn?.querySelector('[data-state="show"]');
+    const hideLabel = btn?.querySelector('[data-state="hide"]');
+
+    function setExpanded(expanded) {
+      if (!btn || !list) return;
+
+      btn.setAttribute("aria-expanded", String(expanded));
+      list.hidden = !expanded;
+
+      if (showLabel && hideLabel) {
+        showLabel.classList.toggle("hidden", expanded);
+        hideLabel.classList.toggle("hidden", !expanded);
+      }
+
+      try {
+        localStorage.setItem("fsm_spots_expanded", expanded ? "1" : "0");
+      } catch {}
+    }
+
+    if (btn && list) {
+      const saved = (() => {
+        try { return localStorage.getItem("fsm_spots_expanded"); } catch { return null; }
+      })();
+
+      // Default: Spots sichtbar
+      setExpanded(saved !== "0");
+
+      btn.addEventListener("click", () => {
+        const expanded = btn.getAttribute("aria-expanded") === "true";
+        setExpanded(!expanded);
+      });
     }
   </script>
 </body>
