@@ -2705,3 +2705,20 @@
 #daylog-section summary.sidebar-section-header > button * {
   line-height: 1 !important;
 }
+
+/* =========================================================
+   FIX: iOS „weißes Schimmern“ unten im Dark Mode (UNLAYERED)
+   - Bottom-Nav deckt Safe-Area ab (kein heller Streifen)
+   ========================================================= */
+[data-theme="dark"] .bottom-nav {
+  bottom: 0 !important;
+  padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  height: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+[data-theme="dark"] .bottom-nav-background {
+  bottom: 0 !important; /* deckt Safe-Area mit ab */
+  opacity: 1 !important; /* keine Aufhellung durch Transparenz */
+  background: rgba(2, 6, 23, 0.96) !important; /* sattes Dark */
+  backdrop-filter: blur(14px);
+}
