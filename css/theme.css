@@ -39,7 +39,8 @@
     /* ================================
        Brand / Accent System (muted warm)
        ================================ */
-    --accent-h: 26;
+    /* WARMER: leicht Richtung Amber/„Night Shift“ geschoben */
+    --accent-h: 30;
 
     /* Brand accent (für Flächen/Badges/Active-Chips etc.) */
     --accent: hsl(var(--accent-h) 74% 48%);
@@ -72,14 +73,15 @@
     /* ================================
        Surfaces (Light)
        ================================ */
-    --surface-0: hsl(34 60% 97%);
-    --surface-1: hsla(32 62% 92% / 0.98);
-    --surface-2: hsla(32 58% 89% / 0.98);
-    --surface-3: hsla(31 54% 86% / 0.98);
+    /* WARMER: mehr Creme/Amber in allen Flächen */
+    --surface-0: hsl(38 70% 97%);
+    --surface-1: hsla(38 70% 92% / 0.98);
+    --surface-2: hsla(38 66% 89% / 0.98);
+    --surface-3: hsla(37 60% 86% / 0.98);
 
-    /* Borders */
-    --border-1: hsla(24 34% 20% / 0.18);
-    --border-2: hsla(24 34% 20% / 0.26);
+    /* Borders (leicht wärmer, weniger „kühl-grau“) */
+    --border-1: hsla(30 30% 18% / 0.18);
+    --border-2: hsla(30 30% 18% / 0.26);
 
     /* Elevation */
     --elev-1: 0 1px 2px hsla(26 35% 18% / 0.10);
@@ -106,17 +108,19 @@
     --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
 
     /* Backgrounds / Effects */
+    /* WARMER: Hintergrundverlauf wie „Night Shift“ (cremiger, mehr Amber) */
     --bg-app:
-      radial-gradient(circle at 18% 0%, hsla(var(--accent-h) 70% 54% / 0.14), transparent 58%),
-      radial-gradient(circle at 88% 22%, hsla(30 70% 58% / 0.08), transparent 54%),
-      linear-gradient(180deg, hsl(34 60% 97%), hsl(32 40% 88%));
+      radial-gradient(circle at 18% 0%, hsla(var(--accent-h) 74% 56% / 0.18), transparent 58%),
+      radial-gradient(circle at 88% 22%, hsla(42 78% 62% / 0.10), transparent 54%),
+      linear-gradient(180deg, hsl(38 70% 97%), hsl(36 52% 88%));
 
     /* App/page background tokens (components.css nutzt --app-bg/--page-bg) */
     --app-bg: var(--bg-app);
     --page-bg: var(--app-bg);
 
     /* Filters */
-    --filter-map: sepia(0.18) saturate(0.92) brightness(1.01) contrast(1.03) hue-rotate(-10deg);
+    /* WARMER: minimal mehr Sepia/Wärme auf der Karte */
+    --filter-map: sepia(0.25) saturate(0.95) brightness(1.02) contrast(1.03) hue-rotate(-12deg);
 
     /* ================================
        Status / Semantic Badges
@@ -145,7 +149,8 @@
     --chip-hover-shadow: 0 12px 30px hsla(26 45% 18% / 0.18);
 
     /* Inputs */
-    --input-bg: hsl(33 52% 90%);
+    /* WARMER: Input-Flächen etwas cremiger */
+    --input-bg: hsl(38 58% 90%);
     --input-shadow: 0 5px 12px hsla(26 45% 18% / 0.14);
 
     /* Legacy button tokens (falls noch genutzt) */
@@ -156,12 +161,13 @@
     --toast-bg: hsla(var(--accent-h) 50% 22% / 0.96);
 
     /* Header tokens (Menu-Button-Optik bleibt wie bisher) */
-    --header-bg-top: hsl(33 58% 93%);
-    --header-bg-bottom: hsl(30 52% 88%);
+    /* WARMER: Header-Verlauf etwas amber/creme */
+    --header-bg-top: hsl(38 62% 93%);
+    --header-bg-bottom: hsl(36 56% 88%);
     --header-shadow: var(--elev-3);
     --header-text-color: var(--text-3);
 
-    --header-tagline-bg: hsla(26 46% 90% / 0.92);
+    --header-tagline-bg: hsla(34 56% 90% / 0.92);
     --header-tagline-color: hsl(24 44% 18%);
     --header-tagline-shadow: var(--elev-2);
 
@@ -175,15 +181,16 @@
     --header-icon-shadow: var(--elev-1);
     --header-icon-border: var(--border-2);
 
-    --language-pill-bg: hsla(32 52% 92% / 0.92);
+    --language-pill-bg: hsla(34 56% 92% / 0.92);
     --language-pill-shadow: var(--elev-1);
 
-    --sidebar-bg: hsl(32 38% 88%);
+    /* WARMER: Sidebar-Grundfläche */
+    --sidebar-bg: hsl(38 42% 88%);
     --sidebar-section-bg: var(--surface-1);
     --sidebar-section-shadow: var(--elev-2);
     --sidebar-section-border: var(--border-1);
 
-    --bottom-nav-backdrop: hsla(var(--accent-h) 40% 76% / 0.50);
+    --bottom-nav-backdrop: hsla(var(--accent-h) 44% 78% / 0.52);
     --bottom-nav-item-bg: var(--surface-1);
     --bottom-nav-item-color: hsl(24 22% 26%);
     --bottom-nav-item-active-bg: var(--accent-solid);
@@ -191,7 +198,7 @@
 
     --map-card-bg: var(--surface-2);
     --map-card-shadow: var(--elev-3);
-    --map-card-border: hsla(24 34% 20% / 0.22);
+    --map-card-border: hsla(30 30% 18% / 0.22);
 
     --shadow-soft: var(--elev-1);
     --shadow-strong: var(--elev-2);
@@ -364,8 +371,8 @@
   /* Prefer more contrast: strengthen borders slightly */
   @media (prefers-contrast: more) {
     :root {
-      --border-1: hsla(24 34% 20% / 0.26);
-      --border-2: hsla(24 34% 20% / 0.34);
+      --border-1: hsla(30 30% 18% / 0.26);
+      --border-2: hsla(30 30% 18% / 0.34);
     }
 
     :root[data-theme="dark"],
