@@ -42,7 +42,7 @@ html[data-theme="light"] .app-header {
    2) Menü-Panel (☰) kompakt halten (kein riesiges Fenster)
    ========================================= */
 
-/* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
+/* ---------- 1) Bottom Nav vollständig entfernen + Layout-Padding sauber halten ---------- */
 :root {
   --bottom-nav-height: 0px;
   --bottom-nav-safearea: 0px;
@@ -52,12 +52,11 @@ html[data-theme="light"] .app-header {
   display: none !important;
 }
 
-/* Falls irgendwo padding für Bottom-Nav reserviert wird */
-body,
-.app,
+/* Wichtig: components.css reserviert unten Platz (für Nav).
+   Wir holen ihn zurück, lassen aber Safe-Area minimal drin. */
 .app-main,
 #main-content {
-  padding-bottom: 0 !important;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
 }
 
 /* ---------- 2) App-Menü (☰) als sauberes Action-Sheet, nicht vollflächig ---------- */
@@ -92,11 +91,11 @@ body,
   height: auto !important;
   min-height: 0 !important;
 
-  /* Das ist der entscheidende Fix gegen „riesig“ */
+  /* entscheidend gegen „riesig“ */
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
 
-  /* Optional: weichere iOS-Scroll-Physics */
+  /* weichere iOS-Scroll-Physics */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -112,18 +111,27 @@ body,
   margin-top: 12px !important;
 }
 
-/* Wenn dein components.css das Panel irgendwo mit 100vh/100% versieht, neutralisieren */
-#app-menu .app-menu-panel,
-#app-menu .app-menu-panel * {
-  max-height: unset;
-}
-#app-menu .app-menu-panel {
-  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
-}
-
 /* Optional: wenn einzelne Buttons zu groß werden, auf mobile etwas kompakter */
 @media (max-width: 720px) {
   #app-menu .app-menu-panel {
     width: min(560px, 100%);
   }
+}
+
+/* =========================================
+   FIX: „Family Spots Plus“ Title-Farbe angleichen
+   Problem: auf iOS/Dark kann der <summary>/<details>-Kontext
+   den Titel gedimmt wirken lassen (inherit/opacity/color).
+   -> Erzwingt konsistenten Titel-Farbtoken wie andere Sections.
+   ========================================= */
+#plus-section-title,
+#daylog-section-title {
+  color: var(--text-strong, var(--text-color, #e5e7eb)) !important;
+  opacity: 1 !important;
+}
+
+/* Zusätzliche Robustheit: falls ein parent (summary/details) Farbe/Opacity setzt */
+#plus-section summary.sidebar-section-header,
+#daylog-section summary.sidebar-section-header {
+  opacity: 1 !important;
 }
