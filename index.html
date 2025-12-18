@@ -280,25 +280,6 @@
             </span>
           </button>
 
-          <!-- NEU: Start-Hinweis erneut anzeigen -->
-          <button id="btn-show-onboarding-hint" class="app-menu-item" type="button" data-menu-close="1">
-            <span class="app-menu-item-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3a7 7 0 0 1 7 7c0 2.4-1.2 4.3-3 5.6-.9.7-1.5 1.6-1.7 2.7H8.7c-.2-1.1-.8-2-1.7-2.7C5.2 14.3 4 12.4 4 10a7 7 0 0 1 8-7z"></path>
-                <path d="M9 21h6"></path>
-              </svg>
-            </span>
-            <span
-              class="app-menu-item-label"
-              data-i18n-de="Start-Hinweis anzeigen"
-              data-i18n-en="Show start hint"
-              data-i18n-da="Vis starthjælp"
-            >
-              Start-Hinweis anzeigen
-            </span>
-          </button>
-
           <!-- Nur Karte -->
           <button id="btn-toggle-view-menu" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
@@ -1684,9 +1665,6 @@
     defer
   ></script>
 
-  <!-- Onboarding-Hinweis (ES-Modul) -->
-  <script type="module" src="./js/onboarding-hint.js"></script>
-
   <!-- Details/Summary Fix (ES-Modul) -->
   <script type="module" src="./js/ui/details-summary-fix.js"></script>
 
@@ -1703,49 +1681,20 @@
     }
   </script>
 
-  <!-- Onboarding-Hinweis schließen + Zustand merken + öffentliches API für Menü -->
+  <!-- Onboarding-Hinweis schließen (ohne Persistenz: nach Reload wieder sichtbar) -->
   <script type="module">
-    const KEY = "fsm_onboarding_hint_dismissed_v1";
     const hint = document.querySelector("[data-onboarding-hint]");
-    const closeBtn = hint?.querySelector("[data-onboarding-close]") || hint?.querySelector(".fsm-onboarding-hint__close");
+    const closeBtn =
+      hint?.querySelector("[data-onboarding-close]") ||
+      hint?.querySelector(".fsm-onboarding-hint__close");
 
     function dismissHint() {
       if (!hint) return;
-      hint.setAttribute("hidden", "");
+      hint.hidden = true;                 // nur für die aktuelle Session
       hint.setAttribute("aria-hidden", "true");
-      try { localStorage.setItem(KEY, "1"); } catch {}
     }
 
-    function showHint() {
-      if (!hint) return;
-      try { localStorage.removeItem(KEY); } catch {}
-      hint.removeAttribute("hidden");
-      hint.setAttribute("aria-hidden", "false");
-      // optional: leicht sichtbar machen, wenn man aus Menü kommt
-      try { hint.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
-    }
-
-    // Restore state
-    try {
-      if (localStorage.getItem(KEY) === "1") dismissHint();
-    } catch {}
-
-    // Wire close button
     if (closeBtn) closeBtn.addEventListener("click", dismissHint);
-
-    // Expose for menu access
-    window.fsmOnboardingHint = { show: showHint, dismiss: dismissHint, key: KEY };
-  </script>
-
-  <!-- Menüpunkt: Start-Hinweis anzeigen -->
-  <script type="module">
-    const btn = document.getElementById("btn-show-onboarding-hint");
-    if (btn) {
-      btn.addEventListener("click", () => {
-        // Hint wieder sichtbar machen
-        window.fsmOnboardingHint?.show?.();
-      });
-    }
   </script>
 
   <!-- Spots-Liste anzeigen/ausblenden + Zustand merken -->
