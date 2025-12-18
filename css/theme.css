@@ -218,8 +218,6 @@
 
 /* =========================================================
    TOKENS — Dark Overrides
-   (applies when data-theme="dark" is set on root/html/body
-   or on a container [data-theme="dark"])
    ========================================================= */
 @layer tokens {
   :root[data-theme="dark"],
@@ -255,7 +253,7 @@
     --app-bg: var(--bg-app);
     --page-bg: var(--app-bg);
 
-    /* Dark accent: keep brand accent for surfaces, keep solid for CTAs */
+    /* Dark accent */
     --accent: hsl(var(--accent-h) 72% 52%);
     --accent-light: hsl(var(--accent-h) 72% 64%);
     --accent-dark: hsl(var(--accent-h) 72% 42%);
@@ -347,19 +345,12 @@
 
 /* =========================================================
    OS Preference Fallback (only if no manual theme set)
-   - keeps one source of truth: we “mirror” dark overrides
    ========================================================= */
 @layer overrides {
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
       color-scheme: dark;
     }
-
-    /* Apply the same variable set as dark when no manual theme is present.
-       NOTE: CSS cannot “import” the block above, so we keep this minimal by
-       only flipping the attribute-driven surface via color-scheme.
-       If you want full dark tokens without data-theme, set data-theme in JS
-       (recommended for deterministic theming). */
   }
 
   @media (prefers-color-scheme: light) {
