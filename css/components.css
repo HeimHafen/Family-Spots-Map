@@ -2800,3 +2800,31 @@
 [data-theme="dark"] summary.sidebar-section-header {
   color: var(--text-color, #e5e7eb) !important;
 }
+
+/* =========================================================
+   FIX: "Family Spots Plus" Schriftfarbe im Dark Mode
+   - greift auch, wenn der Titel NICHT .sidebar-section-title nutzt
+   - deckt summary-Textnode + #plus-section-title ab
+   ========================================================= */
+
+[data-theme="dark"] #plus-section,
+[data-theme="dark"] #plus-section > summary.sidebar-section-header,
+[data-theme="dark"] #plus-section-title {
+  color: var(--text-color, #e5e7eb) !important;
+}
+
+/* optional: rechte Action (z.B. "Anzeigen") minimal softer */
+[data-theme="dark"] #plus-section > summary.sidebar-section-header > :last-child {
+  color: rgba(203, 213, 225, 0.92) !important;
+}
+
+/* gleiche Robustheit für "Mein Tag" */
+[data-theme="dark"] #daylog-section,
+[data-theme="dark"] #daylog-section > summary.sidebar-section-header,
+[data-theme="dark"] #daylog-section-title {
+  color: var(--text-color, #e5e7eb) !important;
+}
+
+[data-theme="dark"] #daylog-section > summary.sidebar-section-header > :last-child {
+  color: rgba(203, 213, 225, 0.92) !important;
+}
