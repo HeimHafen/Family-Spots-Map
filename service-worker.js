@@ -1,20 +1,29 @@
 // service-worker.js
 
-const CACHE_VERSION = "4";
+const CACHE_VERSION = "5";
 const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
-// OPTIONAL: Wenn du components/theme nutzt, ergänzen:
-// "css/components.css",
-// "css/theme.css",
-
+/**
+ * Wichtig:
+ * - KEINE Tippfehler/losen Zeichen in ASSETS (sonst installiert SW nicht)
+ * - CSS/JS behandeln wir "network-first", damit Updates sofort sichtbar werden
+ */
 const ASSETS = [
   "./",
   "index.html",
   OFFLINE_URL,
-  "css/styles.css",6
+
+  // CSS (Aggregator + imports)
+  "css/styles.css",
+  "css/theme.css",
+  "css/base.css",
+  "css/utilities.css",
+  "css/components.css",
   "css/badges.css",
   "css/tilla.css",
+
+  // JS
   "js/app.js",
   "js/utils.js",
   "js/storage.js",
@@ -26,15 +35,23 @@ const ASSETS = [
   "js/sw-register.js",
   "js/header-tagline.js",
   "js/nav.js",
+  "js/onboarding-hint.js",
+  "js/ui/details-summary-fix.js",
+
+  // Data
   "data/index.json",
   "data/spots.json",
   "data/i18n/de.json",
   "data/i18n/en.json",
+  "data/i18n/da.json",
   "data/partners.json",
   "data/partner-codes.json",
+
+  // Assets
   "assets/logo.svg",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
+  "assets/tilla/tilla-hero.png",
 ];
 
 function isSameOrigin(url) {
@@ -48,19 +65,22 @@ function withTimeout(promise, ms) {
   ]);
 }
 
-// 📦 Install: Pre-cache App Shell
+// 📦 Install: Pre-cache App Shell (best effort)
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
 
-      // addAll bricht beim ersten Fehler ab -> wir machen “best effort”
+      // "cache: reload" -> um HTTP-Caches zu umgehen, wenn möglich
       await Promise.allSettled(
-        ASSETS.map((asset) => cache.add(asset))
+        ASSETS.map((asset) => {
+          const req = new Request(asset, { cache: "reload" });
+          return cache.add(req);
+        })
       );
 
       // Stelle sicher, dass offline.html wirklich drin ist
-      await cache.add(OFFLINE_URL).catch(() => {});
+      await cache.add(new Request(OFFLINE_URL, { cache: "reload" })).catch(() => {});
     })()
   );
 
@@ -122,14 +142,35 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // ✅ CSS/JS: NETWORK FIRST (damit Updates sofort greifen), Cache-Fallback
+  if (url.pathname.endsWith(".css") || url.pathname.endsWith(".js")) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(CACHE_NAME);
+        try {
+          const res = await withTimeout(fetch(request), 3500);
+          if (res && res.ok) {
+            await cache.put(request, res.clone());
+          }
+          return res;
+        } catch {
+          const cached = await caches.match(request);
+          return (
+            cached ||
+            new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } })
+          );
+        }
+      })()
+    );
+    return;
+  }
+
   // 🔄 JSON: network first (mit Fallback)
   if (url.pathname.endsWith(".json")) {
     event.respondWith(
       (async () => {
         try {
-          // optional: Timeout, damit es sich offline nicht “aufhängt”
           const res = await withTimeout(fetch(request), 3500);
-
           if (res && res.ok) {
             const cache = await caches.open(CACHE_NAME);
             cache.put(request, res.clone());
@@ -150,7 +191,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 📁 Andere Assets: stale-while-revalidate (Cache first + Update im Hintergrund)
+  // 📁 Andere Assets: stale-while-revalidate
   event.respondWith(
     (async () => {
       const cached = await caches.match(request);
@@ -167,13 +208,10 @@ self.addEventListener("fetch", (event) => {
         }
       })();
 
-      // wichtig: Update darf im Hintergrund fertig laufen
       event.waitUntil(updatePromise);
 
-      // niemals null zurückgeben
       if (cached) return cached;
 
-      // wenn nichts im Cache: versuch network, sonst fallback response
       try {
         const res = await fetch(request);
         if (res && res.ok) {
