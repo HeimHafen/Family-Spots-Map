@@ -34,6 +34,41 @@
       line-height: 1.25 !important;
       margin: 0 !important;
     }
+
+    /* NEU: Onboarding-Hinweis Close-Button zuverlässig sichtbar + sauber positioniert */
+    .fsm-onboarding-hint { position: relative; }
+    .fsm-onboarding-hint__close {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+
+      position: absolute;
+      top: 10px;
+      right: 10px;
+
+      width: 34px;
+      height: 34px;
+
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(255, 255, 255, 0.82);
+
+      color: rgba(15, 23, 42, 0.85);
+      font-size: 20px;
+      line-height: 1;
+
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    [data-theme="dark"] .fsm-onboarding-hint__close {
+      background: rgba(15, 23, 42, 0.62);
+      color: rgba(229, 231, 235, 0.95);
+      border-color: rgba(148, 163, 184, 0.25);
+    }
+    .fsm-onboarding-hint__close:active {
+      transform: translateY(1px);
+      opacity: 0.92;
+    }
   </style>
 
   <!-- Theme color (Light / Dark) -->
@@ -446,7 +481,13 @@
               </span>
             </p>
 
-            <button type="button" class="fsm-onboarding-hint__close" aria-label="Hinweis schließen">×</button>
+            <!-- NEU: data-onboarding-close + Persistenz per JS -->
+            <button
+              type="button"
+              class="fsm-onboarding-hint__close"
+              data-onboarding-close="1"
+              aria-label="Hinweis schließen"
+            >×</button>
           </section>
 
           <!-- Kompakter Filter -->
@@ -1657,6 +1698,30 @@
 
     if (menuToggle && sidebarToggle) {
       menuToggle.addEventListener("click", () => sidebarToggle.click());
+    }
+  </script>
+
+  <!-- NEU: Onboarding-Hinweis schließen + Zustand merken -->
+  <script type="module">
+    const KEY = "fsm_onboarding_hint_dismissed_v1";
+    const hint = document.querySelector("[data-onboarding-hint]");
+    const closeBtn = hint?.querySelector("[data-onboarding-close]") || hint?.querySelector(".fsm-onboarding-hint__close");
+
+    function dismissHint() {
+      if (!hint) return;
+      hint.setAttribute("hidden", "");
+      hint.setAttribute("aria-hidden", "true");
+      try { localStorage.setItem(KEY, "1"); } catch {}
+    }
+
+    // Restore state
+    try {
+      if (localStorage.getItem(KEY) === "1") dismissHint();
+    } catch {}
+
+    // Wire close button
+    if (closeBtn) {
+      closeBtn.addEventListener("click", dismissHint);
     }
   </script>
 
