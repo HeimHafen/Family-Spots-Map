@@ -1,4 +1,3 @@
-
 /* =========================================
    components.css — Layout & Komponenten
    Highest-Level: Robustheit, Konsistenz,
@@ -2407,6 +2406,9 @@
     font-size: 14px;
     line-height: 1.5;
     color: var(--text-soft);
+
+    /* IMPORTANT: damit der Close-Button nicht abgeschnitten wird */
+    overflow: visible;
   }
 
   .fsm-onboarding-hint__text {
@@ -2443,9 +2445,50 @@
     margin-bottom: 0;
   }
 
+  /* FIX: Close-Button sichtbar + klickbar (war vorher: display:none !important) */
   .fsm-onboarding-hint__close,
   .fsm-onboarding-hint-close {
-    display: none !important;
+    all: unset;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
+
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: rgba(255, 255, 255, 0.92);
+
+    color: rgba(15, 23, 42, 0.9);
+    font-size: 20px;
+    line-height: 1;
+
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+
+    box-shadow: var(--elevation-xs);
+  }
+
+  .fsm-onboarding-hint__close:active,
+  .fsm-onboarding-hint-close:active {
+    transform: translateY(1px);
+    box-shadow: var(--elevation-xs);
+    filter: brightness(0.98);
+  }
+
+  [data-theme="dark"] .fsm-onboarding-hint__close,
+  [data-theme="dark"] .fsm-onboarding-hint-close {
+    background: rgba(15, 23, 42, 0.70);
+    color: rgba(229, 231, 235, 0.95);
+    border-color: rgba(148, 163, 184, 0.25);
+    box-shadow: var(--elevation-sm);
   }
 
   .fsm-onboarding-hint--hidden {
@@ -2613,6 +2656,13 @@
       transform: translateY(-1px);
       box-shadow: var(--elevation-md);
     }
+
+    /* Onboarding close hover */
+    .fsm-onboarding-hint__close:hover,
+    .fsm-onboarding-hint-close:hover {
+      box-shadow: var(--elevation-sm);
+      filter: brightness(1.02);
+    }
   }
 
   /* Ensure Tilla button active color */
@@ -2733,4 +2783,13 @@
 #plus-section summary.sidebar-section-header > button *,
 #daylog-section summary.sidebar-section-header > button * {
   line-height: 1 !important;
+}
+
+/* HARD SAFETY: Onboarding-Close darf niemals „weggeCSSed“ werden */
+.fsm-onboarding-hint__close,
+.fsm-onboarding-hint-close {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
