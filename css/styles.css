@@ -37,6 +37,21 @@ html[data-theme="light"] .app-header {
 }
 
 /* =========================================
+   Fix: Details/Summary Titel-Farbe stabilisieren
+   - iOS/Safari kann <summary> anders einfärben (Link/Muted)
+   - wir erzwingen hier konsistente Title-Color
+   ========================================= */
+#plus-section summary.sidebar-section-header,
+#daylog-section summary.sidebar-section-header {
+  color: var(--text-strong) !important;
+}
+
+#plus-section-title,
+#daylog-section-title {
+  color: var(--text-strong) !important;
+}
+
+/* =========================================
    Highest-Level UI Fixes (passgenau zu deinem Markup)
    1) Bottom Nav entfernen (Karte/Über)
    2) Menü-Panel (☰) kompakt halten (kein riesiges Fenster)
@@ -67,12 +82,10 @@ body,
   inset: 0;
   z-index: 9999;
 
-  /* Flex-Overlay, Panel oben/zentriert */
   display: flex;
   align-items: flex-start;
   justify-content: center;
 
-  /* Safe Area & angenehmes Atmen */
   padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
@@ -92,11 +105,8 @@ body,
   height: auto !important;
   min-height: 0 !important;
 
-  /* Das ist der entscheidende Fix gegen „riesig“ */
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
-
-  /* Optional: weichere iOS-Scroll-Physics */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -107,18 +117,9 @@ body,
   min-height: 0 !important;
 }
 
-/* Sprache-Bereich optisch kompakt halten (falls in components.css zu viel Abstand ist) */
+/* Sprache-Bereich optisch kompakt halten */
 #app-menu .app-menu-languages {
   margin-top: 12px !important;
-}
-
-/* Wenn dein components.css das Panel irgendwo mit 100vh/100% versieht, neutralisieren */
-#app-menu .app-menu-panel,
-#app-menu .app-menu-panel * {
-  max-height: unset;
-}
-#app-menu .app-menu-panel {
-  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
 }
 
 /* Optional: wenn einzelne Buttons zu groß werden, auf mobile etwas kompakter */
@@ -126,31 +127,4 @@ body,
   #app-menu .app-menu-panel {
     width: min(560px, 100%);
   }
-}
-
-/* =========================================
-   FIX: „Family Spots Plus“ hat andere Schriftfarbe
-   Ursache (typisch): Section wird „disabled“ gedimmt (opacity).
-   -> Opacity am Container auf 1 erzwingen + Titel explizit setzen.
-   ========================================= */
-#plus-section {
-  opacity: 1 !important;
-  color: var(--text-strong) !important;
-}
-
-#plus-section summary.sidebar-section-header {
-  opacity: 1 !important;
-  color: var(--text-strong) !important;
-}
-
-#plus-section .sidebar-section-title,
-#plus-section-title {
-  color: var(--text-strong) !important;
-  opacity: 1 !important;
-}
-
-/* Optional: falls auch der rechte Button („Anzeigen“) zu hell/dunkel wirkt */
-#plus-section #btn-toggle-plus {
-  color: var(--text-soft) !important;
-  opacity: 1 !important;
 }
