@@ -37,21 +37,6 @@ html[data-theme="light"] .app-header {
 }
 
 /* =========================================
-   Fix: Details/Summary Titel-Farbe stabilisieren
-   - iOS/Safari kann <summary> anders einfärben (Link/Muted)
-   - wir erzwingen hier konsistente Title-Color
-   ========================================= */
-#plus-section summary.sidebar-section-header,
-#daylog-section summary.sidebar-section-header {
-  color: var(--text-strong) !important;
-}
-
-#plus-section-title,
-#daylog-section-title {
-  color: var(--text-strong) !important;
-}
-
-/* =========================================
    Highest-Level UI Fixes (passgenau zu deinem Markup)
    1) Bottom Nav entfernen (Karte/Über)
    2) Menü-Panel (☰) kompakt halten (kein riesiges Fenster)
@@ -82,10 +67,12 @@ body,
   inset: 0;
   z-index: 9999;
 
+  /* Flex-Overlay, Panel oben/zentriert */
   display: flex;
   align-items: flex-start;
   justify-content: center;
 
+  /* Safe Area & angenehmes Atmen */
   padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
@@ -105,8 +92,10 @@ body,
   height: auto !important;
   min-height: 0 !important;
 
+  /* Fix gegen „riesig“ */
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
+
   -webkit-overflow-scrolling: touch;
 }
 
@@ -122,9 +111,44 @@ body,
   margin-top: 12px !important;
 }
 
-/* Optional: wenn einzelne Buttons zu groß werden, auf mobile etwas kompakter */
+/* Wenn components.css das Panel irgendwo mit 100vh/100% versieht, neutralisieren */
+#app-menu .app-menu-panel,
+#app-menu .app-menu-panel * {
+  max-height: unset;
+}
+#app-menu .app-menu-panel {
+  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+}
+
 @media (max-width: 720px) {
   #app-menu .app-menu-panel {
     width: min(560px, 100%);
   }
+}
+
+/* =========================================
+   FIX: Dark Mode – „Family Spots Plus“ Titel-Farbe angleichen
+   (die Plus-Card wirkt sonst „ausgegraut“)
+   ========================================= */
+
+/* Basis: Beide Card-Titel identisch „strong“ */
+#plus-section .sidebar-section-title,
+#daylog-section .sidebar-section-title {
+  color: var(--text-strong) !important;
+}
+
+/* Robust: falls irgendwo opacity/filter auf summary/details hängt */
+#plus-section summary,
+#daylog-section summary {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Dark: explizit nochmal erzwingen */
+:root[data-theme="dark"] #plus-section .sidebar-section-title,
+html[data-theme="dark"] #plus-section .sidebar-section-title,
+body[data-theme="dark"] #plus-section .sidebar-section-title,
+[data-theme="dark"] #plus-section .sidebar-section-title {
+  color: var(--text-strong) !important;
+  opacity: 1 !important;
 }
