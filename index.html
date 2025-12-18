@@ -107,7 +107,7 @@
   />
   <meta name="twitter:image" content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png" />
 
-  <!-- Structured Data: WebApplication (ohne Preisangaben, damit nichts “falsch” markiert wird) -->
+  <!-- Structured Data: WebApplication -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -280,20 +280,20 @@
             </span>
           </button>
 
-          <!-- NEU: Start-Hinweis wieder anzeigen -->
+          <!-- NEU: Start-Hinweis erneut anzeigen -->
           <button id="btn-show-onboarding-hint" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12a9 9 0 1 1-3-6.7"></path>
-                <path d="M21 3v6h-6"></path>
+                <path d="M12 3a7 7 0 0 1 7 7c0 2.4-1.2 4.3-3 5.6-.9.7-1.5 1.6-1.7 2.7H8.7c-.2-1.1-.8-2-1.7-2.7C5.2 14.3 4 12.4 4 10a7 7 0 0 1 8-7z"></path>
+                <path d="M9 21h6"></path>
               </svg>
             </span>
             <span
               class="app-menu-item-label"
               data-i18n-de="Start-Hinweis anzeigen"
               data-i18n-en="Show start hint"
-              data-i18n-da="Vis start-hint"
+              data-i18n-da="Vis starthjælp"
             >
               Start-Hinweis anzeigen
             </span>
@@ -500,7 +500,6 @@
               </span>
             </p>
 
-            <!-- NEU: data-onboarding-close + Persistenz per JS -->
             <button
               type="button"
               class="fsm-onboarding-hint__close"
@@ -721,7 +720,6 @@
             <header class="sidebar-section-header">
               <h2 class="sidebar-section-title" id="spots-title">Spots</h2>
 
-              <!-- NEU: Spots anzeigen/ausblenden -->
               <button
                 id="btn-toggle-spots"
                 class="btn-ghost btn-small"
@@ -749,8 +747,6 @@
                 </span>
               </button>
 
-              <!-- Bestehender Toggle (Nur Karte) bleibt für die JS-Logik/Bridge im DOM,
-                   wird aber nicht mehr als UI-Button genutzt. -->
               <button
                 id="btn-toggle-view"
                 class="btn-ghost btn-small sr-only"
@@ -765,7 +761,7 @@
               </button>
             </header>
 
-            <div id="spot-list" class="spot-list"><!-- Karten via JS --></div>
+            <div id="spot-list" class="spot-list"></div>
           </section>
         </aside>
 
@@ -1467,9 +1463,7 @@
         </article>
       </section>
 
-      <!-- =========================================
-           FILTER-MODAL: ALLE FILTER
-           ========================================= -->
+      <!-- FILTER-MODAL -->
       <div
         id="filter-modal"
         class="filter-modal"
@@ -1537,7 +1531,6 @@
                 euch passt.
               </p>
 
-              <!-- Schnellfilter -->
               <div class="filter-group" id="filter-tags-group">
                 <label
                   class="filter-group-label"
@@ -1565,12 +1558,9 @@
                   role="group"
                   aria-labelledby="filter-tags-label"
                   aria-describedby="filter-tags-helper"
-                >
-                  <!-- Chips werden dynamisch durch JS gerendert -->
-                </div>
+                ></div>
               </div>
 
-              <!-- Kategorie -->
               <div class="filter-group">
                 <label
                   class="filter-group-label"
@@ -1590,7 +1580,6 @@
                 </select>
               </div>
 
-              <!-- Alter -->
               <div class="filter-group">
                 <label
                   class="filter-group-label"
@@ -1619,7 +1608,6 @@
                 </select>
               </div>
 
-              <!-- Nur verifizierte Spots -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-verified-label">
                   <input id="filter-verified" name="verified" type="checkbox" />
@@ -1629,7 +1617,6 @@
                 </label>
               </div>
 
-              <!-- Große Abenteuer -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-big-label">
                   <input id="filter-big-adventures" name="big-adventures" type="checkbox" />
@@ -1639,7 +1626,6 @@
                 </label>
               </div>
 
-              <!-- Nur Favoriten -->
               <div class="filter-group filter-group--checkbox">
                 <label class="checkbox-label" id="filter-favorites-label">
                   <input id="filter-favorites" name="favorites" type="checkbox" />
@@ -1668,7 +1654,6 @@
       </div>
     </main>
 
-    <!-- Bottom Navigation: im UI entfernt (hidden), bleibt aber im DOM für Router/JS -->
     <nav class="bottom-nav" aria-label="Navigation" hidden aria-hidden="true">
       <button class="bottom-nav-item" type="button" data-route="map" aria-pressed="true">
         <span id="bottom-nav-map-label" data-i18n-de="Karte" data-i18n-en="Map" data-i18n-da="Kort">Karte</span>
@@ -1678,11 +1663,9 @@
       </button>
     </nav>
 
-    <!-- Toast -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
 
-  <!-- Landscape-Warnung -->
   <div class="landscape-warning" aria-hidden="true">
     <span aria-hidden="true">
       Bitte Gerät drehen 📱🔄 – im Hochformat fühlt sich Tilla in der Family Spots Map ein bisschen wohler.
@@ -1720,31 +1703,7 @@
     }
   </script>
 
-  <!-- NEU: Menüpunkt "Start-Hinweis anzeigen" -> Onboarding-Hinweis wieder einblenden -->
-  <script type="module">
-    const KEY = "fsm_onboarding_hint_dismissed_v1";
-    const btnShow = document.getElementById("btn-show-onboarding-hint");
-
-    function showHint() {
-      const hint = document.querySelector("[data-onboarding-hint]");
-      if (!hint) return;
-
-      // robust gegen verschiedene Hide-Mechaniken (hidden-Attr, aria-hidden, CSS-Klasse)
-      hint.removeAttribute("hidden");
-      hint.setAttribute("aria-hidden", "false");
-      hint.classList.remove("fsm-onboarding-hint--hidden");
-      hint.style.removeProperty("display");
-    }
-
-    if (btnShow) {
-      btnShow.addEventListener("click", () => {
-        try { localStorage.removeItem(KEY); } catch {}
-        showHint();
-      });
-    }
-  </script>
-
-  <!-- NEU: Onboarding-Hinweis schließen + Zustand merken -->
+  <!-- Onboarding-Hinweis schließen + Zustand merken + öffentliches API für Menü -->
   <script type="module">
     const KEY = "fsm_onboarding_hint_dismissed_v1";
     const hint = document.querySelector("[data-onboarding-hint]");
@@ -1757,18 +1716,39 @@
       try { localStorage.setItem(KEY, "1"); } catch {}
     }
 
+    function showHint() {
+      if (!hint) return;
+      try { localStorage.removeItem(KEY); } catch {}
+      hint.removeAttribute("hidden");
+      hint.setAttribute("aria-hidden", "false");
+      // optional: leicht sichtbar machen, wenn man aus Menü kommt
+      try { hint.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
+    }
+
     // Restore state
     try {
       if (localStorage.getItem(KEY) === "1") dismissHint();
     } catch {}
 
     // Wire close button
-    if (closeBtn) {
-      closeBtn.addEventListener("click", dismissHint);
+    if (closeBtn) closeBtn.addEventListener("click", dismissHint);
+
+    // Expose for menu access
+    window.fsmOnboardingHint = { show: showHint, dismiss: dismissHint, key: KEY };
+  </script>
+
+  <!-- Menüpunkt: Start-Hinweis anzeigen -->
+  <script type="module">
+    const btn = document.getElementById("btn-show-onboarding-hint");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        // Hint wieder sichtbar machen
+        window.fsmOnboardingHint?.show?.();
+      });
     }
   </script>
 
-  <!-- NEU: Spots-Liste anzeigen/ausblenden + Zustand merken -->
+  <!-- Spots-Liste anzeigen/ausblenden + Zustand merken -->
   <script type="module">
     const btn = document.getElementById("btn-toggle-spots");
     const list = document.getElementById("spot-list");
@@ -1797,7 +1777,6 @@
         try { return localStorage.getItem("fsm_spots_expanded"); } catch { return null; }
       })();
 
-      // Default: Spots sichtbar
       setExpanded(saved !== "0");
 
       btn.addEventListener("click", () => {
