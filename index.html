@@ -280,6 +280,25 @@
             </span>
           </button>
 
+          <!-- NEU: Start-Hinweis wieder anzeigen -->
+          <button id="btn-show-onboarding-hint" class="app-menu-item" type="button" data-menu-close="1">
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-3-6.7"></path>
+                <path d="M21 3v6h-6"></path>
+              </svg>
+            </span>
+            <span
+              class="app-menu-item-label"
+              data-i18n-de="Start-Hinweis anzeigen"
+              data-i18n-en="Show start hint"
+              data-i18n-da="Vis start-hint"
+            >
+              Start-Hinweis anzeigen
+            </span>
+          </button>
+
           <!-- Nur Karte -->
           <button id="btn-toggle-view-menu" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
@@ -1698,6 +1717,30 @@
 
     if (menuToggle && sidebarToggle) {
       menuToggle.addEventListener("click", () => sidebarToggle.click());
+    }
+  </script>
+
+  <!-- NEU: Menüpunkt "Start-Hinweis anzeigen" -> Onboarding-Hinweis wieder einblenden -->
+  <script type="module">
+    const KEY = "fsm_onboarding_hint_dismissed_v1";
+    const btnShow = document.getElementById("btn-show-onboarding-hint");
+
+    function showHint() {
+      const hint = document.querySelector("[data-onboarding-hint]");
+      if (!hint) return;
+
+      // robust gegen verschiedene Hide-Mechaniken (hidden-Attr, aria-hidden, CSS-Klasse)
+      hint.removeAttribute("hidden");
+      hint.setAttribute("aria-hidden", "false");
+      hint.classList.remove("fsm-onboarding-hint--hidden");
+      hint.style.removeProperty("display");
+    }
+
+    if (btnShow) {
+      btnShow.addEventListener("click", () => {
+        try { localStorage.removeItem(KEY); } catch {}
+        showHint();
+      });
     }
   </script>
 
