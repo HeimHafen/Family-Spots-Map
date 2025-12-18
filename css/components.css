@@ -1021,6 +1021,25 @@
     content: "";
   }
 
+  /* =========================================================
+     FIX (Dark): "Family Spots Plus" Title Contrast
+     - iOS/Safari summary/title can inherit unexpected muted color
+     - force semantic foregrounds for Plus section header
+     ========================================================= */
+  [data-theme="dark"] #plus-section > summary.sidebar-section-header {
+    color: var(--text-1, rgba(229, 231, 235, 0.92));
+  }
+
+  [data-theme="dark"] #plus-section > summary.sidebar-section-header .sidebar-section-title,
+  [data-theme="dark"] #plus-section-title {
+    color: var(--text-3, #ffffff);
+  }
+
+  /* Optional: keep the "Anzeigen" button readable but slightly softer than the title */
+  [data-theme="dark"] #plus-section > summary.sidebar-section-header .btn-ghost {
+    color: var(--text-2, rgba(203, 213, 225, 0.78));
+  }
+
   .sidebar-section-close {
     --shadow: var(--elevation-xs);
 
@@ -2792,4 +2811,18 @@
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
+}
+
+/* =========================================================
+   HARD SAFETY (UNLAYERED): Dark Mode Plus Title Contrast
+   - wins even if something unlayered overrides summary color
+   ========================================================= */
+[data-theme="dark"] #plus-section > summary.sidebar-section-header {
+  color: var(--text-1, rgba(229, 231, 235, 0.92)) !important;
+}
+[data-theme="dark"] #plus-section-title {
+  color: var(--text-3, #ffffff) !important;
+}
+[data-theme="dark"] #plus-section > summary.sidebar-section-header .btn-ghost {
+  color: var(--text-2, rgba(203, 213, 225, 0.78)) !important;
 }
