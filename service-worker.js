@@ -1,20 +1,15 @@
 // service-worker.js
 
-const CACHE_VERSION = "6";
+const CACHE_VERSION = "5";
 const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
-/**
- * Wichtig:
- * - KEINE Tippfehler/losen Zeichen in ASSETS (sonst installiert SW nicht)
- * - CSS/JS behandeln wir "network-first", damit Updates sofort sichtbar werden
- */
 const ASSETS = [
   "./",
   "index.html",
   OFFLINE_URL,
 
-  // CSS (Aggregator + imports)
+  // CSS (Aggregator + Imports)
   "css/styles.css",
   "css/theme.css",
   "css/base.css",
@@ -35,6 +30,8 @@ const ASSETS = [
   "js/sw-register.js",
   "js/header-tagline.js",
   "js/nav.js",
+
+  // Module-Skripte, die in index.html geladen werden
   "js/onboarding-hint.js",
   "js/ui/details-summary-fix.js",
 
@@ -43,7 +40,6 @@ const ASSETS = [
   "data/spots.json",
   "data/i18n/de.json",
   "data/i18n/en.json",
-  "data/i18n/da.json",
   "data/partners.json",
   "data/partner-codes.json",
 
@@ -51,7 +47,6 @@ const ASSETS = [
   "assets/logo.svg",
   "assets/icons/icon-192.png",
   "assets/icons/icon-512.png",
-  "assets/tilla/tilla-hero.png",
 ];
 
 function isSameOrigin(url) {
@@ -65,22 +60,17 @@ function withTimeout(promise, ms) {
   ]);
 }
 
-// 📦 Install: Pre-cache App Shell (best effort)
+// 📦 Install: Pre-cache App Shell
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
 
-      // "cache: reload" -> um HTTP-Caches zu umgehen, wenn möglich
-      await Promise.allSettled(
-        ASSETS.map((asset) => {
-          const req = new Request(asset, { cache: "reload" });
-          return cache.add(req);
-        })
-      );
+      // addAll bricht beim ersten Fehler ab -> best effort
+      await Promise.allSettled(ASSETS.map((asset) => cache.add(asset)));
 
       // Stelle sicher, dass offline.html wirklich drin ist
-      await cache.add(new Request(OFFLINE_URL, { cache: "reload" })).catch(() => {});
+      await cache.add(OFFLINE_URL).catch(() => {});
     })()
   );
 
@@ -142,35 +132,13 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ✅ CSS/JS: NETWORK FIRST (damit Updates sofort greifen), Cache-Fallback
-  if (url.pathname.endsWith(".css") || url.pathname.endsWith(".js")) {
-    event.respondWith(
-      (async () => {
-        const cache = await caches.open(CACHE_NAME);
-        try {
-          const res = await withTimeout(fetch(request), 3500);
-          if (res && res.ok) {
-            await cache.put(request, res.clone());
-          }
-          return res;
-        } catch {
-          const cached = await caches.match(request);
-          return (
-            cached ||
-            new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } })
-          );
-        }
-      })()
-    );
-    return;
-  }
-
   // 🔄 JSON: network first (mit Fallback)
   if (url.pathname.endsWith(".json")) {
     event.respondWith(
       (async () => {
         try {
           const res = await withTimeout(fetch(request), 3500);
+
           if (res && res.ok) {
             const cache = await caches.open(CACHE_NAME);
             cache.put(request, res.clone());
