@@ -13,6 +13,14 @@
 @import url("./components.css");
 
 /* =========================================
+   Einheitliche Textfarbe für Sidebar-Titel
+   ========================================= */
+.sidebar-section-title {
+  color: var(--text-strong, var(--text-color, #111827)) !important;
+  opacity: 1 !important;
+}
+
+/* =========================================
    Override: Header im Light-Theme wärmer
    ========================================= */
 html[data-theme="light"] .app-header {
@@ -29,8 +37,6 @@ html[data-theme="light"] .app-header {
 
 /* =========================================
    UI Fix: „Nur Karte“ im Spots-Header entfernen
-   - Der Toggle bleibt im DOM (Bridge/JS bleibt intakt),
-     wird aber nicht mehr angezeigt.
    ========================================= */
 #btn-toggle-view {
   display: none !important;
@@ -39,7 +45,7 @@ html[data-theme="light"] .app-header {
 /* =========================================
    Highest-Level UI Fixes
    1) Bottom Nav entfernen (Karte/Über)
-   2) Menü-Panel (☰) kompakt halten (kein riesiges Fenster)
+   2) Menü-Panel (☰) kompakt halten
    ========================================= */
 
 /* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
@@ -52,7 +58,6 @@ html[data-theme="light"] .app-header {
   display: none !important;
 }
 
-/* Falls irgendwo padding für Bottom-Nav reserviert wird */
 body,
 .app,
 .app-main,
@@ -60,59 +65,50 @@ body,
   padding-bottom: 0 !important;
 }
 
-/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet, nicht vollflächig ---------- */
-/* Overlay */
+/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet ---------- */
 #app-menu.app-menu {
   position: fixed;
   inset: 0;
   z-index: 9999;
-
   display: flex;
   align-items: flex-start;
   justify-content: center;
-
   padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
   padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
-/* Backdrop bleibt vollflächig klickbar */
 #app-menu .app-menu-backdrop {
   position: absolute;
   inset: 0;
 }
 
-/* Panel: content-sized + max-height, scrollt nur wenn nötig */
 #app-menu .app-menu-panel {
   position: relative;
   width: min(520px, 100%);
   height: auto !important;
   min-height: 0 !important;
-
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
-
   -webkit-overflow-scrolling: touch;
 }
 
-/* Innenliste soll nicht „strecken“ */
 #app-menu .app-menu-list,
 #app-menu .app-menu-languages {
   height: auto !important;
   min-height: 0 !important;
 }
 
-/* Sprache-Bereich optisch kompakt halten */
 #app-menu .app-menu-languages {
   margin-top: 12px !important;
 }
 
-/* Wenn components.css das Panel irgendwo mit 100vh/100% versieht, neutralisieren */
 #app-menu .app-menu-panel,
 #app-menu .app-menu-panel * {
   max-height: unset;
 }
+
 #app-menu .app-menu-panel {
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
 }
