@@ -37,7 +37,7 @@ html[data-theme="light"] .app-header {
 }
 
 /* =========================================
-   Highest-Level UI Fixes (passgenau zu deinem Markup)
+   Highest-Level UI Fixes
    1) Bottom Nav entfernen (Karte/Über)
    2) Menü-Panel (☰) kompakt halten (kein riesiges Fenster)
    ========================================= */
@@ -67,12 +67,10 @@ body,
   inset: 0;
   z-index: 9999;
 
-  /* Flex-Overlay, Panel oben/zentriert */
   display: flex;
   align-items: flex-start;
   justify-content: center;
 
-  /* Safe Area & angenehmes Atmen */
   padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
@@ -92,7 +90,6 @@ body,
   height: auto !important;
   min-height: 0 !important;
 
-  /* Fix gegen „riesig“ */
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
 
@@ -124,31 +121,4 @@ body,
   #app-menu .app-menu-panel {
     width: min(560px, 100%);
   }
-}
-
-/* =========================================
-   FIX: Dark Mode – „Family Spots Plus“ Titel-Farbe angleichen
-   (die Plus-Card wirkt sonst „ausgegraut“)
-   ========================================= */
-
-/* Basis: Beide Card-Titel identisch „strong“ */
-#plus-section .sidebar-section-title,
-#daylog-section .sidebar-section-title {
-  color: var(--text-strong) !important;
-}
-
-/* Robust: falls irgendwo opacity/filter auf summary/details hängt */
-#plus-section summary,
-#daylog-section summary {
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* Dark: explizit nochmal erzwingen */
-:root[data-theme="dark"] #plus-section .sidebar-section-title,
-html[data-theme="dark"] #plus-section .sidebar-section-title,
-body[data-theme="dark"] #plus-section .sidebar-section-title,
-[data-theme="dark"] #plus-section .sidebar-section-title {
-  color: var(--text-strong) !important;
-  opacity: 1 !important;
 }
