@@ -2785,3 +2785,85 @@
 #btn-toggle-view {
   display: none !important;
 }
+
+/* =========================================================
+   PLUS ↔ MEIN TAG — FARBE ANGLEICHEN (UNLAYERED, HARD OVERRIDE)
+   Ziel: "Family Spots Plus" soll optisch identisch zu "Mein Tag" sein,
+   auch wenn theme.css oder unlayered Defaults dazwischenfunken.
+   ========================================================= */
+
+/* 1) Section-Card selbst: Plus bekommt exakt die gleiche "Section"-Optik
+      wie alle anderen Sidebar-Sections (insb. #daylog-section). */
+#plus-section,
+#plus-section.sidebar-section {
+  background: var(--sidebar-section-bg, var(--card-bg, rgba(255, 255, 255, 0.98))) !important;
+  border: 1px solid var(--sidebar-section-border, rgba(148, 163, 184, 0.16)) !important;
+  box-shadow: var(--sidebar-section-shadow, var(--elevation-sm)) !important;
+  color: var(--text-color, #111827) !important;
+}
+
+[data-theme="dark"] #plus-section,
+[data-theme="dark"] #plus-section.sidebar-section {
+  background: var(--sidebar-section-bg, var(--card-bg, rgba(15, 23, 42, 0.98))) !important;
+  border-color: var(--sidebar-section-border, rgba(255, 255, 255, 0.08)) !important;
+  box-shadow: var(--sidebar-section-shadow, var(--elevation-md)) !important;
+  color: var(--text-color, #e5e7eb) !important;
+}
+
+/* 2) Title-Farbe wie "Mein Tag" (falls Plus-Titel z.B. als Link gestylt wird) */
+#plus-section-title,
+#plus-title,
+#plus-section .sidebar-section-title,
+#plus-section summary.sidebar-section-header .sidebar-section-title {
+  color: var(--text-strong, #111827) !important;
+}
+
+[data-theme="dark"] #plus-section-title,
+[data-theme="dark"] #plus-title,
+[data-theme="dark"] #plus-section .sidebar-section-title,
+[data-theme="dark"] #plus-section summary.sidebar-section-header .sidebar-section-title {
+  color: var(--text-color, #e5e7eb) !important;
+}
+
+/* 3) Header-Action ("Anzeigen"/Toggle) auf exakt den gleichen Chip-Look
+      wie bei #daylog-section – unabhängig davon, ob es <button> oder <a> ist.
+      (Hier liegt in der Praxis fast immer die Farb-Abweichung.) */
+#plus-section :is(#btn-toggle-plus, #btn-toggle-view),
+#plus-section .sidebar-section-header > :is(button, a),
+#plus-section summary.sidebar-section-header > :is(button, a),
+#plus-section .sidebar-section-header > :last-child :is(button, a) {
+  background: rgba(15, 23, 42, 0.06) !important;
+  border: 1px solid rgba(148, 163, 184, 0.34) !important;
+  color: var(--text-strong, #111827) !important;
+  box-shadow: none !important;
+}
+
+#plus-section :is(#btn-toggle-plus, #btn-toggle-view):active,
+#plus-section .sidebar-section-header > :is(button, a):active,
+#plus-section summary.sidebar-section-header > :is(button, a):active,
+#plus-section .sidebar-section-header > :last-child :is(button, a):active {
+  background: rgba(15, 23, 42, 0.10) !important;
+}
+
+[data-theme="dark"] #plus-section :is(#btn-toggle-plus, #btn-toggle-view),
+[data-theme="dark"] #plus-section .sidebar-section-header > :is(button, a),
+[data-theme="dark"] #plus-section summary.sidebar-section-header > :is(button, a),
+[data-theme="dark"] #plus-section .sidebar-section-header > :last-child :is(button, a) {
+  background: rgba(148, 163, 184, 0.10) !important;
+  border-color: rgba(148, 163, 184, 0.26) !important;
+  color: var(--text-color, #e5e7eb) !important;
+}
+
+[data-theme="dark"] #plus-section :is(#btn-toggle-plus, #btn-toggle-view):active,
+[data-theme="dark"] #plus-section .sidebar-section-header > :is(button, a):active,
+[data-theme="dark"] #plus-section summary.sidebar-section-header > :is(button, a):active,
+[data-theme="dark"] #plus-section .sidebar-section-header > :last-child :is(button, a):active {
+  background: rgba(148, 163, 184, 0.14) !important;
+}
+
+/* 4) Kleinigkeit: wenn der Button innen <span> o.Ä. hat, keine Line-Height-Spruenge */
+#plus-section :is(#btn-toggle-plus, #btn-toggle-view) *,
+#plus-section .sidebar-section-header > :is(button, a) *,
+#plus-section summary.sidebar-section-header > :is(button, a) * {
+  line-height: 1 !important;
+}
