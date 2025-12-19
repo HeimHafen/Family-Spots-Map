@@ -2443,54 +2443,54 @@
   }
 
   /* Close button: restore (X) + allow reappear on reload (no persistence) */
-.fsm-onboarding-hint__close,
-.fsm-onboarding-hint-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  .fsm-onboarding-hint__close,
+  .fsm-onboarding-hint-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 
-  width: 34px;
-  height: 34px;
+    width: 34px;
+    height: 34px;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
 
-  background: rgba(255, 255, 255, 0.72);
-  color: rgba(17, 24, 39, 0.78);
+    background: rgba(255, 255, 255, 0.72);
+    color: rgba(17, 24, 39, 0.78);
 
-  font-size: 18px;
-  line-height: 1;
+    font-size: 18px;
+    line-height: 1;
 
-  box-shadow: var(--elevation-xs);
-  cursor: pointer;
+    box-shadow: var(--elevation-xs);
+    cursor: pointer;
 
-  -webkit-tap-highlight-color: transparent;
-}
+    -webkit-tap-highlight-color: transparent;
+  }
 
-.fsm-onboarding-hint__close:active,
-.fsm-onboarding-hint-close:active {
-  transform: translateY(1px);
-  background: rgba(255, 255, 255, 0.88);
-}
+  .fsm-onboarding-hint__close:active,
+  .fsm-onboarding-hint-close:active {
+    transform: translateY(1px);
+    background: rgba(255, 255, 255, 0.88);
+  }
 
-[data-theme="dark"] .fsm-onboarding-hint__close,
-[data-theme="dark"] .fsm-onboarding-hint-close {
-  background: rgba(15, 23, 42, 0.55);
-  border-color: rgba(148, 163, 184, 0.35);
-  color: rgba(229, 231, 235, 0.86);
-  box-shadow: var(--elevation-sm);
-}
+  [data-theme="dark"] .fsm-onboarding-hint__close,
+  [data-theme="dark"] .fsm-onboarding-hint-close {
+    background: rgba(15, 23, 42, 0.55);
+    border-color: rgba(148, 163, 184, 0.35);
+    color: rgba(229, 231, 235, 0.86);
+    box-shadow: var(--elevation-sm);
+  }
 
-[data-theme="dark"] .fsm-onboarding-hint__close:active,
-[data-theme="dark"] .fsm-onboarding-hint-close:active {
-  background: rgba(15, 23, 42, 0.72);
-}
+  [data-theme="dark"] .fsm-onboarding-hint__close:active,
+  [data-theme="dark"] .fsm-onboarding-hint-close:active {
+    background: rgba(15, 23, 42, 0.72);
+  }
 
-.fsm-onboarding-hint--hidden {
+  .fsm-onboarding-hint--hidden {
     display: none;
   }
 
@@ -2831,16 +2831,9 @@
 
 /* =========================================================
    HOTFIXES (unlayered)
-   1) Dark Mode: "Family Spots Plus" title matches "Mein Tag"
-   2) Summary focus outline: use app focus ring (no browser rectangle)
-   3) Normalize "Anzeigen" buttons for Plus/Mein Tag in Safari iOS
+   1) Summary focus outline: use app focus ring (no browser rectangle)
+   2) Normalize "Anzeigen" buttons for Plus/Mein Tag in Safari iOS
    ========================================================= */
-
-[data-theme="dark"] #plus-section-title,
-[data-theme="dark"] #daylog-section-title {
-  color: var(--text-color, #e5e7eb) !important;
-  opacity: 1 !important;
-}
 
 /* Some browsers dim <summary> content in closed <details>; harden it */
 [data-theme="dark"] #plus-section summary.sidebar-section-header,
@@ -2869,4 +2862,17 @@ summary.sidebar-section-header:focus-visible {
   box-shadow: none !important;
   -webkit-appearance: none;
   appearance: none;
+}
+
+/* =========================================================
+   TITLE COLOR UNIFICATION (unlayered)
+   - Plus / Mein Tag / alle Sidebar-Section-Titles immer gleich
+   - robust: fallback, falls --text-strong nicht gesetzt ist
+   ========================================================= */
+
+#plus-section-title,
+#daylog-section-title,
+.sidebar-section-title {
+  color: var(--text-strong, var(--text-color, #111827)) !important;
+  opacity: 1 !important;
 }
