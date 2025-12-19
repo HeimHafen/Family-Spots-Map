@@ -2821,3 +2821,16 @@
     color: #f8fafc !important;
   }
 }
+
+/* =========================================================
+   FIX: "Family Spots Plus" Titel im Dark Mode
+   - erzwingt gleiche Schriftfarbe wie andere Section-Titel
+   ========================================================= */
+[data-theme="dark"] #plus-section-title {
+  color: var(--text-color, #e5e7eb) !important;
+}
+
+/* Optional: falls das Summary selbst die Farbe überschreibt */
+[data-theme="dark"] #plus-section > summary.sidebar-section-header {
+  color: var(--text-color, #e5e7eb) !important;
+}
