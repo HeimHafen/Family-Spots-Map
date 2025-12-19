@@ -152,3 +152,19 @@ body[data-theme="dark"] #plus-section .sidebar-section-title,
   color: var(--text-strong) !important;
   opacity: 1 !important;
 }
+
+/* =========================================
+   FIX: „Anzeigen“-Textfarbe im Plus/Mein Tag Header
+   Ursache: .btn-ghost nutzt standardmäßig var(--text-soft)
+   -> hier gezielt auf „strong“ setzen (nur diese beiden Buttons)
+   ========================================= */
+#plus-section #btn-toggle-plus.btn-ghost,
+#daylog-section #btn-toggle-daylog.btn-ghost {
+  color: var(--text-strong) !important;
+  opacity: 1 !important;
+}
+
+#plus-section #btn-toggle-plus.btn-ghost *,
+#daylog-section #btn-toggle-daylog.btn-ghost * {
+  color: inherit !important;
+}
