@@ -2406,9 +2406,6 @@
     font-size: 14px;
     line-height: 1.5;
     color: var(--text-soft);
-
-    /* IMPORTANT: damit der Close-Button nicht abgeschnitten wird */
-    overflow: visible;
   }
 
   .fsm-onboarding-hint__text {
@@ -2445,50 +2442,9 @@
     margin-bottom: 0;
   }
 
-  /* FIX: Close-Button sichtbar + klickbar (war vorher: display:none !important) */
   .fsm-onboarding-hint__close,
   .fsm-onboarding-hint-close {
-    all: unset;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 20;
-
-    width: 34px;
-    height: 34px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    background: rgba(255, 255, 255, 0.92);
-
-    color: rgba(15, 23, 42, 0.9);
-    font-size: 20px;
-    line-height: 1;
-
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-
-    box-shadow: var(--elevation-xs);
-  }
-
-  .fsm-onboarding-hint__close:active,
-  .fsm-onboarding-hint-close:active {
-    transform: translateY(1px);
-    box-shadow: var(--elevation-xs);
-    filter: brightness(0.98);
-  }
-
-  [data-theme="dark"] .fsm-onboarding-hint__close,
-  [data-theme="dark"] .fsm-onboarding-hint-close {
-    background: rgba(15, 23, 42, 0.70);
-    color: rgba(229, 231, 235, 0.95);
-    border-color: rgba(148, 163, 184, 0.25);
-    box-shadow: var(--elevation-sm);
+    display: none !important;
   }
 
   .fsm-onboarding-hint--hidden {
@@ -2656,13 +2612,6 @@
       transform: translateY(-1px);
       box-shadow: var(--elevation-md);
     }
-
-    /* Onboarding close hover */
-    .fsm-onboarding-hint__close:hover,
-    .fsm-onboarding-hint-close:hover {
-      box-shadow: var(--elevation-sm);
-      filter: brightness(1.02);
-    }
   }
 
   /* Ensure Tilla button active color */
@@ -2785,52 +2734,54 @@
   line-height: 1 !important;
 }
 
-/* HARD SAFETY: Onboarding-Close darf niemals „weggeCSSed“ werden */
-.fsm-onboarding-hint__close,
-.fsm-onboarding-hint-close {
-  display: inline-flex !important;
-  visibility: visible !important;
+/* =========================================================
+   ADDED FIXES (UNLAYERED)
+   1) "Family Spots Plus" Action-Text ("Anzeigen") nicht ausgegraut
+   2) Robustheit: keine opacity/filter-Fallen auf Plus/Daylog summary
+   3) Optional: Bottom-Nav endgültig entfernen + Padding zurückholen
+   4) Optional: "Nur Karte" Toggle ausblenden (wenn vorhanden)
+   ========================================================= */
+
+/* 1) Plus/Daylog: "Anzeigen" immer wie starker Text */
+#plus-section #btn-toggle-plus.btn-ghost,
+#daylog-section #btn-toggle-daylog.btn-ghost,
+#plus-section summary.sidebar-section-header > button.btn-ghost,
+#daylog-section summary.sidebar-section-header > button.btn-ghost {
+  color: var(--text-strong) !important;
   opacity: 1 !important;
-  pointer-events: auto !important;
 }
 
-/* =========================================================
-   FIX (DARK MODE): "Family Spots Plus" Title + Action Contrast
-   - Some styles (UA/details, other sheets) can override h2/button colors
-   - We pin the intended tokens with high specificity + !important
-   ========================================================= */
-:where(html[data-theme="dark"], body[data-theme="dark"], [data-theme="dark"]) #plus-section summary.sidebar-section-header {
-  color: var(--text-3, var(--text-strong, #ffffff)) !important;
+#plus-section #btn-toggle-plus.btn-ghost *,
+#daylog-section #btn-toggle-daylog.btn-ghost *,
+#plus-section summary.sidebar-section-header > button.btn-ghost *,
+#daylog-section summary.sidebar-section-header > button.btn-ghost * {
+  color: inherit !important;
+  opacity: 1 !important;
 }
 
-:where(html[data-theme="dark"], body[data-theme="dark"], [data-theme="dark"])
-  #plus-section summary.sidebar-section-header .sidebar-section-title {
-  color: var(--text-3, var(--text-strong, #ffffff)) !important;
+/* 2) Falls irgendwo opacity/filter auf summary/details hängt */
+#plus-section summary,
+#daylog-section summary {
+  opacity: 1 !important;
+  filter: none !important;
 }
 
-:where(html[data-theme="dark"], body[data-theme="dark"], [data-theme="dark"])
-  #plus-section summary.sidebar-section-header .btn-ghost {
-  color: var(--text-1, var(--text-color, #ffffff)) !important;
+/* 3) Bottom Nav entfernen + Platz zurückholen (wenn du Bottom-Nav nicht mehr nutzt) */
+:root {
+  --bottom-nav-height: 0px;
+  --bottom-nav-safearea: 0px;
 }
 
-/* Optional fallback: wenn Dark nur über OS-Preference kommt (ohne data-theme) */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) #plus-section summary.sidebar-section-header,
-  :root:not([data-theme]) #plus-section summary.sidebar-section-header .sidebar-section-title,
-  :root:not([data-theme]) #plus-section summary.sidebar-section-header .btn-ghost {
-    color: #f8fafc !important;
-  }
+.bottom-nav {
+  display: none !important;
 }
 
-/* =========================================================
-   FIX: "Family Spots Plus" Titel im Dark Mode
-   - erzwingt gleiche Schriftfarbe wie andere Section-Titel
-   ========================================================= */
-[data-theme="dark"] #plus-section-title {
-  color: var(--text-color, #e5e7eb) !important;
+/* App padding-bottom zurückholen (components.css reserviert standardmäßig 96px) */
+.app-main {
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
 }
 
-/* Optional: falls das Summary selbst die Farbe überschreibt */
-[data-theme="dark"] #plus-section > summary.sidebar-section-header {
-  color: var(--text-color, #e5e7eb) !important;
+/* 4) "Nur Karte" im Spots-Header ausblenden (Toggle bleibt im DOM) */
+#btn-toggle-view {
+  display: none !important;
 }
