@@ -1,24 +1,13 @@
-/* styles.css — Aggregator für modulare Styles
-   1:1 Replace File
-*/
-
-/* =========================================================
-   Cascade Layer Order (global)
-   - verhindert, dass unlayered Imports „alles überfahren“
-   - theme.css / components.css nutzen diese Layer-Namen bereits
-   ========================================================= */
-@layer tokens, base, components, utilities, overrides;
+/* styles.css — Aggregator für modulare Styles */
 
 /* 1. Design-Variablen (Light/Dark Theme) */
 @import url("./theme.css");
 
-/* 2. Reset, Body, Typografie, Grundlayout
-   -> bewusst in den base-Layer, damit es nicht unlayered “höher” ist */
-@import url("./base.css") layer(base);
+/* 2. Reset, Body, Typografie, Grundlayout */
+@import url("./base.css");
 
-/* 3. Utilities / Hilfsklassen (.hidden, .sr-only, etc.)
-   -> bewusst in den utilities-Layer */
-@import url("./utilities.css") layer(utilities);
+/* 3. Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
+@import url("./utilities.css");
 
 /* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
 @import url("./components.css");
@@ -33,11 +22,8 @@
 
 /* =========================================
    Override: Header im Light-Theme wärmer
-   (scoped, damit Dark nicht betroffen ist)
    ========================================= */
-html[data-theme="light"] .app-header,
-:root[data-theme="light"] .app-header,
-body[data-theme="light"] .app-header {
+html[data-theme="light"] .app-header {
   background:
     radial-gradient(900px 420px at 18% -10%,
       rgba(243, 162, 58, 0.32) 0%,
@@ -62,7 +48,7 @@ body[data-theme="light"] .app-header {
    2) Menü-Panel (☰) kompakt halten
    ========================================= */
 
-/* ---------- 1) Bottom Nav vollständig entfernen + Safe-Area korrekt behalten ---------- */
+/* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
 :root {
   --bottom-nav-height: 0px;
   --bottom-nav-safearea: 0px;
@@ -72,65 +58,63 @@ body[data-theme="light"] .app-header {
   display: none !important;
 }
 
-/* WICHTIG:
-   Kein globales padding-bottom:0 auf body/.app/.app-main,
-   damit iOS Safe-Area (Home-Indikator) nicht „Content frisst“.
-   (components.css setzt .app-main bereits passend.) */
+body,
+.app,
+.app-main,
+#main-content {
+  padding-bottom: 0 !important;
+}
 
-/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet (nur wenn offen) ---------- */
-body[data-menu-open="1"] #app-menu.app-menu {
+/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet ---------- */
+#app-menu.app-menu {
   position: fixed;
   inset: 0;
   z-index: 9999;
-
   display: flex;
   align-items: flex-start;
   justify-content: center;
-
-  padding-top: max(14px, env(safe-area-inset-top, 0px));
+  padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
-  padding-bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
-body[data-menu-open="1"] #app-menu .app-menu-backdrop {
+#app-menu .app-menu-backdrop {
   position: absolute;
   inset: 0;
 }
 
-body[data-menu-open="1"] #app-menu .app-menu-panel {
+#app-menu .app-menu-panel {
   position: relative;
   width: min(520px, 100%);
-
   height: auto !important;
   min-height: 0 !important;
-
-  max-height: calc(
-    100dvh - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
-  ) !important;
-
+  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
   -webkit-overflow-scrolling: touch;
 }
 
-body[data-menu-open="1"] #app-menu .app-menu-list,
-body[data-menu-open="1"] #app-menu .app-menu-languages {
+#app-menu .app-menu-list,
+#app-menu .app-menu-languages {
   height: auto !important;
   min-height: 0 !important;
 }
 
-body[data-menu-open="1"] #app-menu .app-menu-languages {
+#app-menu .app-menu-languages {
   margin-top: 12px !important;
 }
 
-/* Defensive: kein max-height “durchreichen” */
-body[data-menu-open="1"] #app-menu .app-menu-panel,
-body[data-menu-open="1"] #app-menu .app-menu-panel * {
+#app-menu .app-menu-panel,
+#app-menu .app-menu-panel * {
   max-height: unset;
 }
 
+#app-menu .app-menu-panel {
+  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+}
+
 @media (max-width: 720px) {
-  body[data-menu-open="1"] #app-menu .app-menu-panel {
+  #app-menu .app-menu-panel {
     width: min(560px, 100%);
   }
 }
