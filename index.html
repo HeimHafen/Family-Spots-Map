@@ -16,13 +16,39 @@
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
 
+  <!-- Theme vor dem Rendern setzen (verhindert Flash + falsche Textfarben) -->
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem("fsm_theme"); // ggf. Key anpassen, falls du anders speicherst
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = saved || (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch {}
+    })();
+  </script>
+
   <!-- Critical Background (verhindert weiße Ränder/Flash bevor CSS lädt) -->
   <style>
+    /* Theme-fähige Critical Tokens */
+    html[data-theme="light"] {
+      color-scheme: light;
+      --app-bg: #f7e1d0;
+      --app-fg: #111827; /* schwarz */
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --app-bg: #020617;
+      --app-fg: #ffffff; /* weiß */
+    }
+
     html, body {
       margin: 0;
       min-height: 100%;
-      background: #f7e1d0;
+      background: var(--app-bg, #f7e1d0);
+      color: var(--app-fg, #111827);
     }
+
     /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem */
     .app-menu-item-icon svg {
       display: block;
@@ -53,7 +79,9 @@
       border: 1px solid rgba(148, 163, 184, 0.35);
       background: rgba(255, 255, 255, 0.82);
 
-      color: rgba(15, 23, 42, 0.85);
+      /* statt “grau” -> klare Theme-Farbe */
+      color: var(--app-fg, #111827);
+
       font-size: 20px;
       line-height: 1;
 
@@ -62,7 +90,7 @@
     }
     [data-theme="dark"] .fsm-onboarding-hint__close {
       background: rgba(15, 23, 42, 0.62);
-      color: rgba(229, 231, 235, 0.95);
+      color: var(--app-fg, #ffffff);
       border-color: rgba(148, 163, 184, 0.25);
     }
     .fsm-onboarding-hint__close:active {
