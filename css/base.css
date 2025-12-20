@@ -1,6 +1,8 @@
 /* =========================================
    base.css — Reset, Grundlegende Styles, Globals
-   Corporate Refine
+   Corporate Refine (Token-aligned)
+   - nutzt Theme-Tokens (theme.css) konsistent
+   - Focus: token-basiert (kein harter UA-Outline-Konflikt)
    ========================================= */
 
 /* Reset & Box-Sizing */
@@ -29,13 +31,15 @@ html {
 
 /* Grundlegende Typografie & Body Styling */
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", sans-serif;
+  font-family: var(--font-stack, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif);
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+
+  /* Theme background + semantic text */
   background: var(--app-bg);
-  color: var(--text-color, #452213);
+  color: var(--text-color, #111827);
+
   transition:
     background 0.4s ease,
     color 0.3s ease;
@@ -104,7 +108,7 @@ h1 {
 h2,
 h3,
 h4 {
-  color: var(--text-strong, #2f160b);
+  color: var(--text-strong, var(--text-color, #111827));
 }
 
 h2 {
@@ -157,17 +161,28 @@ img {
    FOKUS & SELECTION
    ========================================= */
 
-/* Globale Fokus-Outline (Element-spezifische Styles
-   aus components.css können diese überschreiben) */
+/* Globaler Fokus:
+   - token-basiert (theme.css: --focus-ring)
+   - stört components.css nicht (die setzt für Interactives box-shadow-Rings)
+   - sorgt trotzdem für sichtbaren Fokus bei „sonstigen“ Elementen */
 :focus-visible {
-  outline: 2px solid rgba(245, 158, 11, 0.9); /* warmes, klares Orange */
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--focus-ring, 0 0 0 2px #ffffff, 0 0 0 4px rgba(245, 158, 11, 0.55));
+}
+
+/* Forced Colors: sichtbarer Fokus im High-Contrast Mode */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
 }
 
 /* Auswahlfarbe passend zum Brand */
 ::selection {
   background: var(--accent-soft, #ffe0b2);
-  color: var(--text-strong, #2f160b);
+  color: var(--text-strong, var(--text-color, #111827));
 }
 
 /* =========================================
