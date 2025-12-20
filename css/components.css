@@ -612,19 +612,13 @@
     position: fixed;
     inset: 0;
     z-index: 1800;
-    display: none;
+
+    /* OPTION A: Sichtbarkeit wird ausschließlich über [hidden] gesteuert */
+    display: block;
   }
 
   .app-menu[hidden] {
     display: none !important;
-  }
-
-  body:not([data-menu-open="1"]) .app-menu {
-    display: none !important;
-  }
-
-  body[data-menu-open="1"] .app-menu {
-    display: block;
   }
 
   .app-menu-backdrop {
