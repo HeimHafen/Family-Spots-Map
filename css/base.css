@@ -1,7 +1,6 @@
 /* =========================================
    base.css — Reset, Grundlegende Styles, Globals
    Corporate Refine
-   1:1 Replace File
    ========================================= */
 
 /* Reset & Box-Sizing */
@@ -26,38 +25,20 @@ html {
   font-size: 100%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-
-  /* Base background should be token-driven and safe if tokens missing */
-  background: var(--page-bg, var(--app-bg, #ffffff));
 }
 
 /* Grundlegende Typografie & Body Styling */
 body {
-  font-family: var(
-    --font-stack,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Text",
-    "Segoe UI",
-    sans-serif
-  );
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-
-  /* Do NOT hard-wire background to --app-bg only; allow fallbacks */
-  background: var(--page-bg, var(--app-bg, #ffffff));
-
-  /* Unified body text color: rely on theme tokens */
-  color: var(--text-color, #111827);
-
+  background: var(--app-bg);
+  color: var(--text-color, #452213);
   transition:
     background 0.4s ease,
     color 0.3s ease;
-
-  /* Verhindert horizontales Scrollen durch kleine Offsets */
-  overflow-x: hidden;
 }
 
 /* Ab mittleren Viewports etwas größere Grundschrift
@@ -111,23 +92,19 @@ h4 {
   margin: 0 0 0.75rem;
   font-weight: 700;
   line-height: 1.25;
-
-  /* Ensure unified heading color unless a container overrides */
-  color: var(--text-strong, var(--text-color, #111827));
 }
 
 /* H1 wird in der Regel per .header-title überschrieben,
    deshalb keine feste Farbe hier – es erbt vom Container */
 h1 {
   font-size: 1.8rem;
-  color: inherit;
 }
 
 /* H2–H4 bekommen die Standard-Headline-Farbe */
 h2,
 h3,
 h4 {
-  color: var(--text-strong, var(--text-color, #111827));
+  color: var(--text-strong, #2f160b);
 }
 
 h2 {
@@ -152,9 +129,6 @@ p:last-child {
 
 small {
   font-size: 0.875em;
-
-  /* Small text should follow unified muted token */
-  color: var(--text-soft, color-mix(in srgb, var(--text-color, #111827) 70%, transparent));
 }
 
 strong {
@@ -184,16 +158,23 @@ img {
    ========================================= */
 
 /* Globale Fokus-Outline (Element-spezifische Styles
-   aus components.css können diese überschreiben)
-   IMPORTANT: prefer token ring if available */
+   aus components.css können diese überschreiben) */
 :focus-visible {
-  outline: 2px solid transparent;
+  outline: 2px solid rgba(245, 158, 11, 0.9); /* warmes, klares Orange */
   outline-offset: 2px;
-  box-shadow: var(--focus-ring, 0 0 0 2px rgba(245, 158, 11, 0.9));
 }
 
 /* Auswahlfarbe passend zum Brand */
 ::selection {
   background: var(--accent-soft, #ffe0b2);
-  color: var(--text-strong, var(--text-color, #111827));
+  color: var(--text-strong, #2f160b);
+}
+
+/* =========================================
+   MISC
+   ========================================= */
+
+/* Verhindert horizontales Scrollen durch kleine Offsets */
+body {
+  overflow-x: hidden;
 }
