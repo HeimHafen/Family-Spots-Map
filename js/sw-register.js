@@ -1,37 +1,71 @@
 // js/sw-register.js
 
-if ("serviceWorker" in navigator) {
+(() => {
+  if (!("serviceWorker" in navigator)) return;
+
+  // Prevent reload loops across controllerchange
+  const RELOAD_GUARD_KEY = "fsm_sw_reloaded";
+
+  function safeReloadOnce() {
+    try {
+      if (sessionStorage.getItem(RELOAD_GUARD_KEY) === "1") return;
+      sessionStorage.setItem(RELOAD_GUARD_KEY, "1");
+    } catch {
+      // If sessionStorage is not available, still attempt a single reload
+    }
+    window.location.reload();
+  }
+
+  function sendSkipWaiting(sw) {
+    try {
+      sw && sw.postMessage && sw.postMessage({ type: "SKIP_WAITING" });
+    } catch {
+      // ignore
+    }
+  }
+
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("service-worker.js");
+      const reg = await navigator.serviceWorker.register("service-worker.js", {
+        // Critical on iOS/Safari: do not use cached SW script when checking updates
+        updateViaCache: "none",
+      });
 
-      // Wenn ein neuer SW installiert/gefunden wird: sofort aktivieren
+      // If there is already a waiting SW (update downloaded previously), activate it now
+      if (reg.waiting) {
+        sendSkipWaiting(reg.waiting);
+      }
+
+      // When a new SW is found, activate ASAP once installed
       reg.addEventListener("updatefound", () => {
         const sw = reg.installing;
         if (!sw) return;
 
         sw.addEventListener("statechange", () => {
-          // "installed" + es gibt schon einen Controller => Update (nicht Erst-Install)
+          // installed + existing controller => it's an update, not first install
           if (sw.state === "installed" && navigator.serviceWorker.controller) {
-            sw.postMessage({ type: "SKIP_WAITING" });
+            sendSkipWaiting(sw);
           }
         });
       });
 
-      // Sobald der neue SW übernimmt: einmal reloaden (damit neue CSS/JS sicher aktiv sind)
-      let reloaded = false;
+      // Once the new SW takes control, reload exactly once to ensure fresh CSS/JS
       navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (reloaded) return;
-        reloaded = true;
-        window.location.reload();
+        safeReloadOnce();
       });
 
-      // Optional: beim Start einmal aktiv nach Updates suchen (hilft besonders auf iOS)
-      if (reg.update) {
+      // Actively check for updates once at startup (helps on iOS)
+      if (typeof reg.update === "function") {
         reg.update().catch(() => {});
       }
+
+      // Periodic update checks (iOS often misses update cycles)
+      // Keep it conservative to avoid battery/network noise.
+      setInterval(() => {
+        reg.update && reg.update().catch(() => {});
+      }, 60 * 60 * 1000); // every 60 minutes
     } catch (err) {
       console.error("Service Worker registration failed", err);
     }
   });
-}
+})();
