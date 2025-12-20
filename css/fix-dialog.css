@@ -1,7 +1,6 @@
 /* ============================================================
-   fix-dialog.css – Final (tokenized + compatible)
+   fix-dialog.css – 10/10 Final
    Dialog-Fixes & Corporate Styling für Web-Apps
-   1:1 Replace File
    ============================================================ */
 
 /* [1] Safari / iOS Fix: geschlossene Dialoge ausblenden */
@@ -33,14 +32,11 @@ dialog {
   overflow: auto;
   overscroll-behavior: contain;
 
-  /* Token-driven surfaces & text */
-  background: var(--card-bg, var(--surface-1, #ffffff));
+  background: var(--card-bg, #ffffff);
   color: var(--text-color, #111827);
-
-  /* Elevation: prefer theme tokens, fall back to component tokens */
   box-shadow:
-    var(--elev-3, var(--elevation-lg, 0 10px 30px rgba(15, 23, 42, 0.25))),
-    0 0 0 1px var(--border-2, rgba(148, 163, 184, 0.35));
+    var(--elevation-lg, 0 10px 30px rgba(15, 23, 42, 0.25)),
+    0 0 0 1px rgba(148, 163, 184, 0.35);
 
   font-family: inherit;
   font-size: 15px;
@@ -63,17 +59,13 @@ dialog {
   }
 }
 
-/* [5] Dark Mode Variante (rein token-basiert) */
-html[data-theme="dark"] dialog,
-:root[data-theme="dark"] dialog,
-body[data-theme="dark"] dialog,
-[data-theme="dark"] dialog {
-  background: var(--card-bg, var(--surface-1, rgba(15, 23, 42, 0.98)));
-  color: var(--text-color, #f9fafb);
-
+/* [5] Dark Mode Variante */
+html[data-theme="dark"] dialog {
+  background: rgba(15, 23, 42, 0.98);
+  color: #f9fafb;
   box-shadow:
-    var(--elev-3, var(--elevation-lg, 0 14px 32px rgba(0, 0, 0, 0.9))),
-    0 0 0 1px var(--border-2, rgba(148, 163, 184, 0.45));
+    0 14px 32px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(148, 163, 184, 0.45);
 }
 
 /* [6] Fokus-Styling: Barrierefrei & CI-freundlich */
@@ -82,11 +74,9 @@ dialog:focus {
 }
 
 dialog:focus-visible {
-  outline: none;
-  box-shadow:
-    var(--focus-ring, 0 0 0 2px rgba(255, 255, 255, 0.85), 0 0 0 4px rgba(245, 158, 11, 0.55)),
-    var(--elev-3, var(--elevation-lg, 0 10px 30px rgba(15, 23, 42, 0.25))),
-    0 0 0 1px var(--border-2, rgba(148, 163, 184, 0.35));
+  outline: 2px solid rgba(245, 158, 11, 0.9);
+  outline-offset: 0;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3);
 }
 
 /* [7] Typografie Defaults */
@@ -96,16 +86,13 @@ dialog h3 {
   margin-top: 0;
   margin-bottom: 0.75rem;
   font-weight: 700;
-  color: var(--text-strong, var(--text-color, #111827));
+  color: var(--text-strong, #2f160b);
 }
 
 html[data-theme="dark"] dialog h1,
 html[data-theme="dark"] dialog h2,
-html[data-theme="dark"] dialog h3,
-[data-theme="dark"] dialog h1,
-[data-theme="dark"] dialog h2,
-[data-theme="dark"] dialog h3 {
-  color: var(--text-strong, var(--text-color, #f9fafb));
+html[data-theme="dark"] dialog h3 {
+  color: #f9fafb;
 }
 
 dialog p {
@@ -130,8 +117,7 @@ dialog::-webkit-scrollbar-thumb {
   border-radius: 999px;
 }
 
-html[data-theme="dark"] dialog::-webkit-scrollbar-thumb,
-[data-theme="dark"] dialog::-webkit-scrollbar-thumb {
+html[data-theme="dark"] dialog::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.8);
 }
 
