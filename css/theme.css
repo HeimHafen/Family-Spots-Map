@@ -7,7 +7,7 @@
    - robustes Theme-Targeting: :root/html/body + optional container [data-theme]
    ========================================= */
 
-@layer tokens, base, overrides;
+@layer tokens, base, components, utilities, overrides;
 
 /* =========================================================
    BASE — Theme plumbing (kein “Look”, nur System)
@@ -232,9 +232,7 @@
     /* Semantic Overrides (Dark) */
     --text-3: hsl(32 100% 96%);
     --text-1: hsla(32 100% 96% / 0.92);
-
-    /* ADJUSTED: secondary/muted text a touch stronger for readability (e.g. header action labels) */
-    --text-2: hsla(215 18% 82% / 0.82);
+    --text-2: hsla(215 18% 82% / 0.74);
 
     --surface-0: hsl(228 50% 6%);
     --surface-1: hsla(222 40% 10% / 0.92);
@@ -365,9 +363,7 @@
     :root:not([data-theme]) {
       --text-3: hsl(32 100% 96%);
       --text-1: hsla(32 100% 96% / 0.92);
-
-      /* ADJUSTED: match dark token tweak */
-      --text-2: hsla(215 18% 82% / 0.82);
+      --text-2: hsla(215 18% 82% / 0.74);
 
       --surface-0: hsl(228 50% 6%);
       --surface-1: hsla(222 40% 10% / 0.92);
