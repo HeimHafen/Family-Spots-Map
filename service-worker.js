@@ -9,7 +9,7 @@
  *   damit iOS/PWA sicher ein Update zieht.
  */
 
-const CACHE_VERSION = "14";
+const CACHE_VERSION = "15";
 const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
