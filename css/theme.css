@@ -19,7 +19,8 @@
 
   :root[data-theme="light"],
   html[data-theme="light"],
-  body[data-theme="light"] {
+  body[data-theme="light"],
+  [data-theme="light"] {
     color-scheme: light;
   }
 
@@ -138,6 +139,10 @@
     --text-color: var(--text-1);
     --text-soft: var(--text-2);
     --text-strong: var(--text-3);
+
+    /* Zusatz-Aliase für konsistente Typografie (ohne Breaking Changes) */
+    --text-muted: var(--text-2);      /* empfohlen für “secondary text” */
+    --heading-color: var(--text-3);   /* empfohlen für Überschriften */
 
     --card-bg: var(--surface-1);
     --card-shadow: var(--elev-2);
@@ -348,8 +353,108 @@
    ========================================================= */
 @layer overrides {
   @media (prefers-color-scheme: dark) {
+    /* 1) Native UI (Form Controls etc.) */
     :root:not([data-theme]) {
       color-scheme: dark;
+    }
+
+    /* 2) Token-Fallback: wenn KEIN data-theme gesetzt ist, sollen Tokens zum OS passen
+          (damit Überschriften/Fließtext/Surfaces nicht “Light” bleiben) */
+    :root:not([data-theme]) {
+      --text-3: hsl(32 100% 96%);
+      --text-1: hsla(32 100% 96% / 0.92);
+      --text-2: hsla(215 18% 82% / 0.74);
+
+      --surface-0: hsl(228 50% 6%);
+      --surface-1: hsla(222 40% 10% / 0.92);
+      --surface-2: hsla(222 38% 13% / 0.92);
+      --surface-3: hsla(222 34% 16% / 0.92);
+
+      --border-1: hsla(0 0% 100% / 0.08);
+      --border-2: hsla(0 0% 100% / 0.14);
+
+      --elev-1: 0 8px 22px hsla(0 0% 0% / 0.55);
+      --elev-2: 0 16px 46px hsla(0 0% 0% / 0.62);
+      --elev-3: 0 24px 70px hsla(0 0% 0% / 0.70);
+
+      --focus-inner: rgba(2, 6, 23, 0.92);
+      --focus-outer: hsla(var(--accent-h) 74% 52% / 0.45);
+      --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
+
+      --bg-app:
+        radial-gradient(circle at 35% -10%, hsla(var(--accent-h) 78% 54% / 0.18), transparent 55%),
+        radial-gradient(circle at 90% 20%, hsla(34 80% 66% / 0.07), transparent 50%),
+        linear-gradient(180deg, hsl(228 50% 6%), hsl(229 60% 5%));
+
+      --app-bg: var(--bg-app);
+      --page-bg: var(--app-bg);
+
+      --accent: hsl(var(--accent-h) 72% 52%);
+      --accent-light: hsl(var(--accent-h) 72% 64%);
+      --accent-dark: hsl(var(--accent-h) 72% 42%);
+
+      --accent-solid: hsl(var(--accent-h) 74% 41%);
+      --accent-solid-dark: hsl(var(--accent-h) 76% 34%);
+      --accent-solid-light: hsl(var(--accent-h) 70% 52%);
+      --on-accent-solid: #ffffff;
+
+      --accent-soft: hsla(var(--accent-h) 72% 50% / 0.18);
+      --accent-soft-hover: hsla(var(--accent-h) 72% 50% / 0.24);
+
+      --filter-map: grayscale(0.35) sepia(0.26) brightness(0.78) contrast(1.05) saturate(0.9)
+        hue-rotate(-14deg);
+
+      --map-filter: var(--filter-map);
+
+      /* Kritische Legacy/Component-Overrides, die NICHT rein semantisch abgeleitet sind */
+      --toast-bg: hsla(222 40% 10% / 0.96);
+
+      --header-bg-top: hsl(228 45% 8%);
+      --header-bg-bottom: hsl(228 50% 6%);
+      --header-shadow: var(--elev-3);
+      --header-text-color: var(--on-dark);
+
+      --header-tagline-bg: linear-gradient(
+        135deg,
+        hsla(var(--accent-h) 72% 54% / 0.90),
+        hsla(34 80% 52% / 0.88)
+      );
+      --header-tagline-color: hsl(24 45% 14%);
+      --header-tagline-shadow: var(--elev-2);
+
+      --header-icon-bg: radial-gradient(
+        circle at 30% 20%,
+        hsla(222 40% 14% / 0.95) 0%,
+        hsla(228 50% 6% / 0.98) 55%,
+        hsla(228 50% 6% / 0.98) 100%
+      );
+      --header-icon-shadow: var(--elev-1);
+      --header-icon-border: var(--border-2);
+
+      --language-pill-bg: var(--surface-3);
+      --language-pill-shadow: var(--elev-1);
+
+      --sidebar-bg: var(--surface-0);
+      --sidebar-section-bg: var(--surface-1);
+      --sidebar-section-shadow: var(--elev-2);
+      --sidebar-section-border: var(--border-1);
+
+      --bottom-nav-backdrop: hsla(222 40% 10% / 0.92);
+      --bottom-nav-item-bg: var(--surface-3);
+      --bottom-nav-item-color: hsla(32 100% 96% / 0.78);
+      --bottom-nav-item-active-bg: var(--accent-solid);
+      --bottom-nav-item-active-color: #ffffff;
+
+      --map-card-bg: var(--surface-0);
+      --map-card-shadow: var(--elev-3);
+      --map-card-border: var(--border-1);
+
+      --radius-circle-stroke: hsla(var(--accent-h) 72% 64% / 0.70);
+      --radius-circle-fill: hsla(var(--accent-h) 72% 64% / 0.14);
+
+      --cta-fg: var(--on-accent-solid);
+      --cta-bg: var(--accent-solid);
+      --cta-bg-hover: var(--accent-solid-dark);
     }
   }
 
