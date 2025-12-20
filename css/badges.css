@@ -1,6 +1,7 @@
 /* ==========================================================================
    badges.css — Labels für Stimmung, Distanz, Plus etc.
    Corporate Refine – abgestimmt auf cremiges Family-Spots-Theme
+   1:1 Replace File
    ========================================================================== */
 
 /* Container für mehrere Badges */
@@ -18,48 +19,55 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  border-radius: var(--radius-pill);
+
+  border-radius: var(--radius-pill, 999px);
   padding: 2px 8px;
+
   font-size: 0.72rem;
   line-height: 1.3;
   white-space: nowrap;
-  background: rgba(145, 93, 54, 0.06);
-  color: #6f4224;
-  border: 1px solid rgba(145, 93, 54, 0.18);
-  font-weight: 500;
+
+  /* UNIFICATION:
+     - keine Hardcodes für Textfarben mehr
+     - neutrales Badge folgt Text-Tokens */
+  background: var(--accent-soft, rgba(145, 93, 54, 0.06));
+  color: var(--text-soft, var(--text-color, #111827));
+  border: 1px solid var(--border-1, rgba(145, 93, 54, 0.18));
+
+  font-weight: 600;
   letter-spacing: 0.02em;
   vertical-align: middle;
+
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.08s ease-out;
+    background-color var(--dur, 160ms) var(--ease-out, ease),
+    color var(--dur, 160ms) var(--ease-out, ease),
+    border-color var(--dur, 160ms) var(--ease-out, ease),
+    box-shadow var(--dur, 160ms) var(--ease-out, ease),
+    transform var(--dur-fast, 120ms) var(--ease-out, ease);
 }
 
-/* Dark Theme – Basis */
+/* Dark Theme – Basis (nutzt Tokens aus theme.css) */
 [data-theme="dark"] .badge {
-  background: rgba(15, 23, 42, 0.9);
-  color: #e5e7eb;
-  border-color: rgba(148, 163, 184, 0.32);
+  background: var(--accent-soft, rgba(15, 23, 42, 0.9));
+  color: var(--text-soft, var(--text-color, #e5e7eb));
+  border-color: var(--border-2, rgba(148, 163, 184, 0.32));
 }
 
 /* Dezentes Hover-Feedback, falls Badges in Buttons/Links genutzt werden */
 .badge:hover {
-  background: rgba(145, 93, 54, 0.12);
-  border-color: rgba(145, 93, 54, 0.28);
+  background: var(--accent-soft-hover, rgba(145, 93, 54, 0.12));
+  border-color: var(--border-2, rgba(145, 93, 54, 0.28));
 }
 
 [data-theme="dark"] .badge:hover {
-  background: rgba(15, 23, 42, 0.95);
-  border-color: rgba(148, 163, 184, 0.45);
+  background: var(--accent-soft-hover, rgba(15, 23, 42, 0.95));
+  border-color: var(--border-2, rgba(148, 163, 184, 0.45));
 }
 
 /* Wenn Badge selbst fokussierbar ist (z. B. als Button/Link) */
 .badge:focus-visible {
-  outline: 2px solid rgba(245, 158, 11, 0.9);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 1px #ffffff;
+  outline: none;
+  box-shadow: var(--focus-ring, 0 0 0 2px rgba(245, 158, 11, 0.9));
 }
 
 /* -------------------
@@ -68,70 +76,71 @@
 
 /* Soft – neutrale Badges */
 .badge--soft {
-  background: rgba(214, 151, 93, 0.14);
-  color: #6f4224;
-  border-color: rgba(214, 151, 93, 0.6);
+  background: var(--accent-soft, rgba(214, 151, 93, 0.14));
+  color: var(--text-soft, var(--text-color, #111827));
+  border-color: var(--border-2, rgba(214, 151, 93, 0.6));
 }
 
 [data-theme="dark"] .badge--soft {
-  background: rgba(31, 41, 55, 0.9);
-  color: #cbd5f5;
-  border-color: rgba(148, 163, 184, 0.5);
+  background: var(--accent-soft, rgba(31, 41, 55, 0.9));
+  color: var(--text-soft, var(--text-color, #cbd5f5));
+  border-color: var(--border-2, rgba(148, 163, 184, 0.5));
 }
 
 /* Outline – nur Rahmen, sehr zurückhaltend */
 .badge--outline {
   background: transparent;
-  border-color: rgba(148, 92, 54, 0.45);
-  color: #6f4224;
+  border-color: var(--border-2, rgba(148, 92, 54, 0.45));
+  color: var(--text-soft, var(--text-color, #111827));
 }
 
 [data-theme="dark"] .badge--outline {
   background: transparent;
-  border-color: rgba(148, 163, 184, 0.6);
-  color: #e5e7eb;
+  border-color: var(--border-2, rgba(148, 163, 184, 0.6));
+  color: var(--text-soft, var(--text-color, #e5e7eb));
 }
 
-/* Match – aktuelle Stimmung passt gut zum Spot */
+/* Match – aktuelle Stimmung passt gut zum Spot
+   (Statusfarben bleiben bewusst semantisch) */
 .badge--match {
-  background: rgba(34, 197, 94, 0.12);
-  color: #166534;
-  border-color: rgba(34, 197, 94, 0.5);
+  background: var(--success-soft, rgba(34, 197, 94, 0.12));
+  color: var(--success, #166534);
+  border-color: color-mix(in srgb, var(--success, #166534) 55%, transparent);
 }
 
 [data-theme="dark"] .badge--match {
-  background: rgba(22, 163, 74, 0.2);
-  color: #bbf7d0;
-  border-color: rgba(34, 197, 94, 0.8);
+  background: var(--success-soft, rgba(22, 163, 74, 0.2));
+  color: color-mix(in srgb, var(--success, #22c55e) 25%, white);
+  border-color: color-mix(in srgb, var(--success, #22c55e) 80%, transparent);
 }
 
-/* Distanz – z. B. „4,3 km“ */
+/* Distanz – z. B. „4,3 km“ (Info) */
 .badge--distance {
-  background: rgba(255, 244, 232, 0.96);
-  color: #1f4fb0;
-  border-color: rgba(59, 130, 246, 0.45);
+  background: var(--info-soft, rgba(255, 244, 232, 0.96));
+  color: var(--info, #1f4fb0);
+  border-color: color-mix(in srgb, var(--info, #1f4fb0) 55%, transparent);
 }
 
 [data-theme="dark"] .badge--distance {
-  background: rgba(37, 99, 235, 0.28);
-  color: #bfdbfe;
-  border-color: rgba(147, 197, 253, 0.7);
+  background: var(--info-soft, rgba(37, 99, 235, 0.28));
+  color: color-mix(in srgb, var(--info, #60a5fa) 25%, white);
+  border-color: color-mix(in srgb, var(--info, #60a5fa) 70%, transparent);
 }
 
-/* Dauer / Aufenthaltszeit */
+/* Dauer / Aufenthaltszeit (Warning) */
 .badge--time {
-  background: rgba(249, 115, 22, 0.12);
-  color: #c2410c;
-  border-color: rgba(249, 115, 22, 0.55);
+  background: var(--warning-soft, rgba(249, 115, 22, 0.12));
+  color: var(--warning, #c2410c);
+  border-color: color-mix(in srgb, var(--warning, #c2410c) 55%, transparent);
 }
 
 [data-theme="dark"] .badge--time {
-  background: rgba(234, 88, 12, 0.22);
-  color: #fed7aa;
-  border-color: rgba(248, 153, 72, 0.85);
+  background: var(--warning-soft, rgba(234, 88, 12, 0.22));
+  color: color-mix(in srgb, var(--warning, #fb923c) 25%, white);
+  border-color: color-mix(in srgb, var(--warning, #fb923c) 80%, transparent);
 }
 
-/* Alters-Match */
+/* Alters-Match (Pink bleibt als Feature-Farbe; Text nicht global) */
 .badge--age {
   background: rgba(236, 72, 153, 0.12);
   color: #9d174d;
@@ -144,33 +153,33 @@
   border-color: rgba(244, 114, 182, 0.8);
 }
 
-/* Plus / Partner / Adventure */
+/* Plus / Partner / Adventure (Warning/Accent) */
 .badge--plus {
-  background: rgba(250, 204, 21, 0.12);
-  color: #92400e;
-  border-color: rgba(250, 204, 21, 0.7);
+  background: var(--warning-soft, rgba(250, 204, 21, 0.12));
+  color: color-mix(in srgb, var(--warning, #92400e) 80%, black);
+  border-color: color-mix(in srgb, var(--warning, #92400e) 65%, transparent);
 }
 
 [data-theme="dark"] .badge--plus {
-  background: rgba(234, 179, 8, 0.26);
+  background: var(--warning-soft, rgba(234, 179, 8, 0.26));
   color: #fef9c3;
   border-color: rgba(250, 250, 170, 0.85);
 }
 
-/* Verifiziert */
+/* Verifiziert (Success) */
 .badge--verified {
-  background: rgba(16, 185, 129, 0.12);
-  color: #047857;
-  border-color: rgba(16, 185, 129, 0.55);
+  background: var(--success-soft, rgba(16, 185, 129, 0.12));
+  color: var(--success, #047857);
+  border-color: color-mix(in srgb, var(--success, #047857) 55%, transparent);
 }
 
 [data-theme="dark"] .badge--verified {
-  background: rgba(5, 150, 105, 0.26);
+  background: var(--success-soft, rgba(5, 150, 105, 0.26));
   color: #d1fae5;
   border-color: rgba(52, 211, 153, 0.85);
 }
 
-/* Big Adventure / Großes Ticket */
+/* Big Adventure / Großes Ticket (Purple bleibt als Feature-Farbe) */
 .badge--big {
   background: rgba(147, 51, 234, 0.12);
   color: #6b21a8;
