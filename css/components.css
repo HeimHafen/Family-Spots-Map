@@ -1,3 +1,4 @@
+
 /* =========================================
    components.css — Layout & Komponenten
    Highest-Level: Robustheit, Konsistenz,
@@ -84,13 +85,6 @@
     --tilla-card-pad-x: 10px;
     --tilla-text-size: 13px;
     --tilla-text-line: 1.45;
-
-    /* -----------------------------------------
-       Text aliasing (prefers theme.css)
-       ----------------------------------------- */
-    --heading-color: var(--text-strong, var(--text-color, #111827));
-    --body-color: var(--text-color, #111827);
-    --muted-color: var(--text-muted, var(--text-soft, rgba(75, 85, 99, 1)));
   }
 
   [data-theme="dark"] {
@@ -102,10 +96,6 @@
     --chip-border-hover: rgba(148, 163, 184, 0.55);
     --chip-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
     --chip-shadow-hover: 0 2px 0 rgba(0, 0, 0, 0.28);
-
-    --heading-color: var(--text-strong, var(--text-color, #f3f4f6));
-    --body-color: var(--text-color, #e5e7eb);
-    --muted-color: var(--text-muted, var(--text-soft, rgba(203, 213, 225, 0.78)));
   }
 }
 
@@ -116,10 +106,6 @@
   :root {
     color-scheme: light;
   }
-
-  :root[data-theme="dark"],
-  html[data-theme="dark"],
-  body[data-theme="dark"],
   [data-theme="dark"] {
     color-scheme: dark;
   }
@@ -129,31 +115,24 @@
     background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-light)));
   }
 
-  /* If tokens are missing, dark gets a safe background */
-  html[data-theme="dark"],
-  :root[data-theme="dark"] html {
-    background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-dark)));
-  }
-
   body {
     margin: 0;
     background: inherit;
     min-height: 100svh;
-
-    /* Global typography color context */
-    color: var(--body-color, var(--text-color, #111827));
-    font-family: var(--font-stack, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
-  }
-
-  /* Global headings color context (low specificity) */
-  :where(h1, h2, h3, h4, h5, h6) {
-    color: var(--heading-color, var(--text-strong, var(--text-color, #111827)));
   }
 
   @supports (height: 100dvh) {
     body {
       min-height: 100dvh;
     }
+  }
+
+  [data-theme="dark"] html {
+    background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-dark)));
+  }
+
+  [data-theme="dark"] body {
+    background: inherit;
   }
 
   /* Universal interactive ergonomics (mobile) */
@@ -612,13 +591,19 @@
     position: fixed;
     inset: 0;
     z-index: 1800;
-
-    /* OPTION A: Sichtbarkeit wird ausschließlich über [hidden] gesteuert */
-    display: block;
+    display: none;
   }
 
   .app-menu[hidden] {
     display: none !important;
+  }
+
+  body:not([data-menu-open="1"]) .app-menu {
+    display: none !important;
+  }
+
+  body[data-menu-open="1"] .app-menu {
+    display: block;
   }
 
   .app-menu-backdrop {
@@ -865,7 +850,6 @@
     padding: 12px 14px 14px;
     box-shadow: var(--sidebar-section-shadow);
     border: 1px solid var(--sidebar-section-border);
-    color: inherit;
   }
 
   /* OPTIMIZED: Compact the three marked header cards (Filter / Plus / Mein Tag) and Spots */
@@ -944,7 +928,7 @@
     margin: 0;
     font-size: 18px;
     font-weight: 700;
-    color: var(--heading-color, var(--text-strong, var(--text-color, #111827)));
+    color: var(--text-strong);
 
     flex: 1 1 auto;
     min-width: 0;
@@ -1030,7 +1014,6 @@
   summary.sidebar-section-header {
     list-style: none;
     cursor: pointer;
-    color: inherit;
   }
   summary.sidebar-section-header::-webkit-details-marker {
     display: none;
@@ -1112,21 +1095,21 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--heading-color, var(--text-strong));
+    color: var(--text-strong);
     margin-bottom: 4px;
   }
 
   .filter-group-helper {
     margin: 0 0 6px;
     font-size: 13px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .filter-group-helper--compact {
     margin-top: 4px;
     margin-bottom: 6px;
     font-size: 13px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   #btn-toggle-filters {
@@ -1150,7 +1133,7 @@
   .filter-summary {
     margin: 0;
     font-size: 12px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .input,
@@ -1313,13 +1296,13 @@
   .radius-max-label {
     font-size: 13px;
     font-weight: 650;
-    color: var(--heading-color, var(--text-strong));
+    color: var(--text-strong);
   }
 
   .radius-description {
     margin: 4px 0 2px;
     font-size: 13px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   /* Advanced filters */
@@ -1404,7 +1387,7 @@
   .plus-note {
     margin: 0;
     font-size: 13px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   /* Daylog spacing */
@@ -1525,8 +1508,15 @@
     font-size: 0.78rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--muted-color, var(--text-soft));
-    opacity: 1;
+    opacity: 0.85;
+  }
+
+  [data-theme="light"] .daylog-entry-date {
+    color: rgba(15, 23, 42, 0.6);
+  }
+
+  [data-theme="dark"] .daylog-entry-date {
+    color: rgba(203, 213, 225, 0.78);
   }
 
   .daylog-entry-text {
@@ -1591,13 +1581,13 @@
     margin: 0 0 4px;
     font-size: 15px;
     font-weight: 700;
-    color: var(--heading-color, var(--text-strong));
+    color: var(--text-strong);
   }
 
   .empty-state-text {
     margin: 0 0 8px;
     font-size: 13px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .empty-state-actions {
@@ -1639,18 +1629,17 @@
     font-weight: 700;
     margin: 0 0 3px;
     letter-spacing: 0.01em;
-    color: var(--heading-color, var(--text-strong));
   }
 
   .spot-card-subtitle {
     font-size: 13px;
     margin: 0 0 4px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .spot-card-meta {
     font-size: 12px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .spot-list-empty {
@@ -1659,7 +1648,7 @@
     background: var(--card-bg, #ffffff);
     font-size: 14px;
     line-height: 1.5;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
     box-shadow: var(--elevation-xs);
     border: var(--border-soft);
   }
@@ -1673,7 +1662,7 @@
     margin: 4px 0 6px;
     font-size: 13px;
     line-height: 1.4;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .spot-card-badges {
@@ -1689,7 +1678,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .spot-card-fav-icon {
@@ -1718,7 +1707,7 @@
 
   [data-theme="dark"] .spot-details {
     background: var(--surface-2, rgba(15, 23, 42, 0.98));
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-color, #fef3e7);
     box-shadow: var(--elevation-lg);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
@@ -1735,7 +1724,6 @@
     margin: 0 0 2px;
     font-size: 16px;
     font-weight: 700;
-    color: var(--heading-color, var(--text-strong));
   }
 
   .spot-details-meta {
@@ -1743,7 +1731,7 @@
     flex-wrap: wrap;
     gap: 6px;
     font-size: 12px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .spot-details-meta span {
@@ -1781,13 +1769,13 @@
     margin: 0 0 6px;
     font-size: 14px;
     font-style: italic;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .spot-details-address {
     margin: 0 0 6px;
     font-size: 13px;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .spot-details-routes {
@@ -1965,7 +1953,6 @@
   #filter-modal-title {
     margin: 0;
     font-size: 20px;
-    color: var(--heading-color, var(--text-strong));
   }
 
   #filter-modal-close {
@@ -2419,7 +2406,7 @@
     border: var(--border-soft);
     font-size: 14px;
     line-height: 1.5;
-    color: var(--muted-color, var(--text-soft));
+    color: var(--text-soft);
   }
 
   .fsm-onboarding-hint__text {
@@ -2437,7 +2424,7 @@
     margin: 0 0 4px;
     font-size: 15px;
     font-weight: 700;
-    color: var(--heading-color, var(--text-strong));
+    color: var(--text-strong);
   }
 
   .fsm-onboarding-hint__list {
@@ -2456,52 +2443,9 @@
     margin-bottom: 0;
   }
 
-  /* Close button: restore (X) + allow reappear on reload (no persistence) */
   .fsm-onboarding-hint__close,
   .fsm-onboarding-hint-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-
-    width: 34px;
-    height: 34px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.28);
-
-    background: rgba(255, 255, 255, 0.72);
-    color: rgba(17, 24, 39, 0.78);
-
-    font-size: 18px;
-    line-height: 1;
-
-    box-shadow: var(--elevation-xs);
-    cursor: pointer;
-
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .fsm-onboarding-hint__close:active,
-  .fsm-onboarding-hint-close:active {
-    transform: translateY(1px);
-    background: rgba(255, 255, 255, 0.88);
-  }
-
-  [data-theme="dark"] .fsm-onboarding-hint__close,
-  [data-theme="dark"] .fsm-onboarding-hint-close {
-    background: rgba(15, 23, 42, 0.55);
-    border-color: rgba(148, 163, 184, 0.35);
-    color: rgba(229, 231, 235, 0.86);
-    box-shadow: var(--elevation-sm);
-  }
-
-  [data-theme="dark"] .fsm-onboarding-hint__close:active,
-  [data-theme="dark"] .fsm-onboarding-hint-close:active {
-    background: rgba(15, 23, 42, 0.72);
+    display: none !important;
   }
 
   .fsm-onboarding-hint--hidden {
@@ -2789,111 +2733,4 @@
 #plus-section summary.sidebar-section-header > button *,
 #daylog-section summary.sidebar-section-header > button * {
   line-height: 1 !important;
-}
-
-/* =========================================================
-   ADDED FIXES (UNLAYERED)
-   1) "Family Spots Plus" Action-Text ("Anzeigen") nicht ausgegraut
-   2) Robustheit: keine opacity/filter-Fallen auf Plus/Daylog summary
-   3) Optional: Bottom-Nav endgültig entfernen + Padding zurückholen
-   4) Optional: "Nur Karte" Toggle ausblenden (wenn vorhanden)
-   ========================================================= */
-
-/* 1) Plus/Daylog: "Anzeigen" immer wie starker Text */
-#plus-section #btn-toggle-plus.btn-ghost,
-#daylog-section #btn-toggle-daylog.btn-ghost,
-#plus-section summary.sidebar-section-header > button.btn-ghost,
-#daylog-section summary.sidebar-section-header > button.btn-ghost {
-  color: var(--heading-color, var(--text-strong, var(--text-color, #111827))) !important;
-  opacity: 1 !important;
-}
-
-#plus-section #btn-toggle-plus.btn-ghost *,
-#daylog-section #btn-toggle-daylog.btn-ghost *,
-#plus-section summary.sidebar-section-header > button.btn-ghost *,
-#daylog-section summary.sidebar-section-header > button.btn-ghost * {
-  color: inherit !important;
-  opacity: 1 !important;
-}
-
-/* 2) Falls irgendwo opacity/filter auf summary/details hängt */
-#plus-section summary,
-#daylog-section summary {
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* 3) Bottom Nav entfernen + Platz zurückholen (wenn du Bottom-Nav nicht mehr nutzt) */
-:root {
-  --bottom-nav-height: 0px;
-  --bottom-nav-safearea: 0px;
-}
-
-.bottom-nav {
-  display: none !important;
-}
-
-/* App padding-bottom zurückholen (components.css reserviert standardmäßig 96px) */
-.app-main {
-  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
-}
-
-/* 4) "Nur Karte" im Spots-Header ausblenden (Toggle bleibt im DOM) */
-#btn-toggle-view {
-  display: none !important;
-}
-
-/* =========================================================
-   HOTFIXES (unlayered)
-   1) Summary focus outline: use app focus ring (no browser rectangle)
-   2) Normalize "Anzeigen" buttons for Plus/Mein Tag in Safari iOS
-   ========================================================= */
-
-/* Some browsers dim <summary> content in closed <details>; harden it */
-[data-theme="dark"] #plus-section summary.sidebar-section-header,
-[data-theme="dark"] #daylog-section summary.sidebar-section-header {
-  color: inherit !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* Focus: replace UA outline with app ring */
-summary.sidebar-section-header:focus,
-summary.sidebar-section-header:focus-visible {
-  outline: none !important;
-}
-
-summary.sidebar-section-header:focus-visible {
-  border-radius: 18px;
-  box-shadow: var(--focus-ring, var(--focus-ring-default)) !important;
-}
-
-/* iOS/Safari: ensure "Anzeigen" never becomes a filled native button */
-#btn-toggle-plus,
-#btn-toggle-daylog {
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  box-shadow: none !important;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-/* =========================================================
-   TITLE COLOR UNIFICATION (unlayered)
-   - Plus / Mein Tag / alle Sidebar-Section-Titles immer gleich
-   - robust: fallback je Theme
-   ========================================================= */
-
-#plus-section-title,
-#daylog-section-title,
-.sidebar-section-title {
-  color: var(--text-strong, var(--text-color, #111827)) !important;
-  opacity: 1 !important;
-}
-
-[data-theme="dark"] #plus-section-title,
-[data-theme="dark"] #daylog-section-title,
-[data-theme="dark"] .sidebar-section-title {
-  color: var(--text-strong, var(--text-color, #f3f4f6)) !important;
-  opacity: 1 !important;
 }
