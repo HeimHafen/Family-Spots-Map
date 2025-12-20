@@ -1,15 +1,6 @@
 // service-worker.js
 
-/**
- * Fix: CSS/JS-Updates kommen "sofort" an (network-first),
- * während Offline weiterhin funktioniert (Fallback auf Cache).
- *
- * WICHTIG:
- * - CACHE_VERSION bei Deploys hochzählen (mindestens wenn CSS/JS geändert wurden),
- *   damit iOS/PWA sicher ein Update zieht.
- */
-
-const CACHE_VERSION = "15";
+const CACHE_VERSION = "16"; // <— IMPORTANT: bump on any release
 const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
@@ -69,38 +60,45 @@ function withTimeout(promise, ms) {
   ]);
 }
 
-/**
- * Fetch helper: erzwingt Netz-Request ohne HTTP-Cache,
- * damit Updates (gerade CSS) nicht "kleben".
- */
-function fetchNoStore(request) {
-  return fetch(request, { cache: "no-store" });
+function isJSON(url) {
+  return url.pathname.endsWith(".json");
 }
 
-/**
- * Install: Pre-cache App Shell (mit cache: "reload" um HTTP-Caches zu umgehen)
- */
+function isStaticAsset(url) {
+  return (
+    url.pathname.endsWith(".css") ||
+    url.pathname.endsWith(".js") ||
+    url.pathname.endsWith(".png") ||
+    url.pathname.endsWith(".jpg") ||
+    url.pathname.endsWith(".jpeg") ||
+    url.pathname.endsWith(".webp") ||
+    url.pathname.endsWith(".svg") ||
+    url.pathname.endsWith(".ico") ||
+    url.pathname.endsWith(".woff") ||
+    url.pathname.endsWith(".woff2") ||
+    url.pathname.endsWith(".ttf") ||
+    url.pathname.endsWith(".otf")
+  );
+}
+
+// 📦 Install: Pre-cache App Shell
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
 
-      // Best effort: nicht beim ersten Fehler abbrechen
-      await Promise.allSettled(
-        ASSETS.map((asset) => cache.add(new Request(asset, { cache: "reload" })))
-      );
+      // addAll bricht beim ersten Fehler ab -> best effort
+      await Promise.allSettled(ASSETS.map((asset) => cache.add(asset)));
 
       // Stelle sicher, dass offline.html wirklich drin ist
-      await cache.add(new Request(OFFLINE_URL, { cache: "reload" })).catch(() => {});
+      await cache.add(OFFLINE_URL).catch(() => {});
     })()
   );
 
   self.skipWaiting();
 });
 
-/**
- * Activate: alte Caches löschen + navigation preload
- */
+// 🔄 Activate: Clean up old caches + enable navigation preload
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
@@ -123,9 +121,7 @@ self.addEventListener("message", (event) => {
   }
 });
 
-/**
- * Fetch handler
- */
+// 🌐 Fetch handler
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
@@ -143,7 +139,7 @@ self.addEventListener("fetch", (event) => {
           const preload = await event.preloadResponse;
           if (preload) return preload;
 
-          // Für HTML bewusst normal fetch (no-store kann hier Side-Effects haben)
+          // Always try network for HTML
           const res = await fetch(request);
           return res;
         } catch {
@@ -158,51 +154,27 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  /**
-   * 🔥 WICHTIGER FIX:
-   * CSS & JS (und auch "document"-ähnliche Module) online network-first,
-   * damit Änderungen sofort sichtbar werden.
-   */
-  const isCSS = request.destination === "style" || url.pathname.endsWith(".css");
-  const isJS = request.destination === "script" || url.pathname.endsWith(".js");
-
-  if (isCSS || isJS) {
+  // 🔄 JSON: network first (mit Fallback) — force fresh to avoid 304 traps
+  if (isJSON(url)) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(CACHE_NAME);
-
         try {
-          const res = await withTimeout(fetchNoStore(request), 4500);
-          if (res && res.ok) {
+          const res = await withTimeout(fetch(request, { cache: "no-store" }), 3500);
+
+          if (res && res.status === 200) {
             await cache.put(request, res.clone());
           }
-          return res;
-        } catch {
-          const cached = await caches.match(request);
-          return (
-            cached ||
-            new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } })
-          );
-        }
-      })()
-    );
-    return;
-  }
 
-  // 🔄 JSON: network first (mit Fallback) + no-store gegen klebenden HTTP-Cache
-  if (url.pathname.endsWith(".json")) {
-    event.respondWith(
-      (async () => {
-        try {
-          const res = await withTimeout(fetchNoStore(request), 3500);
-
-          if (res && res.ok) {
-            const cache = await caches.open(CACHE_NAME);
-            await cache.put(request, res.clone());
+          // If server ever returns 304 here, fall back to cache
+          if (res && res.status === 304) {
+            const cached = await cache.match(request);
+            if (cached) return cached;
           }
+
           return res;
         } catch {
-          const cached = await caches.match(request);
+          const cached = await cache.match(request);
           return (
             cached ||
             new Response("Offline / JSON not cached", {
@@ -216,16 +188,52 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 📁 Andere Assets: stale-while-revalidate (ok für Images, Icons, etc.)
+  // 📁 Static assets (CSS/JS/Images/Fonts): cache-first + background refresh (no-store)
+  if (isStaticAsset(url)) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(CACHE_NAME);
+        const cached = await cache.match(request);
+
+        const updatePromise = (async () => {
+          try {
+            const res = await fetch(request, { cache: "no-store" });
+            if (res && res.status === 200) {
+              await cache.put(request, res.clone());
+            }
+          } catch {
+            // ignore
+          }
+        })();
+
+        event.waitUntil(updatePromise);
+
+        if (cached) return cached;
+
+        try {
+          const res = await fetch(request, { cache: "no-store" });
+          if (res && res.status === 200) {
+            await cache.put(request, res.clone());
+          }
+          return res;
+        } catch {
+          return new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } });
+        }
+      })()
+    );
+    return;
+  }
+
+  // 📁 Andere Requests: stale-while-revalidate (best effort)
   event.respondWith(
     (async () => {
-      const cached = await caches.match(request);
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(request);
 
       const updatePromise = (async () => {
         try {
-          const res = await fetchNoStore(request);
-          if (res && res.ok) {
-            const cache = await caches.open(CACHE_NAME);
+          const res = await fetch(request, { cache: "no-store" });
+          if (res && res.status === 200) {
             await cache.put(request, res.clone());
           }
         } catch {
@@ -238,9 +246,8 @@ self.addEventListener("fetch", (event) => {
       if (cached) return cached;
 
       try {
-        const res = await fetchNoStore(request);
-        if (res && res.ok) {
-          const cache = await caches.open(CACHE_NAME);
+        const res = await fetch(request, { cache: "no-store" });
+        if (res && res.status === 200) {
           await cache.put(request, res.clone());
         }
         return res;
