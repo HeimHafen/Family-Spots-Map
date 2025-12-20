@@ -84,6 +84,13 @@
     --tilla-card-pad-x: 10px;
     --tilla-text-size: 13px;
     --tilla-text-line: 1.45;
+
+    /* -----------------------------------------
+       Text aliasing (prefers theme.css)
+       ----------------------------------------- */
+    --heading-color: var(--text-strong, var(--text-color, #111827));
+    --body-color: var(--text-color, #111827);
+    --muted-color: var(--text-muted, var(--text-soft, rgba(75, 85, 99, 1)));
   }
 
   [data-theme="dark"] {
@@ -95,6 +102,10 @@
     --chip-border-hover: rgba(148, 163, 184, 0.55);
     --chip-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
     --chip-shadow-hover: 0 2px 0 rgba(0, 0, 0, 0.28);
+
+    --heading-color: var(--text-strong, var(--text-color, #f3f4f6));
+    --body-color: var(--text-color, #e5e7eb);
+    --muted-color: var(--text-muted, var(--text-soft, rgba(203, 213, 225, 0.78)));
   }
 }
 
@@ -105,6 +116,10 @@
   :root {
     color-scheme: light;
   }
+
+  :root[data-theme="dark"],
+  html[data-theme="dark"],
+  body[data-theme="dark"],
   [data-theme="dark"] {
     color-scheme: dark;
   }
@@ -114,24 +129,31 @@
     background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-light)));
   }
 
+  /* If tokens are missing, dark gets a safe background */
+  html[data-theme="dark"],
+  :root[data-theme="dark"] html {
+    background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-dark)));
+  }
+
   body {
     margin: 0;
     background: inherit;
     min-height: 100svh;
+
+    /* Global typography color context */
+    color: var(--body-color, var(--text-color, #111827));
+    font-family: var(--font-stack, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  }
+
+  /* Global headings color context (low specificity) */
+  :where(h1, h2, h3, h4, h5, h6) {
+    color: var(--heading-color, var(--text-strong, var(--text-color, #111827)));
   }
 
   @supports (height: 100dvh) {
     body {
       min-height: 100dvh;
     }
-  }
-
-  [data-theme="dark"] html {
-    background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-dark)));
-  }
-
-  [data-theme="dark"] body {
-    background: inherit;
   }
 
   /* Universal interactive ergonomics (mobile) */
@@ -849,6 +871,7 @@
     padding: 12px 14px 14px;
     box-shadow: var(--sidebar-section-shadow);
     border: 1px solid var(--sidebar-section-border);
+    color: inherit;
   }
 
   /* OPTIMIZED: Compact the three marked header cards (Filter / Plus / Mein Tag) and Spots */
@@ -927,7 +950,7 @@
     margin: 0;
     font-size: 18px;
     font-weight: 700;
-    color: var(--text-strong);
+    color: var(--heading-color, var(--text-strong, var(--text-color, #111827)));
 
     flex: 1 1 auto;
     min-width: 0;
@@ -1013,6 +1036,7 @@
   summary.sidebar-section-header {
     list-style: none;
     cursor: pointer;
+    color: inherit;
   }
   summary.sidebar-section-header::-webkit-details-marker {
     display: none;
@@ -1094,21 +1118,21 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--text-strong);
+    color: var(--heading-color, var(--text-strong));
     margin-bottom: 4px;
   }
 
   .filter-group-helper {
     margin: 0 0 6px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .filter-group-helper--compact {
     margin-top: 4px;
     margin-bottom: 6px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   #btn-toggle-filters {
@@ -1132,7 +1156,7 @@
   .filter-summary {
     margin: 0;
     font-size: 12px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .input,
@@ -1295,13 +1319,13 @@
   .radius-max-label {
     font-size: 13px;
     font-weight: 650;
-    color: var(--text-strong);
+    color: var(--heading-color, var(--text-strong));
   }
 
   .radius-description {
     margin: 4px 0 2px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   /* Advanced filters */
@@ -1386,7 +1410,7 @@
   .plus-note {
     margin: 0;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   /* Daylog spacing */
@@ -1507,15 +1531,8 @@
     font-size: 0.78rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    opacity: 0.85;
-  }
-
-  [data-theme="light"] .daylog-entry-date {
-    color: rgba(15, 23, 42, 0.6);
-  }
-
-  [data-theme="dark"] .daylog-entry-date {
-    color: rgba(203, 213, 225, 0.78);
+    color: var(--muted-color, var(--text-soft));
+    opacity: 1;
   }
 
   .daylog-entry-text {
@@ -1580,13 +1597,13 @@
     margin: 0 0 4px;
     font-size: 15px;
     font-weight: 700;
-    color: var(--text-strong);
+    color: var(--heading-color, var(--text-strong));
   }
 
   .empty-state-text {
     margin: 0 0 8px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .empty-state-actions {
@@ -1628,17 +1645,18 @@
     font-weight: 700;
     margin: 0 0 3px;
     letter-spacing: 0.01em;
+    color: var(--heading-color, var(--text-strong));
   }
 
   .spot-card-subtitle {
     font-size: 13px;
     margin: 0 0 4px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .spot-card-meta {
     font-size: 12px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .spot-list-empty {
@@ -1647,7 +1665,7 @@
     background: var(--card-bg, #ffffff);
     font-size: 14px;
     line-height: 1.5;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
     box-shadow: var(--elevation-xs);
     border: var(--border-soft);
   }
@@ -1661,7 +1679,7 @@
     margin: 4px 0 6px;
     font-size: 13px;
     line-height: 1.4;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .spot-card-badges {
@@ -1677,7 +1695,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .spot-card-fav-icon {
@@ -1706,7 +1724,7 @@
 
   [data-theme="dark"] .spot-details {
     background: var(--surface-2, rgba(15, 23, 42, 0.98));
-    color: var(--text-color, #fef3e7);
+    color: var(--text-color, #e5e7eb);
     box-shadow: var(--elevation-lg);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
@@ -1723,6 +1741,7 @@
     margin: 0 0 2px;
     font-size: 16px;
     font-weight: 700;
+    color: var(--heading-color, var(--text-strong));
   }
 
   .spot-details-meta {
@@ -1730,7 +1749,7 @@
     flex-wrap: wrap;
     gap: 6px;
     font-size: 12px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .spot-details-meta span {
@@ -1768,13 +1787,13 @@
     margin: 0 0 6px;
     font-size: 14px;
     font-style: italic;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .spot-details-address {
     margin: 0 0 6px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .spot-details-routes {
@@ -1952,6 +1971,7 @@
   #filter-modal-title {
     margin: 0;
     font-size: 20px;
+    color: var(--heading-color, var(--text-strong));
   }
 
   #filter-modal-close {
@@ -2405,7 +2425,7 @@
     border: var(--border-soft);
     font-size: 14px;
     line-height: 1.5;
-    color: var(--text-soft);
+    color: var(--muted-color, var(--text-soft));
   }
 
   .fsm-onboarding-hint__text {
@@ -2423,7 +2443,7 @@
     margin: 0 0 4px;
     font-size: 15px;
     font-weight: 700;
-    color: var(--text-strong);
+    color: var(--heading-color, var(--text-strong));
   }
 
   .fsm-onboarding-hint__list {
@@ -2790,7 +2810,7 @@
 #daylog-section #btn-toggle-daylog.btn-ghost,
 #plus-section summary.sidebar-section-header > button.btn-ghost,
 #daylog-section summary.sidebar-section-header > button.btn-ghost {
-  color: var(--text-strong) !important;
+  color: var(--heading-color, var(--text-strong, var(--text-color, #111827))) !important;
   opacity: 1 !important;
 }
 
@@ -2867,12 +2887,19 @@ summary.sidebar-section-header:focus-visible {
 /* =========================================================
    TITLE COLOR UNIFICATION (unlayered)
    - Plus / Mein Tag / alle Sidebar-Section-Titles immer gleich
-   - robust: fallback, falls --text-strong nicht gesetzt ist
+   - robust: fallback je Theme
    ========================================================= */
 
 #plus-section-title,
 #daylog-section-title,
 .sidebar-section-title {
   color: var(--text-strong, var(--text-color, #111827)) !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] #plus-section-title,
+[data-theme="dark"] #daylog-section-title,
+[data-theme="dark"] .sidebar-section-title {
+  color: var(--text-strong, var(--text-color, #f3f4f6)) !important;
   opacity: 1 !important;
 }
