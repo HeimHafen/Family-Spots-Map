@@ -1,6 +1,15 @@
 // service-worker.js
 
-const CACHE_VERSION = "13";
+/**
+ * Fix: CSS/JS-Updates kommen "sofort" an (network-first),
+ * während Offline weiterhin funktioniert (Fallback auf Cache).
+ *
+ * WICHTIG:
+ * - CACHE_VERSION bei Deploys hochzählen (mindestens wenn CSS/JS geändert wurden),
+ *   damit iOS/PWA sicher ein Update zieht.
+ */
+
+const CACHE_VERSION = "14";
 const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
@@ -60,24 +69,38 @@ function withTimeout(promise, ms) {
   ]);
 }
 
-// 📦 Install: Pre-cache App Shell
+/**
+ * Fetch helper: erzwingt Netz-Request ohne HTTP-Cache,
+ * damit Updates (gerade CSS) nicht "kleben".
+ */
+function fetchNoStore(request) {
+  return fetch(request, { cache: "no-store" });
+}
+
+/**
+ * Install: Pre-cache App Shell (mit cache: "reload" um HTTP-Caches zu umgehen)
+ */
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
 
-      // addAll bricht beim ersten Fehler ab -> best effort
-      await Promise.allSettled(ASSETS.map((asset) => cache.add(asset)));
+      // Best effort: nicht beim ersten Fehler abbrechen
+      await Promise.allSettled(
+        ASSETS.map((asset) => cache.add(new Request(asset, { cache: "reload" })))
+      );
 
       // Stelle sicher, dass offline.html wirklich drin ist
-      await cache.add(OFFLINE_URL).catch(() => {});
+      await cache.add(new Request(OFFLINE_URL, { cache: "reload" })).catch(() => {});
     })()
   );
 
   self.skipWaiting();
 });
 
-// 🔄 Activate: Clean up old caches + enable navigation preload
+/**
+ * Activate: alte Caches löschen + navigation preload
+ */
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
@@ -100,7 +123,9 @@ self.addEventListener("message", (event) => {
   }
 });
 
-// 🌐 Fetch handler
+/**
+ * Fetch handler
+ */
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
@@ -118,6 +143,7 @@ self.addEventListener("fetch", (event) => {
           const preload = await event.preloadResponse;
           if (preload) return preload;
 
+          // Für HTML bewusst normal fetch (no-store kann hier Side-Effects haben)
           const res = await fetch(request);
           return res;
         } catch {
@@ -132,16 +158,47 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 🔄 JSON: network first (mit Fallback)
+  /**
+   * 🔥 WICHTIGER FIX:
+   * CSS & JS (und auch "document"-ähnliche Module) online network-first,
+   * damit Änderungen sofort sichtbar werden.
+   */
+  const isCSS = request.destination === "style" || url.pathname.endsWith(".css");
+  const isJS = request.destination === "script" || url.pathname.endsWith(".js");
+
+  if (isCSS || isJS) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(CACHE_NAME);
+
+        try {
+          const res = await withTimeout(fetchNoStore(request), 4500);
+          if (res && res.ok) {
+            await cache.put(request, res.clone());
+          }
+          return res;
+        } catch {
+          const cached = await caches.match(request);
+          return (
+            cached ||
+            new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } })
+          );
+        }
+      })()
+    );
+    return;
+  }
+
+  // 🔄 JSON: network first (mit Fallback) + no-store gegen klebenden HTTP-Cache
   if (url.pathname.endsWith(".json")) {
     event.respondWith(
       (async () => {
         try {
-          const res = await withTimeout(fetch(request), 3500);
+          const res = await withTimeout(fetchNoStore(request), 3500);
 
           if (res && res.ok) {
             const cache = await caches.open(CACHE_NAME);
-            cache.put(request, res.clone());
+            await cache.put(request, res.clone());
           }
           return res;
         } catch {
@@ -159,14 +216,14 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 📁 Andere Assets: stale-while-revalidate
+  // 📁 Andere Assets: stale-while-revalidate (ok für Images, Icons, etc.)
   event.respondWith(
     (async () => {
       const cached = await caches.match(request);
 
       const updatePromise = (async () => {
         try {
-          const res = await fetch(request);
+          const res = await fetchNoStore(request);
           if (res && res.ok) {
             const cache = await caches.open(CACHE_NAME);
             await cache.put(request, res.clone());
@@ -181,7 +238,7 @@ self.addEventListener("fetch", (event) => {
       if (cached) return cached;
 
       try {
-        const res = await fetch(request);
+        const res = await fetchNoStore(request);
         if (res && res.ok) {
           const cache = await caches.open(CACHE_NAME);
           await cache.put(request, res.clone());
