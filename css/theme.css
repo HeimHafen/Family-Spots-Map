@@ -5,6 +5,7 @@
    - CTA-Kontrast sauber: --accent-solid + --on-accent-solid
    - Legacy/Component Tokens bleiben kompatibel
    - robustes Theme-Targeting: :root/html/body + optional container [data-theme]
+   - NEW: semantische Text-Rollen (Headings / Body / Muted)
    ========================================= */
 
 @layer tokens, base, overrides;
@@ -64,6 +65,11 @@
     --text-3: hsl(22 60% 12%); /* strongest */
     --text-1: hsl(24 52% 14%); /* default */
     --text-2: hsl(24 26% 28%); /* muted */
+
+    /* NEW: Text roles (use in base.css/components.css for consistency) */
+    --text-heading: var(--text-3); /* Überschriften einheitlich */
+    --text-body: var(--text-1);    /* Fließtext einheitlich */
+    --text-muted: var(--text-2);   /* Sekundärtexte/Hilfetexte */
 
     /* “On-*” tokens: intended as foreground on corresponding backgrounds */
     --on-accent: hsl(24 55% 12%); /* on accent-soft / warm surfaces */
@@ -135,16 +141,17 @@
     /* =========================================================
        Legacy / Component Tokens (compat)
        ========================================================= */
-    --text-color: var(--text-1);
-    --text-soft: var(--text-2);
-    --text-strong: var(--text-3);
+    /* Keep legacy mapping, but drive it from roles for consistency */
+    --text-color: var(--text-body);
+    --text-soft: var(--text-muted);
+    --text-strong: var(--text-heading);
 
     --card-bg: var(--surface-1);
     --card-shadow: var(--elev-2);
     --card-border: var(--border-1);
 
     --chip-bg: var(--surface-3);
-    --chip-color: var(--text-2);
+    --chip-color: var(--text-muted);
     --chip-shadow: var(--elev-1);
     --chip-hover-shadow: 0 12px 30px hsla(26 45% 18% / 0.18);
 
@@ -165,7 +172,7 @@
     --header-bg-top: hsl(38 62% 93%);
     --header-bg-bottom: hsl(36 56% 88%);
     --header-shadow: var(--elev-3);
-    --header-text-color: var(--text-3);
+    --header-text-color: var(--text-heading);
 
     --header-tagline-bg: hsla(34 56% 90% / 0.92);
     --header-tagline-color: hsl(24 44% 18%);
@@ -229,6 +236,11 @@
     --text-1: hsla(32 100% 96% / 0.92);
     --text-2: hsla(215 18% 82% / 0.74);
 
+    /* NEW: Text roles (Dark) */
+    --text-heading: var(--text-3);
+    --text-body: var(--text-1);
+    --text-muted: var(--text-2);
+
     --surface-0: hsl(228 50% 6%);
     --surface-1: hsla(222 40% 10% / 0.92);
     --surface-2: hsla(222 38% 13% / 0.92);
@@ -272,9 +284,9 @@
     --map-filter: var(--filter-map);
 
     /* Legacy / Component Overrides (Dark) */
-    --text-color: var(--text-1);
-    --text-soft: var(--text-2);
-    --text-strong: var(--text-3);
+    --text-color: var(--text-body);
+    --text-soft: var(--text-muted);
+    --text-strong: var(--text-heading);
 
     --card-bg: var(--surface-1);
     --card-shadow: var(--elev-2);
