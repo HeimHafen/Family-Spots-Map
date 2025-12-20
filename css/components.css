@@ -1,4 +1,3 @@
-
 /* =========================================
    components.css — Layout & Komponenten
    Highest-Level: Robustheit, Konsistenz,
@@ -2443,9 +2442,52 @@
     margin-bottom: 0;
   }
 
+  /* Close button: restore (X) + allow reappear on reload (no persistence) */
   .fsm-onboarding-hint__close,
   .fsm-onboarding-hint-close {
-    display: none !important;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+
+    background: rgba(255, 255, 255, 0.72);
+    color: rgba(17, 24, 39, 0.78);
+
+    font-size: 18px;
+    line-height: 1;
+
+    box-shadow: var(--elevation-xs);
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .fsm-onboarding-hint__close:active,
+  .fsm-onboarding-hint-close:active {
+    transform: translateY(1px);
+    background: rgba(255, 255, 255, 0.88);
+  }
+
+  [data-theme="dark"] .fsm-onboarding-hint__close,
+  [data-theme="dark"] .fsm-onboarding-hint-close {
+    background: rgba(15, 23, 42, 0.55);
+    border-color: rgba(148, 163, 184, 0.35);
+    color: rgba(229, 231, 235, 0.86);
+    box-shadow: var(--elevation-sm);
+  }
+
+  [data-theme="dark"] .fsm-onboarding-hint__close:active,
+  [data-theme="dark"] .fsm-onboarding-hint-close:active {
+    background: rgba(15, 23, 42, 0.72);
   }
 
   .fsm-onboarding-hint--hidden {
@@ -2733,4 +2775,104 @@
 #plus-section summary.sidebar-section-header > button *,
 #daylog-section summary.sidebar-section-header > button * {
   line-height: 1 !important;
+}
+
+/* =========================================================
+   ADDED FIXES (UNLAYERED)
+   1) "Family Spots Plus" Action-Text ("Anzeigen") nicht ausgegraut
+   2) Robustheit: keine opacity/filter-Fallen auf Plus/Daylog summary
+   3) Optional: Bottom-Nav endgültig entfernen + Padding zurückholen
+   4) Optional: "Nur Karte" Toggle ausblenden (wenn vorhanden)
+   ========================================================= */
+
+/* 1) Plus/Daylog: "Anzeigen" immer wie starker Text */
+#plus-section #btn-toggle-plus.btn-ghost,
+#daylog-section #btn-toggle-daylog.btn-ghost,
+#plus-section summary.sidebar-section-header > button.btn-ghost,
+#daylog-section summary.sidebar-section-header > button.btn-ghost {
+  color: var(--text-strong) !important;
+  opacity: 1 !important;
+}
+
+#plus-section #btn-toggle-plus.btn-ghost *,
+#daylog-section #btn-toggle-daylog.btn-ghost *,
+#plus-section summary.sidebar-section-header > button.btn-ghost *,
+#daylog-section summary.sidebar-section-header > button.btn-ghost * {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+/* 2) Falls irgendwo opacity/filter auf summary/details hängt */
+#plus-section summary,
+#daylog-section summary {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* 3) Bottom Nav entfernen + Platz zurückholen (wenn du Bottom-Nav nicht mehr nutzt) */
+:root {
+  --bottom-nav-height: 0px;
+  --bottom-nav-safearea: 0px;
+}
+
+.bottom-nav {
+  display: none !important;
+}
+
+/* App padding-bottom zurückholen (components.css reserviert standardmäßig 96px) */
+.app-main {
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* 4) "Nur Karte" im Spots-Header ausblenden (Toggle bleibt im DOM) */
+#btn-toggle-view {
+  display: none !important;
+}
+
+/* =========================================================
+   HOTFIXES (unlayered)
+   1) Summary focus outline: use app focus ring (no browser rectangle)
+   2) Normalize "Anzeigen" buttons for Plus/Mein Tag in Safari iOS
+   ========================================================= */
+
+/* Some browsers dim <summary> content in closed <details>; harden it */
+[data-theme="dark"] #plus-section summary.sidebar-section-header,
+[data-theme="dark"] #daylog-section summary.sidebar-section-header {
+  color: inherit !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Focus: replace UA outline with app ring */
+summary.sidebar-section-header:focus,
+summary.sidebar-section-header:focus-visible {
+  outline: none !important;
+}
+
+summary.sidebar-section-header:focus-visible {
+  border-radius: 18px;
+  box-shadow: var(--focus-ring, var(--focus-ring-default)) !important;
+}
+
+/* iOS/Safari: ensure "Anzeigen" never becomes a filled native button */
+#btn-toggle-plus,
+#btn-toggle-daylog {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* =========================================================
+   TITLE COLOR UNIFICATION (unlayered)
+   - Plus / Mein Tag / alle Sidebar-Section-Titles immer gleich
+   - robust: fallback, falls --text-strong nicht gesetzt ist
+   ========================================================= */
+
+#plus-section-title,
+#daylog-section-title,
+.sidebar-section-title {
+  color: var(--text-strong, var(--text-color, #111827)) !important;
+  opacity: 1 !important;
 }
