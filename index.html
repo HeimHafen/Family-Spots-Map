@@ -16,37 +16,60 @@
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
 
-  <!-- Theme vor dem Rendern setzen (verhindert Flash + falsche Textfarben) -->
+  <!-- ======================================================
+       EARLY THEME INIT (verhindert falsche Farben vor CSS/JS)
+       ====================================================== -->
   <script>
     (function () {
       try {
-        const saved = localStorage.getItem("fsm_theme"); // ggf. Key anpassen, falls du anders speicherst
-        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const theme = saved || (prefersDark ? "dark" : "light");
-        document.documentElement.setAttribute("data-theme", theme);
-      } catch {}
+        var stored =
+          localStorage.getItem("fsm_theme") ||
+          localStorage.getItem("fs_theme") ||
+          localStorage.getItem("theme");
+
+        var theme = null;
+        if (stored === "dark" || stored === "light") {
+          theme = stored;
+        } else if (window.matchMedia) {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+
+        if (theme) document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {
+        // ignore
+      }
     })();
   </script>
 
-  <!-- Critical Background (verhindert weiße Ränder/Flash bevor CSS lädt) -->
+  <!-- ======================================================
+       CRITICAL CSS (Background + Textfarben konsistent)
+       ====================================================== -->
   <style>
-    /* Theme-fähige Critical Tokens */
-    html[data-theme="light"] {
-      color-scheme: light;
-      --app-bg: #f7e1d0;
-      --app-fg: #111827; /* schwarz */
-    }
-    html[data-theme="dark"] {
-      color-scheme: dark;
-      --app-bg: #020617;
-      --app-fg: #ffffff; /* weiß */
-    }
-
     html, body {
       margin: 0;
       min-height: 100%;
-      background: var(--app-bg, #f7e1d0);
-      color: var(--app-fg, #111827);
+      background: #f7e1d0;   /* Light fallback */
+      color: #111827;        /* Light text fallback */
+    }
+
+    html[data-theme="dark"], html[data-theme="dark"] body {
+      background: #020617;   /* Dark fallback */
+      color: #e5e7eb;        /* Dark text fallback */
+    }
+
+    /* Form-Controls sollen Textfarbe sauber erben (sonst iOS/Safari teils „falsch“) */
+    input, textarea, select, button {
+      color: inherit;
+    }
+
+    /* Placeholder: lesbar in Light/Dark */
+    ::placeholder {
+      color: rgba(107, 114, 128, 0.95);
+      opacity: 1;
+    }
+    html[data-theme="dark"] ::placeholder {
+      color: rgba(148, 163, 184, 0.85);
+      opacity: 1;
     }
 
     /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem */
@@ -79,18 +102,16 @@
       border: 1px solid rgba(148, 163, 184, 0.35);
       background: rgba(255, 255, 255, 0.82);
 
-      /* statt “grau” -> klare Theme-Farbe */
-      color: var(--app-fg, #111827);
-
+      color: rgba(15, 23, 42, 0.85);
       font-size: 20px;
       line-height: 1;
 
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-    [data-theme="dark"] .fsm-onboarding-hint__close {
+    html[data-theme="dark"] .fsm-onboarding-hint__close {
       background: rgba(15, 23, 42, 0.62);
-      color: var(--app-fg, #ffffff);
+      color: rgba(229, 231, 235, 0.95);
       border-color: rgba(148, 163, 184, 0.25);
     }
     .fsm-onboarding-hint__close:active {
