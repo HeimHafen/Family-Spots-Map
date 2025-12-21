@@ -1,83 +1,46 @@
 /* styles.css — Aggregator für modulare Styles
-   Build: 2025-12-21-01
-   NOTE: iOS/Safari cached @import sehr aggressiv → Version im Query hochzählen!
-*/
+   ---------------------------------------------------------
+   NOTE (Cache Busting):
+   - GitHub Pages + iOS Safari können CSS/Imports sehr aggressiv cachen.
+   - Deshalb hängen die Imports hier bewusst ein Version-Query an.
+   - Wenn du Änderungen veröffentlichst und “es passiert nichts”:
+     -> erhöhe einfach die Zahl in ?v=... (einmalig) und committe erneut.
+   --------------------------------------------------------- */
 
-/* 1) Design-Variablen (Light/Dark Theme) */
-@import url("./theme.css?v=2025-12-21-01");
+/* 1. Design-Variablen (Light/Dark Theme) */
+@import url("./theme.css?v=20251221");
 
-/* 2) Reset, Body, Typografie, Grundlayout */
-@import url("./base.css?v=2025-12-21-01");
+/* 2. Reset, Body, Typografie, Grundlayout */
+@import url("./base.css?v=20251221");
 
-/* 3) Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
-@import url("./utilities.css?v=2025-12-21-01");
+/* 3. Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
+@import url("./utilities.css?v=20251221");
 
-/* 4) Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
-@import url("./components.css?v=2025-12-21-01");
+/* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
+@import url("./components.css?v=20251221");
+
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
    ========================================================= */
 
-/* =========================================
-   Einheitliche Textfarbe für Sidebar-Titel
-   ========================================= */
+/* Einheitliche Textfarbe für Sidebar-Titel (inkl. <details>/<summary>) */
 .sidebar-section-title {
-  color: var(--text-strong, var(--text-color, #111827)) !important;
+  color: var(--text-heading, var(--text-strong, var(--text-color, #111827))) !important;
   opacity: 1 !important;
 }
 
-/* =========================================
-   iOS FIX: <details>/<summary> wie normale Sidebar-Cards rendern
-   (behebt u.a. "Family Spots Plus" wirkt anders als "Mein Tag")
-   ========================================= */
-details.sidebar-section {
-  /* Card-Look sicherstellen */
-  background: var(--sidebar-section-bg, var(--card-bg)) !important;
-  border: 1px solid var(--sidebar-section-border, var(--card-border)) !important;
-  box-shadow: var(--sidebar-section-shadow, var(--card-shadow)) !important;
-  border-radius: var(--border-radius, 0.5rem) !important;
-  overflow: hidden; /* wichtig: Summary/Body sauber clippen */
-}
-
-/* Summary = Header: Marker entfernen + Layout angleichen */
-details.sidebar-section > summary.sidebar-section-header {
-  list-style: none !important;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Marker in iOS/Safari entfernen */
-details.sidebar-section > summary.sidebar-section-header::-webkit-details-marker {
-  display: none !important;
-}
-details.sidebar-section > summary.sidebar-section-header::marker {
-  content: "" !important;
-}
-
-/* Summary-Header soll optisch identisch zu anderen Headers sein */
-details.sidebar-section > summary.sidebar-section-header {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-
-  /* gleiche Fläche wie andere Section-Header */
-  background: transparent !important;
-}
-
-/* Wenn geöffnet: dezente Trennlinie wie bei "Section Header + Content" */
-details.sidebar-section[open] > summary.sidebar-section-header {
-  border-bottom: 1px solid var(--sidebar-section-border, var(--card-border)) !important;
-}
-
-/* Optional: Button im Summary nicht "komisch" rendern */
-details.sidebar-section > summary.sidebar-section-header button {
-  margin-left: auto;
+/* Helper-/Muted-Texte konsistent (falls Komponenten irgendwo “hart” färben) */
+.filter-group-helper,
+.filter-summary,
+.daylog-last-saved,
+.plus-note {
+  color: var(--text-muted, var(--text-soft, rgba(107, 114, 128, 0.95)));
 }
 
 /* =========================================
    Override: Header im Light-Theme wärmer
+   (nur Light – Dark bleibt aus tokens)
    ========================================= */
 html[data-theme="light"] .app-header {
   background:
@@ -102,6 +65,7 @@ html[data-theme="light"] .app-header {
    Highest-Level UI Fixes
    1) Bottom Nav entfernen (Karte/Über)
    2) Menü-Panel (☰) kompakt halten
+   3) Details/Summary (Plus / Mein Tag) visuell angleichen
    ========================================= */
 
 /* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
@@ -121,56 +85,121 @@ body,
   padding-bottom: 0 !important;
 }
 
-/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet ---------- */
-#app-menu.app-menu {
+/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet ----------
+   WICHTIG: Regeln NUR anwenden, wenn das Menü offen ist.
+   Sonst kann es (je nach Browser) “unsichtbar” über der App liegen. */
+#app-menu.app-menu:not([hidden]) {
   position: fixed;
   inset: 0;
   z-index: 9999;
+
   display: flex;
   align-items: flex-start;
   justify-content: center;
+
   padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
   padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
-#app-menu .app-menu-backdrop {
+#app-menu.app-menu:not([hidden]) .app-menu-backdrop {
   position: absolute;
   inset: 0;
 }
 
-#app-menu .app-menu-panel {
+#app-menu.app-menu:not([hidden]) .app-menu-panel {
   position: relative;
   width: min(520px, 100%);
   height: auto !important;
+
   min-height: 0 !important;
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+
   overflow: auto !important;
   -webkit-overflow-scrolling: touch;
+
+  /* Visuell stabil (falls component-styles abweichen) */
+  border-radius: calc(var(--border-radius, 0.5rem) * 2);
+  background: var(--card-bg, var(--surface-1, rgba(255, 255, 255, 0.9)));
+  border: 1px solid var(--card-border, var(--border-1, rgba(0, 0, 0, 0.08)));
+  box-shadow: var(--card-shadow, var(--elev-2, 0 10px 26px rgba(0, 0, 0, 0.16)));
 }
 
-#app-menu .app-menu-list,
-#app-menu .app-menu-languages {
+#app-menu.app-menu:not([hidden]) .app-menu-list,
+#app-menu.app-menu:not([hidden]) .app-menu-languages {
   height: auto !important;
   min-height: 0 !important;
 }
 
-#app-menu .app-menu-languages {
+#app-menu.app-menu:not([hidden]) .app-menu-languages {
   margin-top: 12px !important;
 }
 
-#app-menu .app-menu-panel,
-#app-menu .app-menu-panel * {
-  max-height: unset;
-}
-
-#app-menu .app-menu-panel {
-  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
-}
-
 @media (max-width: 720px) {
-  #app-menu .app-menu-panel {
+  #app-menu.app-menu:not([hidden]) .app-menu-panel {
     width: min(560px, 100%);
   }
+}
+
+/* ---------- 3) <details class="sidebar-section"> (Plus / Mein Tag) angleichen ----------
+   Problem (aus deinen Screens):
+   - Details-Sections wirken oft “anders” als normale <section>, weil UA-Styles
+     für <summary> greifen und/oder components.css nur <section.sidebar-section> adressiert.
+   Fix:
+   - Container-Styling explizit auch auf <details.sidebar-section> setzen
+   - Summary wie einen Sidebar-Header rendern
+*/
+details.sidebar-section {
+  /* gleiche “Card”-Optik wie andere Sidebar-Sections */
+  background: var(--sidebar-section-bg, var(--card-bg, var(--surface-1)));
+  border: 1px solid var(--sidebar-section-border, var(--card-border, var(--border-1)));
+  box-shadow: var(--sidebar-section-shadow, var(--card-shadow, var(--elev-2)));
+  border-radius: calc(var(--border-radius, 0.5rem) * 2);
+  overflow: hidden; /* verhindert “Kanten” bei Summary */
+}
+
+/* Summary soll keinen Browser-Marker/Default-Spacing haben */
+details.sidebar-section > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+details.sidebar-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Summary-Header-Layout: wie .sidebar-section-header */
+details.sidebar-section > summary.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 14px 16px;
+  margin: 0;
+
+  background: transparent; /* Container steuert Background */
+  border: 0;
+}
+
+/* Der Rest-Inhalt soll “normal” gepolstert sein */
+details.sidebar-section > :not(summary) {
+  padding: 14px 16px;
+}
+
+/* Wenn Details geschlossen ist, soll keine “Doppel-Padding”-Kante entstehen */
+details.sidebar-section:not([open]) > :not(summary) {
+  padding-top: 0;
+}
+
+/* Buttons in <summary> sollen klickbar bleiben (Safari/iOS-Edgecases) */
+details.sidebar-section > summary * {
+  pointer-events: auto;
+}
+
+/* Optional: etwas mehr Abstand unten im Sidebar-Stack (iOS fühlt sich “luftiger” an) */
+.sidebar > .sidebar-section,
+.sidebar > details.sidebar-section {
+  scroll-margin-top: 12px;
 }
