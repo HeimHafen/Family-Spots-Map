@@ -2876,3 +2876,21 @@ summary.sidebar-section-header:focus-visible {
   color: var(--text-strong, var(--text-color, #111827)) !important;
   opacity: 1 !important;
 }
+
+/* =========================================================
+   FINAL FIX (unlayered)
+   - genau die 2 “falschen” Stellen im Dark Mode
+   1) Tilla-Title (#tilla-title) hatte keine Farbzuweisung
+   2) Plus-Header Action/Titel (egal ob a/span/button) immer stark
+   ========================================================= */
+
+[data-theme="dark"] #tilla-title {
+  color: var(--text-strong, var(--text-color)) !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] #plus-section summary.sidebar-section-header,
+[data-theme="dark"] #plus-section summary.sidebar-section-header * {
+  color: var(--text-strong, var(--text-color)) !important;
+  opacity: 1 !important;
+}
