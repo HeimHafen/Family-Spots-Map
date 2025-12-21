@@ -1,11 +1,12 @@
 /* =========================================
    theme.css — Light & Dark Design Tokens
-   Playful Warm v2.3 (Design-System Level)
+   Playful Warm v2.4 (Design-System Level)
    - deterministische Token-Struktur via Cascade Layers
    - CTA-Kontrast sauber: --accent-solid + --on-accent-solid
    - Legacy/Component Tokens bleiben kompatibel
    - robustes Theme-Targeting: :root/html/body + optional container [data-theme]
-   - NEW: semantische Text-Rollen (Headings / Body / Muted)
+   - semantische Text-Rollen (Headings / Body / Muted)
+   - FIX: Dark Mode Headings wirklich weiß (inkl. Legacy-Mapping)
    ========================================= */
 
 @layer tokens, base, overrides;
@@ -13,21 +14,19 @@
 /* =========================================================
    BASE — Theme plumbing (kein “Look”, nur System)
    ========================================================= */
-@layer base {
-  :root {
-    color-scheme: light;
-  }
+@layer base{
+  :root{ color-scheme: light; }
 
   :root[data-theme="light"],
   html[data-theme="light"],
-  body[data-theme="light"] {
+  body[data-theme="light"]{
     color-scheme: light;
   }
 
   :root[data-theme="dark"],
   html[data-theme="dark"],
   body[data-theme="dark"],
-  [data-theme="dark"] {
+  [data-theme="dark"]{
     color-scheme: dark;
   }
 }
@@ -35,26 +34,22 @@
 /* =========================================================
    TOKENS — Default (Light)
    ========================================================= */
-@layer tokens {
-  :root {
+@layer tokens{
+  :root{
     /* ================================
        Brand / Accent System (muted warm)
        ================================ */
-    /* WARMER: leicht Richtung Amber/„Night Shift“ geschoben */
     --accent-h: 30;
 
-    /* Brand accent (für Flächen/Badges/Active-Chips etc.) */
     --accent: hsl(var(--accent-h) 74% 48%);
     --accent-light: hsl(var(--accent-h) 70% 58%);
     --accent-dark: hsl(var(--accent-h) 76% 34%);
 
-    /* Solid accent for CTAs (AA-kontrastfähig zu weißem Text) */
     --accent-solid: hsl(var(--accent-h) 74% 41%);
     --accent-solid-dark: hsl(var(--accent-h) 76% 34%);
     --accent-solid-light: hsl(var(--accent-h) 70% 52%);
     --on-accent-solid: #ffffff;
 
-    /* Accent surfaces (muted) */
     --accent-soft: hsl(var(--accent-h) 56% 92%);
     --accent-soft-hover: hsl(var(--accent-h) 56% 86%);
     --accent-strong: hsl(var(--accent-h) 64% 40%);
@@ -66,39 +61,34 @@
     --text-1: hsl(24 52% 14%); /* default */
     --text-2: hsl(24 26% 28%); /* muted */
 
-    /* NEW: Text roles (use in base.css/components.css for consistency) */
-    --text-heading: var(--text-3); /* Überschriften einheitlich */
-    --text-body: var(--text-1);    /* Fließtext einheitlich */
-    --text-muted: var(--text-2);   /* Sekundärtexte/Hilfetexte */
+    /* Text roles */
+    --text-heading: var(--text-3);
+    --text-body: var(--text-1);
+    --text-muted: var(--text-2);
 
-    /* “On-*” tokens: intended as foreground on corresponding backgrounds */
-    --on-accent: hsl(24 55% 12%); /* on accent-soft / warm surfaces */
+    /* “On-*” tokens */
+    --on-accent: hsl(24 55% 12%);
     --on-dark: hsl(32 100% 95%);
     --on-light: hsl(222 47% 11%);
 
     /* ================================
        Surfaces (Light)
        ================================ */
-    /* WARMER: mehr Creme/Amber in allen Flächen */
     --surface-0: hsl(38 70% 97%);
     --surface-1: hsla(38 70% 92% / 0.98);
     --surface-2: hsla(38 66% 89% / 0.98);
     --surface-3: hsla(37 60% 86% / 0.98);
 
-    /* Borders (leicht wärmer, weniger „kühl-grau“) */
     --border-1: hsla(30 30% 18% / 0.18);
     --border-2: hsla(30 30% 18% / 0.26);
 
-    /* Elevation */
     --elev-1: 0 1px 2px hsla(26 35% 18% / 0.10);
     --elev-2: 0 10px 26px hsla(26 40% 18% / 0.16);
     --elev-3: 0 18px 54px hsla(26 45% 18% / 0.20);
 
-    /* Radii / Motion / Typography */
     --radius-pill: 999px;
     --border-radius: 0.5rem;
 
-    /* Motion tokens (kompatibel zu components.css: --dur*, --ease-out) */
     --transition-fast: 150ms ease;
     --dur-fast: 120ms;
     --dur: 160ms;
@@ -108,29 +98,22 @@
     --font-stack: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
     --font-size-base: 1rem;
 
-    /* Focus ring (consumed by components.css via --focus-ring) */
     --focus-inner: #ffffff;
     --focus-outer: hsla(var(--accent-h) 74% 48% / 0.55);
     --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
 
     /* Backgrounds / Effects */
-    /* WARMER: Hintergrundverlauf wie „Night Shift“ (cremiger, mehr Amber) */
     --bg-app:
       radial-gradient(circle at 18% 0%, hsla(var(--accent-h) 74% 56% / 0.18), transparent 58%),
       radial-gradient(circle at 88% 22%, hsla(42 78% 62% / 0.10), transparent 54%),
       linear-gradient(180deg, hsl(38 70% 97%), hsl(36 52% 88%));
 
-    /* App/page background tokens (components.css nutzt --app-bg/--page-bg) */
     --app-bg: var(--bg-app);
     --page-bg: var(--app-bg);
 
-    /* Filters */
-    /* WARMER: minimal mehr Sepia/Wärme auf der Karte */
     --filter-map: sepia(0.25) saturate(0.95) brightness(1.02) contrast(1.03) hue-rotate(-12deg);
 
-    /* ================================
-       Status / Semantic Badges
-       ================================ */
+    /* Status */
     --success: hsl(146 45% 36%);
     --success-soft: hsla(146 45% 36% / 0.14);
     --info: hsl(210 60% 38%);
@@ -141,7 +124,6 @@
     /* =========================================================
        Legacy / Component Tokens (compat)
        ========================================================= */
-    /* Keep legacy mapping, but drive it from roles for consistency */
     --text-color: var(--text-body);
     --text-soft: var(--text-muted);
     --text-strong: var(--text-heading);
@@ -155,20 +137,15 @@
     --chip-shadow: var(--elev-1);
     --chip-hover-shadow: 0 12px 30px hsla(26 45% 18% / 0.18);
 
-    /* Inputs */
-    /* WARMER: Input-Flächen etwas cremiger */
     --input-bg: hsl(38 58% 90%);
     --input-shadow: 0 5px 12px hsla(26 45% 18% / 0.14);
 
-    /* Legacy button tokens (falls noch genutzt) */
     --button-bg: var(--accent-soft);
     --button-hover-bg: var(--accent-soft-hover);
     --button-text-color: var(--on-accent);
 
     --toast-bg: hsla(var(--accent-h) 50% 22% / 0.96);
 
-    /* Header tokens (Menu-Button-Optik bleibt wie bisher) */
-    /* WARMER: Header-Verlauf etwas amber/creme */
     --header-bg-top: hsl(38 62% 93%);
     --header-bg-bottom: hsl(36 56% 88%);
     --header-shadow: var(--elev-3);
@@ -178,7 +155,6 @@
     --header-tagline-color: hsl(24 44% 18%);
     --header-tagline-shadow: var(--elev-2);
 
-    /* WICHTIG: nicht anfassen, Menu-Button soll so bleiben. */
     --header-icon-bg: radial-gradient(
       circle at 30% 20%,
       hsl(30 80% 90%) 0%,
@@ -191,7 +167,6 @@
     --language-pill-bg: hsla(34 56% 92% / 0.92);
     --language-pill-shadow: var(--elev-1);
 
-    /* WARMER: Sidebar-Grundfläche */
     --sidebar-bg: hsl(38 42% 88%);
     --sidebar-section-bg: var(--surface-1);
     --sidebar-section-shadow: var(--elev-2);
@@ -213,10 +188,8 @@
     --radius-circle-stroke: hsla(var(--accent-h) 74% 48% / 0.60);
     --radius-circle-fill: hsla(var(--accent-h) 74% 48% / 0.13);
 
-    /* components.css expects --map-filter */
     --map-filter: var(--filter-map);
 
-    /* Optional: explicit CTA foreground alias (recommended in components) */
     --cta-fg: var(--on-accent-solid);
     --cta-bg: var(--accent-solid);
     --cta-bg-hover: var(--accent-solid-dark);
@@ -226,21 +199,32 @@
 /* =========================================================
    TOKENS — Dark Overrides
    ========================================================= */
-@layer tokens {
+@layer tokens{
   :root[data-theme="dark"],
   html[data-theme="dark"],
   body[data-theme="dark"],
-  [data-theme="dark"] {
-    /* Semantic Overrides (Dark) */
-    --text-3: hsl(32 100% 96%);
-    --text-1: hsla(32 100% 96% / 0.92);
-    --text-2: hsla(215 18% 82% / 0.74);
+  [data-theme="dark"]{
+    /* =====================================================
+       Text (Dark)
+       FIX: Headings wirklich weiß
+       - headings: #fff (gewünscht)
+       - body: leicht gedimmt (besserer Lesekomfort)
+       - muted: noch stärker gedimmt
+       ===================================================== */
+    --text-3: #ffffff;                 /* strongest = headings */
+    --text-1: hsla(0 0% 100% / 0.92);  /* body */
+    --text-2: hsla(215 18% 82% / 0.74);/* muted */
 
-    /* NEW: Text roles (Dark) */
     --text-heading: var(--text-3);
     --text-body: var(--text-1);
     --text-muted: var(--text-2);
 
+    /* Legacy mappings (wichtig für alte Selektoren) */
+    --text-color: var(--text-body);
+    --text-soft: var(--text-muted);
+    --text-strong: var(--text-heading);
+
+    /* Surfaces */
     --surface-0: hsl(228 50% 6%);
     --surface-1: hsla(222 40% 10% / 0.92);
     --surface-2: hsla(222 38% 13% / 0.92);
@@ -265,7 +249,7 @@
     --app-bg: var(--bg-app);
     --page-bg: var(--app-bg);
 
-    /* Dark accent */
+    /* Accent (Dark) */
     --accent: hsl(var(--accent-h) 72% 52%);
     --accent-light: hsl(var(--accent-h) 72% 64%);
     --accent-dark: hsl(var(--accent-h) 72% 42%);
@@ -284,16 +268,12 @@
     --map-filter: var(--filter-map);
 
     /* Legacy / Component Overrides (Dark) */
-    --text-color: var(--text-body);
-    --text-soft: var(--text-muted);
-    --text-strong: var(--text-heading);
-
     --card-bg: var(--surface-1);
     --card-shadow: var(--elev-2);
     --card-border: var(--border-1);
 
     --chip-bg: var(--surface-3);
-    --chip-color: hsla(32 100% 96% / 0.86);
+    --chip-color: hsla(0 0% 100% / 0.86);
     --chip-shadow: var(--elev-1);
     --chip-hover-shadow: var(--elev-2);
 
@@ -302,7 +282,7 @@
 
     --button-bg: var(--accent-soft);
     --button-hover-bg: var(--accent-soft-hover);
-    --button-text-color: hsl(32 100% 96%);
+    --button-text-color: hsla(0 0% 100% / 0.92);
 
     --toast-bg: hsla(222 40% 10% / 0.96);
 
@@ -338,7 +318,7 @@
 
     --bottom-nav-backdrop: hsla(222 40% 10% / 0.92);
     --bottom-nav-item-bg: var(--surface-3);
-    --bottom-nav-item-color: hsla(32 100% 96% / 0.78);
+    --bottom-nav-item-color: hsla(0 0% 100% / 0.78);
     --bottom-nav-item-active-bg: var(--accent-solid);
     --bottom-nav-item-active-color: #ffffff;
 
@@ -358,22 +338,18 @@
 /* =========================================================
    OS Preference Fallback (only if no manual theme set)
    ========================================================= */
-@layer overrides {
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) {
-      color-scheme: dark;
-    }
+@layer overrides{
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme]){ color-scheme: dark; }
   }
 
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme]) {
-      color-scheme: light;
-    }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme]){ color-scheme: light; }
   }
 
   /* Prefer more contrast: strengthen borders slightly */
-  @media (prefers-contrast: more) {
-    :root {
+  @media (prefers-contrast: more){
+    :root{
       --border-1: hsla(30 30% 18% / 0.26);
       --border-2: hsla(30 30% 18% / 0.34);
     }
@@ -381,16 +357,14 @@
     :root[data-theme="dark"],
     html[data-theme="dark"],
     body[data-theme="dark"],
-    [data-theme="dark"] {
+    [data-theme="dark"]{
       --border-1: hsla(0 0% 100% / 0.12);
       --border-2: hsla(0 0% 100% / 0.20);
     }
   }
 
   /* Forced Colors */
-  @media (forced-colors: active) {
-    :root {
-      --focus-ring: 0 0 0 2px Highlight;
-    }
+  @media (forced-colors: active){
+    :root{ --focus-ring: 0 0 0 2px Highlight; }
   }
 }
