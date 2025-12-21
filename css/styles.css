@@ -1,120 +1,156 @@
 /* styles.css — Aggregator für modulare Styles */
 
-/* 1. Design-Variablen (Light/Dark Theme) */
+/* 1) Design-Variablen (Light/Dark Theme) */
 @import url("./theme.css");
 
-/* 2. Reset, Body, Typografie, Grundlayout */
+/* 2) Reset, Body, Typografie, Grundlayout */
 @import url("./base.css");
 
-/* 3. Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
+/* 3) Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
 @import url("./utilities.css");
 
-/* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
+/* 4) Komponenten, Layout, Map, Sidebar, Toast, Onboarding etc. */
 @import url("./components.css");
 
-/* =========================================
-   Einheitliche Textfarbe für Sidebar-Titel
-   ========================================= */
-.sidebar-section-title {
-  color: var(--text-strong, var(--text-color, #111827)) !important;
+
+/* =========================================================
+   GLOBAL OVERRIDES (unlayered)
+   - bewusst NACH den Imports: gewinnt gegen Komponenten
+   ========================================================= */
+
+/* -----------------------------------------
+   Sidebar: Titel + Header-Actions konsistent
+   - Ziel: Überschriften im Dark Mode weiß
+   - iOS/Safari: -webkit-text-fill-color absichern
+   ----------------------------------------- */
+
+/* Default: Titel nutzt semantischen Strong/Heading Token */
+.sidebar-section-title{
+  color: var(--text-strong, var(--text-color, #111827));
+  opacity: 1;
+}
+
+/* Dark: alle Sidebar-Section-Titles (h2.sidebar-section-title) immer weiß */
+html[data-theme="dark"] .sidebar-section-title{
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important; /* iOS/Safari */
   opacity: 1 !important;
 }
 
-/* =========================================
-   Override: Header im Light-Theme wärmer
-   ========================================= */
-html[data-theme="light"] .app-header {
+/* Dark: Header-Actions rechts ("Ausblenden/Anzeigen") ebenfalls weiß */
+html[data-theme="dark"] .sidebar-section-header > :last-child :where(button, a, span){
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important; /* iOS/Safari */
+  opacity: 1 !important;
+}
+
+
+/* -----------------------------------------
+   Light-Theme: Header wärmer
+   ----------------------------------------- */
+html[data-theme="light"] .app-header{
   background:
-    radial-gradient(900px 420px at 18% -10%,
+    radial-gradient(
+      900px 420px at 18% -10%,
       rgba(243, 162, 58, 0.32) 0%,
-      rgba(243, 162, 58, 0.00) 60%),
-    linear-gradient(180deg,
+      rgba(243, 162, 58, 0.00) 60%
+    ),
+    linear-gradient(
+      180deg,
       #FFF7EE 0%,
       #FFE7D1 55%,
-      #F6C79D 100%);
+      #F6C79D 100%
+    );
   border-bottom: 1px solid rgba(243, 162, 58, 0.18);
 }
 
-/* =========================================
+
+/* -----------------------------------------
    UI Fix: „Nur Karte“ im Spots-Header entfernen
-   ========================================= */
-#btn-toggle-view {
+   ----------------------------------------- */
+#btn-toggle-view{
   display: none !important;
 }
 
-/* =========================================
+
+/* -----------------------------------------
    Highest-Level UI Fixes
    1) Bottom Nav entfernen (Karte/Über)
    2) Menü-Panel (☰) kompakt halten
-   ========================================= */
+   ----------------------------------------- */
 
-/* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
-:root {
+/* 1) Bottom Nav vollständig entfernen + Platz zurückholen */
+:root{
   --bottom-nav-height: 0px;
   --bottom-nav-safearea: 0px;
 }
 
-.bottom-nav {
+.bottom-nav{
   display: none !important;
 }
 
+/* components.css reserviert unten Platz; hier konsequent zurückholen */
 body,
 .app,
 .app-main,
-#main-content {
+#main-content{
   padding-bottom: 0 !important;
 }
 
-/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet ---------- */
-#app-menu.app-menu {
+
+/* 2) App-Menü (☰) als sauberes Action-Sheet */
+#app-menu.app-menu{
   position: fixed;
   inset: 0;
   z-index: 9999;
   display: flex;
   align-items: flex-start;
   justify-content: center;
+
   padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
   padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
-#app-menu .app-menu-backdrop {
+#app-menu .app-menu-backdrop{
   position: absolute;
   inset: 0;
 }
 
-#app-menu .app-menu-panel {
+#app-menu .app-menu-panel{
   position: relative;
   width: min(520px, 100%);
+
   height: auto !important;
   min-height: 0 !important;
+
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
   overflow: auto !important;
   -webkit-overflow-scrolling: touch;
 }
 
 #app-menu .app-menu-list,
-#app-menu .app-menu-languages {
+#app-menu .app-menu-languages{
   height: auto !important;
   min-height: 0 !important;
 }
 
-#app-menu .app-menu-languages {
+#app-menu .app-menu-languages{
   margin-top: 12px !important;
 }
 
 #app-menu .app-menu-panel,
-#app-menu .app-menu-panel * {
+#app-menu .app-menu-panel *{
   max-height: unset;
 }
 
-#app-menu .app-menu-panel {
+#app-menu .app-menu-panel{
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
 }
 
-@media (max-width: 720px) {
-  #app-menu .app-menu-panel {
+@media (max-width: 720px){
+  #app-menu .app-menu-panel{
     width: min(560px, 100%);
   }
 }
