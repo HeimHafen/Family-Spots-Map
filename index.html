@@ -77,14 +77,14 @@
       display: block;
     }
 
-    /* Tilla-Titel kompakter (wie "Filter") */
+    /* NEU: Tilla-Titel kompakter (wie "Filter") */
     .tilla-sidebar-section .sidebar-section-title {
       font-size: 1rem !important;
       line-height: 1.25 !important;
       margin: 0 !important;
     }
 
-    /* Onboarding-Hinweis Close-Button zuverlässig sichtbar + sauber positioniert */
+    /* NEU: Onboarding-Hinweis Close-Button zuverlässig sichtbar + sauber positioniert */
     .fsm-onboarding-hint { position: relative; }
     .fsm-onboarding-hint__close {
       display: inline-flex !important;
@@ -117,14 +117,6 @@
     .fsm-onboarding-hint__close:active {
       transform: translateY(1px);
       opacity: 0.92;
-    }
-
-    /* Optional: "Pseudo-Button" im Summary (nicht interaktiv, nur optisch) */
-    .summary-badge {
-      margin-left: auto;
-      opacity: 0.9;
-      pointer-events: none;
-      user-select: none;
     }
   </style>
 
@@ -559,202 +551,197 @@
                 Filter
               </h2>
 
-              <!-- FIX: aria-controls zeigt nun auf den echten Inhalt, nicht auf sich selbst -->
               <button
                 id="btn-toggle-filters"
                 class="btn-ghost btn-small"
                 type="button"
-                aria-controls="filter-basic"
+                aria-controls="filter-section"
                 aria-expanded="false"
               >
-                <span data-state="show"
-                      data-i18n-de="Filter anzeigen"
-                      data-i18n-en="Show filters"
-                      data-i18n-da="Vis filtre">Filter anzeigen</span>
-                <span data-state="hide" class="hidden"
-                      data-i18n-de="Filter ausblenden"
-                      data-i18n-en="Hide filters"
-                      data-i18n-da="Skjul filtre">Filter ausblenden</span>
+                <span
+                  data-i18n-de="Filter anzeigen"
+                  data-i18n-en="Show filters"
+                  data-i18n-da="Vis filtre"
+                >
+                  Filter anzeigen
+                </span>
               </button>
             </header>
 
-            <!-- FIX: eigener Container, der tatsächlich ein-/ausgeblendet wird -->
-            <div id="filter-basic" hidden>
+            <p
+              class="filter-group-helper filter-group-helper--compact"
+              data-i18n-de="Suche, Stimmung &amp; Radius – alles, was ihr für den Start braucht. Weitere Filter öffnen sich bei Bedarf."
+              data-i18n-en="Search, mood &amp; radius – everything you need to get started. Open all filters only when needed."
+              data-i18n-da="Søgning, stemning &amp; radius – alt det vigtigste til at starte med. Åbn alle filtre efter behov."
+            >
+              Suche, Stimmung &amp; Radius – alles, was ihr für den Start braucht. Weitere Filter öffnen sich bei
+              Bedarf.
+            </p>
+
+            <!-- Suche -->
+            <div class="filter-group">
+              <label
+                class="filter-group-label"
+                for="filter-search"
+                id="filter-search-label"
+                data-i18n-de="Suche"
+                data-i18n-en="Search"
+                data-i18n-da="Søg"
+              >
+                Suche
+              </label>
+              <input
+                id="filter-search"
+                name="search"
+                class="input"
+                type="search"
+                placeholder="Ort, Spot, Stichwort …"
+                autocomplete="off"
+                data-i18n-de="Ort, Spot, Stichwort …"
+                data-i18n-en="Place, spot, keywords …"
+                data-i18n-da="Sted, spot, søgeord …"
+              />
+            </div>
+
+            <!-- Stimmung -->
+            <div class="filter-group">
+              <label
+                class="filter-group-label"
+                id="filter-mood-label"
+                data-i18n-de="Stimmung"
+                data-i18n-en="Mood"
+                data-i18n-da="Stemning"
+              >
+                Stimmung
+              </label>
+
               <p
                 class="filter-group-helper filter-group-helper--compact"
-                data-i18n-de="Suche, Stimmung &amp; Radius – alles, was ihr für den Start braucht. Weitere Filter öffnen sich bei Bedarf."
-                data-i18n-en="Search, mood &amp; radius – everything you need to get started. Open all filters only when needed."
-                data-i18n-da="Søgning, stemning &amp; radius – alt det vigtigste til at starte med. Åbn alle filtre efter behov."
+                id="filter-mood-helper"
+                data-i18n-de="Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?"
+                data-i18n-en="Calm, movement, water or a day with animals?"
+                data-i18n-da="Ro, bevægelse, vand eller en dag med dyr?"
               >
-                Suche, Stimmung &amp; Radius – alles, was ihr für den Start braucht. Weitere Filter öffnen sich bei
-                Bedarf.
+                Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?
               </p>
 
-              <!-- Suche -->
-              <div class="filter-group">
-                <label
-                  class="filter-group-label"
-                  for="filter-search"
-                  id="filter-search-label"
-                  data-i18n-de="Suche"
-                  data-i18n-en="Search"
-                  data-i18n-da="Søg"
-                >
-                  Suche
-                </label>
-                <input
-                  id="filter-search"
-                  name="search"
-                  class="input"
-                  type="search"
-                  placeholder="Ort, Spot, Stichwort …"
-                  autocomplete="off"
-                  data-i18n-de="Ort, Spot, Stichwort …"
-                  data-i18n-en="Place, spot, keywords …"
-                  data-i18n-da="Sted, spot, søgeord …"
-                />
-              </div>
-
-              <!-- Stimmung -->
-              <div class="filter-group">
-                <label
-                  class="filter-group-label"
-                  id="filter-mood-label"
-                  data-i18n-de="Stimmung"
-                  data-i18n-en="Mood"
-                  data-i18n-da="Stemning"
-                >
-                  Stimmung
-                </label>
-
-                <p
-                  class="filter-group-helper filter-group-helper--compact"
-                  id="filter-mood-helper"
-                  data-i18n-de="Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?"
-                  data-i18n-en="Calm, movement, water or a day with animals?"
-                  data-i18n-da="Ro, bevægelse, vand eller en dag med dyr?"
-                >
-                  Ruhe, Bewegung, Wasser oder ein Tag mit Tieren?
-                </p>
-
-                <div
-                  class="mood-row"
-                  role="group"
-                  aria-labelledby="filter-mood-label"
-                  aria-describedby="filter-mood-helper"
-                >
-                  <button type="button" class="mood-chip" data-mood="relaxed" aria-pressed="false">
-                    <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
-                    <span class="mood-chip-label" id="mood-relaxed-label"
-                      data-i18n-de="Entspannt" data-i18n-en="Relaxed" data-i18n-da="Afslappet"
-                    >
-                      Entspannt
-                    </span>
-                  </button>
-
-                  <button type="button" class="mood-chip" data-mood="action" aria-pressed="false">
-                    <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
-                    <span class="mood-chip-label" id="mood-action-label"
-                      data-i18n-de="Bewegung" data-i18n-en="Active" data-i18n-da="Aktiv"
-                    >
-                      Bewegung
-                    </span>
-                  </button>
-
-                  <button type="button" class="mood-chip" data-mood="water" aria-pressed="false">
-                    <span class="mood-chip-emoji" aria-hidden="true">💧</span>
-                    <span class="mood-chip-label" id="mood-water-label"
-                      data-i18n-de="Wasser &amp; Sand" data-i18n-en="Water &amp; sand" data-i18n-da="Vand &amp; sand"
-                    >
-                      Wasser &amp; Sand
-                    </span>
-                  </button>
-
-                  <button type="button" class="mood-chip" data-mood="animals" aria-pressed="false">
-                    <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
-                    <span class="mood-chip-label" id="mood-animals-label"
-                      data-i18n-de="Tier-Tag" data-i18n-en="Animal day" data-i18n-da="Dyredag"
-                    >
-                      Tier-Tag
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Micro-Abenteuer-Radius -->
-              <div class="filter-group">
-                <label
-                  class="filter-group-label"
-                  for="filter-radius"
-                  id="filter-radius-label"
-                  data-i18n-de="Micro-Abenteuer-Radius"
-                  data-i18n-en="Micro-adventure radius"
-                  data-i18n-da="Mikroeventyr-radius"
-                >
-                  Micro-Abenteuer-Radius
-                </label>
-
-                <p
-                  class="filter-group-helper filter-group-helper--compact"
-                  id="filter-radius-helper"
-                  data-i18n-de="Wie weit darf euer Abenteuer heute gehen?"
-                  data-i18n-en="How far may your adventure go today?"
-                  data-i18n-da="Hvor langt må jeres eventyr række i dag?"
-                >
-                  Wie weit darf euer Abenteuer heute gehen?
-                </p>
-
-                <div class="radius-row">
-                  <input
-                    id="filter-radius"
-                    name="radius"
-                    type="range"
-                    min="0"
-                    max="4"
-                    step="1"
-                    value="4"
-                    aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description"
-                  />
-                  <span
-                    id="filter-radius-max-label"
-                    class="radius-max-label"
-                    data-i18n-de="Alle Spots"
-                    data-i18n-en="All spots"
-                    data-i18n-da="Alle spots"
+              <div
+                class="mood-row"
+                role="group"
+                aria-labelledby="filter-mood-label"
+                aria-describedby="filter-mood-helper"
+              >
+                <button type="button" class="mood-chip" data-mood="relaxed" aria-pressed="false">
+                  <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
+                  <span class="mood-chip-label" id="mood-relaxed-label"
+                    data-i18n-de="Entspannt" data-i18n-en="Relaxed" data-i18n-da="Afslappet"
                   >
-                    Alle Spots
-                  </span>
-                </div>
-
-                <p
-                  id="filter-radius-description"
-                  class="radius-description"
-                  data-i18n-de="Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
-                  data-i18n-en="All spots – no radius limit. The map is all yours."
-                  data-i18n-da="Alle spots – ingen radiusbegrænsning. Kortet er helt jeres."
-                >
-                  Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
-                </p>
-              </div>
-
-              <!-- Zusammenfassung & Button "Alle Filter öffnen" -->
-              <div class="filter-footer">
-                <button id="btn-open-filter-modal" class="btn btn-small" type="button">
-                  <span data-i18n-de="Alle Filter öffnen" data-i18n-en="Open all filters" data-i18n-da="Åbn alle filtre">
-                    Alle Filter öffnen
+                    Entspannt
                   </span>
                 </button>
 
-                <p
-                  id="filter-summary"
-                  class="filter-summary"
-                  data-i18n-de="Aktive Filter: Basisfilter"
-                  data-i18n-en="Active filters: basic filters"
-                  data-i18n-da="Aktive filtre: basisfiltre"
-                >
-                  Aktive Filter: Basisfilter
-                </p>
+                <button type="button" class="mood-chip" data-mood="action" aria-pressed="false">
+                  <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
+                  <span class="mood-chip-label" id="mood-action-label"
+                    data-i18n-de="Bewegung" data-i18n-en="Active" data-i18n-da="Aktiv"
+                  >
+                    Bewegung
+                  </span>
+                </button>
+
+                <button type="button" class="mood-chip" data-mood="water" aria-pressed="false">
+                  <span class="mood-chip-emoji" aria-hidden="true">💧</span>
+                  <span class="mood-chip-label" id="mood-water-label"
+                    data-i18n-de="Wasser &amp; Sand" data-i18n-en="Water &amp; sand" data-i18n-da="Vand &amp; sand"
+                  >
+                    Wasser &amp; Sand
+                  </span>
+                </button>
+
+                <button type="button" class="mood-chip" data-mood="animals" aria-pressed="false">
+                  <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
+                  <span class="mood-chip-label" id="mood-animals-label"
+                    data-i18n-de="Tier-Tag" data-i18n-en="Animal day" data-i18n-da="Dyredag"
+                  >
+                    Tier-Tag
+                  </span>
+                </button>
               </div>
+            </div>
+
+            <!-- Micro-Abenteuer-Radius -->
+            <div class="filter-group">
+              <label
+                class="filter-group-label"
+                for="filter-radius"
+                id="filter-radius-label"
+                data-i18n-de="Micro-Abenteuer-Radius"
+                data-i18n-en="Micro-adventure radius"
+                data-i18n-da="Mikroeventyr-radius"
+              >
+                Micro-Abenteuer-Radius
+              </label>
+
+              <p
+                class="filter-group-helper filter-group-helper--compact"
+                id="filter-radius-helper"
+                data-i18n-de="Wie weit darf euer Abenteuer heute gehen?"
+                data-i18n-en="How far may your adventure go today?"
+                data-i18n-da="Hvor langt må jeres eventyr række i dag?"
+              >
+                Wie weit darf euer Abenteuer heute gehen?
+              </p>
+
+              <div class="radius-row">
+                <input
+                  id="filter-radius"
+                  name="radius"
+                  type="range"
+                  min="0"
+                  max="4"
+                  step="1"
+                  value="4"
+                  aria-labelledby="filter-radius-label filter-radius-helper filter-radius-description"
+                />
+                <span
+                  id="filter-radius-max-label"
+                  class="radius-max-label"
+                  data-i18n-de="Alle Spots"
+                  data-i18n-en="All spots"
+                  data-i18n-da="Alle spots"
+                >
+                  Alle Spots
+                </span>
+              </div>
+
+              <p
+                id="filter-radius-description"
+                class="radius-description"
+                data-i18n-de="Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch."
+                data-i18n-en="All spots – no radius limit. The map is all yours."
+                data-i18n-da="Alle spots – ingen radiusbegrænsning. Kortet er helt jeres."
+              >
+                Alle Spots – ohne Radiusbegrenzung. Die Karte gehört euch.
+              </p>
+            </div>
+
+            <!-- Zusammenfassung & Button "Alle Filter öffnen" -->
+            <div class="filter-footer">
+              <button id="btn-open-filter-modal" class="btn btn-small" type="button">
+                <span data-i18n-de="Alle Filter öffnen" data-i18n-en="Open all filters" data-i18n-da="Åbn alle filtre">
+                  Alle Filter öffnen
+                </span>
+              </button>
+
+              <p
+                id="filter-summary"
+                class="filter-summary"
+                data-i18n-de="Aktive Filter: Basisfilter"
+                data-i18n-en="Active filters: basic filters"
+                data-i18n-da="Aktive filtre: basisfiltre"
+              >
+                Aktive Filter: Basisfilter
+              </p>
             </div>
           </section>
 
@@ -820,12 +807,11 @@
 
         <!-- Family Spots Plus -->
         <details class="sidebar-section" id="plus-section" aria-labelledby="plus-section-title">
-          <!-- FIX: kein Button in summary (verhindert verschachtelte Interaktion) -->
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title" id="plus-section-title">Family Spots Plus</h2>
-            <span class="btn-ghost btn-small summary-badge" aria-hidden="true">
+            <button id="btn-toggle-plus" class="btn-ghost btn-small" type="button">
               <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-            </span>
+            </button>
           </summary>
 
           <div class="filter-group">
@@ -871,16 +857,16 @@
 
         <!-- Mein Tag -->
         <details class="sidebar-section" id="daylog-section" aria-labelledby="daylog-section-title">
-          <!-- FIX: kein Button in summary (verhindert verschachtelte Interaktion) -->
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title" id="daylog-section-title"
               data-i18n-de="Mein Tag 💚" data-i18n-en="My day 💚" data-i18n-da="Min dag 💚"
             >
               Mein Tag 💚
             </h2>
-            <span class="btn-ghost btn-small summary-badge" aria-hidden="true">
+
+            <button id="btn-toggle-daylog" class="btn-ghost btn-small" type="button">
               <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-            </span>
+            </button>
           </summary>
 
           <div class="filter-group">
@@ -1744,9 +1730,8 @@
     }
   </script>
 
-  <!-- Onboarding-Hinweis schließen (MIT Persistenz) -->
+  <!-- Onboarding-Hinweis schließen (ohne Persistenz: nach Reload wieder sichtbar) -->
   <script type="module">
-    const KEY = "fsm_onboarding_dismissed_v1";
     const hint = document.querySelector("[data-onboarding-hint]");
     const closeBtn =
       hint?.querySelector("[data-onboarding-close]") ||
@@ -1754,57 +1739,11 @@
 
     function dismissHint() {
       if (!hint) return;
-      hint.hidden = true;
+      hint.hidden = true;                 // nur für die aktuelle Session
       hint.setAttribute("aria-hidden", "true");
-      try { localStorage.setItem(KEY, "1"); } catch {}
     }
-
-    // Beim Laden: falls bereits geschlossen, nicht mehr anzeigen
-    try {
-      if (localStorage.getItem(KEY) === "1") dismissHint();
-    } catch {}
 
     if (closeBtn) closeBtn.addEventListener("click", dismissHint);
-  </script>
-
-  <!-- Filter (Basis) anzeigen/ausblenden + Zustand merken -->
-  <script type="module">
-    const btn = document.getElementById("btn-toggle-filters");
-    const panel = document.getElementById("filter-basic");
-
-    const showLabel = btn?.querySelector('[data-state="show"]');
-    const hideLabel = btn?.querySelector('[data-state="hide"]');
-
-    const KEY = "fsm_filters_expanded_v1";
-
-    function setExpanded(expanded) {
-      if (!btn || !panel) return;
-      btn.setAttribute("aria-expanded", String(expanded));
-      panel.hidden = !expanded;
-
-      if (showLabel && hideLabel) {
-        showLabel.classList.toggle("hidden", expanded);
-        hideLabel.classList.toggle("hidden", !expanded);
-      }
-
-      try { localStorage.setItem(KEY, expanded ? "1" : "0"); } catch {}
-    }
-
-    if (btn && panel) {
-      let expanded = false;
-      try {
-        const saved = localStorage.getItem(KEY);
-        // Default: zu (damit Karte/Spots schneller sichtbar sind), außer User hat es geöffnet.
-        expanded = saved === "1";
-      } catch {}
-
-      setExpanded(expanded);
-
-      btn.addEventListener("click", () => {
-        const isExpanded = btn.getAttribute("aria-expanded") === "true";
-        setExpanded(!isExpanded);
-      });
-    }
   </script>
 
   <!-- Spots-Liste anzeigen/ausblenden + Zustand merken -->
