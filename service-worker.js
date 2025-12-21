@@ -1,6 +1,6 @@
 // service-worker.js
 
-const CACHE_VERSION = "18"; // <— IMPORTANT: bump on any release
+const CACHE_VERSION = "19"; // <— IMPORTANT: bump on any release
 const CACHE_NAME = `family-spots-map-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 
