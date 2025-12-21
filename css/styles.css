@@ -1,33 +1,84 @@
-/* styles.css — Aggregator + final patches
-   IMPORTANT: Layer-Order muss vor allen Imports stehen,
-   sonst kann theme/components die Reihenfolge „falsch“ fixieren. */
-@layer tokens, base, components, utilities, overrides;
+/* styles.css — Aggregator für modulare Styles
+   Build: 2025-12-21-01
+   NOTE: iOS/Safari cached @import sehr aggressiv → Version im Query hochzählen!
+*/
 
 /* 1) Design-Variablen (Light/Dark Theme) */
-@import url("./theme.css");
+@import url("./theme.css?v=2025-12-21-01");
 
 /* 2) Reset, Body, Typografie, Grundlayout */
-@import url("./base.css");
+@import url("./base.css?v=2025-12-21-01");
 
 /* 3) Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
-@import url("./utilities.css");
+@import url("./utilities.css?v=2025-12-21-01");
 
 /* 4) Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
-@import url("./components.css");
+@import url("./components.css?v=2025-12-21-01");
 
 /* =========================================================
-   FINAL PATCHES (unlayered on purpose)
-   - Diese Regeln sollen „ganz zuletzt“ gewinnen.
-   - Nur das hier rein, was wirklich global/entscheidend ist.
+   GLOBAL OVERRIDES / FIXES
    ========================================================= */
 
-/* Einheitliche Textfarbe für Sidebar-Titel (Plus/Mein Tag/Spots/Filter/Tilla) */
+/* =========================================
+   Einheitliche Textfarbe für Sidebar-Titel
+   ========================================= */
 .sidebar-section-title {
   color: var(--text-strong, var(--text-color, #111827)) !important;
   opacity: 1 !important;
 }
 
-/* Header im Light-Theme wärmer (dein gewünschter Look) */
+/* =========================================
+   iOS FIX: <details>/<summary> wie normale Sidebar-Cards rendern
+   (behebt u.a. "Family Spots Plus" wirkt anders als "Mein Tag")
+   ========================================= */
+details.sidebar-section {
+  /* Card-Look sicherstellen */
+  background: var(--sidebar-section-bg, var(--card-bg)) !important;
+  border: 1px solid var(--sidebar-section-border, var(--card-border)) !important;
+  box-shadow: var(--sidebar-section-shadow, var(--card-shadow)) !important;
+  border-radius: var(--border-radius, 0.5rem) !important;
+  overflow: hidden; /* wichtig: Summary/Body sauber clippen */
+}
+
+/* Summary = Header: Marker entfernen + Layout angleichen */
+details.sidebar-section > summary.sidebar-section-header {
+  list-style: none !important;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Marker in iOS/Safari entfernen */
+details.sidebar-section > summary.sidebar-section-header::-webkit-details-marker {
+  display: none !important;
+}
+details.sidebar-section > summary.sidebar-section-header::marker {
+  content: "" !important;
+}
+
+/* Summary-Header soll optisch identisch zu anderen Headers sein */
+details.sidebar-section > summary.sidebar-section-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+
+  /* gleiche Fläche wie andere Section-Header */
+  background: transparent !important;
+}
+
+/* Wenn geöffnet: dezente Trennlinie wie bei "Section Header + Content" */
+details.sidebar-section[open] > summary.sidebar-section-header {
+  border-bottom: 1px solid var(--sidebar-section-border, var(--card-border)) !important;
+}
+
+/* Optional: Button im Summary nicht "komisch" rendern */
+details.sidebar-section > summary.sidebar-section-header button {
+  margin-left: auto;
+}
+
+/* =========================================
+   Override: Header im Light-Theme wärmer
+   ========================================= */
 html[data-theme="light"] .app-header {
   background:
     radial-gradient(900px 420px at 18% -10%,
@@ -40,10 +91,18 @@ html[data-theme="light"] .app-header {
   border-bottom: 1px solid rgba(243, 162, 58, 0.18);
 }
 
-/* UI Fix: „Nur Karte“ im Spots-Header entfernen (Toggle bleibt im DOM) */
+/* =========================================
+   UI Fix: „Nur Karte“ im Spots-Header entfernen
+   ========================================= */
 #btn-toggle-view {
   display: none !important;
 }
+
+/* =========================================
+   Highest-Level UI Fixes
+   1) Bottom Nav entfernen (Karte/Über)
+   2) Menü-Panel (☰) kompakt halten
+   ========================================= */
 
 /* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
 :root {
@@ -55,66 +114,63 @@ html[data-theme="light"] .app-header {
   display: none !important;
 }
 
-/* components.css reserviert unten Platz – sauber zurückholen (mit Safe-Area) */
-.app-main {
-  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+body,
+.app,
+.app-main,
+#main-content {
+  padding-bottom: 0 !important;
 }
 
-/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet (nur wenn offen) ---------- */
-/* Standard: nie „aus Versehen“ sichtbar */
+/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet ---------- */
 #app-menu.app-menu {
-  display: none !important;
-}
-
-/* Wenn offen: flex overlay */
-body[data-menu-open="1"] #app-menu.app-menu:not([hidden]) {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  display: flex !important;
+  display: flex;
   align-items: flex-start;
   justify-content: center;
-
   padding-top: max(14px, env(safe-area-inset-top));
   padding-left: 12px;
   padding-right: 12px;
   padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
-body[data-menu-open="1"] #app-menu .app-menu-backdrop {
+#app-menu .app-menu-backdrop {
   position: absolute;
   inset: 0;
 }
 
-body[data-menu-open="1"] #app-menu .app-menu-panel {
+#app-menu .app-menu-panel {
   position: relative;
   width: min(520px, 100%);
   height: auto !important;
   min-height: 0 !important;
   max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
-
   overflow: auto !important;
   -webkit-overflow-scrolling: touch;
 }
 
-body[data-menu-open="1"] #app-menu .app-menu-list,
-body[data-menu-open="1"] #app-menu .app-menu-languages {
+#app-menu .app-menu-list,
+#app-menu .app-menu-languages {
   height: auto !important;
   min-height: 0 !important;
 }
 
-body[data-menu-open="1"] #app-menu .app-menu-languages {
+#app-menu .app-menu-languages {
   margin-top: 12px !important;
 }
 
-/* Keine „max-height: ...“ Fallen durch Sub-Elemente */
-body[data-menu-open="1"] #app-menu .app-menu-panel,
-body[data-menu-open="1"] #app-menu .app-menu-panel * {
+#app-menu .app-menu-panel,
+#app-menu .app-menu-panel * {
   max-height: unset;
 }
 
+#app-menu .app-menu-panel {
+  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+}
+
 @media (max-width: 720px) {
-  body[data-menu-open="1"] #app-menu .app-menu-panel {
+  #app-menu .app-menu-panel {
     width: min(560px, 100%);
   }
 }
