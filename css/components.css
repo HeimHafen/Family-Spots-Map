@@ -2930,86 +2930,69 @@ summary.sidebar-section-header:focus-visible {
   opacity: 1 !important;
 }
 
-/* === Forced title colors: Light=black, Dark=white (unlayered) === */
-
-/* Defaults (covers light theme and cases where data-theme is absent) */
-#tilla-title,
-.tilla-sidebar-section :is(.sidebar-section-title, h1, h2, h3, h4) {
-  color: #111827 !important;
-  opacity: 1 !important;
-}
-
-#plus-section :is(summary, summary *),
-#plus-section-title,
-#btn-toggle-plus,
-#btn-toggle-plus * {
-  color: #111827 !important;
-  opacity: 1 !important;
-}
-
-/* Dark theme overrides (works whether data-theme sits on html or body or :root) */
-html[data-theme="dark"] #tilla-title,
-body[data-theme="dark"] #tilla-title,
-:root[data-theme="dark"] #tilla-title,
-html[data-theme="dark"] .tilla-sidebar-section :is(.sidebar-section-title, h1, h2, h3, h4),
-body[data-theme="dark"] .tilla-sidebar-section :is(.sidebar-section-title, h1, h2, h3, h4),
-:root[data-theme="dark"] .tilla-sidebar-section :is(.sidebar-section-title, h1, h2, h3, h4) {
-  color: #ffffff !important;
-  opacity: 1 !important;
-}
-
-html[data-theme="dark"] #plus-section :is(summary, summary *),
-body[data-theme="dark"] #plus-section :is(summary, summary *),
-:root[data-theme="dark"] #plus-section :is(summary, summary *),
-html[data-theme="dark"] #plus-section-title,
-body[data-theme="dark"] #plus-section-title,
-:root[data-theme="dark"] #plus-section-title,
-html[data-theme="dark"] #btn-toggle-plus,
-body[data-theme="dark"] #btn-toggle-plus,
-:root[data-theme="dark"] #btn-toggle-plus,
-html[data-theme="dark"] #btn-toggle-plus *,
-body[data-theme="dark"] #btn-toggle-plus *,
-:root[data-theme="dark"] #btn-toggle-plus * {
-  color: #ffffff !important;
-  opacity: 1 !important;
-}
-
 /* =========================================================
-   THEME READABILITY OVERRIDE (UNLAYERED — FINAL)
-   Problem: Two headers (Tilla title + Family Spots Plus) were not turning white in dark mode
-   because earlier overrides relied on html/body carrying data-theme.
-   Fix: Use an ancestor selector that matches regardless of where data-theme is applied,
-   and also set -webkit-text-fill-color for Safari.
-   Desired:
-   - Dark mode: white
-   - Light mode: near-black
+   HARD FORCE HEADER TITLE COLORS (unlayered)
+   Goal:
+   - Light mode: black text
+   - Dark mode: white text
+   Targets:
+   - "Familienbegleiterin Tilla" (Tilla section header)
+   - "Family Spots Plus" (Plus section header)
+   Notes:
+   - also sets -webkit-text-fill-color (Safari iOS)
+   - neutralizes accidental opacity/filter/disabled dimming
    ========================================================= */
 
-/* DARK: force white for the two marked areas (title + action) */
-:where([data-theme="dark"]) :is(
-  #tilla-title,
-  #plus-section-title,
-  #btn-toggle-plus,
-  #btn-toggle-plus *,
-  #plus-section summary.sidebar-section-header,
-  #plus-section summary.sidebar-section-header *
-) {
+/* Helper selector: header rows inside the two problematic sections */
+:where(#plus-section, #tilla-section, .tilla-sidebar-section)
+  :where(.sidebar-section-header, summary.sidebar-section-header) {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* ---- Explicit theme attribute (preferred) ---- */
+:where([data-theme="dark"]) :where(#plus-section, #tilla-section, .tilla-sidebar-section)
+  :where(.sidebar-section-header, summary.sidebar-section-header, .sidebar-section-title, #tilla-title, #plus-section-title, #btn-toggle-plus, #btn-toggle-plus *) {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
+  filter: none !important;
 }
 
-/* LIGHT: force strong readable dark text for the same areas */
-:where([data-theme="light"]) :is(
-  #tilla-title,
-  #plus-section-title,
-  #btn-toggle-plus,
-  #btn-toggle-plus *,
-  #plus-section summary.sidebar-section-header,
-  #plus-section summary.sidebar-section-header *
-) {
+:where([data-theme="light"]) :where(#plus-section, #tilla-section, .tilla-sidebar-section)
+  :where(.sidebar-section-header, summary.sidebar-section-header, .sidebar-section-title, #tilla-title, #plus-section-title, #btn-toggle-plus, #btn-toggle-plus *) {
   color: #111827 !important;
   -webkit-text-fill-color: #111827 !important;
   opacity: 1 !important;
+  filter: none !important;
 }
 
+/* ---- Fallback: system color scheme (if data-theme is not set) ---- */
+@media (prefers-color-scheme: dark) {
+  :where(html, body, :root):not([data-theme="light"])
+    :where(#plus-section, #tilla-section, .tilla-sidebar-section)
+    :where(.sidebar-section-header, summary.sidebar-section-header, .sidebar-section-title, #tilla-title, #plus-section-title, #btn-toggle-plus, #btn-toggle-plus *) {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :where(html, body, :root):not([data-theme="dark"])
+    :where(#plus-section, #tilla-section, .tilla-sidebar-section)
+    :where(.sidebar-section-header, summary.sidebar-section-header, .sidebar-section-title, #tilla-title, #plus-section-title, #btn-toggle-plus, #btn-toggle-plus *) {
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+}
+
+/* If the Plus toggle is accidentally rendered "disabled", keep it readable */
+#btn-toggle-plus:disabled,
+#btn-toggle-plus[aria-disabled="true"] {
+  opacity: 1 !important;
+  -webkit-text-fill-color: currentColor !important;
+}
