@@ -1,173 +1,205 @@
-/* styles.css — Entry / Aggregator (layered, deterministic cascade)
+/* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
-   Cache Busting (GitHub Pages / iOS Safari):
-   - Wenn Änderungen “nicht greifen”: erhöhe die Zahl in ?v=...
+   NOTE (Cache Busting):
+   - GitHub Pages + iOS Safari können CSS/Imports sehr aggressiv cachen.
+   - Deshalb hängen die Imports hier bewusst ein Version-Query an.
+   - Wenn du Änderungen veröffentlichst und “es passiert nichts”:
+     -> erhöhe einfach die Zahl in ?v=... (einmalig) und committe erneut.
    --------------------------------------------------------- */
 
-@layer tokens, base, components, utilities, overrides;
+/* 1. Design-Variablen (Light/Dark Theme) */
+@import url("./theme.css?v=20251221");
 
-/* 1) Design-Variablen / Semantische Tokens (Light/Dark) */
-@import url("./theme.css?v=20251222b");
+/* 2. Reset, Body, Typografie, Grundlayout */
+@import url("./base.css?v=20251221");
 
-/* 2) Reset, Body, Typografie, Grundlayout (muss selbst @layer base nutzen!) */
-@import url("./base.css?v=20251222b");
+/* 3. Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
+@import url("./utilities.css?v=20251221");
 
-/* 3) Komponenten, Layout, Map, Sidebar, Toast, Onboarding etc. */
-@import url("./components.css?v=20251222b");
-
-/* 4) Badges (badges.css sollte in @layer components stehen!) */
-@import url("./badges.css?v=20251222b");
-
-/* 5) Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
-@import url("./utilities.css?v=20251222b");
+/* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
+@import url("./components.css?v=20251221");
 
 
 /* =========================================================
-   GLOBAL OVERRIDES / FIXES (layered)
-   - nur hier global “nachziehen”
-   - vermeidet unlayered Override-Fallen
+   GLOBAL OVERRIDES / FIXES
    ========================================================= */
-@layer overrides {
-  /* Einheitliche Textfarbe für Sidebar-Titel (inkl. <details>/<summary>) */
-  .sidebar-section-title {
-    color: var(--text-heading, var(--text-strong, var(--text-color, #111827))) !important;
-    opacity: 1 !important;
-  }
 
-  /* Helper-/Muted-Texte konsistent */
-  .filter-group-helper,
-  .filter-summary,
-  .daylog-last-saved,
-  .plus-note {
-    color: var(--text-muted, var(--text-soft, rgba(107, 114, 128, 0.95)));
-  }
+/* Einheitliche Textfarbe für Sidebar-Titel (inkl. <details>/<summary>) */
+.sidebar-section-title {
+  color: var(--text-heading, var(--text-strong, var(--text-color, #111827))) !important;
+  opacity: 1 !important;
+}
 
-  /* Header im Light-Theme wärmer (Dark bleibt aus tokens) */
-  html[data-theme="light"] .app-header {
-    background:
-      radial-gradient(900px 420px at 18% -10%,
-        rgba(243, 162, 58, 0.32) 0%,
-        rgba(243, 162, 58, 0.00) 60%),
-      linear-gradient(180deg,
-        #FFF7EE 0%,
-        #FFE7D1 55%,
-        #F6C79D 100%);
-    border-bottom: 1px solid rgba(243, 162, 58, 0.18);
-  }
+/* Helper-/Muted-Texte konsistent (falls Komponenten irgendwo “hart” färben) */
+.filter-group-helper,
+.filter-summary,
+.daylog-last-saved,
+.plus-note {
+  color: var(--text-muted, var(--text-soft, rgba(107, 114, 128, 0.95)));
+}
 
-  /* UI Fix: „Nur Karte“ Toggle im Spots-Header entfernen (bleibt im Menü nutzbar) */
-  #btn-toggle-view {
-    display: none !important;
-  }
+/* =========================================
+   Override: Header im Light-Theme wärmer
+   (nur Light – Dark bleibt aus tokens)
+   ========================================= */
+html[data-theme="light"] .app-header {
+  background:
+    radial-gradient(900px 420px at 18% -10%,
+      rgba(243, 162, 58, 0.32) 0%,
+      rgba(243, 162, 58, 0.00) 60%),
+    linear-gradient(180deg,
+      #FFF7EE 0%,
+      #FFE7D1 55%,
+      #F6C79D 100%);
+  border-bottom: 1px solid rgba(243, 162, 58, 0.18);
+}
 
-  /* Bottom Nav entfernen + Platz zurückholen (wenn du sie nicht mehr nutzt) */
-  :root {
-    --bottom-nav-height: 0px;
-    --bottom-nav-safearea: 0px;
-  }
+/* =========================================
+   UI Fix: „Nur Karte“ im Spots-Header entfernen
+   ========================================= */
+#btn-toggle-view {
+  display: none !important;
+}
 
-  .bottom-nav {
-    display: none !important;
-  }
+/* =========================================
+   Highest-Level UI Fixes
+   1) Bottom Nav entfernen (Karte/Über)
+   2) Menü-Panel (☰) kompakt halten
+   3) Details/Summary (Plus / Mein Tag) visuell angleichen
+   ========================================= */
 
-  /* Wenn components.css unten Padding reserviert, wieder neutralisieren */
-  .app-main {
-    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
-  }
+/* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
+:root {
+  --bottom-nav-height: 0px;
+  --bottom-nav-safearea: 0px;
+}
 
-  /* ---------------------------------------------------------
-     Details/Summary Angleichen (Plus / Mein Tag)
-     - sorgt dafür, dass <details.sidebar-section> exakt wie <section.sidebar-section> wirkt
-     --------------------------------------------------------- */
-  details.sidebar-section {
-    background: var(--sidebar-section-bg, var(--card-bg, var(--surface-1)));
-    border: 1px solid var(--sidebar-section-border, var(--card-border, var(--border-1, rgba(0,0,0,0.08))));
-    box-shadow: var(--sidebar-section-shadow, var(--card-shadow, var(--elev-2, 0 10px 26px rgba(0,0,0,0.16))));
-    border-radius: 20px;
-    overflow: hidden;
-  }
+.bottom-nav {
+  display: none !important;
+}
 
-  details.sidebar-section > summary {
-    list-style: none;
-    cursor: pointer;
-  }
+body,
+.app,
+.app-main,
+#main-content {
+  padding-bottom: 0 !important;
+}
 
-  details.sidebar-section > summary::-webkit-details-marker {
-    display: none;
-  }
+/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet ----------
+   WICHTIG: Regeln NUR anwenden, wenn das Menü offen ist.
+   Sonst kann es (je nach Browser) “unsichtbar” über der App liegen. */
+#app-menu.app-menu:not([hidden]) {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
 
-  details.sidebar-section > summary.sidebar-section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 
-    padding: 10px 14px;
-    margin: 0;
+  padding-top: max(14px, env(safe-area-inset-top));
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+}
 
-    background: transparent;
-    border: 0;
-  }
+#app-menu.app-menu:not([hidden]) .app-menu-backdrop {
+  position: absolute;
+  inset: 0;
+}
 
-  details.sidebar-section > :not(summary) {
-    padding: 12px 14px 14px;
-  }
+#app-menu.app-menu:not([hidden]) .app-menu-panel {
+  position: relative;
+  width: min(520px, 100%);
+  height: auto !important;
 
-  details.sidebar-section:not([open]) > :not(summary) {
-    padding-top: 0;
-  }
+  min-height: 0 !important;
+  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
 
-  /* iOS/Safari: Summary-Fokus sauber (kein UA-Rechteck) */
-  summary.sidebar-section-header:focus,
-  summary.sidebar-section-header:focus-visible {
-    outline: none !important;
-  }
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch;
 
-  summary.sidebar-section-header:focus-visible {
-    border-radius: 18px;
-    box-shadow: var(--focus-ring, var(--focus-ring-default)) !important;
-  }
+  /* Visuell stabil (falls component-styles abweichen) */
+  border-radius: calc(var(--border-radius, 0.5rem) * 2);
+  background: var(--card-bg, var(--surface-1, rgba(255, 255, 255, 0.9)));
+  border: 1px solid var(--card-border, var(--border-1, rgba(0, 0, 0, 0.08)));
+  box-shadow: var(--card-shadow, var(--elev-2, 0 10px 26px rgba(0, 0, 0, 0.16)));
+}
 
-  /* App-Menü (☰) nur stylen, wenn es offen ist (verhindert „unsichtbares Overlay“) */
-  #app-menu.app-menu:not([hidden]) {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
+#app-menu.app-menu:not([hidden]) .app-menu-list,
+#app-menu.app-menu:not([hidden]) .app-menu-languages {
+  height: auto !important;
+  min-height: 0 !important;
+}
 
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
+#app-menu.app-menu:not([hidden]) .app-menu-languages {
+  margin-top: 12px !important;
+}
 
-    padding-top: max(14px, env(safe-area-inset-top));
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-bottom: max(14px, env(safe-area-inset-bottom));
-  }
-
-  #app-menu.app-menu:not([hidden]) .app-menu-backdrop {
-    position: absolute;
-    inset: 0;
-  }
-
+@media (max-width: 720px) {
   #app-menu.app-menu:not([hidden]) .app-menu-panel {
-    position: relative;
-
-    width: min(520px, 100%);
-    height: auto !important;
-
-    min-height: 0 !important;
-    max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
-
-    overflow: auto !important;
-    -webkit-overflow-scrolling: touch;
-
-    border-radius: 24px;
-    background: var(--card-bg, var(--surface-1, rgba(255,255,255,0.98)));
-    border: 1px solid var(--card-border, var(--border-1, rgba(0,0,0,0.08)));
-    box-shadow: var(--elevation-lg, 0 10px 24px rgba(15, 23, 42, 0.22));
+    width: min(560px, 100%);
   }
+}
 
-  #app-menu.app-menu:not([hidden]) .app-menu-languages {
-    margin-top: 12px !important;
-  }
+/* ---------- 3) <details class="sidebar-section"> (Plus / Mein Tag) angleichen ----------
+   Problem (aus deinen Screens):
+   - Details-Sections wirken oft “anders” als normale <section>, weil UA-Styles
+     für <summary> greifen und/oder components.css nur <section.sidebar-section> adressiert.
+   Fix:
+   - Container-Styling explizit auch auf <details.sidebar-section> setzen
+   - Summary wie einen Sidebar-Header rendern
+*/
+details.sidebar-section {
+  /* gleiche “Card”-Optik wie andere Sidebar-Sections */
+  background: var(--sidebar-section-bg, var(--card-bg, var(--surface-1)));
+  border: 1px solid var(--sidebar-section-border, var(--card-border, var(--border-1)));
+  box-shadow: var(--sidebar-section-shadow, var(--card-shadow, var(--elev-2)));
+  border-radius: calc(var(--border-radius, 0.5rem) * 2);
+  overflow: hidden; /* verhindert “Kanten” bei Summary */
+}
+
+/* Summary soll keinen Browser-Marker/Default-Spacing haben */
+details.sidebar-section > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+details.sidebar-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Summary-Header-Layout: wie .sidebar-section-header */
+details.sidebar-section > summary.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 14px 16px;
+  margin: 0;
+
+  background: transparent; /* Container steuert Background */
+  border: 0;
+}
+
+/* Der Rest-Inhalt soll “normal” gepolstert sein */
+details.sidebar-section > :not(summary) {
+  padding: 14px 16px;
+}
+
+/* Wenn Details geschlossen ist, soll keine “Doppel-Padding”-Kante entstehen */
+details.sidebar-section:not([open]) > :not(summary) {
+  padding-top: 0;
+}
+
+/* Buttons in <summary> sollen klickbar bleiben (Safari/iOS-Edgecases) */
+details.sidebar-section > summary * {
+  pointer-events: auto;
+}
+
+/* Optional: etwas mehr Abstand unten im Sidebar-Stack (iOS fühlt sich “luftiger” an) */
+.sidebar > .sidebar-section,
+.sidebar > details.sidebar-section {
+  scroll-margin-top: 12px;
 }
