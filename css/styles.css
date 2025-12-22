@@ -7,19 +7,19 @@
 @layer tokens, base, components, utilities, overrides;
 
 /* 1) Design-Variablen / Semantische Tokens (Light/Dark) */
-@import url("./theme.css?v=20251223");
+@import url("./theme.css?v=20251222b");
 
 /* 2) Reset, Body, Typografie, Grundlayout (muss selbst @layer base nutzen!) */
-@import url("./base.css?v=20251223");
+@import url("./base.css?v=20251222b");
 
 /* 3) Komponenten, Layout, Map, Sidebar, Toast, Onboarding etc. */
-@import url("./components.css?v=20251223");
+@import url("./components.css?v=20251222b");
 
 /* 4) Badges (badges.css sollte in @layer components stehen!) */
-@import url("./badges.css?v=20251223");
+@import url("./badges.css?v=20251222b");
 
 /* 5) Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
-@import url("./utilities.css?v=20251223");
+@import url("./utilities.css?v=20251222b");
 
 
 /* =========================================================
@@ -32,38 +32,6 @@
   .sidebar-section-title {
     color: var(--text-heading, var(--text-strong, var(--text-color, #111827))) !important;
     opacity: 1 !important;
-  }
-
-  /* ---------------------------------------------------------
-     FIX: iOS/WebKit ignoriert in manchen Fällen "color" (summary/details)
-     -> erzwingt die Textfarbe via -webkit-text-fill-color
-     Ziel: Light = schwarz, Dark = weiß (für die zwei Problemstellen)
-     --------------------------------------------------------- */
-  html[data-theme="light"] #tilla-title,
-  html[data-theme="light"] #plus-section-title {
-    color: #111827 !important;
-    -webkit-text-fill-color: #111827 !important;
-    opacity: 1 !important;
-  }
-
-  html[data-theme="dark"] #tilla-title,
-  html[data-theme="dark"] #plus-section-title {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    opacity: 1 !important;
-  }
-
-  /* Zusätzlich: falls im Summary/Children irgendwas “muted” gesetzt wird */
-  html[data-theme="light"] #plus-section > summary.sidebar-section-header,
-  html[data-theme="light"] #plus-section > summary.sidebar-section-header * {
-    color: #111827 !important;
-    -webkit-text-fill-color: #111827 !important;
-  }
-
-  html[data-theme="dark"] #plus-section > summary.sidebar-section-header,
-  html[data-theme="dark"] #plus-section > summary.sidebar-section-header * {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
   }
 
   /* Helper-/Muted-Texte konsistent */
