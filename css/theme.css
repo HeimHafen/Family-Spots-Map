@@ -1,11 +1,12 @@
 /* =========================================
    theme.css — Light & Dark Design Tokens
-   Playful Warm v2.3 (Design-System Level)
+   Playful Warm v2.4 (Design-System Level)
    - deterministische Token-Struktur via Cascade Layers
    - CTA-Kontrast sauber: --accent-solid + --on-accent-solid
+   - semantische Text-Rollen (Headings / Body / Muted) konsistent
    - Legacy/Component Tokens bleiben kompatibel
    - robustes Theme-Targeting: :root/html/body + optional container [data-theme]
-   - NEW: semantische Text-Rollen (Headings / Body / Muted)
+   - NEW: zusätzliche “Flat”-Background Tokens (für Fallbacks / iOS / Meta)
    ========================================= */
 
 @layer tokens, base, overrides;
@@ -18,15 +19,11 @@
     color-scheme: light;
   }
 
-  :root[data-theme="light"],
-  html[data-theme="light"],
-  body[data-theme="light"] {
+  :where(:root, html, body)[data-theme="light"] {
     color-scheme: light;
   }
 
-  :root[data-theme="dark"],
-  html[data-theme="dark"],
-  body[data-theme="dark"],
+  :where(:root, html, body)[data-theme="dark"],
   [data-theme="dark"] {
     color-scheme: dark;
   }
@@ -40,40 +37,28 @@
     /* ----------------------------
        Cache / Debug Token (harmlos)
        ---------------------------- */
-    --theme-version: 20251221;
+    --theme-version: 20251222;
 
     /* ================================
-       Brand / Accent System (muted warm)
+       Brand / Accent System (warm, AA-friendly)
        ================================ */
     --accent-h: 30;
 
-    /* Brand accent (für Flächen/Badges/Active-Chips etc.) */
+    /* Accent (general) */
     --accent: hsl(var(--accent-h) 74% 48%);
-    --accent-light: hsl(var(--accent-h) 70% 58%);
-    --accent-dark: hsl(var(--accent-h) 76% 34%);
+    --accent-light: hsl(var(--accent-h) 72% 58%);
+    --accent-dark: hsl(var(--accent-h) 78% 34%);
 
     /* Solid accent for CTAs (AA-kontrastfähig zu weißem Text) */
-    --accent-solid: hsl(var(--accent-h) 74% 41%);
-    --accent-solid-dark: hsl(var(--accent-h) 76% 34%);
-    --accent-solid-light: hsl(var(--accent-h) 70% 52%);
+    --accent-solid: hsl(var(--accent-h) 78% 39%);
+    --accent-solid-dark: hsl(var(--accent-h) 80% 32%);
+    --accent-solid-light: hsl(var(--accent-h) 76% 46%);
     --on-accent-solid: #ffffff;
 
-    /* Accent surfaces (muted) */
-    --accent-soft: hsl(var(--accent-h) 56% 92%);
-    --accent-soft-hover: hsl(var(--accent-h) 56% 86%);
-    --accent-strong: hsl(var(--accent-h) 64% 40%);
-
-    /* ================================
-       Semantic Color Tokens
-       ================================ */
-    --text-3: hsl(22 60% 12%); /* strongest */
-    --text-1: hsl(24 52% 14%); /* default */
-    --text-2: hsl(24 26% 28%); /* muted */
-
-    /* NEW: Text roles */
-    --text-heading: var(--text-3);
-    --text-body: var(--text-1);
-    --text-muted: var(--text-2);
+    /* Accent surfaces (soft warmth) */
+    --accent-soft: hsla(var(--accent-h) 78% 52% / 0.16);
+    --accent-soft-hover: hsla(var(--accent-h) 78% 52% / 0.22);
+    --accent-strong: hsl(var(--accent-h) 70% 40%);
 
     /* “On-*” tokens */
     --on-accent: hsl(24 55% 12%);
@@ -81,7 +66,26 @@
     --on-light: hsl(222 47% 11%);
 
     /* ================================
-       Surfaces (Light)
+       Semantic Text Tokens (wärmere “Tinte”)
+       ================================ */
+    --text-3: hsl(22 58% 12%); /* headings / strongest */
+    --text-1: hsl(24 46% 16%); /* body */
+    --text-2: hsl(24 22% 34%); /* muted */
+
+    /* Text roles */
+    --text-heading: var(--text-3);
+    --text-body: var(--text-1);
+    --text-muted: var(--text-2);
+
+    /* Optional roles (helpful for fine-tuning across files) */
+    --text-soft: color-mix(in oklab, var(--text-body) 78%, transparent);
+    --text-strong: var(--text-heading);
+
+    /* Placeholder (optional use) */
+    --placeholder-color: color-mix(in oklab, var(--text-muted) 92%, transparent);
+
+    /* ================================
+       Surfaces (Light: warm paper)
        ================================ */
     --surface-0: hsl(38 70% 97%);
     --surface-1: hsla(38 70% 92% / 0.98);
@@ -89,8 +93,8 @@
     --surface-3: hsla(37 60% 86% / 0.98);
 
     /* Borders */
-    --border-1: hsla(30 30% 18% / 0.18);
-    --border-2: hsla(30 30% 18% / 0.26);
+    --border-1: hsla(30 30% 18% / 0.16);
+    --border-2: hsla(30 30% 18% / 0.24);
 
     /* Elevation */
     --elev-1: 0 1px 2px hsla(26 35% 18% / 0.10);
@@ -111,21 +115,30 @@
     --font-size-base: 1rem;
 
     /* Focus ring */
-    --focus-inner: #ffffff;
-    --focus-outer: hsla(var(--accent-h) 74% 48% / 0.55);
-    --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
+    --focus-inner: rgba(255, 255, 255, 0.92);
+    --focus-outer: hsla(var(--accent-h) 78% 44% / 0.42);
+    --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 5px var(--focus-outer);
 
-    /* Backgrounds / Effects */
+    /* Some files expect a default ring token name */
+    --focus-ring-default: var(--focus-ring);
+
+    /* ================================
+       Backgrounds / Effects
+       ================================ */
     --bg-app:
-      radial-gradient(circle at 18% 0%, hsla(var(--accent-h) 74% 56% / 0.18), transparent 58%),
+      radial-gradient(circle at 18% 0%, hsla(var(--accent-h) 78% 56% / 0.16), transparent 58%),
       radial-gradient(circle at 88% 22%, hsla(42 78% 62% / 0.10), transparent 54%),
       linear-gradient(180deg, hsl(38 70% 97%), hsl(36 52% 88%));
+
+    /* “Flat” fallback (useful for elements that cannot handle gradients well) */
+    --app-bg-flat: hsl(36 52% 88%);
 
     --app-bg: var(--bg-app);
     --page-bg: var(--app-bg);
 
-    /* Filters */
-    --filter-map: sepia(0.25) saturate(0.95) brightness(1.02) contrast(1.03) hue-rotate(-12deg);
+    /* Map filter (warm, subtle) */
+    --filter-map: sepia(0.22) saturate(0.96) brightness(1.02) contrast(1.03) hue-rotate(-12deg);
+    --map-filter: var(--filter-map);
 
     /* ================================
        Status / Semantic Badges
@@ -141,7 +154,7 @@
        Legacy / Component Tokens (compat)
        ========================================================= */
     --text-color: var(--text-body);
-    --text-soft: var(--text-muted);
+    --text-soft: color-mix(in oklab, var(--text-body) 78%, transparent);
     --text-strong: var(--text-heading);
 
     --card-bg: var(--surface-1);
@@ -168,7 +181,7 @@
     --header-text-color: var(--text-heading);
 
     --header-tagline-bg: hsla(34 56% 90% / 0.92);
-    --header-tagline-color: hsl(24 44% 18%);
+    --header-tagline-color: color-mix(in oklab, var(--text-heading) 86%, transparent);
     --header-tagline-shadow: var(--elev-2);
 
     --header-icon-bg: radial-gradient(
@@ -190,21 +203,19 @@
 
     --bottom-nav-backdrop: hsla(var(--accent-h) 44% 78% / 0.52);
     --bottom-nav-item-bg: var(--surface-1);
-    --bottom-nav-item-color: hsl(24 22% 26%);
+    --bottom-nav-item-color: color-mix(in oklab, var(--text-body) 82%, transparent);
     --bottom-nav-item-active-bg: var(--accent-solid);
     --bottom-nav-item-active-color: #ffffff;
 
     --map-card-bg: var(--surface-2);
     --map-card-shadow: var(--elev-3);
-    --map-card-border: hsla(30 30% 18% / 0.22);
+    --map-card-border: hsla(30 30% 18% / 0.20);
 
     --shadow-soft: var(--elev-1);
     --shadow-strong: var(--elev-2);
 
     --radius-circle-stroke: hsla(var(--accent-h) 74% 48% / 0.60);
     --radius-circle-fill: hsla(var(--accent-h) 74% 48% / 0.13);
-
-    --map-filter: var(--filter-map);
 
     --cta-fg: var(--on-accent-solid);
     --cta-bg: var(--accent-solid);
@@ -216,10 +227,9 @@
    TOKENS — Dark Overrides
    ========================================================= */
 @layer tokens {
-  :root[data-theme="dark"],
-  html[data-theme="dark"],
-  body[data-theme="dark"],
+  :where(:root, html, body)[data-theme="dark"],
   [data-theme="dark"] {
+    /* Text (warm off-white; less “icy” than pure white) */
     --text-3: hsl(32 100% 96%);
     --text-1: hsla(32 100% 96% / 0.92);
     --text-2: hsla(215 18% 82% / 0.74);
@@ -228,30 +238,45 @@
     --text-body: var(--text-1);
     --text-muted: var(--text-2);
 
+    --text-color: var(--text-body);
+    --text-soft: color-mix(in oklab, var(--text-body) 76%, transparent);
+    --text-strong: var(--text-heading);
+
+    --placeholder-color: color-mix(in oklab, var(--text-muted) 92%, transparent);
+
+    /* Surfaces */
     --surface-0: hsl(228 50% 6%);
     --surface-1: hsla(222 40% 10% / 0.92);
     --surface-2: hsla(222 38% 13% / 0.92);
     --surface-3: hsla(222 34% 16% / 0.92);
 
+    /* Borders */
     --border-1: hsla(0 0% 100% / 0.08);
     --border-2: hsla(0 0% 100% / 0.14);
 
+    /* Elevation */
     --elev-1: 0 8px 22px hsla(0 0% 0% / 0.55);
     --elev-2: 0 16px 46px hsla(0 0% 0% / 0.62);
     --elev-3: 0 24px 70px hsla(0 0% 0% / 0.70);
 
-    --focus-inner: rgba(2, 6, 23, 0.92);
-    --focus-outer: hsla(var(--accent-h) 74% 52% / 0.45);
-    --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 4px var(--focus-outer);
+    /* Focus ring */
+    --focus-inner: rgba(2, 6, 23, 0.88);
+    --focus-outer: hsla(var(--accent-h) 74% 54% / 0.34);
+    --focus-ring: 0 0 0 2px var(--focus-inner), 0 0 0 5px var(--focus-outer);
+    --focus-ring-default: var(--focus-ring);
 
+    /* Background */
     --bg-app:
-      radial-gradient(circle at 35% -10%, hsla(var(--accent-h) 78% 54% / 0.18), transparent 55%),
-      radial-gradient(circle at 90% 20%, hsla(34 80% 66% / 0.07), transparent 50%),
+      radial-gradient(circle at 35% -10%, hsla(var(--accent-h) 78% 54% / 0.16), transparent 55%),
+      radial-gradient(circle at 90% 20%, hsla(34 80% 66% / 0.06), transparent 50%),
       linear-gradient(180deg, hsl(228 50% 6%), hsl(229 60% 5%));
+
+    --app-bg-flat: hsl(228 50% 6%);
 
     --app-bg: var(--bg-app);
     --page-bg: var(--app-bg);
 
+    /* Accent */
     --accent: hsl(var(--accent-h) 72% 52%);
     --accent-light: hsl(var(--accent-h) 72% 64%);
     --accent-dark: hsl(var(--accent-h) 72% 42%);
@@ -264,15 +289,11 @@
     --accent-soft: hsla(var(--accent-h) 72% 50% / 0.18);
     --accent-soft-hover: hsla(var(--accent-h) 72% 50% / 0.24);
 
-    --filter-map: grayscale(0.35) sepia(0.26) brightness(0.78) contrast(1.05) saturate(0.9)
-      hue-rotate(-14deg);
-
+    /* Map filter (dark: slight desat + dim) */
+    --filter-map: grayscale(0.32) sepia(0.22) brightness(0.82) contrast(1.05) saturate(0.92) hue-rotate(-14deg);
     --map-filter: var(--filter-map);
 
-    --text-color: var(--text-body);
-    --text-soft: var(--text-muted);
-    --text-strong: var(--text-heading);
-
+    /* Legacy / component wiring */
     --card-bg: var(--surface-1);
     --card-shadow: var(--elev-2);
     --card-border: var(--border-1);
@@ -298,8 +319,8 @@
 
     --header-tagline-bg: linear-gradient(
       135deg,
-      hsla(var(--accent-h) 72% 54% / 0.90),
-      hsla(34 80% 52% / 0.88)
+      hsla(var(--accent-h) 72% 54% / 0.88),
+      hsla(34 80% 52% / 0.84)
     );
     --header-tagline-color: hsl(24 45% 14%);
     --header-tagline-shadow: var(--elev-2);
@@ -359,13 +380,11 @@
   /* Prefer more contrast: strengthen borders slightly */
   @media (prefers-contrast: more) {
     :root {
-      --border-1: hsla(30 30% 18% / 0.26);
-      --border-2: hsla(30 30% 18% / 0.34);
+      --border-1: hsla(30 30% 18% / 0.22);
+      --border-2: hsla(30 30% 18% / 0.32);
     }
 
-    :root[data-theme="dark"],
-    html[data-theme="dark"],
-    body[data-theme="dark"],
+    :where(:root, html, body)[data-theme="dark"],
     [data-theme="dark"] {
       --border-1: hsla(0 0% 100% / 0.12);
       --border-2: hsla(0 0% 100% / 0.20);
@@ -376,6 +395,7 @@
   @media (forced-colors: active) {
     :root {
       --focus-ring: 0 0 0 2px Highlight;
+      --focus-ring-default: var(--focus-ring);
     }
   }
 }
