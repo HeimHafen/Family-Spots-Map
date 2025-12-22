@@ -42,6 +42,11 @@
     --ease-out-fallback: cubic-bezier(0.2, 0.8, 0.2, 1);
 
     /* Focus ring fallback (theme.css preferred) */
+    /*
+       Dynamic accent tokens (defined in theme.css):
+       - --accent-h: hue for hsla() usage
+       - --accent-soft / --accent-dark: semantic variants used for hover/active
+    */
     --focus-ring-default:
       0 0 0 2px #ffffff,
       0 0 0 4px hsla(var(--accent-h, 28), 72%, 52%, 0.55);
@@ -67,6 +72,10 @@
     --chip-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
     --chip-shadow-hover: 0 2px 0 rgba(15, 23, 42, 0.08);
     --chip-active-border: hsla(var(--accent-h, 28), 72%, 52%, 0.85);
+
+    /* NEW: Chip active surface feedback (does not fight theme tokens) */
+    --chip-active-bg: var(--accent-soft, rgba(245, 227, 212, 0.90));
+    --chip-active-fg: var(--on-accent, var(--text-strong, #111827));
 
     /* Tilla shell button color (extracted from screenshot; theme may override) */
     --tilla-shell: #f3831a;
@@ -95,6 +104,10 @@
     --chip-border-hover: rgba(148, 163, 184, 0.55);
     --chip-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
     --chip-shadow-hover: 0 2px 0 rgba(0, 0, 0, 0.28);
+
+    /* NEW: chip active surface in dark */
+    --chip-active-bg: var(--accent-soft, rgba(255, 255, 255, 0.08));
+    --chip-active-fg: var(--text-strong, var(--text-color, #e5e7eb));
   }
 }
 
@@ -375,7 +388,7 @@
     color: var(--text-color, #e5e7eb);
   }
 
-  /* OPTIMIZED: ensure btn-small also compacts ghost buttons (Filter anzeigen / Nur Karte / Anzeigen) */
+  /* ensure btn-small also compacts ghost buttons (Filter anzeigen / Nur Karte / Anzeigen) */
   .btn-ghost.btn-small {
     min-height: 28px;
     padding: 0 0.75rem;
@@ -851,7 +864,7 @@
     border: 1px solid var(--sidebar-section-border);
   }
 
-  /* OPTIMIZED: Compact the three marked header cards (Filter / Plus / Mein Tag) and Spots */
+  /* Compact the three marked header cards (Filter / Plus / Mein Tag) and Spots */
   #filter-section.sidebar-section,
   .sidebar-section.sidebar-section--grow,
   #plus-section.sidebar-section,
@@ -895,7 +908,7 @@
   }
 
   /* ================================
-     FIX: Header row (Filter / Spots)
+     Header row (Filter / Spots)
      - wieder kompakt (oben/unten)
      - Action rechts bleibt „textig“
      ================================ */
@@ -909,11 +922,11 @@
     min-width: 0;
     flex-wrap: nowrap;
 
-    /* NEW: verhindert „hohe“ Header-Zeilen */
+    /* verhindert „hohe“ Header-Zeilen */
     min-height: 40px;
   }
 
-  /* NEW: rechter Bereich darf nicht wachsen / umbrechen */
+  /* rechter Bereich darf nicht wachsen / umbrechen */
   .sidebar-section-header > :last-child {
     margin-left: auto;
     flex: 0 0 auto;
@@ -922,7 +935,7 @@
     white-space: nowrap;
   }
 
-  /* FIX: allow title to shrink/truncate instead of pushing action / increasing height */
+  /* allow title to shrink/truncate instead of pushing action / increasing height */
   .sidebar-section-title {
     margin: 0;
     font-size: 18px;
@@ -932,11 +945,10 @@
     flex: 1 1 auto;
     min-width: 0;
 
-    /* NEW: kompakter wie im alten Screenshot */
     line-height: 1.15;
   }
 
-  /* FIX (robust): Action im Header generell kompakt halten (egal ob Button/Link/Span) */
+  /* Action im Header generell kompakt halten (egal ob Button/Link/Span) */
   :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
   :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
     display: inline-flex;
@@ -1009,7 +1021,7 @@
     background-color: rgba(148, 163, 184, 0.14);
   }
 
-  /* OPTIMIZED: Details/Summary headers should not show markers (Plus / Mein Tag) */
+  /* Details/Summary headers should not show markers (Plus / Mein Tag) */
   summary.sidebar-section-header {
     list-style: none;
     cursor: pointer;
@@ -1115,7 +1127,7 @@
     margin-bottom: 0;
   }
 
-  /* OPTIMIZED: reduce the extra vertical space under "Filter" header */
+  /* reduce the extra vertical space under "Filter" header */
   .sidebar-section-header + .filter-group-helper {
     margin-top: 0.45rem;
   }
@@ -1251,12 +1263,17 @@
 
   :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip)[aria-pressed="true"] {
     border-color: var(--chip-active-border);
+    background: var(--chip-active-bg);
+    color: var(--chip-active-fg);
     box-shadow: none;
     transform: none;
   }
 
+  /* Back-compat class-based actives */
   :where(.mood-chip--active, .travel-chip--active, .compass-mode-chip--active, .tag-filter-chip--active) {
     border-color: var(--chip-active-border);
+    background: var(--chip-active-bg);
+    color: var(--chip-active-fg);
     box-shadow: none;
     transform: none;
   }
@@ -1273,6 +1290,8 @@
   [data-theme="dark"]
     :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip)[aria-pressed="true"] {
     border-color: var(--chip-active-border);
+    background: var(--chip-active-bg);
+    color: var(--chip-active-fg);
     box-shadow: none;
   }
 
@@ -1545,7 +1564,7 @@
   }
 
   #spot-list {
-    margin-top: 6px; /* OPTIMIZED: was 8px */
+    margin-top: 6px;
     max-height: 320px;
     overflow-y: auto;
     padding-right: 4px;
@@ -1920,7 +1939,7 @@
     align-items: flex-end;
     padding: 0 16px 16px;
     background: rgba(0, 0, 0, 0.35);
-    z-index: 2000;
+    z-index: 3200;
   }
 
   .filter-modal[hidden] {
@@ -2320,7 +2339,7 @@
     100% { transform: scale(1); }
   }
 
-  .leaflet-control-attribution {
+  .leaflet-container .leaflet-control-attribution {
     bottom: 4px !important;
     right: 12px !important;
     font-size: 10px;
@@ -2684,10 +2703,9 @@
   .tilla-sidebar-avatar img {
     animation: tilla-bob 3.5s ease-in-out infinite !important;
   }
-}
 
 /* =========================================================
-   SAFETY + ALIGNMENT OVERRIDES (UNLAYERED)
+   SAFETY + ALIGNMENT OVERRIDES (Layer Overrides)
    - gewinnt gegen unlayered theme/button defaults
    - sorgt für echte vertikale Zentrierung (oben/unten gleich)
    - behält deine Kompaktheit (Padding/Font) bei
@@ -2732,7 +2750,7 @@
 }
 
 /* Titel: mittig im Header (nicht baseline), kompakt
-   + NEW: #tilla-title auf gleiche Größe wie Filter */
+   + #tilla-title auf gleiche Größe wie Filter */
 #filter-title,
 #spots-title,
 #plus-section-title,
@@ -2778,11 +2796,11 @@
 }
 
 /* =========================================================
-   ADDED FIXES (UNLAYERED)
+   ADDED FIXES (Layer Overrides)
    1) "Family Spots Plus" Action-Text ("Anzeigen") nicht ausgegraut
    2) Robustheit: keine opacity/filter-Fallen auf Plus/Daylog summary
-   3) Optional: Bottom-Nav endgültig entfernen + Padding zurückholen
-   4) Optional: "Nur Karte" Toggle ausblenden (wenn vorhanden)
+   3) Bottom-Nav endgültig entfernen + Padding zurückholen
+   4) "Nur Karte" Toggle ausblenden (wenn vorhanden)
    ========================================================= */
 
 /* 1) Plus/Daylog: "Anzeigen" immer wie starker Text */
@@ -2809,7 +2827,7 @@
   filter: none !important;
 }
 
-/* 3) Bottom Nav entfernen + Platz zurückholen (wenn du Bottom-Nav nicht mehr nutzt) */
+/* 3) Bottom Nav entfernen + Platz zurückholen */
 :root {
   --bottom-nav-height: 0px;
   --bottom-nav-safearea: 0px;
@@ -2830,7 +2848,7 @@
 }
 
 /* =========================================================
-   HOTFIXES (unlayered)
+   HOTFIXES (Layer Overrides)
    1) Summary focus outline: use app focus ring (no browser rectangle)
    2) Normalize "Anzeigen" buttons for Plus/Mein Tag in Safari iOS
    ========================================================= */
@@ -2865,7 +2883,7 @@ summary.sidebar-section-header:focus-visible {
 }
 
 /* =========================================================
-   TITLE COLOR UNIFICATION (unlayered)
+   TITLE COLOR UNIFICATION (Layer Overrides)
    - Plus / Mein Tag / alle Sidebar-Section-Titles immer gleich
    - robust: fallback, falls --text-strong nicht gesetzt ist
    ========================================================= */
@@ -2878,7 +2896,7 @@ summary.sidebar-section-header:focus-visible {
 }
 
 /* =========================================================
-   FINAL FIX (unlayered)
+   FINAL FIX (Layer Overrides)
    - genau die 2 “falschen” Stellen im Dark Mode
    1) Tilla-Title (#tilla-title) hatte keine Farbzuweisung
    2) Plus-Header Action/Titel (egal ob a/span/button) immer stark
@@ -2893,4 +2911,6 @@ summary.sidebar-section-header:focus-visible {
 [data-theme="dark"] #plus-section summary.sidebar-section-header * {
   color: var(--text-strong, var(--text-color)) !important;
   opacity: 1 !important;
+}
+
 }
