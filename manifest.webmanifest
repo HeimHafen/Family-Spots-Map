@@ -5,7 +5,7 @@
   "lang": "de",
   "dir": "ltr",
 
-  "start_url": "./",
+  "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -50,6 +50,20 @@
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/home.jpg",
+      "sizes": "540x960",
+      "type": "image/jpeg",
+      "label": "Startseite"
+    },
+    {
+      "src": "assets/screenshots/map.jpg",
+      "sizes": "540x960",
+      "type": "image/jpeg",
+      "label": "Karte"
     }
   ]
 }
