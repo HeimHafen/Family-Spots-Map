@@ -22,12 +22,12 @@
   <script>
     (function () {
       try {
-        const stored =
+        var stored =
           localStorage.getItem("fsm_theme") ||
           localStorage.getItem("fs_theme") ||
           localStorage.getItem("theme");
 
-        let theme = null;
+        var theme = null;
         if (stored === "dark" || stored === "light") {
           theme = stored;
         } else if (window.matchMedia) {
@@ -45,77 +45,46 @@
        CRITICAL CSS (Background + Textfarben konsistent)
        ====================================================== -->
   <style>
-    :root {
-      --color-bg-light: #f7e1d0;
-      --color-bg-dark: #020617;
-      --text-light: #111827;
-      --text-dark: #e5e7eb;
-      --placeholder-light: rgba(107,114,128,0.95);
-      --placeholder-dark: rgba(148,163,184,0.85);
-    }
-
     html, body {
       margin: 0;
       min-height: 100%;
-      background: var(--color-bg-light);
-      color: var(--text-light);
+      background: #f7e1d0;   /* Light fallback */
+      color: #111827;        /* Light text fallback */
     }
 
     html[data-theme="dark"], html[data-theme="dark"] body {
-      background: var(--color-bg-dark);
-      color: var(--text-dark);
+      background: #020617;   /* Dark fallback */
+      color: #e5e7eb;        /* Dark text fallback */
     }
 
+    /* Form-Controls sollen Textfarbe sauber erben (sonst iOS/Safari teils „falsch“) */
     input, textarea, select, button {
       color: inherit;
     }
 
+    /* Placeholder: lesbar in Light/Dark */
     ::placeholder {
-      color: var(--placeholder-light);
+      color: rgba(107, 114, 128, 0.95);
       opacity: 1;
     }
     html[data-theme="dark"] ::placeholder {
-      color: var(--placeholder-dark);
+      color: rgba(148, 163, 184, 0.85);
       opacity: 1;
     }
 
+    /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem */
     .app-menu-item-icon svg {
       display: block;
     }
 
-    /* Skip-Link (sofort nutzbar, auch vor geladenem CSS) */
-    .skip-link {
-      position: absolute;
-      left: -9999px;
-      top: auto;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      z-index: 10000;
-    }
-    .skip-link:focus,
-    .skip-link:active,
-    .skip-link:focus-visible {
-      position: absolute;
-      left: 8px;
-      top: calc(env(safe-area-inset-top, 0px) + 8px);
-      width: auto;
-      height: auto;
-      padding: 10px 14px;
-      background: #000;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 999px;
-    }
-
-    /* Tilla-Titel kompakter (wie "Filter") */
+    /* NEU: Tilla-Titel kompakter (wie "Filter") */
     .tilla-sidebar-section .sidebar-section-title {
       font-size: 1rem !important;
       line-height: 1.25 !important;
       margin: 0 !important;
     }
 
-    /* Onboarding-Hinweis Close-Button zuverlässig sichtbar + sauber positioniert */
+    /* NEU: Onboarding-Hinweis Close-Button zuverlässig sichtbar + sauber positioniert */
     .fsm-onboarding-hint { position: relative; }
     .fsm-onboarding-hint__close {
       display: inline-flex !important;
@@ -148,28 +117,6 @@
     .fsm-onboarding-hint__close:active {
       transform: translateY(1px);
       opacity: 0.92;
-    }
-
-    /* ======================================================
-       FIX: Tilla + Family Spots Plus Titel im Dark Mode weiß
-       (verhindert "grau" durch spätere CSS/Opacity/WebKit)
-       ====================================================== */
-    html[data-theme="dark"] #tilla-title,
-    html[data-theme="dark"] #plus-section-title,
-    html[data-theme="dark"] #tilla-section > .sidebar-section-header,
-    html[data-theme="dark"] #plus-section > summary.sidebar-section-header {
-      color: #ffffff !important;
-      -webkit-text-fill-color: #ffffff !important;
-      opacity: 1 !important;
-      filter: none !important;
-    }
-
-    /* Plus-Summary-Button ("Anzeigen") soll im Dark Mode ebenfalls sauber erben */
-    html[data-theme="dark"] #plus-section > summary.sidebar-section-header button,
-    html[data-theme="dark"] #plus-section > summary.sidebar-section-header button * {
-      color: inherit !important;
-      -webkit-text-fill-color: inherit !important;
-      opacity: 1 !important;
     }
   </style>
 
@@ -228,7 +175,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-touch-fullscreen" content="yes" />
 
   <!-- Performance hints -->
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
@@ -238,7 +184,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
 
-  <!-- Leaflet CSS (vor eigenen Styles, damit du überschreiben kannst) -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
@@ -246,12 +192,6 @@
   <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/badges.css" />
-
-  <!-- PRELOAD: kritische Ressourcen -->
-  <link rel="preload" href="css/styles.css" as="style" />
-  <link rel="preload" href="css/badges.css" as="style" />
-  <link rel="modulepreload" href="./js/app.js" />
-  <link rel="modulepreload" href="./js/ui/details-summary-fix.js" />
 </head>
 
 <body>
@@ -374,7 +314,6 @@
             <span class="app-menu-item-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <title>Info öffnen</title>
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="10" x2="12" y2="16"></line>
                 <circle cx="12" cy="7" r="1"></circle>
@@ -395,7 +334,6 @@
             <span class="app-menu-item-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <title>Nur Karte</title>
                 <line x1="8" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>
                 <line x1="8" y1="18" x2="21" y2="18"></line>
@@ -420,7 +358,6 @@
             <span class="app-menu-item-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <title>Designmodus wechseln</title>
                 <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
               </svg>
             </span>
@@ -440,7 +377,6 @@
             <span class="app-menu-item-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <title>Standort</title>
                 <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"></path>
                 <circle cx="12" cy="10" r="2"></circle>
               </svg>
@@ -470,15 +406,15 @@
           </p>
 
           <div class="app-menu-languages-row">
-            <button type="button" class="app-menu-lang-chip" data-lang-target="de" aria-label="Deutsch">
+            <button type="button" class="app-menu-lang-chip" data-lang-target="de">
               <span class="app-menu-lang-flag" aria-hidden="true">🇩🇪</span>
               <span class="app-menu-lang-code">DE</span>
             </button>
-            <button type="button" class="app-menu-lang-chip" data-lang-target="da" aria-label="Dansk">
+            <button type="button" class="app-menu-lang-chip" data-lang-target="da">
               <span class="app-menu-lang-flag" aria-hidden="true">🇩🇰</span>
               <span class="app-menu-lang-code">DA</span>
             </button>
-            <button type="button" class="app-menu-lang-chip" data-lang-target="en" aria-label="English">
+            <button type="button" class="app-menu-lang-chip" data-lang-target="en">
               <span class="app-menu-lang-flag" aria-hidden="true">🇬🇧</span>
               <span class="app-menu-lang-code">EN</span>
             </button>
@@ -520,8 +456,7 @@
                 <img
                   src="assets/tilla/tilla-hero.png"
                   alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
-                  fetchpriority="high"
-                  loading="eager"
+                  loading="lazy"
                   decoding="async"
                   width="512"
                   height="512"
@@ -1775,7 +1710,7 @@
     defer
   ></script>
   <script
-    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.js"
+    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
     defer
   ></script>
 
@@ -1795,7 +1730,7 @@
     }
   </script>
 
-  <!-- Onboarding-Hinweis schließen (OHNE Persistenz: nach Reload wieder sichtbar) -->
+  <!-- Onboarding-Hinweis schließen (ohne Persistenz: nach Reload wieder sichtbar) -->
   <script type="module">
     const hint = document.querySelector("[data-onboarding-hint]");
     const closeBtn =
