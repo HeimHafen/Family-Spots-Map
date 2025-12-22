@@ -36,14 +36,13 @@
 
         if (theme) document.documentElement.setAttribute("data-theme", theme);
       } catch (e) {
-        console.warn("Theme init failed", e);
+        // ignore
       }
     })();
   </script>
 
   <!-- ======================================================
        CRITICAL CSS (Background + Textfarben konsistent)
-       + Skip-Link immer nutzbar (auch bevor styles.css lädt)
        ====================================================== -->
   <style>
     :root {
@@ -51,8 +50,8 @@
       --color-bg-dark: #020617;
       --text-light: #111827;
       --text-dark: #e5e7eb;
-      --placeholder-light: rgba(107, 114, 128, 0.95);
-      --placeholder-dark: rgba(148, 163, 184, 0.85);
+      --placeholder-light: rgba(107,114,128,0.95);
+      --placeholder-dark: rgba(148,163,184,0.85);
     }
 
     html, body {
@@ -84,7 +83,7 @@
       display: block;
     }
 
-    /* Skip-Link: immer verfügbar, auch ohne geladenes CSS */
+    /* Skip-Link (sofort nutzbar, auch vor geladenem CSS) */
     .skip-link {
       position: absolute;
       left: -9999px;
@@ -92,30 +91,31 @@
       width: 1px;
       height: 1px;
       overflow: hidden;
+      z-index: 10000;
     }
     .skip-link:focus,
-    .skip-link:active {
+    .skip-link:active,
+    .skip-link:focus-visible {
       position: absolute;
       left: 8px;
-      top: 8px;
+      top: calc(env(safe-area-inset-top, 0px) + 8px);
       width: auto;
       height: auto;
-      padding: 0.5rem 1rem;
+      padding: 10px 14px;
       background: #000;
       color: #fff;
       text-decoration: none;
-      z-index: 10000;
-      border-radius: 10px;
+      border-radius: 999px;
     }
 
-    /* Kompaktere Tilla-Überschrift */
+    /* Tilla-Titel kompakter (wie "Filter") */
     .tilla-sidebar-section .sidebar-section-title {
       font-size: 1rem !important;
       line-height: 1.25 !important;
       margin: 0 !important;
     }
 
-    /* Onboarding Close-Button robust sichtbar */
+    /* Onboarding-Hinweis Close-Button zuverlässig sichtbar + sauber positioniert */
     .fsm-onboarding-hint { position: relative; }
     .fsm-onboarding-hint__close {
       display: inline-flex !important;
@@ -216,20 +216,20 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
 
-  <!-- Leaflet CSS (vor deinen Styles, damit du sauber überschreiben kannst) -->
+  <!-- Leaflet CSS (vor eigenen Styles, damit du überschreiben kannst) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+  <!-- App Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/badges.css" />
 
   <!-- PRELOAD: kritische Ressourcen -->
   <link rel="preload" href="css/styles.css" as="style" />
   <link rel="preload" href="css/badges.css" as="style" />
   <link rel="modulepreload" href="./js/app.js" />
   <link rel="modulepreload" href="./js/ui/details-summary-fix.js" />
-
-  <!-- App Styles -->
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/badges.css" />
 </head>
 
 <body>
@@ -350,8 +350,9 @@
           <!-- Info -->
           <button id="btn-help" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
-              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none"
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <title>Info öffnen</title>
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="10" x2="12" y2="16"></line>
                 <circle cx="12" cy="7" r="1"></circle>
@@ -370,8 +371,9 @@
           <!-- Nur Karte -->
           <button id="btn-toggle-view-menu" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
-              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none"
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <title>Nur Karte</title>
                 <line x1="8" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>
                 <line x1="8" y1="18" x2="21" y2="18"></line>
@@ -394,8 +396,9 @@
           <!-- Designmodus wechseln -->
           <button id="theme-toggle" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
-              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none"
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <title>Designmodus wechseln</title>
                 <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
               </svg>
             </span>
@@ -413,8 +416,9 @@
           <!-- Standort -->
           <button id="btn-locate" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
-              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none"
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <title>Standort</title>
                 <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"></path>
                 <circle cx="12" cy="10" r="2"></circle>
               </svg>
@@ -444,15 +448,15 @@
           </p>
 
           <div class="app-menu-languages-row">
-            <button type="button" class="app-menu-lang-chip" data-lang-target="de">
+            <button type="button" class="app-menu-lang-chip" data-lang-target="de" aria-label="Deutsch">
               <span class="app-menu-lang-flag" aria-hidden="true">🇩🇪</span>
               <span class="app-menu-lang-code">DE</span>
             </button>
-            <button type="button" class="app-menu-lang-chip" data-lang-target="da">
+            <button type="button" class="app-menu-lang-chip" data-lang-target="da" aria-label="Dansk">
               <span class="app-menu-lang-flag" aria-hidden="true">🇩🇰</span>
               <span class="app-menu-lang-code">DA</span>
             </button>
-            <button type="button" class="app-menu-lang-chip" data-lang-target="en">
+            <button type="button" class="app-menu-lang-chip" data-lang-target="en" aria-label="English">
               <span class="app-menu-lang-flag" aria-hidden="true">🇬🇧</span>
               <span class="app-menu-lang-code">EN</span>
             </button>
@@ -494,8 +498,8 @@
                 <img
                   src="assets/tilla/tilla-hero.png"
                   alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
-                  loading="eager"
                   fetchpriority="high"
+                  loading="eager"
                   decoding="async"
                   width="512"
                   height="512"
@@ -1769,7 +1773,7 @@
     }
   </script>
 
-  <!-- Onboarding-Hinweis schließen (mit Persistenz) -->
+  <!-- Onboarding-Hinweis schließen (OHNE Persistenz: nach Reload wieder sichtbar) -->
   <script type="module">
     const hint = document.querySelector("[data-onboarding-hint]");
     const closeBtn =
@@ -1778,21 +1782,11 @@
 
     function dismissHint() {
       if (!hint) return;
-      hint.hidden = true;
+      hint.hidden = true;                 // nur für die aktuelle Session
       hint.setAttribute("aria-hidden", "true");
     }
 
-    try {
-      const dismissed = localStorage.getItem("fsm_hint_dismissed") === "1";
-      if (dismissed) dismissHint();
-    } catch {}
-
-    if (closeBtn) {
-      closeBtn.addEventListener("click", () => {
-        dismissHint();
-        try { localStorage.setItem("fsm_hint_dismissed", "1"); } catch {}
-      });
-    }
+    if (closeBtn) closeBtn.addEventListener("click", dismissHint);
   </script>
 
   <!-- Spots-Liste anzeigen/ausblenden + Zustand merken -->
