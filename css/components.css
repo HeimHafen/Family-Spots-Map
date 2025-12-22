@@ -68,20 +68,17 @@
     --chip-shadow-hover: 0 2px 0 rgba(15, 23, 42, 0.08);
     --chip-active-border: hsla(var(--accent-h, 28), 72%, 52%, 0.85);
 
-    /* NEW: Chip active surface feedback (does not fight theme tokens) */
+    /* Chip active surface feedback */
     --chip-active-bg: var(--accent-soft, rgba(245, 227, 212, 0.90));
     --chip-active-fg: var(--on-accent, var(--text-strong, #111827));
 
-    /* Tilla shell button color (extracted from screenshot; theme may override) */
+    /* Tilla shell button color */
     --tilla-shell: #f3831a;
     --tilla-shell-hover: #e17112;
     --tilla-shell-active: #d1630e;
     --on-tilla-shell: #ffffff;
 
-    /* -----------------------------------------
-       Tilla sizing tokens (optimized)
-       - bigger avatar, but tighter card so the box stays compact
-       ----------------------------------------- */
+    /* Tilla sizing tokens */
     --tilla-avatar-size: 124px;
     --tilla-card-gap: 10px;
     --tilla-card-pad-y: 8px;
@@ -100,7 +97,6 @@
     --chip-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
     --chip-shadow-hover: 0 2px 0 rgba(0, 0, 0, 0.28);
 
-    /* NEW: chip active surface in dark */
     --chip-active-bg: var(--accent-soft, rgba(255, 255, 255, 0.08));
     --chip-active-fg: var(--text-strong, var(--text-color, #e5e7eb));
   }
@@ -110,12 +106,8 @@
    BASE — Global Defaults, Viewport, A11y
    ========================================= */
 @layer base {
-  :root {
-    color-scheme: light;
-  }
-  [data-theme="dark"] {
-    color-scheme: dark;
-  }
+  :root { color-scheme: light; }
+  [data-theme="dark"] { color-scheme: dark; }
 
   html {
     height: 100%;
@@ -129,20 +121,15 @@
   }
 
   @supports (height: 100dvh) {
-    body {
-      min-height: 100dvh;
-    }
+    body { min-height: 100dvh; }
   }
 
   [data-theme="dark"] html {
     background: var(--app-bg, var(--page-bg, var(--app-bg-fallback-dark)));
   }
 
-  [data-theme="dark"] body {
-    background: inherit;
-  }
+  [data-theme="dark"] body { background: inherit; }
 
-  /* Universal interactive ergonomics (mobile) */
   :where(
     button,
     .btn,
@@ -159,7 +146,6 @@
     touch-action: manipulation;
   }
 
-  /* Pressable: prevent selection where it feels wrong */
   :where(
     .btn,
     .btn-ghost,
@@ -182,7 +168,6 @@
     -webkit-user-select: none;
   }
 
-  /* Focus: additive ring + existing elevation (no “shadow wipe”) */
   :where(
     button,
     .language-switcher,
@@ -212,7 +197,6 @@
       var(--shadow, none);
   }
 
-  /* Forced colors: ensure visible focus */
   @media (forced-colors: active) {
     :where(
       button,
@@ -237,7 +221,6 @@
     }
   }
 
-  /* Prevent background scroll when modal/menu open */
   body[data-filter-modal-open="1"],
   body[data-menu-open="1"] {
     overflow: hidden;
@@ -249,9 +232,7 @@
    COMPONENTS
    ========================================= */
 @layer components {
-  /* -----------------------------------------
-     Form Controls – Select baseline
-     ----------------------------------------- */
+  /* Form Controls – Select baseline */
   select {
     background-color: var(--input-bg, rgba(255, 255, 255, 0.92));
     color: var(--text-color, #111827);
@@ -263,9 +244,7 @@
     z-index: 1;
   }
 
-  /* -----------------------------------------
-     Buttons
-     ----------------------------------------- */
+  /* Buttons */
   :where(.btn, .btn-play-idea) {
     --shadow: var(--elevation-sm);
 
@@ -281,7 +260,6 @@
     font-family: inherit;
     letter-spacing: 0.01em;
 
-    /* Default CTA wiring (theme.css): solid background + readable text */
     background-color: var(--cta-bg, var(--accent-solid, var(--accent)));
     color: var(--cta-fg, var(--on-accent-solid, #ffffff));
 
@@ -320,10 +298,8 @@
     --shadow: var(--elevation-md);
   }
 
-  /* Secondary buttons */
   .btn-secondary {
     --shadow: var(--elevation-xs);
-
     background-color: var(--neutral-0);
     color: var(--text-strong, #111827);
     border: var(--stroke-2);
@@ -337,14 +313,12 @@
 
   [data-theme="dark"] .btn-secondary {
     --shadow: var(--elevation-sm);
-
     background: var(--neutral-0);
     color: var(--text-color, #e5e7eb);
     border: var(--stroke-2);
     box-shadow: var(--shadow);
   }
 
-  /* Ghost buttons */
   .btn-ghost {
     --shadow: none;
 
@@ -374,23 +348,19 @@
       border-color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
   }
 
-  .btn-ghost:active {
-    background-color: rgba(15, 23, 42, 0.07);
-  }
+  .btn-ghost:active { background-color: rgba(15, 23, 42, 0.07); }
 
   [data-theme="dark"] .btn-ghost {
     background: transparent;
     color: var(--text-color, #e5e7eb);
   }
 
-  /* ensure btn-small also compacts ghost buttons (Filter anzeigen / Nur Karte / Anzeigen) */
   .btn-ghost.btn-small {
     min-height: 28px;
     padding: 0 0.75rem;
     font-size: 12px;
   }
 
-  /* Tilla / Compact primary button */
   .btn-play-idea {
     max-width: 100%;
     padding: 0.3rem 0.85rem;
@@ -401,7 +371,6 @@
     gap: 6px;
     line-height: 1.15;
 
-    /* REQUIRED: match Tilla shell color */
     background-color: var(--tilla-shell);
     color: var(--on-tilla-shell);
   }
@@ -413,7 +382,6 @@
     }
   }
 
-  /* Disabled states */
   :where(.btn, .btn-play-idea, .btn-ghost, .btn-icon):disabled,
   :where(.btn, .btn-play-idea, .btn-ghost, .btn-icon)[aria-disabled="true"] {
     cursor: not-allowed;
@@ -423,9 +391,7 @@
     pointer-events: none;
   }
 
-  /* -----------------------------------------
-     HEADER
-     ----------------------------------------- */
+  /* HEADER */
   .app-header {
     position: sticky;
     top: 0;
@@ -433,11 +399,7 @@
 
     padding: calc(env(safe-area-inset-top, 0px) + 10px) 14px 14px;
 
-    background: linear-gradient(
-      180deg,
-      var(--header-bg-top),
-      var(--header-bg-bottom)
-    );
+    background: linear-gradient(180deg, var(--header-bg-top), var(--header-bg-bottom));
     color: var(--header-text-color);
 
     border-bottom-left-radius: 24px;
@@ -446,14 +408,8 @@
     box-shadow: var(--header-shadow);
   }
 
-  /* Light-mode header: warm muted */
   :where(html, body, :root)[data-theme="light"] .app-header {
-    background: radial-gradient(
-      circle at top left,
-      var(--fsm-warm-0) 0,
-      var(--fsm-warm-1) 52%,
-      var(--fsm-warm-2) 100%
-    );
+    background: radial-gradient(circle at top left, var(--fsm-warm-0) 0, var(--fsm-warm-1) 52%, var(--fsm-warm-2) 100%);
     color: var(--text-strong, #111827);
     box-shadow: var(--elevation-md);
 
@@ -477,7 +433,6 @@
     gap: 8px;
   }
 
-  /* Header icons */
   .btn-icon {
     --shadow: var(--elevation-sm);
 
@@ -513,18 +468,11 @@
     opacity: 0.92;
   }
 
-  .btn-menu-icon {
-    font-size: 20px;
-  }
+  .btn-menu-icon { font-size: 20px; }
 
-  /* legacy language-switcher is not used */
-  .language-switcher {
-    display: none;
-  }
+  .language-switcher { display: none; }
 
-  .app-header-main {
-    text-align: center;
-  }
+  .app-header-main { text-align: center; }
 
   .header-title {
     margin: 0;
@@ -550,15 +498,10 @@
     box-shadow: none;
   }
 
-  .header-flag {
-    font-size: 20px;
-  }
+  .header-flag { font-size: 20px; }
 
-  .header-title-spots {
-    text-decoration: none;
-  }
+  .header-title-spots { text-decoration: none; }
 
-  /* REMOVE: frame around "Family Spots Map" */
   .header-title,
   .header-title-spots,
   .header-title-spots:link,
@@ -591,9 +534,7 @@
     box-shadow: var(--elevation-sm);
   }
 
-  /* -----------------------------------------
-     HEADER MENU (☰)
-     ----------------------------------------- */
+  /* HEADER MENU (☰) */
   .app-menu {
     position: fixed;
     inset: 0;
@@ -601,17 +542,10 @@
     display: none;
   }
 
-  .app-menu[hidden] {
-    display: none !important;
-  }
+  .app-menu[hidden] { display: none !important; }
 
-  body:not([data-menu-open="1"]) .app-menu {
-    display: none !important;
-  }
-
-  body[data-menu-open="1"] .app-menu {
-    display: block;
-  }
+  body:not([data-menu-open="1"]) .app-menu { display: none !important; }
+  body[data-menu-open="1"] .app-menu { display: block; }
 
   .app-menu-backdrop {
     position: absolute;
@@ -637,10 +571,7 @@
     box-shadow: var(--elevation-lg);
 
     height: auto;
-    max-height: min(
-      70vh,
-      calc(100vh - env(safe-area-inset-top, 0px) - 84px)
-    );
+    max-height: min(70vh, calc(100vh - env(safe-area-inset-top, 0px) - 84px));
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
@@ -696,7 +627,6 @@
 
   [data-theme="dark"] .app-menu-item {
     --shadow: var(--elevation-md);
-
     background: var(--neutral-0);
     color: var(--text-color, #e5e7eb);
     border: var(--stroke-1);
@@ -706,7 +636,6 @@
   .app-menu-item-icon {
     width: 26px;
     height: 26px;
-
     border-radius: 999px;
 
     display: inline-flex;
@@ -724,7 +653,6 @@
     text-align: left;
   }
 
-  /* Language chips */
   .app-menu-languages {
     margin-top: 4px;
     padding-top: 6px;
@@ -777,7 +705,6 @@
 
   [data-theme="dark"] .app-menu-lang-chip {
     --shadow: var(--elevation-sm);
-
     background: var(--neutral-1);
     color: var(--text-color, #e5e7eb);
     box-shadow: var(--shadow);
@@ -785,7 +712,6 @@
 
   .app-menu-lang-chip--active {
     --shadow: var(--elevation-md);
-
     background: var(--accent-soft);
     color: var(--on-accent, #111827);
     box-shadow: var(--shadow);
@@ -796,9 +722,7 @@
     color: var(--on-accent, #111827);
   }
 
-  .app-menu-lang-flag {
-    font-size: 16px;
-  }
+  .app-menu-lang-flag { font-size: 16px; }
 
   .app-menu-lang-code {
     font-size: 12px;
@@ -806,9 +730,7 @@
     text-transform: uppercase;
   }
 
-  /* -----------------------------------------
-     MAIN LAYOUT
-     ----------------------------------------- */
+  /* MAIN LAYOUT */
   .app-main {
     flex: 1;
     width: 100%;
@@ -817,17 +739,10 @@
     padding: 16px 12px calc(96px + env(safe-area-inset-bottom, 0px));
   }
 
-  .view {
-    display: none;
-  }
+  .view { display: none; }
+  .view--active { display: block; }
 
-  .view--active {
-    display: block;
-  }
-
-  /* -----------------------------------------
-     MAP VIEW & SIDEBAR
-     ----------------------------------------- */
+  /* MAP VIEW & SIDEBAR */
   #view-map {
     display: flex;
     flex-direction: column;
@@ -842,15 +757,10 @@
   }
 
   [data-theme="dark"] #view-map {
-    background: linear-gradient(
-      to bottom,
-      rgba(2, 6, 23, 0.88) 0,
-      rgba(2, 6, 23, 0.88) 100%
-    );
+    background: linear-gradient(to bottom, rgba(2, 6, 23, 0.88) 0, rgba(2, 6, 23, 0.88) 100%);
     border-radius: 0 0 28px 28px;
   }
 
-  /* Sections / Cards */
   .sidebar-section {
     background: var(--sidebar-section-bg);
     border-radius: 20px;
@@ -859,7 +769,6 @@
     border: 1px solid var(--sidebar-section-border);
   }
 
-  /* Compact the three marked header cards (Filter / Plus / Mein Tag) and Spots */
   #filter-section.sidebar-section,
   .sidebar-section.sidebar-section--grow,
   #plus-section.sidebar-section,
@@ -872,15 +781,9 @@
     padding-bottom: 10px;
   }
 
-  /* global stack spacing */
-  .sidebar-section + .sidebar-section {
-    margin-top: 10px;
-  }
-  .sidebar > .sidebar-section + .sidebar-section {
-    margin-top: 0;
-  }
+  .sidebar-section + .sidebar-section { margin-top: 10px; }
+  .sidebar > .sidebar-section + .sidebar-section { margin-top: 0; }
 
-  /* Map card */
   .map-section {
     border-radius: 22px;
     overflow: hidden;
@@ -893,20 +796,10 @@
     margin-bottom: 14px;
   }
 
-  /* plus-section ↔ daylog-section spacing */
-  #plus-section + #daylog-section {
-    margin-top: 14px;
-  }
+  #plus-section + #daylog-section { margin-top: 14px; }
 
-  .sidebar-section[open] {
-    padding-bottom: 14px;
-  }
+  .sidebar-section[open] { padding-bottom: 14px; }
 
-  /* ================================
-     Header row (Filter / Spots)
-     - wieder kompakt (oben/unten)
-     - Action rechts bleibt „textig“
-     ================================ */
   .sidebar-section-header {
     display: flex;
     align-items: center;
@@ -917,11 +810,9 @@
     min-width: 0;
     flex-wrap: nowrap;
 
-    /* verhindert „hohe“ Header-Zeilen */
     min-height: 40px;
   }
 
-  /* rechter Bereich darf nicht wachsen / umbrechen */
   .sidebar-section-header > :last-child {
     margin-left: auto;
     flex: 0 0 auto;
@@ -930,7 +821,6 @@
     white-space: nowrap;
   }
 
-  /* allow title to shrink/truncate instead of pushing action / increasing height */
   .sidebar-section-title {
     margin: 0;
     font-size: 18px;
@@ -939,11 +829,9 @@
 
     flex: 1 1 auto;
     min-width: 0;
-
     line-height: 1.15;
   }
 
-  /* Action im Header generell kompakt halten (egal ob Button/Link/Span) */
   :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
   :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
     display: inline-flex;
@@ -980,7 +868,6 @@
     background-color: rgba(148, 163, 184, 0.14);
   }
 
-  /* (falls IDs existieren) zusätzliche Absicherung */
   #btn-toggle-filters,
   #btn-toggle-spots {
     flex: 0 0 auto !important;
@@ -1016,17 +903,12 @@
     background-color: rgba(148, 163, 184, 0.14);
   }
 
-  /* Details/Summary headers should not show markers (Plus / Mein Tag) */
   summary.sidebar-section-header {
     list-style: none;
     cursor: pointer;
   }
-  summary.sidebar-section-header::-webkit-details-marker {
-    display: none;
-  }
-  summary.sidebar-section-header::marker {
-    content: "";
-  }
+  summary.sidebar-section-header::-webkit-details-marker { display: none; }
+  summary.sidebar-section-header::marker { content: ""; }
 
   .sidebar-section-close {
     --shadow: var(--elevation-xs);
@@ -1057,22 +939,15 @@
 
   [data-theme="dark"] .sidebar-section-close {
     --shadow: var(--elevation-sm);
-
     background: var(--neutral-0);
     color: var(--text-color, #e5e7eb);
     border: var(--stroke-2);
     box-shadow: var(--shadow);
   }
 
-  .sidebar-section--collapsed {
-    padding-bottom: 10px;
-  }
+  .sidebar-section--collapsed { padding-bottom: 10px; }
+  .sidebar-section--collapsed > .filter-group { display: none; }
 
-  .sidebar-section--collapsed > .filter-group {
-    display: none;
-  }
-
-  /* Compass card */
   .compass-card {
     margin-top: 4px;
     padding: 10px 10px 12px;
@@ -1088,12 +963,8 @@
     border: var(--border-soft);
   }
 
-  /* -----------------------------------------
-     Form Controls in Sidebar
-     ----------------------------------------- */
-  .filter-group {
-    margin-top: 8px;
-  }
+  /* Form Controls in Sidebar */
+  .filter-group { margin-top: 8px; }
 
   .filter-group-label {
     display: block;
@@ -1118,16 +989,10 @@
     color: var(--text-soft);
   }
 
-  #btn-toggle-filters {
-    margin-bottom: 0;
-  }
+  #btn-toggle-filters { margin-bottom: 0; }
 
-  /* reduce the extra vertical space under "Filter" header */
-  .sidebar-section-header + .filter-group-helper {
-    margin-top: 0.45rem;
-  }
+  .sidebar-section-header + .filter-group-helper { margin-top: 0.45rem; }
 
-  /* Footer under base filters */
   .filter-footer {
     display: flex;
     align-items: center;
@@ -1170,9 +1035,7 @@
     resize: vertical;
   }
 
-  :where(.input, textarea.input, select.input):hover {
-    border-color: rgba(148, 163, 184, 0.55);
-  }
+  :where(.input, textarea.input, select.input):hover { border-color: rgba(148, 163, 184, 0.55); }
 
   .input:focus,
   textarea.input:focus,
@@ -1182,7 +1045,6 @@
     box-shadow: 0 0 0 1px hsla(var(--accent-h, 28), 72%, 52%, 0.45);
   }
 
-  /* Select chevron */
   select.input {
     padding-right: 2.35rem;
     background-image:
@@ -1201,10 +1063,7 @@
       linear-gradient(135deg, rgba(229, 231, 235, 0.7) 50%, transparent 50%);
   }
 
-  /* -----------------------------------------
-     Mood / Travel / Tag chips (Bild 3 Look)
-     - aktiv über aria-pressed="true" (A11y)
-     ----------------------------------------- */
+  /* Mood / Travel / Tag chips */
   .mood-row {
     display: flex;
     flex-wrap: wrap;
@@ -1252,9 +1111,7 @@
     transform: translateY(1px);
   }
 
-  .mood-chip-emoji {
-    font-size: 15px;
-  }
+  .mood-chip-emoji { font-size: 15px; }
 
   :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip)[aria-pressed="true"] {
     border-color: var(--chip-active-border);
@@ -1264,7 +1121,6 @@
     transform: none;
   }
 
-  /* Back-compat class-based actives */
   :where(.mood-chip--active, .travel-chip--active, .compass-mode-chip--active, .tag-filter-chip--active) {
     border-color: var(--chip-active-border);
     background: var(--chip-active-bg);
@@ -1275,7 +1131,6 @@
 
   [data-theme="dark"] :where(.mood-chip, .travel-chip, .compass-mode-chip, .tag-filter-chip, .btn-chip) {
     --shadow: var(--chip-shadow);
-
     background: var(--surface-3, rgba(15, 23, 42, 0.98));
     color: var(--text-color, #e5e7eb);
     border-color: var(--chip-border);
@@ -1302,9 +1157,7 @@
     gap: 8px;
   }
 
-  #filter-radius {
-    flex: 1;
-  }
+  #filter-radius { flex: 1; }
 
   .radius-max-label {
     font-size: 13px;
@@ -1329,18 +1182,11 @@
     border-top-color: rgba(148, 163, 184, 0.22);
   }
 
-  .filter-advanced-summary {
-    display: none;
-  }
-
-  .filter-advanced-summary .filter-group-label {
-    margin: 0;
-  }
+  .filter-advanced-summary { display: none; }
+  .filter-advanced-summary .filter-group-label { margin: 0; }
 
   /* Checkbox */
-  .filter-group--checkbox {
-    margin-top: 4px;
-  }
+  .filter-group--checkbox { margin-top: 4px; }
 
   .checkbox-label {
     display: flex;
@@ -1381,15 +1227,10 @@
     background: #ffffff;
   }
 
-  .filter-group--checkbox input[type="checkbox"]:active {
-    filter: brightness(0.96);
-  }
+  .filter-group--checkbox input[type="checkbox"]:active { filter: brightness(0.96); }
 
   /* Plus-code form */
-  .plus-code-form {
-    margin-top: 6px;
-    font-size: 14px;
-  }
+  .plus-code-form { margin-top: 6px; font-size: 14px; }
 
   .plus-code-row {
     display: flex;
@@ -1409,17 +1250,10 @@
     margin-bottom: 6px;
   }
 
-  #daylog-text {
-    min-height: 70px;
-  }
+  #daylog-text { min-height: 70px; }
+  #daylog-save { margin-top: 14px; }
 
-  #daylog-save {
-    margin-top: 14px;
-  }
-
-  /* -----------------------------------------
-     Daylog list & entries
-     ----------------------------------------- */
+  /* Daylog list & entries */
   .daylog-list,
   #daylog-list {
     margin-top: 0.75rem;
@@ -1435,14 +1269,10 @@
   }
 
   .daylog-list::-webkit-scrollbar,
-  #daylog-list::-webkit-scrollbar {
-    width: 6px;
-  }
+  #daylog-list::-webkit-scrollbar { width: 6px; }
 
   .daylog-list::-webkit-scrollbar-track,
-  #daylog-list::-webkit-scrollbar-track {
-    background: transparent;
-  }
+  #daylog-list::-webkit-scrollbar-track { background: transparent; }
 
   .daylog-list::-webkit-scrollbar-thumb,
   #daylog-list::-webkit-scrollbar-thumb {
@@ -1524,39 +1354,25 @@
     opacity: 0.85;
   }
 
-  [data-theme="light"] .daylog-entry-date {
-    color: rgba(15, 23, 42, 0.6);
-  }
-
-  [data-theme="dark"] .daylog-entry-date {
-    color: rgba(203, 213, 225, 0.78);
-  }
+  [data-theme="light"] .daylog-entry-date { color: rgba(15, 23, 42, 0.6); }
+  [data-theme="dark"] .daylog-entry-date { color: rgba(203, 213, 225, 0.78); }
 
   .daylog-entry-text {
     margin: 0.15rem 0 0;
     white-space: pre-wrap;
   }
 
-  .daylog-entry:last-child {
-    margin-bottom: 0.1rem;
-  }
+  .daylog-entry:last-child { margin-bottom: 0.1rem; }
 
-  /* -----------------------------------------
-     Spot list
-     ----------------------------------------- */
+  /* Spot list */
   .sidebar-section--grow {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
   }
 
-  .sidebar-section--grow.spot-list-collapsed {
-    padding-bottom: 10px;
-  }
-
-  .sidebar-section--grow.spot-list-collapsed #spot-list {
-    display: none;
-  }
+  .sidebar-section--grow.spot-list-collapsed { padding-bottom: 10px; }
+  .sidebar-section--grow.spot-list-collapsed #spot-list { display: none; }
 
   #spot-list {
     margin-top: 6px;
@@ -1567,19 +1383,13 @@
     scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
   }
 
-  #spot-list::-webkit-scrollbar {
-    width: 6px;
-  }
-  #spot-list::-webkit-scrollbar-track {
-    background: transparent;
-  }
+  #spot-list::-webkit-scrollbar { width: 6px; }
+  #spot-list::-webkit-scrollbar-track { background: transparent; }
   #spot-list::-webkit-scrollbar-thumb {
     border-radius: 999px;
     background: rgba(148, 163, 184, 0.55);
   }
-  [data-theme="dark"] #spot-list::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.55);
-  }
+  [data-theme="dark"] #spot-list::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.55); }
 
   .empty-state {
     padding: 12px 12px 14px;
@@ -1694,17 +1504,10 @@
     color: var(--text-soft);
   }
 
-  .spot-card-fav-icon {
-    font-size: 16px;
-  }
+  .spot-card-fav-icon { font-size: 16px; }
+  .spot-card-detail-label { font-weight: 650; }
 
-  .spot-card-detail-label {
-    font-weight: 650;
-  }
-
-  .spot-details--hidden {
-    display: none;
-  }
+  .spot-details--hidden { display: none; }
 
   .spot-details {
     position: static;
@@ -1861,7 +1664,6 @@
 
   [data-theme="dark"] .favorite-toggle {
     --shadow: var(--elevation-sm);
-
     background: var(--neutral-0);
     color: var(--text-color, #e5e7eb);
     border: var(--stroke-2);
@@ -1880,13 +1682,8 @@
   }
 
   @media (max-width: 899px) {
-    .map-section {
-      min-height: 60vh;
-    }
-
-    .map-container {
-      min-height: 60vh;
-    }
+    .map-section { min-height: 60vh; }
+    .map-container { min-height: 60vh; }
   }
 
   @media (min-width: 900px) {
@@ -1895,9 +1692,7 @@
       align-items: flex-start;
     }
 
-    .sidebar {
-      flex: 0 0 320px;
-    }
+    .sidebar { flex: 0 0 320px; }
 
     .map-section {
       flex: 1 1 auto;
@@ -1907,9 +1702,7 @@
       margin-left: 14px;
     }
 
-    #spot-list {
-      max-height: 380px;
-    }
+    #spot-list { max-height: 380px; }
 
     .spot-details {
       position: absolute;
@@ -1923,9 +1716,7 @@
     }
   }
 
-  /* -----------------------------------------
-     FILTER MODAL (BOTTOM SHEET)
-     ----------------------------------------- */
+  /* FILTER MODAL (BOTTOM SHEET) */
   .filter-modal {
     position: fixed;
     inset: 0;
@@ -1937,9 +1728,7 @@
     z-index: 3200;
   }
 
-  .filter-modal[hidden] {
-    display: none;
-  }
+  .filter-modal[hidden] { display: none; }
 
   .filter-modal-inner {
     width: 100%;
@@ -1963,10 +1752,7 @@
     margin-bottom: 10px;
   }
 
-  #filter-modal-title {
-    margin: 0;
-    font-size: 20px;
-  }
+  #filter-modal-title { margin: 0; font-size: 20px; }
 
   #filter-modal-close {
     --shadow: var(--elevation-xs);
@@ -1999,7 +1785,6 @@
 
   [data-theme="dark"] #filter-modal-close {
     --shadow: var(--elevation-sm);
-
     background: var(--neutral-0);
     color: var(--text-color, #e5e7eb);
     border: var(--stroke-2);
@@ -2014,9 +1799,7 @@
     gap: 10px;
   }
 
-  /* -----------------------------------------
-     TILLA SIDEBAR
-     ----------------------------------------- */
+  /* TILLA SIDEBAR */
   @keyframes tilla-bob {
     0% { transform: translateY(0) rotate(0deg); }
     25% { transform: translateY(-2px) rotate(-2deg); }
@@ -2030,7 +1813,6 @@
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  /* tighter section padding -> less “box height” without losing presence */
   .tilla-sidebar-section {
     padding-top: 8px;
     padding-bottom: 8px;
@@ -2038,7 +1820,7 @@
 
   .tilla-sidebar-card {
     display: flex;
-    align-items: center; /* true vertical centering of avatar vs text */
+    align-items: center;
     gap: var(--tilla-card-gap);
     padding: var(--tilla-card-pad-y) var(--tilla-card-pad-x);
     border-radius: 18px;
@@ -2055,7 +1837,6 @@
   }
 
   .tilla-sidebar-avatar {
-    /* fixed column -> bigger turtle, predictable text area */
     flex: 0 0 var(--tilla-avatar-size);
     width: var(--tilla-avatar-size);
 
@@ -2085,7 +1866,6 @@
     line-height: var(--tilla-text-line);
   }
 
-  /* Keep it stable on very small screens */
   @media (max-width: 420px) {
     :root {
       --tilla-avatar-size: 110px;
@@ -2095,9 +1875,7 @@
     }
   }
 
-  /* -----------------------------------------
-     ABOUT VIEW
-     ----------------------------------------- */
+  /* ABOUT VIEW */
   .page-about {
     background: var(--card-bg);
     border-radius: 22px;
@@ -2125,9 +1903,7 @@
     font-size: 15px;
   }
 
-  /* -----------------------------------------
-     BOTTOM NAV
-     ----------------------------------------- */
+  /* BOTTOM NAV (bleibt definiert – wird in overrides deaktiviert) */
   .bottom-nav {
     position: fixed;
     left: 0;
@@ -2141,64 +1917,7 @@
     justify-content: center;
   }
 
-  .bottom-nav-background {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 8px;
-    bottom: 8px;
-    border-radius: 999px;
-    background: var(--bottom-nav-backdrop);
-    opacity: 0.96;
-    backdrop-filter: blur(14px);
-  }
-
-  .bottom-nav-indicator {
-    display: none;
-  }
-
-  .bottom-nav-item {
-    pointer-events: auto;
-    border: none;
-    background: transparent;
-    border-radius: var(--radius-pill, 999px);
-    padding: 6px 14px;
-    margin: 0 4px;
-    min-width: 84px;
-
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-
-    font-size: 0.7rem;
-    font-weight: 650;
-    color: var(--bottom-nav-item-color);
-    cursor: pointer;
-
-    transition:
-      background-color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
-      color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
-      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
-  }
-
-  .bottom-nav-item--active {
-    background: var(--bottom-nav-item-active-bg);
-    color: var(--bottom-nav-item-active-color);
-  }
-
-  .bottom-nav-item:active {
-    transform: translateY(1px);
-  }
-
-  .bottom-nav-icon {
-    font-size: 1.1rem;
-  }
-
-  /* -----------------------------------------
-     TOAST
-     ----------------------------------------- */
+  /* TOAST */
   .toast {
     position: fixed;
     left: 50%;
@@ -2225,9 +1944,7 @@
     transform: translateX(-50%) translateY(-4px);
   }
 
-  /* -----------------------------------------
-     NOSCRIPT
-     ----------------------------------------- */
+  /* NOSCRIPT */
   .noscript-warning {
     padding: 8px 12px;
     background: #d84315;
@@ -2236,9 +1953,7 @@
     font-size: 14px;
   }
 
-  /* -----------------------------------------
-     MAP MARKER & ATTRIBUTION
-     ----------------------------------------- */
+  /* MAP MARKER & ATTRIBUTION */
   :where(.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large) {
     background: transparent !important;
     box-shadow: none !important;
@@ -2246,10 +1961,10 @@
   }
 
   :where(.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large) > div {
-    background-color: #8fbf5a !important; /* helleres Olive/Sage */
+    background-color: #8fbf5a !important;
     border-radius: 999px !important;
-    border: 2px solid #e8f2d8 !important; /* sehr heller Rand */
-    color: #223015 !important;            /* dunkles Olive für Text */
+    border: 2px solid #e8f2d8 !important;
+    color: #223015 !important;
     font-weight: 650 !important;
     font-family: inherit !important;
 
@@ -2272,34 +1987,21 @@
     line-height: 1;
   }
 
-  .spot-marker {
-    border-radius: var(--radius-pill, 999px);
-  }
+  .spot-marker { border-radius: var(--radius-pill, 999px); }
 
   .spot-marker-inner {
     width: 18px;
     height: 18px;
     border-radius: var(--radius-pill, 999px);
-    background: radial-gradient(
-      circle at 30% 20%,
-      #f9fbf4 0,
-      #c8e3a6 40%,
-      #8fbf5a 100%
-    );
+    background: radial-gradient(circle at 30% 20%, #f9fbf4 0, #c8e3a6 40%, #8fbf5a 100%);
     box-shadow:
       0 0 0 2px rgba(255, 255, 255, 0.9),
       0 6px 14px rgba(0, 0, 0, 0.55);
     position: relative;
   }
 
-  .spot-marker--cluster {
-    position: relative;
-  }
-
-  .spot-marker--cluster .spot-marker-inner {
-    width: 28px;
-    height: 28px;
-  }
+  .spot-marker--cluster { position: relative; }
+  .spot-marker--cluster .spot-marker-inner { width: 28px; height: 28px; }
 
   .spot-marker-count {
     position: absolute;
@@ -2317,16 +2019,10 @@
     position: absolute;
     inset: -5px;
     border-radius: inherit;
-    background: radial-gradient(
-      circle,
-      rgba(143, 191, 90, 0.26),
-      transparent 60%
-    );
+    background: radial-gradient(circle, rgba(143, 191, 90, 0.26), transparent 60%);
   }
 
-  .pin-pop {
-    animation: pin-pop 0.22s ease-out;
-  }
+  .pin-pop { animation: pin-pop 0.22s ease-out; }
 
   @keyframes pin-pop {
     0% { transform: scale(0.6); opacity: 0; }
@@ -2340,13 +2036,8 @@
     font-size: 10px;
   }
 
-  .popup strong {
-    font-size: 14px;
-  }
-
-  .popup small {
-    font-size: 13px;
-  }
+  .popup strong { font-size: 14px; }
+  .popup small { font-size: 13px; }
 
   .popup-actions {
     margin-top: 4px;
@@ -2393,22 +2084,16 @@
     fill: var(--radius-circle-fill);
   }
 
-  /* -----------------------------------------
-     Misc
-     ----------------------------------------- */
+  /* Misc */
   hr {
     border: none;
     border-bottom: 1px solid var(--fsm-divider-warm);
     margin: 16px 0;
   }
 
-  [data-theme="dark"] hr {
-    border-bottom-color: rgba(255, 255, 255, 0.10);
-  }
+  [data-theme="dark"] hr { border-bottom-color: rgba(255, 255, 255, 0.10); }
 
-  /* -----------------------------------------
-     Onboarding hint
-     ----------------------------------------- */
+  /* Onboarding hint */
   .fsm-onboarding-hint {
     position: relative;
     margin: 0;
@@ -2422,9 +2107,7 @@
     color: var(--text-soft);
   }
 
-  .fsm-onboarding-hint__text {
-    margin: 0;
-  }
+  .fsm-onboarding-hint__text { margin: 0; }
 
   [data-theme="dark"] .fsm-onboarding-hint {
     background: var(--card-bg);
@@ -2433,30 +2116,6 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  .fsm-onboarding-hint__title {
-    margin: 0 0 4px;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-strong);
-  }
-
-  .fsm-onboarding-hint__list {
-    margin: 0;
-    padding-left: 1.25rem;
-    font-size: 14px;
-    line-height: 1.45;
-    list-style-type: decimal;
-  }
-
-  .fsm-onboarding-hint__list li {
-    margin: 0 0 2px;
-  }
-
-  .fsm-onboarding-hint__list li:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Close button: restore (X) + allow reappear on reload (no persistence) */
   .fsm-onboarding-hint__close,
   .fsm-onboarding-hint-close {
     position: absolute;
@@ -2504,13 +2163,9 @@
     background: rgba(15, 23, 42, 0.72);
   }
 
-  .fsm-onboarding-hint--hidden {
-    display: none;
-  }
+  .fsm-onboarding-hint--hidden { display: none; }
 
-  /* -----------------------------------------
-     Landscape warning
-     ----------------------------------------- */
+  /* Landscape warning */
   .landscape-warning {
     position: fixed;
     left: 0;
@@ -2526,9 +2181,7 @@
   }
 
   @media (orientation: landscape) and (max-width: 900px) {
-    .landscape-warning {
-      display: block;
-    }
+    .landscape-warning { display: block; }
   }
 }
 
@@ -2575,12 +2228,12 @@
 }
 
 /* =========================================
-   OVERRIDES — Hover gating, color-mix, motion
+   OVERRIDES — Hover gating, motion, iOS fixes,
+   header alignment, bottom-nav removal
    ========================================= */
 @layer overrides {
   /* Hover only on devices that actually hover */
   @media (hover: hover) and (pointer: fine) {
-    /* Primary CTA (.btn) uses system CTA tokens */
     .btn:hover {
       --shadow: var(--elevation-md);
       background-color: var(--cta-bg-hover, var(--accent-solid-dark, var(--accent-dark)));
@@ -2588,24 +2241,17 @@
 
     @supports (background-color: color-mix(in oklab, white, black)) {
       .btn:hover {
-        background-color: color-mix(
-          in oklab,
-          var(--cta-bg, var(--accent-solid, var(--accent))),
-          black 8%
-        );
+        background-color: color-mix(in oklab, var(--cta-bg, var(--accent-solid, var(--accent))), black 8%);
       }
     }
 
-    /* Tilla button hover must stay shell-colored */
     .btn-play-idea:hover {
       --shadow: var(--elevation-md);
       background-color: var(--tilla-shell-hover);
     }
 
     @supports (background-color: color-mix(in oklab, white, black)) {
-      .btn-play-idea:hover {
-        background-color: color-mix(in oklab, var(--tilla-shell), black 10%);
-      }
+      .btn-play-idea:hover { background-color: color-mix(in oklab, var(--tilla-shell), black 10%); }
     }
 
     .btn-secondary:hover {
@@ -2624,14 +2270,10 @@
       border-color: rgba(148, 163, 184, 0.36);
     }
 
-    .btn-icon:hover {
-      --shadow: var(--elevation-md);
-    }
+    .btn-icon:hover { --shadow: var(--elevation-md); }
 
     @supports (background-color: color-mix(in oklab, white, black)) {
-      .btn-icon:hover {
-        background-color: color-mix(in oklab, var(--header-icon-bg), white 8%);
-      }
+      .btn-icon:hover { background-color: color-mix(in oklab, var(--header-icon-bg), white 8%); }
     }
 
     .app-menu-item:hover {
@@ -2672,9 +2314,7 @@
   }
 
   /* Ensure Tilla button active color */
-  .btn-play-idea:active {
-    background-color: var(--tilla-shell-active);
-  }
+  .btn-play-idea:active { background-color: var(--tilla-shell-active); }
 
   /* Prefers Reduced Motion */
   @media (prefers-reduced-motion: reduce) {
@@ -2698,376 +2338,195 @@
   .tilla-sidebar-avatar img {
     animation: tilla-bob 3.5s ease-in-out infinite !important;
   }
-}
 
-/* =========================================================
-   SAFETY + ALIGNMENT OVERRIDES (UNLAYERED)
-   - gewinnt gegen unlayered theme/button defaults
-   - sorgt für echte vertikale Zentrierung (oben/unten gleich)
-   - behält deine Kompaktheit (Padding/Font) bei
-   ========================================================= */
+  /* =========================================
+     HEADER ALIGNMENT (Filter/Spots/Plus/Daylog)
+     - kompakt, echte Vertikalzentrierung
+     ========================================= */
+  #filter-section.sidebar-section,
+  .sidebar-section.sidebar-section--grow,
+  #plus-section.sidebar-section,
+  #daylog-section.sidebar-section {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
 
-/* Action rechts: niemals umbrechen / nicht wachsen */
-#filter-section .sidebar-section-header > :last-child,
-.sidebar-section--grow .sidebar-section-header > :last-child,
-#plus-section .sidebar-section-header > :last-child,
-#daylog-section .sidebar-section-header > :last-child {
-  width: auto !important;
-  max-width: 100% !important;
-  white-space: nowrap !important;
-}
+  #plus-section.sidebar-section[open],
+  #daylog-section.sidebar-section[open] {
+    padding-bottom: 6px;
+  }
 
-/* Kompaktes Card-Padding (wie vorher) */
-#filter-section.sidebar-section,
-.sidebar-section.sidebar-section--grow,
-#plus-section.sidebar-section,
-#daylog-section.sidebar-section {
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-}
+  #filter-section > .sidebar-section-header,
+  .sidebar-section--grow > .sidebar-section-header,
+  #plus-section > summary.sidebar-section-header,
+  #daylog-section > summary.sidebar-section-header {
+    height: 32px;
+    min-height: 32px;
+    padding-top: 0;
+    padding-bottom: 0;
+    display: flex;
+    align-items: center;
+  }
 
-/* Falls Plus/Mein Tag (details[open]) unten wieder dicker werden */
-#plus-section.sidebar-section[open],
-#daylog-section.sidebar-section[open] {
-  padding-bottom: 6px !important;
-}
-
-/* Header-Zeile: feste Höhe + echtes Centering */
-#filter-section > .sidebar-section-header,
-.sidebar-section--grow > .sidebar-section-header,
-#plus-section > summary.sidebar-section-header,
-#daylog-section > summary.sidebar-section-header {
-  height: 32px !important;
-  min-height: 32px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Titel: mittig im Header (nicht baseline), kompakt
-   + #tilla-title auf gleiche Größe wie Filter */
-#filter-title,
-#spots-title,
-#plus-section-title,
-#daylog-section-title,
-#tilla-title {
-  margin: 0 !important;
-  font-size: 16px !important;
-  line-height: 1.15 !important;
-
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Optional: auf sehr kleinen Screens noch etwas kleiner */
-@media (max-width: 480px) {
   #filter-title,
   #spots-title,
   #plus-section-title,
   #daylog-section-title,
   #tilla-title {
-    font-size: 15px !important;
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.15;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
-}
 
-/* Buttons rechts: ebenfalls sauber vertikal zentriert */
-#filter-section .sidebar-section-header > button,
-.sidebar-section--grow .sidebar-section-header > button,
-#plus-section summary.sidebar-section-header > button,
-#daylog-section summary.sidebar-section-header > button {
-  height: 100% !important;
-  min-height: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
-
-/* Button-Text: kein “vertikales Wandern” */
-#filter-section .sidebar-section-header > button *,
-.sidebar-section--grow .sidebar-section-header > button *,
-#plus-section summary.sidebar-section-header > button *,
-#daylog-section summary.sidebar-section-header > button * {
-  line-height: 1 !important;
-}
-
-/* =========================================================
-   ADDED FIXES (UNLAYERED)
-   1) "Family Spots Plus" Action-Text ("Anzeigen") nicht ausgegraut
-   2) Robustheit: keine opacity/filter-Fallen auf Plus/Daylog summary
-   3) Bottom-Nav endgültig entfernen + Padding zurückholen
-   4) "Nur Karte" Toggle ausblenden (wenn vorhanden)
-   ========================================================= */
-
-/* 1) Plus/Daylog: "Anzeigen" immer wie starker Text */
-#plus-section #btn-toggle-plus.btn-ghost,
-#daylog-section #btn-toggle-daylog.btn-ghost,
-#plus-section summary.sidebar-section-header > button.btn-ghost,
-#daylog-section summary.sidebar-section-header > button.btn-ghost {
-  color: var(--text-strong) !important;
-  opacity: 1 !important;
-}
-
-#plus-section #btn-toggle-plus.btn-ghost *,
-#daylog-section #btn-toggle-daylog.btn-ghost *,
-#plus-section summary.sidebar-section-header > button.btn-ghost *,
-#daylog-section summary.sidebar-section-header > button.btn-ghost * {
-  color: inherit !important;
-  opacity: 1 !important;
-}
-
-/* 2) Falls irgendwo opacity/filter auf summary/details hängt */
-#plus-section summary,
-#daylog-section summary {
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* 3) Bottom Nav entfernen + Platz zurückholen */
-:root {
-  --bottom-nav-height: 0px;
-  --bottom-nav-safearea: 0px;
-}
-
-.bottom-nav {
-  display: none !important;
-}
-
-/* App padding-bottom zurückholen (components.css reserviert standardmäßig 96px) */
-.app-main {
-  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
-}
-
-/* 4) "Nur Karte" im Spots-Header ausblenden (Toggle bleibt im DOM) */
-#btn-toggle-view {
-  display: none !important;
-}
-
-/* =========================================================
-   HOTFIXES (unlayered)
-   1) Summary focus outline: use app focus ring (no browser rectangle)
-   2) Normalize "Anzeigen" buttons for Plus/Mein Tag in Safari iOS
-   ========================================================= */
-
-/* Some browsers dim <summary> content in closed <details>; harden it */
-[data-theme="dark"] #plus-section summary.sidebar-section-header,
-[data-theme="dark"] #daylog-section summary.sidebar-section-header {
-  color: inherit !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* Focus: replace UA outline with app ring */
-summary.sidebar-section-header:focus,
-summary.sidebar-section-header:focus-visible {
-  outline: none !important;
-}
-
-summary.sidebar-section-header:focus-visible {
-  border-radius: 18px;
-  box-shadow: var(--focus-ring, var(--focus-ring-default)) !important;
-}
-
-/* iOS/Safari: ensure "Anzeigen" never becomes a filled native button */
-#btn-toggle-plus,
-#btn-toggle-daylog {
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  box-shadow: none !important;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-/* =========================================================
-   TITLE COLOR UNIFICATION (unlayered)
-   - Plus / Mein Tag / alle Sidebar-Section-Titles immer gleich
-   - robust: fallback, falls --text-strong nicht gesetzt ist
-   ========================================================= */
-
-#plus-section-title,
-#daylog-section-title,
-.sidebar-section-title {
-  color: var(--text-strong, var(--text-color, #111827)) !important;
-  opacity: 1 !important;
-}
-
-/* =========================================================
-   FINAL FIX (unlayered)
-   - genau die 2 “falschen” Stellen im Dark Mode
-   1) Tilla-Title (#tilla-title) hatte keine Farbzuweisung
-   2) Plus-Header Action/Titel (egal ob a/span/button) immer stark
-   ========================================================= */
-
-[data-theme="dark"] #tilla-title {
-  color: var(--text-strong, var(--text-color)) !important;
-  opacity: 1 !important;
-}
-
-[data-theme="dark"] #plus-section summary.sidebar-section-header,
-[data-theme="dark"] #plus-section summary.sidebar-section-header * {
-  color: var(--text-strong, var(--text-color)) !important;
-  opacity: 1 !important;
-}
-
-
-/* =========================================================
-   SCHEME-ROBUST TITLE COLOR FIX (unlayered)
-   Problem: Two specific titles/actions stay gray because the page
-   may be themed via prefers-color-scheme (no [data-theme] attr),
-   or because WebKit uses text-fill / inherited opacity.
-   Fix: Force explicit text color + -webkit-text-fill-color for:
-   - "Familienbegleiterin Tilla" (#tilla-title)
-   - "Family Spots Plus" title (#plus-section-title) + action (#btn-toggle-plus / "Anzeigen")
-   in dark (white) and light (black), regardless of theming mechanism.
-   ========================================================= */
-
-/* 1) OS scheme fallback (when no data-theme switching is used) */
-@media (prefers-color-scheme: dark) {
-  :where(
-    #tilla-title,
-    #tilla-title *,
+  @media (max-width: 480px) {
+    #filter-title,
+    #spots-title,
     #plus-section-title,
-    #plus-section-title *,
-    #btn-toggle-plus,
-    #btn-toggle-plus *,
-    #plus-section summary.sidebar-section-header,
-    #plus-section summary.sidebar-section-header *,
-    #plus-section .sidebar-section-header,
-    #plus-section .sidebar-section-header *
-  ) {
+    #daylog-section-title,
+    #tilla-title {
+      font-size: 15px;
+    }
+  }
+
+  #filter-section .sidebar-section-header > :last-child,
+  .sidebar-section--grow .sidebar-section-header > :last-child,
+  #plus-section .sidebar-section-header > :last-child,
+  #daylog-section .sidebar-section-header > :last-child {
+    width: auto;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+
+  #filter-section .sidebar-section-header > button,
+  .sidebar-section--grow .sidebar-section-header > button,
+  #plus-section summary.sidebar-section-header > button,
+  #daylog-section summary.sidebar-section-header > button {
+    height: 100%;
+    min-height: 0;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  #filter-section .sidebar-section-header > button *,
+  .sidebar-section--grow .sidebar-section-header > button *,
+  #plus-section summary.sidebar-section-header > button *,
+  #daylog-section summary.sidebar-section-header > button * {
+    line-height: 1;
+  }
+
+  /* =========================================
+     PLUS/DAYLOG: "Anzeigen" nie ausgegraut
+     ========================================= */
+  #plus-section #btn-toggle-plus.btn-ghost,
+  #daylog-section #btn-toggle-daylog.btn-ghost,
+  #plus-section summary.sidebar-section-header > button.btn-ghost,
+  #daylog-section summary.sidebar-section-header > button.btn-ghost {
+    color: var(--text-strong, var(--text-color, #111827));
+    opacity: 1;
+  }
+
+  #plus-section #btn-toggle-plus.btn-ghost *,
+  #daylog-section #btn-toggle-daylog.btn-ghost *,
+  #plus-section summary.sidebar-section-header > button.btn-ghost *,
+  #daylog-section summary.sidebar-section-header > button.btn-ghost * {
+    color: inherit;
+    opacity: 1;
+  }
+
+  #plus-section summary,
+  #daylog-section summary {
+    opacity: 1;
+    filter: none;
+  }
+
+  /* Focus: replace UA outline with app ring */
+  summary.sidebar-section-header:focus,
+  summary.sidebar-section-header:focus-visible {
+    outline: none !important;
+  }
+
+  summary.sidebar-section-header:focus-visible {
+    border-radius: 18px;
+    box-shadow: var(--focus-ring, var(--focus-ring-default)) !important;
+  }
+
+  /* iOS/Safari: ensure Plus/Daylog ghost buttons stay "ghost" */
+  #btn-toggle-plus,
+  #btn-toggle-daylog {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* =========================================
+     SAFARI/iOS COLOR FIX (die 2 Problemstellen)
+     - erzwingt color + -webkit-text-fill-color
+     - funktioniert mit data-theme UND OS-scheme fallback
+     ========================================= */
+  :where(html, body, :root)[data-theme="dark"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus),
+  [data-theme="dark"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus),
+  :where(html, body, :root)[data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header),
+  [data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header),
+  :where(html, body, :root)[data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header,
+  [data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header {
     color: #ffffff !important;
     -webkit-text-fill-color: #ffffff !important;
     opacity: 1 !important;
     filter: none !important;
-    mix-blend-mode: normal !important;
   }
-}
 
-@media (prefers-color-scheme: light) {
-  :where(
-    #tilla-title,
-    #tilla-title *,
-    #plus-section-title,
-    #plus-section-title *,
-    #btn-toggle-plus,
-    #btn-toggle-plus *,
-    #plus-section summary.sidebar-section-header,
-    #plus-section summary.sidebar-section-header *,
-    #plus-section .sidebar-section-header,
-    #plus-section .sidebar-section-header *
-  ) {
+  :where(html, body, :root)[data-theme="light"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus),
+  [data-theme="light"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus),
+  :where(html, body, :root)[data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header),
+  [data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header),
+  :where(html, body, :root)[data-theme="light"] .tilla-sidebar-section > .sidebar-section-header,
+  [data-theme="light"] .tilla-sidebar-section > .sidebar-section-header {
     color: #111827 !important;
     -webkit-text-fill-color: #111827 !important;
     opacity: 1 !important;
     filter: none !important;
-    mix-blend-mode: normal !important;
   }
-}
 
-/* 2) Manual theme switching (covers html/body/root OR ancestor attribute usage) */
-:where(html, body, :root)[data-theme="dark"],
-[data-theme="dark"] {
-  /* no-op: only here to allow consistent selector grouping below */
-}
+  /* OS scheme fallback (falls data-theme nicht gesetzt ist) */
+  @media (prefers-color-scheme: dark) {
+    :where(html:not([data-theme]), body:not([data-theme]), :root:not([data-theme]))
+      :where(#tilla-title, #plus-section-title, #btn-toggle-plus, #plus-section summary.sidebar-section-header, #plus-section summary.sidebar-section-header *) {
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+  }
 
-:where(html, body, :root)[data-theme="light"],
-[data-theme="light"] {
-  /* no-op */
-}
+  @media (prefers-color-scheme: light) {
+    :where(html:not([data-theme]), body:not([data-theme]), :root:not([data-theme]))
+      :where(#tilla-title, #plus-section-title, #btn-toggle-plus, #plus-section summary.sidebar-section-header, #plus-section summary.sidebar-section-header *) {
+      color: #111827 !important;
+      -webkit-text-fill-color: #111827 !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+  }
 
-:where(html, body, :root)[data-theme="dark"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus),
-[data-theme="dark"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus) {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
+  /* =========================================
+     Bottom Nav entfernen + Platz zurückholen
+     ========================================= */
+  :root {
+    --bottom-nav-height: 0px;
+    --bottom-nav-safearea: 0px;
+  }
 
-:where(html, body, :root)[data-theme="dark"] :where(#tilla-title *, #plus-section-title *, #btn-toggle-plus *),
-[data-theme="dark"] :where(#tilla-title *, #plus-section-title *, #btn-toggle-plus *) {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
+  .bottom-nav { display: none !important; }
 
-:where(html, body, :root)[data-theme="light"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus),
-[data-theme="light"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus) {
-  color: #111827 !important;
-  -webkit-text-fill-color: #111827 !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
+  .app-main {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+  }
 
-:where(html, body, :root)[data-theme="light"] :where(#tilla-title *, #plus-section-title *, #btn-toggle-plus *),
-[data-theme="light"] :where(#tilla-title *, #plus-section-title *, #btn-toggle-plus *) {
-  color: #111827 !important;
-  -webkit-text-fill-color: #111827 !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* =========================================================
-   FINAL HARDENED COLOR FIX (unlayered)
-   - Guarantees correct header title colors across Safari/Chrome
-   - Targets the two problematic headers via structural selectors
-   - Dark: white  |  Light: near-black
-   ========================================================= */
-
-/* Dark mode: force white on the *header rows* only */
-:where(html, body, :root)[data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header,
-[data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  opacity: 1 !important;
-}
-
-:where(html, body, :root)[data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header * ,
-[data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header * {
-  color: inherit !important;
-  -webkit-text-fill-color: inherit !important;
-  opacity: 1 !important;
-}
-
-:where(html, body, :root)[data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header),
-[data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  opacity: 1 !important;
-}
-
-:where(html, body, :root)[data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) * ,
-[data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) * {
-  color: inherit !important;
-  -webkit-text-fill-color: inherit !important;
-  opacity: 1 !important;
-}
-
-/* Light mode: force dark text on the *header rows* only */
-:where(html, body, :root)[data-theme="light"] .tilla-sidebar-section > .sidebar-section-header,
-[data-theme="light"] .tilla-sidebar-section > .sidebar-section-header {
-  color: #111827 !important;
-  -webkit-text-fill-color: #111827 !important;
-  opacity: 1 !important;
-}
-
-:where(html, body, :root)[data-theme="light"] .tilla-sidebar-section > .sidebar-section-header * ,
-[data-theme="light"] .tilla-sidebar-section > .sidebar-section-header * {
-  color: inherit !important;
-  -webkit-text-fill-color: inherit !important;
-  opacity: 1 !important;
-}
-
-:where(html, body, :root)[data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header),
-[data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) {
-  color: #111827 !important;
-  -webkit-text-fill-color: #111827 !important;
-  opacity: 1 !important;
-}
-
-:where(html, body, :root)[data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) * ,
-[data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) * {
-  color: inherit !important;
-  -webkit-text-fill-color: inherit !important;
-  opacity: 1 !important;
+  /* "Nur Karte" Toggle aus Spots-Header entfernen */
+  #btn-toggle-view { display: none !important; }
 }
