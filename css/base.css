@@ -1,195 +1,160 @@
 /* =========================================
    base.css — Reset, Grundlegende Styles, Globals
    Corporate Refine (Token-aligned)
-   - nutzt Theme-Tokens (theme.css) konsistent
-   - Focus: token-basiert (kein harter UA-Outline-Konflikt)
    ========================================= */
 
-/* Reset & Box-Sizing */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@layer base {
+  /* Reset & Box-Sizing */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-/* Grundsetup für HTML & Body */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-}
-
-/* Basiseinstellungen für HTML:
-   - bessere Skalierung
-   - sanftes Scrollen für Anker (z. B. „Zur Spot-Liste springen“) */
-html {
-  font-size: 100%;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-/* Grundlegende Typografie & Body Styling */
-body {
-  font-family: var(--font-stack, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif);
-  font-size: 15px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-
-  /* Theme background + semantic text */
-  background: var(--app-bg);
-  color: var(--text-color, #111827);
-
-  transition:
-    background 0.4s ease,
-    color 0.3s ease;
-}
-
-/* Ab mittleren Viewports etwas größere Grundschrift
-   – besonders für den About-Text angenehm */
-@media (min-width: 900px) {
+  html,
   body {
-    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
   }
-}
 
-/* Form Controls erben gleiche Schriftart */
-button,
-input,
-textarea,
-select {
-  font-family: inherit;
-}
-
-/* Links: keine Unterstreichung, Farbe vererben
-   – Hover-Status übernehmen die Komponenten bei Bedarf */
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* Dezente Unterstreichung nur bei explizitem Hover/Fokus
-   in Fließtexten (z. B. Mail-Link im About) */
-a:hover,
-a:focus-visible {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
-}
-
-/* Grund-Layout der App-Wrapper */
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* =========================================
-   TYPOGRAFIE-GRUNDBASIS
-   (Komponenten-spezifische Größen bleiben unberührt)
-   ========================================= */
-
-h1,
-h2,
-h3,
-h4 {
-  margin: 0 0 0.75rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-/* H1 wird in der Regel per .header-title überschrieben,
-   deshalb keine feste Farbe hier – es erbt vom Container */
-h1 {
-  font-size: 1.8rem;
-}
-
-/* H2–H4 bekommen die Standard-Headline-Farbe */
-h2,
-h3,
-h4 {
-  color: var(--text-strong, var(--text-color, #111827));
-}
-
-h2 {
-  font-size: 1.4rem;
-}
-
-h3 {
-  font-size: 1.15rem;
-}
-
-h4 {
-  font-size: 1rem;
-}
-
-p {
-  margin: 0 0 0.75rem;
-}
-
-p:last-child {
-  margin-bottom: 0;
-}
-
-small {
-  font-size: 0.875em;
-}
-
-strong {
-  font-weight: 600;
-}
-
-/* Listen etwas luftiger, aber kompakt genug für mobile */
-ul,
-ol {
-  margin: 0 0 0.75rem 1.25rem;
-  padding: 0;
-}
-
-li + li {
-  margin-top: 0.15rem;
-}
-
-/* Bilder sollen nie „aus dem Layout laufen“ */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* =========================================
-   FOKUS & SELECTION
-   ========================================= */
-
-/* Globaler Fokus:
-   - token-basiert (theme.css: --focus-ring)
-   - stört components.css nicht (die setzt für Interactives box-shadow-Rings)
-   - sorgt trotzdem für sichtbaren Fokus bei „sonstigen“ Elementen */
-:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring, 0 0 0 2px #ffffff, 0 0 0 4px rgba(245, 158, 11, 0.55));
-}
-
-/* Forced Colors: sichtbarer Fokus im High-Contrast Mode */
-@media (forced-colors: active) {
-  :focus-visible {
-    outline: 2px solid Highlight;
-    outline-offset: 2px;
-    box-shadow: none;
+  html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
-}
 
-/* Auswahlfarbe passend zum Brand */
-::selection {
-  background: var(--accent-soft, #ffe0b2);
-  color: var(--text-strong, var(--text-color, #111827));
-}
+  body {
+    font-family: var(
+      --font-stack,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "SF Pro Text",
+      "Segoe UI",
+      sans-serif
+    );
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 
-/* =========================================
-   MISC
-   ========================================= */
+    /* robust fallback falls theme.css noch nicht geladen ist */
+    background: var(--page-bg, var(--app-bg, #f7e1d0));
+    color: var(--text-color, #111827);
 
-/* Verhindert horizontales Scrollen durch kleine Offsets */
-body {
-  overflow-x: hidden;
+    overflow-x: hidden;
+
+    transition:
+      background 0.4s ease,
+      color 0.3s ease;
+  }
+
+  @media (min-width: 900px) {
+    body {
+      font-size: 16px;
+    }
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover,
+  a:focus-visible {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2,
+  h3,
+  h4 {
+    color: var(--text-strong, var(--text-color, #111827));
+  }
+
+  h2 { font-size: 1.4rem; }
+  h3 { font-size: 1.15rem; }
+  h4 { font-size: 1rem; }
+
+  p {
+    margin: 0 0 0.75rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  small {
+    font-size: 0.875em;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  ul,
+  ol {
+    margin: 0 0 0.75rem 1.25rem;
+    padding: 0;
+  }
+
+  li + li {
+    margin-top: 0.15rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Fokus: nur generisch – Interactives werden in components.css sauber gehandhabt */
+  :where(a, [tabindex]):focus-visible {
+    outline: none;
+    box-shadow: var(
+      --focus-ring,
+      0 0 0 2px #ffffff,
+      0 0 0 4px rgba(245, 158, 11, 0.55)
+    );
+  }
+
+  @media (forced-colors: active) {
+    :where(a, [tabindex]):focus-visible {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+      box-shadow: none;
+    }
+  }
+
+  ::selection {
+    background: var(--accent-soft, #ffe0b2);
+    color: var(--text-strong, var(--text-color, #111827));
+  }
 }
