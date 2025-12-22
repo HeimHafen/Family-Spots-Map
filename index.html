@@ -22,12 +22,12 @@
   <script>
     (function () {
       try {
-        var stored =
+        const stored =
           localStorage.getItem("fsm_theme") ||
           localStorage.getItem("fs_theme") ||
           localStorage.getItem("theme");
 
-        var theme = null;
+        let theme = null;
         if (stored === "dark" || stored === "light") {
           theme = stored;
         } else if (window.matchMedia) {
@@ -36,55 +36,86 @@
 
         if (theme) document.documentElement.setAttribute("data-theme", theme);
       } catch (e) {
-        // ignore
+        console.warn("Theme init failed", e);
       }
     })();
   </script>
 
   <!-- ======================================================
        CRITICAL CSS (Background + Textfarben konsistent)
+       + Skip-Link immer nutzbar (auch bevor styles.css lädt)
        ====================================================== -->
   <style>
+    :root {
+      --color-bg-light: #f7e1d0;
+      --color-bg-dark: #020617;
+      --text-light: #111827;
+      --text-dark: #e5e7eb;
+      --placeholder-light: rgba(107, 114, 128, 0.95);
+      --placeholder-dark: rgba(148, 163, 184, 0.85);
+    }
+
     html, body {
       margin: 0;
       min-height: 100%;
-      background: #f7e1d0;   /* Light fallback */
-      color: #111827;        /* Light text fallback */
+      background: var(--color-bg-light);
+      color: var(--text-light);
     }
 
     html[data-theme="dark"], html[data-theme="dark"] body {
-      background: #020617;   /* Dark fallback */
-      color: #e5e7eb;        /* Dark text fallback */
+      background: var(--color-bg-dark);
+      color: var(--text-dark);
     }
 
-    /* Form-Controls sollen Textfarbe sauber erben (sonst iOS/Safari teils „falsch“) */
     input, textarea, select, button {
       color: inherit;
     }
 
-    /* Placeholder: lesbar in Light/Dark */
     ::placeholder {
-      color: rgba(107, 114, 128, 0.95);
+      color: var(--placeholder-light);
       opacity: 1;
     }
     html[data-theme="dark"] ::placeholder {
-      color: rgba(148, 163, 184, 0.85);
+      color: var(--placeholder-dark);
       opacity: 1;
     }
 
-    /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem */
     .app-menu-item-icon svg {
       display: block;
     }
 
-    /* NEU: Tilla-Titel kompakter (wie "Filter") */
+    /* Skip-Link: immer verfügbar, auch ohne geladenes CSS */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+    .skip-link:focus,
+    .skip-link:active {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      width: auto;
+      height: auto;
+      padding: 0.5rem 1rem;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      z-index: 10000;
+      border-radius: 10px;
+    }
+
+    /* Kompaktere Tilla-Überschrift */
     .tilla-sidebar-section .sidebar-section-title {
       font-size: 1rem !important;
       line-height: 1.25 !important;
       margin: 0 !important;
     }
 
-    /* NEU: Onboarding-Hinweis Close-Button zuverlässig sichtbar + sauber positioniert */
+    /* Onboarding Close-Button robust sichtbar */
     .fsm-onboarding-hint { position: relative; }
     .fsm-onboarding-hint__close {
       display: inline-flex !important;
@@ -175,6 +206,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-touch-fullscreen" content="yes" />
 
   <!-- Performance hints -->
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
@@ -184,10 +216,16 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
 
-  <!-- Leaflet CSS -->
+  <!-- Leaflet CSS (vor deinen Styles, damit du sauber überschreiben kannst) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+  <!-- PRELOAD: kritische Ressourcen -->
+  <link rel="preload" href="css/styles.css" as="style" />
+  <link rel="preload" href="css/badges.css" as="style" />
+  <link rel="modulepreload" href="./js/app.js" />
+  <link rel="modulepreload" href="./js/ui/details-summary-fix.js" />
 
   <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css" />
@@ -312,7 +350,7 @@
           <!-- Info -->
           <button id="btn-help" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="10" x2="12" y2="16"></line>
@@ -332,7 +370,7 @@
           <!-- Nur Karte -->
           <button id="btn-toggle-view-menu" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="8" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -356,7 +394,7 @@
           <!-- Designmodus wechseln -->
           <button id="theme-toggle" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
               </svg>
@@ -375,7 +413,7 @@
           <!-- Standort -->
           <button id="btn-locate" class="app-menu-item" type="button" data-menu-close="1">
             <span class="app-menu-item-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none"
                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"></path>
                 <circle cx="12" cy="10" r="2"></circle>
@@ -456,7 +494,8 @@
                 <img
                   src="assets/tilla/tilla-hero.png"
                   alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
-                  loading="lazy"
+                  loading="eager"
+                  fetchpriority="high"
                   decoding="async"
                   width="512"
                   height="512"
@@ -1730,7 +1769,7 @@
     }
   </script>
 
-  <!-- Onboarding-Hinweis schließen (ohne Persistenz: nach Reload wieder sichtbar) -->
+  <!-- Onboarding-Hinweis schließen (mit Persistenz) -->
   <script type="module">
     const hint = document.querySelector("[data-onboarding-hint]");
     const closeBtn =
@@ -1739,11 +1778,21 @@
 
     function dismissHint() {
       if (!hint) return;
-      hint.hidden = true;                 // nur für die aktuelle Session
+      hint.hidden = true;
       hint.setAttribute("aria-hidden", "true");
     }
 
-    if (closeBtn) closeBtn.addEventListener("click", dismissHint);
+    try {
+      const dismissed = localStorage.getItem("fsm_hint_dismissed") === "1";
+      if (dismissed) dismissHint();
+    } catch {}
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        dismissHint();
+        try { localStorage.setItem("fsm_hint_dismissed", "1"); } catch {}
+      });
+    }
   </script>
 
   <!-- Spots-Liste anzeigen/ausblenden + Zustand merken -->
