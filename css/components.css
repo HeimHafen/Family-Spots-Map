@@ -2908,91 +2908,166 @@ summary.sidebar-section-header:focus-visible {
   color: var(--text-strong, var(--text-color)) !important;
   opacity: 1 !important;
 }
-/* =========================================================
-   DARK TITLE/ACTION WHITENING (unlayered)
-   - ensures the two marked areas are white in Dark Mode:
-     1) "Familienbegleiterin Tilla" title
-     2) "Family Spots Plus" title + "Anzeigen" action
-   ========================================================= */
 
-[data-theme="dark"] #tilla-title,
-[data-theme="dark"] .tilla-sidebar-section .sidebar-section-title {
-  color: #ffffff !important;
-  opacity: 1 !important;
-}
-
-[data-theme="dark"] #plus-section-title,
-[data-theme="dark"] #plus-section summary.sidebar-section-header,
-[data-theme="dark"] #plus-section summary.sidebar-section-header *,
-[data-theme="dark"] #btn-toggle-plus,
-[data-theme="dark"] #btn-toggle-plus * {
-  color: #ffffff !important;
-  opacity: 1 !important;
-}
 
 /* =========================================================
-   HARD FORCE HEADER TITLE COLORS (unlayered)
-   Goal:
-   - Light mode: black text
-   - Dark mode: white text
-   Targets:
-   - "Familienbegleiterin Tilla" (Tilla section header)
-   - "Family Spots Plus" (Plus section header)
-   Notes:
-   - also sets -webkit-text-fill-color (Safari iOS)
-   - neutralizes accidental opacity/filter/disabled dimming
+   SCHEME-ROBUST TITLE COLOR FIX (unlayered)
+   Problem: Two specific titles/actions stay gray because the page
+   may be themed via prefers-color-scheme (no [data-theme] attr),
+   or because WebKit uses text-fill / inherited opacity.
+   Fix: Force explicit text color + -webkit-text-fill-color for:
+   - "Familienbegleiterin Tilla" (#tilla-title)
+   - "Family Spots Plus" title (#plus-section-title) + action (#btn-toggle-plus / "Anzeigen")
+   in dark (white) and light (black), regardless of theming mechanism.
    ========================================================= */
 
-/* Helper selector: header rows inside the two problematic sections */
-:where(#plus-section, #tilla-section, .tilla-sidebar-section)
-  :where(.sidebar-section-header, summary.sidebar-section-header) {
-  opacity: 1 !important;
-  filter: none !important;
+/* 1) OS scheme fallback (when no data-theme switching is used) */
+@media (prefers-color-scheme: dark) {
+  :where(
+    #tilla-title,
+    #tilla-title *,
+    #plus-section-title,
+    #plus-section-title *,
+    #btn-toggle-plus,
+    #btn-toggle-plus *,
+    #plus-section summary.sidebar-section-header,
+    #plus-section summary.sidebar-section-header *,
+    #plus-section .sidebar-section-header,
+    #plus-section .sidebar-section-header *
+  ) {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+  }
 }
 
-/* ---- Explicit theme attribute (preferred) ---- */
-:where([data-theme="dark"]) :where(#plus-section, #tilla-section, .tilla-sidebar-section)
-  :where(.sidebar-section-header, summary.sidebar-section-header, .sidebar-section-title, #tilla-title, #plus-section-title, #btn-toggle-plus, #btn-toggle-plus *) {
+@media (prefers-color-scheme: light) {
+  :where(
+    #tilla-title,
+    #tilla-title *,
+    #plus-section-title,
+    #plus-section-title *,
+    #btn-toggle-plus,
+    #btn-toggle-plus *,
+    #plus-section summary.sidebar-section-header,
+    #plus-section summary.sidebar-section-header *,
+    #plus-section .sidebar-section-header,
+    #plus-section .sidebar-section-header *
+  ) {
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    opacity: 1 !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+  }
+}
+
+/* 2) Manual theme switching (covers html/body/root OR ancestor attribute usage) */
+:where(html, body, :root)[data-theme="dark"],
+[data-theme="dark"] {
+  /* no-op: only here to allow consistent selector grouping below */
+}
+
+:where(html, body, :root)[data-theme="light"],
+[data-theme="light"] {
+  /* no-op */
+}
+
+:where(html, body, :root)[data-theme="dark"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus),
+[data-theme="dark"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus) {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
   filter: none !important;
 }
 
-:where([data-theme="light"]) :where(#plus-section, #tilla-section, .tilla-sidebar-section)
-  :where(.sidebar-section-header, summary.sidebar-section-header, .sidebar-section-title, #tilla-title, #plus-section-title, #btn-toggle-plus, #btn-toggle-plus *) {
+:where(html, body, :root)[data-theme="dark"] :where(#tilla-title *, #plus-section-title *, #btn-toggle-plus *),
+[data-theme="dark"] :where(#tilla-title *, #plus-section-title *, #btn-toggle-plus *) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+:where(html, body, :root)[data-theme="light"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus),
+[data-theme="light"] :where(#tilla-title, #plus-section-title, #btn-toggle-plus) {
   color: #111827 !important;
   -webkit-text-fill-color: #111827 !important;
   opacity: 1 !important;
   filter: none !important;
 }
 
-/* ---- Fallback: system color scheme (if data-theme is not set) ---- */
-@media (prefers-color-scheme: dark) {
-  :where(html, body, :root):not([data-theme="light"])
-    :where(#plus-section, #tilla-section, .tilla-sidebar-section)
-    :where(.sidebar-section-header, summary.sidebar-section-header, .sidebar-section-title, #tilla-title, #plus-section-title, #btn-toggle-plus, #btn-toggle-plus *) {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    opacity: 1 !important;
-    filter: none !important;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :where(html, body, :root):not([data-theme="dark"])
-    :where(#plus-section, #tilla-section, .tilla-sidebar-section)
-    :where(.sidebar-section-header, summary.sidebar-section-header, .sidebar-section-title, #tilla-title, #plus-section-title, #btn-toggle-plus, #btn-toggle-plus *) {
-    color: #111827 !important;
-    -webkit-text-fill-color: #111827 !important;
-    opacity: 1 !important;
-    filter: none !important;
-  }
-}
-
-/* If the Plus toggle is accidentally rendered "disabled", keep it readable */
-#btn-toggle-plus:disabled,
-#btn-toggle-plus[aria-disabled="true"] {
+:where(html, body, :root)[data-theme="light"] :where(#tilla-title *, #plus-section-title *, #btn-toggle-plus *),
+[data-theme="light"] :where(#tilla-title *, #plus-section-title *, #btn-toggle-plus *) {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
   opacity: 1 !important;
-  -webkit-text-fill-color: currentColor !important;
+  filter: none !important;
+}
+
+/* =========================================================
+   FINAL HARDENED COLOR FIX (unlayered)
+   - Guarantees correct header title colors across Safari/Chrome
+   - Targets the two problematic headers via structural selectors
+   - Dark: white  |  Light: near-black
+   ========================================================= */
+
+/* Dark mode: force white on the *header rows* only */
+:where(html, body, :root)[data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header,
+[data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+:where(html, body, :root)[data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header * ,
+[data-theme="dark"] .tilla-sidebar-section > .sidebar-section-header * {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  opacity: 1 !important;
+}
+
+:where(html, body, :root)[data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header),
+[data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+:where(html, body, :root)[data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) * ,
+[data-theme="dark"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) * {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  opacity: 1 !important;
+}
+
+/* Light mode: force dark text on the *header rows* only */
+:where(html, body, :root)[data-theme="light"] .tilla-sidebar-section > .sidebar-section-header,
+[data-theme="light"] .tilla-sidebar-section > .sidebar-section-header {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  opacity: 1 !important;
+}
+
+:where(html, body, :root)[data-theme="light"] .tilla-sidebar-section > .sidebar-section-header * ,
+[data-theme="light"] .tilla-sidebar-section > .sidebar-section-header * {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  opacity: 1 !important;
+}
+
+:where(html, body, :root)[data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header),
+[data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  opacity: 1 !important;
+}
+
+:where(html, body, :root)[data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) * ,
+[data-theme="light"] #plus-section :where(summary.sidebar-section-header, .sidebar-section-header) * {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  opacity: 1 !important;
 }
