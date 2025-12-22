@@ -14,6 +14,7 @@
   "btn_show_list": "Liste zeigen",
   "toast_location_ok": "Standort gesetzt – euer nächster Moment wartet. 🌍",
   "toast_location_error": "Standort gerade nicht verfügbar. Vielleicht offline – ihr findet euren Weg.",
+  "toast_location_unavailable_radius_disabled": "Standort nicht verfügbar – Radiusfilter ist deaktiviert.",
   "toast_fav_added": "Zu den Favoriten – ein Ort, der bleiben darf. 💚",
   "toast_fav_removed": "Aus Favoriten entfernt – neue Schätze warten. 🌿",
   "filter_category_all": "Alle Kategorien",
