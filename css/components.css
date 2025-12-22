@@ -2973,3 +2973,43 @@ body[data-theme="dark"] #btn-toggle-plus *,
   color: #ffffff !important;
   opacity: 1 !important;
 }
+
+/* =========================================================
+   THEME READABILITY OVERRIDE (UNLAYERED — FINAL)
+   Problem: Two headers (Tilla title + Family Spots Plus) were not turning white in dark mode
+   because earlier overrides relied on html/body carrying data-theme.
+   Fix: Use an ancestor selector that matches regardless of where data-theme is applied,
+   and also set -webkit-text-fill-color for Safari.
+   Desired:
+   - Dark mode: white
+   - Light mode: near-black
+   ========================================================= */
+
+/* DARK: force white for the two marked areas (title + action) */
+:where([data-theme="dark"]) :is(
+  #tilla-title,
+  #plus-section-title,
+  #btn-toggle-plus,
+  #btn-toggle-plus *,
+  #plus-section summary.sidebar-section-header,
+  #plus-section summary.sidebar-section-header *
+) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* LIGHT: force strong readable dark text for the same areas */
+:where([data-theme="light"]) :is(
+  #tilla-title,
+  #plus-section-title,
+  #btn-toggle-plus,
+  #btn-toggle-plus *,
+  #plus-section summary.sidebar-section-header,
+  #plus-section summary.sidebar-section-header *
+) {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  opacity: 1 !important;
+}
+
