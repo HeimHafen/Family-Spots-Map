@@ -149,6 +149,28 @@
       transform: translateY(1px);
       opacity: 0.92;
     }
+
+    /* ======================================================
+       FIX: Tilla + Family Spots Plus Titel im Dark Mode weiß
+       (verhindert "grau" durch spätere CSS/Opacity/WebKit)
+       ====================================================== */
+    html[data-theme="dark"] #tilla-title,
+    html[data-theme="dark"] #plus-section-title,
+    html[data-theme="dark"] #tilla-section > .sidebar-section-header,
+    html[data-theme="dark"] #plus-section > summary.sidebar-section-header {
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+
+    /* Plus-Summary-Button ("Anzeigen") soll im Dark Mode ebenfalls sauber erben */
+    html[data-theme="dark"] #plus-section > summary.sidebar-section-header button,
+    html[data-theme="dark"] #plus-section > summary.sidebar-section-header button * {
+      color: inherit !important;
+      -webkit-text-fill-color: inherit !important;
+      opacity: 1 !important;
+    }
   </style>
 
   <!-- Theme color (Light / Dark) -->
@@ -1753,7 +1775,7 @@
     defer
   ></script>
   <script
-    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.js"
     defer
   ></script>
 
