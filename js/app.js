@@ -1,4 +1,3 @@
-
 // js/app.js
 // ======================================================
 // Family Spots Map – Hauptlogik (UI, State, Tilla, Navigation)
@@ -8,13 +7,14 @@
 
 "use strict";
 
-import "./i18n.js"; // Modul führt sich selbst aus und setzt globales I18N
+import "./i18n.js"; // setzt window.I18N
 
 import { initMenu } from "./ui/menu.js";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
 import { TillaCompanion } from "./features/tilla.js";
+
 import {
   DEFAULT_MAP_CENTER,
   DEFAULT_MAP_ZOOM,
@@ -37,24 +37,14 @@ import {
   CATEGORY_LABELS_DA
 } from "./config.js";
 
-import {
-  normalizeSpot,
-  filterSpots,
-  getSpotName,
-  getSpotSubtitle,
-  getSpotId
-} from "./filters.js";
-
-import {
-  initMap,
-  renderMarkers,
-  hasValidLatLng
-} from "./map.js";
+import { normalizeSpot, filterSpots, getSpotName, getSpotSubtitle, getSpotId } from "./filters.js";
+import { initMap, renderMarkers, hasValidLatLng } from "./map.js";
 
 import { initRouter } from "./router.js";
 import { getInitialTheme, applyTheme } from "./theme.js";
 import { initToast, showToast } from "./toast.js";
 import { loadData } from "./data.js";
+
 import {
   getPlusStatus,
   formatPlusStatus,
@@ -62,13 +52,22 @@ import {
   isPlusCategory
 } from "./features/plus.js";
 
-// NEU (wie von dir gewünscht)
+// ------------------------------------------------------
+// Debug
+// ------------------------------------------------------
+const DEBUG = false;
+const log = (...args) => { if (DEBUG) console.log(...args); };
+const warn = (...args) => { if (DEBUG) console.warn(...args); };
+
+// ------------------------------------------------------
+// Menu / Language / Skip
+// ------------------------------------------------------
 const { closeMenu } = initMenu();
 initLanguageSwitcher();
 initSkipToSpots(closeMenu);
 
 // ------------------------------------------------------
-// Typdefinitionen (JSDoc) – für bessere Lesbarkeit & Tooling
+// Typdefinitionen (JSDoc)
 // ------------------------------------------------------
 
 /**
@@ -126,107 +125,80 @@ initSkipToSpots(closeMenu);
  */
 
 // ------------------------------------------------------
-// I18N / Text-Helfer
+// i18n helper
 // ------------------------------------------------------
-
-/** Übersetzungs-Helper (fällt zur Not auf Key zurück) */
-const t = (key) =>
-  typeof I18N !== "undefined" && typeof I18N.t === "function"
-    ? I18N.t(key)
-    : key;
-
-/** Spielideen aus I18N abholen – mit statischem Fallback */
-function getRandomPlayIdea() {
-  if (
-    typeof I18N !== "undefined" &&
-    typeof I18N.getRandomPlayIdea === "function"
-  ) {
-    const ideaFromI18n = I18N.getRandomPlayIdea();
-    if (ideaFromI18n) return ideaFromI18n;
-  }
-
-  const FALLBACK_PLAY_IDEAS = {
-    de: [
-      "Macht eine Mini-Schatzsuche: Jedes Kind denkt sich eine Sache aus, die alle finden sollen.",
-      "Sammelt drei Dinge in der Natur mit derselben Farbe und baut daraus ein kleines Kunstwerk.",
-      "Findet fünf runde und fünf eckige Dinge und legt daraus ein Bild auf dem Boden.",
-      "Spielt „Ich sehe was, was du nicht siehst“ nur mit Dingen in einer bestimmten Farbe.",
-      "Erfindet gemeinsam eine kleine Geschichte zu einem Baum, Stein oder Haus, an dem ihr gerade vorbeikommt."
-    ],
-    en: [
-      "Do a tiny treasure hunt: each child thinks of one thing everyone has to find.",
-      "Collect three things in nature with the same colour and build a tiny artwork from them.",
-      "Look for five round and five square objects and arrange them as a little picture on the ground.",
-      "Play “I spy with my little eye” but only with things of one colour.",
-      "Make up a short story together about a tree, rock or house you can see right now."
-    ],
-    da: [
-      "Lav en mini-skattejagt: Hvert barn finder på én ting, som alle skal finde.",
-      "Saml tre ting i naturen med samme farve og lav et lille kunstværk ud af dem.",
-      "Find fem runde og fem kantede ting og læg dem som et lille billede på jorden.",
-      "Leg „Jeg ser noget, som du ikke ser“ – men kun med ting i én bestemt farve.",
-      "Find på en lille historie sammen om et træ, en sten eller et hus, som I kan se lige nu."
-    ]
-  };
-
-  const langKey =
-    currentLang === LANG_EN ? "en" : currentLang === LANG_DA ? "da" : "de";
-  const list = FALLBACK_PLAY_IDEAS[langKey] || FALLBACK_PLAY_IDEAS.de;
-
-  if (!Array.isArray(list) || list.length === 0) {
-    return "";
-  }
-
-  const idx = Math.floor(Math.random() * list.length);
-  return list[idx];
-}
-
-/** Sprache aus LocalStorage / Browser / I18N ableiten */
-function getInitialLang() {
-  try {
-    const stored = localStorage.getItem("fs_lang");
-    if (stored === LANG_DE || stored === LANG_EN || stored === LANG_DA) {
-      return stored;
-    }
-  } catch {
-    // ignore
-  }
-
-  if (typeof I18N !== "undefined" && typeof I18N.getLanguage === "function") {
-    const fromI18n = I18N.getLanguage();
-    if (fromI18n === LANG_DE || fromI18n === LANG_EN || fromI18n === LANG_DA) {
-      return fromI18n;
-    }
-  }
-
-  const htmlLang = (document.documentElement.lang || navigator.language || LANG_DE)
-    .toLowerCase()
-    .slice(0, 2);
-
-  if (htmlLang === "en") return LANG_EN;
-  if (htmlLang === "da" || htmlLang === "dk") return LANG_DA;
-  return LANG_DE;
-}
+const t = (key, fallback) =>
+  (typeof I18N !== "undefined" && typeof I18N.t === "function")
+    ? I18N.t(key, fallback)
+    : (fallback ?? key);
 
 /**
- * Header-Tagline: bevorzugt aus i18n ("header_tagline"),
- * sonst aus statischem HEADER_TAGLINE_TEXT.
+ * Toast helper:
+ * - Wenn key in i18n existiert → showToast(key)
+ * - sonst optional fallbackText als Literal
  */
-function updateHeaderTagline(lang) {
-  const el = document.getElementById("header-tagline");
-  if (!el) return;
-
-  let text =
-    HEADER_TAGLINE_TEXT[lang] ||
-    HEADER_TAGLINE_TEXT.de ||
-    el.textContent ||
-    "";
-
-  if (typeof I18N !== "undefined" && typeof I18N.t === "function") {
-    text = I18N.t("header_tagline", text) || text;
+function toastKey(key, fallbackText) {
+  const translated = t(key, null);
+  if (translated && translated !== key) {
+    showToast(key);
+  } else if (fallbackText) {
+    showToast(fallbackText);
+  } else {
+    showToast(key);
   }
+}
 
-  el.textContent = text;
+// ------------------------------------------------------
+// Small utilities
+// ------------------------------------------------------
+function debounce(fn, delay = 200) {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => fn(...args), delay);
+  };
+}
+
+function activateOnEnterSpace(handler) {
+  return (event) => {
+    if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+      event.preventDefault();
+      handler(event);
+    }
+  };
+}
+
+function safeJsonParse(raw, fallback) {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
+}
+
+function storageGet(key) {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+function storageSet(key, value) {
+  try { localStorage.setItem(key, value); return true; } catch { return false; }
+}
+function storageRemove(key) {
+  try { localStorage.removeItem(key); return true; } catch { return false; }
+}
+
+// ------------------------------------------------------
+// Tilla helper
+// ------------------------------------------------------
+function safeTillaCall(method, ...args) {
+  try {
+    if (tilla && typeof tilla[method] === "function") {
+      tilla[method](...args);
+    }
+  } catch (err) {
+    // Tilla darf nie die App killen
+    warn("[Family Spots] Tilla call failed:", method, err);
+  }
 }
 
 // ------------------------------------------------------
@@ -249,14 +221,14 @@ let favorites = new Set();
 /** Mein Tag – gespeicherte Einträge */
 let daylogEntries = [];
 
-/** Toast-Entprellung für Marker-Limit */
+// Toast-Entprellung
 let hasShownMarkerLimitToast = false;
 
 // Filter-States
 let plusActive = false;
 let moodFilter = null; // "relaxed" | "action" | "water" | "animals" | null
 let travelMode = null; // "everyday" | "trip" | null
-let radiusStep = 4; // 0–4
+let radiusStep = 4; // 0–4 (Default: max)
 let ageFilter = "all"; // "all" | "0-3" | "4-9" | "10+"
 let searchTerm = "";
 let categoryFilter = "";
@@ -268,7 +240,7 @@ let filtersCollapsed = true;
 let activeTagFilters = new Set();
 
 // ------------------------------------------------------
-// NEU: „Real Location“-State (Entfernung/Radius/Route immer vom echten Standort)
+// Geolocation / Real Location State
 // ------------------------------------------------------
 
 /**
@@ -279,10 +251,9 @@ let userLocation = null;
 /** @type {number|null} */
 let geoWatchId = null;
 
-/**
- * Setzt/aktualisiert den echten Nutzerstandort.
- * Wir übernehmen den Wert auch bei wiederholten Updates (watchPosition).
- */
+/** show radius-disabled toast only once per session */
+let hasShownRadiusDisabledToast = false;
+
 function setUserLocation(lat, lng, accuracy) {
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
   userLocation = {
@@ -293,27 +264,14 @@ function setUserLocation(lat, lng, accuracy) {
   };
 }
 
-/**
- * Liefert die „Origin“-LatLng (echter Standort), oder null wenn nicht verfügbar.
- * Wichtig: Für Vertrauen zeigen wir keine „Pseudo-Entfernungen“ vom Karten-Center.
- */
 function getUserOriginLatLng() {
   if (!userLocation) return null;
   if (typeof L === "undefined" || typeof L.latLng !== "function") return null;
   return L.latLng(userLocation.lat, userLocation.lng);
 }
 
-/**
- * Holt den echten Standort (einmalig).
- * Wird bewusst nur bei User-Aktion genutzt (Locate-Button / Radius-Interaktion),
- * damit iOS/Safari keinen unerwarteten Prompt bei App-Start zeigt.
- */
 function requestUserLocationOnce(options = {}) {
-  const {
-    enableHighAccuracy = true,
-    timeout = 8000,
-    maximumAge = 0
-  } = options;
+  const { enableHighAccuracy = true, timeout = 8000, maximumAge = 0 } = options;
 
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -333,10 +291,6 @@ function requestUserLocationOnce(options = {}) {
   });
 }
 
-/**
- * Startet optional ein watchPosition (damit Entfernungen/Radius aktuell bleiben),
- * wird erst nach erfolgreichem Locate gestartet.
- */
 function startLocationWatch() {
   if (!navigator.geolocation) return;
   if (geoWatchId != null) return;
@@ -346,12 +300,11 @@ function startLocationWatch() {
       (pos) => {
         const { latitude, longitude, accuracy } = pos.coords || {};
         setUserLocation(latitude, longitude, accuracy);
-
-        // UI aktualisieren (Distanzen/Filter) ohne die Karte zwangsweise zu verschieben
+        // Update list/markers/distances without forcing map movement
         applyFiltersAndRender();
       },
       () => {
-        // Watch-Fehler ignorieren (User kann jederzeit erneut „Locate“ drücken)
+        // Ignorieren – User kann erneut "Locate" drücken
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 15000 }
     );
@@ -360,40 +313,40 @@ function startLocationWatch() {
   }
 }
 
-/**
- * Baut Routing-Links immer vom echten Standort (wenn verfügbar).
- * Fallback: Ziel-only (Apple/Google öffnen ohne explizites Origin).
- */
+function stopLocationWatch() {
+  if (!navigator.geolocation) return;
+  if (geoWatchId == null) return;
+  try {
+    navigator.geolocation.clearWatch(geoWatchId);
+  } catch {}
+  geoWatchId = null;
+}
+
+// ------------------------------------------------------
+// Routing URLs: always from real location if present
+// ------------------------------------------------------
 function getRouteUrlsForSpotFromUserLocation(spot) {
   if (!hasValidLatLng(spot)) return null;
 
   const destLat = spot.lat;
   const destLng = spot.lng;
 
-  const origin = userLocation
-    ? { lat: userLocation.lat, lng: userLocation.lng }
-    : null;
+  const origin = userLocation ? { lat: userLocation.lat, lng: userLocation.lng } : null;
 
-  // Apple Maps: saddr/daddr
   const apple = origin
-    ? `https://maps.apple.com/?saddr=${encodeURIComponent(
-        origin.lat + "," + origin.lng
-      )}&daddr=${encodeURIComponent(destLat + "," + destLng)}`
+    ? `https://maps.apple.com/?saddr=${encodeURIComponent(origin.lat + "," + origin.lng)}&daddr=${encodeURIComponent(destLat + "," + destLng)}`
     : `https://maps.apple.com/?daddr=${encodeURIComponent(destLat + "," + destLng)}`;
 
-  // Google Maps: dir/?api=1
   const google = origin
-    ? `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
-        origin.lat + "," + origin.lng
-      )}&destination=${encodeURIComponent(destLat + "," + destLng)}`
-    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        destLat + "," + destLng
-      )}`;
+    ? `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin.lat + "," + origin.lng)}&destination=${encodeURIComponent(destLat + "," + destLng)}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destLat + "," + destLng)}`;
 
   return { apple, google };
 }
 
-// DOM-Referenzen
+// ------------------------------------------------------
+// DOM refs
+// ------------------------------------------------------
 let languageSwitcherEl;
 let languageSwitcherFlagEl;
 let themeToggleEl;
@@ -419,10 +372,9 @@ let filterVerifiedEl;
 let filterFavoritesEl;
 let spotListEl;
 let spotDetailEl;
-let spotsSectionEl;
 let tagFilterContainerEl;
 
-// Plus & Mein Tag – Sections + Toggle-Buttons
+// Plus & Mein Tag
 let plusSectionEl;
 let btnTogglePlusEl;
 let daylogSectionEl;
@@ -444,10 +396,10 @@ let tilla = null;
 // Spielideen
 let playIdeasBtnEl = null;
 
-// Filter-Body innerhalb der Filter-Section
+// Filter-Body in Filter-Section
 let filterBodyEls = [];
 
-// Fokus-Merkung für Detail-Panel
+// Fokus-Merkung
 let lastSpotTriggerEl = null;
 
 // Filtermodal
@@ -458,49 +410,24 @@ let filterModalApplyEl;
 let filterModalResetEl;
 let filterSummaryEl;
 
-// State für Filtermodal
 let isFilterModalOpen = false;
 let lastFocusBeforeFilterModal = null;
 
-// Skip-Link (Zum Hauptinhalt springen)
+// Skip link
 let skipLinkEl;
 
 // ------------------------------------------------------
-// Utilities
+// Static i18n (data-i18n-de/en/da) – kompatibel mit deinem HTML
 // ------------------------------------------------------
-
-function debounce(fn, delay = 200) {
-  let timeoutId;
-  return (...args) => {
-    if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => fn(...args), delay);
-  };
-}
-
-function activateOnEnterSpace(handler) {
-  return (event) => {
-    if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
-      event.preventDefault();
-      handler(event);
-    }
-  };
-}
-
 function applyStaticI18n() {
   document.querySelectorAll("[data-i18n-de]").forEach((el) => {
     let attrName;
-    if (currentLang === LANG_EN) {
-      attrName = "data-i18n-en";
-    } else if (currentLang === LANG_DA) {
-      attrName = "data-i18n-da";
-    } else {
-      attrName = "data-i18n-de";
-    }
+    if (currentLang === LANG_EN) attrName = "data-i18n-en";
+    else if (currentLang === LANG_DA) attrName = "data-i18n-da";
+    else attrName = "data-i18n-de";
 
     let text = el.getAttribute(attrName);
-    if (!text) {
-      text = el.getAttribute("data-i18n-de") || el.getAttribute("data-i18n-en");
-    }
+    if (!text) text = el.getAttribute("data-i18n-de") || el.getAttribute("data-i18n-en");
     if (text) el.textContent = text;
   });
 }
@@ -508,9 +435,7 @@ function applyStaticI18n() {
 function initLazyLoadImages() {
   if (!("loading" in HTMLImageElement.prototype)) return;
   document.querySelectorAll("img").forEach((img) => {
-    if (!img.loading || img.loading === "auto") {
-      img.loading = "lazy";
-    }
+    if (!img.loading || img.loading === "auto") img.loading = "lazy";
   });
 }
 
@@ -518,9 +443,7 @@ function updateMetaAndA11yFromI18n() {
   if (typeof I18N === "undefined" || typeof I18N.t !== "function") return;
 
   const metaTitle = I18N.t("meta_title", document.title || "");
-  if (metaTitle) {
-    document.title = metaTitle;
-  }
+  if (metaTitle) document.title = metaTitle;
 
   const metaDescEl = document.querySelector('meta[name="description"]');
   if (metaDescEl) {
@@ -550,76 +473,39 @@ function updateMetaAndA11yFromI18n() {
   }
 }
 
-// ------------------------------------------------------
-// Sprache & Übersetzungen
-// ------------------------------------------------------
+function updateHeaderTagline(lang) {
+  const el = document.getElementById("header-tagline");
+  if (!el) return;
 
-function getCategoryLabel(slug) {
-  if (!slug) return "";
+  let text =
+    (HEADER_TAGLINE_TEXT && HEADER_TAGLINE_TEXT[lang]) ||
+    (HEADER_TAGLINE_TEXT && HEADER_TAGLINE_TEXT.de) ||
+    el.textContent ||
+    "";
 
-  let langMap;
-  let fallbackMap;
-
-  if (currentLang === LANG_EN) {
-    langMap = CATEGORY_LABELS_EN;
-    fallbackMap = CATEGORY_LABELS_DE;
-  } else if (currentLang === LANG_DA) {
-    langMap = CATEGORY_LABELS_DA;
-    fallbackMap = CATEGORY_LABELS_DE;
-  } else {
-    langMap = CATEGORY_LABELS_DE;
-    fallbackMap = CATEGORY_LABELS_EN;
+  if (typeof I18N !== "undefined" && typeof I18N.t === "function") {
+    text = I18N.t("header_tagline", text) || text;
   }
 
-  return (
-    (langMap && langMap[slug]) ||
-    (fallbackMap && fallbackMap[slug]) ||
-    slug.replace(/[_-]/g, " ")
-  );
+  el.textContent = text;
 }
 
-function getCategoryLabelWithAccess(slug) {
-  const base = getCategoryLabel(slug);
-  if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) return base;
+// ------------------------------------------------------
+// Sprache
+// ------------------------------------------------------
+function getInitialLang() {
+  const stored = storageGet("fs_lang");
+  if (stored === LANG_DE || stored === LANG_EN || stored === LANG_DA) return stored;
 
-  const access = CATEGORY_ACCESS.perCategory[slug];
-  if (!access) {
-    return base;
+  if (typeof I18N !== "undefined" && typeof I18N.getLanguage === "function") {
+    const fromI18n = I18N.getLanguage();
+    if (fromI18n === LANG_DE || fromI18n === LANG_EN || fromI18n === LANG_DA) return fromI18n;
   }
 
-  if (access.level === "subscription") {
-    const suffix = " · Plus";
-    return base + suffix;
-  }
-
-  if (access.level === "addon") {
-    let suffix;
-    if (access.addonId === "addon_water") {
-      suffix =
-        currentLang === LANG_EN
-          ? " · water add-on (Plus)"
-          : currentLang === LANG_DA
-          ? " · vand-add-on (Plus)"
-          : " · Wasser-Add-on (Plus)";
-    } else if (access.addonId === "addon_rv") {
-      suffix =
-        currentLang === LANG_EN
-          ? " · RV add-on (Plus)"
-          : currentLang === LANG_DA
-          ? " · autocamper-add-on (Plus)"
-          : " · WoMo-Add-on (Plus)";
-    } else {
-      suffix =
-        currentLang === LANG_EN
-          ? " · add-on (Plus)"
-          : currentLang === LANG_DA
-          ? " · add-on (Plus)"
-          : " · Add-on (Plus)";
-    }
-    return base + suffix;
-  }
-
-  return base;
+  const htmlLang = (document.documentElement.lang || navigator.language || LANG_DE).toLowerCase().slice(0, 2);
+  if (htmlLang === "en") return LANG_EN;
+  if (htmlLang === "da" || htmlLang === "dk") return LANG_DA;
+  return LANG_DE;
 }
 
 function updateLanguageSwitcherVisual() {
@@ -628,15 +514,8 @@ function updateLanguageSwitcherVisual() {
   if (languageSwitcherFlagEl) {
     let src = "assets/flags/flag-de.svg";
     let alt = "Deutsch";
-
-    if (currentLang === LANG_EN) {
-      src = "assets/flags/flag-gb.svg";
-      alt = "English";
-    } else if (currentLang === LANG_DA) {
-      src = "assets/flags/flag-dk.svg";
-      alt = "Dansk";
-    }
-
+    if (currentLang === LANG_EN) { src = "assets/flags/flag-gb.svg"; alt = "English"; }
+    else if (currentLang === LANG_DA) { src = "assets/flags/flag-dk.svg"; alt = "Dansk"; }
     languageSwitcherFlagEl.src = src;
     languageSwitcherFlagEl.alt = alt;
   } else {
@@ -646,56 +525,25 @@ function updateLanguageSwitcherVisual() {
     languageSwitcherEl.textContent = label;
   }
 
-  let ariaLabel;
-  if (currentLang === LANG_DE) {
-    ariaLabel = "Sprache: Deutsch (Tippen für Dansk)";
-  } else if (currentLang === LANG_DA) {
-    ariaLabel = "Sprog: Dansk (tryk for English)";
-  } else {
-    ariaLabel = "Language: English (tap for Deutsch)";
-  }
+  const ariaLabel =
+    currentLang === LANG_DE
+      ? "Sprache: Deutsch (Tippen für Dansk)"
+      : currentLang === LANG_DA
+      ? "Sprog: Dansk (tryk for English)"
+      : "Language: English (tap for Deutsch)";
   languageSwitcherEl.setAttribute("aria-label", ariaLabel);
 }
 
-function updateGenericSectionToggleLabel(btn, isOpen) {
-  if (!btn) return;
-  const target = btn.querySelector("span") || btn;
-  const isDeLike = currentLang === LANG_DE || currentLang === LANG_DA;
-  const showLabel = isDeLike ? "Anzeigen" : "Show";
-  const hideLabel = isDeLike ? "Ausblenden" : "Hide";
-  target.textContent = isOpen ? hideLabel : showLabel;
-  btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-}
-
-function updatePlusStatusText(status) {
-  if (!plusStatusTextEl) return;
-
-  if (!FEATURES.plus) {
-    plusStatusTextEl.textContent = "";
-    return;
-  }
-
-  const s = status || getPlusStatus();
-  plusStatusTextEl.textContent = formatPlusStatus(s);
-}
-
 function setLanguage(lang, { initial = false } = {}) {
-  currentLang = lang === LANG_EN ? LANG_EN : lang === LANG_DA ? LANG_DA : LANG_DE;
+  currentLang = (lang === LANG_EN) ? LANG_EN : (lang === LANG_DA) ? LANG_DA : LANG_DE;
 
-  try {
-    localStorage.setItem("fs_lang", currentLang);
-  } catch {
-    // ignore
-  }
-
+  storageSet("fs_lang", currentLang);
   document.documentElement.lang = currentLang;
 
+  // I18N modul parallel halten (falls genutzt)
   try {
     if (typeof I18N !== "undefined" && typeof I18N.setLanguage === "function") {
-      let i18nLang = LANG_DE;
-      if (currentLang === LANG_EN) i18nLang = LANG_EN;
-      else if (currentLang === LANG_DA) i18nLang = "da";
-      I18N.setLanguage(i18nLang);
+      I18N.setLanguage(currentLang);
     }
   } catch (err) {
     console.error("[Family Spots] I18N.setLanguage fehlgeschlagen:", err);
@@ -704,19 +552,17 @@ function setLanguage(lang, { initial = false } = {}) {
   updateMetaAndA11yFromI18n();
   updateHeaderTagline(currentLang);
 
-  if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map");
-  if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about");
+  if (bottomNavMapLabelEl) bottomNavMapLabelEl.textContent = t("nav_map", bottomNavMapLabelEl.textContent || "Karte");
+  if (bottomNavAboutLabelEl) bottomNavAboutLabelEl.textContent = t("nav_about", bottomNavAboutLabelEl.textContent || "Über");
 
   const aboutDe = document.getElementById("page-about-de");
   const aboutDa = document.getElementById("page-about-da");
   const aboutEn = document.getElementById("page-about-en");
 
   if (aboutDe && aboutEn && aboutDa) {
-    const langCode = currentLang;
-
-    const showDe = langCode === LANG_DE;
-    const showDa = langCode === LANG_DA;
-    const showEn = langCode === LANG_EN;
+    const showDe = currentLang === LANG_DE;
+    const showDa = currentLang === LANG_DA;
+    const showEn = currentLang === LANG_EN;
 
     aboutDe.classList.toggle("hidden", !showDe);
     aboutDe.setAttribute("aria-hidden", showDe ? "false" : "true");
@@ -728,226 +574,109 @@ function setLanguage(lang, { initial = false } = {}) {
     aboutEn.setAttribute("aria-hidden", showEn ? "false" : "true");
   }
 
+  // Button labels
   if (btnToggleFiltersEl) {
     const span = btnToggleFiltersEl.querySelector("span");
-    if (span) {
-      span.textContent = filtersCollapsed ? t("btn_show_filters") : t("btn_hide_filters");
-    }
+    if (span) span.textContent = filtersCollapsed ? t("btn_show_filters", "Filter anzeigen") : t("btn_hide_filters", "Filter ausblenden");
   }
 
   if (btnToggleViewEl && sidebarEl) {
     const sidebarHidden = sidebarEl.classList.contains("hidden");
     const span = btnToggleViewEl.querySelector("span");
-    if (span) {
-      span.textContent = sidebarHidden ? t("btn_show_list") : t("btn_only_map");
-    }
-  }
-
-  if (plusSectionEl && btnTogglePlusEl) {
-    updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
-  }
-  if (daylogSectionEl && btnToggleDaylogEl) {
-    updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
+    if (span) span.textContent = sidebarHidden ? t("btn_show_list", "Liste anzeigen") : t("btn_only_map", "Nur Karte");
   }
 
   if (filterSearchEl) {
     filterSearchEl.placeholder =
-      currentLang === LANG_EN
-        ? "Place, spot, keywords …"
-        : currentLang === LANG_DA
-        ? "Sted, spot, søgeord …"
-        : "Ort, Spot, Stichwörter …";
+      currentLang === LANG_EN ? "Place, spot, keywords …"
+      : currentLang === LANG_DA ? "Sted, spot, søgeord …"
+      : "Ort, Spot, Stichwort …";
   }
 
   if (daylogTextEl && FEATURES.daylog) {
     daylogTextEl.placeholder =
       currentLang === LANG_EN
-        ? "Today we went to the wildlife park – the goats were sooo cute!"
+        ? "Today we found a place where time slowed down a little."
         : currentLang === LANG_DA
-        ? "I dag var vi i dyreparken – gederne var såå søde!"
-        : "Heute waren wir im Wildpark – die Ziegen waren sooo süß!";
-  }
-
-  if (FEATURES.daylog) {
-    updateDaylogUI();
+        ? "I dag fandt vi et sted, hvor tiden blev lidt langsommere."
+        : "Heute haben wir einen Ort gefunden, an dem die Zeit kurz langsamer wurde.";
   }
 
   updateRadiusTexts();
 
   if (filterCategoryEl) {
-    const firstOption = filterCategoryEl.querySelector("option[value='']");
-    if (firstOption) firstOption.textContent = t("filter_category_all");
     populateCategoryOptions();
   }
 
-  if (tagFilterContainerEl) {
-    renderTagFilterChips();
-  }
-
-  if (!initial && tilla && typeof tilla.onLanguageChanged === "function") {
-    tilla.onLanguageChanged();
-  }
-
+  if (tagFilterContainerEl) renderTagFilterChips();
   updateLanguageSwitcherVisual();
   applyStaticI18n();
   updatePlusStatusText();
   updateFilterSummary();
 
-  document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
-    btn.textContent =
-      currentLang === LANG_EN ? "Close" : currentLang === LANG_DA ? "Luk" : "Schließen";
-  });
+  safeTillaCall("onLanguageChanged");
 
   if (!initial) {
     const headerTitle = document.querySelector(".header-title");
-    if (headerTitle && typeof headerTitle.focus === "function") {
-      headerTitle.focus();
-    }
+    if (headerTitle && typeof headerTitle.focus === "function") headerTitle.focus();
   }
 }
 
 // ------------------------------------------------------
-// Spots – Laden (über data.js)
+// Kategorien
 // ------------------------------------------------------
+function getCategoryLabel(slug) {
+  if (!slug) return "";
 
-function showSpotsLoadErrorUI() {
-  if (!spotListEl) return;
+  let langMap, fallbackMap;
+  if (currentLang === LANG_EN) { langMap = CATEGORY_LABELS_EN; fallbackMap = CATEGORY_LABELS_DE; }
+  else if (currentLang === LANG_DA) { langMap = CATEGORY_LABELS_DA; fallbackMap = CATEGORY_LABELS_DE; }
+  else { langMap = CATEGORY_LABELS_DE; fallbackMap = CATEGORY_LABELS_EN; }
 
-  spotListEl.innerHTML = "";
-
-  const msg = document.createElement("p");
-  msg.className = "filter-group-helper";
-  msg.textContent =
-    currentLang === LANG_EN
-      ? "Spots could not be loaded. Please check your connection and try again."
-      : currentLang === LANG_DA
-      ? "Spots kunne ikke indlæses. Tjek venligst forbindelsen og prøv igen."
-      : "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.";
-  spotListEl.appendChild(msg);
-
-  const retryBtn = document.createElement("button");
-  retryBtn.type = "button";
-  retryBtn.className = "btn btn-small";
-  retryBtn.textContent =
-    currentLang === LANG_EN ? "Try again" : currentLang === LANG_DA ? "Prøv igen" : "Erneut versuchen";
-
-  retryBtn.addEventListener("click", () => {
-    showToast(
-      currentLang === LANG_EN
-        ? "Reloading spots…"
-        : currentLang === LANG_DA
-        ? "Indlæser spots igen …"
-        : "Lade Spots erneut …"
-    );
-    loadSpots();
-  });
-
-  spotListEl.appendChild(retryBtn);
+  return (langMap && langMap[slug]) || (fallbackMap && fallbackMap[slug]) || slug.replace(/[_-]/g, " ");
 }
 
-async function loadSpots() {
-  try {
-    const result = await loadData();
-    const rawSpots = Array.isArray(result.spots) ? result.spots : [];
+function getCategoryLabelWithAccess(slug) {
+  const base = getCategoryLabel(slug);
+  if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) return base;
 
-    spots = rawSpots.map(normalizeSpot);
+  const access = CATEGORY_ACCESS.perCategory[slug];
+  if (!access) return base;
 
-    console.log("[Family Spots] loadSpots:", { total: spots.length });
+  if (access.level === "subscription") return base + " · Plus";
 
-    loadFavoritesFromStorage();
-    populateCategoryOptions();
-
-    if (tagFilterContainerEl) {
-      renderTagFilterChips();
+  if (access.level === "addon") {
+    let suffix;
+    if (access.addonId === "addon_water") {
+      suffix = currentLang === LANG_EN ? " · water add-on (Plus)" : currentLang === LANG_DA ? " · vand-add-on (Plus)" : " · Wasser-Add-on (Plus)";
+    } else if (access.addonId === "addon_rv") {
+      suffix = currentLang === LANG_EN ? " · RV add-on (Plus)" : currentLang === LANG_DA ? " · autocamper-add-on (Plus)" : " · WoMo-Add-on (Plus)";
+    } else {
+      suffix = currentLang === LANG_EN ? " · add-on (Plus)" : currentLang === LANG_DA ? " · add-on (Plus)" : " · Add-on (Plus)";
     }
-
-    if (result.fromCache) {
-      showToast(
-        currentLang === LANG_EN
-          ? "Loaded offline data."
-          : currentLang === LANG_DA
-          ? "Indlæste offline-data."
-          : "Offline-Daten geladen."
-      );
-    }
-
-    applyFiltersAndRender();
-  } catch (err) {
-    console.error("[Family Spots] Fehler beim Laden der Spots:", err);
-
-    showToast("error_data_load");
-    showSpotsLoadErrorUI();
-    spots = [];
-    filteredSpots = [];
-
-    if (map && markersLayer) {
-      hasShownMarkerLimitToast = renderMarkers({
-        map,
-        markersLayer,
-        spots: [],
-        maxMarkers: MAX_MARKERS_RENDER,
-        currentLang,
-        showToast,
-        hasShownMarkerLimitToast,
-        focusSpotOnMap
-      });
-    }
-
-    if (tilla && typeof tilla.onNoSpotsFound === "function") {
-      tilla.onNoSpotsFound();
-    }
+    return base + suffix;
   }
+
+  return base;
 }
-
-// ------------------------------------------------------
-// Favorites – Persistence
-// ------------------------------------------------------
-
-function loadFavoritesFromStorage() {
-  if (!FEATURES.favorites) return;
-
-  try {
-    const stored = localStorage.getItem("fs_favorites");
-    if (!stored) return;
-    const arr = JSON.parse(stored);
-    if (Array.isArray(arr)) favorites = new Set(arr);
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Favoriten nicht laden:", err);
-  }
-}
-
-function saveFavoritesToStorage() {
-  if (!FEATURES.favorites) return;
-
-  try {
-    localStorage.setItem("fs_favorites", JSON.stringify(Array.from(favorites)));
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Favoriten nicht speichern:", err);
-  }
-}
-
-// ------------------------------------------------------
-// Kategorien / Filter-Dropdown
-// ------------------------------------------------------
 
 function populateCategoryOptions() {
   if (!filterCategoryEl) return;
 
-  const firstOption =
-    filterCategoryEl.querySelector("option[value='']") || document.createElement("option");
-  firstOption.value = "";
-  firstOption.textContent = t("filter_category_all");
+  const frag = document.createDocumentFragment();
 
-  filterCategoryEl.innerHTML = "";
-  filterCategoryEl.appendChild(firstOption);
+  const firstOption = document.createElement("option");
+  firstOption.value = "";
+  firstOption.textContent = t("filter_category_all", "Alle Kategorien");
+  frag.appendChild(firstOption);
 
   const groupedSlugs = new Set();
 
-  Object.entries(CATEGORY_GROUPS).forEach(([groupKey, slugs]) => {
+  Object.entries(CATEGORY_GROUPS || {}).forEach(([groupKey, slugs]) => {
     if (!Array.isArray(slugs) || !slugs.length) return;
 
     const groupLabel =
-      (CATEGORY_GROUP_LABELS[currentLang] && CATEGORY_GROUP_LABELS[currentLang][groupKey]) ||
+      (CATEGORY_GROUP_LABELS && CATEGORY_GROUP_LABELS[currentLang] && CATEGORY_GROUP_LABELS[currentLang][groupKey]) ||
       groupKey;
 
     const optgroup = document.createElement("optgroup");
@@ -962,17 +691,14 @@ function populateCategoryOptions() {
       optgroup.appendChild(opt);
     });
 
-    filterCategoryEl.appendChild(optgroup);
+    frag.appendChild(optgroup);
   });
 
+  // additional categories discovered from data
   const extraSet = new Set();
-
   spots.forEach((spot) => {
     if (Array.isArray(spot.categories)) {
-      spot.categories.forEach((c) => {
-        if (!c) return;
-        if (!groupedSlugs.has(c)) extraSet.add(c);
-      });
+      spot.categories.forEach((c) => { if (c && !groupedSlugs.has(c)) extraSet.add(c); });
     } else if (spot.category && !groupedSlugs.has(spot.category)) {
       extraSet.add(spot.category);
     }
@@ -981,21 +707,15 @@ function populateCategoryOptions() {
   if (extraSet.size > 0) {
     const extraGroup = document.createElement("optgroup");
     extraGroup.label =
-      currentLang === LANG_EN
-        ? "Other categories"
-        : currentLang === LANG_DA
-        ? "Andre kategorier"
-        : "Weitere Kategorien";
+      currentLang === LANG_EN ? "Other categories"
+      : currentLang === LANG_DA ? "Andre kategorier"
+      : "Weitere Kategorien";
 
     Array.from(extraSet)
-      .sort((a, b) =>
-        getCategoryLabel(a)
-          .toLowerCase()
-          .localeCompare(
-            getCategoryLabel(b).toLowerCase(),
-            currentLang === LANG_DE ? "de" : currentLang === LANG_DA ? "da" : "en"
-          )
-      )
+      .sort((a, b) => getCategoryLabel(a).toLowerCase().localeCompare(
+        getCategoryLabel(b).toLowerCase(),
+        currentLang === LANG_DE ? "de" : currentLang === LANG_DA ? "da" : "en"
+      ))
       .forEach((slug) => {
         const opt = document.createElement("option");
         opt.value = slug;
@@ -1003,108 +723,128 @@ function populateCategoryOptions() {
         extraGroup.appendChild(opt);
       });
 
-    filterCategoryEl.appendChild(extraGroup);
+    frag.appendChild(extraGroup);
   }
 
-  filterCategoryEl.value = categoryFilter || "";
+  // preserve selection
+  const selected = categoryFilter || "";
+  filterCategoryEl.replaceChildren(frag);
+  filterCategoryEl.value = selected;
 }
 
 // ------------------------------------------------------
 // Radius / Geodistanz
 // ------------------------------------------------------
+function getMaxRadiusIndex() {
+  return Math.max(0, (RADIUS_STEPS_KM?.length || 1) - 1);
+}
 
 function updateRadiusTexts() {
   if (!filterRadiusEl || !filterRadiusMaxLabelEl || !filterRadiusDescriptionEl) return;
 
   let value = parseInt(filterRadiusEl.value, 10);
-  if (Number.isNaN(value)) {
-    value = 4;
-  }
-  value = Math.min(Math.max(value, 0), RADIUS_STEPS_KM.length - 1);
-  radiusStep = value;
+  if (Number.isNaN(value)) value = getMaxRadiusIndex();
+  value = Math.min(Math.max(value, 0), getMaxRadiusIndex());
 
+  radiusStep = value;
   filterRadiusEl.value = String(radiusStep);
   filterRadiusEl.setAttribute("aria-valuenow", String(radiusStep));
 
-  if (radiusStep === RADIUS_STEPS_KM.length - 1) {
-    filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label");
-    filterRadiusDescriptionEl.textContent = t("filter_radius_description_all");
+  const maxIndex = getMaxRadiusIndex();
+  if (radiusStep === maxIndex) {
+    filterRadiusMaxLabelEl.textContent = t("filter_radius_max_label", "Alle Spots");
+    filterRadiusDescriptionEl.textContent = t("filter_radius_description_all", "Alle Spots – ohne Radiusbegrenzung.");
   } else {
     const km = RADIUS_STEPS_KM[radiusStep];
     filterRadiusMaxLabelEl.textContent = `${km} km`;
     const key = `filter_radius_description_step${radiusStep}`;
-    filterRadiusDescriptionEl.textContent = t(key);
+    filterRadiusDescriptionEl.textContent = t(key, `${km} km – begrenzt um deinen Standort.`);
   }
+}
+
+/**
+ * Effective radius:
+ * - If slider is limited but userLocation missing -> treat as Infinity (disable radius)
+ *   and show a toast once to explain.
+ */
+function getEffectiveRadiusKm() {
+  const maxIndex = getMaxRadiusIndex();
+  const requested = RADIUS_STEPS_KM[radiusStep] ?? RADIUS_STEPS_KM[maxIndex] ?? Infinity;
+
+  if (radiusStep === maxIndex) return requested; // all spots
+  if (userLocation) return requested;
+
+  // location missing but limited radius chosen -> disable radius for trust
+  if (!hasShownRadiusDisabledToast) {
+    hasShownRadiusDisabledToast = true;
+    toastKey(
+      "toast_location_unavailable_radius_disabled",
+      currentLang === LANG_EN
+        ? "Location not available – radius filter is disabled."
+        : currentLang === LANG_DA
+        ? "Placering ikke tilgængelig – radiusfilter er slået fra."
+        : "Standort nicht verfügbar – Radiusfilter ist deaktiviert."
+    );
+  }
+  return Infinity;
 }
 
 function initRadiusSliderA11y() {
   if (!filterRadiusEl) return;
 
   const min = filterRadiusEl.min || "0";
-  const max = filterRadiusEl.max || String(RADIUS_STEPS_KM.length - 1);
+  const max = filterRadiusEl.max || String(getMaxRadiusIndex());
 
-  if (!filterRadiusEl.value) {
-    filterRadiusEl.value = max;
-  }
+  if (!filterRadiusEl.value) filterRadiusEl.value = max;
 
   filterRadiusEl.setAttribute("aria-valuemin", min);
   filterRadiusEl.setAttribute("aria-valuemax", max);
   filterRadiusEl.setAttribute("aria-valuenow", filterRadiusEl.value);
 
-  filterRadiusEl.addEventListener("input", async () => {
+  const onRadiusInput = debounce(async () => {
     updateRadiusTexts();
 
-    // NEU: Wenn Radius begrenzt ist, versuchen wir den echten Standort zu holen,
-    // damit der Radius wirklich „um mich herum“ gilt.
-    const maxIndex = RADIUS_STEPS_KM.length - 1;
+    // If radius limited, try to obtain location once (user-initiated interaction)
+    const maxIndex = getMaxRadiusIndex();
     if (radiusStep !== maxIndex && !userLocation && navigator.geolocation) {
       try {
         await requestUserLocationOnce({ enableHighAccuracy: true, timeout: 9000 });
         startLocationWatch();
       } catch {
-        // Wenn der User ablehnt, filtern wir nicht „falsch um Karten-Center herum“,
-        // sondern lassen den Radius für diesen Lauf praktisch „unbegrenzt“ wirken
-        // (isSpotInRadius gibt dann true zurück, weil centerLatLng null sein kann).
+        // user denied -> handled by getEffectiveRadiusKm()
       }
     }
 
     applyFiltersAndRender();
-  });
+  }, 120);
 
+  filterRadiusEl.addEventListener("input", () => onRadiusInput());
   updateRadiusTexts();
 }
 
-/**
- * Distanz-Check für einen Spot relativ zu originLatLng / radiusKm.
- * Origin ist der echte Nutzerstandort, nicht das Map-Center.
- */
 function isSpotInRadius(spot, originLatLng, radiusKm) {
-  if (!originLatLng || typeof originLatLng.distanceTo !== "function") {
-    return true;
-  }
+  if (!originLatLng || typeof originLatLng.distanceTo !== "function") return true;
   if (!isFinite(radiusKm) || radiusKm === Infinity) return true;
   if (!hasValidLatLng(spot)) return true;
-
   if (typeof L === "undefined" || typeof L.latLng !== "function") return true;
 
   const spotLatLng = L.latLng(spot.lat, spot.lng);
-  const distanceMeters = originLatLng.distanceTo(spotLatLng);
-  const distanceKm = distanceMeters / 1000;
+  const distanceKm = originLatLng.distanceTo(spotLatLng) / 1000;
   return distanceKm <= radiusKm;
 }
 
 // ------------------------------------------------------
-// Tag-Filter-Chips (UI)
+// Tag Filter Chips
 // ------------------------------------------------------
-
 function renderTagFilterChips() {
   if (!tagFilterContainerEl) return;
+
   if (!FILTERS || !Array.isArray(FILTERS) || !FILTERS.length) {
-    tagFilterContainerEl.innerHTML = "";
+    tagFilterContainerEl.replaceChildren();
     return;
   }
 
-  tagFilterContainerEl.innerHTML = "";
+  const frag = document.createDocumentFragment();
 
   FILTERS.forEach((filter) => {
     if (!filter || !filter.id) return;
@@ -1115,38 +855,31 @@ function renderTagFilterChips() {
     btn.dataset.filterId = filter.id;
 
     const isActive = activeTagFilters.has(filter.id);
-    if (isActive) {
-      btn.classList.add("tag-filter-chip--active");
-      btn.setAttribute("aria-pressed", "true");
-    } else {
-      btn.setAttribute("aria-pressed", "false");
-    }
+    btn.classList.toggle("tag-filter-chip--active", isActive);
+    btn.setAttribute("aria-pressed", isActive ? "true" : "false");
 
     const label = (filter.label && (filter.label[currentLang] || filter.label.de)) || filter.id;
     btn.textContent = label;
 
     btn.addEventListener("click", () => {
-      const currentlyActive = activeTagFilters.has(filter.id);
-      if (currentlyActive) {
-        activeTagFilters.delete(filter.id);
-      } else {
-        activeTagFilters.add(filter.id);
-      }
+      if (activeTagFilters.has(filter.id)) activeTagFilters.delete(filter.id);
+      else activeTagFilters.add(filter.id);
+
       renderTagFilterChips();
       applyFiltersAndRender();
     });
 
-    tagFilterContainerEl.appendChild(btn);
+    frag.appendChild(btn);
   });
+
+  tagFilterContainerEl.replaceChildren(frag);
 }
 
 // ------------------------------------------------------
-// Kompakte Filter-Zusammenfassung (unter Basis-Filtern)
+// Filter Summary
 // ------------------------------------------------------
-
 function getMoodLabel(moodKey) {
   if (!moodKey) return "";
-
   if (currentLang === LANG_EN) {
     if (moodKey === "relaxed") return "Relaxed";
     if (moodKey === "action") return "Active";
@@ -1166,138 +899,87 @@ function getMoodLabel(moodKey) {
   return "";
 }
 
-function getMoodLabelForSummary() {
-  if (!moodFilter) return "";
-  return getMoodLabel(moodFilter);
-}
-
 function updateFilterSummary() {
   if (!filterSummaryEl) return;
 
   const parts = [];
-  const maxRadiusIndex = RADIUS_STEPS_KM.length - 1;
+  const maxIndex = getMaxRadiusIndex();
 
   if (searchTerm) {
-    if (currentLang === LANG_EN) {
-      parts.push(`Search: “${searchTerm}”`);
-    } else if (currentLang === LANG_DA) {
-      parts.push(`Søgning: “${searchTerm}”`);
-    } else {
-      parts.push(`Suche: „${searchTerm}“`);
+    parts.push(
+      currentLang === LANG_EN ? `Search: “${searchTerm}”`
+      : currentLang === LANG_DA ? `Søgning: “${searchTerm}”`
+      : `Suche: „${searchTerm}“`
+    );
+  }
+
+  if (moodFilter) {
+    const moodLabel = getMoodLabel(moodFilter);
+    if (moodLabel) {
+      parts.push(
+        currentLang === LANG_EN ? `Mood: ${moodLabel}`
+        : currentLang === LANG_DA ? `Stemning: ${moodLabel}`
+        : `Stimmung: ${moodLabel}`
+      );
     }
   }
 
-  const moodLabel = getMoodLabelForSummary();
-  if (moodLabel) {
-    if (currentLang === LANG_EN) {
-      parts.push(`Mood: ${moodLabel}`);
-    } else if (currentLang === LANG_DA) {
-      parts.push(`Stemning: ${moodLabel}`);
-    } else {
-      parts.push(`Stimmung: ${moodLabel}`);
-    }
-  }
-
-  if (radiusStep !== maxRadiusIndex) {
+  if (radiusStep !== maxIndex) {
     const km = RADIUS_STEPS_KM[radiusStep];
     parts.push(`Radius: ${km} km`);
   }
 
   if (categoryFilter && filterCategoryEl) {
-    const selected = filterCategoryEl.selectedOptions[0];
+    const selected = filterCategoryEl.selectedOptions?.[0];
     const label = (selected && selected.textContent.trim()) || getCategoryLabel(categoryFilter);
     if (label) {
-      if (currentLang === LANG_EN) {
-        parts.push(`Category: ${label}`);
-      } else if (currentLang === LANG_DA) {
-        parts.push(`Kategori: ${label}`);
-      } else {
-        parts.push(`Kategorie: ${label}`);
-      }
+      parts.push(
+        currentLang === LANG_EN ? `Category: ${label}`
+        : currentLang === LANG_DA ? `Kategori: ${label}`
+        : `Kategorie: ${label}`
+      );
     }
   }
 
   if (ageFilter !== "all" && filterAgeEl) {
-    const selected = filterAgeEl.selectedOptions[0];
+    const selected = filterAgeEl.selectedOptions?.[0];
     const label = selected ? selected.textContent.trim() : ageFilter;
-    if (currentLang === LANG_EN) {
-      parts.push(`Age: ${label}`);
-    } else if (currentLang === LANG_DA) {
-      parts.push(`Alder: ${label}`);
-    } else {
-      parts.push(`Alter: ${label}`);
-    }
+    parts.push(
+      currentLang === LANG_EN ? `Age: ${label}`
+      : currentLang === LANG_DA ? `Alder: ${label}`
+      : `Alter: ${label}`
+    );
   }
 
-  if (activeTagFilters && activeTagFilters.size > 0) {
+  if (activeTagFilters.size > 0) {
     const count = activeTagFilters.size;
-    if (currentLang === LANG_EN) {
-      parts.push(`Quick filters (${count})`);
-    } else if (currentLang === LANG_DA) {
-      parts.push(`Hurtigfiltre (${count})`);
-    } else {
-      parts.push(`Schnellfilter (${count})`);
-    }
+    parts.push(
+      currentLang === LANG_EN ? `Quick filters (${count})`
+      : currentLang === LANG_DA ? `Hurtigfiltre (${count})`
+      : `Schnellfilter (${count})`
+    );
   }
 
-  if (onlyVerified) {
-    if (currentLang === LANG_EN) {
-      parts.push("Only verified spots");
-    } else if (currentLang === LANG_DA) {
-      parts.push("Kun verificerede spots");
-    } else {
-      parts.push("Nur verifizierte Spots");
-    }
-  }
+  if (onlyVerified) parts.push(currentLang === LANG_EN ? "Only verified spots" : currentLang === LANG_DA ? "Kun verificerede spots" : "Nur verifizierte Spots");
+  if (onlyFavorites) parts.push(currentLang === LANG_EN ? "Favourites only" : currentLang === LANG_DA ? "Kun favoritter" : "Nur Favoriten");
+  if (onlyBigAdventures) parts.push(currentLang === LANG_EN ? "Big adventures" : currentLang === LANG_DA ? "Store eventyr" : "Große Abenteuer");
 
-  if (onlyFavorites) {
-    if (currentLang === LANG_EN) {
-      parts.push("Favourites only");
-    } else if (currentLang === LANG_DA) {
-      parts.push("Kun favoritter");
-    } else {
-      parts.push("Nur Favoriten");
-    }
-  }
-
-  if (onlyBigAdventures) {
-    if (currentLang === LANG_EN) {
-      parts.push("Big adventures");
-    } else if (currentLang === LANG_DA) {
-      parts.push("Store eventyr");
-    } else {
-      parts.push("Große Abenteuer");
-    }
-  }
-
-  let text;
   if (!parts.length) {
-    if (currentLang === LANG_EN) {
-      text = "Active filters: basic filters";
-    } else if (currentLang === LANG_DA) {
-      text = "Aktive filtre: basisfiltre";
-    } else {
-      text = "Aktive Filter: Basisfilter";
-    }
+    filterSummaryEl.textContent =
+      currentLang === LANG_EN ? "Active filters: basic filters"
+      : currentLang === LANG_DA ? "Aktive filtre: basisfiltre"
+      : "Aktive Filter: Basisfilter";
   } else {
-    const prefix =
-      currentLang === LANG_EN ? "Active filters: " : currentLang === LANG_DA ? "Aktive filtre: " : "Aktive Filter: ";
-    text = prefix + parts.join(" · ");
+    const prefix = currentLang === LANG_EN ? "Active filters: " : currentLang === LANG_DA ? "Aktive filtre: " : "Aktive Filter: ";
+    filterSummaryEl.textContent = prefix + parts.join(" · ");
   }
-
-  filterSummaryEl.textContent = text;
 }
 
-// ------------------------------------------------------
-// Strukturierter Filter-Kontext (für Tilla / AI-Hooks)
-// ------------------------------------------------------
-
 function getFilterContext() {
-  const maxIndex = RADIUS_STEPS_KM.length - 1;
-  const radiusKm =
-    radiusStep >= 0 && radiusStep <= maxIndex
-      ? RADIUS_STEPS_KM[radiusStep]
-      : RADIUS_STEPS_KM[maxIndex];
+  const maxIndex = getMaxRadiusIndex();
+  const radiusKm = (radiusStep >= 0 && radiusStep <= maxIndex)
+    ? (RADIUS_STEPS_KM[radiusStep] ?? Infinity)
+    : (RADIUS_STEPS_KM[maxIndex] ?? Infinity);
 
   const origin = userLocation ? { lat: userLocation.lat, lng: userLocation.lng } : null;
 
@@ -1320,43 +1002,26 @@ function getFilterContext() {
 }
 
 // ------------------------------------------------------
-// Filter-Modal öffnen / schließen / zurücksetzen
+// Filter Modal
 // ------------------------------------------------------
-
 function openFilterModal() {
   if (!filterModalEl) return;
   isFilterModalOpen = true;
   lastFocusBeforeFilterModal = document.activeElement;
   filterModalEl.hidden = false;
+  document.body?.setAttribute("data-filter-modal-open", "1");
 
-  if (document && document.body) {
-    document.body.setAttribute("data-filter-modal-open", "1");
-  }
-
-  const focusable = filterModalEl.querySelector(
-    "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
-  );
-  if (focusable && typeof focusable.focus === "function") {
-    focusable.focus();
-  }
+  const focusable = filterModalEl.querySelector("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+  focusable?.focus?.();
 }
 
-function closeFilterModal(options = {}) {
-  if (!filterModalEl) return;
-  if (!isFilterModalOpen) return;
-
-  const { returnFocus = true } = options;
-
+function closeFilterModal({ returnFocus = true } = {}) {
+  if (!filterModalEl || !isFilterModalOpen) return;
   isFilterModalOpen = false;
   filterModalEl.hidden = true;
+  document.body?.removeAttribute("data-filter-modal-open");
 
-  if (document && document.body) {
-    document.body.removeAttribute("data-filter-modal-open");
-  }
-
-  if (returnFocus && lastFocusBeforeFilterModal && typeof lastFocusBeforeFilterModal.focus === "function") {
-    lastFocusBeforeFilterModal.focus();
-  }
+  if (returnFocus && lastFocusBeforeFilterModal?.focus) lastFocusBeforeFilterModal.focus();
 }
 
 function resetAllFilters() {
@@ -1370,7 +1035,8 @@ function resetAllFilters() {
   onlyFavorites = false;
   activeTagFilters.clear();
 
-  radiusStep = RADIUS_STEPS_KM.length - 1;
+  radiusStep = getMaxRadiusIndex();
+  hasShownRadiusDisabledToast = false;
 
   if (filterSearchEl) filterSearchEl.value = "";
   if (filterAgeEl) filterAgeEl.value = "all";
@@ -1395,87 +1061,54 @@ function resetAllFilters() {
     chip.setAttribute("aria-pressed", "false");
   });
 
-  if (tilla && typeof tilla.setTravelMode === "function") {
-    tilla.setTravelMode(null);
-  }
+  safeTillaCall("setTravelMode", null);
 
-  if (tagFilterContainerEl) {
-    renderTagFilterChips();
-  }
-
+  renderTagFilterChips();
   applyFiltersAndRender();
 }
 
 // ------------------------------------------------------
-// Sichtbarkeit: Datum (validFrom/validTo) + Plus/Add-ons
+// Sichtbarkeit: Datum + Plus/Add-ons
 // ------------------------------------------------------
-
 function isSpotCurrentlyValid(spot, now = new Date()) {
   const fromStr = spot.validFrom || spot.valid_from;
   const toStr = spot.validTo || spot.valid_to;
 
   if (fromStr) {
     const from = new Date(fromStr);
-    if (!Number.isNaN(from.getTime()) && now < from) {
-      return false;
-    }
+    if (!Number.isNaN(from.getTime()) && now < from) return false;
   }
-
   if (toStr) {
     const to = new Date(toStr);
-    if (!Number.isNaN(to.getTime()) && now > to) {
-      return false;
-    }
+    if (!Number.isNaN(to.getTime()) && now > to) return false;
   }
-
   return true;
 }
 
 function userCanSeeSpot(spot) {
-  if (!isSpotCurrentlyValid(spot)) {
-    return false;
-  }
+  if (!isSpotCurrentlyValid(spot)) return false;
 
-  const slugs = Array.isArray(spot.categories)
-    ? spot.categories
-    : spot.category
-    ? [spot.category]
-    : [];
-
-  if (!slugs.length) {
-    return true;
-  }
+  const slugs = Array.isArray(spot.categories) ? spot.categories : spot.category ? [spot.category] : [];
+  if (!slugs.length) return true;
 
   const status = getPlusStatus();
   const plan = status.plan || null;
   const addons = status.addons || [];
 
   return slugs.every((slug) => {
-    if (!isPlusCategory(slug)) {
-      return true;
-    }
-
-    if (!CATEGORY_ACCESS || !CATEGORY_ACCESS.perCategory) {
-      return true;
-    }
+    if (!isPlusCategory(slug)) return true;
+    if (!CATEGORY_ACCESS?.perCategory) return true;
 
     const rule = CATEGORY_ACCESS.perCategory[slug];
-    if (!rule) {
-      return true;
-    }
+    if (!rule) return true;
 
-    if (!status.active) {
-      return false;
-    }
+    if (!status.active) return false;
 
-    if (rule.level === "subscription") {
-      return plan === rule.subscriptionId;
-    }
+    if (rule.level === "subscription") return plan === rule.subscriptionId;
 
     if (rule.level === "addon") {
       const hasBase = plan === rule.subscriptionId;
-      const hasAddon =
-        Array.isArray(addons) && rule.addonId ? addons.includes(rule.addonId) : false;
+      const hasAddon = Array.isArray(addons) && rule.addonId ? addons.includes(rule.addonId) : false;
       return hasBase && hasAddon;
     }
 
@@ -1484,9 +1117,311 @@ function userCanSeeSpot(spot) {
 }
 
 // ------------------------------------------------------
-// Filterlogik (verwendet filterSpots aus filters.js)
+// Favorites
 // ------------------------------------------------------
+function loadFavoritesFromStorage() {
+  if (!FEATURES.favorites) return;
+  const stored = storageGet("fs_favorites");
+  if (!stored) return;
+  const arr = safeJsonParse(stored, null);
+  if (Array.isArray(arr)) favorites = new Set(arr);
+}
 
+function saveFavoritesToStorage() {
+  if (!FEATURES.favorites) return;
+  storageSet("fs_favorites", JSON.stringify(Array.from(favorites)));
+}
+
+function syncFavButtonState(btn, spotId) {
+  const isFav = favorites.has(spotId);
+  btn.textContent = isFav ? "★" : "☆";
+  btn.setAttribute(
+    "aria-label",
+    isFav
+      ? currentLang === LANG_EN
+        ? "Remove from favourites"
+        : currentLang === LANG_DA
+        ? "Fjern fra favoritter"
+        : "Aus Favoriten entfernen"
+      : currentLang === LANG_EN
+      ? "Add to favourites"
+      : currentLang === LANG_DA
+      ? "Tilføj til favoritter"
+      : "Zu Favoriten hinzufügen"
+  );
+}
+
+function toggleFavorite(spot) {
+  if (!FEATURES.favorites) return;
+
+  const spotId = getSpotId(spot);
+  const wasFavorite = favorites.has(spotId);
+
+  if (wasFavorite) favorites.delete(spotId);
+  else favorites.add(spotId);
+
+  saveFavoritesToStorage();
+
+  showToast(wasFavorite ? "toast_fav_removed" : "toast_fav_added");
+  safeTillaCall(wasFavorite ? "onFavoriteRemoved" : "onFavoriteAdded");
+
+  renderSpotList();
+}
+
+// ------------------------------------------------------
+// Plus & Daylog
+// ------------------------------------------------------
+function updatePlusStatusText(status) {
+  if (!plusStatusTextEl) return;
+  if (!FEATURES.plus) { plusStatusTextEl.textContent = ""; return; }
+  const s = status || getPlusStatus();
+  plusStatusTextEl.textContent = formatPlusStatus(s);
+}
+
+function loadPlusStateFromStorage({ reapplyFilters = false } = {}) {
+  if (!FEATURES.plus) {
+    plusActive = false;
+    updatePlusStatusText({ active: false, plan: null, validUntil: null, addons: null, partner: null, source: null });
+    if (reapplyFilters && spots.length) applyFiltersAndRender();
+    return;
+  }
+
+  const status = getPlusStatus();
+  plusActive = !!status.active;
+  updatePlusStatusText(status);
+  log("[Family Spots] Plus status:", { plusActive, status });
+
+  if (reapplyFilters && spots.length) applyFiltersAndRender();
+}
+
+async function handlePlusCodeSubmit() {
+  if (!FEATURES.plus) return;
+  if (!plusCodeInputEl || !plusStatusTextEl) return;
+
+  const raw = plusCodeInputEl.value.trim();
+  const result = await redeemPartnerCode(raw);
+
+  if (!result.ok) {
+    showToast(result.reason === "empty" ? "plus_code_empty" : "plus_code_unknown");
+    return;
+  }
+
+  const status = result.status || getPlusStatus();
+  plusActive = !!status.active;
+  updatePlusStatusText(status);
+
+  showToast("plus_code_activated");
+  safeTillaCall("onPlusActivated");
+  applyFiltersAndRender();
+}
+
+function formatDaylogTimestamp(ts) {
+  try {
+    const date = new Date(ts);
+    const locale = currentLang === LANG_EN ? "en-GB" : currentLang === LANG_DA ? "da-DK" : "de-DE";
+    return new Intl.DateTimeFormat(locale, {
+      year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit"
+    }).format(date);
+  } catch {
+    return "";
+  }
+}
+
+function updateDaylogUI() {
+  if (!FEATURES.daylog || !daylogTextEl) return;
+
+  if (daylogListEl) daylogListEl.replaceChildren();
+
+  if (!daylogEntries?.length) {
+    if (daylogLastSavedEl) {
+      daylogLastSavedEl.textContent =
+        currentLang === LANG_EN ? "Nothing saved yet."
+        : currentLang === LANG_DA ? "Ingen gemte endnu."
+        : "Noch nichts gespeichert.";
+    }
+    daylogClearEl?.classList.add("hidden");
+    daylogTextEl.value = "";
+    return;
+  }
+
+  daylogEntries.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  const latest = daylogEntries[0];
+
+  if (daylogLastSavedEl) {
+    const formatted = formatDaylogTimestamp(latest.ts || Date.now());
+    daylogLastSavedEl.textContent =
+      currentLang === LANG_EN ? (formatted ? `Last saved: ${formatted}` : "Last saved.")
+      : currentLang === LANG_DA ? (formatted ? `Sidst gemt: ${formatted}` : "Sidst gemt.")
+      : (formatted ? `Zuletzt gespeichert: ${formatted}` : "Zuletzt gespeichert.");
+  }
+
+  daylogClearEl?.classList.toggle("hidden", daylogEntries.length === 0);
+  daylogTextEl.value = "";
+
+  if (!daylogListEl) return;
+
+  const frag = document.createDocumentFragment();
+
+  daylogEntries.forEach((entry) => {
+    if (!entry?.text) return;
+
+    const item = document.createElement("article");
+    item.className = "daylog-entry";
+
+    const header = document.createElement("header");
+    header.className = "daylog-entry-header";
+
+    const dateEl = document.createElement("p");
+    dateEl.className = "daylog-entry-date";
+    dateEl.textContent = formatDaylogTimestamp(entry.ts || Date.now());
+    header.appendChild(dateEl);
+
+    const textEl = document.createElement("p");
+    textEl.className = "daylog-entry-text";
+    textEl.textContent = entry.text;
+
+    item.appendChild(header);
+    item.appendChild(textEl);
+
+    frag.appendChild(item);
+  });
+
+  daylogListEl.appendChild(frag);
+}
+
+function loadDaylogFromStorage() {
+  if (!FEATURES.daylog) return;
+
+  daylogEntries = [];
+  const stored = storageGet(DAYLOG_STORAGE_KEY);
+  if (!stored) { updateDaylogUI(); return; }
+
+  const parsed = safeJsonParse(stored, null);
+
+  if (parsed?.entries && Array.isArray(parsed.entries)) {
+    daylogEntries = parsed.entries
+      .filter((e) => e && typeof e.text === "string")
+      .map((e) => ({
+        id: e.id || e.ts || Date.now(),
+        text: String(e.text).trim(),
+        ts: typeof e.ts === "number" ? e.ts : Date.now()
+      }))
+      .filter((e) => e.text);
+  } else if (parsed && typeof parsed.text === "string") {
+    const ts = typeof parsed.ts === "number" ? parsed.ts : Date.now();
+    daylogEntries = [{ id: ts, text: parsed.text.trim(), ts }].filter((e) => e.text);
+  }
+
+  updateDaylogUI();
+}
+
+function handleDaylogSave() {
+  if (!FEATURES.daylog || !daylogTextEl) return;
+
+  const text = daylogTextEl.value.trim();
+  if (!text) return;
+
+  const now = Date.now();
+  daylogEntries.push({ id: now, text, ts: now });
+
+  storageSet(DAYLOG_STORAGE_KEY, JSON.stringify({ entries: daylogEntries }));
+
+  daylogTextEl.value = "";
+  showToast("daylog_saved");
+  safeTillaCall("onDaylogSaved");
+  updateDaylogUI();
+}
+
+function handleDaylogClear() {
+  if (!FEATURES.daylog) return;
+
+  daylogEntries = [];
+  storageRemove(DAYLOG_STORAGE_KEY);
+  updateDaylogUI();
+
+  showToast(
+    currentLang === LANG_EN ? "Entry deleted."
+    : currentLang === LANG_DA ? "Notat slettet."
+    : "Eintrag gelöscht."
+  );
+}
+
+// ------------------------------------------------------
+// Spots – Laden
+// ------------------------------------------------------
+function showSpotsLoadErrorUI() {
+  if (!spotListEl) return;
+
+  spotListEl.replaceChildren();
+
+  const msg = document.createElement("p");
+  msg.className = "filter-group-helper";
+  msg.textContent =
+    currentLang === LANG_EN
+      ? "Spots could not be loaded. Please check your connection and try again."
+      : currentLang === LANG_DA
+      ? "Spots kunne ikke indlæses. Tjek venligst forbindelsen og prøv igen."
+      : "Die Spots konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.";
+  spotListEl.appendChild(msg);
+
+  const retryBtn = document.createElement("button");
+  retryBtn.type = "button";
+  retryBtn.className = "btn btn-small";
+  retryBtn.textContent = currentLang === LANG_EN ? "Try again" : currentLang === LANG_DA ? "Prøv igen" : "Erneut versuchen";
+  retryBtn.addEventListener("click", () => {
+    showToast(currentLang === LANG_EN ? "Reloading spots…" : currentLang === LANG_DA ? "Indlæser spots igen …" : "Lade Spots erneut …");
+    loadSpots();
+  });
+
+  spotListEl.appendChild(retryBtn);
+}
+
+async function loadSpots() {
+  try {
+    const result = await loadData();
+    const rawSpots = Array.isArray(result?.spots) ? result.spots : [];
+
+    spots = rawSpots.map(normalizeSpot);
+    log("[Family Spots] loadSpots:", { total: spots.length });
+
+    loadFavoritesFromStorage();
+    populateCategoryOptions();
+    renderTagFilterChips();
+
+    if (result?.fromCache) {
+      showToast(currentLang === LANG_EN ? "Loaded offline data." : currentLang === LANG_DA ? "Indlæste offline-data." : "Offline-Daten geladen.");
+    }
+
+    applyFiltersAndRender();
+  } catch (err) {
+    console.error("[Family Spots] Fehler beim Laden der Spots:", err);
+
+    showToast("error_data_load");
+    showSpotsLoadErrorUI();
+
+    spots = [];
+    filteredSpots = [];
+
+    if (map && markersLayer) {
+      hasShownMarkerLimitToast = renderMarkers({
+        map,
+        markersLayer,
+        spots: [],
+        maxMarkers: MAX_MARKERS_RENDER,
+        currentLang,
+        showToast,
+        hasShownMarkerLimitToast,
+        focusSpotOnMap
+      });
+    }
+
+    safeTillaCall("onNoSpotsFound");
+  }
+}
+
+// ------------------------------------------------------
+// Filterlogik
+// ------------------------------------------------------
 function applyFiltersAndRender() {
   if (!spots.length) {
     filteredSpots = [];
@@ -1505,20 +1440,13 @@ function applyFiltersAndRender() {
       });
     }
 
-    if (tilla && typeof tilla.onNoSpotsFound === "function") {
-      tilla.onNoSpotsFound();
-    }
-
     updateFilterSummary();
-
-    if (tilla && typeof tilla.onFiltersUpdated === "function") {
-      tilla.onFiltersUpdated({
-        totalSpots: spots.length,
-        filteredSpotsCount: filteredSpots.length,
-        filters: getFilterContext()
-      });
-    }
-
+    safeTillaCall("onNoSpotsFound");
+    safeTillaCall("onFiltersUpdated", {
+      totalSpots: spots.length,
+      filteredSpotsCount: filteredSpots.length,
+      filters: getFilterContext()
+    });
     return;
   }
 
@@ -1538,17 +1466,10 @@ function applyFiltersAndRender() {
 
   const visibilityFiltered = nonGeoFiltered.filter((spot) => userCanSeeSpot(spot));
 
-  // NEU: Radius-Filter verwendet den echten Standort als Origin.
-  // Wenn kein Standort verfügbar ist, wird (für Vertrauen) kein „Pseudo-Radius“
-  // um das Karten-Center angewendet.
   const originLatLng = getUserOriginLatLng();
+  const radiusKm = getEffectiveRadiusKm();
 
-  const radiusKm =
-    RADIUS_STEPS_KM[radiusStep] ??
-    RADIUS_STEPS_KM[RADIUS_STEPS_KM.length - 1] ??
-    Infinity;
-
-  filteredSpots = originLatLng
+  filteredSpots = (originLatLng && isFinite(radiusKm) && radiusKm !== Infinity)
     ? visibilityFiltered.filter((spot) => isSpotInRadius(spot, originLatLng, radiusKm))
     : visibilityFiltered;
 
@@ -1569,87 +1490,53 @@ function applyFiltersAndRender() {
 
   updateFilterSummary();
 
-  if (tilla && typeof tilla.onFiltersUpdated === "function") {
-    tilla.onFiltersUpdated({
-      totalSpots: spots.length,
-      filteredSpotsCount: filteredSpots.length,
-      filters: getFilterContext()
-    });
-  }
+  safeTillaCall("onFiltersUpdated", {
+    totalSpots: spots.length,
+    filteredSpotsCount: filteredSpots.length,
+    filters: getFilterContext()
+  });
 }
 
 // ------------------------------------------------------
-// Marker-Liste & Meta + Badges
+// Badges / Meta
 // ------------------------------------------------------
-
 function isSpotVerified(spot) {
   return !!spot.verified || !!spot.isVerified;
 }
-
 function isBigAdventureSpot(spot) {
   return !!spot.bigAdventure || !!spot.isBigAdventure || !!spot.longTrip;
 }
-
 function isPlusSpot(spot) {
   if (!FEATURES.plus) return false;
   if (spot.plusOnly || spot.plus) return true;
 
-  const slugs = Array.isArray(spot.categories)
-    ? spot.categories
-    : spot.category
-    ? [spot.category]
-    : [];
-
-  if (!slugs.length) return false;
-  return slugs.some((slug) => {
-    if (!slug) return false;
-    if (typeof isPlusCategory === "function") {
-      return isPlusCategory(slug);
-    }
-    return false;
-  });
+  const slugs = Array.isArray(spot.categories) ? spot.categories : spot.category ? [spot.category] : [];
+  return slugs.some((slug) => slug && typeof isPlusCategory === "function" && isPlusCategory(slug));
 }
 
 function getSpotPrimaryMoodKey(spot) {
   const src = spot._moods || spot.moods || spot.moodTags || spot.mood;
-
   let arr = [];
-  if (Array.isArray(src)) {
-    arr = src;
-  } else if (typeof src === "string" && src.trim()) {
-    arr = src
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-  }
-
+  if (Array.isArray(src)) arr = src;
+  else if (typeof src === "string" && src.trim()) arr = src.split(",").map((s) => s.trim()).filter(Boolean);
   return arr.length ? arr[0] : null;
 }
 
 function getSpotAgeLabel(spot) {
   const src = spot._ageGroups || spot.ageGroups || spot.age || spot.ages;
-
   let arr = [];
-  if (Array.isArray(src)) {
-    arr = src;
-  } else if (typeof src === "string" && src.trim()) {
-    arr = src
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-  }
-
+  if (Array.isArray(src)) arr = src;
+  else if (typeof src === "string" && src.trim()) arr = src.split(",").map((s) => s.trim()).filter(Boolean);
   const key = arr.length ? arr[0] : null;
   if (!key) return "";
 
-  const lang = currentLang;
-  if (lang === LANG_EN) {
+  if (currentLang === LANG_EN) {
     if (key === "0-3") return "0–3 yrs";
     if (key === "4-9") return "4–9 yrs";
     if (key === "10+") return "10+ yrs";
     return key;
   }
-  if (lang === LANG_DA) {
+  if (currentLang === LANG_DA) {
     if (key === "0-3") return "0–3 år";
     if (key === "4-9") return "4–9 år";
     if (key === "10+") return "10+ år";
@@ -1664,12 +1551,7 @@ function getSpotAgeLabel(spot) {
 function getSpotVisitTimeLabel(spot) {
   const minutes = spot.visit_minutes;
   if (!minutes || !Number.isFinite(minutes)) return "";
-  if (minutes < 60) {
-    if (currentLang === LANG_EN || currentLang === LANG_DA) {
-      return `~${minutes} min`;
-    }
-    return `~${minutes} Min.`;
-  }
+  if (minutes < 60) return (currentLang === LANG_DE) ? `~${minutes} Min.` : `~${minutes} min`;
 
   const hours = minutes / 60;
   const rounded = Math.round(hours * 10) / 10;
@@ -1677,37 +1559,24 @@ function getSpotVisitTimeLabel(spot) {
     currentLang === LANG_DA ? "da-DK" : currentLang === LANG_EN ? "en-GB" : "de-DE",
     { maximumFractionDigits: 1 }
   );
-  const hoursLabel = formatter.format(rounded);
 
-  if (currentLang === LANG_EN) {
-    return `~${hoursLabel} h`;
-  }
-  if (currentLang === LANG_DA) {
-    return `~${hoursLabel} t`;
-  }
+  const hoursLabel = formatter.format(rounded);
+  if (currentLang === LANG_EN) return `~${hoursLabel} h`;
+  if (currentLang === LANG_DA) return `~${hoursLabel} t`;
   return `~${hoursLabel} Std.`;
 }
 
-/**
- * NEU: Distanz wird ausschließlich vom echten Standort berechnet.
- * Wenn kein Standort verfügbar ist, zeigen wir keine Distanz (null).
- * Außerdem: Das ist Luftlinie (nicht Fahrstrecke) – wird per Label „≈“ gekennzeichnet.
- */
 function getSpotDistanceKm(spot) {
   try {
     if (typeof L === "undefined" || typeof L.latLng !== "function") return null;
     if (!hasValidLatLng(spot)) return null;
-
     const originLatLng = getUserOriginLatLng();
     if (!originLatLng) return null;
 
     const spotLatLng = L.latLng(spot.lat, spot.lng);
-    const distanceMeters = originLatLng.distanceTo(spotLatLng);
-    const km = distanceMeters / 1000;
+    const km = originLatLng.distanceTo(spotLatLng) / 1000;
     if (!Number.isFinite(km)) return null;
-
-    const rounded = Math.max(0.1, Math.round(km * 10) / 10);
-    return rounded;
+    return Math.max(0.1, Math.round(km * 10) / 10);
   } catch {
     return null;
   }
@@ -1719,8 +1588,7 @@ function formatKmBadgeLabel(km) {
     currentLang === LANG_DA ? "da-DK" : currentLang === LANG_EN ? "en-GB" : "de-DE",
     { maximumFractionDigits: 1 }
   );
-  const value = formatter.format(km);
-  return `≈ ${value} km`;
+  return `≈ ${formatter.format(km)} km`;
 }
 
 function getSpotMetaParts(spot) {
@@ -1738,7 +1606,6 @@ function buildSpotBadges(spot) {
   const distanceKm = getSpotDistanceKm(spot);
   if (distanceKm != null) {
     badges.push({
-      type: "distance",
       className: "badge badge--distance",
       icon: "📍",
       label: formatKmBadgeLabel(distanceKm),
@@ -1752,75 +1619,42 @@ function buildSpotBadges(spot) {
   }
 
   const timeLabel = getSpotVisitTimeLabel(spot);
-  if (timeLabel) {
-    badges.push({
-      type: "time",
-      className: "badge badge--time",
-      icon: "⏱️",
-      label: timeLabel
-    });
-  }
+  if (timeLabel) badges.push({ className: "badge badge--time", icon: "⏱️", label: timeLabel });
 
   const ageLabel = getSpotAgeLabel(spot);
-  if (ageLabel) {
-    badges.push({
-      type: "age",
-      className: "badge badge--age",
-      icon: "👶",
-      label: ageLabel
-    });
-  }
+  if (ageLabel) badges.push({ className: "badge badge--age", icon: "👶", label: ageLabel });
 
   const moodKey = getSpotPrimaryMoodKey(spot);
   const moodLabel = getMoodLabel(moodKey);
-  if (moodLabel) {
-    badges.push({
-      type: "mood",
-      className: "badge badge--soft",
-      icon: "🎈",
-      label: moodLabel
-    });
-  }
+  if (moodLabel) badges.push({ className: "badge badge--soft", icon: "🎈", label: moodLabel });
 
   if (isSpotVerified(spot)) {
     badges.push({
-      type: "verified",
       className: "badge badge--verified",
       icon: "✔︎",
-      label:
-        currentLang === LANG_EN ? "Verified" : currentLang === LANG_DA ? "Verificeret" : "Verifiziert"
+      label: currentLang === LANG_EN ? "Verified" : currentLang === LANG_DA ? "Verificeret" : "Verifiziert"
     });
   }
 
-  if (isPlusSpot(spot)) {
-    badges.push({
-      type: "plus",
-      className: "badge badge--plus",
-      icon: "⭐",
-      label: "Plus"
-    });
-  }
+  if (isPlusSpot(spot)) badges.push({ className: "badge badge--plus", icon: "⭐", label: "Plus" });
 
   if (isBigAdventureSpot(spot)) {
     badges.push({
-      type: "big",
       className: "badge badge--big",
       icon: "🎒",
-      label:
-        currentLang === LANG_EN
-          ? "Big adventure"
-          : currentLang === LANG_DA
-          ? "Stort eventyr"
-          : "Großes Abenteuer"
+      label: currentLang === LANG_EN ? "Big adventure" : currentLang === LANG_DA ? "Stort eventyr" : "Großes Abenteuer"
     });
   }
 
   return badges;
 }
 
+// ------------------------------------------------------
+// Spot List
+// ------------------------------------------------------
 function renderSpotList() {
   if (!spotListEl) return;
-  spotListEl.innerHTML = "";
+  spotListEl.replaceChildren();
 
   if (!filteredSpots.length) {
     const wrapper = document.createElement("div");
@@ -1828,42 +1662,34 @@ function renderSpotList() {
 
     const titleEl = document.createElement("h3");
     titleEl.className = "empty-state-title";
+    titleEl.textContent =
+      currentLang === LANG_EN ? "No spots for your selection right now"
+      : currentLang === LANG_DA ? "Ingen spots til jeres valg lige nu"
+      : "Gerade keine Spots für eure Auswahl";
 
     const textEl = document.createElement("p");
     textEl.className = "empty-state-text";
+    textEl.textContent =
+      currentLang === LANG_EN
+        ? "Your radius might be too small or there are many filters active. Try one of these options:"
+        : currentLang === LANG_DA
+        ? "Måske er radius for lille, eller der er mange filtre slået til. Prøv en af disse muligheder:"
+        : "Vielleicht ist euer Radius zu klein oder es sind viele Filter aktiv. Ihr könnt es so versuchen:";
 
     const actionsEl = document.createElement("div");
     actionsEl.className = "empty-state-actions";
 
-    if (currentLang === LANG_EN) {
-      titleEl.textContent = "No spots for your selection right now";
-      textEl.textContent =
-        "Your radius might be too small or there are many filters active. Try one of these options:";
-    } else if (currentLang === LANG_DA) {
-      titleEl.textContent = "Ingen spots til jeres valg lige nu";
-      textEl.textContent =
-        "Måske er radius for lille, eller der er mange filtre slået til. Prøv en af disse muligheder:";
-    } else {
-      titleEl.textContent = "Gerade keine Spots für eure Auswahl";
-      textEl.textContent =
-        "Vielleicht ist euer Radius zu klein oder es sind viele Filter aktiv. Ihr könnt es so versuchen:";
-    }
-
     const btnRadius = document.createElement("button");
     btnRadius.type = "button";
     btnRadius.className = "btn btn-small";
-    btnRadius.textContent =
-      currentLang === LANG_EN ? "Increase radius" : currentLang === LANG_DA ? "Større radius" : "Radius vergrößern";
-
+    btnRadius.textContent = currentLang === LANG_EN ? "Increase radius" : currentLang === LANG_DA ? "Større radius" : "Radius vergrößern";
     btnRadius.addEventListener("click", () => {
       if (!filterRadiusEl) return;
-
-      const maxIndex = RADIUS_STEPS_KM.length - 1;
-      let value = parseInt(filterRadiusEl.value, 10);
-      if (Number.isNaN(value)) value = radiusStep;
-
-      if (value < maxIndex) {
-        radiusStep = value + 1;
+      const maxIndex = getMaxRadiusIndex();
+      const value = parseInt(filterRadiusEl.value, 10);
+      const v = Number.isNaN(value) ? radiusStep : value;
+      if (v < maxIndex) {
+        radiusStep = v + 1;
         filterRadiusEl.value = String(radiusStep);
         updateRadiusTexts();
         applyFiltersAndRender();
@@ -1873,12 +1699,8 @@ function renderSpotList() {
     const btnReset = document.createElement("button");
     btnReset.type = "button";
     btnReset.className = "btn btn-small btn-secondary";
-    btnReset.textContent =
-      currentLang === LANG_EN ? "Reset all filters" : currentLang === LANG_DA ? "Nulstil alle filtre" : "Alle Filter zurücksetzen";
-
-    btnReset.addEventListener("click", () => {
-      resetAllFilters();
-    });
+    btnReset.textContent = currentLang === LANG_EN ? "Reset all filters" : currentLang === LANG_DA ? "Nulstil alle filtre" : "Alle Filter zurücksetzen";
+    btnReset.addEventListener("click", resetAllFilters);
 
     actionsEl.appendChild(btnRadius);
     actionsEl.appendChild(btnReset);
@@ -1886,14 +1708,16 @@ function renderSpotList() {
     wrapper.appendChild(titleEl);
     wrapper.appendChild(textEl);
     wrapper.appendChild(actionsEl);
-
     spotListEl.appendChild(wrapper);
     return;
   }
 
+  const frag = document.createDocumentFragment();
+
   filteredSpots.forEach((spot) => {
     const card = document.createElement("article");
     card.className = "spot-card";
+
     const spotId = getSpotId(spot);
     card.dataset.spotId = spotId;
 
@@ -1901,34 +1725,21 @@ function renderSpotList() {
     card.setAttribute("role", "button");
     card.setAttribute("aria-label", getSpotName(spot));
 
-    const titleEl = document.createElement("h3");
-    titleEl.className = "spot-card-title";
-    titleEl.textContent = getSpotName(spot);
-
-    const subtitleText = getSpotSubtitle(spot);
-    const subtitleEl = document.createElement("p");
-    subtitleEl.className = "spot-card-subtitle";
-    subtitleEl.textContent = subtitleText;
-
-    const metaEl = document.createElement("p");
-    metaEl.className = "spot-card-meta";
-
-    const metaParts = getSpotMetaParts(spot);
-    metaEl.textContent = metaParts.join(" · ");
-
     const headerRow = document.createElement("div");
     headerRow.style.display = "flex";
     headerRow.style.alignItems = "center";
     headerRow.style.justifyContent = "space-between";
     headerRow.style.gap = "8px";
 
+    const titleEl = document.createElement("h3");
+    titleEl.className = "spot-card-title";
+    titleEl.textContent = getSpotName(spot);
     headerRow.appendChild(titleEl);
 
     if (FEATURES.favorites) {
       const favBtn = document.createElement("button");
       favBtn.type = "button";
       favBtn.className = "btn-ghost btn-small";
-
       syncFavButtonState(favBtn, spotId);
 
       favBtn.addEventListener("click", (ev) => {
@@ -1941,14 +1752,27 @@ function renderSpotList() {
     }
 
     card.appendChild(headerRow);
-    if (subtitleText) card.appendChild(subtitleEl);
-    if (metaParts.length) card.appendChild(metaEl);
+
+    const subtitleText = getSpotSubtitle(spot);
+    if (subtitleText) {
+      const subtitleEl = document.createElement("p");
+      subtitleEl.className = "spot-card-subtitle";
+      subtitleEl.textContent = subtitleText;
+      card.appendChild(subtitleEl);
+    }
+
+    const metaParts = getSpotMetaParts(spot);
+    if (metaParts.length) {
+      const metaEl = document.createElement("p");
+      metaEl.className = "spot-card-meta";
+      metaEl.textContent = metaParts.join(" · ");
+      card.appendChild(metaEl);
+    }
 
     const badgesRow = document.createElement("div");
     badgesRow.className = "spot-card-badges";
 
-    const badges = buildSpotBadges(spot);
-    badges.forEach((badge) => {
+    buildSpotBadges(spot).forEach((badge) => {
       const badgeEl = document.createElement("span");
       badgeEl.className = badge.className;
       if (badge.title) badgeEl.title = badge.title;
@@ -1976,50 +1800,25 @@ function renderSpotList() {
       });
     }
 
-    if (badgesRow.children.length) {
-      card.appendChild(badgesRow);
-    }
+    if (badgesRow.children.length) card.appendChild(badgesRow);
 
-    card.addEventListener("click", () => {
+    const open = () => {
       lastSpotTriggerEl = card;
       focusSpotOnMap(spot);
-    });
+    };
 
-    card.addEventListener(
-      "keydown",
-      activateOnEnterSpace(() => {
-        lastSpotTriggerEl = card;
-        focusSpotOnMap(spot);
-      })
-    );
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", activateOnEnterSpace(open));
 
-    spotListEl.appendChild(card);
+    frag.appendChild(card);
   });
-}
 
-function syncFavButtonState(btn, spotId) {
-  const isFav = favorites.has(spotId);
-  btn.textContent = isFav ? "★" : "☆";
-  btn.setAttribute(
-    "aria-label",
-    isFav
-      ? currentLang === LANG_EN
-        ? "Remove from favourites"
-        : currentLang === LANG_DA
-        ? "Fjern fra favoritter"
-        : "Aus Favoriten entfernen"
-      : currentLang === LANG_EN
-      ? "Add to favourites"
-      : currentLang === LANG_DA
-      ? "Tilføj til favoritter"
-      : "Zu Favoriten hinzufügen"
-  );
+  spotListEl.appendChild(frag);
 }
 
 // ------------------------------------------------------
-// Detail-Panel
+// Spot Details
 // ------------------------------------------------------
-
 function focusSpotOnMap(spot) {
   if (!map || !hasValidLatLng(spot)) {
     showSpotDetails(spot);
@@ -2030,17 +1829,12 @@ function focusSpotOnMap(spot) {
   showSpotDetails(spot);
 }
 
-function closeSpotDetails(options = {}) {
-  const { returnFocus = true } = options;
-
+function closeSpotDetails({ returnFocus = true } = {}) {
   if (!spotDetailEl) return;
-
   spotDetailEl.classList.add("spot-details--hidden");
-  spotDetailEl.innerHTML = "";
+  spotDetailEl.replaceChildren();
 
-  if (returnFocus && lastSpotTriggerEl && typeof lastSpotTriggerEl.focus === "function") {
-    lastSpotTriggerEl.focus();
-  }
+  if (returnFocus && lastSpotTriggerEl?.focus) lastSpotTriggerEl.focus();
 }
 
 function showSpotDetails(spot) {
@@ -2053,14 +1847,9 @@ function showSpotDetails(spot) {
   const tags = Array.isArray(spot.tags) ? spot.tags : [];
 
   let description = "";
-  if (currentLang === LANG_EN) {
-    description = spot.summary_en || spot.poetry || spot.description || spot.text || "";
-  } else if (currentLang === LANG_DA) {
-    description =
-      spot.summary_da || spot.summary_de || spot.poetry || spot.description || spot.text || "";
-  } else {
-    description = spot.summary_de || spot.poetry || spot.description || spot.text || "";
-  }
+  if (currentLang === LANG_EN) description = spot.summary_en || spot.poetry || spot.description || spot.text || "";
+  else if (currentLang === LANG_DA) description = spot.summary_da || spot.summary_de || spot.poetry || spot.description || spot.text || "";
+  else description = spot.summary_de || spot.poetry || spot.description || spot.text || "";
 
   const addressParts = [];
   if (spot.address) addressParts.push(spot.address);
@@ -2069,7 +1858,7 @@ function showSpotDetails(spot) {
   if (!addressParts.length && subtitle) addressParts.push(subtitle);
   const addressText = addressParts.join(", ");
 
-  spotDetailEl.innerHTML = "";
+  spotDetailEl.replaceChildren();
   spotDetailEl.classList.remove("spot-details--hidden");
 
   const headerEl = document.createElement("div");
@@ -2081,13 +1870,6 @@ function showSpotDetails(spot) {
   titleEl.className = "spot-details-title";
   titleEl.textContent = name;
   titleWrapperEl.appendChild(titleEl);
-
-  if (subtitle && !addressText) {
-    const subtitleEl = document.createElement("p");
-    subtitleEl.className = "spot-card-subtitle";
-    subtitleEl.textContent = subtitle;
-    titleWrapperEl.appendChild(subtitleEl);
-  }
 
   const actionsEl = document.createElement("div");
   actionsEl.className = "spot-details-actions";
@@ -2108,33 +1890,22 @@ function showSpotDetails(spot) {
   closeBtn.type = "button";
   closeBtn.className = "btn-ghost btn-small";
   closeBtn.textContent = currentLang === LANG_EN ? "Close" : currentLang === LANG_DA ? "Luk" : "Schließen";
-  closeBtn.addEventListener("click", () => {
-    closeSpotDetails({ returnFocus: true });
-  });
+  closeBtn.addEventListener("click", () => closeSpotDetails({ returnFocus: true }));
   actionsEl.appendChild(closeBtn);
 
   headerEl.appendChild(titleWrapperEl);
   headerEl.appendChild(actionsEl);
 
-  const metaEl = document.createElement("div");
-  metaEl.className = "spot-details-meta";
-  metaParts.forEach((p) => {
-    const span = document.createElement("span");
-    span.textContent = p;
-    metaEl.appendChild(span);
-  });
-
-  const tagsEl = document.createElement("div");
-  tagsEl.className = "spot-details-tags";
-  tags.forEach((tag) => {
-    const span = document.createElement("span");
-    span.className = "badge badge--soft";
-    span.textContent = tag;
-    tagsEl.appendChild(span);
-  });
-
   spotDetailEl.appendChild(headerEl);
+
   if (metaParts.length) {
+    const metaEl = document.createElement("div");
+    metaEl.className = "spot-details-meta";
+    metaParts.forEach((p) => {
+      const span = document.createElement("span");
+      span.textContent = p;
+      metaEl.appendChild(span);
+    });
     spotDetailEl.appendChild(metaEl);
   }
 
@@ -2152,34 +1923,33 @@ function showSpotDetails(spot) {
     spotDetailEl.appendChild(addrEl);
   }
 
-  const detailBadgesContainer = document.createElement("div");
-  detailBadgesContainer.className = "spot-details-scores";
-
   const detailBadges = buildSpotBadges(spot);
-  detailBadges.forEach((badge) => {
-    const badgeEl = document.createElement("span");
-    badgeEl.className = badge.className;
-    if (badge.title) badgeEl.title = badge.title;
+  if (detailBadges.length) {
+    const detailBadgesContainer = document.createElement("div");
+    detailBadgesContainer.className = "spot-details-scores";
 
-    if (badge.icon) {
-      const iconEl = document.createElement("span");
-      iconEl.className = "badge__icon";
-      iconEl.textContent = badge.icon;
-      badgeEl.appendChild(iconEl);
-    }
+    detailBadges.forEach((badge) => {
+      const badgeEl = document.createElement("span");
+      badgeEl.className = badge.className;
+      if (badge.title) badgeEl.title = badge.title;
 
-    const labelEl = document.createElement("span");
-    labelEl.textContent = badge.label;
-    badgeEl.appendChild(labelEl);
+      if (badge.icon) {
+        const iconEl = document.createElement("span");
+        iconEl.className = "badge__icon";
+        iconEl.textContent = badge.icon;
+        badgeEl.appendChild(iconEl);
+      }
 
-    detailBadgesContainer.appendChild(badgeEl);
-  });
+      const labelEl = document.createElement("span");
+      labelEl.textContent = badge.label;
+      badgeEl.appendChild(labelEl);
 
-  if (detailBadgesContainer.children.length) {
+      detailBadgesContainer.appendChild(badgeEl);
+    });
+
     spotDetailEl.appendChild(detailBadgesContainer);
   }
 
-  // NEU: Route immer vom echten Standort (wenn vorhanden).
   const routeUrls = getRouteUrlsForSpotFromUserLocation(spot);
   if (routeUrls) {
     const routesEl = document.createElement("div");
@@ -2190,326 +1960,38 @@ function showSpotDetails(spot) {
     appleLink.target = "_blank";
     appleLink.rel = "noopener noreferrer";
     appleLink.className = "spot-details-route-link";
-    appleLink.textContent = t("route_apple");
+    appleLink.textContent = t("route_apple", "Apple Maps");
 
     const googleLink = document.createElement("a");
     googleLink.href = routeUrls.google;
     googleLink.target = "_blank";
     googleLink.rel = "noopener noreferrer";
     googleLink.className = "spot-details-route-link";
-    googleLink.textContent = t("route_google");
+    googleLink.textContent = t("route_google", "Google Maps");
 
     routesEl.appendChild(appleLink);
     routesEl.appendChild(googleLink);
-
     spotDetailEl.appendChild(routesEl);
   }
 
   if (tags.length) {
+    const tagsEl = document.createElement("div");
+    tagsEl.className = "spot-details-tags";
+    tags.forEach((tag) => {
+      const span = document.createElement("span");
+      span.className = "badge badge--soft";
+      span.textContent = tag;
+      tagsEl.appendChild(span);
+    });
     spotDetailEl.appendChild(tagsEl);
   }
 
-  if (typeof spotDetailEl.scrollTop === "number") {
-    spotDetailEl.scrollTop = 0;
-  }
+  if (typeof spotDetailEl.scrollTop === "number") spotDetailEl.scrollTop = 0;
 }
 
 // ------------------------------------------------------
-// Favoriten
+// Locate
 // ------------------------------------------------------
-
-function toggleFavorite(spot) {
-  if (!FEATURES.favorites) return;
-
-  const spotId = getSpotId(spot);
-  const wasFavorite = favorites.has(spotId);
-
-  if (wasFavorite) {
-    favorites.delete(spotId);
-  } else {
-    favorites.add(spotId);
-  }
-
-  saveFavoritesToStorage();
-
-  const toastKey = wasFavorite ? "toast_fav_removed" : "toast_fav_added";
-  showToast(toastKey);
-
-  if (tilla) {
-    const callbackName = wasFavorite ? "onFavoriteRemoved" : "onFavoriteAdded";
-    const callback = tilla[callbackName];
-    if (typeof callback === "function") {
-      callback.call(tilla);
-    }
-  }
-
-  renderSpotList();
-}
-
-// ------------------------------------------------------
-// Plus & Mein Tag
-// ------------------------------------------------------
-
-function loadPlusStateFromStorage(options = {}) {
-  const { reapplyFilters = false } = options;
-
-  if (!FEATURES.plus) {
-    plusActive = false;
-
-    updatePlusStatusText({
-      active: false,
-      plan: null,
-      validUntil: null,
-      addons: null,
-      partner: null,
-      source: null
-    });
-
-    if (reapplyFilters && spots.length) {
-      applyFiltersAndRender();
-    }
-    return;
-  }
-
-  const status = getPlusStatus();
-  plusActive = !!status.active;
-
-  updatePlusStatusText(status);
-
-  console.log("[Family Spots] Plus status loaded:", {
-    plusActive,
-    status
-  });
-
-  if (reapplyFilters && spots.length) {
-    applyFiltersAndRender();
-  }
-}
-
-async function handlePlusCodeSubmit() {
-  if (!FEATURES.plus) return;
-  if (!plusCodeInputEl || !plusStatusTextEl) return;
-
-  const raw = plusCodeInputEl.value.trim();
-
-  const result = await redeemPartnerCode(raw);
-
-  if (!result.ok) {
-    if (result.reason === "empty") {
-      showToast("plus_code_empty");
-    } else if (result.reason === "invalid_days") {
-      showToast("plus_code_unknown");
-    } else {
-      showToast("plus_code_unknown");
-    }
-    return;
-  }
-
-  const status = result.status || getPlusStatus();
-  plusActive = !!status.active;
-  updatePlusStatusText(status);
-
-  showToast("plus_code_activated");
-
-  if (tilla && typeof tilla.onPlusActivated === "function") {
-    tilla.onPlusActivated();
-  }
-
-  applyFiltersAndRender();
-}
-
-function formatDaylogTimestamp(ts) {
-  try {
-    const date = new Date(ts);
-    const locale = currentLang === LANG_EN ? "en-GB" : currentLang === LANG_DA ? "da-DK" : "de-DE";
-    const options = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit"
-    };
-    return new Intl.DateTimeFormat(locale, options).format(date);
-  } catch {
-    return "";
-  }
-}
-
-function updateDaylogUI() {
-  if (!FEATURES.daylog) return;
-  if (!daylogTextEl) return;
-
-  if (daylogListEl) {
-    daylogListEl.innerHTML = "";
-  }
-
-  if (!daylogEntries || daylogEntries.length === 0) {
-    if (daylogLastSavedEl) {
-      const txt =
-        currentLang === LANG_EN
-          ? "Nothing saved yet."
-          : currentLang === LANG_DA
-          ? "Ingen gemte endnu."
-          : "Noch nichts gespeichert.";
-      daylogLastSavedEl.textContent = txt;
-    }
-    if (daylogClearEl) {
-      daylogClearEl.classList.add("hidden");
-    }
-    daylogTextEl.value = "";
-    return;
-  }
-
-  daylogEntries.sort((a, b) => (b.ts || 0) - (a.ts || 0));
-  const latest = daylogEntries[0];
-
-  if (daylogLastSavedEl) {
-    const formatted = formatDaylogTimestamp(latest.ts || Date.now());
-    let label;
-    if (currentLang === LANG_EN) {
-      label = formatted ? `Last saved: ${formatted}` : "Last saved.";
-    } else if (currentLang === LANG_DA) {
-      label = formatted ? `Sidst gemt: ${formatted}` : "Sidst gemt.";
-    } else {
-      label = formatted ? `Zuletzt gespeichert: ${formatted}` : "Zuletzt gespeichert.";
-    }
-    daylogLastSavedEl.textContent = label;
-  }
-
-  if (daylogClearEl) {
-    daylogClearEl.classList.toggle("hidden", daylogEntries.length === 0);
-  }
-
-  daylogTextEl.value = "";
-
-  if (!daylogListEl) return;
-
-  daylogEntries.forEach((entry) => {
-    if (!entry || !entry.text) return;
-
-    const item = document.createElement("article");
-    item.className = "daylog-entry";
-
-    const header = document.createElement("header");
-    header.className = "daylog-entry-header";
-
-    const dateEl = document.createElement("p");
-    dateEl.className = "daylog-entry-date";
-    dateEl.textContent = formatDaylogTimestamp(entry.ts || Date.now());
-
-    header.appendChild(dateEl);
-
-    const textEl = document.createElement("p");
-    textEl.className = "daylog-entry-text";
-    textEl.textContent = entry.text;
-
-    item.appendChild(header);
-    item.appendChild(textEl);
-
-    daylogListEl.appendChild(item);
-  });
-}
-
-function loadDaylogFromStorage() {
-  if (!FEATURES.daylog) return;
-
-  daylogEntries = [];
-
-  try {
-    const stored = localStorage.getItem(DAYLOG_STORAGE_KEY);
-    if (!stored) {
-      updateDaylogUI();
-      return;
-    }
-
-    const parsed = JSON.parse(stored);
-
-    if (parsed && Array.isArray(parsed.entries)) {
-      daylogEntries = parsed.entries
-        .filter((e) => e && typeof e.text === "string")
-        .map((e) => ({
-          id: e.id || e.ts || Date.now(),
-          text: e.text.trim(),
-          ts: typeof e.ts === "number" ? e.ts : Date.now()
-        }))
-        .filter((e) => e.text);
-    } else if (parsed && typeof parsed.text === "string") {
-      const ts = typeof parsed.ts === "number" ? parsed.ts : Date.now();
-      daylogEntries = [
-        {
-          id: ts,
-          text: parsed.text.trim(),
-          ts
-        }
-      ];
-    }
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Mein-Tag nicht laden:", err);
-  }
-
-  updateDaylogUI();
-}
-
-function handleDaylogSave() {
-  if (!FEATURES.daylog) return;
-  if (!daylogTextEl) return;
-
-  const text = daylogTextEl.value.trim();
-  if (!text) return;
-
-  const now = Date.now();
-  const entry = {
-    id: now,
-    text,
-    ts: now
-  };
-
-  daylogEntries.push(entry);
-
-  try {
-    const payload = {
-      entries: daylogEntries
-    };
-    localStorage.setItem(DAYLOG_STORAGE_KEY, JSON.stringify(payload));
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Mein-Tag nicht speichern:", err);
-  }
-
-  daylogTextEl.value = "";
-
-  showToast("daylog_saved");
-  if (tilla && typeof tilla.onDaylogSaved === "function") {
-    tilla.onDaylogSaved();
-  }
-
-  updateDaylogUI();
-}
-
-function handleDaylogClear() {
-  if (!FEATURES.daylog) return;
-
-  daylogEntries = [];
-  try {
-    localStorage.removeItem(DAYLOG_STORAGE_KEY);
-  } catch (err) {
-    console.warn("[Family Spots] Konnte Mein-Tag nicht löschen:", err);
-  }
-
-  updateDaylogUI();
-
-  const msg =
-    currentLang === LANG_EN
-      ? "Entry deleted."
-      : currentLang === LANG_DA
-      ? "Notat slettet."
-      : "Eintrag gelöscht.";
-  showToast(msg);
-}
-
-// ------------------------------------------------------
-// Geolocation
-// ------------------------------------------------------
-
 async function handleLocateClick() {
   if (!navigator.geolocation || !map) {
     showToast("toast_location_error");
@@ -2517,20 +1999,12 @@ async function handleLocateClick() {
   }
 
   try {
-    const loc = await requestUserLocationOnce({
-      enableHighAccuracy: true,
-      timeout: 9000,
-      maximumAge: 0
-    });
+    const loc = await requestUserLocationOnce({ enableHighAccuracy: true, timeout: 9000, maximumAge: 0 });
 
     if (loc && Number.isFinite(loc.lat) && Number.isFinite(loc.lng)) {
       map.setView([loc.lat, loc.lng], 13);
       showToast("toast_location_ok");
-
-      // NEU: Entfernungen/Radius sofort korrekt vom echten Standort
       applyFiltersAndRender();
-
-      // Optional live-updates
       startLocationWatch();
     }
   } catch {
@@ -2539,53 +2013,53 @@ async function handleLocateClick() {
 }
 
 // ------------------------------------------------------
-// Filter-Umschalter & View-Toggle
+// Filter toggles / view toggle
 // ------------------------------------------------------
-
 function handleToggleFilters() {
   if (!btnToggleFiltersEl || !filterBodyEls.length) return;
 
   filtersCollapsed = !filtersCollapsed;
   const isExpanded = !filtersCollapsed;
 
-  filterBodyEls.forEach((el) => {
-    el.classList.toggle("hidden", filtersCollapsed);
-  });
+  filterBodyEls.forEach((el) => el.classList.toggle("hidden", filtersCollapsed));
 
   const span = btnToggleFiltersEl.querySelector("span");
-  if (span) {
-    span.textContent = filtersCollapsed ? t("btn_show_filters") : t("btn_hide_filters");
-  }
+  if (span) span.textContent = filtersCollapsed ? t("btn_show_filters", "Filter anzeigen") : t("btn_hide_filters", "Filter ausblenden");
 
   btnToggleFiltersEl.setAttribute("aria-expanded", isExpanded ? "true" : "false");
 }
 
 function handleToggleView() {
   if (!sidebarEl || !btnToggleViewEl) return;
+
   const isHidden = sidebarEl.classList.toggle("hidden");
   const span = btnToggleViewEl.querySelector("span");
-  if (span) {
-    span.textContent = isHidden ? t("btn_show_list") : t("btn_only_map");
-  }
+  if (span) span.textContent = isHidden ? t("btn_show_list", "Liste anzeigen") : t("btn_only_map", "Nur Karte");
 
   btnToggleViewEl.setAttribute("aria-pressed", isHidden ? "true" : "false");
 
-  if (map) {
-    window.setTimeout(() => {
-      map.invalidateSize();
-    }, 300);
-  }
+  if (map) window.setTimeout(() => map.invalidateSize(), 300);
 }
 
 // ------------------------------------------------------
-// Initialisierung
+// Spielideen
 // ------------------------------------------------------
+function getRandomPlayIdea() {
+  if (typeof I18N !== "undefined" && typeof I18N.getRandomPlayIdea === "function") {
+    const idea = I18N.getRandomPlayIdea();
+    if (idea) return idea;
+  }
+  return "";
+}
 
+// ------------------------------------------------------
+// Init
+// ------------------------------------------------------
 async function init() {
   try {
-    languageSwitcherEl =
-      document.getElementById("language-switcher") || document.getElementById("language-toggle");
+    languageSwitcherEl = document.getElementById("language-switcher") || document.getElementById("language-toggle");
     languageSwitcherFlagEl = document.getElementById("language-switcher-flag");
+
     themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
@@ -2598,13 +2072,12 @@ async function init() {
     bottomNavAboutLabelEl = document.getElementById("bottom-nav-about-label");
 
     sidebarEl = document.querySelector(".sidebar");
+
     const filterTitleEl = document.getElementById("filter-title");
     filterSectionEl = filterTitleEl ? filterTitleEl.closest(".sidebar-section") : null;
 
     if (filterSectionEl) {
-      filterBodyEls = Array.from(filterSectionEl.children).filter(
-        (el) => !el.classList.contains("sidebar-section-header")
-      );
+      filterBodyEls = Array.from(filterSectionEl.children).filter((el) => !el.classList.contains("sidebar-section-header"));
       filtersCollapsed = true;
       filterBodyEls.forEach((el) => el.classList.add("hidden"));
     }
@@ -2635,7 +2108,6 @@ async function init() {
 
     spotListEl = document.getElementById("spot-list");
     spotDetailEl = document.getElementById("spot-detail");
-    spotsSectionEl = spotListEl ? spotListEl.closest(".sidebar-section--grow") : null;
 
     plusSectionEl = document.getElementById("plus-section");
     btnTogglePlusEl = document.getElementById("btn-toggle-plus");
@@ -2653,13 +2125,7 @@ async function init() {
     daylogListEl = document.getElementById("daylog-list");
 
     toastEl = document.getElementById("toast");
-
     skipLinkEl = document.querySelector(".skip-link");
-
-    if (btnToggleFiltersEl && filterSectionEl && filterSectionEl.id) {
-      btnToggleFiltersEl.setAttribute("aria-controls", filterSectionEl.id);
-      btnToggleFiltersEl.setAttribute("aria-expanded", "false");
-    }
 
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
@@ -2669,41 +2135,22 @@ async function init() {
 
     initToast({ element: toastEl, t });
 
-    const mapResult = initMap({
-      center: DEFAULT_MAP_CENTER,
-      zoom: DEFAULT_MAP_ZOOM
-    });
+    const mapResult = initMap({ center: DEFAULT_MAP_CENTER, zoom: DEFAULT_MAP_ZOOM });
     map = mapResult.map;
     markersLayer = mapResult.markersLayer;
 
+    const debouncedApply = debounce(() => applyFiltersAndRender(), 180);
+    const debouncedResize = debounce(() => map?.invalidateSize?.(), 200);
+
     if (map) {
-      if (spotDetailEl) {
-        map.on("click", () => {
-          closeSpotDetails({ returnFocus: true });
-        });
-      }
-
-      // NEU: Panning/Zooming ändert nicht mehr „Entfernung vom echten Standort“,
-      // aber wir lassen die Re-Renders (Marker/Listen) trotzdem laufen (UI bleibt frisch).
-      map.on(
-        "moveend zoomend",
-        debounce(() => {
-          applyFiltersAndRender();
-        }, 200)
-      );
-
-      window.addEventListener(
-        "resize",
-        debounce(() => {
-          map.invalidateSize();
-        }, 200)
-      );
+      map.on("click", () => closeSpotDetails({ returnFocus: true }));
+      map.on("moveend zoomend", debouncedApply);
+      window.addEventListener("resize", debouncedResize);
     }
 
-    tilla = new TillaCompanion({
-      getText: (key) => t(key)
-    });
+    tilla = new TillaCompanion({ getText: (key) => t(key) });
 
+    // Language switcher button (sr-only in your HTML)
     if (languageSwitcherEl) {
       languageSwitcherEl.addEventListener("click", () => {
         const nextLang = currentLang === LANG_DE ? LANG_DA : currentLang === LANG_DA ? LANG_EN : LANG_DE;
@@ -2719,11 +2166,7 @@ async function init() {
       });
     }
 
-    if (btnLocateEl) {
-      btnLocateEl.addEventListener("click", () => {
-        handleLocateClick();
-      });
-    }
+    btnLocateEl?.addEventListener("click", handleLocateClick);
 
     initRouter({
       viewMapEl,
@@ -2733,48 +2176,37 @@ async function init() {
       getCurrentLang: () => currentLang
     });
 
+    // Search (debounced)
     if (filterSearchEl) {
       const applySearch = debounce((value) => {
-        searchTerm = value.trim();
+        searchTerm = String(value || "").trim();
         applyFiltersAndRender();
-      }, 200);
+      }, 180);
 
-      filterSearchEl.addEventListener("input", (e) => {
-        applySearch(e.target.value);
-      });
+      filterSearchEl.addEventListener("input", (e) => applySearch(e.target.value));
     }
 
-    if (filterCategoryEl) {
-      filterCategoryEl.addEventListener("change", (e) => {
-        categoryFilter = e.target.value;
-        applyFiltersAndRender();
-      });
-    }
+    filterCategoryEl?.addEventListener("change", (e) => {
+      categoryFilter = e.target.value;
+      applyFiltersAndRender();
+    });
 
-    if (filterAgeEl) {
-      filterAgeEl.addEventListener("change", (e) => {
-        ageFilter = e.target.value;
-        applyFiltersAndRender();
-      });
-    }
+    filterAgeEl?.addEventListener("change", (e) => {
+      ageFilter = e.target.value;
+      applyFiltersAndRender();
+    });
 
-    if (filterRadiusEl) {
-      initRadiusSliderA11y();
-    }
+    if (filterRadiusEl) initRadiusSliderA11y();
 
-    if (filterBigEl) {
-      filterBigEl.addEventListener("change", (e) => {
-        onlyBigAdventures = e.target.checked;
-        applyFiltersAndRender();
-      });
-    }
+    filterBigEl?.addEventListener("change", (e) => {
+      onlyBigAdventures = e.target.checked;
+      applyFiltersAndRender();
+    });
 
-    if (filterVerifiedEl) {
-      filterVerifiedEl.addEventListener("change", (e) => {
-        onlyVerified = e.target.checked;
-        applyFiltersAndRender();
-      });
-    }
+    filterVerifiedEl?.addEventListener("change", (e) => {
+      onlyVerified = e.target.checked;
+      applyFiltersAndRender();
+    });
 
     if (FEATURES.favorites && filterFavoritesEl) {
       filterFavoritesEl.addEventListener("change", (e) => {
@@ -2809,14 +2241,11 @@ async function init() {
       document.querySelectorAll(".travel-chip").forEach((chip) => {
         chip.addEventListener("click", () => {
           const mode = chip.getAttribute("data-travel-mode") || "everyday";
-
           if (travelMode === mode) {
             travelMode = null;
             chip.classList.remove("travel-chip--active");
             chip.setAttribute("aria-pressed", "false");
-            if (tilla && typeof tilla.setTravelMode === "function") {
-              tilla.setTravelMode(null);
-            }
+            safeTillaCall("setTravelMode", null);
           } else {
             travelMode = mode;
             document.querySelectorAll(".travel-chip").forEach((c) => {
@@ -2824,11 +2253,8 @@ async function init() {
               c.classList.toggle("travel-chip--active", isActive);
               c.setAttribute("aria-pressed", isActive ? "true" : "false");
             });
-            if (tilla && typeof tilla.setTravelMode === "function") {
-              tilla.setTravelMode(mode);
-            }
+            safeTillaCall("setTravelMode", mode);
           }
-
           applyFiltersAndRender();
         });
       });
@@ -2836,72 +2262,51 @@ async function init() {
 
     if (btnToggleFiltersEl) {
       btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
+      btnToggleFiltersEl.querySelector("span")?.replaceChildren?.(); // noop, but safe
       const span = btnToggleFiltersEl.querySelector("span");
-      if (span) span.textContent = t("btn_show_filters");
+      if (span) span.textContent = t("btn_show_filters", "Filter anzeigen");
+      btnToggleFiltersEl.setAttribute("aria-expanded", "false");
     }
 
     if (btnToggleViewEl) {
       btnToggleViewEl.addEventListener("click", handleToggleView);
       const span = btnToggleViewEl.querySelector("span");
-      if (span) span.textContent = t("btn_only_map");
+      if (span) span.textContent = t("btn_only_map", "Nur Karte");
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
+    // Details toggles (Plus / Daylog) – keep conservative: only adjust label text
+    function updateGenericSectionToggleLabel(btn, isOpen) {
+      if (!btn) return;
+      const target = btn.querySelector("span") || btn;
+      const isDeLike = currentLang === LANG_DE || currentLang === LANG_DA;
+      target.textContent = isOpen ? (isDeLike ? "Ausblenden" : "Hide") : (isDeLike ? "Anzeigen" : "Show");
+      btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+
     if (plusSectionEl && btnTogglePlusEl) {
-      plusSectionEl.id = plusSectionEl.id || "plus-section";
-      btnTogglePlusEl.setAttribute("aria-controls", plusSectionEl.id);
-
-      const togglePlusHandler = (event) => {
+      btnTogglePlusEl.addEventListener("click", (event) => {
         event.preventDefault();
-        const isOpen = !plusSectionEl.open;
-        plusSectionEl.open = isOpen;
-        updateGenericSectionToggleLabel(btnTogglePlusEl, isOpen);
-      };
-
-      btnTogglePlusEl.addEventListener("click", togglePlusHandler);
-      btnTogglePlusEl.addEventListener("keydown", activateOnEnterSpace(togglePlusHandler));
-
-      plusSectionEl.addEventListener("toggle", () => {
-        updateGenericSectionToggleLabel(btnTogglePlusEl, plusSectionEl.open);
+        plusSectionEl.open = !plusSectionEl.open;
+        updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
       });
-
+      plusSectionEl.addEventListener("toggle", () => updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open));
       updateGenericSectionToggleLabel(btnTogglePlusEl, !!plusSectionEl.open);
     }
 
     if (daylogSectionEl && btnToggleDaylogEl) {
-      daylogSectionEl.id = daylogSectionEl.id || "daylog-section";
-      btnToggleDaylogEl.setAttribute("aria-controls", daylogSectionEl.id);
-
-      const toggleDaylogHandler = (event) => {
+      btnToggleDaylogEl.addEventListener("click", (event) => {
         event.preventDefault();
-        const isOpen = !daylogSectionEl.open;
-        daylogSectionEl.open = isOpen;
-        updateGenericSectionToggleLabel(btnToggleDaylogEl, isOpen);
-      };
-
-      btnToggleDaylogEl.addEventListener("click", toggleDaylogHandler);
-      btnToggleDaylogEl.addEventListener("keydown", activateOnEnterSpace(toggleDaylogHandler));
-
-      daylogSectionEl.addEventListener("toggle", () => {
-        updateGenericSectionToggleLabel(btnToggleDaylogEl, daylogSectionEl.open);
+        daylogSectionEl.open = !daylogSectionEl.open;
+        updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
       });
-
+      daylogSectionEl.addEventListener("toggle", () => updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open));
       updateGenericSectionToggleLabel(btnToggleDaylogEl, !!daylogSectionEl.open);
     }
 
-    if (FEATURES.plus && plusCodeSubmitEl) {
-      plusCodeSubmitEl.addEventListener("click", () => {
-        handlePlusCodeSubmit();
-      });
-    }
-
-    if (FEATURES.daylog && daylogSaveEl) {
-      daylogSaveEl.addEventListener("click", handleDaylogSave);
-    }
-
-    if (FEATURES.daylog && daylogClearEl) {
-      daylogClearEl.addEventListener("click", handleDaylogClear);
-    }
+    if (FEATURES.plus && plusCodeSubmitEl) plusCodeSubmitEl.addEventListener("click", handlePlusCodeSubmit);
+    if (FEATURES.daylog && daylogSaveEl) daylogSaveEl.addEventListener("click", handleDaylogSave);
+    if (FEATURES.daylog && daylogClearEl) daylogClearEl.addEventListener("click", handleDaylogClear);
 
     if (FEATURES.playIdeas && playIdeasBtnEl) {
       playIdeasBtnEl.addEventListener("click", () => {
@@ -2909,54 +2314,22 @@ async function init() {
         if (!idea) return;
 
         if (tilla && typeof tilla.showPlayIdea === "function") {
-          tilla.showPlayIdea(idea);
-
-          const tillaCard = document.querySelector(".tilla-sidebar-card");
-          if (tillaCard && typeof tillaCard.scrollIntoView === "function") {
-            tillaCard.scrollIntoView({
-              behavior: "smooth",
-              block: "nearest"
-            });
-          }
+          safeTillaCall("showPlayIdea", idea);
+          document.querySelector(".tilla-sidebar-card")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
         } else {
           showToast(idea);
         }
       });
     }
 
-    if (btnOpenFilterModalEl && filterModalEl) {
-      btnOpenFilterModalEl.addEventListener("click", () => {
-        openFilterModal();
-      });
-    }
+    // Filter modal wiring
+    btnOpenFilterModalEl?.addEventListener("click", openFilterModal);
+    filterModalCloseEl?.addEventListener("click", () => closeFilterModal({ returnFocus: true }));
+    filterModalApplyEl?.addEventListener("click", () => { applyFiltersAndRender(); closeFilterModal({ returnFocus: true }); });
+    filterModalResetEl?.addEventListener("click", resetAllFilters);
+    filterModalEl?.addEventListener("click", (event) => { if (event.target === filterModalEl) closeFilterModal({ returnFocus: true }); });
 
-    if (filterModalCloseEl) {
-      filterModalCloseEl.addEventListener("click", () => {
-        closeFilterModal({ returnFocus: true });
-      });
-    }
-
-    if (filterModalApplyEl) {
-      filterModalApplyEl.addEventListener("click", () => {
-        applyFiltersAndRender();
-        closeFilterModal({ returnFocus: true });
-      });
-    }
-
-    if (filterModalResetEl) {
-      filterModalResetEl.addEventListener("click", () => {
-        resetAllFilters();
-      });
-    }
-
-    if (filterModalEl) {
-      filterModalEl.addEventListener("click", (event) => {
-        if (event.target === filterModalEl) {
-          closeFilterModal({ returnFocus: true });
-        }
-      });
-    }
-
+    // Skip link focus
     if (skipLinkEl) {
       skipLinkEl.addEventListener("click", (event) => {
         const href = skipLinkEl.getAttribute("href") || "";
@@ -2966,47 +2339,13 @@ async function init() {
         const target = document.getElementById(id);
         if (!target) return;
 
-        if (!target.hasAttribute("tabindex")) {
-          target.setAttribute("tabindex", "-1");
-        }
-
+        if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
         target.scrollIntoView();
-        if (typeof target.focus === "function") {
-          target.focus();
-        }
+        target.focus?.();
       });
     }
 
-    document.querySelectorAll(".sidebar-section-close").forEach((btn) => {
-      const targetId = btn.getAttribute("data-target");
-      let section = null;
-      if (targetId) section = document.getElementById(targetId);
-      if (!section) section = btn.closest(".sidebar-section");
-      if (!section) return;
-
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const tag = section.tagName.toLowerCase();
-        if (tag === "details") {
-          section.open = false;
-        } else {
-          section.classList.add("hidden");
-        }
-
-        if (section.id === "plus-section" && btnTogglePlusEl) {
-          updateGenericSectionToggleLabel(btnTogglePlusEl, false);
-        }
-
-        if (section.id === "daylog-section" && btnToggleDaylogEl) {
-          updateGenericSectionToggleLabel(btnToggleDaylogEl, false);
-        }
-      });
-    });
-
-    loadPlusStateFromStorage();
-    loadDaylogFromStorage();
-    initLazyLoadImages();
-
+    // ESC handling
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
 
@@ -3016,14 +2355,20 @@ async function init() {
         return;
       }
 
-      if (!spotDetailEl) return;
-
-      const isOpen = !spotDetailEl.classList.contains("spot-details--hidden");
-      if (!isOpen) return;
-
-      event.preventDefault();
-      closeSpotDetails({ returnFocus: true });
+      const isOpen = spotDetailEl && !spotDetailEl.classList.contains("spot-details--hidden");
+      if (isOpen) {
+        event.preventDefault();
+        closeSpotDetails({ returnFocus: true });
+      }
     });
+
+    // Clean up watch on unload
+    window.addEventListener("beforeunload", () => stopLocationWatch());
+
+    // Init states
+    loadPlusStateFromStorage();
+    loadDaylogFromStorage();
+    initLazyLoadImages();
 
     updateFilterSummary();
     loadSpots();
@@ -3033,9 +2378,8 @@ async function init() {
 }
 
 // ------------------------------------------------------
-// DOMContentLoaded – I18N.init() + App-Init
+// DOMContentLoaded
 // ------------------------------------------------------
-
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     if (typeof I18N !== "undefined" && typeof I18N.init === "function") {
@@ -3044,6 +2388,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (err) {
     console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
   }
-
   await init();
 });
