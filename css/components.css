@@ -2929,3 +2929,64 @@ summary.sidebar-section-header:focus-visible {
   color: #ffffff !important;
   opacity: 1 !important;
 }
+
+/* =========================================================
+   ABSOLUTE FINAL OVERRIDE (UNLAYERED)
+   - Safari/Chrome hardening: force the two marked headers to white
+   - covers cases where IDs differ or UA uses -webkit-text-fill-color
+   ========================================================= */
+
+/* 1) Tilla title ("Familienbegleiterin Tilla") */
+:where([data-theme="dark"]) :where(
+  #tilla-title,
+  .tilla-sidebar-section .sidebar-section-title,
+  .tilla-sidebar-section .sidebar-section-header,
+  .tilla-sidebar-section summary.sidebar-section-header,
+  .tilla-sidebar-section summary.sidebar-section-header *
+) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* 2) Plus header ("Family Spots Plus" + "Anzeigen") */
+:where([data-theme="dark"]) #plus-section :where(
+  summary.sidebar-section-header,
+  summary.sidebar-section-header *,
+  .sidebar-section-title,
+  #plus-section-title,
+  #btn-toggle-plus,
+  #btn-toggle-plus *
+) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* Safety net: if dark mode is driven by OS (no data-theme attribute) */
+@media (prefers-color-scheme: dark) {
+  :where(
+    #tilla-title,
+    .tilla-sidebar-section .sidebar-section-title,
+    .tilla-sidebar-section .sidebar-section-header,
+    .tilla-sidebar-section summary.sidebar-section-header,
+    .tilla-sidebar-section summary.sidebar-section-header *
+  ) {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+  }
+
+  #plus-section :where(
+    summary.sidebar-section-header,
+    summary.sidebar-section-header *,
+    .sidebar-section-title,
+    #plus-section-title,
+    #btn-toggle-plus,
+    #btn-toggle-plus *
+  ) {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+  }
+}
