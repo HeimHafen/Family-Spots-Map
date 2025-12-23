@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html lang="de" data-theme="light">
 <head>
@@ -54,14 +56,7 @@
 
     html[data-theme="dark"], html[data-theme="dark"] body {
       background: #020617;   /* Dark fallback */
-      color: #ffffff;        /* Dark text fallback (JETZT: weiß) */
-    }
-
-    /* NEU: Dark Mode -> jede Schrift / jedes Wort ZWINGEND weiß */
-    html[data-theme="dark"] *,
-    html[data-theme="dark"] *::before,
-    html[data-theme="dark"] *::after {
-      color: #ffffff !important;
+      color: #e5e7eb;        /* Dark text fallback */
     }
 
     /* Form-Controls sollen Textfarbe sauber erben (sonst iOS/Safari teils „falsch“) */
@@ -75,8 +70,8 @@
       opacity: 1;
     }
     html[data-theme="dark"] ::placeholder {
-      color: #ffffff !important;  /* JETZT: weiß */
-      opacity: 0.85;
+      color: rgba(148, 163, 184, 0.85);
+      opacity: 1;
     }
 
     /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem */
