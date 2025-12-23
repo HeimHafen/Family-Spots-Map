@@ -8,224 +8,191 @@
    --------------------------------------------------------- */
 
 /* 1. Design-Variablen (Light/Dark Theme) */
-@import url("./theme.css?v=20251223");
+@import url("./theme.css?v=20251224");
 
 /* 2. Reset, Body, Typografie, Grundlayout */
-@import url("./base.css?v=20251223");
+@import url("./base.css?v=20251224");
 
 /* 3. Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
-@import url("./utilities.css?v=20251223");
+@import url("./utilities.css?v=20251224");
 
-/* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
-@import url("./components.css?v=20251223");
+/* 4. Komponenten, Layout, Map, Sidebar, Toast, Onboarding etc. */
+@import url("./components.css?v=20251224");
 
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
+   (bewusst im overrides-layer, damit die Layer-Cascade sauber bleibt)
    ========================================================= */
-
-/* Einheitliche Textfarbe für Sidebar-Titel (inkl. <details>/<summary>) */
-.sidebar-section-title {
-  color: var(--text-heading, var(--text-strong, var(--text-color, #111827))) !important;
-  opacity: 1 !important;
-}
-
-/* =========================================================
-   FIX: Tilla-Section Titel im Dark-Theme wirklich weiß
-   (dein Screenshot: „Familienbegleiterin Tilla“)
-   - robust gegen abweichende Markup-Strukturen
-   - iOS/Safari: -webkit-text-fill-color mitsetzen
-   ========================================================= */
-html[data-theme="dark"] #tilla-section,
-body[data-theme="dark"] #tilla-section {
-  /* Falls Komponenten über CSS-Variablen färben */
-  --text-heading: #ffffff;
-  --text-strong: #ffffff;
-  --text-color: #ffffff;
-}
-
-html[data-theme="dark"] #tilla-section #tilla-title,
-body[data-theme="dark"] #tilla-section #tilla-title,
-html[data-theme="dark"] #tilla-section .sidebar-section-title,
-body[data-theme="dark"] #tilla-section .sidebar-section-title,
-html[data-theme="dark"] #tilla-section summary,
-body[data-theme="dark"] #tilla-section summary,
-html[data-theme="dark"] #tilla-section summary *,
-body[data-theme="dark"] #tilla-section summary *,
-html[data-theme="dark"] #tilla-section h1,
-body[data-theme="dark"] #tilla-section h1,
-html[data-theme="dark"] #tilla-section h2,
-body[data-theme="dark"] #tilla-section h2,
-html[data-theme="dark"] #tilla-section h3,
-body[data-theme="dark"] #tilla-section h3 {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important; /* iOS Safari */
-  opacity: 1 !important;
-}
-
-/* Helper-/Muted-Texte konsistent (falls Komponenten irgendwo “hart” färben) */
-.filter-group-helper,
-.filter-summary,
-.daylog-last-saved,
-.plus-note {
-  color: var(--text-muted, var(--text-soft, rgba(107, 114, 128, 0.95)));
-}
-
-/* =========================================
-   Override: Header im Light-Theme wärmer
-   (nur Light – Dark bleibt aus tokens)
-   ========================================= */
-html[data-theme="light"] .app-header {
-  background:
-    radial-gradient(900px 420px at 18% -10%,
-      rgba(243, 162, 58, 0.32) 0%,
-      rgba(243, 162, 58, 0.00) 60%),
-    linear-gradient(180deg,
-      #FFF7EE 0%,
-      #FFE7D1 55%,
-      #F6C79D 100%);
-  border-bottom: 1px solid rgba(243, 162, 58, 0.18);
-}
-
-/* =========================================
-   UI Fix: „Nur Karte“ im Spots-Header entfernen
-   ========================================= */
-#btn-toggle-view {
-  display: none !important;
-}
-
-/* =========================================
-   Highest-Level UI Fixes
-   1) Bottom Nav entfernen (Karte/Über)
-   2) Menü-Panel (☰) kompakt halten
-   3) Details/Summary (Plus / Mein Tag) visuell angleichen
-   ========================================= */
-
-/* ---------- 1) Bottom Nav vollständig entfernen + Platz zurückholen ---------- */
-:root {
-  --bottom-nav-height: 0px;
-  --bottom-nav-safearea: 0px;
-}
-
-.bottom-nav {
-  display: none !important;
-}
-
-body,
-.app,
-.app-main,
-#main-content {
-  padding-bottom: 0 !important;
-}
-
-/* ---------- 2) App-Menü (☰) als sauberes Action-Sheet ----------
-   WICHTIG: Regeln NUR anwenden, wenn das Menü offen ist.
-   Sonst kann es (je nach Browser) “unsichtbar” über der App liegen. */
-#app-menu.app-menu:not([hidden]) {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-
-  padding-top: max(14px, env(safe-area-inset-top));
-  padding-left: 12px;
-  padding-right: 12px;
-  padding-bottom: max(14px, env(safe-area-inset-bottom));
-}
-
-#app-menu.app-menu:not([hidden]) .app-menu-backdrop {
-  position: absolute;
-  inset: 0;
-}
-
-#app-menu.app-menu:not([hidden]) .app-menu-panel {
-  position: relative;
-  width: min(520px, 100%);
-  height: auto !important;
-
-  min-height: 0 !important;
-  max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
-
-  overflow: auto !important;
-  -webkit-overflow-scrolling: touch;
-
-  /* Visuell stabil (falls component-styles abweichen) */
-  border-radius: calc(var(--border-radius, 0.5rem) * 2);
-  background: var(--card-bg, var(--surface-1, rgba(255, 255, 255, 0.9)));
-  border: 1px solid var(--card-border, var(--border-1, rgba(0, 0, 0, 0.08)));
-  box-shadow: var(--card-shadow, var(--elev-2, 0 10px 26px rgba(0, 0, 0, 0.16)));
-}
-
-#app-menu.app-menu:not([hidden]) .app-menu-list,
-#app-menu.app-menu:not([hidden]) .app-menu-languages {
-  height: auto !important;
-  min-height: 0 !important;
-}
-
-#app-menu.app-menu:not([hidden]) .app-menu-languages {
-  margin-top: 12px !important;
-}
-
-@media (max-width: 720px) {
-  #app-menu.app-menu:not([hidden]) .app-menu-panel {
-    width: min(560px, 100%);
+@layer overrides {
+  /* Einheitliche Textfarbe für Sidebar-Titel (inkl. <details>/<summary>) */
+  .sidebar-section-title {
+    color: var(--text-heading, var(--text-strong, var(--text-color, #111827))) !important;
+    opacity: 1 !important;
   }
-}
 
-/* ---------- 3) <details class="sidebar-section"> (Plus / Mein Tag) angleichen ---------- */
-details.sidebar-section {
-  /* gleiche “Card”-Optik wie andere Sidebar-Sections */
-  background: var(--sidebar-section-bg, var(--card-bg, var(--surface-1)));
-  border: 1px solid var(--sidebar-section-border, var(--card-border, var(--border-1)));
-  box-shadow: var(--sidebar-section-shadow, var(--card-shadow, var(--elev-2)));
-  border-radius: calc(var(--border-radius, 0.5rem) * 2);
-  overflow: hidden; /* verhindert “Kanten” bei Summary */
-}
+  /* =========================================================
+     FIX: Tilla-Section Titel im Dark-Theme wirklich weiß
+     - robust gegen abweichende Markup-Strukturen
+     - iOS/Safari: -webkit-text-fill-color mitsetzen
+     ========================================================= */
+  html[data-theme="dark"] #tilla-section,
+  body[data-theme="dark"] #tilla-section {
+    --text-heading: #ffffff;
+    --text-strong: #ffffff;
+    --text-color: #ffffff;
+  }
 
-/* Summary soll keinen Browser-Marker/Default-Spacing haben */
-details.sidebar-section > summary {
-  list-style: none;
-  cursor: pointer;
-}
+  html[data-theme="dark"] #tilla-section #tilla-title,
+  body[data-theme="dark"] #tilla-section #tilla-title,
+  html[data-theme="dark"] #tilla-section .sidebar-section-title,
+  body[data-theme="dark"] #tilla-section .sidebar-section-title,
+  html[data-theme="dark"] #tilla-section summary,
+  body[data-theme="dark"] #tilla-section summary,
+  html[data-theme="dark"] #tilla-section summary *,
+  body[data-theme="dark"] #tilla-section summary *,
+  html[data-theme="dark"] #tilla-section h1,
+  body[data-theme="dark"] #tilla-section h1,
+  html[data-theme="dark"] #tilla-section h2,
+  body[data-theme="dark"] #tilla-section h2,
+  html[data-theme="dark"] #tilla-section h3,
+  body[data-theme="dark"] #tilla-section h3 {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important; /* iOS Safari */
+    opacity: 1 !important;
+  }
 
-details.sidebar-section > summary::-webkit-details-marker {
-  display: none;
-}
+  /* Helper-/Muted-Texte konsistent */
+  .filter-group-helper,
+  .filter-summary,
+  .daylog-last-saved,
+  .plus-note {
+    color: var(--text-muted, var(--text-soft, rgba(107, 114, 128, 0.95)));
+  }
 
-/* Summary-Header-Layout: wie .sidebar-section-header */
-details.sidebar-section > summary.sidebar-section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  /* =========================================
+     Override: Header im Light-Theme wärmer
+     ========================================= */
+  html[data-theme="light"] .app-header {
+    background:
+      radial-gradient(900px 420px at 18% -10%,
+        rgba(243, 162, 58, 0.32) 0%,
+        rgba(243, 162, 58, 0.00) 60%),
+      linear-gradient(180deg,
+        #FFF7EE 0%,
+        #FFE7D1 55%,
+        #F6C79D 100%);
+    border-bottom: 1px solid rgba(243, 162, 58, 0.18);
+  }
 
-  padding: 14px 16px;
-  margin: 0;
+  /* =========================================
+     UI Fix: „Nur Karte“ im Spots-Header entfernen
+     ========================================= */
+  #btn-toggle-view {
+    display: none !important;
+  }
 
-  background: transparent; /* Container steuert Background */
-  border: 0;
-}
+  /* =========================================
+     Bottom-Nav komplett weg (Layout-Padding NICHT zerstören!)
+     - Die Safe-Area / das App-Padding wird über components.css geregelt.
+     ========================================= */
+  :root {
+    --bottom-nav-height: 0px;
+    --bottom-nav-safearea: 0px;
+  }
 
-/* Der Rest-Inhalt soll “normal” gepolstert sein */
-details.sidebar-section > :not(summary) {
-  padding: 14px 16px;
-}
+  .bottom-nav {
+    display: none !important;
+  }
 
-/* Wenn Details geschlossen ist, soll keine “Doppel-Padding”-Kante entstehen */
-details.sidebar-section:not([open]) > :not(summary) {
-  padding-top: 0;
-}
+  /* =========================================
+     App-Menü (☰) als sauberes Action-Sheet
+     WICHTIG: Nur wenn body[data-menu-open="1"]
+     (sonst kann es unsichtbar über der App liegen)
+     ========================================= */
+  body[data-menu-open="1"] #app-menu.app-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
 
-/* Buttons in <summary> sollen klickbar bleiben (Safari/iOS-Edgecases) */
-details.sidebar-section > summary * {
-  pointer-events: auto;
-}
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
 
-/* Optional: etwas mehr Abstand unten im Sidebar-Stack (iOS fühlt sich “luftiger” an) */
-.sidebar > .sidebar-section,
-.sidebar > details.sidebar-section {
-  scroll-margin-top: 12px;
+    padding-top: max(14px, env(safe-area-inset-top));
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+  }
+
+  body[data-menu-open="1"] #app-menu.app-menu .app-menu-backdrop {
+    position: absolute;
+    inset: 0;
+  }
+
+  body[data-menu-open="1"] #app-menu.app-menu .app-menu-panel {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    margin: 0 !important;
+
+    width: min(520px, 100%);
+    height: auto !important;
+
+    min-height: 0 !important;
+    max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch;
+
+    border-radius: calc(var(--border-radius, 0.5rem) * 2);
+    background: var(--card-bg, var(--surface-1, rgba(255, 255, 255, 0.9)));
+    border: 1px solid var(--card-border, var(--border-1, rgba(0, 0, 0, 0.08)));
+    box-shadow: var(--card-shadow, var(--elev-2, 0 10px 26px rgba(0, 0, 0, 0.16)));
+  }
+
+  body[data-menu-open="1"] #app-menu.app-menu .app-menu-list,
+  body[data-menu-open="1"] #app-menu.app-menu .app-menu-languages {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  body[data-menu-open="1"] #app-menu.app-menu .app-menu-languages {
+    margin-top: 12px !important;
+  }
+
+  @media (max-width: 720px) {
+    body[data-menu-open="1"] #app-menu.app-menu .app-menu-panel {
+      width: min(560px, 100%);
+    }
+  }
+
+  /* =========================================
+     <details class="sidebar-section"> (Plus / Mein Tag)
+     Minimal-fix: Marker weg + Klickbarkeit, ohne Padding/Heights zu überschreiben
+     ========================================= */
+  details.sidebar-section > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  details.sidebar-section > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details.sidebar-section > summary::marker {
+    content: "";
+  }
+
+  /* Buttons/Links in summary sollen auf iOS/Safari sicher klickbar bleiben */
+  details.sidebar-section > summary * {
+    pointer-events: auto;
+  }
+
+  /* Optional: etwas mehr „Anker“-Luft beim Scrollen */
+  .sidebar > .sidebar-section,
+  .sidebar > details.sidebar-section {
+    scroll-margin-top: 12px;
+  }
 }
