@@ -43,7 +43,6 @@
 
   <!-- ======================================================
        CRITICAL CSS (Background + Textfarben konsistent)
-       (NUR Farbschema angepasst – keine Layout/Struktur-Änderungen)
        ====================================================== -->
   <style>
     html, body {
@@ -55,7 +54,14 @@
 
     html[data-theme="dark"], html[data-theme="dark"] body {
       background: #020617;   /* Dark fallback */
-      color: #e5e7eb;        /* Dark text fallback */
+      color: #ffffff;        /* Dark text fallback (JETZT: weiß) */
+    }
+
+    /* NEU: Dark Mode -> jede Schrift / jedes Wort ZWINGEND weiß */
+    html[data-theme="dark"] *,
+    html[data-theme="dark"] *::before,
+    html[data-theme="dark"] *::after {
+      color: #ffffff !important;
     }
 
     /* Form-Controls sollen Textfarbe sauber erben (sonst iOS/Safari teils „falsch“) */
@@ -69,8 +75,8 @@
       opacity: 1;
     }
     html[data-theme="dark"] ::placeholder {
-      color: rgba(148, 163, 184, 0.85);
-      opacity: 1;
+      color: #ffffff !important;  /* JETZT: weiß */
+      opacity: 0.85;
     }
 
     /* Menü-Icons als Inline-SVG: sauberer Look + kein ALT-Text-Problem */
@@ -100,10 +106,10 @@
       height: 34px;
 
       border-radius: 999px;
-      border: 1px solid rgba(15, 23, 42, 0.12);     /* angepasst (Light Border) */
-      background: rgba(255, 255, 255, 0.62);        /* angepasst (Light Surface) */
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(255, 255, 255, 0.82);
 
-      color: #111827;                                /* angepasst (Light Text) */
+      color: rgba(15, 23, 42, 0.85);
       font-size: 20px;
       line-height: 1;
 
@@ -111,9 +117,9 @@
       -webkit-tap-highlight-color: transparent;
     }
     html[data-theme="dark"] .fsm-onboarding-hint__close {
-      background: rgba(2, 6, 23, 0.62);             /* angepasst (Dark Surface) */
-      color: #e5e7eb;                                /* angepasst (Dark Text) */
-      border-color: rgba(148, 163, 184, 0.18);       /* angepasst (Dark Border) */
+      background: rgba(15, 23, 42, 0.62);
+      color: rgba(229, 231, 235, 0.95);
+      border-color: rgba(148, 163, 184, 0.25);
     }
     .fsm-onboarding-hint__close:active {
       transform: translateY(1px);
