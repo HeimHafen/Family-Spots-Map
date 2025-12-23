@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="de" data-theme="light">
 <head>
@@ -43,7 +44,6 @@
 
   <!-- ======================================================
        CRITICAL CSS (Background + Textfarben konsistent)
-       + FIX: Tilla-Titel im Dark Mode garantiert weiß (iOS Safari inkl.)
        ====================================================== -->
   <style>
     html, body {
@@ -78,29 +78,14 @@
       display: block;
     }
 
-    /* Tilla-Titel kompakter (wie "Filter") */
+    /* NEU: Tilla-Titel kompakter (wie "Filter") */
     .tilla-sidebar-section .sidebar-section-title {
       font-size: 1rem !important;
       line-height: 1.25 !important;
       margin: 0 !important;
     }
 
-    /* FIX: Tilla-Section Titel im Dark Theme wirklich weiß (robust gegen Variablen/Overrides) */
-    html[data-theme="dark"] #tilla-section {
-      --text-heading: #ffffff;
-      --text-strong: #ffffff;
-      --text-color: #ffffff;
-    }
-    html[data-theme="dark"] #tilla-title,
-    html[data-theme="dark"] #tilla-section .sidebar-section-title,
-    html[data-theme="dark"] #tilla-section .sidebar-section-header,
-    html[data-theme="dark"] #tilla-section .sidebar-section-header * {
-      color: #ffffff !important;
-      -webkit-text-fill-color: #ffffff !important; /* iOS Safari */
-      opacity: 1 !important;
-    }
-
-    /* Onboarding-Hinweis Close-Button zuverlässig sichtbar + sauber positioniert */
+    /* NEU: Onboarding-Hinweis Close-Button zuverlässig sichtbar + sauber positioniert */
     .fsm-onboarding-hint { position: relative; }
     .fsm-onboarding-hint__close {
       display: inline-flex !important;
@@ -205,9 +190,9 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
-  <!-- App Styles (Cache Busting: wichtig wegen Service Worker / iOS Safari) -->
-  <link rel="stylesheet" href="css/styles.css?v=20251223" />
-  <link rel="stylesheet" href="css/badges.css?v=20251223" />
+  <!-- App Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/badges.css" />
 </head>
 
 <body>
@@ -946,7 +931,6 @@
       <section id="view-about" class="view" aria-label="Über Family Spots Map">
         <!-- Deutsch -->
         <article id="page-about-de" class="page page-about" lang="de" aria-hidden="false">
-          <!-- (Inhalt unverändert) -->
           <h2>Über Family Spots Map</h2>
           <p>
             Family Spots Map ist eine Karte, behutsam gezeichnet für Familienabenteuer –<br />
@@ -1143,7 +1127,6 @@
 
         <!-- Dansk -->
         <article id="page-about-da" class="page page-about hidden" lang="da" aria-hidden="true">
-          <!-- (Inhalt unverändert) -->
           <h2>Om Family Spots Map</h2>
           <p>
             Family Spots Map er et kort, tegnet med omtanke til familieeventyr –<br />
@@ -1342,7 +1325,6 @@
 
         <!-- Englisch -->
         <article id="page-about-en" class="page page-about hidden" lang="en" aria-hidden="true">
-          <!-- (Inhalt unverändert) -->
           <h2>About Family Spots Map</h2>
           <p>
             Family Spots Map is a carefully curated map for family adventures –<br />
