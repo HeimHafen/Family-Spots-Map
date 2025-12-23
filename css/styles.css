@@ -8,16 +8,16 @@
    --------------------------------------------------------- */
 
 /* 1. Design-Variablen (Light/Dark Theme) */
-@import url("./theme.css?v=20251221");
+@import url("./theme.css?v=20251223");
 
 /* 2. Reset, Body, Typografie, Grundlayout */
-@import url("./base.css?v=20251221");
+@import url("./base.css?v=20251223");
 
 /* 3. Utilities / Hilfsklassen (.hidden, .sr-only, etc.) */
-@import url("./utilities.css?v=20251221");
+@import url("./utilities.css?v=20251223");
 
 /* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
-@import url("./components.css?v=20251221");
+@import url("./components.css?v=20251223");
 
 
 /* =========================================================
@@ -30,10 +30,36 @@
   opacity: 1 !important;
 }
 
-/* FIX: Tilla-Section Titel im Dark-Theme wirklich weiß (dein Screenshot) */
-html[data-theme="dark"] #tilla-title,
-html[data-theme="dark"] #tilla-section .sidebar-section-title {
+/* =========================================================
+   FIX: Tilla-Section Titel im Dark-Theme wirklich weiß
+   (dein Screenshot: „Familienbegleiterin Tilla“)
+   - robust gegen abweichende Markup-Strukturen
+   - iOS/Safari: -webkit-text-fill-color mitsetzen
+   ========================================================= */
+html[data-theme="dark"] #tilla-section,
+body[data-theme="dark"] #tilla-section {
+  /* Falls Komponenten über CSS-Variablen färben */
+  --text-heading: #ffffff;
+  --text-strong: #ffffff;
+  --text-color: #ffffff;
+}
+
+html[data-theme="dark"] #tilla-section #tilla-title,
+body[data-theme="dark"] #tilla-section #tilla-title,
+html[data-theme="dark"] #tilla-section .sidebar-section-title,
+body[data-theme="dark"] #tilla-section .sidebar-section-title,
+html[data-theme="dark"] #tilla-section summary,
+body[data-theme="dark"] #tilla-section summary,
+html[data-theme="dark"] #tilla-section summary *,
+body[data-theme="dark"] #tilla-section summary *,
+html[data-theme="dark"] #tilla-section h1,
+body[data-theme="dark"] #tilla-section h1,
+html[data-theme="dark"] #tilla-section h2,
+body[data-theme="dark"] #tilla-section h2,
+html[data-theme="dark"] #tilla-section h3,
+body[data-theme="dark"] #tilla-section h3 {
   color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important; /* iOS Safari */
   opacity: 1 !important;
 }
 
@@ -149,14 +175,7 @@ body,
   }
 }
 
-/* ---------- 3) <details class="sidebar-section"> (Plus / Mein Tag) angleichen ----------
-   Problem (aus deinen Screens):
-   - Details-Sections wirken oft “anders” als normale <section>, weil UA-Styles
-     für <summary> greifen und/oder components.css nur <section.sidebar-section> adressiert.
-   Fix:
-   - Container-Styling explizit auch auf <details.sidebar-section> setzen
-   - Summary wie einen Sidebar-Header rendern
-*/
+/* ---------- 3) <details class="sidebar-section"> (Plus / Mein Tag) angleichen ---------- */
 details.sidebar-section {
   /* gleiche “Card”-Optik wie andere Sidebar-Sections */
   background: var(--sidebar-section-bg, var(--card-bg, var(--surface-1)));
