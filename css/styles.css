@@ -30,6 +30,13 @@
   opacity: 1 !important;
 }
 
+/* FIX: Tilla-Section Titel im Dark-Theme wirklich weiß (dein Screenshot) */
+html[data-theme="dark"] #tilla-title,
+html[data-theme="dark"] #tilla-section .sidebar-section-title {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
 /* Helper-/Muted-Texte konsistent (falls Komponenten irgendwo “hart” färben) */
 .filter-group-helper,
 .filter-summary,
