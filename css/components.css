@@ -2,10 +2,15 @@
    components.css — Layout & Komponenten
    Highest-Level: Robustheit, Konsistenz,
    iOS Safe Area, A11y Focus, weniger Redundanz
-   1:1 Replace File
+   (Adjusted: Layering stabil, semantische Tokens konsequent,
+   Header-Actions nicht mehr “muted”, Inputs/Borders token-basiert,
+   Bottom-Nav entfernt + App-Padding korrigiert)
    ========================================= */
 
-@layer tokens, base, components, utilities, overrides;
+/* Globale Layer-Reihenfolge (sollte idealerweise zusätzlich in styles.css stehen).
+   Wichtig: Diese Reihenfolge ist die „saubere“ Zielstruktur:
+   Base -> Tokens -> Components -> Utilities -> Overrides */
+@layer base, tokens, components, utilities, overrides;
 
 /* =========================================
    TOKENS — Component-level Fallback Tokens
@@ -60,7 +65,7 @@
     --app-bg-fallback-light: var(--fsm-warm-0);
     --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
 
-    /* Chip look (Bild 3) */
+    /* Chip look */
     --chip-surface: var(--chip-bg, var(--fsm-chip-warm, #f1dfcf));
     --chip-border: rgba(148, 163, 184, 0.45);
     --chip-border-hover: rgba(148, 163, 184, 0.65);
@@ -68,16 +73,18 @@
     --chip-shadow-hover: 0 2px 0 rgba(15, 23, 42, 0.08);
     --chip-active-border: hsla(var(--accent-h, 28), 72%, 52%, 0.85);
 
-    /* Tilla shell button color (extracted from screenshot; theme may override) */
+    /* Tilla shell button color */
     --tilla-shell: #f3831a;
     --tilla-shell-hover: #e17112;
     --tilla-shell-active: #d1630e;
     --on-tilla-shell: #ffffff;
 
-    /* -----------------------------------------
-       Tilla sizing tokens (optimized)
-       - bigger avatar, but tighter card so the box stays compact
-       ----------------------------------------- */
+    /* Section header sizing (compact, consistent) */
+    --section-header-height: 32px;
+    --section-title-size: 16px;
+    --section-title-size-sm: 15px;
+
+    /* Tilla sizing tokens */
     --tilla-avatar-size: 124px;
     --tilla-card-gap: 10px;
     --tilla-card-pad-y: 8px;
@@ -246,7 +253,7 @@
      ----------------------------------------- */
   select {
     background-color: var(--input-bg, rgba(255, 255, 255, 0.92));
-    color: var(--text-color, #111827);
+    color: var(--text-body, var(--text-color, #111827));
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -317,7 +324,7 @@
     --shadow: var(--elevation-xs);
 
     background-color: var(--neutral-0);
-    color: var(--text-strong, #111827);
+    color: var(--text-heading, var(--text-strong, #111827));
     border: var(--stroke-2);
     box-shadow: var(--shadow);
   }
@@ -331,7 +338,7 @@
     --shadow: var(--elevation-sm);
 
     background: var(--neutral-0);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     border: var(--stroke-2);
     box-shadow: var(--shadow);
   }
@@ -352,7 +359,7 @@
     border: 1px solid transparent;
 
     background: transparent;
-    color: var(--text-soft, #4b5563);
+    color: var(--text-muted, var(--text-soft, #4b5563));
 
     font-size: 13px;
     font-weight: 650;
@@ -372,10 +379,18 @@
 
   [data-theme="dark"] .btn-ghost {
     background: transparent;
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
   }
 
-  /* OPTIMIZED: ensure btn-small also compacts ghost buttons (Filter anzeigen / Nur Karte / Anzeigen) */
+  /* Ensure header actions are not "muted" (Filter anzeigen / Anzeigen / Spots ausblenden) */
+  .sidebar .sidebar-section-header .btn-ghost {
+    color: var(--text-heading, var(--text-strong, #111827));
+  }
+  [data-theme="dark"] .sidebar .sidebar-section-header .btn-ghost {
+    color: var(--text-heading, var(--text-strong, #ffffff));
+  }
+
+  /* ensure btn-small also compacts ghost buttons */
   .btn-ghost.btn-small {
     min-height: 28px;
     padding: 0 0.75rem;
@@ -393,7 +408,7 @@
     gap: 6px;
     line-height: 1.15;
 
-    /* REQUIRED: match Tilla shell color */
+    /* Required: match Tilla shell color */
     background-color: var(--tilla-shell);
     color: var(--on-tilla-shell);
   }
@@ -446,10 +461,10 @@
       var(--fsm-warm-1) 52%,
       var(--fsm-warm-2) 100%
     );
-    color: var(--text-strong, #111827);
+    color: var(--text-heading, var(--text-strong, #111827));
     box-shadow: var(--elevation-md);
 
-    --header-text-color: var(--text-strong, #111827);
+    --header-text-color: var(--text-heading, var(--text-strong, #111827));
     --header-tagline-bg: rgba(255, 255, 255, 0.56);
     --header-tagline-color: rgba(17, 24, 39, 0.92);
     --header-icon-bg: rgba(255, 255, 255, 0.72);
@@ -534,7 +549,7 @@
   }
 
   :where(html, body, :root)[data-theme="light"] .header-title {
-    color: var(--text-strong, #111827);
+    color: var(--text-heading, var(--text-strong, #111827));
   }
 
   .header-title:focus-visible {
@@ -667,7 +682,7 @@
     font-weight: 650;
 
     background: var(--neutral-0);
-    color: var(--text-strong);
+    color: var(--text-heading, var(--text-strong));
 
     border: var(--stroke-1);
     box-shadow: var(--shadow);
@@ -690,7 +705,7 @@
     --shadow: var(--elevation-md);
 
     background: var(--neutral-0);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     border: var(--stroke-1);
     box-shadow: var(--shadow);
   }
@@ -733,7 +748,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .app-menu-languages-row {
@@ -754,7 +769,7 @@
     gap: 6px;
 
     background: var(--neutral-1);
-    color: var(--text-strong);
+    color: var(--text-heading, var(--text-strong));
 
     font-size: 13px;
     font-weight: 650;
@@ -771,7 +786,7 @@
     --shadow: var(--elevation-sm);
 
     background: var(--neutral-1);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     box-shadow: var(--shadow);
   }
 
@@ -806,7 +821,9 @@
     width: 100%;
     max-width: 1120px;
     margin: 0 auto;
-    padding: 16px 12px calc(96px + env(safe-area-inset-bottom, 0px));
+
+    /* Bottom-Nav ist entfernt -> kein 96px Reserve-Padding */
+    padding: 16px 12px calc(16px + env(safe-area-inset-bottom, 0px));
   }
 
   .view {
@@ -851,7 +868,7 @@
     border: 1px solid var(--sidebar-section-border);
   }
 
-  /* OPTIMIZED: Compact the three marked header cards (Filter / Plus / Mein Tag) and Spots */
+  /* Compact key sections */
   #filter-section.sidebar-section,
   .sidebar-section.sidebar-section--grow,
   #plus-section.sidebar-section,
@@ -894,11 +911,7 @@
     padding-bottom: 14px;
   }
 
-  /* ================================
-     FIX: Header row (Filter / Spots)
-     - wieder kompakt (oben/unten)
-     - Action rechts bleibt „textig“
-     ================================ */
+  /* Header row */
   .sidebar-section-header {
     display: flex;
     align-items: center;
@@ -909,11 +922,9 @@
     min-width: 0;
     flex-wrap: nowrap;
 
-    /* NEW: verhindert „hohe“ Header-Zeilen */
     min-height: 40px;
   }
 
-  /* NEW: rechter Bereich darf nicht wachsen / umbrechen */
   .sidebar-section-header > :last-child {
     margin-left: auto;
     flex: 0 0 auto;
@@ -922,21 +933,20 @@
     white-space: nowrap;
   }
 
-  /* FIX: allow title to shrink/truncate instead of pushing action / increasing height */
+  /* Titles */
   .sidebar-section-title {
     margin: 0;
     font-size: 18px;
     font-weight: 700;
-    color: var(--text-strong);
+    color: var(--text-heading, var(--text-strong));
 
     flex: 1 1 auto;
     min-width: 0;
 
-    /* NEW: kompakter wie im alten Screenshot */
     line-height: 1.15;
   }
 
-  /* FIX (robust): Action im Header generell kompakt halten (egal ob Button/Link/Span) */
+  /* Header “action” compact */
   :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
   :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
     display: inline-flex;
@@ -963,21 +973,18 @@
     background-color: rgba(15, 23, 42, 0.07);
   }
 
-  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child,
-  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a) {
-    color: var(--text-color, #e5e7eb);
-  }
-
-  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child:active,
-  [data-theme="dark"] :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
+  [data-theme="dark"]
+    :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child:active,
+  [data-theme="dark"]
+    :where(#filter-section, .sidebar-section--grow) .sidebar-section-header > :last-child :where(button, a):active {
     background-color: rgba(148, 163, 184, 0.14);
   }
 
   /* (falls IDs existieren) zusätzliche Absicherung */
   #btn-toggle-filters,
   #btn-toggle-spots {
-    flex: 0 0 auto !important;
-    width: auto !important;
+    flex: 0 0 auto;
+    width: auto;
     max-width: 100%;
 
     min-height: 28px;
@@ -1001,7 +1008,7 @@
 
   [data-theme="dark"] #btn-toggle-filters,
   [data-theme="dark"] #btn-toggle-spots {
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
   }
 
   [data-theme="dark"] #btn-toggle-filters:active,
@@ -1009,7 +1016,7 @@
     background-color: rgba(148, 163, 184, 0.14);
   }
 
-  /* OPTIMIZED: Details/Summary headers should not show markers (Plus / Mein Tag) */
+  /* Details/Summary markers */
   summary.sidebar-section-header {
     list-style: none;
     cursor: pointer;
@@ -1019,6 +1026,12 @@
   }
   summary.sidebar-section-header::marker {
     content: "";
+  }
+
+  /* Ensure summary doesn't dim in some UAs */
+  details.sidebar-section > summary {
+    opacity: 1;
+    filter: none;
   }
 
   .sidebar-section-close {
@@ -1052,7 +1065,7 @@
     --shadow: var(--elevation-sm);
 
     background: var(--neutral-0);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     border: var(--stroke-2);
     box-shadow: var(--shadow);
   }
@@ -1094,28 +1107,27 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--text-strong);
+    color: var(--text-heading, var(--text-strong));
     margin-bottom: 4px;
   }
 
   .filter-group-helper {
     margin: 0 0 6px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .filter-group-helper--compact {
     margin-top: 4px;
     margin-bottom: 6px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   #btn-toggle-filters {
     margin-bottom: 0;
   }
 
-  /* OPTIMIZED: reduce the extra vertical space under "Filter" header */
   .sidebar-section-header + .filter-group-helper {
     margin-top: 0.45rem;
   }
@@ -1132,7 +1144,7 @@
   .filter-summary {
     margin: 0;
     font-size: 12px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .input,
@@ -1140,7 +1152,9 @@
   select.input {
     width: 100%;
     border-radius: var(--radius-pill, 999px);
-    border: 1px solid rgba(209, 213, 219, 0.9);
+
+    /* Token-basierte Borders statt “kühles Grau” */
+    border: 1px solid var(--border-1, rgba(209, 213, 219, 0.9));
 
     padding: 9px 13px;
     font-size: 14px;
@@ -1150,7 +1164,7 @@
     background-clip: padding-box;
 
     box-shadow: none;
-    color: var(--text-color, #111827);
+    color: var(--text-body, var(--text-color, #111827));
 
     transition:
       border-color var(--dur, var(--dur-fallback)) var(--ease-out, var(--ease-out-fallback)),
@@ -1164,7 +1178,7 @@
   }
 
   :where(.input, textarea.input, select.input):hover {
-    border-color: rgba(148, 163, 184, 0.55);
+    border-color: var(--border-2, rgba(148, 163, 184, 0.55));
   }
 
   .input:focus,
@@ -1195,8 +1209,7 @@
   }
 
   /* -----------------------------------------
-     Mood / Travel / Tag chips (Bild 3 Look)
-     - aktiv über aria-pressed="true" (A11y)
+     Mood / Travel / Tag chips
      ----------------------------------------- */
   .mood-row {
     display: flex;
@@ -1225,7 +1238,7 @@
     line-height: 1.1;
 
     background: var(--chip-bg, var(--chip-surface));
-    color: var(--text-color, #374151);
+    color: var(--text-body, var(--text-color, #374151));
 
     border: 1px solid var(--chip-border);
     box-shadow: var(--shadow);
@@ -1265,7 +1278,7 @@
     --shadow: var(--chip-shadow);
 
     background: var(--surface-3, rgba(15, 23, 42, 0.98));
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     border-color: var(--chip-border);
     box-shadow: var(--shadow);
   }
@@ -1295,13 +1308,13 @@
   .radius-max-label {
     font-size: 13px;
     font-weight: 650;
-    color: var(--text-strong);
+    color: var(--text-heading, var(--text-strong));
   }
 
   .radius-description {
     margin: 4px 0 2px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   /* Advanced filters */
@@ -1341,8 +1354,10 @@
     width: 18px;
     height: 18px;
     border-radius: 6px;
-    border: 1px solid rgba(209, 213, 219, 1);
+
+    border: 1px solid var(--border-1, rgba(209, 213, 219, 1));
     background: var(--neutral-0);
+
     box-shadow: none;
     cursor: pointer;
     position: relative;
@@ -1351,7 +1366,7 @@
 
   [data-theme="dark"] .filter-group--checkbox input[type="checkbox"] {
     background: var(--neutral-0);
-    border-color: rgba(148, 163, 184, 0.45);
+    border-color: var(--border-2, rgba(148, 163, 184, 0.45));
   }
 
   .filter-group--checkbox input[type="checkbox"]:checked {
@@ -1386,7 +1401,7 @@
   .plus-note {
     margin: 0;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   /* Daylog spacing */
@@ -1456,7 +1471,7 @@
 
   [data-theme="light"] .daylog-entry {
     background-color: var(--card-bg, #ffffff);
-    border: 1px solid rgba(148, 163, 184, 0.24);
+    border: 1px solid var(--border-1, rgba(148, 163, 184, 0.24));
     box-shadow: var(--elevation-xs);
   }
 
@@ -1545,7 +1560,7 @@
   }
 
   #spot-list {
-    margin-top: 6px; /* OPTIMIZED: was 8px */
+    margin-top: 6px;
     max-height: 320px;
     overflow-y: auto;
     padding-right: 4px;
@@ -1574,19 +1589,20 @@
     box-shadow: var(--elevation-xs);
     border: var(--border-soft);
     font-size: 14px;
+    color: var(--text-body, var(--text-color, #111827));
   }
 
   .empty-state-title {
     margin: 0 0 4px;
     font-size: 15px;
     font-weight: 700;
-    color: var(--text-strong);
+    color: var(--text-heading, var(--text-strong));
   }
 
   .empty-state-text {
     margin: 0 0 8px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .empty-state-actions {
@@ -1597,7 +1613,7 @@
 
   [data-theme="dark"] .empty-state {
     background: var(--card-bg);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     border: var(--border-soft);
   }
 
@@ -1620,7 +1636,7 @@
   .spot-card:focus-within {
     transform: translateY(-1px);
     box-shadow: var(--elevation-md);
-    border-color: rgba(148, 163, 184, 0.4);
+    border-color: var(--border-2, rgba(148, 163, 184, 0.4));
   }
 
   .spot-card-title {
@@ -1628,17 +1644,18 @@
     font-weight: 700;
     margin: 0 0 3px;
     letter-spacing: 0.01em;
+    color: var(--text-heading, var(--text-strong));
   }
 
   .spot-card-subtitle {
     font-size: 13px;
     margin: 0 0 4px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .spot-card-meta {
     font-size: 12px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .spot-list-empty {
@@ -1647,21 +1664,21 @@
     background: var(--card-bg, #ffffff);
     font-size: 14px;
     line-height: 1.5;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
     box-shadow: var(--elevation-xs);
     border: var(--border-soft);
   }
 
   [data-theme="dark"] .spot-list-empty {
     background: var(--card-bg);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
   }
 
   .spot-card-description {
     margin: 4px 0 6px;
     font-size: 13px;
     line-height: 1.4;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .spot-card-badges {
@@ -1677,7 +1694,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .spot-card-fav-icon {
@@ -1702,11 +1719,12 @@
     box-shadow: var(--elevation-lg);
     padding: 10px 12px 11px;
     border: var(--border-soft);
+    color: var(--text-body, var(--text-color, #111827));
   }
 
   [data-theme="dark"] .spot-details {
     background: var(--surface-2, rgba(15, 23, 42, 0.98));
-    color: var(--text-color, #fef3e7);
+    color: var(--text-body, var(--text-color, #fef3e7));
     box-shadow: var(--elevation-lg);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
@@ -1723,6 +1741,7 @@
     margin: 0 0 2px;
     font-size: 16px;
     font-weight: 700;
+    color: var(--text-heading, var(--text-strong));
   }
 
   .spot-details-meta {
@@ -1730,7 +1749,7 @@
     flex-wrap: wrap;
     gap: 6px;
     font-size: 12px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .spot-details-meta span {
@@ -1768,13 +1787,13 @@
     margin: 0 0 6px;
     font-size: 14px;
     font-style: italic;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .spot-details-address {
     margin: 0 0 6px;
     font-size: 13px;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .spot-details-routes {
@@ -1793,7 +1812,7 @@
     border-radius: var(--radius-pill, 999px);
 
     background: var(--neutral-0);
-    color: var(--text-strong, #1f2933);
+    color: var(--text-heading, var(--text-strong, #1f2933));
 
     border: var(--stroke-2);
     box-shadow: var(--shadow);
@@ -1812,7 +1831,7 @@
 
   [data-theme="dark"] .spot-details-route-link {
     background: var(--neutral-0);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     border: var(--stroke-2);
   }
 
@@ -1824,7 +1843,7 @@
     padding: 6px 12px;
 
     background: var(--neutral-0);
-    color: var(--text-strong, #374151);
+    color: var(--text-heading, var(--text-strong, #374151));
 
     cursor: pointer;
     font-size: 14px;
@@ -1849,7 +1868,7 @@
     --shadow: var(--elevation-sm);
 
     background: var(--neutral-0);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     border: var(--stroke-2);
     box-shadow: var(--shadow);
   }
@@ -1939,6 +1958,7 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
     padding: 16px 20px 20px;
+    color: var(--text-body, var(--text-color, #111827));
   }
 
   .filter-modal-header {
@@ -1952,6 +1972,7 @@
   #filter-modal-title {
     margin: 0;
     font-size: 20px;
+    color: var(--text-heading, var(--text-strong));
   }
 
   #filter-modal-close {
@@ -1961,7 +1982,7 @@
     padding: 6px 16px;
 
     background: var(--neutral-0);
-    color: var(--text-strong, #374151);
+    color: var(--text-heading, var(--text-strong, #374151));
 
     font-size: 13px;
     font-weight: 650;
@@ -1987,7 +2008,7 @@
     --shadow: var(--elevation-sm);
 
     background: var(--neutral-0);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     border: var(--stroke-2);
     box-shadow: var(--shadow);
   }
@@ -2016,7 +2037,6 @@
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  /* tighter section padding -> less “box height” without losing presence */
   .tilla-sidebar-section {
     padding-top: 8px;
     padding-bottom: 8px;
@@ -2024,7 +2044,7 @@
 
   .tilla-sidebar-card {
     display: flex;
-    align-items: center; /* true vertical centering of avatar vs text */
+    align-items: center;
     gap: var(--tilla-card-gap);
     padding: var(--tilla-card-pad-y) var(--tilla-card-pad-x);
     border-radius: 18px;
@@ -2041,7 +2061,6 @@
   }
 
   .tilla-sidebar-avatar {
-    /* fixed column -> bigger turtle, predictable text area */
     flex: 0 0 var(--tilla-avatar-size);
     width: var(--tilla-avatar-size);
 
@@ -2063,6 +2082,7 @@
   .tilla-sidebar-text {
     flex: 1 1 auto;
     min-width: 0;
+    color: var(--text-body, var(--text-color, #111827));
   }
 
   #tilla-sidebar-text {
@@ -2071,7 +2091,6 @@
     line-height: var(--tilla-text-line);
   }
 
-  /* Keep it stable on very small screens */
   @media (max-width: 420px) {
     :root {
       --tilla-avatar-size: 110px;
@@ -2090,18 +2109,21 @@
     padding: 18px 16px 22px;
     box-shadow: var(--elevation-sm);
     border: var(--border-soft);
+    color: var(--text-body, var(--text-color, #111827));
   }
 
   .page-about h2 {
     margin-top: 0;
     margin-bottom: 16px;
     font-size: 22px;
+    color: var(--text-heading, var(--text-strong));
   }
 
   .page-about h3 {
     margin-top: 18px;
     margin-bottom: 6px;
     font-size: 18px;
+    color: var(--text-heading, var(--text-strong));
   }
 
   .page-about p {
@@ -2112,74 +2134,10 @@
   }
 
   /* -----------------------------------------
-     BOTTOM NAV
+     BOTTOM NAV (removed)
      ----------------------------------------- */
   .bottom-nav {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: env(safe-area-inset-bottom, 0px);
-    z-index: 30;
-    height: 64px;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .bottom-nav-background {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 8px;
-    bottom: 8px;
-    border-radius: 999px;
-    background: var(--bottom-nav-backdrop);
-    opacity: 0.96;
-    backdrop-filter: blur(14px);
-  }
-
-  .bottom-nav-indicator {
-    display: none;
-  }
-
-  .bottom-nav-item {
-    pointer-events: auto;
-    border: none;
-    background: transparent;
-    border-radius: var(--radius-pill, 999px);
-    padding: 6px 14px;
-    margin: 0 4px;
-    min-width: 84px;
-
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-
-    font-size: 0.7rem;
-    font-weight: 650;
-    color: var(--bottom-nav-item-color);
-    cursor: pointer;
-
-    transition:
-      background-color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
-      color var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback)),
-      transform var(--dur-fast, var(--dur-fast-fallback)) var(--ease-out, var(--ease-out-fallback));
-  }
-
-  .bottom-nav-item--active {
-    background: var(--bottom-nav-item-active-bg);
-    color: var(--bottom-nav-item-active-color);
-  }
-
-  .bottom-nav-item:active {
-    transform: translateY(1px);
-  }
-
-  .bottom-nav-icon {
-    font-size: 1.1rem;
+    display: none !important;
   }
 
   /* -----------------------------------------
@@ -2188,7 +2146,7 @@
   .toast {
     position: fixed;
     left: 50%;
-    bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     transform: translateX(-50%);
     max-width: 90%;
     background: var(--toast-bg);
@@ -2232,10 +2190,10 @@
   }
 
   :where(.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large) > div {
-    background-color: #8fbf5a !important; /* helleres Olive/Sage */
+    background-color: #8fbf5a !important;
     border-radius: 999px !important;
-    border: 2px solid #e8f2d8 !important; /* sehr heller Rand */
-    color: #223015 !important;            /* dunkles Olive für Text */
+    border: 2px solid #e8f2d8 !important;
+    color: #223015 !important;
     font-weight: 650 !important;
     font-family: inherit !important;
 
@@ -2328,10 +2286,12 @@
 
   .popup strong {
     font-size: 14px;
+    color: var(--text-heading, var(--text-strong));
   }
 
   .popup small {
     font-size: 13px;
+    color: var(--text-muted, var(--text-soft));
   }
 
   .popup-actions {
@@ -2350,7 +2310,7 @@
     border-radius: var(--radius-pill, 999px);
 
     background: var(--neutral-0);
-    color: var(--text-strong, #1f2933);
+    color: var(--text-heading, var(--text-strong, #1f2933));
 
     border: var(--stroke-2);
     box-shadow: var(--shadow);
@@ -2369,7 +2329,7 @@
 
   [data-theme="dark"] .popup-link {
     background: var(--neutral-0);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     border: var(--stroke-2);
   }
 
@@ -2405,7 +2365,7 @@
     border: var(--border-soft);
     font-size: 14px;
     line-height: 1.5;
-    color: var(--text-soft);
+    color: var(--text-muted, var(--text-soft));
   }
 
   .fsm-onboarding-hint__text {
@@ -2414,7 +2374,7 @@
 
   [data-theme="dark"] .fsm-onboarding-hint {
     background: var(--card-bg);
-    color: var(--text-color, #e5e7eb);
+    color: var(--text-body, var(--text-color, #e5e7eb));
     box-shadow: var(--elevation-sm);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
@@ -2423,7 +2383,7 @@
     margin: 0 0 4px;
     font-size: 15px;
     font-weight: 700;
-    color: var(--text-strong);
+    color: var(--text-heading, var(--text-strong));
   }
 
   .fsm-onboarding-hint__list {
@@ -2442,7 +2402,6 @@
     margin-bottom: 0;
   }
 
-  /* Close button: restore (X) + allow reappear on reload (no persistence) */
   .fsm-onboarding-hint__close,
   .fsm-onboarding-hint-close {
     position: absolute;
@@ -2516,6 +2475,11 @@
       display: block;
     }
   }
+
+  /* "Nur Karte" Toggle (falls vorhanden) ausblenden */
+  #btn-toggle-view {
+    display: none !important;
+  }
 }
 
 /* =========================================
@@ -2566,7 +2530,6 @@
 @layer overrides {
   /* Hover only on devices that actually hover */
   @media (hover: hover) and (pointer: fine) {
-    /* Primary CTA (.btn) uses system CTA tokens */
     .btn:hover {
       --shadow: var(--elevation-md);
       background-color: var(--cta-bg-hover, var(--accent-solid-dark, var(--accent-dark)));
@@ -2582,7 +2545,6 @@
       }
     }
 
-    /* Tilla button hover must stay shell-colored */
     .btn-play-idea:hover {
       --shadow: var(--elevation-md);
       background-color: var(--tilla-shell-hover);
@@ -2602,7 +2564,7 @@
     .btn-ghost:hover {
       background-color: rgba(15, 23, 42, 0.05);
       border-color: rgba(148, 163, 184, 0.34);
-      color: var(--text-strong, #111827);
+      color: var(--text-heading, var(--text-strong, #111827));
     }
 
     [data-theme="dark"] .btn-ghost:hover {
@@ -2684,195 +2646,64 @@
   .tilla-sidebar-avatar img {
     animation: tilla-bob 3.5s ease-in-out infinite !important;
   }
-}
 
-/* =========================================================
-   SAFETY + ALIGNMENT OVERRIDES (UNLAYERED)
-   - gewinnt gegen unlayered theme/button defaults
-   - sorgt für echte vertikale Zentrierung (oben/unten gleich)
-   - behält deine Kompaktheit (Padding/Font) bei
-   ========================================================= */
+  /* Compact header rows (Filter/Spots/Plus/Daylog/Tilla) – stable vertical centering */
+  #filter-section > .sidebar-section-header,
+  .sidebar-section--grow > .sidebar-section-header,
+  #plus-section > summary.sidebar-section-header,
+  #daylog-section > summary.sidebar-section-header,
+  #tilla-section .sidebar-section-header {
+    height: var(--section-header-height);
+    min-height: var(--section-header-height);
+    padding-top: 0;
+    padding-bottom: 0;
+    display: flex;
+    align-items: center;
+  }
 
-/* Action rechts: niemals umbrechen / nicht wachsen */
-#filter-section .sidebar-section-header > :last-child,
-.sidebar-section--grow .sidebar-section-header > :last-child,
-#plus-section .sidebar-section-header > :last-child,
-#daylog-section .sidebar-section-header > :last-child {
-  width: auto !important;
-  max-width: 100% !important;
-  white-space: nowrap !important;
-}
-
-/* Kompaktes Card-Padding (wie vorher) */
-#filter-section.sidebar-section,
-.sidebar-section.sidebar-section--grow,
-#plus-section.sidebar-section,
-#daylog-section.sidebar-section {
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-}
-
-/* Falls Plus/Mein Tag (details[open]) unten wieder dicker werden */
-#plus-section.sidebar-section[open],
-#daylog-section.sidebar-section[open] {
-  padding-bottom: 6px !important;
-}
-
-/* Header-Zeile: feste Höhe + echtes Centering */
-#filter-section > .sidebar-section-header,
-.sidebar-section--grow > .sidebar-section-header,
-#plus-section > summary.sidebar-section-header,
-#daylog-section > summary.sidebar-section-header {
-  height: 32px !important;
-  min-height: 32px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Titel: mittig im Header (nicht baseline), kompakt
-   + NEW: #tilla-title auf gleiche Größe wie Filter */
-#filter-title,
-#spots-title,
-#plus-section-title,
-#daylog-section-title,
-#tilla-title {
-  margin: 0 !important;
-  font-size: 16px !important;
-  line-height: 1.15 !important;
-
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Optional: auf sehr kleinen Screens noch etwas kleiner */
-@media (max-width: 480px) {
   #filter-title,
   #spots-title,
   #plus-section-title,
   #daylog-section-title,
   #tilla-title {
-    font-size: 15px !important;
+    margin: 0;
+    font-size: var(--section-title-size);
+    line-height: 1.15;
+
+    height: 100%;
+    display: flex;
+    align-items: center;
+    color: var(--text-heading, var(--text-strong));
   }
-}
 
-/* Buttons rechts: ebenfalls sauber vertikal zentriert */
-#filter-section .sidebar-section-header > button,
-.sidebar-section--grow .sidebar-section-header > button,
-#plus-section summary.sidebar-section-header > button,
-#daylog-section summary.sidebar-section-header > button {
-  height: 100% !important;
-  min-height: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
+  @media (max-width: 480px) {
+    #filter-title,
+    #spots-title,
+    #plus-section-title,
+    #daylog-section-title,
+    #tilla-title {
+      font-size: var(--section-title-size-sm);
+    }
+  }
 
-/* Button-Text: kein “vertikales Wandern” */
-#filter-section .sidebar-section-header > button *,
-.sidebar-section--grow .sidebar-section-header > button *,
-#plus-section summary.sidebar-section-header > button *,
-#daylog-section summary.sidebar-section-header > button * {
-  line-height: 1 !important;
-}
+  /* Focus: replace UA outline with app ring for summary */
+  summary.sidebar-section-header:focus,
+  summary.sidebar-section-header:focus-visible {
+    outline: none !important;
+  }
 
-/* =========================================================
-   ADDED FIXES (UNLAYERED)
-   1) "Family Spots Plus" Action-Text ("Anzeigen") nicht ausgegraut
-   2) Robustheit: keine opacity/filter-Fallen auf Plus/Daylog summary
-   3) Optional: Bottom-Nav endgültig entfernen + Padding zurückholen
-   4) Optional: "Nur Karte" Toggle ausblenden (wenn vorhanden)
-   ========================================================= */
+  summary.sidebar-section-header:focus-visible {
+    border-radius: 18px;
+    box-shadow: var(--focus-ring, var(--focus-ring-default)) !important;
+  }
 
-/* 1) Plus/Daylog: "Anzeigen" immer wie starker Text */
-#plus-section #btn-toggle-plus.btn-ghost,
-#daylog-section #btn-toggle-daylog.btn-ghost,
-#plus-section summary.sidebar-section-header > button.btn-ghost,
-#daylog-section summary.sidebar-section-header > button.btn-ghost {
-  color: var(--text-strong) !important;
-  opacity: 1 !important;
-}
-
-#plus-section #btn-toggle-plus.btn-ghost *,
-#daylog-section #btn-toggle-daylog.btn-ghost *,
-#plus-section summary.sidebar-section-header > button.btn-ghost *,
-#daylog-section summary.sidebar-section-header > button.btn-ghost * {
-  color: inherit !important;
-  opacity: 1 !important;
-}
-
-/* 2) Falls irgendwo opacity/filter auf summary/details hängt */
-#plus-section summary,
-#daylog-section summary {
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* 3) Bottom Nav entfernen + Platz zurückholen (wenn du Bottom-Nav nicht mehr nutzt) */
-:root {
-  --bottom-nav-height: 0px;
-  --bottom-nav-safearea: 0px;
-}
-
-.bottom-nav {
-  display: none !important;
-}
-
-/* App padding-bottom zurückholen (components.css reserviert standardmäßig 96px) */
-.app-main {
-  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
-}
-
-/* 4) "Nur Karte" im Spots-Header ausblenden (Toggle bleibt im DOM) */
-#btn-toggle-view {
-  display: none !important;
-}
-
-/* =========================================================
-   HOTFIXES (unlayered)
-   1) Summary focus outline: use app focus ring (no browser rectangle)
-   2) Normalize "Anzeigen" buttons for Plus/Mein Tag in Safari iOS
-   ========================================================= */
-
-/* Some browsers dim <summary> content in closed <details>; harden it */
-[data-theme="dark"] #plus-section summary.sidebar-section-header,
-[data-theme="dark"] #daylog-section summary.sidebar-section-header {
-  color: inherit !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-/* Focus: replace UA outline with app ring */
-summary.sidebar-section-header:focus,
-summary.sidebar-section-header:focus-visible {
-  outline: none !important;
-}
-
-summary.sidebar-section-header:focus-visible {
-  border-radius: 18px;
-  box-shadow: var(--focus-ring, var(--focus-ring-default)) !important;
-}
-
-/* iOS/Safari: ensure "Anzeigen" never becomes a filled native button */
-#btn-toggle-plus,
-#btn-toggle-daylog {
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  box-shadow: none !important;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-/* =========================================================
-   TITLE COLOR UNIFICATION (unlayered)
-   - Plus / Mein Tag / alle Sidebar-Section-Titles immer gleich
-   - robust: fallback, falls --text-strong nicht gesetzt ist
-   ========================================================= */
-
-#plus-section-title,
-#daylog-section-title,
-.sidebar-section-title {
-  color: var(--text-strong, var(--text-color, #111827)) !important;
-  opacity: 1 !important;
+  /* iOS/Safari: ensure "Anzeigen" never becomes a filled native button */
+  #btn-toggle-plus,
+  #btn-toggle-daylog {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+  }
 }
