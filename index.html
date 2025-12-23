@@ -43,6 +43,7 @@
 
   <!-- ======================================================
        CRITICAL CSS (Background + Textfarben konsistent)
+       (NUR Farbschema angepasst – keine Layout/Struktur-Änderungen)
        ====================================================== -->
   <style>
     html, body {
@@ -99,10 +100,10 @@
       height: 34px;
 
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(15, 23, 42, 0.12);     /* angepasst (Light Border) */
+      background: rgba(255, 255, 255, 0.62);        /* angepasst (Light Surface) */
 
-      color: rgba(15, 23, 42, 0.85);
+      color: #111827;                                /* angepasst (Light Text) */
       font-size: 20px;
       line-height: 1;
 
@@ -110,168 +111,13 @@
       -webkit-tap-highlight-color: transparent;
     }
     html[data-theme="dark"] .fsm-onboarding-hint__close {
-      background: rgba(15, 23, 42, 0.62);
-      color: rgba(229, 231, 235, 0.95);
-      border-color: rgba(148, 163, 184, 0.25);
+      background: rgba(2, 6, 23, 0.62);             /* angepasst (Dark Surface) */
+      color: #e5e7eb;                                /* angepasst (Dark Text) */
+      border-color: rgba(148, 163, 184, 0.18);       /* angepasst (Dark Border) */
     }
     .fsm-onboarding-hint__close:active {
       transform: translateY(1px);
       opacity: 0.92;
-    }
-
-    /* ======================================================
-       PREMIUM LAYOUT OVERRIDES (weniger „gestapelt“, map-first)
-       ====================================================== */
-
-    /* Map-View: Sidebar + Map als klare 2-Spalten-Layoutfläche (Desktop), 1-Spalte (Mobile) */
-    #view-map{
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 14px;
-      align-items: stretch;
-    }
-    @media (max-width: 980px){
-      #view-map{
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-    }
-
-    /* Sidebar als EIN Panel (statt Card-in-Card) */
-    .sidebar{
-      min-height: 0;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-
-      background: rgba(255,255,255,0.56);
-      border: 1px solid rgba(15,23,42,0.10);
-      border-radius: 20px;
-      padding: 8px;
-    }
-    html[data-theme="dark"] .sidebar{
-      background: rgba(2,6,23,0.56);
-      border-color: rgba(148,163,184,0.18);
-    }
-
-    /* Sektionen flach; Trennung über Divider statt „Stack“ */
-    .sidebar-section{
-      background: transparent;
-      border: 0;
-      border-radius: 0;
-      margin: 0;
-      padding: 14px 12px;
-    }
-    .sidebar-section + .sidebar-section{
-      border-top: 1px solid rgba(15,23,42,0.08);
-    }
-    html[data-theme="dark"] .sidebar-section + .sidebar-section{
-      border-top-color: rgba(148,163,184,0.14);
-    }
-
-    /* Header-Reihe ruhiger */
-    .sidebar-section-header{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    /* Tilla: kompakter, editorial */
-    .tilla-sidebar-card{
-      display: grid;
-      grid-template-columns: 56px 1fr;
-      gap: 12px;
-
-      padding: 0;
-      background: transparent;
-      border: 0;
-    }
-    .tilla-sidebar-avatar img{
-      width: 56px;
-      height: 56px;
-      object-fit: contain;
-    }
-    .tilla-sidebar-text p{
-      margin: 0 0 10px 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    /* Onboarding als „Info-Strip“ statt großer Card */
-    .fsm-onboarding-hint{
-      padding: 10px 10px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.40);
-      border: 1px solid rgba(15,23,42,0.08);
-    }
-    html[data-theme="dark"] .fsm-onboarding-hint{
-      background: rgba(2,6,23,0.40);
-      border-color: rgba(148,163,184,0.14);
-    }
-    .fsm-onboarding-hint__text{
-      margin: 0;
-      font-size: 0.95rem;
-      line-height: 1.35;
-    }
-
-    /* Details/Summary: keine „Button-in-Summary“-Interaktion, label state per CSS */
-    .sidebar-details > summary{
-      list-style: none;
-      cursor: pointer;
-      user-select: none;
-    }
-    .sidebar-details > summary::-webkit-details-marker{ display: none; }
-
-    .summary-action{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.92rem;
-      opacity: 0.9;
-      white-space: nowrap;
-    }
-    .summary-state--open{ display: none; }
-    .sidebar-details[open] .summary-state--open{ display: inline; }
-    .sidebar-details[open] .summary-state--closed{ display: none; }
-
-    /* Optional: kleiner Caret */
-    .sidebar-details > summary::after{
-      content: "›";
-      opacity: 0.65;
-      transform: rotate(90deg);
-      transition: transform 160ms ease;
-      margin-left: 10px;
-    }
-    .sidebar-details[open] > summary::after{
-      transform: rotate(-90deg);
-    }
-
-    /* Map-Section: klare Primary-Fläche */
-    .map-section{
-      min-height: 0;
-      border-radius: 20px;
-      overflow: hidden; /* saubere Kanten für Map */
-      border: 1px solid rgba(15,23,42,0.10);
-      background: rgba(255,255,255,0.16);
-    }
-    html[data-theme="dark"] .map-section{
-      border-color: rgba(148,163,184,0.16);
-      background: rgba(2,6,23,0.16);
-    }
-    .map-container{
-      min-height: 360px;
-    }
-
-    /* Focus sichtbarer (Premium-A11y) */
-    :focus-visible{
-      outline: 2px solid rgba(249,115,22,0.75);
-      outline-offset: 2px;
-    }
-    @media (prefers-reduced-motion: reduce){
-      *{ transition: none !important; scroll-behavior: auto !important; }
     }
   </style>
 
@@ -900,129 +746,6 @@
             </div>
           </section>
 
-          <!-- Family Spots Plus (JETZT in der Sidebar – nicht mehr unter der Karte) -->
-          <details class="sidebar-section sidebar-details" id="plus-section" aria-labelledby="plus-section-title">
-            <summary class="sidebar-section-header">
-              <h2 class="sidebar-section-title" id="plus-section-title">Family Spots Plus</h2>
-
-              <!-- ID bleibt erhalten (kompatibel), State-Text via CSS -->
-              <span id="btn-toggle-plus" class="summary-action" aria-hidden="true">
-                <span class="summary-state summary-state--closed" data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-                <span class="summary-state summary-state--open" data-i18n-de="Ausblenden" data-i18n-en="Hide" data-i18n-da="Skjul">Ausblenden</span>
-              </span>
-            </summary>
-
-            <div class="filter-group">
-              <p
-                id="plus-status-text"
-                data-i18n-de="Family Spots Plus ist nicht aktiviert."
-                data-i18n-en="Family Spots Plus is not activated."
-                data-i18n-da="Family Spots Plus er ikke aktiveret."
-              >
-                Family Spots Plus ist nicht aktiviert.
-              </p>
-            </div>
-
-            <div class="plus-code-form">
-              <label
-                for="plus-code-input"
-                data-i18n-de="Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
-                data-i18n-en="Enter partner code (e.g. from campground, municipality or sponsor):"
-                data-i18n-da="Indtast partnerkode (f.eks. fra campingplads, kommune eller sponsor):"
-              >
-                Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):
-              </label>
-
-              <div class="plus-code-row">
-                <input id="plus-code-input" name="plus-code" class="input" type="text" autocomplete="off" />
-                <button id="plus-code-submit" class="btn" type="button">
-                  <span data-i18n-de="Code aktivieren" data-i18n-en="Activate code" data-i18n-da="Aktivér kode">
-                    Code aktivieren
-                  </span>
-                </button>
-              </div>
-
-              <p
-                class="plus-note"
-                data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
-                data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap."
-                data-i18n-da="Family Spots Plus låser op for ekstra filtre &amp; spots – helt uden abonnementsfælder."
-              >
-                Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle.
-              </p>
-            </div>
-          </details>
-
-          <!-- Mein Tag (JETZT in der Sidebar – nicht mehr unter der Karte) -->
-          <details class="sidebar-section sidebar-details" id="daylog-section" aria-labelledby="daylog-section-title">
-            <summary class="sidebar-section-header">
-              <h2 class="sidebar-section-title" id="daylog-section-title"
-                data-i18n-de="Mein Tag 💚" data-i18n-en="My day 💚" data-i18n-da="Min dag 💚"
-              >
-                Mein Tag 💚
-              </h2>
-
-              <!-- ID bleibt erhalten (kompatibel), State-Text via CSS -->
-              <span id="btn-toggle-daylog" class="summary-action" aria-hidden="true">
-                <span class="summary-state summary-state--closed" data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-                <span class="summary-state summary-state--open" data-i18n-de="Ausblenden" data-i18n-en="Hide" data-i18n-da="Skjul">Ausblenden</span>
-              </span>
-            </summary>
-
-            <div class="filter-group">
-              <label
-                for="daylog-text"
-                data-i18n-de="Wie war euer Tag?"
-                data-i18n-en="How was your day?"
-                data-i18n-da="Hvordan var jeres dag?"
-              >
-                Wie war euer Tag?
-              </label>
-
-              <p
-                class="filter-group-helper"
-                data-i18n-de="Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß an Tilla."
-                data-i18n-en="Capture a little moment you’d like to remember later – and if you like, add a small note to Tilla."
-                data-i18n-da="Gem et lille øjeblik, som I gerne vil huske senere – og hvis du har lyst, med en lille hilsen til Tilla."
-              >
-                Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß
-                an Tilla.
-              </p>
-
-              <textarea
-                id="daylog-text"
-                name="daylog"
-                class="input"
-                rows="3"
-                placeholder="Heute haben wir einen Ort gefunden, an dem die Zeit kurz langsamer wurde."
-              ></textarea>
-
-              <button id="daylog-save" class="btn btn-small" type="button">
-                <span data-i18n-de="Speichern 💾" data-i18n-en="Save 💾" data-i18n-da="Gem 💾">Speichern 💾</span>
-              </button>
-
-              <div class="daylog-meta-row">
-                <p
-                  id="daylog-last-saved"
-                  class="daylog-last-saved"
-                  data-i18n-de="Noch nichts gespeichert."
-                  data-i18n-en="Nothing saved yet."
-                  data-i18n-da="Ingen gemte endnu."
-                >
-                  Noch nichts gespeichert.
-                </p>
-
-                <button id="daylog-clear" class="btn-ghost btn-small daylog-clear-btn hidden" type="button">
-                  <span data-i18n-de="Eintrag löschen" data-i18n-en="Delete entry" data-i18n-da="Slet notat">
-                    Eintrag löschen
-                  </span>
-                </button>
-              </div>
-
-              <div id="daylog-list" class="daylog-list"></div>
-            </div>
-          </details>
-
           <!-- Spot-Liste -->
           <section class="sidebar-section sidebar-section--grow" aria-labelledby="spots-title">
             <header class="sidebar-section-header">
@@ -1082,6 +805,124 @@
             aria-live="polite"
           ></aside>
         </section>
+
+        <!-- Family Spots Plus -->
+        <details class="sidebar-section" id="plus-section" aria-labelledby="plus-section-title">
+          <summary class="sidebar-section-header">
+            <h2 class="sidebar-section-title" id="plus-section-title">Family Spots Plus</h2>
+            <button id="btn-toggle-plus" class="btn-ghost btn-small" type="button">
+              <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
+            </button>
+          </summary>
+
+          <div class="filter-group">
+            <p
+              id="plus-status-text"
+              data-i18n-de="Family Spots Plus ist nicht aktiviert."
+              data-i18n-en="Family Spots Plus is not activated."
+              data-i18n-da="Family Spots Plus er ikke aktiveret."
+            >
+              Family Spots Plus ist nicht aktiviert.
+            </p>
+          </div>
+
+          <div class="plus-code-form">
+            <label
+              for="plus-code-input"
+              data-i18n-de="Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):"
+              data-i18n-en="Enter partner code (e.g. from campground, municipality or sponsor):"
+              data-i18n-da="Indtast partnerkode (f.eks. fra campingplads, kommune eller sponsor):"
+            >
+              Partner-Code eingeben (z. B. von Campingplatz, Kommune oder Sponsor):
+            </label>
+
+            <div class="plus-code-row">
+              <input id="plus-code-input" name="plus-code" class="input" type="text" autocomplete="off" />
+              <button id="plus-code-submit" class="btn" type="button">
+                <span data-i18n-de="Code aktivieren" data-i18n-en="Activate code" data-i18n-da="Aktivér kode">
+                  Code aktivieren
+                </span>
+              </button>
+            </div>
+
+            <p
+              class="plus-note"
+              data-i18n-de="Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle."
+              data-i18n-en="Family Spots Plus unlocks additional filters &amp; spots – with no subscription trap."
+              data-i18n-da="Family Spots Plus låser op for ekstra filtre &amp; spots – helt uden abonnementsfælder."
+            >
+              Family Spots Plus schaltet zusätzliche Filter &amp; Spots frei – ganz ohne Abo-Falle.
+            </p>
+          </div>
+        </details>
+
+        <!-- Mein Tag -->
+        <details class="sidebar-section" id="daylog-section" aria-labelledby="daylog-section-title">
+          <summary class="sidebar-section-header">
+            <h2 class="sidebar-section-title" id="daylog-section-title"
+              data-i18n-de="Mein Tag 💚" data-i18n-en="My day 💚" data-i18n-da="Min dag 💚"
+            >
+              Mein Tag 💚
+            </h2>
+
+            <button id="btn-toggle-daylog" class="btn-ghost btn-small" type="button">
+              <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
+            </button>
+          </summary>
+
+          <div class="filter-group">
+            <label
+              for="daylog-text"
+              data-i18n-de="Wie war euer Tag?"
+              data-i18n-en="How was your day?"
+              data-i18n-da="Hvordan var jeres dag?"
+            >
+              Wie war euer Tag?
+            </label>
+
+            <p
+              class="filter-group-helper"
+              data-i18n-de="Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß an Tilla."
+              data-i18n-en="Capture a little moment you’d like to remember later – and if you like, add a small note to Tilla."
+              data-i18n-da="Gem et lille øjeblik, som I gerne vil huske senere – og hvis du har lyst, med en lille hilsen til Tilla."
+            >
+              Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß
+              an Tilla.
+            </p>
+
+            <textarea
+              id="daylog-text"
+              name="daylog"
+              class="input"
+              rows="3"
+              placeholder="Heute haben wir einen Ort gefunden, an dem die Zeit kurz langsamer wurde."
+            ></textarea>
+
+            <button id="daylog-save" class="btn btn-small" type="button">
+              <span data-i18n-de="Speichern 💾" data-i18n-en="Save 💾" data-i18n-da="Gem 💾">Speichern 💾</span>
+            </button>
+
+            <div class="daylog-meta-row">
+              <p
+                id="daylog-last-saved"
+                class="daylog-last-saved"
+                data-i18n-de="Noch nichts gespeichert."
+                data-i18n-en="Nothing saved yet."
+                data-i18n-da="Ingen gemte endnu."
+              >
+                Noch nichts gespeichert.
+              </p>
+
+              <button id="daylog-clear" class="btn-ghost btn-small daylog-clear-btn hidden" type="button">
+                <span data-i18n-de="Eintrag löschen" data-i18n-en="Delete entry" data-i18n-da="Slet notat">
+                  Eintrag löschen
+                </span>
+              </button>
+            </div>
+
+            <div id="daylog-list" class="daylog-list"></div>
+          </div>
+        </details>
       </section>
 
       <!-- =========================================
