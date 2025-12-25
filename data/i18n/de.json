@@ -1,44 +1,149 @@
 {
-  "meta_title": "Family Spots Map – Die schönste Karte für Familien-Abenteuer",
-  "meta_description": "Handverlesene Orte für Familien: Spielplätze, Tiere, Wasser & Wege, die Erinnerungen schenken.",
-  "error_data_load": "Ups – das hat gerade nicht geklappt. Bitte versuch es gleich noch einmal.",
-  "btn_help_aria": "Hilfe und Infos anzeigen",
-  "label_language_switcher": "Sprache wechseln",
-  "btn_theme_toggle_aria": "Designmodus wechseln",
-  "btn_locate_aria": "Standort zentrieren",
-  "alt_tilla_image": "Tilla die Schildkröte – eure Familienbegleiterin",
-  "header_tagline": "Heute wird aus Alltag ein kleines Familienabenteuer – ganz nah.",
-  "btn_show_filters": "Filter aufklappen",
-  "btn_hide_filters": "Filter zuklappen",
-  "btn_only_map": "Nur Karte",
-  "btn_show_list": "Liste zeigen",
-  "toast_location_ok": "Standort gesetzt – euer nächster Moment wartet. 🌍",
-  "toast_location_error": "Standort gerade nicht verfügbar. Vielleicht offline – ihr findet euren Weg.",
-  "toast_location_unavailable_radius_disabled": "Standort nicht verfügbar – Radiusfilter ist deaktiviert.",
-  "toast_fav_added": "Zu den Favoriten – ein Ort, der bleiben darf. 💚",
-  "toast_fav_removed": "Aus Favoriten entfernt – neue Schätze warten. 🌿",
-  "filter_category_all": "Alle Kategorien",
-  "plus_code_empty": "Bitte zuerst euren Partner-Code eingeben.",
-  "plus_code_unknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
-  "plus_code_activated": "Family Spots Plus ist aktiv – viel Freude auf euren Touren!",
-  "plus_code_failed": "Code gerade nicht prüfbar. Bitte später noch einmal versuchen.",
-  "filter_radius_max_label": "Alle Spots",
-  "filter_radius_description_step0": "Mini-Abenteuer – ganz nah, perfekt für eine kleine Pause.",
-  "filter_radius_description_step1": "Kurz raus – schnell da, schnell wieder zurück.",
-  "filter_radius_description_step2": "Kleine Tour – ein halber Tag voller Entdeckungen.",
-  "filter_radius_description_step3": "Großes Ziel – ein ganzer Tag für magische Momente.",
-  "filter_radius_description_all": "Alle Spots – ohne Radius. Die Karte gehört euch.",
-  "turtle_intro_1": "Ich bin Tilla. Ich zeige euch Orte für Nähe, Erinnerungen und kleine Abenteuer. Gehen wir los? 🐢",
-  "turtle_intro_2": "Heute finde ich keinen passenden Spot. Vielleicht ein Spaziergang – oder Radius etwas aufdrehen. 🐢",
-  "turtle_after_daylog_save": "Euer Tag ist gespeichert – klein erlebt, groß erinnert. 💚",
-  "turtle_after_fav_added": "Dieser Ort hat jetzt einen Stern auf eurer Karte. ⭐",
-  "turtle_after_fav_removed": "Alles gut – nicht jeder Ort bleibt. Wir finden neue. 🐢",
-  "turtle_trip_mode": "Ihr seid unterwegs – ich halte Ausschau nach Herzmomenten. 🚐",
-  "turtle_everyday_mode": "Alltag darf leuchten. Lass uns Wunder ganz nah finden. 🌿",
-  "turtle_plus_activated": "Plus ist aktiv – mehr Wege, mehr Orte, mehr Abenteuer. ✨",
-  "daylog_saved": "Gespeichert 💾 – später könnt ihr zurücklächeln.",
-  "nav_map": "Karte",
-  "nav_about": "Über Family Spots Map",
-  "route_apple": "In Apple Karten öffnen",
-  "route_google": "In Google Maps öffnen"
+  "__meta": {
+    "schemaVersion": 1,
+    "locale": "de-DE",
+    "source": "family-spots",
+    "updatedAt": "2025-12-25"
+  },
+  "ui": {
+    "meta": {
+      "title": "Family Spots Map – Die schönste Karte für Familien-Abenteuer",
+      "description": "Handverlesene Orte für Familien: Spielplätze, Tiere, Wasser & Wege mit Erinnerungswert."
+    },
+    "errors": {
+      "dataLoad": "Ups – das hat gerade nicht geklappt. Bitte versuch es gleich noch einmal."
+    },
+    "aria": {
+      "help": "Hilfe und Infos anzeigen",
+      "themeToggle": "Designmodus wechseln",
+      "locate": "Standort zentrieren"
+    },
+    "labels": {
+      "languageSwitcher": "Sprache wechseln"
+    },
+    "alt": {
+      "tillaImage": "Tilla die Schildkröte – eure Familienbegleiterin"
+    },
+    "header": {
+      "tagline": "Heute wird aus Alltag ein kleines Familienabenteuer – ganz nah."
+    },
+    "buttons": {
+      "showFilters": "Filter aufklappen",
+      "hideFilters": "Filter zuklappen",
+      "onlyMap": "Nur Karte",
+      "showList": "Liste zeigen"
+    },
+    "toast": {
+      "locationOk": "Standort gesetzt – euer nächster Moment wartet. 🌍",
+      "locationError": "Standort gerade nicht verfügbar. Vielleicht offline – ihr findet euren Weg.",
+      "locationUnavailableRadiusDisabled": "Standort nicht verfügbar – Radiusfilter ist deaktiviert.",
+      "favAdded": "Zu den Favoriten – ein Ort, der bleiben darf. 💚",
+      "favRemoved": "Aus Favoriten entfernt – neue Schätze warten. 🌿"
+    },
+    "filters": {
+      "categoryAll": "Alle Kategorien",
+      "radius": {
+        "maxLabel": "Alle Spots",
+        "description": {
+          "step0": "Mini-Abenteuer – ganz nah, perfekt für eine kleine Pause.",
+          "step1": "Kurz raus – schnell da, schnell wieder zurück.",
+          "step2": "Kleine Tour – ein halber Tag voller Entdeckungen.",
+          "step3": "Großes Ziel – ein ganzer Tag für magische Momente.",
+          "all": "Alle Spots – ohne Radius. Die Karte gehört euch."
+        }
+      }
+    },
+    "plus": {
+      "codeEmpty": "Bitte zuerst euren Partner-Code eingeben.",
+      "codeUnknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
+      "activated": "Family Spots Plus ist aktiv – viel Freude auf euren Touren!",
+      "failed": "Code gerade nicht prüfbar. Bitte später noch einmal versuchen."
+    },
+    "tilla": {
+      "intro1": "Ich bin Tilla. Ich zeige euch Orte für Nähe, Erinnerungen und kleine Abenteuer. Gehen wir los? 🐢",
+      "intro2": "Heute finde ich keinen passenden Spot. Vielleicht ein Spaziergang – oder Radius etwas aufdrehen. 🐢",
+      "afterDaylogSave": "Euer Tag ist gespeichert – klein erlebt, groß erinnert. 💚",
+      "afterFavAdded": "Dieser Ort hat jetzt einen Stern auf eurer Karte. ⭐",
+      "afterFavRemoved": "Alles gut – nicht jeder Ort bleibt. Wir finden neue. 🐢",
+      "tripMode": "Ihr seid unterwegs – ich halte Ausschau nach Herzmomenten. 🚐",
+      "everydayMode": "Alltag darf leuchten. Lass uns Wunder ganz nah finden. 🌿",
+      "plusActivated": "Plus ist aktiv – mehr Wege, mehr Orte, mehr Abenteuer. ✨"
+    },
+    "daylog": {
+      "saved": "Gespeichert 💾 – später könnt ihr zurücklächeln."
+    },
+    "nav": {
+      "map": "Karte",
+      "about": "Über Family Spots Map"
+    },
+    "route": {
+      "apple": "In Apple Karten öffnen",
+      "google": "In Google Maps öffnen"
+    }
+  },
+  "domain": {
+    "categories": {
+      "spielplatz": "Spielplatz",
+      "abenteuerspielplatz": "Abenteuerspielplatz",
+      "indoor_spielplatz": "Indoor-Spielplatz",
+      "waldspielplatz": "Waldspielplatz",
+      "wasserspielplatz": "Wasserspielplatz",
+      "barrierefreier_spielplatz": "Barrierefreier Spielplatz",
+      "bewegungspark": "Bewegungspark",
+      "multifunktionsfeld": "Multifunktionsfeld",
+      "bolzplatz": "Bolzplatz",
+      "pumptrack": "Pumptrack",
+      "skatepark": "Skatepark",
+      "verkehrsgarten": "Verkehrsgarten",
+      "toddler_barfuss_motorik": "Kleinkind / Barfuß & Motorik",
+      "zoo": "Zoo",
+      "tierpark": "Tierpark",
+      "wildpark": "Wildpark & Safari",
+      "bauernhof": "Bauernhof",
+      "naturerlebnispfad": "Naturerlebnispfad",
+      "walderlebnisroute": "Walderlebnisroute",
+      "freilichtmuseum": "Freilichtmuseum",
+      "schwimmbad": "Schwimmbad",
+      "badesee": "Badesee",
+      "strand": "Familienstrand",
+      "eisbahn": "Eisbahn",
+      "rodelhuegel": "Rodelhügel",
+      "freizeitpark": "Freizeitpark",
+      "trampolinpark": "Trampolinpark",
+      "kletterhalle": "Kletterhalle",
+      "kletteranlage_outdoor": "Kletteranlage (Outdoor)",
+      "kletterwald_hochseilgarten": "Kletterwald / Hochseilgarten",
+      "boulderpark": "Boulderpark",
+      "minigolf": "Minigolf",
+      "hoehle": "Höhle / Felsausflug",
+      "felsenwanderung": "Felsenwanderung",
+      "aussichtspunkt": "Aussichtspunkt",
+      "baumhaus": "Baumhaus / Aussicht",
+      "labyrinth": "Labyrinth",
+      "klangpfad": "Klangpfad in der Natur",
+      "ueberdachter_spielplatz": "Überdachter Spielplatz",
+      "dirtbike_track": "Dirtbike-Track",
+      "streetball_platz": "Streetball / Basketball",
+      "waldbaden_ort": "Waldbaden / Ruheort",
+      "natur_aussichtspunkt": "Natürlicher Aussichtspunkt",
+      "wanderweg_kinderwagen": "Weg (kinderwagentauglich)",
+      "radweg_family": "Familien-Radweg",
+      "familiencafe": "Familiencafé",
+      "kinder_familiencafe": "Kinder- & Familiencafé",
+      "familien_restaurant": "Familienrestaurant",
+      "museum_kinder": "Museum (Kinder)",
+      "kinder_museum": "Kindermuseum",
+      "bibliothek": "Kinder- & Familienbibliothek",
+      "oeffentliche_toilette": "Öffentliche Toilette",
+      "wickelraum": "Wickelraum",
+      "familien_event": "Familien-Event",
+      "stellplatz_spielplatz_naehe_kostenlos": "Stellplatz nahe Spielplatz (kostenlos)",
+      "wohnmobil_service_station": "Wohnmobil-Service-Station",
+      "rastplatz_spielplatz_dusche": "Rastplatz mit Spielplatz/Dusche",
+      "bikepacking_spot": "Bikepacking-Spot",
+      "campingplatz_familien": "Familienfreundlicher Campingplatz",
+      "park_garten": "Park / Garten",
+      "picknickwiese": "Picknickwiese"
+    }
+  }
 }
