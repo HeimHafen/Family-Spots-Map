@@ -15,8 +15,8 @@
     },
     "aria": {
       "help": "Vis hjælp og info",
-      "themeToggle": "Skift design-tilstand",
-      "locate": "Centrér position"
+      "themeToggle": "Skift tema",
+      "locate": "Centrér på min position"
     },
     "labels": {
       "languageSwitcher": "Skift sprog"
@@ -25,7 +25,7 @@
       "tillaImage": "Tilla skildpadden – jeres familieledsager"
     },
     "header": {
-      "tagline": "I dag må hverdagen blive til et lille familieeventyr – tæt på."
+      "tagline": "I dag kan hverdagen blive til et lille familieeventyr – tæt på."
     },
     "buttons": {
       "showFilters": "Fold filtre ud",
@@ -34,10 +34,10 @@
       "showList": "Vis liste"
     },
     "toast": {
-      "locationOk": "Jeres position er sat – næste øjeblik venter. 🌍",
-      "locationError": "Vi kan ikke finde positionen nu. Måske offline – I finder stadig vejen.",
+      "locationOk": "Positionen er sat – næste øjeblik venter. 🌍",
+      "locationError": "Vi kan ikke få adgang til din position lige nu. I kan stadig bruge kortet.",
       "locationUnavailableRadiusDisabled": "Position ikke tilgængelig – radiusfilter er deaktiveret.",
-      "favAdded": "Gemt som favorit – et sted der må blive. 💚",
+      "favAdded": "Gemt som favorit – et sted, der er værd at gemme. 💚",
       "favRemoved": "Fjernet fra favoritter – nye skatte venter. 🌿"
     },
     "filters": {
@@ -47,7 +47,7 @@
         "description": {
           "step0": "Mini-eventyr – helt tæt på, perfekt til en lille pause.",
           "step1": "Kort tur ud – hurtigt afsted, hurtigt hjemme igen.",
-          "step2": "En lille tur – en halv dag fuld af oplevelser.",
+          "step2": "En lille udflugt – en halv dag fuld af oplevelser.",
           "step3": "Store mål – en hel dag med magiske øjeblikke.",
           "all": "Alle spots – ingen radius. Kortet er helt jeres."
         }
@@ -60,8 +60,8 @@
       "failed": "Koden kunne ikke tjekkes nu. Prøv igen senere."
     },
     "tilla": {
-      "intro1": "Jeg er Tilla. Jeg viser jer steder med nærhed, minder og små eventyr. Skal vi gå? 🐢",
-      "intro2": "Lige nu finder jeg ingen spot. Måske en gåtur – eller øg radius lidt. 🐢",
+      "intro1": "Jeg er Tilla. Jeg viser jer steder med nærhed, minder og små eventyr. Skal vi afsted? 🐢",
+      "intro2": "Lige nu kan jeg ikke finde et passende sted. Måske en gåtur – eller øg radius lidt. 🐢",
       "afterDaylogSave": "Jeres dag er gemt – små øjeblikke, store minder. 💚",
       "afterFavAdded": "Stedet har nu en stjerne på jeres kort. ⭐",
       "afterFavRemoved": "Helt i orden – vi finder nye minder. 🐢",
@@ -70,7 +70,7 @@
       "plusActivated": "Plus er aktiv – flere veje, flere steder, flere eventyr. ✨"
     },
     "daylog": {
-      "saved": "Gemt 💾 – senere kan I smile tilbage."
+      "saved": "Gemt 💾 – senere kan I smile tilbage til det."
     },
     "nav": {
       "map": "Kort",
@@ -89,21 +89,21 @@
       "waldspielplatz": "Skovlegeplads",
       "wasserspielplatz": "Vandlegeplads",
       "barrierefreier_spielplatz": "Tilgængelig legeplads",
-      "bewegungspark": "Bevægelsespark",
+      "bewegungspark": "Aktivitetspark",
       "multifunktionsfeld": "Multibane",
       "bolzplatz": "Boldbane",
       "pumptrack": "Pumptrack",
       "skatepark": "Skatepark",
-      "verkehrsgarten": "Trafikpark",
-      "toddler_barfuss_motorik": "Tumling / motorik",
+      "verkehrsgarten": "Trafiklegeplads",
+      "toddler_barfuss_motorik": "Tumlinger / motorik",
       "zoo": "Zoo",
       "tierpark": "Dyrepark",
-      "wildpark": "Vildtreservat & safari",
+      "wildpark": "Vildtpark & safaripark",
       "bauernhof": "Gård",
       "naturerlebnispfad": "Natursti",
-      "walderlebnisroute": "Skovrute",
+      "walderlebnisroute": "Skovoplevelsesrute",
       "freilichtmuseum": "Frilandsmuseum",
-      "schwimmbad": "Svømmebad",
+      "schwimmbad": "Svømmehal",
       "badesee": "Badesø",
       "strand": "Familiestrand",
       "eisbahn": "Skøjtebane",
@@ -123,10 +123,10 @@
       "klangpfad": "Lydsti i naturen",
       "ueberdachter_spielplatz": "Overdækket legeplads",
       "dirtbike_track": "Dirtbike-bane",
-      "streetball_platz": "Streetball / basket",
+      "streetball_platz": "Streetball / basketball",
       "waldbaden_ort": "Skovbadning / ro",
       "natur_aussichtspunkt": "Naturligt udsigtspunkt",
-      "wanderweg_kinderwagen": "Rute (barnevogn)",
+      "wanderweg_kinderwagen": "Rute (barnevognsvenlig)",
       "radweg_family": "Familie-cykelrute",
       "familiencafe": "Familiecafé",
       "kinder_familiencafe": "Børne- & familiecafé",
@@ -137,13 +137,13 @@
       "oeffentliche_toilette": "Offentligt toilet",
       "wickelraum": "Puslerum",
       "familien_event": "Familieevent",
-      "stellplatz_spielplatz_naehe_kostenlos": "Gratis plads nær legeplads",
-      "wohnmobil_service_station": "Autocamper serviceplads",
-      "rastplatz_spielplatz_dusche": "Rasteplads m. legeplads",
+      "stellplatz_spielplatz_naehe_kostenlos": "Gratis autocamperplads nær legeplads",
+      "wohnmobil_service_station": "Autocamper-serviceplads",
+      "rastplatz_spielplatz_dusche": "Rasteplads med legeplads og bruser",
       "bikepacking_spot": "Bikepacking-spot",
-      "campingplatz_familien": "Familievenlig camping",
+      "campingplatz_familien": "Familievenlig campingplads",
       "park_garten": "Park / have",
-      "picknickwiese": "Picnicplæne"
+      "picknickwiese": "Picnicområde"
     }
   }
 }
