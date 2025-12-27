@@ -16,7 +16,7 @@
     "aria": {
       "help": "Vis hjælp og info",
       "themeToggle": "Skift tema",
-      "locate": "Centrér på min position"
+      "locate": "Centrér på jeres position"
     },
     "labels": {
       "languageSwitcher": "Skift sprog"
@@ -25,7 +25,7 @@
       "tillaImage": "Tilla skildpadden – jeres familieledsager"
     },
     "header": {
-      "tagline": "I dag kan hverdagen blive til et lille familieeventyr – tæt på."
+      "tagline": "I dag kan hverdagen blive til et lille familieeventyr – tæt på hjemmet."
     },
     "buttons": {
       "showFilters": "Fold filtre ud",
@@ -34,8 +34,8 @@
       "showList": "Vis liste"
     },
     "toast": {
-      "locationOk": "Positionen er sat – næste øjeblik venter. 🌍",
-      "locationError": "Vi kan ikke få adgang til din position lige nu. I kan stadig bruge kortet.",
+      "locationOk": "Positionen er sat – næste øjeblik venter.",
+      "locationError": "Vi kan ikke få adgang til jeres position lige nu. I kan stadig bruge kortet.",
       "locationUnavailableRadiusDisabled": "Position ikke tilgængelig – radiusfilter er deaktiveret.",
       "favAdded": "Gemt som favorit – et sted, der er værd at gemme. 💚",
       "favRemoved": "Fjernet fra favoritter – nye skatte venter. 🌿"
