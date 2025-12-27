@@ -7,7 +7,7 @@
   },
   "ui": {
     "meta": {
-      "title": "Family Spots Map – Your map for family adventures",
+      "title": "Family Spots Map – Family adventures near you",
       "description": "Handpicked places for families: playgrounds, animals, water play, and short routes that turn into memories."
     },
     "errors": {
@@ -15,7 +15,7 @@
     },
     "aria": {
       "help": "Show help and information",
-      "themeToggle": "Switch color theme",
+      "themeToggle": "Switch theme",
       "locate": "Center on my location"
     },
     "labels": {
@@ -25,7 +25,7 @@
       "tillaImage": "Tilla the turtle – your family companion"
     },
     "header": {
-      "tagline": "Today, turn everyday life into a small family adventure — nearby."
+      "tagline": "Today, turn everyday life into a small family adventure – close to home."
     },
     "buttons": {
       "showFilters": "Expand filters",
@@ -34,7 +34,7 @@
       "showList": "Show list"
     },
     "toast": {
-      "locationOk": "Location set – your next moment is waiting. 🌍",
+      "locationOk": "Location set – your next moment is waiting.",
       "locationError": "We can’t access your location right now. You can still browse the map.",
       "locationUnavailableRadiusDisabled": "Location not available – radius filter has been disabled.",
       "favAdded": "Saved to favorites – a place worth keeping. 💚",
@@ -46,31 +46,31 @@
         "maxLabel": "All spots",
         "description": {
           "step0": "Mini adventures – very close by, perfect for a short break.",
-          "step1": "Short trips – quick out, quick back.",
-          "step2": "A small outing – half a day of discoveries.",
-          "step3": "Big destinations – a full day of magical moments.",
+          "step1": "Quick outing – out and back in no time.",
+          "step2": "Half-day outing – lots to discover.",
+          "step3": "A big day out – full of magical moments.",
           "all": "All spots – no radius limit. The map is yours."
         }
       }
     },
     "plus": {
-      "codeEmpty": "Please enter your partner code first.",
+      "codeEmpty": "Please enter your partner code.",
       "codeUnknown": "This code is unknown or no longer valid.",
       "activated": "Family Spots Plus is active – happy travels!",
       "failed": "The code couldn’t be checked right now. Please try again later."
     },
     "tilla": {
-      "intro1": "I’m Tilla. I guide you to places of closeness, memories and small adventures. Shall we go? 🐢",
+      "intro1": "I’m Tilla. I’ll guide you to places for togetherness, memories, and small adventures. Shall we go? 🐢",
       "intro2": "Right now, I can’t find a matching spot. Maybe a short walk – or widen the radius a little. 🐢",
       "afterDaylogSave": "Your day is saved – small moments, big memories. 💚",
       "afterFavAdded": "This place now has a star on your map. ⭐",
       "afterFavRemoved": "No worries – we’ll find new memories. 🐢",
-      "tripMode": "You’re on the move — I’m watching for heartwarming moments. 🚐",
+      "tripMode": "You’re on the move – I’m watching for heartwarming moments. 🚐",
       "everydayMode": "Everyday life can glow. Let’s find small wonders nearby. 🌿",
       "plusActivated": "Plus is active – more paths, more places, more adventures. ✨"
     },
     "daylog": {
-      "saved": "Saved 💾 – later, you can smile back at it."
+      "saved": "Saved 💾 – you’ll smile back later."
     },
     "nav": {
       "map": "Map",
@@ -91,17 +91,17 @@
       "barrierefreier_spielplatz": "Accessible playground",
       "bewegungspark": "Activity park",
       "multifunktionsfeld": "Multi-use court",
-      "bolzplatz": "Soccer pitch",
+      "bolzplatz": "Soccer field",
       "pumptrack": "Pump track",
-      "skatepark": "Skate park",
-      "verkehrsgarten": "Traffic garden (road safety park)",
+      "skatepark": "Skatepark",
+      "verkehrsgarten": "Road safety park",
       "toddler_barfuss_motorik": "Toddler / motor skills",
       "zoo": "Zoo",
       "tierpark": "Animal park",
       "wildpark": "Wildlife park & safari",
       "bauernhof": "Farm",
       "naturerlebnispfad": "Nature trail",
-      "walderlebnisroute": "Forest experience route",
+      "walderlebnisroute": "Forest discovery route",
       "freilichtmuseum": "Open-air museum",
       "schwimmbad": "Swimming pool",
       "badesee": "Bathing lake",
@@ -113,7 +113,7 @@
       "kletterhalle": "Climbing gym",
       "kletteranlage_outdoor": "Outdoor climbing area",
       "kletterwald_hochseilgarten": "Ropes course / treetop adventure",
-      "boulderpark": "Bouldering park",
+      "boulderpark": "Bouldering area",
       "minigolf": "Mini golf",
       "hoehle": "Cave / rock excursion",
       "felsenwanderung": "Rock hike",
@@ -127,11 +127,11 @@
       "waldbaden_ort": "Forest bathing / quiet spot",
       "natur_aussichtspunkt": "Natural viewpoint",
       "wanderweg_kinderwagen": "Stroller-friendly route",
-      "radweg_family": "Family cycle path",
+      "radweg_family": "Family-friendly bike route",
       "familiencafe": "Family café",
       "kinder_familiencafe": "Kids & family café",
       "familien_restaurant": "Family restaurant",
-      "museum_kinder": "Museum (kids)",
+      "museum_kinder": "Kid-friendly museum",
       "kinder_museum": "Children’s museum",
       "bibliothek": "Children’s & family library",
       "oeffentliche_toilette": "Public restroom",
