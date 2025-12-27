@@ -7,8 +7,8 @@
   },
   "ui": {
     "meta": {
-      "title": "Family Spots Map – The most beautiful map for family adventures",
-      "description": "Handpicked places for families: playgrounds, animals, water spots and small routes that become memories."
+      "title": "Family Spots Map – Your map for family adventures",
+      "description": "Handpicked places for families: playgrounds, animals, water play, and short routes that turn into memories."
     },
     "errors": {
       "dataLoad": "Oops – we couldn’t load the data just now. Please try again in a moment."
@@ -25,7 +25,7 @@
       "tillaImage": "Tilla the turtle – your family companion"
     },
     "header": {
-      "tagline": "Today, everyday life can become a small family adventure – nearby."
+      "tagline": "Today, turn everyday life into a small family adventure — nearby."
     },
     "buttons": {
       "showFilters": "Expand filters",
@@ -35,7 +35,7 @@
     },
     "toast": {
       "locationOk": "Location set – your next moment is waiting. 🌍",
-      "locationError": "We can’t access your location right now. Maybe offline – you’ll still find your way.",
+      "locationError": "We can’t access your location right now. You can still browse the map.",
       "locationUnavailableRadiusDisabled": "Location not available – radius filter has been disabled.",
       "favAdded": "Saved to favorites – a place worth keeping. 💚",
       "favRemoved": "Removed from favorites – new treasures await. 🌿"
@@ -65,7 +65,7 @@
       "afterDaylogSave": "Your day is saved – small moments, big memories. 💚",
       "afterFavAdded": "This place now has a star on your map. ⭐",
       "afterFavRemoved": "No worries – we’ll find new memories. 🐢",
-      "tripMode": "You’re on the move – I’m watching for heart-warming moments. 🚐",
+      "tripMode": "You’re on the move — I’m watching for heartwarming moments. 🚐",
       "everydayMode": "Everyday life can glow. Let’s find small wonders nearby. 🌿",
       "plusActivated": "Plus is active – more paths, more places, more adventures. ✨"
     },
@@ -91,10 +91,10 @@
       "barrierefreier_spielplatz": "Accessible playground",
       "bewegungspark": "Activity park",
       "multifunktionsfeld": "Multi-use court",
-      "bolzplatz": "Soccer field / kickabout",
+      "bolzplatz": "Soccer pitch",
       "pumptrack": "Pump track",
       "skatepark": "Skate park",
-      "verkehrsgarten": "Traffic park",
+      "verkehrsgarten": "Traffic garden (road safety park)",
       "toddler_barfuss_motorik": "Toddler / motor skills",
       "zoo": "Zoo",
       "tierpark": "Animal park",
@@ -135,7 +135,7 @@
       "kinder_museum": "Children’s museum",
       "bibliothek": "Children’s & family library",
       "oeffentliche_toilette": "Public restroom",
-      "wickelraum": "Diaper changing room",
+      "wickelraum": "Baby changing room",
       "familien_event": "Family event",
       "stellplatz_spielplatz_naehe_kostenlos": "Free camper pitch near playground",
       "wohnmobil_service_station": "Camper service station",
@@ -143,7 +143,7 @@
       "bikepacking_spot": "Bikepacking spot",
       "campingplatz_familien": "Family-friendly campsite",
       "park_garten": "Park / garden",
-      "picknickwiese": "Picnic meadow"
+      "picknickwiese": "Picnic area"
     }
   }
 }
