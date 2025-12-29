@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html lang="de" data-theme="light">
 <head>
@@ -18,8 +16,12 @@
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
 
+  <!-- Theme color (wird im Early Theme Init passend gesetzt) -->
+  <meta id="meta-theme-color" name="theme-color" content="#f7e1d0" />
+
   <!-- ======================================================
        EARLY THEME INIT (verhindert falsche Farben vor CSS/JS)
+       + setzt theme-color konsistent passend zum Theme
        ====================================================== -->
   <script>
     (function () {
@@ -37,6 +39,9 @@
         }
 
         if (theme) document.documentElement.setAttribute("data-theme", theme);
+
+        var meta = document.getElementById("meta-theme-color");
+        if (meta) meta.setAttribute("content", theme === "dark" ? "#020617" : "#f7e1d0");
       } catch (e) {
         // ignore
       }
@@ -122,10 +127,6 @@
     }
   </style>
 
-  <!-- Theme color (Light / Dark) -->
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7e1d0" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617" />
-
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
   <meta name="application-name" content="Family Spots Map" />
 
@@ -187,9 +188,24 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
 
   <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    integrity="sha256-YU3qCpj/P06tdPBJGPax0bm6Q1wltfwjsho5TR4+TYc="
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+    integrity="sha256-YSWCMtmNZNwqex4CEw1nQhvFub2lmU7vcCKP+XVwwXA="
+    crossorigin="anonymous"
+  />
 
   <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css" />
@@ -811,9 +827,10 @@
         <details class="sidebar-section" id="plus-section" aria-labelledby="plus-section-title">
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title" id="plus-section-title">Family Spots Plus</h2>
-            <button id="btn-toggle-plus" class="btn-ghost btn-small" type="button">
+            <!-- Hinweis-Label (keine interaktive Kontrolle innerhalb <summary>) -->
+            <span id="btn-toggle-plus" class="btn-ghost btn-small" aria-hidden="true">
               <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-            </button>
+            </span>
           </summary>
 
           <div class="filter-group">
@@ -865,10 +882,10 @@
             >
               Mein Tag 💚
             </h2>
-
-            <button id="btn-toggle-daylog" class="btn-ghost btn-small" type="button">
+            <!-- Hinweis-Label (keine interaktive Kontrolle innerhalb <summary>) -->
+            <span id="btn-toggle-daylog" class="btn-ghost btn-small" aria-hidden="true">
               <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-            </button>
+            </span>
           </summary>
 
           <div class="filter-group">
@@ -1193,7 +1210,7 @@
           <p>
             Family Spots Map er ikke en anonym samling af pins,<br />
             men et levende kort,<br />
-            hvor hvert spot er valgt med omtanke<br />
+            hvor hvert spot er valgt med omtanke
             og ses på igen og igen.
           </p>
           <p>
@@ -1208,7 +1225,7 @@
             Verden ændrer sig alligevel hele tiden:<br />
             Legepladser bygges om, stier lukkes, regler justeres –<br />
             så tjek altid skilte på stedet,<br />
-            de aktuelle oplysninger fra udbyderen<br />
+            de aktuelle oplysninger fra udbyderen
             og jeres egen mavefornemmelse.
           </p>
 
@@ -1713,6 +1730,8 @@
   ></script>
   <script
     src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+    integrity="sha256-Hk4dIpcqOSb0hZjgyvFOP+cEmDXUKKNE/tT542ZbNQg="
+    crossorigin="anonymous"
     defer
   ></script>
 
