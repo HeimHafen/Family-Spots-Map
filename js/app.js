@@ -10,7 +10,6 @@
 import "./i18n.js"; // setzt window.I18N
 
 import { initMenu } from "./ui/menu.js";
-import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
 import { TillaCompanion } from "./features/tilla.js";
@@ -60,10 +59,9 @@ const log = (...args) => { if (DEBUG) console.log(...args); };
 const warn = (...args) => { if (DEBUG) console.warn(...args); };
 
 // ------------------------------------------------------
-// Menu / Language / Skip
+// Menu / Skip
 // ------------------------------------------------------
 const { closeMenu } = initMenu();
-initLanguageSwitcher();
 initSkipToSpots(closeMenu);
 
 // ------------------------------------------------------
@@ -187,16 +185,25 @@ function storageRemove(key) {
   try { localStorage.removeItem(key); return true; } catch { return false; }
 }
 
+function getFocusableElements(root) {
+  if (!root) return [];
+  return Array.from(
+    root.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+  ).filter((el) => !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+}
+
 // ------------------------------------------------------
 // Tilla helper
 // ------------------------------------------------------
+let tilla = null;
 function safeTillaCall(method, ...args) {
   try {
     if (tilla && typeof tilla[method] === "function") {
       tilla[method](...args);
     }
   } catch (err) {
-    // Tilla darf nie die App killen
     warn("[Family Spots] Tilla call failed:", method, err);
   }
 }
@@ -204,7 +211,6 @@ function safeTillaCall(method, ...args) {
 // ------------------------------------------------------
 // Globaler UI-State
 // ------------------------------------------------------
-
 let currentLang = LANG_DE;
 let currentTheme = THEME_LIGHT;
 
@@ -242,7 +248,6 @@ let activeTagFilters = new Set();
 // ------------------------------------------------------
 // Geolocation / Real Location State
 // ------------------------------------------------------
-
 /**
  * @type {{lat:number,lng:number,accuracy?:number,ts?:number}|null}
  */
@@ -300,12 +305,9 @@ function startLocationWatch() {
       (pos) => {
         const { latitude, longitude, accuracy } = pos.coords || {};
         setUserLocation(latitude, longitude, accuracy);
-        // Update list/markers/distances without forcing map movement
         applyFiltersAndRender();
       },
-      () => {
-        // Ignorieren – User kann erneut "Locate" drücken
-      },
+      () => { /* ignore */ },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 15000 }
     );
   } catch {
@@ -389,9 +391,6 @@ let daylogLastSavedEl;
 let daylogClearEl;
 let daylogListEl;
 let toastEl;
-
-// Tilla
-let tilla = null;
 
 // Spielideen
 let playIdeasBtnEl = null;
@@ -532,6 +531,14 @@ function updateLanguageSwitcherVisual() {
       ? "Sprog: Dansk (tryk for English)"
       : "Language: English (tap for Deutsch)";
   languageSwitcherEl.setAttribute("aria-label", ariaLabel);
+
+  // optional: active state on menu chips
+  document.querySelectorAll("[data-lang-target]").forEach((btn) => {
+    const lang = btn.getAttribute("data-lang-target");
+    const isActive = lang === currentLang;
+    btn.classList.toggle("app-menu-lang-chip--active", isActive);
+    btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
 }
 
 function setLanguage(lang, { initial = false } = {}) {
@@ -574,7 +581,6 @@ function setLanguage(lang, { initial = false } = {}) {
     aboutEn.setAttribute("aria-hidden", showEn ? "false" : "true");
   }
 
-  // Button labels
   if (btnToggleFiltersEl) {
     const span = btnToggleFiltersEl.querySelector("span");
     if (span) span.textContent = filtersCollapsed ? t("btn_show_filters", "Filter anzeigen") : t("btn_hide_filters", "Filter ausblenden");
@@ -618,8 +624,32 @@ function setLanguage(lang, { initial = false } = {}) {
 
   if (!initial) {
     const headerTitle = document.querySelector(".header-title");
-    if (headerTitle && typeof headerTitle.focus === "function") headerTitle.focus();
+    headerTitle?.focus?.();
   }
+}
+
+function bindLanguageControls() {
+  // 1) sr-only language switcher (cycles DE -> DA -> EN -> DE)
+  if (languageSwitcherEl) {
+    languageSwitcherEl.addEventListener("click", () => {
+      const nextLang = currentLang === LANG_DE ? LANG_DA : currentLang === LANG_DA ? LANG_EN : LANG_DE;
+      setLanguage(nextLang);
+      closeMenu?.();
+    });
+  }
+
+  // 2) menu language chips (direct selection)
+  document.querySelectorAll("[data-lang-target]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-lang-target");
+      if (target === LANG_DE || target === LANG_EN || target === LANG_DA) {
+        setLanguage(target);
+        closeMenu?.();
+      }
+    });
+  });
+
+  updateLanguageSwitcherVisual();
 }
 
 // ------------------------------------------------------
@@ -726,7 +756,6 @@ function populateCategoryOptions() {
     frag.appendChild(extraGroup);
   }
 
-  // preserve selection
   const selected = categoryFilter || "";
   filterCategoryEl.replaceChildren(frag);
   filterCategoryEl.value = selected;
@@ -771,10 +800,9 @@ function getEffectiveRadiusKm() {
   const maxIndex = getMaxRadiusIndex();
   const requested = RADIUS_STEPS_KM[radiusStep] ?? RADIUS_STEPS_KM[maxIndex] ?? Infinity;
 
-  if (radiusStep === maxIndex) return requested; // all spots
+  if (radiusStep === maxIndex) return requested;
   if (userLocation) return requested;
 
-  // location missing but limited radius chosen -> disable radius for trust
   if (!hasShownRadiusDisabledToast) {
     hasShownRadiusDisabledToast = true;
     toastKey(
@@ -804,14 +832,13 @@ function initRadiusSliderA11y() {
   const onRadiusInput = debounce(async () => {
     updateRadiusTexts();
 
-    // If radius limited, try to obtain location once (user-initiated interaction)
     const maxIndex = getMaxRadiusIndex();
     if (radiusStep !== maxIndex && !userLocation && navigator.geolocation) {
       try {
         await requestUserLocationOnce({ enableHighAccuracy: true, timeout: 9000 });
         startLocationWatch();
       } catch {
-        // user denied -> handled by getEffectiveRadiusKm()
+        // handled by getEffectiveRadiusKm()
       }
     }
 
@@ -1002,26 +1029,62 @@ function getFilterContext() {
 }
 
 // ------------------------------------------------------
-// Filter Modal
+// Filter Modal (Open/Close + Focus trap)
 // ------------------------------------------------------
+let filterModalFocusables = [];
 function openFilterModal() {
-  if (!filterModalEl) return;
+  if (!filterModalEl || isFilterModalOpen) return;
   isFilterModalOpen = true;
+
   lastFocusBeforeFilterModal = document.activeElement;
   filterModalEl.hidden = false;
+  filterModalEl.setAttribute("aria-hidden", "false");
   document.body?.setAttribute("data-filter-modal-open", "1");
 
-  const focusable = filterModalEl.querySelector("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
-  focusable?.focus?.();
+  filterModalFocusables = getFocusableElements(filterModalEl);
+  (filterModalFocusables[0] || filterModalCloseEl)?.focus?.();
 }
 
 function closeFilterModal({ returnFocus = true } = {}) {
   if (!filterModalEl || !isFilterModalOpen) return;
   isFilterModalOpen = false;
+
   filterModalEl.hidden = true;
+  filterModalEl.setAttribute("aria-hidden", "true");
   document.body?.removeAttribute("data-filter-modal-open");
 
   if (returnFocus && lastFocusBeforeFilterModal?.focus) lastFocusBeforeFilterModal.focus();
+}
+
+function handleFilterModalKeydown(event) {
+  if (!isFilterModalOpen || !filterModalEl || filterModalEl.hidden) return;
+
+  if (event.key === "Escape" || event.key === "Esc") {
+    event.preventDefault();
+    closeFilterModal({ returnFocus: true });
+    return;
+  }
+
+  if (event.key !== "Tab") return;
+
+  // Simple focus trap
+  filterModalFocusables = filterModalFocusables.length ? filterModalFocusables : getFocusableElements(filterModalEl);
+  if (!filterModalFocusables.length) return;
+
+  const first = filterModalFocusables[0];
+  const last = filterModalFocusables[filterModalFocusables.length - 1];
+
+  if (event.shiftKey) {
+    if (document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    }
+  } else {
+    if (document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 }
 
 function resetAllFilters() {
@@ -2127,14 +2190,18 @@ async function init() {
     toastEl = document.getElementById("toast");
     skipLinkEl = document.querySelector(".skip-link");
 
+    // i18n init + language apply
     const initialLang = getInitialLang();
     setLanguage(initialLang, { initial: true });
+    bindLanguageControls();
 
+    // Theme init
     const initialTheme = getInitialTheme();
     currentTheme = applyTheme(initialTheme);
 
     initToast({ element: toastEl, t });
 
+    // Map init
     const mapResult = initMap({ center: DEFAULT_MAP_CENTER, zoom: DEFAULT_MAP_ZOOM });
     map = mapResult.map;
     markersLayer = mapResult.markersLayer;
@@ -2148,17 +2215,10 @@ async function init() {
       window.addEventListener("resize", debouncedResize);
     }
 
+    // Tilla init
     tilla = new TillaCompanion({ getText: (key) => t(key) });
 
-    // Language switcher button (sr-only in your HTML)
-    if (languageSwitcherEl) {
-      languageSwitcherEl.addEventListener("click", () => {
-        const nextLang = currentLang === LANG_DE ? LANG_DA : currentLang === LANG_DA ? LANG_EN : LANG_DE;
-        setLanguage(nextLang);
-      });
-      updateLanguageSwitcherVisual();
-    }
-
+    // Theme toggle
     if (themeToggleEl) {
       themeToggleEl.addEventListener("click", () => {
         const nextTheme = currentTheme === THEME_LIGHT ? THEME_DARK : THEME_LIGHT;
@@ -2166,8 +2226,10 @@ async function init() {
       });
     }
 
+    // Locate
     btnLocateEl?.addEventListener("click", handleLocateClick);
 
+    // Router
     initRouter({
       viewMapEl,
       viewAboutEl,
@@ -2215,6 +2277,7 @@ async function init() {
       });
     }
 
+    // Mood filter chips
     if (FEATURES.moodFilter) {
       document.querySelectorAll(".mood-chip").forEach((chip) => {
         chip.addEventListener("click", () => {
@@ -2237,6 +2300,7 @@ async function init() {
       });
     }
 
+    // Travel mode chips
     if (FEATURES.travelMode) {
       document.querySelectorAll(".travel-chip").forEach((chip) => {
         chip.addEventListener("click", () => {
@@ -2260,14 +2324,15 @@ async function init() {
       });
     }
 
+    // Toggle filter section
     if (btnToggleFiltersEl) {
       btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
-      btnToggleFiltersEl.querySelector("span")?.replaceChildren?.(); // noop, but safe
       const span = btnToggleFiltersEl.querySelector("span");
       if (span) span.textContent = t("btn_show_filters", "Filter anzeigen");
       btnToggleFiltersEl.setAttribute("aria-expanded", "false");
     }
 
+    // Toggle list/map view
     if (btnToggleViewEl) {
       btnToggleViewEl.addEventListener("click", handleToggleView);
       const span = btnToggleViewEl.querySelector("span");
@@ -2275,7 +2340,7 @@ async function init() {
       btnToggleViewEl.setAttribute("aria-pressed", "false");
     }
 
-    // Details toggles (Plus / Daylog) – keep conservative: only adjust label text
+    // Details toggles (Plus / Daylog) – label only (conservative)
     function updateGenericSectionToggleLabel(btn, isOpen) {
       if (!btn) return;
       const target = btn.querySelector("span") || btn;
@@ -2327,7 +2392,14 @@ async function init() {
     filterModalCloseEl?.addEventListener("click", () => closeFilterModal({ returnFocus: true }));
     filterModalApplyEl?.addEventListener("click", () => { applyFiltersAndRender(); closeFilterModal({ returnFocus: true }); });
     filterModalResetEl?.addEventListener("click", resetAllFilters);
-    filterModalEl?.addEventListener("click", (event) => { if (event.target === filterModalEl) closeFilterModal({ returnFocus: true }); });
+
+    // click on backdrop closes (only if clicking the outer container)
+    filterModalEl?.addEventListener("click", (event) => {
+      if (event.target === filterModalEl) closeFilterModal({ returnFocus: true });
+    });
+
+    // keydown in modal (focus trap + ESC)
+    document.addEventListener("keydown", handleFilterModalKeydown);
 
     // Skip link focus
     if (skipLinkEl) {
@@ -2345,15 +2417,9 @@ async function init() {
       });
     }
 
-    // ESC handling
+    // ESC handling for spot details (modal handled above)
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape" && event.key !== "Esc") return;
-
-      if (isFilterModalOpen && filterModalEl && !filterModalEl.hidden) {
-        event.preventDefault();
-        closeFilterModal({ returnFocus: true });
-        return;
-      }
 
       const isOpen = spotDetailEl && !spotDetailEl.classList.contains("spot-details--hidden");
       if (isOpen) {
