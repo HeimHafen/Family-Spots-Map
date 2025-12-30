@@ -16,12 +16,8 @@
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light dark" />
 
-  <!-- Theme color (wird im Early Theme Init passend gesetzt) -->
-  <meta id="meta-theme-color" name="theme-color" content="#f7e1d0" />
-
   <!-- ======================================================
        EARLY THEME INIT (verhindert falsche Farben vor CSS/JS)
-       + setzt theme-color konsistent passend zum Theme
        ====================================================== -->
   <script>
     (function () {
@@ -39,9 +35,6 @@
         }
 
         if (theme) document.documentElement.setAttribute("data-theme", theme);
-
-        var meta = document.getElementById("meta-theme-color");
-        if (meta) meta.setAttribute("content", theme === "dark" ? "#020617" : "#f7e1d0");
       } catch (e) {
         // ignore
       }
@@ -127,6 +120,10 @@
     }
   </style>
 
+  <!-- Theme color (Light / Dark) -->
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7e1d0" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617" />
+
   <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
   <meta name="application-name" content="Family Spots Map" />
 
@@ -188,24 +185,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
 
   <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin="anonymous"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-    integrity="sha256-YU3qCpj/P06tdPBJGPax0bm6Q1wltfwjsho5TR4+TYc="
-    crossorigin="anonymous"
-  />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
-    integrity="sha256-YSWCMtmNZNwqex4CEw1nQhvFub2lmU7vcCKP+XVwwXA="
-    crossorigin="anonymous"
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
   <!-- App Styles -->
   <link rel="stylesheet" href="css/styles.css" />
@@ -827,10 +809,9 @@
         <details class="sidebar-section" id="plus-section" aria-labelledby="plus-section-title">
           <summary class="sidebar-section-header">
             <h2 class="sidebar-section-title" id="plus-section-title">Family Spots Plus</h2>
-            <!-- Hinweis-Label (keine interaktive Kontrolle innerhalb <summary>) -->
-            <span id="btn-toggle-plus" class="btn-ghost btn-small" aria-hidden="true">
+            <button id="btn-toggle-plus" class="btn-ghost btn-small" type="button">
               <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-            </span>
+            </button>
           </summary>
 
           <div class="filter-group">
@@ -882,10 +863,10 @@
             >
               Mein Tag 💚
             </h2>
-            <!-- Hinweis-Label (keine interaktive Kontrolle innerhalb <summary>) -->
-            <span id="btn-toggle-daylog" class="btn-ghost btn-small" aria-hidden="true">
+
+            <button id="btn-toggle-daylog" class="btn-ghost btn-small" type="button">
               <span data-i18n-de="Anzeigen" data-i18n-en="Show" data-i18n-da="Vis">Anzeigen</span>
-            </span>
+            </button>
           </summary>
 
           <div class="filter-group">
@@ -1210,7 +1191,7 @@
           <p>
             Family Spots Map er ikke en anonym samling af pins,<br />
             men et levende kort,<br />
-            hvor hvert spot er valgt med omtanke
+            hvor hvert spot er valgt med omtanke<br />
             og ses på igen og igen.
           </p>
           <p>
@@ -1225,7 +1206,7 @@
             Verden ændrer sig alligevel hele tiden:<br />
             Legepladser bygges om, stier lukkes, regler justeres –<br />
             så tjek altid skilte på stedet,<br />
-            de aktuelle oplysninger fra udbyderen
+            de aktuelle oplysninger fra udbyderen<br />
             og jeres egen mavefornemmelse.
           </p>
 
@@ -1721,7 +1702,7 @@
     </span>
   </div>
 
-  <!-- Scripts: Leaflet + MarkerCluster -->
+  <!-- Leaflet + MarkerCluster (Variante A: klassische Scripts) -->
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -1730,79 +1711,10 @@
   ></script>
   <script
     src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
-    integrity="sha256-Hk4dIpcqOSb0hZjgyvFOP+cEmDXUKKNE/tT542ZbNQg="
-    crossorigin="anonymous"
     defer
   ></script>
 
-  <!-- Details/Summary Fix (ES-Modul) -->
-  <script type="module" src="./js/ui/details-summary-fix.js"></script>
-
-  <!-- App (ES-Modul) -->
-  <script type="module" src="./js/app.js"></script>
-
-  <!-- Bridge: Menüpunkt "Nur Karte" nutzt die bestehende Toggle-Logik -->
-  <script type="module">
-    const menuToggle = document.getElementById("btn-toggle-view-menu");
-    const sidebarToggle = document.getElementById("btn-toggle-view");
-
-    if (menuToggle && sidebarToggle) {
-      menuToggle.addEventListener("click", () => sidebarToggle.click());
-    }
-  </script>
-
-  <!-- Onboarding-Hinweis schließen (ohne Persistenz: nach Reload wieder sichtbar) -->
-  <script type="module">
-    const hint = document.querySelector("[data-onboarding-hint]");
-    const closeBtn =
-      hint?.querySelector("[data-onboarding-close]") ||
-      hint?.querySelector(".fsm-onboarding-hint__close");
-
-    function dismissHint() {
-      if (!hint) return;
-      hint.hidden = true;                 // nur für die aktuelle Session
-      hint.setAttribute("aria-hidden", "true");
-    }
-
-    if (closeBtn) closeBtn.addEventListener("click", dismissHint);
-  </script>
-
-  <!-- Spots-Liste anzeigen/ausblenden + Zustand merken -->
-  <script type="module">
-    const btn = document.getElementById("btn-toggle-spots");
-    const list = document.getElementById("spot-list");
-
-    const showLabel = btn?.querySelector('[data-state="show"]');
-    const hideLabel = btn?.querySelector('[data-state="hide"]');
-
-    function setExpanded(expanded) {
-      if (!btn || !list) return;
-
-      btn.setAttribute("aria-expanded", String(expanded));
-      list.hidden = !expanded;
-
-      if (showLabel && hideLabel) {
-        showLabel.classList.toggle("hidden", expanded);
-        hideLabel.classList.toggle("hidden", !expanded);
-      }
-
-      try {
-        localStorage.setItem("fsm_spots_expanded", expanded ? "1" : "0");
-      } catch {}
-    }
-
-    if (btn && list) {
-      const saved = (() => {
-        try { return localStorage.getItem("fsm_spots_expanded"); } catch { return null; }
-      })();
-
-      setExpanded(saved !== "0");
-
-      btn.addEventListener("click", () => {
-        const expanded = btn.getAttribute("aria-expanded") === "true";
-        setExpanded(!expanded);
-      });
-    }
-  </script>
+  <!-- Bootstrap: ersetzt Inline-Scripts + startet App deterministisch -->
+  <script type="module" src="./js/init.js"></script>
 </body>
 </html>
