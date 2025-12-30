@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html lang="de" data-theme="light">
 <head>
@@ -1702,7 +1704,7 @@
     </span>
   </div>
 
-  <!-- Leaflet + MarkerCluster (Variante A: klassische Scripts) -->
+  <!-- Scripts: Leaflet + MarkerCluster -->
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -1714,7 +1716,74 @@
     defer
   ></script>
 
-  <!-- Bootstrap: ersetzt Inline-Scripts + startet App deterministisch -->
-  <script type="module" src="./js/init.js"></script>
+  <!-- Details/Summary Fix (ES-Modul) -->
+  <script type="module" src="./js/ui/details-summary-fix.js"></script>
+
+  <!-- App (ES-Modul) -->
+  <script type="module" src="./js/app.js"></script>
+
+  <!-- Bridge: Menüpunkt "Nur Karte" nutzt die bestehende Toggle-Logik -->
+  <script type="module">
+    const menuToggle = document.getElementById("btn-toggle-view-menu");
+    const sidebarToggle = document.getElementById("btn-toggle-view");
+
+    if (menuToggle && sidebarToggle) {
+      menuToggle.addEventListener("click", () => sidebarToggle.click());
+    }
+  </script>
+
+  <!-- Onboarding-Hinweis schließen (ohne Persistenz: nach Reload wieder sichtbar) -->
+  <script type="module">
+    const hint = document.querySelector("[data-onboarding-hint]");
+    const closeBtn =
+      hint?.querySelector("[data-onboarding-close]") ||
+      hint?.querySelector(".fsm-onboarding-hint__close");
+
+    function dismissHint() {
+      if (!hint) return;
+      hint.hidden = true;                 // nur für die aktuelle Session
+      hint.setAttribute("aria-hidden", "true");
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", dismissHint);
+  </script>
+
+  <!-- Spots-Liste anzeigen/ausblenden + Zustand merken -->
+  <script type="module">
+    const btn = document.getElementById("btn-toggle-spots");
+    const list = document.getElementById("spot-list");
+
+    const showLabel = btn?.querySelector('[data-state="show"]');
+    const hideLabel = btn?.querySelector('[data-state="hide"]');
+
+    function setExpanded(expanded) {
+      if (!btn || !list) return;
+
+      btn.setAttribute("aria-expanded", String(expanded));
+      list.hidden = !expanded;
+
+      if (showLabel && hideLabel) {
+        showLabel.classList.toggle("hidden", expanded);
+        hideLabel.classList.toggle("hidden", !expanded);
+      }
+
+      try {
+        localStorage.setItem("fsm_spots_expanded", expanded ? "1" : "0");
+      } catch {}
+    }
+
+    if (btn && list) {
+      const saved = (() => {
+        try { return localStorage.getItem("fsm_spots_expanded"); } catch { return null; }
+      })();
+
+      setExpanded(saved !== "0");
+
+      btn.addEventListener("click", () => {
+        const expanded = btn.getAttribute("aria-expanded") === "true";
+        setExpanded(!expanded);
+      });
+    }
+  </script>
 </body>
 </html>
