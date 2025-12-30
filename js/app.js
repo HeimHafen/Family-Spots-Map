@@ -60,6 +60,13 @@ const log = (...args) => { if (DEBUG) console.log(...args); };
 const warn = (...args) => { if (DEBUG) console.warn(...args); };
 
 // ------------------------------------------------------
+// Menu / Language / Skip
+// ------------------------------------------------------
+const { closeMenu } = initMenu();
+initLanguageSwitcher();
+initSkipToSpots(closeMenu);
+
+// ------------------------------------------------------
 // Typdefinitionen (JSDoc)
 // ------------------------------------------------------
 
@@ -2050,12 +2057,6 @@ function getRandomPlayIdea() {
 // ------------------------------------------------------
 async function init() {
   try {
-    // Menu / Language / Skip (moved inside init for zero import side-effects)
-    const menuApi = initMenu() || {};
-    const closeMenu = typeof menuApi.closeMenu === "function" ? menuApi.closeMenu : (() => {});
-    initLanguageSwitcher();
-    initSkipToSpots(closeMenu);
-
     languageSwitcherEl = document.getElementById("language-switcher") || document.getElementById("language-toggle");
     languageSwitcherFlagEl = document.getElementById("language-switcher-flag");
 
@@ -2261,6 +2262,7 @@ async function init() {
 
     if (btnToggleFiltersEl) {
       btnToggleFiltersEl.addEventListener("click", handleToggleFilters);
+      btnToggleFiltersEl.querySelector("span")?.replaceChildren?.(); // noop, but safe
       const span = btnToggleFiltersEl.querySelector("span");
       if (span) span.textContent = t("btn_show_filters", "Filter anzeigen");
       btnToggleFiltersEl.setAttribute("aria-expanded", "false");
@@ -2376,14 +2378,9 @@ async function init() {
 }
 
 // ------------------------------------------------------
-// Exported deterministic start (called by init.js)
+// DOMContentLoaded
 // ------------------------------------------------------
-let __started = false;
-
-export async function startApp() {
-  if (__started) return;
-  __started = true;
-
+document.addEventListener("DOMContentLoaded", async () => {
   try {
     if (typeof I18N !== "undefined" && typeof I18N.init === "function") {
       await I18N.init();
@@ -2391,6 +2388,5 @@ export async function startApp() {
   } catch (err) {
     console.warn("[Family Spots] I18N konnte nicht geladen werden:", err);
   }
-
   await init();
-}
+});
