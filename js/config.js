@@ -36,7 +36,7 @@
  *  "Lernen & Kultur" |
  *  "Praktisches" |
  *  "Unterwegs mit WoMo & Rad" |
- *  "Entspannung & Naturorte" |
+ *  "Entspannung & Naturorte"
  * } CategoryGroupKey
  */
 
@@ -169,7 +169,13 @@ export const FEATURES = Object.freeze({
 // Kategorien & Gruppen
 // ------------------------------------------------------
 
-/** @type {Record<CategoryGroupKey, string[]>} */
+/**
+ * Kuratierte Hauptkategorien pro Gruppe.
+ * Nur diese Slugs erscheinen als Kategorien in der UI.
+ * Weitere Slugs bleiben über Labels/Tags technisch nutzbar (Legacy / Feintypen).
+ *
+ * @type {Record<CategoryGroupKey, string[]>}
+ */
 export const CATEGORY_GROUPS = {
   "Spiel & Bewegung": [
     "spielplatz",
@@ -177,22 +183,19 @@ export const CATEGORY_GROUPS = {
     "indoor-spielplatz",
     "waldspielplatz",
     "wasserspielplatz",
-    "barrierefreier-spielplatz",
     "bewegungspark",
-    "multifunktionsfeld",
     "bolzplatz",
     "pumptrack",
     "skatepark",
-    "verkehrsgarten",
-    "toddler-barfuss-motorik"
+    "verkehrsgarten"
   ],
   "Tiere & Natur": [
     "zoo",
     "tierpark",
     "wildpark",
     "bauernhof",
-    "naturerlebnispfad",
-    "walderlebnisroute"
+    "naturerlebnispfad"
+    // "walderlebnisroute" als Feintyp via Tags/Label
   ],
   "Wasser & Schwimmen": [
     "schwimmbad",
@@ -205,32 +208,22 @@ export const CATEGORY_GROUPS = {
     "freizeitpark",
     "trampolinpark",
     "kletterhalle",
-    "kletteranlage-outdoor",
     "kletterwald-hochseilgarten",
     "boulderpark",
-    "minigolf",
-    // ➕ NEU
-    "hoehle",
-    "felsenwanderung",
-    "aussichtspunkt",
-    "baumhaus",
-    "labyrinth",
-    "klangpfad",
-    "ueberdachter-spielplatz",
-    "dirtbike-track",
-    "streetball-platz"
+    "minigolf"
+    // hoehle / labyrinth / baumhaus etc. laufen über Tags auf Natur-/Wander-Kategorien
   ],
   "Wandern & Radfahren": ["wanderweg-kinderwagen", "radweg-family"],
   "Essen & Trinken": [
     "familiencafe",
-    "kinder-familiencafe",
     "familien-restaurant"
+    // "kinder-familiencafe" als Legacy-Slug/Label möglich
   ],
   "Lernen & Kultur": [
-    "museum-kinder",
     "kinder-museum",
     "freilichtmuseum",
     "bibliothek"
+    // "museum-kinder" / "kinder_museum" als Legacy-Slugs
   ],
   "Praktisches": ["oeffentliche-toilette", "wickelraum"],
   "Unterwegs mit WoMo & Rad": [
@@ -242,12 +235,10 @@ export const CATEGORY_GROUPS = {
   ],
   "Entspannung & Naturorte": [
     "park-garten",
-    "picknickwiese",
-
-    // ➕ NEU
-    "waldbaden-ort",
-    "natur-aussichtspunkt"
-  ]};
+    "picknickwiese"
+    // "waldbaden-ort" / "natur-aussichtspunkt" als Tag-Feintypen
+  ]
+};
 
 /**
  * Labels für Kategorie-Gruppen in verschiedenen Sprachen.
@@ -265,7 +256,8 @@ export const CATEGORY_GROUP_LABELS = {
     "Lernen & Kultur": "Lernen & Kultur",
     "Praktisches": "Praktisches",
     "Unterwegs mit WoMo & Rad": "Unterwegs mit WoMo & Rad",
-    "Entspannung & Naturorte": "Entspannung & Naturorte"},
+    "Entspannung & Naturorte": "Entspannung & Naturorte"
+  },
   en: {
     "Spiel & Bewegung": "Play & movement",
     "Tiere & Natur": "Animals & nature",
@@ -276,7 +268,8 @@ export const CATEGORY_GROUP_LABELS = {
     "Lernen & Kultur": "Learning & culture",
     "Praktisches": "Useful on the way",
     "Unterwegs mit WoMo & Rad": "On the road (RV & bike)",
-    "Entspannung & Naturorte": "Relax & nature"},
+    "Entspannung & Naturorte": "Relax & nature"
+  },
   da: {
     "Spiel & Bewegung": "Leg & bevægelse",
     "Tiere & Natur": "Dyr & natur",
@@ -287,11 +280,13 @@ export const CATEGORY_GROUP_LABELS = {
     "Lernen & Kultur": "Læring & kultur",
     "Praktisches": "Praktisk på tur",
     "Unterwegs mit WoMo & Rad": "På farten (autocamper & cykel)",
-    "Entspannung & Naturorte": "Afslapning & natursteder"}
+    "Entspannung & Naturorte": "Afslapning & natursteder"
+  }
 };
 
 /** @type {Record<string, string>} */
 export const CATEGORY_LABELS_DE = {
+  // Spiel & Bewegung
   spielplatz: "Spielplatz",
   abenteuerspielplatz: "Abenteuerspielplatz",
   "indoor-spielplatz": "Indoor-Spielplatz",
@@ -305,21 +300,29 @@ export const CATEGORY_LABELS_DE = {
   skatepark: "Skatepark",
   verkehrsgarten: "Verkehrsgarten",
   "toddler-barfuss-motorik": "Toddler / Barfuß / Motorik",
+
+  // Tiere & Natur
   zoo: "Zoo",
   tierpark: "Tierpark",
   wildpark: "Wildpark & Safaris",
   bauernhof: "Bauernhof",
   naturerlebnispfad: "Naturerlebnispfad",
   walderlebnisroute: "Walderlebnisroute",
+
+  // Lernen & Kultur / Outdoor
   freilichtmuseum: "Freilichtmuseum",
+
+  // Wasser & Schwimmen / Winter
   schwimmbad: "Schwimmbad",
   badesee: "Badesee",
   strand: "Familien-Strand",
   eisbahn: "Eisbahn",
   rodelhuegel: "Rodelhügel",
+
+  // Erlebnis & Freizeit
   freizeitpark: "Freizeitpark",
 
-  // ➕ NEU
+  // Feintypen / Natur-Erlebnis (laufen primär über Tags)
   hoehle: "Höhle / Felsenwanderung",
   felsenwanderung: "Felsenwanderung",
   aussichtspunkt: "Aussichtspunkt / Panorama",
@@ -338,28 +341,42 @@ export const CATEGORY_LABELS_DE = {
   "kletterwald-hochseilgarten": "Kletterwald / Hochseilgarten",
   boulderpark: "Boulderpark",
   minigolf: "Minigolf",
+
+  // Wandern & Radfahren
   "wanderweg-kinderwagen": "Wanderweg (kinderwagenfreundlich)",
   "radweg-family": "Familien-Radweg",
+
+  // Essen & Trinken
   familiencafe: "Familiencafé",
   "kinder-familiencafe": "Kinder- & Familiencafé",
   "familien-restaurant": "Familien-Restaurant",
+
+  // Lernen & Kultur (indoor)
   "museum-kinder": "Museum (Kinder)",
   "kinder-museum": "Kinder-Museum",
   kinder_museum: "Kinder-Museum",
   bibliothek: "Bibliothek",
+
+  // Praktisches
   "oeffentliche-toilette": "Öffentliche Toilette",
   wickelraum: "Wickelraum",
+
+  // Unterwegs mit WoMo & Rad
   "stellplatz-spielplatz-naehe-kostenlos":
     "Kostenloser Stellplatz (Spielplatznähe)",
   "wohnmobil-service-station": "Wohnmobil-Service-Station",
   "rastplatz-spielplatz-dusche": "Rastplatz (Spielplatz & Dusche)",
   "bikepacking-spot": "Bikepacking-Spot",
   "campingplatz-familien": "Familien-Campingplatz",
+
+  // Entspannung & Naturorte
   "park-garten": "Park / Garten",
-  picknickwiese: "Picknickwiese"};
+  picknickwiese: "Picknickwiese"
+};
 
 /** @type {Record<string, string>} */
 export const CATEGORY_LABELS_EN = {
+  // Play & movement
   spielplatz: "Playground",
   abenteuerspielplatz: "Adventure playground",
   "indoor-spielplatz": "Indoor playground",
@@ -373,21 +390,29 @@ export const CATEGORY_LABELS_EN = {
   skatepark: "Skate park",
   verkehrsgarten: "Traffic training park",
   "toddler-barfuss-motorik": "Toddler / barefoot / motor skills",
+
+  // Animals & nature
   zoo: "Zoo",
   tierpark: "Animal park",
   wildpark: "Wildlife park & safaris",
   bauernhof: "Farm",
   naturerlebnispfad: "Nature discovery trail",
   walderlebnisroute: "Forest experience route",
+
+  // Learning & culture / outdoor
   freilichtmuseum: "Open-air museum",
+
+  // Water & swimming / winter
   schwimmbad: "Swimming pool",
   badesee: "Swimming lake",
   strand: "Family beach",
   eisbahn: "Ice rink",
   rodelhuegel: "Sledding hill",
+
+  // Adventure & leisure
   freizeitpark: "Theme park",
 
-  // ➕ NEU
+  // Fine types (mostly via tags)
   hoehle: "Cave / rock hike",
   felsenwanderung: "Rock hike",
   aussichtspunkt: "Scenic viewpoint / panorama",
@@ -406,28 +431,42 @@ export const CATEGORY_LABELS_EN = {
   "kletterwald-hochseilgarten": "Rope course / climbing forest",
   boulderpark: "Bouldering park",
   minigolf: "Mini golf",
+
+  // Hiking & cycling
   "wanderweg-kinderwagen": "Stroller-friendly trail",
   "radweg-family": "Family bike route",
+
+  // Food & drinks
   familiencafe: "Family café",
   "kinder-familiencafe": "Kids & family café",
   "familien-restaurant": "Family restaurant",
+
+  // Learning & culture (indoor)
   "museum-kinder": "Museum (kids)",
   "kinder-museum": "Children's museum",
   kinder_museum: "Children's museum",
   bibliothek: "Library",
+
+  // Practical
   "oeffentliche-toilette": "Public toilet",
   wickelraum: "Baby changing room",
+
+  // RV & vanlife
   "stellplatz-spielplatz-naehe-kostenlos":
     "Free RV spot (near playground)",
   "wohnmobil-service-station": "RV service station",
   "rastplatz-spielplatz-dusche": "Rest area (playground & shower)",
   "bikepacking-spot": "Bikepacking spot",
   "campingplatz-familien": "Family campground",
+
+  // Relax & nature
   "park-garten": "Park / garden",
-  picknickwiese: "Picnic meadow"};
+  picknickwiese: "Picnic meadow"
+};
 
 /** @type {Record<string, string>} */
 export const CATEGORY_LABELS_DA = {
+  // Leg & bevægelse
   spielplatz: "Legeplads",
   abenteuerspielplatz: "Eventyrlegeplads",
   "indoor-spielplatz": "Indendørs legeplads",
@@ -441,20 +480,29 @@ export const CATEGORY_LABELS_DA = {
   skatepark: "Skatepark",
   verkehrsgarten: "Trafiklegeplads",
   "toddler-barfuss-motorik": "Tumling / barfod / motorik",
+
+  // Dyr & natur
   zoo: "Zoo",
   tierpark: "Dyrepark",
   wildpark: "Dyrepark & safari",
   bauernhof: "Gård",
   naturerlebnispfad: "Natursti",
   walderlebnisroute: "Skovoplevelsesrute",
+
+  // Frilandsmuseum
   freilichtmuseum: "Frilandsmuseum",
+
+  // Vand & badning / vinter
   schwimmbad: "Svømmebad",
   badesee: "Badesø",
   strand: "Familiestrand",
   eisbahn: "Skøjtebane",
   rodelhuegel: "Kælkebakke",
+
+  // Oplevelser & fritid
   freizeitpark: "Forlystelsespark",
 
+  // Fine typer (primært via tags)
   hoehle: "Hule / klippevandring",
   felsenwanderung: "Klippevandring",
   aussichtspunkt: "Udsigtspunkt / panorama",
@@ -473,25 +521,38 @@ export const CATEGORY_LABELS_DA = {
   "kletterwald-hochseilgarten": "Klatreskov / højdebane",
   boulderpark: "Boulderpark",
   minigolf: "Minigolf",
+
+  // Vandring & cykling
   "wanderweg-kinderwagen": "Vandrerute (barnevognsvenlig)",
   "radweg-family": "Familievenlig cykelrute",
+
+  // Mad & drikke
   familiencafe: "Familiecafé",
   "kinder-familiencafe": "Børne- & familiecafé",
   "familien-restaurant": "Familierestaurant",
+
+  // Læring & kultur (indendørs)
   "museum-kinder": "Museum (børn)",
   "kinder-museum": "Børnemuseum",
   kinder_museum: "Børnemuseum",
   bibliothek: "Børne- & familiebibliotek",
+
+  // Praktisk
   "oeffentliche-toilette": "Offentligt toilet",
   wickelraum: "Puslerum",
+
+  // Autocamper & vanlife
   "stellplatz-spielplatz-naehe-kostenlos":
     "Gratis autocamperplads (tæt på legeplads)",
   "wohnmobil-service-station": "Autocamper serviceplads",
   "rastplatz-spielplatz-dusche": "Rasteplads (legeplads & bruser)",
   "bikepacking-spot": "Bikepacking-spot",
   "campingplatz-familien": "Familievenlig campingplads",
+
+  // Afslapning & natursteder
   "park-garten": "Park / have",
-  picknickwiese: "Picniceng"};
+  picknickwiese: "Picniceng"
+};
 
 // ------------------------------------------------------
 // Kategorie-Tags (für Filter-Logik)
@@ -499,6 +560,7 @@ export const CATEGORY_LABELS_DA = {
 
 /** @type {Record<string, string[]>} */
 export const CATEGORY_TAGS = {
+  // Spiel & Bewegung
   spielplatz: ["playground", "outdoor", "all-ages", "family-friendly"],
   abenteuerspielplatz: [
     "playground",
@@ -562,6 +624,7 @@ export const CATEGORY_TAGS = {
     "family-friendly"
   ],
 
+  // Tiere & Natur
   zoo: [
     "animals",
     "zoo",
@@ -597,6 +660,7 @@ export const CATEGORY_TAGS = {
     "family-friendly"
   ],
 
+  // Lernen & Kultur (outdoor)
   freilichtmuseum: [
     "museum",
     "outdoor",
@@ -606,6 +670,7 @@ export const CATEGORY_TAGS = {
     "family-friendly"
   ],
 
+  // Wasser & Schwimmen / Winter
   schwimmbad: [
     "water",
     "swimming",
@@ -626,6 +691,7 @@ export const CATEGORY_TAGS = {
   eisbahn: ["ice-skating", "winter", "sport", "seasonal", "family-friendly"],
   rodelhuegel: ["sledding", "winter", "snow", "outdoor", "family-friendly"],
 
+  // Erlebnis & Freizeit
   freizeitpark: [
     "theme-park",
     "rides",
@@ -663,6 +729,7 @@ export const CATEGORY_TAGS = {
   boulderpark: ["climbing", "bouldering", "sport", "family-friendly"],
   minigolf: ["sport", "mini-golf", "game", "family-friendly"],
 
+  // Feintypen Natur / Aussicht / Spezial
   hoehle: [
     "hiking",
     "adventure",
@@ -736,6 +803,7 @@ export const CATEGORY_TAGS = {
     "family-friendly"
   ],
 
+  // Wandern & Radfahren
   "wanderweg-kinderwagen": [
     "hiking",
     "stroller-friendly",
@@ -745,6 +813,7 @@ export const CATEGORY_TAGS = {
   ],
   "radweg-family": ["cycling", "family-route", "outdoor", "family-friendly"],
 
+  // Essen & Trinken
   familiencafe: ["food", "cafe", "indoor", "family-friendly"],
   "kinder-familiencafe": [
     "food",
@@ -755,6 +824,7 @@ export const CATEGORY_TAGS = {
   ],
   "familien-restaurant": ["food", "restaurant", "indoor", "family-friendly"],
 
+  // Lernen & Kultur (indoor)
   "museum-kinder": [
     "museum",
     "indoor",
@@ -781,9 +851,11 @@ export const CATEGORY_TAGS = {
     "family-friendly"
   ],
 
+  // Praktisches
   "oeffentliche-toilette": ["infrastructure", "toilet"],
   wickelraum: ["infrastructure", "baby-changing", "indoor"],
 
+  // Unterwegs mit WoMo & Rad
   "stellplatz-spielplatz-naehe-kostenlos": [
     "rv",
     "free",
@@ -826,6 +898,7 @@ export const CATEGORY_TAGS = {
     "family-friendly"
   ],
 
+  // Entspannung & Naturorte
   "park-garten": [
     "park",
     "nature",
@@ -834,7 +907,8 @@ export const CATEGORY_TAGS = {
     "picnic-possible",
     "family-friendly"
   ],
-  picknickwiese: ["picnic", "nature", "relax", "outdoor", "family-friendly"]};
+  picknickwiese: ["picnic", "nature", "relax", "outdoor", "family-friendly"]
+};
 
 // ------------------------------------------------------
 // Filter-Chips (Mapping Filter → Tags)
@@ -1082,7 +1156,9 @@ export const ADDONS = Object.freeze({
       "bikepacking-spot",
       "campingplatz-familien"
     ]
-  },
+  }
+});
+
 /**
  * Zugriffsregeln pro Kategorie:
  *
@@ -1093,8 +1169,6 @@ export const ADDONS = Object.freeze({
  * Default ist "free", falls Kategorie hier nicht eingetragen ist.
  * @type {CategoryAccessConfig}
  */
-});
-
 export const CATEGORY_ACCESS = Object.freeze({
   defaultLevel: "free",
   perCategory: {
@@ -1159,7 +1233,7 @@ export const CATEGORY_ACCESS = Object.freeze({
       level: "addon",
       subscriptionId: "family_plus",
       addonId: "addon_rv"
-    },
+    }
 
     // ➕ weitere Kategorien kannst du hier jederzeit ergänzen
   }
