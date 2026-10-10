@@ -1,5 +1,5 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261010-review-2";
+const CACHE_VERSION = "20261010-repair-3";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 const ROOT = new URL("./", self.location.href);
