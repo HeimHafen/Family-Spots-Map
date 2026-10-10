@@ -47,10 +47,12 @@ function safeGet(key) {
  */
 function safeSet(key, value) {
   try {
-    if (typeof localStorage === "undefined") return;
+    if (typeof localStorage === "undefined") return false;
     localStorage.setItem(key, value);
+    return true;
   } catch (err) {
     console.warn("[Family Spots] Konnte localStorage schreiben:", err);
+    return false;
   }
 }
 
@@ -316,7 +318,7 @@ export function savePlusStatus(status) {
   };
 
   try {
-    safeSet(PLUS_STORAGE_KEY, JSON.stringify(normalized));
+    return safeSet(PLUS_STORAGE_KEY, JSON.stringify(normalized));
   } catch (err) {
     console.warn("[Family Spots] Konnte Plus-Status nicht speichern:", err);
   }
