@@ -1,4 +1,3 @@
-{
   "__meta": {
     "schemaVersion": 1,
     "locale": "en",
@@ -63,7 +62,7 @@
       "intro1": "I’m Tilla. I’ll guide you to places for togetherness, memories, and small adventures. Shall we go? 🐢",
       "intro2": "Right now, I can’t find a matching spot. Maybe a short walk – or widen the radius a little. 🐢",
       "afterDaylogSave": "Your day is saved – small moments, big memories. 💚",
-      "afterFavAdded": "This place now has a star on your map. ⭐",
+      "afterFavAdded": "This place now has a heart on your map. 💚",
       "afterFavRemoved": "No worries – we’ll find new memories. 🐢",
       "tripMode": "You’re on the move – I’m watching for heartwarming moments. 🚐",
       "everydayMode": "Everyday life can glow. Let’s find small wonders nearby. 🌿",
@@ -173,7 +172,7 @@
   "turtle_intro_1": "I’m Tilla. I’ll guide you to places for togetherness, memories, and small adventures. Shall we go? 🐢",
   "turtle_intro_2": "Right now, I can’t find a matching spot. Maybe a short walk – or widen the radius a little. 🐢",
   "turtle_after_daylog_save": "Your day is saved – small moments, big memories. 💚",
-  "turtle_after_fav_added": "This place now has a star on your map. ⭐",
+  "turtle_after_fav_added": "This place now has a heart on your map. 💚",
   "turtle_after_fav_removed": "No worries – we’ll find new memories. 🐢",
   "turtle_trip_mode": "You’re on the move – I’m watching for heartwarming moments. 🚐",
   "turtle_everyday_mode": "Everyday life can glow. Let’s find small wonders nearby. 🌿",
