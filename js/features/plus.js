@@ -9,7 +9,7 @@ import {
   getPlusStatus as getPlusStatusFromStorage,
   savePlusStatus as savePlusStatusToStorage
 } from "../storage.js";
-import { t, getLanguage } from "../i18n.js?v=20261010-repair-3";
+import { t, getLanguage } from "../i18n.js?v=20261010-unified-4";
 import {
   SUBSCRIPTIONS,
   ADDONS,
@@ -17,7 +17,7 @@ import {
   DEV_FORCE_PLUS
 } from "../config.js";
 
-import { fetchJsonWithTimeout } from "../data/dataLoader.js?v=20261010-repair-3";
+import { fetchJsonWithTimeout } from "../data/dataLoader.js?v=20261010-unified-4";
 
 const PARTNERS_URL = "data/partners.json";
 
