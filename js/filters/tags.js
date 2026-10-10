@@ -1,7 +1,7 @@
 // js/filters/tags.js
 "use strict";
 
-import { getLanguage } from "../i18n.js?v=20261010-repair-3";
+import { getLanguage } from "../i18n.js?v=20261010-unified-4";
 
 import { CATEGORY_TAGS } from "../config.js";
 
