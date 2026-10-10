@@ -18,7 +18,7 @@
  */
 
 /** Pfad zur Datenquelle relativ zu index.html */
-const SPOTS_DATA_URL = "./data/spots.json?v=20261008-3";
+const SPOTS_DATA_URL = "./data/spots.json?v=20261010-review-2";
 
 /**
  * Normalisiert den JSON-Response in ein konsistentes
@@ -28,9 +28,7 @@ const SPOTS_DATA_URL = "./data/spots.json?v=20261008-3";
  *  - [ { ...Spot... }, ... ]
  *  - { spots: [ ... ], index: { ... } }
  *
- * Bei unerwarteter Struktur:
- *  - spots: []
- *  - index: null
+ * Bei unerwarteter Struktur wird ein Fehler ausgelöst; gespeicherte Daten bleiben erhalten.
  *
  * @param {any} json
  * @returns {AppDataPayload}
@@ -60,6 +58,12 @@ function normalizeAppData(json) {
     );
   }
 
+  if (!Array.isArray(json) && !Array.isArray(json?.spots)) {
+    throw new Error("[Family Spots] spots.json muss ein Array oder ein Objekt mit spots enthalten.");
+  }
+  if (spots.some(spot => !spot || typeof spot !== "object" || Array.isArray(spot))) {
+    throw new Error("[Family Spots] Ungültiger Spot-Datensatz.");
+  }
   return { spots, index };
 }
 
@@ -78,38 +82,18 @@ function normalizeAppData(json) {
  * @returns {Promise<AppDataPayload>}
  * @throws {Error} wenn Fetch oder JSON-Parsing fehlschlägt
  */
+export async function fetchJsonWithTimeout(url, timeout = 10000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const response = await fetch(url, { cache: "no-cache", signal: controller.signal });
+    if (!response.ok) throw new Error(`[Family Spots] HTTP ${response.status}: ${url}`);
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function loadAppData() {
-  let response;
-
-  // 1) Netzwerk/HTTP
-  try {
-    response = await fetch(SPOTS_DATA_URL);
-  } catch (err) {
-    throw new Error(
-      `[Family Spots] Konnte Spots nicht laden (Netzwerkfehler): ${String(
-        err
-      )}`
-    );
-  }
-
-  if (!response.ok) {
-    throw new Error(
-      `[Family Spots] Konnte Spots nicht laden: HTTP ${response.status}`
-    );
-  }
-
-  // 2) JSON-Parsing
-  let json;
-  try {
-    json = await response.json();
-  } catch (err) {
-    throw new Error(
-      `[Family Spots] Ungültiges JSON-Format in ${SPOTS_DATA_URL}: ${String(
-        err
-      )}`
-    );
-  }
-
-  // 3) Struktur normalisieren
-  return normalizeAppData(json);
+  return normalizeAppData(await fetchJsonWithTimeout(SPOTS_DATA_URL));
 }
