@@ -20,6 +20,7 @@ for (const name of [...files("data"), ".eslintrc.json", "htmlhint.json", "manife
   if (!/\.(?:json|webmanifest)$/.test(name)) continue;
   try { JSON.parse(read(name)); } catch (error) { fail(`${name}: ${error.message}`); }
 }
+if (failures) { console.error(`Project check stopped: ${failures} syntax/JSON errors. Nothing can be published.`); process.exit(1); }
 function flatten(object, prefix = "", result = {}) {
   for (const [key, value] of Object.entries(object)) {
     const name = prefix ? `${prefix}.${key}` : key;
@@ -32,6 +33,16 @@ const translations = Object.fromEntries(["de", "en", "da"].map(lang => [lang, fl
 const allKeys = new Set(Object.values(translations).flatMap(table => Object.keys(table)));
 for (const [lang, table] of Object.entries(translations)) {
   for (const key of allKeys) if (!table[key]?.trim()) fail(`Translation ${lang} missing: ${key}`);
+}
+// Check the built-in fallback against all three source dictionaries.
+const fallbackMatch = read("js/i18n.js").match(/const FALLBACK_MESSAGES = (\{[\s\S]*?\n\});/);
+if (!fallbackMatch) fail("Bundled language fallback is missing");
+else {
+  const fallback = JSON.parse(fallbackMatch[1]);
+  for (const lang of ["de", "en", "da"]) {
+    for (const key of allKeys) if (fallback[lang]?.[key] !== translations[lang][key]) fail(`Bundled translation ${lang} out of date: ${key}`);
+    for (const key of Object.keys(fallback[lang] || {})) if (!(key in translations[lang])) fail(`Obsolete bundled translation ${lang}: ${key}`);
+  }
 }
 const reached = new Set();
 function checkModule(name) {
