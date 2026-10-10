@@ -1,25 +1,20 @@
-{
-  "id": "./",
+ "id": "./",
   "name": "Family Spots Map",
   "short_name": "Family Spots",
   "lang": "de",
   "dir": "ltr",
-
   "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-
-  "background_color": "#f7f8fb",
-  "theme_color": "#fb8c00",
-
+  "background_color": "#f7e1d0",
+  "theme_color": "#f7e1d0",
   "description": "Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern.",
   "categories": [
     "travel",
     "lifestyle",
     "utilities"
   ],
-
   "icons": [
     {
       "src": "assets/icons/icon-192.png",
@@ -34,36 +29,10 @@
       "purpose": "any"
     },
     {
-      "src": "assets/icons/maskable-icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "assets/icons/maskable-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
       "src": "assets/icons/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "assets/screenshots/home.jpg",
-      "sizes": "540x960",
-      "type": "image/jpeg",
-      "label": "Startseite"
-    },
-    {
-      "src": "assets/screenshots/map.jpg",
-      "sizes": "540x960",
-      "type": "image/jpeg",
-      "label": "Karte"
     }
   ]
 }
