@@ -8,7 +8,7 @@
 "use strict";
 
 import { SPOTS_CACHE_KEY } from "./config.js";
-import { loadAppData } from "./data/dataLoader.js?v=20261010-repair-3";
+import { loadAppData } from "./data/dataLoader.js?v=20261010-unified-4";
 
 /** @typedef {import("./app.js").Spot} Spot */
 
