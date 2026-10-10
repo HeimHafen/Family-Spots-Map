@@ -1,41 +1,32 @@
-// js/ui/menu.js
 import { qs } from "../utils/dom.js";
+import { createModalController } from "./modal.js";
 
 export function initMenu() {
   const menuToggle = qs("#menu-toggle");
   const menu = qs("#app-menu");
-  const backdrop = menu ? qs(".app-menu-backdrop", menu) : null;
-
+  const controller = menu ? createModalController(menu) : null;
   function openMenu() {
-    if (!menu) return;
+    if (!menu || !menu.hidden) return;
     menu.hidden = false;
     menu.setAttribute("aria-hidden", "false");
     document.body.dataset.menuOpen = "1";
     menuToggle?.setAttribute("aria-expanded", "true");
+    controller.activate();
   }
-
   function closeMenu() {
-    if (!menu) return;
+    if (!menu || menu.hidden) return;
+    controller.deactivate();
     menu.hidden = true;
     menu.setAttribute("aria-hidden", "true");
     delete document.body.dataset.menuOpen;
     menuToggle?.setAttribute("aria-expanded", "false");
   }
-
-  menuToggle?.addEventListener("click", () => {
-    if (!menu) return;
-    menu.hidden ? openMenu() : closeMenu();
+  menuToggle?.addEventListener("click", () => menu?.hidden ? openMenu() : closeMenu());
+  menu?.addEventListener("click", event => {
+    if (event.target?.closest("[data-menu-close]")) closeMenu();
   });
-
-  backdrop?.addEventListener("click", closeMenu);
-
-  menu?.addEventListener("click", (e) => {
-    if (e.target?.closest("[data-menu-close]")) closeMenu();
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && menu && !menu.hidden) { event.preventDefault(); closeMenu(); }
   });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeMenu();
-  });
-
   return { openMenu, closeMenu };
 }
