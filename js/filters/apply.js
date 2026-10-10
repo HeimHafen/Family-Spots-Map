@@ -1,7 +1,7 @@
 // js/filters/apply.js
 "use strict";
 
-import { doesSpotMatchBaseFilters } from "./logic.js?v=20261008-3";
+import { doesSpotMatchBaseFilters } from "./logic.js?v=20261010-review-2";
 
 /**
  * @typedef {import("../app.js").Spot} Spot
