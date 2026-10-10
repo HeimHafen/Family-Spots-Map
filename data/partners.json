@@ -14,7 +14,9 @@
       "days": 90,
       "partner": "CamperPlus",
       "source": "partner",
-      "addons": ["addon_rv"],
+      "addons": [
+        "addon_rv"
+      ],
       "enabled": true
     },
     {
@@ -23,7 +25,10 @@
       "days": 365,
       "partner": "Launch",
       "source": "campaign",
-      "addons": ["addon_rv", "addon_water"],
+      "addons": [
+        "addon_rv",
+        "addon_water"
+      ],
       "enabled": true
     },
     {
@@ -32,28 +37,32 @@
       "days": 7,
       "partner": "Internal",
       "source": "testing",
-      "addons": ["addon_rv", "addon_water"],
+      "addons": [
+        "addon_rv",
+        "addon_water"
+      ],
       "enabled": true
     },
-
-    /* --- ABF / Messe-Codes --- */
-
     {
       "code": "FS-ABF-2025",
       "plan": "family_plus",
       "days": 14,
       "partner": "ABF Hannover",
       "source": "event",
-      "addons": ["addon_abf"],
+      "addons": [
+        "addon_abf"
+      ],
       "enabled": true
     },
     {
       "code": "FS-ABF-STAND",
       "plan": "family_plus",
       "days": 7,
-      "partner": "ABF Hannover – Standaktion",
+      "partner": "ABF Hannover â Standaktion",
       "source": "event",
-      "addons": ["addon_abf"],
+      "addons": [
+        "addon_abf"
+      ],
       "enabled": true
     }
   ]
