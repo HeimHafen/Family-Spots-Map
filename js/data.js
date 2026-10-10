@@ -8,7 +8,7 @@
 "use strict";
 
 import { SPOTS_CACHE_KEY } from "./config.js";
-import { loadAppData } from "./data/dataLoader.js?v=20261008-3";
+import { loadAppData } from "./data/dataLoader.js?v=20261010-review-2";
 
 /** @typedef {import("./app.js").Spot} Spot */
 
@@ -36,6 +36,8 @@ let spots = [];
 
 /** @type {AppIndex|null} */
 let indexData = null;
+let hasLoaded = false;
+let loadedFromCache = false;
 
 // ------------------------------------------------------
 // Cache-Helfer (localStorage)
@@ -126,11 +128,11 @@ function extractLatLng(source) {
   if (lng == null) lng = source.longitude;
   if (lng == null && source.lon != null) lng = source.lon;
 
-  if (typeof lat === "string") lat = parseFloat(lat);
-  if (typeof lng === "string") lng = parseFloat(lng);
+  if (typeof lat === "string") lat = lat.trim() ? Number(lat.trim()) : undefined;
+  if (typeof lng === "string") lng = lng.trim() ? Number(lng.trim()) : undefined;
 
-  if (typeof lat !== "number" || Number.isNaN(lat)) lat = undefined;
-  if (typeof lng !== "number" || Number.isNaN(lng)) lng = undefined;
+  if (!Number.isFinite(lat) || Math.abs(lat) > 90) lat = undefined;
+  if (!Number.isFinite(lng) || Math.abs(lng) > 180) lng = undefined;
 
   return { lat, lng };
 }
@@ -229,9 +231,9 @@ function normalizeRawSpot(s) {
  */
 export async function loadData() {
   // Bereits geladen? Dann direkt liefern.
-  // fromCache hier bewusst auf false, da Ursprung nicht mehr nachvollzogen wird.
-  if (spots.length && indexData) {
-    return { spots, index: indexData, fromCache: false };
+  // Die Herkunft bleibt auch bei weiteren Aufrufen erhalten.
+  if (hasLoaded) {
+    return { spots, index: indexData, fromCache: loadedFromCache };
   }
 
   try {
@@ -244,13 +246,17 @@ export async function loadData() {
 
     // Offline-Cache aktualisieren
     saveSpotsToCache(spots, indexData);
+    hasLoaded = true;
+    loadedFromCache = !navigator.onLine;
 
-    return { spots, index: indexData, fromCache: false };
+    return { spots, index: indexData, fromCache: loadedFromCache };
   } catch (err) {
     // Fallback: Cache
     const cached = loadSpotsFromCache();
     if (cached && Array.isArray(cached.spots) && cached.spots.length) {
-      spots = cached.spots;
+      spots = cached.spots.map(normalizeRawSpot);
+      hasLoaded = true;
+      loadedFromCache = true;
       indexData = cached.index || null;
 
       return {
