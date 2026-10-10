@@ -18,7 +18,7 @@
  */
 
 /** Pfad zur Datenquelle relativ zu index.html */
-const SPOTS_DATA_URL = "./data/spots.json?v=20261010-repair-3";
+const SPOTS_DATA_URL = "./data/spots.json?v=20261010-unified-4";
 
 /**
  * Normalisiert den JSON-Response in ein konsistentes
