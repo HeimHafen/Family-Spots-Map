@@ -37,7 +37,7 @@
       "locationOk": "Location set – your next moment is waiting.",
       "locationError": "We can’t access your location right now. You can still browse the map.",
       "locationUnavailableRadiusDisabled": "Location not available – radius filter has been disabled.",
-      "favAdded": "Saved to favorites – a place worth keeping. 💚",
+      "favAdded": "Saved to favourites – a place worth keeping. 💚",
       "favRemoved": "Removed from favorites – new treasures await. 🌿"
     },
     "filters": {
@@ -181,7 +181,7 @@
   "toast_location_ok": "Location set – your next moment is waiting.",
   "toast_location_error": "We can’t access your location right now. You can still browse the map.",
   "toast_location_unavailable_radius_disabled": "Location not available – radius filter has been disabled.",
-  "toast_fav_added": "Saved to favorites – a place worth keeping. 💚",
+  "toast_fav_added": "Saved to favourites – a place worth keeping. 💚",
   "toast_fav_removed": "Removed from favorites – new treasures await. 🌿",
   "filter_radius_description_step0": "Mini adventures – very close by, perfect for a short break.",
   "filter_radius_description_step1": "Quick outing – out and back in no time.",
