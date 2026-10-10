@@ -5,6 +5,8 @@
 
 "use strict";
 
+import { setTextWithHearts } from "./utils/dom.js?v=20261010-unified-4";
+
 let toastEl = null;
 let toastTimeoutId = null;
 let translateFn = null;
@@ -36,7 +38,7 @@ export function showToast(keyOrMessage) {
     }
   }
 
-  toastEl.textContent = message;
+  setTextWithHearts(toastEl, message);
   toastEl.classList.add("toast--visible");
 
   if (toastTimeoutId) {
