@@ -1,53 +1,22 @@
 name: Family Spots Map CI
-
 on:
   push:
     branches: [main]
   pull_request:
-
+  workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   validate:
-    name: Code Quality Checks
+    name: Application integrity
     runs-on: ubuntu-latest
-
+    timeout-minutes: 10
     steps:
-      - name: 📥 Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: 🔧 Set up Node.js
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-
-      - name: 📦 Install Linters
-        run: npm install -g htmlhint csslint eslint
-
-      - name: 🔍 Run HTML Linter
-        run: |
-          if [ -f htmlhint.json ]; then
-            echo "→ Running HTMLHint..."
-            htmlhint . || echo "❌ HTMLHint hat Fehler gefunden – bitte prüfen!"
-          else
-            echo "⚠️ htmlhint.json nicht gefunden – HTML-Skip"
-          fi
-
-      - name: 🎨 Run CSS Linter
-        run: |
-          if [ -f .csslintrc ]; then
-            echo "→ Running CSSLint..."
-            csslint css/ || echo "❌ CSSLint hat Fehler gefunden – bitte prüfen!"
-          else
-            echo "⚠️ .csslintrc nicht gefunden – CSS-Skip"
-          fi
-
-      - name: 💻 Run JavaScript Linter
-        run: |
-          if [ -f .eslintrc.json ]; then
-            echo "→ Running ESLint..."
-            eslint js/ || echo "❌ ESLint hat Fehler gefunden – bitte prüfen!"
-          else
-            echo "⚠️ .eslintrc.json nicht gefunden – JS-Skip"
-          fi
-
-      - name: ✅ Linting abgeschlossen
-        run: echo "✨ Alle statischen Codeprüfungen abgeschlossen!"
+          node-version: "22"
+      - name: Check syntax, JSON, translations, data and offline dependencies
+        run: node tools/check-project.mjs
