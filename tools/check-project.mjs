@@ -13,7 +13,7 @@ function files(dir) {
 }
 for (const name of [...files("js"), ...files("src"), ...files("tools"), "service-worker.js"]) {
   if (!/\.(?:m?js)$/.test(name)) continue;
-  const result = spawnSync(process.execPath, ["--check", path.join(root, name)], { encoding: "utf8" });
+  const result = spawnSync(process.execPath, ["--input-type=module", "--check"], { input: read(name), encoding: "utf8" });
   if (result.status !== 0) fail(`${name}: ${result.stderr}`);
 }
 for (const name of [...files("data"), ".eslintrc.json", "htmlhint.json", "manifest.webmanifest"]) {
