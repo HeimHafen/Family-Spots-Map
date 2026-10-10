@@ -16,4 +16,4 @@ export {
   doesSpotMatchBaseFilters,
   isSpotVerified,
   filterSpots
-} from "./filters/index.js?v=20261010-repair-3";
+} from "./filters/index.js?v=20261010-unified-4";
