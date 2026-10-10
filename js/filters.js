@@ -16,4 +16,4 @@ export {
   doesSpotMatchBaseFilters,
   isSpotVerified,
   filterSpots
-} from "./filters/index.js?v=20261008-3";
+} from "./filters/index.js?v=20261010-review-2";
