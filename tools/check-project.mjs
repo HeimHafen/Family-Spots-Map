@@ -11,7 +11,7 @@ const read = name => fs.readFileSync(path.join(root, name), "utf8");
 function files(dir) {
   return fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? files(path.join(dir, entry.name)) : [path.join(dir, entry.name)]);
 }
-for (const name of [...files("js"), ...files("tools"), "service-worker.js"]) {
+for (const name of [...files("js"), ...files("src"), ...files("tools"), "service-worker.js"]) {
   if (!/\.(?:m?js)$/.test(name)) continue;
   const result = spawnSync(process.execPath, ["--check", path.join(root, name)], { encoding: "utf8" });
   if (result.status !== 0) fail(`${name}: ${result.stderr}`);
