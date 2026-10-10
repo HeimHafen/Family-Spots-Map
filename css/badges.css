@@ -121,7 +121,7 @@
 /* Dauer / Aufenthaltszeit */
 .badge--time {
   background: rgba(249, 115, 22, 0.12);
-  color: #c2410c;
+  color: #9a3412;
   border-color: rgba(249, 115, 22, 0.55);
 }
 
@@ -160,7 +160,7 @@
 /* Verifiziert */
 .badge--verified {
   background: rgba(16, 185, 129, 0.12);
-  color: #047857;
+  color: #065f46;
   border-color: rgba(16, 185, 129, 0.55);
 }
 
