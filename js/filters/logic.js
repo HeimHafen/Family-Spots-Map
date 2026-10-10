@@ -7,8 +7,8 @@ import {
   getSpotCategorySlugs,
   getSpotId,
   getSpotTags,
-} from "./tags.js?v=20261008-3";
-import { getSpotAgeGroups, getSpotMoods, getSpotTravelModes } from "./normalize.js?v=20261008-3";
+} from "./tags.js?v=20261010-review-2";
+import { getSpotAgeGroups, getSpotMoods, getSpotTravelModes } from "./normalize.js?v=20261010-review-2";
 
 /**
  * @typedef {import("../app.js").Spot} Spot
