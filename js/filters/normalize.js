@@ -1,7 +1,7 @@
 // js/filters/normalize.js
 "use strict";
 
-import { buildSpotSearchText } from "./tags.js?v=20261010-review-2";
+import { buildSpotSearchText } from "./tags.js?v=20261010-repair-3";
 
 /**
  * @typedef {import("../app.js").Spot} Spot
@@ -68,7 +68,7 @@ export function getSpotTravelModes(spot) {
 }
 
 /**
- * Vereinheitlichte Normalisierung fÃÂ¼r alle Spots.
+ * Vereinheitlichte Normalisierung fÃ¼r alle Spots.
  * @param {Spot} raw
  * @returns {Spot}
  */
@@ -76,12 +76,12 @@ export function normalizeSpot(raw) {
   /** @type {Spot} */
   const spot = { ...raw };
 
-  // lon Ã¢ÂÂ lng normalisieren
+  // lon â lng normalisieren
   if (spot.lon != null && spot.lng == null) {
     spot.lng = spot.lon;
   }
 
-  // falls keine Haupt-Kategorie gesetzt ist, erste Kategorie aus categories[] ÃÂ¼bernehmen
+  // falls keine Haupt-Kategorie gesetzt ist, erste Kategorie aus categories[] Ã¼bernehmen
   if (
     !spot.category &&
     Array.isArray(spot.categories) &&
