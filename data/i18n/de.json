@@ -1,4 +1,3 @@
-{
   "__meta": {
     "schemaVersion": 1,
     "locale": "de-DE",
@@ -63,7 +62,7 @@
       "intro1": "Ich bin Tilla. Ich zeige euch Orte für Nähe, Erinnerungen und kleine Abenteuer. Gehen wir los? 🐢",
       "intro2": "Heute finde ich keinen passenden Spot. Vielleicht ein Spaziergang – oder Radius etwas aufdrehen. 🐢",
       "afterDaylogSave": "Euer Tag ist gespeichert – klein erlebt, groß erinnert. 💚",
-      "afterFavAdded": "Dieser Ort hat jetzt einen Stern auf eurer Karte. ⭐",
+      "afterFavAdded": "Dieser Ort hat jetzt ein Herz auf eurer Karte. 💚",
       "afterFavRemoved": "Alles gut – nicht jeder Ort bleibt. Wir finden neue. 🐢",
       "tripMode": "Ihr seid unterwegs – ich halte Ausschau nach Herzmomenten. 🚐",
       "everydayMode": "Alltag darf leuchten. Lass uns Wunder ganz nah finden. 🌿",
@@ -173,7 +172,7 @@
   "turtle_intro_1": "Ich bin Tilla. Ich zeige euch Orte für Nähe, Erinnerungen und kleine Abenteuer. Gehen wir los? 🐢",
   "turtle_intro_2": "Heute finde ich keinen passenden Spot. Vielleicht ein Spaziergang – oder Radius etwas aufdrehen. 🐢",
   "turtle_after_daylog_save": "Euer Tag ist gespeichert – klein erlebt, groß erinnert. 💚",
-  "turtle_after_fav_added": "Dieser Ort hat jetzt einen Stern auf eurer Karte. ⭐",
+  "turtle_after_fav_added": "Dieser Ort hat jetzt ein Herz auf eurer Karte. 💚",
   "turtle_after_fav_removed": "Alles gut – nicht jeder Ort bleibt. Wir finden neue. 🐢",
   "turtle_trip_mode": "Ihr seid unterwegs – ich halte Ausschau nach Herzmomenten. 🚐",
   "turtle_everyday_mode": "Alltag darf leuchten. Lass uns Wunder ganz nah finden. 🌿",
