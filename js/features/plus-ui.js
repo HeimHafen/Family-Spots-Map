@@ -6,7 +6,7 @@
 "use strict";
 
 import { FEATURES, LANG_DE, LANG_EN, LANG_DA } from "../config.js";
-import { getPlusStatus, formatPlusStatus, redeemPartnerCode } from "./plus.js?v=20261008-3";
+import { getPlusStatus, formatPlusStatus, redeemPartnerCode } from "./plus.js?v=20261010-review-2";
 
 let sectionEl = null;
 let toggleBtnEl = null;
