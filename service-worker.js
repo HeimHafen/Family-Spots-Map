@@ -1,5 +1,5 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261011-accessibility-theme-9";
+const CACHE_VERSION = "20261011-deep-review-10";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 const ROOT = new URL("./", self.location.href);
@@ -95,6 +95,16 @@ async function validateData(response, url) {
     if (!isRecord(data) || Object.keys(data).length === 0) throw new Error("Invalid translation data");
   }
 }
+async function validateImage(response, url) {
+  const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
+  const size = {"assets/icons/icon-192.png": 192, "assets/icons/icon-512.png": 512, "assets/icons/apple-touch-icon.png": 180}[relative];
+  if (!size) return;
+  const bytes = new Uint8Array(await response.clone().arrayBuffer());
+  const signature = [137,80,78,71,13,10,26,10];
+  if (bytes.length < 33 || signature.some((byte, index) => bytes[index] !== byte)) throw new Error(`Invalid app icon: ${relative}`);
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
+}
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
@@ -106,6 +116,7 @@ self.addEventListener("install", event => {
           const response = await fetchFresh(url, 20000);
           if (!response.ok) throw new Error(`Offline asset unavailable: ${path}`);
           if (new URL(url).pathname.endsWith(".json")) await validateData(response, url);
+          if (new URL(url).pathname.endsWith(".png")) await validateImage(response, url);
           await cache.put(url, response);
         }));
       }
