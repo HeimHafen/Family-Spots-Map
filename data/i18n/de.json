@@ -25,7 +25,7 @@
       "tillaImage": "Tilla die Schildkröte – eure Familienbegleiterin"
     },
     "header": {
-      "tagline": "Heute wird aus Alltag ein kleines Familienabenteuer – ganz nah."
+      "tagline": "Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf."
     },
     "buttons": {
       "showFilters": "Filter aufklappen",
@@ -153,7 +153,7 @@
   "btn_theme_toggle_aria": "Designmodus wechseln",
   "btn_locate_aria": "Standort zentrieren",
   "alt_tilla_image": "Tilla die Schildkröte – eure Familienbegleiterin",
-  "header_tagline": "Heute wird aus Alltag ein kleines Familienabenteuer – ganz nah.",
+  "header_tagline": "Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf.",
   "btn_show_filters": "Filter aufklappen",
   "btn_hide_filters": "Filter zuklappen",
   "btn_only_map": "Nur Karte",
