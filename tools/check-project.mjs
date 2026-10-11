@@ -35,6 +35,13 @@ for (const name of ["index.html", "en/index.html", "da/index.html", "offline.htm
     if (result.status !== 0) fail(`Inline script in ${name}: ${result.stderr}`);
   }
   if (name !== "offline.html") {
+    const spotToggle = html.match(/id="btn-toggle-spots"[\s\S]*?<\/button>/)?.[0];
+    for (const state of ["show", "hide"]) {
+      const label = spotToggle?.match(new RegExp(`<span\\b[^>]*data-state="${state}"[^>]*>`))?.[0];
+      for (const lang of ["de", "en", "da"]) {
+        if (!label?.includes(`data-i18n-${lang}=`)) fail(`Missing list-toggle translation: ${name}: ${state}/${lang}`);
+      }
+    }
     for (const id of ["filter-radius-max-label", "filter-radius-description", "filter-summary", "plus-status-text", "menu-toggle-view-label", "tilla-sidebar-text", "header-tagline"]) {
       const tag = [...html.matchAll(/<[^>]+>/g)].map(match => match[0]).find(tag => tag.includes(`id="${id}"`));
       if (!tag) fail(`Missing dynamic element: ${name}: ${id}`);
@@ -82,7 +89,19 @@ const assets = vm.runInNewContext(assetsMatch[1]);
 for (const name of reached) if (!assets.includes(name)) fail(`Module not available offline: ${name}`);
 for (const name of assets) if (name !== "./" && !fs.existsSync(path.join(root, name))) fail(`Missing offline asset: ${name}`);
 const manifest = JSON.parse(read("manifest.webmanifest"));
-for (const item of [...manifest.icons, ...(manifest.screenshots || [])]) if (!fs.existsSync(path.join(root, item.src))) fail(`Missing manifest image: ${item.src}`);
+for (const item of [...manifest.icons, ...(manifest.screenshots || [])]) {
+  const imagePath = path.join(root, item.src);
+  if (!fs.existsSync(imagePath)) { fail(`Missing manifest image: ${item.src}`); continue; }
+  if (item.type === "image/png" || item.src.endsWith(".png")) {
+    const bytes = fs.readFileSync(imagePath);
+    if (bytes.length < 33 || !bytes.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10])) || bytes.toString("ascii", 12, 16) !== "IHDR") {
+      fail(`Invalid PNG image: ${item.src}`);
+      continue;
+    }
+    const actual = `${bytes.readUInt32BE(16)}x${bytes.readUInt32BE(20)}`;
+    if (item.sizes && !item.sizes.split(/\s+/).includes(actual)) fail(`Wrong manifest image dimensions: ${item.src}: ${actual}`);
+  }
+}
 const payload = JSON.parse(read("data/spots.json"));
 const spots = Array.isArray(payload) ? payload : payload?.spots;
 if (!Array.isArray(spots)) { fail("Spot data must contain an array"); process.exit(1); }
