@@ -21,6 +21,27 @@ for (const name of [...files("data"), ".eslintrc.json", "htmlhint.json", "manife
   try { JSON.parse(read(name)); } catch (error) { fail(`${name}: ${error.message}`); }
 }
 if (failures) { console.error(`Project check stopped: ${failures} syntax/JSON errors. Nothing can be published.`); process.exit(1); }
+for (const name of ["index.html", "en/index.html", "da/index.html", "offline.html"]) {
+  const html = read(name);
+  const htmlIds = new Set();
+  for (const match of html.matchAll(/\bid="([^"]+)"/g)) {
+    if (htmlIds.has(match[1])) fail(`Duplicate HTML id: ${name}: ${match[1]}`);
+    htmlIds.add(match[1]);
+  }
+  for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    if (/\bsrc\s*=/.test(match[1]) || /application\/ld\+json/.test(match[1])) continue;
+    const module = /type=["']module["']/.test(match[1]);
+    const result = spawnSync(process.execPath, module ? ["--input-type=module", "--check"] : ["--check"], { input: match[2], encoding: "utf8" });
+    if (result.status !== 0) fail(`Inline script in ${name}: ${result.stderr}`);
+  }
+  if (name !== "offline.html") {
+    for (const id of ["filter-radius-max-label", "filter-radius-description", "filter-summary", "plus-status-text", "menu-toggle-view-label", "tilla-sidebar-text", "header-tagline"]) {
+      const tag = [...html.matchAll(/<[^>]+>/g)].map(match => match[0]).find(tag => tag.includes(`id="${id}"`));
+      if (!tag) fail(`Missing dynamic element: ${name}: ${id}`);
+      else if (/\bdata-i18n(?:-(?:de|en|da))?\s*=/.test(tag)) fail(`Static translation overwrites dynamic text: ${name}: ${id}`);
+    }
+  }
+}
 function flatten(object, prefix = "", result = {}) {
   for (const [key, value] of Object.entries(object)) {
     const name = prefix ? `${prefix}.${key}` : key;
@@ -63,11 +84,14 @@ for (const name of assets) if (name !== "./" && !fs.existsSync(path.join(root, n
 const manifest = JSON.parse(read("manifest.webmanifest"));
 for (const item of [...manifest.icons, ...(manifest.screenshots || [])]) if (!fs.existsSync(path.join(root, item.src))) fail(`Missing manifest image: ${item.src}`);
 const payload = JSON.parse(read("data/spots.json"));
-const spots = Array.isArray(payload) ? payload : payload.spots;
+const spots = Array.isArray(payload) ? payload : payload?.spots;
+if (!Array.isArray(spots)) { fail("Spot data must contain an array"); process.exit(1); }
 const ids = new Set();
 for (const spot of spots) {
-  if (!spot.id || ids.has(spot.id)) fail(`Missing or duplicate spot id: ${spot.id}`);
-  ids.add(spot.id);
+  if (!spot || typeof spot !== "object" || Array.isArray(spot)) { fail("Invalid spot record"); continue; }
+  const id = (typeof spot.id === "string" && spot.id.trim()) || (typeof spot.id === "number" && Number.isFinite(spot.id) ? String(spot.id) : "");
+  if (!id || ids.has(id)) fail(`Missing or duplicate spot id: ${spot.id}`);
+  ids.add(id);
   const lat = Number(spot.lat ?? spot.location?.lat), lng = Number(spot.lng ?? spot.lon ?? spot.location?.lng);
   if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) fail(`Invalid coordinates: ${spot.id}`);
   for (const lang of ["de", "en", "da"]) if (!spot[`summary_${lang}`]?.trim()) fail(`Missing summary ${lang}: ${spot.id}`);
