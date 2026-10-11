@@ -44,7 +44,7 @@ export function getSpotSubtitle(spot) {
  * @returns {string}
  */
 export function getSpotId(spot) {
-  return String(spot.id || getSpotName(spot));
+  return String(spot.id != null && String(spot.id).trim() !== "" ? spot.id : getSpotName(spot));
 }
 
 /**
