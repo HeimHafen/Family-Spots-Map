@@ -1,12 +1,4 @@
-# robots.txt für Family Spots Map – Letzte Änderung: 2025-12-14
-
-# 💡 Zugriff für alle Crawler erlaubt
 User-agent: *
 Allow: /
 
-# ❌ Optional: Technische Endpunkte vom Index ausschließen
-Disallow: /api/
-Disallow: /offline
-
-# 🔍 Sitemap-Definition (automatisch generiert)
-Sitemap: https://familyspots.app/sitemap.xml
+Sitemap: https://heimhafen.github.io/Family-Spots-Map/sitemap.xml
