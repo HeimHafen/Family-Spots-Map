@@ -5,16 +5,16 @@ html[data-theme="dark"] {
   color-scheme: light;
   --text-3: #352b22;
   --text-1: #352b22;
-  --text-2: #5a4d3d;
-  --surface-0: #d7c8af;
-  --surface-1: #d7c8af;
-  --surface-2: #ddcfb9;
-  --surface-3: #cfbea2;
+  --text-2: #534839;
+  --surface-0: #c7c3b7;
+  --surface-1: #c7c3b7;
+  --surface-2: #d4d0c5;
+  --surface-3: #bdb9ac;
   --border-1: rgba(53, 43, 34, .16);
   --border-2: rgba(53, 43, 34, .3);
   --elev-1: 0 1px 3px rgba(28, 33, 22, .1);
-  --elev-2: 0 5px 16px rgba(28, 33, 22, .14);
-  --elev-3: 0 10px 28px rgba(28, 33, 22, .2);
+  --elev-2: 0 3px 9px rgba(28, 33, 22, .10);
+  --elev-3: 0 6px 18px rgba(28, 33, 22, .14);
   --focus-inner: #f4eadb;
   --focus-outer: #352b22;
   --focus-ring-default: var(--focus-ring);
@@ -26,33 +26,33 @@ html[data-theme="dark"] {
   --accent-solid: #ef8c35;
   --accent-solid-dark: #e47f2a;
   --accent-solid-light: #f39d50;
-  --accent-soft: #ddcfb9;
-  --accent-soft-hover: #cfbea2;
+  --accent-soft: #d4d0c5;
+  --accent-soft-hover: #bdb9ac;
   --accent-strong: #884010;
   --on-accent-solid: #352b22;
   --on-accent: #352b22;
   --on-light: #352b22;
   --on-dark: #f4eadb;
-  --chip-color: #5a4d3d;
+  --chip-color: #534839;
   --chip-border: rgba(53, 43, 34, .3);
   --chip-border-hover: rgba(53, 43, 34, .5);
-  --chip-selected-bg: #c7ad87;
+  --chip-selected-bg: #b6ad97;
   --chip-selected-text: #352b22;
   --button-text-color: #352b22;
   --header-bg-top: #48503d;
   --header-bg-bottom: #48503d;
   --header-shadow: none;
   --header-text-color: #f4eadb;
-  --header-tagline-bg: #d7c8af;
+  --header-tagline-bg: #c7c3b7;
   --header-tagline-color: #352b22;
-  --header-icon-bg: #d7c8af;
+  --header-icon-bg: #c7c3b7;
   --header-icon-border: transparent;
-  --language-pill-bg: #ddcfb9;
+  --language-pill-bg: #d4d0c5;
   --sidebar-bg: #48503d;
   --sidebar-section-border: transparent;
   --map-card-bg: #263028;
   --map-card-border: transparent;
-  --toast-bg: #d7c8af;
+  --toast-bg: #c7c3b7;
   --tilla-shell: #ef8c35;
   --tilla-shell-hover: #e47f2a;
   --tilla-shell-active: #db7420;
@@ -63,7 +63,7 @@ html[data-theme="dark"] {
   --info: #225572;
   --warning: #765009;
   /* Filter only geographic raster tiles, never markers, text or controls. */
-  --filter-map: invert(.92) hue-rotate(180deg) saturate(.45) sepia(.25) brightness(.72) contrast(.95);
+  --filter-map: invert(.92) hue-rotate(180deg) saturate(.45) sepia(.12) brightness(.86) contrast(.95);
 }
 
 html[data-theme="dark"] body { background: var(--bg-app); color: var(--text-body); }
@@ -77,7 +77,7 @@ html[data-theme="dark"] #tilla-section .tilla-sidebar-card {
 }
 html[data-theme="dark"] .fsm-onboarding-hint { border-color: transparent; }
 html[data-theme="dark"] select.input {
-  background-image: linear-gradient(45deg, transparent 50%, #5a4d3d 50%), linear-gradient(135deg, #5a4d3d 50%, transparent 50%);
+  background-image: linear-gradient(45deg, transparent 50%, #534839 50%), linear-gradient(135deg, #534839 50%, transparent 50%);
 }
 html[data-theme="dark"] ::placeholder { color: var(--text-muted); opacity: 1; }
 html[data-theme="dark"] .toast { color: var(--text-body); }
@@ -85,11 +85,11 @@ html[data-theme="dark"] .leaflet-container .leaflet-tile { filter: var(--filter-
 html[data-theme="dark"] hr,
 html[data-theme="dark"] .filter-advanced { border-color: var(--border-1); }
 html[data-theme="dark"] .leaflet-control-zoom a {
-  background: #d7c8af;
+  background: #c7c3b7;
   color: #352b22;
   border-color: rgba(53, 43, 34, .3);
 }
-html[data-theme="dark"] .leaflet-control-zoom a:hover { background: #ddcfb9; }
+html[data-theme="dark"] .leaflet-control-zoom a:hover { background: #d4d0c5; }
 html[data-theme="dark"] .leaflet-control-zoom a.leaflet-disabled { color: #70614f; }
 html[data-theme="dark"] .badge {
   background: rgba(145, 93, 54, .06);
@@ -108,3 +108,15 @@ html[data-theme="dark"] .badge--big { background: rgba(95, 45, 125, .08); color:
 @media (forced-colors: active) {
   html[data-theme="dark"] { --focus-ring: 0 0 0 2px Highlight; }
 }
+
+/* Gewichtung durch Farben, ohne neue Abstände oder Größen. */
+html[data-theme="dark"] #tilla-section { --sidebar-section-bg: #d0ccc0; }
+html[data-theme="dark"] :is(#filter-section, #plus-section, #daylog-section, .sidebar-section--grow) {
+  --sidebar-section-bg: #bfbcaf;
+}
+html[data-theme="dark"] .header-tagline {
+  background: #c3c0b3;
+  font-weight: 500;
+  box-shadow: none;
+}
+html[data-theme="dark"] #btn-play-idea { box-shadow: var(--elev-1); }
