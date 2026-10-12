@@ -1,5 +1,5 @@
 // utils/lang.js
-import { getLanguage } from "../core/i18n.js";
+import { getLanguage } from "../js/i18n.js?v=20261010-unified-4";
 
 export function getLanguageInfo() {
   const lang = (getLanguage && getLanguage()) || "de";
