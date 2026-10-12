@@ -199,3 +199,10 @@ details.sidebar-section > summary * {
 .sidebar > details.sidebar-section {
   scroll-margin-top: 12px;
 }
+
+/* Größerer App-Name in beiden Themes; restliche Gestaltung unverändert. */
+#app-title.header-title {
+  font-size: clamp(1.25rem, 7.2vw, 2.25rem);
+  max-width: 100%;
+}
+#app-title.header-title .header-flag { font-size: .8em; }
