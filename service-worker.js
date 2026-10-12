@@ -1,5 +1,5 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261012-flat-20";
+const CACHE_VERSION = "20261012-evening-21";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 const ROOT = new URL("./", self.location.href);
@@ -37,6 +37,7 @@ const ASSETS = [
   "offline.html",
   "manifest.webmanifest",
   "css/styles.css",
+  "css/evening.css",
   "css/theme.css",
   "css/base.css",
   "css/utilities.css",
