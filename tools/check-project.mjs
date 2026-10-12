@@ -11,7 +11,7 @@ const read = name => fs.readFileSync(path.join(root, name), "utf8");
 function files(dir) {
   return fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? files(path.join(dir, entry.name)) : [path.join(dir, entry.name)]);
 }
-for (const name of [...files("js"), ...files("src"), ...files("tools"), "service-worker.js"]) {
+for (const name of [...files("js"), ...files("src"), ...files("tools"), ...files("utils"), "init.js", "service-worker.js"]) {
   if (!/\.(?:m?js)$/.test(name)) continue;
   const result = spawnSync(process.execPath, ["--input-type=module", "--check"], { input: read(name), encoding: "utf8" });
   if (result.status !== 0) fail(`${name}: ${result.stderr}`);
@@ -72,6 +72,27 @@ else {
     for (const key of Object.keys(fallback[lang] || {})) if (!(key in translations[lang])) fail(`Obsolete bundled translation ${lang}: ${key}`);
   }
 }
+// Historical modules are not loaded by the app, but must not retain broken imports.
+for (const name of [...files("js"), ...files("src"), ...files("utils"), "init.js"]) {
+  if (!name.endsWith(".js")) continue;
+  const source = read(name).replace(/\/\*[\s\S]*?\*\/|^\s*\/\/.*$/gm, "");
+  for (const match of source.matchAll(/(?:import|export)\s+(?:[^;]*?\s+from\s+)?["'](\.[^"']+)["']/g)) {
+    const target = path.resolve(root, path.dirname(name), match[1].split("?")[0]);
+    if (!fs.existsSync(target)) fail(`Broken module dependency: ${name} -> ${match[1]}`);
+  }
+}
+const playFallbackMatch = read("js/i18n.js").match(/const FALLBACK_PLAY_IDEAS = (\[[\s\S]*?\n\]);/);
+const expectedIdeas = JSON.parse(read("data/play-ideas.json")).map(idea => ({id: idea.id, texts: idea.texts || Object.fromEntries(["de", "en", "da"].filter(lang => lang in idea).map(lang => [lang, idea[lang]]))}));
+if (!playFallbackMatch || JSON.stringify(JSON.parse(playFallbackMatch[1])) !== JSON.stringify(expectedIdeas)) fail("Bundled play ideas do not match the source data");
+for (const name of ["index.html", "en/index.html", "da/index.html"]) {
+  const image = read(name).match(/property="og:image"\s+content="([^"]+)"/)?.[1];
+  const prefix = "https://heimhafen.github.io/Family-Spots-Map/";
+  if (!image?.startsWith(prefix) || !fs.existsSync(path.join(root, image.slice(prefix.length)))) fail(`Missing sharing image: ${name}`);
+}
+const expectedSitemap = ["https://heimhafen.github.io/Family-Spots-Map/", "https://heimhafen.github.io/Family-Spots-Map/en/", "https://heimhafen.github.io/Family-Spots-Map/da/"];
+const actualSitemap = [...read("sitemap.xml").matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+if (JSON.stringify(actualSitemap) !== JSON.stringify(expectedSitemap)) fail("Sitemap must contain the three current entry points");
+if (!read("robots.txt").includes("Sitemap: https://heimhafen.github.io/Family-Spots-Map/sitemap.xml")) fail("Robots sitemap URL is incorrect");
 const reached = new Set();
 function checkModule(name) {
   if (reached.has(name)) return;
