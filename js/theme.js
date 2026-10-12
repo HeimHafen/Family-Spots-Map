@@ -53,14 +53,14 @@ export function applyTheme(theme) {
 
   if (typeof document !== "undefined") {
     document.documentElement.setAttribute("data-theme", next);
-    document.documentElement.style.colorScheme = next;
+    document.documentElement.style.colorScheme = "light";
     const scheme = document.querySelector('meta[name="color-scheme"]');
-    if (scheme) scheme.content = next;
+    if (scheme) scheme.content = "light";
     const metas = [...document.querySelectorAll('meta[name="theme-color"]')];
     const colorMeta = metas[0] || document.createElement("meta");
     colorMeta.name = "theme-color";
     colorMeta.removeAttribute("media");
-    colorMeta.content = next === THEME_DARK ? "#020617" : "#f7e1d0";
+    colorMeta.content = next === THEME_DARK ? "#48503d" : "#f7e1d0";
     if (!colorMeta.isConnected) document.head.appendChild(colorMeta);
     metas.slice(1).forEach(meta => meta.remove());
   }
