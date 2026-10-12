@@ -19,6 +19,9 @@
 /* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
 @import url("./components.css?v=20261012-flat-20");
 
+/* Abendpalette: ausschließlich der gespeicherte Dark-Modus. */
+@import url("./evening.css?v=20261012-evening-21");
+
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
@@ -27,39 +30,6 @@
 /* Einheitliche Textfarbe für Sidebar-Titel (inkl. <details>/<summary>) */
 .sidebar-section-title {
   color: var(--text-heading, var(--text-strong, var(--text-color, #111827))) !important;
-  opacity: 1 !important;
-}
-
-/* =========================================================
-   FIX: Tilla-Section Titel im Dark-Theme wirklich weiß
-   (dein Screenshot: „Familienbegleiterin Tilla“)
-   - robust gegen abweichende Markup-Strukturen
-   - iOS/Safari: -webkit-text-fill-color mitsetzen
-   ========================================================= */
-html[data-theme="dark"] #tilla-section,
-body[data-theme="dark"] #tilla-section {
-  /* Falls Komponenten über CSS-Variablen färben */
-  --text-heading: #ffffff;
-  --text-strong: #ffffff;
-  --text-color: #ffffff;
-}
-
-html[data-theme="dark"] #tilla-section #tilla-title,
-body[data-theme="dark"] #tilla-section #tilla-title,
-html[data-theme="dark"] #tilla-section .sidebar-section-title,
-body[data-theme="dark"] #tilla-section .sidebar-section-title,
-html[data-theme="dark"] #tilla-section summary,
-body[data-theme="dark"] #tilla-section summary,
-html[data-theme="dark"] #tilla-section summary *,
-body[data-theme="dark"] #tilla-section summary *,
-html[data-theme="dark"] #tilla-section h1,
-body[data-theme="dark"] #tilla-section h1,
-html[data-theme="dark"] #tilla-section h2,
-body[data-theme="dark"] #tilla-section h2,
-html[data-theme="dark"] #tilla-section h3,
-body[data-theme="dark"] #tilla-section h3 {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important; /* iOS Safari */
   opacity: 1 !important;
 }
 
