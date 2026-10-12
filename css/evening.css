@@ -63,7 +63,7 @@ html[data-theme="dark"] {
   --info: #225572;
   --warning: #765009;
   /* Filter only geographic raster tiles, never markers, text or controls. */
-  --filter-map: invert(.92) hue-rotate(180deg) saturate(.45) sepia(.12) brightness(.86) contrast(.95);
+  --filter-map: invert(1) hue-rotate(180deg) saturate(.3) brightness(.95) contrast(1.1);
 }
 
 html[data-theme="dark"] body { background: var(--bg-app); color: var(--text-body); }
@@ -110,7 +110,7 @@ html[data-theme="dark"] .badge--big { background: rgba(95, 45, 125, .08); color:
 }
 
 /* Gewichtung durch Farben, ohne neue Abstände oder Größen. */
-html[data-theme="dark"] #tilla-section { --sidebar-section-bg: #d0ccc0; }
+html[data-theme="dark"] #tilla-section { --sidebar-section-bg: #d2cbbd; }
 html[data-theme="dark"] :is(#filter-section, #plus-section, #daylog-section, .sidebar-section--grow) {
   --sidebar-section-bg: #bfbcaf;
 }
@@ -120,3 +120,10 @@ html[data-theme="dark"] .header-tagline {
   box-shadow: none;
 }
 html[data-theme="dark"] #btn-play-idea { box-shadow: var(--elev-1); }
+
+/* Etwas weniger Höhe vor dem Inhalt; iPhone-Sicherheitsabstand bleibt. */
+html[data-theme="dark"] .app-header {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 4px);
+  padding-bottom: 8px;
+}
+html[data-theme="dark"] .app-header-top { margin-bottom: 2px; }
