@@ -1,0 +1,110 @@
+/* Abendmodus: matte Olive, Leinen und Espresso.
+   Unlayered overrides intentionally outrank the legacy theme layers.
+   No geometry changes: the accepted light-mode layout stays intact. */
+html[data-theme="dark"] {
+  color-scheme: light;
+  --text-3: #352b22;
+  --text-1: #352b22;
+  --text-2: #5a4d3d;
+  --surface-0: #d7c8af;
+  --surface-1: #d7c8af;
+  --surface-2: #ddcfb9;
+  --surface-3: #cfbea2;
+  --border-1: rgba(53, 43, 34, .16);
+  --border-2: rgba(53, 43, 34, .3);
+  --elev-1: 0 1px 3px rgba(28, 33, 22, .1);
+  --elev-2: 0 5px 16px rgba(28, 33, 22, .14);
+  --elev-3: 0 10px 28px rgba(28, 33, 22, .2);
+  --focus-inner: #f4eadb;
+  --focus-outer: #352b22;
+  --focus-ring-default: var(--focus-ring);
+  --bg-app: #48503d;
+  --app-bg-fallback-dark: #48503d;
+  --accent: #a75114;
+  --accent-light: #ef8c35;
+  --accent-dark: #884010;
+  --accent-solid: #ef8c35;
+  --accent-solid-dark: #e47f2a;
+  --accent-solid-light: #f39d50;
+  --accent-soft: #ddcfb9;
+  --accent-soft-hover: #cfbea2;
+  --accent-strong: #884010;
+  --on-accent-solid: #352b22;
+  --on-accent: #352b22;
+  --on-light: #352b22;
+  --on-dark: #f4eadb;
+  --chip-color: #5a4d3d;
+  --chip-border: rgba(53, 43, 34, .3);
+  --chip-border-hover: rgba(53, 43, 34, .5);
+  --chip-selected-bg: #c7ad87;
+  --chip-selected-text: #352b22;
+  --button-text-color: #352b22;
+  --header-bg-top: #48503d;
+  --header-bg-bottom: #48503d;
+  --header-shadow: none;
+  --header-text-color: #f4eadb;
+  --header-tagline-bg: #d7c8af;
+  --header-tagline-color: #352b22;
+  --header-icon-bg: #d7c8af;
+  --header-icon-border: transparent;
+  --language-pill-bg: #ddcfb9;
+  --sidebar-bg: #48503d;
+  --sidebar-section-border: transparent;
+  --map-card-bg: #263028;
+  --map-card-border: transparent;
+  --toast-bg: #d7c8af;
+  --tilla-shell: #ef8c35;
+  --tilla-shell-hover: #e47f2a;
+  --tilla-shell-active: #db7420;
+  --on-tilla-shell: #352b22;
+  --danger-text: #8b2424;
+  --danger-surface: rgba(139, 36, 36, .08);
+  --success: #246247;
+  --info: #225572;
+  --warning: #765009;
+  /* Filter only geographic raster tiles, never markers, text or controls. */
+  --filter-map: invert(.92) hue-rotate(180deg) saturate(.45) sepia(.25) brightness(.72) contrast(.95);
+}
+
+html[data-theme="dark"] body { background: var(--bg-app); color: var(--text-body); }
+html[data-theme="dark"] #view-map { background: transparent; }
+html[data-theme="dark"] .app-header { background: transparent; border-color: transparent; box-shadow: none; }
+html[data-theme="dark"] .btn-icon { color: var(--text-heading); }
+html[data-theme="dark"] #tilla-section .tilla-sidebar-card {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+html[data-theme="dark"] .fsm-onboarding-hint { border-color: transparent; }
+html[data-theme="dark"] select.input {
+  background-image: linear-gradient(45deg, transparent 50%, #5a4d3d 50%), linear-gradient(135deg, #5a4d3d 50%, transparent 50%);
+}
+html[data-theme="dark"] ::placeholder { color: var(--text-muted); opacity: 1; }
+html[data-theme="dark"] .toast { color: var(--text-body); }
+html[data-theme="dark"] .leaflet-container .leaflet-tile { filter: var(--filter-map); }
+html[data-theme="dark"] hr,
+html[data-theme="dark"] .filter-advanced { border-color: var(--border-1); }
+html[data-theme="dark"] .leaflet-control-zoom a {
+  background: #d7c8af;
+  color: #352b22;
+  border-color: rgba(53, 43, 34, .3);
+}
+html[data-theme="dark"] .leaflet-control-zoom a:hover { background: #ddcfb9; }
+html[data-theme="dark"] .leaflet-control-zoom a.leaflet-disabled { color: #70614f; }
+html[data-theme="dark"] .badge {
+  background: rgba(145, 93, 54, .06);
+  color: #6f4224;
+  border-color: rgba(145, 93, 54, .3);
+}
+html[data-theme="dark"] .badge:hover { background: rgba(145, 93, 54, .12); }
+html[data-theme="dark"] .badge--outline { background: transparent; }
+html[data-theme="dark"] .badge--soft { background: rgba(145, 93, 54, .1); }
+html[data-theme="dark"] .badge--time { background: rgba(249, 115, 22, .1); color: #813012; border-color: rgba(180, 78, 20, .5); }
+html[data-theme="dark"] :is(.badge--verified, .badge--match) { background: rgba(16, 150, 100, .1); color: #15523c; border-color: rgba(21, 100, 70, .5); }
+html[data-theme="dark"] .badge--distance { background: rgba(35, 100, 140, .08); color: #225572; border-color: rgba(35, 100, 140, .4); }
+html[data-theme="dark"] .badge--age { background: rgba(155, 35, 75, .08); color: #791e43; border-color: rgba(155, 35, 75, .4); }
+html[data-theme="dark"] .badge--plus { background: rgba(140, 90, 20, .08); color: #69420c; border-color: rgba(140, 90, 20, .4); }
+html[data-theme="dark"] .badge--big { background: rgba(95, 45, 125, .08); color: #582970; border-color: rgba(95, 45, 125, .4); }
+@media (forced-colors: active) {
+  html[data-theme="dark"] { --focus-ring: 0 0 0 2px Highlight; }
+}
