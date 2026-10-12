@@ -1,5 +1,5 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261012-wildgatter-15";
+const CACHE_VERSION = "20261012-gallery-16";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 const ROOT = new URL("./", self.location.href);
@@ -54,6 +54,9 @@ const ASSETS = [
   "assets/icons/icon-512.png",
   "assets/icons/apple-touch-icon.png",
   "assets/tilla/tilla-hero.png",
+  "assets/spots/wildgatter-hildesheim/eingang-test.webp",
+  "assets/spots/wildgatter-hildesheim/spielplatz-test.webp",
+  "assets/spots/wildgatter-hildesheim/wege-test.webp",
   "data/spots.json",
   "data/i18n/de.json",
   "data/i18n/en.json",
