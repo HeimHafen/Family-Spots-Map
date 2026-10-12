@@ -1,7 +1,7 @@
 // js/features/coach.js
 // Familien-Kompass / Mini-Life-Coach
 
-import { getLanguageInfo } from "../utils/lang.js";
+import { getLanguageInfo } from "../../utils/lang.js";
 
 const RADIUS_LEVELS_KM = [5, 15, 30, 60, null];
 
