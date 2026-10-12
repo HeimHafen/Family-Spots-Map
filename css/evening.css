@@ -72,7 +72,7 @@ html[data-theme="dark"] .app-header { background: transparent; border-color: tra
 html[data-theme="dark"] .btn-icon { color: var(--text-heading); }
 html[data-theme="dark"] #tilla-section .tilla-sidebar-card {
   background: transparent;
-  border-color: transparent;
+  border-color: rgba(53, 43, 34, .22);
   box-shadow: none;
 }
 html[data-theme="dark"] .fsm-onboarding-hint { border-color: transparent; }
