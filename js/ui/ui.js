@@ -1,6 +1,7 @@
-import { $ } from "./utils.js";
-import { getLanguage, t } from "./i18n.js";
-import { showTillaMessage } from "./tilla.js"; // 🐢
+import { $ } from "../utils/utils.js";
+import { getLanguage, t } from "../i18n.js?v=20261010-unified-4";
+// Compatibility for the historical renderer; the current UI lives in app.js.
+import { showToast as showTillaMessage } from "../toast.js";
 
 /**
  * Kurzbeschreibung für die Listenkarte bauen.
