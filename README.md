@@ -105,7 +105,7 @@ Nach erfolgreicher Erstinstallation sind die App-Oberfläche, Spotdaten, Spracht
 
 **Kartenkacheln benötigen Internet.** Der Service Worker lädt keine externen OpenStreetMap-Kacheln als Offline-Kartenpaket herunter. Auch externe Navigation und Quellenwebseiten sind keine Offline-Funktionen dieser App.
 
-Der aktuelle Offline-Umfang beträgt 65 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
+Der aktuelle Offline-Umfang beträgt 66 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
 
 ### Ein Update sicher veröffentlichen
 
@@ -136,6 +136,7 @@ Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien mit ES-M
 | `index.html`, `en/index.html`, `da/index.html` | Einstieg in die drei Sprachversionen |
 | `css/styles.css`, `css/components.css`, `css/theme.css`, `css/evening.css` | Layout, Komponenten, Farbvariablen und Abendmodus |
 | `js/app.js` | Initialisierung und Zusammenspiel der Anwendung |
+| `js/ui/spot-details.js` | Spot-Detailansicht, Bildergalerie, Besuchsinfos, Quellen und Kartenbuttons |
 | `js/map.js`, `js/filters/` | Karte, Marker und Filterlogik |
 | `js/i18n.js`, `data/i18n/`, `data/play-ideas.json` | Sprachen, Fallbacks und Spielideen |
 | `js/features/tilla.js` | Familienbegleiterin Tilla |
@@ -148,6 +149,8 @@ Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien mit ES-M
 | `tools/check-project.mjs` | Maßgebliche Integritätsprüfung für CI und Deployment |
 
 Persönliche Daten werden über IndexedDB und lokale Speichermechanismen verarbeitet; bestehende lokale Daten werden berücksichtigt. Eine globale Browserdaten-Löschung ist keine reguläre Wartungsmaßnahme.
+
+Die Spot-Detailansicht besitzt einen eigenen Controller. Er erhält aktuelle Sprache, DOM-Elemente und Aktionen über klar benannte Schnittstellen. Geöffnete Info- und Bilderbereiche bleiben bei erneutem Rendern erhalten; Speicherung und Standortberechnung bleiben in ihren bisherigen Modulen.
 
 ## Lokal starten und prüfen
 
