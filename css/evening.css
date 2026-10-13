@@ -93,7 +93,7 @@ html[data-theme="dark"] .leaflet-control-zoom a:hover { background: #d4d0c5; }
 html[data-theme="dark"] .leaflet-control-zoom a.leaflet-disabled { color: #70614f; }
 html[data-theme="dark"] .badge {
   background: rgba(145, 93, 54, .06);
-  color: #6f4224;
+  color: #633a20;
   border-color: rgba(145, 93, 54, .3);
 }
 html[data-theme="dark"] .badge:hover { background: rgba(145, 93, 54, .12); }
