@@ -7,7 +7,7 @@ export function createModalController(dialog) {
     return [...dialog.querySelectorAll('button, a[href], input, select, textarea, summary, [tabindex]')]
       .filter(element => element.tabIndex >= 0 && !element.disabled && element.getClientRects().length && getComputedStyle(element).visibility !== 'hidden');
   }
-  function activate() {
+  function activate({ initialFocus = null } = {}) {
     if (active || !dialog) return;
     active = true;
     previousFocus = document.activeElement;
@@ -19,7 +19,10 @@ export function createModalController(dialog) {
         sibling.inert = true;
       }
     }
-    (controls()[0] || dialog).focus({ preventScroll: true });
+    const start = initialFocus && dialog.contains(initialFocus)
+      ? initialFocus
+      : (controls()[0] || dialog);
+    start.focus({ preventScroll: true });
   }
   function deactivate({ returnFocus = true } = {}) {
     if (!active) return;
