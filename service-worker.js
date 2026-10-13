@@ -1,5 +1,5 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261013-menu-focus-31";
+const CACHE_VERSION = "20261013-vejlby-32";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 const ROOT = new URL("./", self.location.href);
@@ -58,6 +58,11 @@ const ASSETS = [
   "assets/spots/wildgatter-hildesheim/eingang-test.webp",
   "assets/spots/wildgatter-hildesheim/spielplatz-test.webp",
   "assets/spots/wildgatter-hildesheim/wege-test.webp",
+  "assets/spots/vejlby-klit/uebersicht.webp",
+  "assets/spots/vejlby-klit/toiletten.webp",
+  "assets/spots/vejlby-klit/muell-picknick.webp",
+  "assets/spots/vejlby-klit/strandzugang.webp",
+  "assets/spots/vejlby-klit/abendstimmung.webp",
   "data/spots.json",
   "data/i18n/de.json",
   "data/i18n/en.json",
