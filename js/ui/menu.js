@@ -5,13 +5,20 @@ export function initMenu() {
   const menuToggle = qs("#menu-toggle");
   const menu = qs("#app-menu");
   const controller = menu ? createModalController(menu) : null;
+  // Start on the dialog title, so opening the menu does not highlight an action.
+  const menuTitle = menu?.querySelector("#app-menu-title");
+  if (menuTitle) {
+    menuTitle.tabIndex = -1;
+    menuTitle.style.outline = "none";
+    menuTitle.style.boxShadow = "none";
+  }
   function openMenu() {
     if (!menu || !menu.hidden) return;
     menu.hidden = false;
     menu.setAttribute("aria-hidden", "false");
     document.body.dataset.menuOpen = "1";
     menuToggle?.setAttribute("aria-expanded", "true");
-    controller.activate();
+    controller.activate({ initialFocus: menuTitle });
   }
   function closeMenu() {
     if (!menu || menu.hidden) return;
