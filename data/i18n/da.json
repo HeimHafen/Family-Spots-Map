@@ -3,7 +3,7 @@
     "schemaVersion": 1,
     "locale": "da-DK",
     "source": "family-spots",
-    "updatedAt": "2026-10-08"
+    "updatedAt": "2026-10-14"
   },
   "ui": {
     "meta": {
@@ -48,7 +48,7 @@
           "step0": "Mini-eventyr – helt tæt på, perfekt til en lille pause.",
           "step1": "Kort tur ud – hurtigt afsted, hurtigt hjemme igen.",
           "step2": "En lille udflugt – en halv dag fuld af oplevelser.",
-          "step3": "Store mål – en hel dag med magiske øjeblikke.",
+          "step3": "Et stort udflugtsmål – en hel dag med magiske øjeblikke.",
           "all": "Alle spots – ingen radius. Kortet er helt jeres."
         }
       }
@@ -95,7 +95,7 @@
       "pumptrack": "Pumptrack",
       "skatepark": "Skatepark",
       "verkehrsgarten": "Trafiklegeplads",
-      "toddler_barfuss_motorik": "Tumlinger / motorik",
+      "toddler_barfuss_motorik": "Småbørn / barfodsleg & motorik",
       "zoo": "Zoo",
       "tierpark": "Dyrepark",
       "wildpark": "Vildtpark & safaripark",
@@ -186,7 +186,7 @@
   "filter_radius_description_step0": "Mini-eventyr – helt tæt på, perfekt til en lille pause.",
   "filter_radius_description_step1": "Kort tur ud – hurtigt afsted, hurtigt hjemme igen.",
   "filter_radius_description_step2": "En lille udflugt – en halv dag fuld af oplevelser.",
-  "filter_radius_description_step3": "Store mål – en hel dag med magiske øjeblikke.",
+  "filter_radius_description_step3": "Et stort udflugtsmål – en hel dag med magiske øjeblikke.",
   "btn_show": "Vis",
   "btn_hide": "Skjul",
   "plus_status_inactive": "Family Spots Plus er ikke aktiveret.",
@@ -223,7 +223,7 @@
   "category_pumptrack": "Pumptrack",
   "category_skatepark": "Skatepark",
   "category_verkehrsgarten": "Trafiklegeplads",
-  "category_toddler_barfuss_motorik": "Tumlinger / motorik",
+  "category_toddler_barfuss_motorik": "Småbørn / barfodsleg & motorik",
   "category_zoo": "Zoo",
   "category_tierpark": "Dyrepark",
   "category_wildpark": "Vildtpark & safaripark",
