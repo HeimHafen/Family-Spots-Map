@@ -3,7 +3,7 @@
     "schemaVersion": 1,
     "locale": "en",
     "source": "family-spots",
-    "updatedAt": "2026-10-13"
+    "updatedAt": "2026-10-14"
   },
   "ui": {
     "meta": {
@@ -95,7 +95,7 @@
       "pumptrack": "Pump track",
       "skatepark": "Skatepark",
       "verkehrsgarten": "Road safety park",
-      "toddler_barfuss_motorik": "Toddler / motor skills",
+      "toddler_barfuss_motorik": "Toddlers / barefoot play & motor skills",
       "zoo": "Zoo",
       "tierpark": "Animal park",
       "wildpark": "Wildlife park & safari",
@@ -223,7 +223,7 @@
   "category_pumptrack": "Pump track",
   "category_skatepark": "Skatepark",
   "category_verkehrsgarten": "Road safety park",
-  "category_toddler_barfuss_motorik": "Toddler / motor skills",
+  "category_toddler_barfuss_motorik": "Toddlers / barefoot play & motor skills",
   "category_zoo": "Zoo",
   "category_tierpark": "Animal park",
   "category_wildpark": "Wildlife park & safari",
