@@ -63,7 +63,7 @@ html[data-theme="dark"] {
   --info: #225572;
   --warning: #765009;
   /* Filter only geographic raster tiles, never markers, text or controls. */
-  --filter-map: invert(.92) hue-rotate(180deg) saturate(.45) sepia(.12) brightness(.86) contrast(.95);
+  --filter-map: invert(.88) hue-rotate(180deg) saturate(.6) sepia(.08) brightness(1.1) contrast(1.05);
 }
 
 html[data-theme="dark"] body { background: var(--bg-app); color: var(--text-body); }
