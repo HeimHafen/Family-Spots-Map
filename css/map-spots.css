@@ -171,3 +171,35 @@ html[data-theme="dark"] .leaflet-control-scale-line { background: #d0cbbccc; }
     content: ""; position: absolute; inset: -4px 0; border-radius: inherit;
   }
 }
+
+
+/* Compact discovery rows; keep type, width and Tilla artwork unchanged. */
+:is(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) > .sidebar-section-header { min-height: 34px; }
+:is(#filter-section, .sidebar-section--grow) > .sidebar-section-header > button { min-height: 34px; }
+@media (pointer: coarse) {
+  :is(#filter-section, .sidebar-section--grow) > .sidebar-section-header > button::before { inset: -5px 0; }
+  details:is(#plus-section, #daylog-section):not([open]) { overflow: visible; }
+  details:is(#plus-section, #daylog-section) > summary { position: relative; }
+  details:is(#plus-section, #daylog-section) > summary::before {
+    content: ""; position: absolute; inset: -5px 0; border-radius: inherit;
+  }
+}
+@media (max-width: 899px) {
+  .app-header.fsm-menu-near-tilla .app-header-top { display: none; }
+  #tilla-section > .sidebar-section-header { gap: 8px; }
+  #tilla-section > .sidebar-section-header #tilla-title { min-width: 0; white-space: normal; }
+  html[data-theme] #tilla-section #menu-toggle {
+    position: relative; flex: 0 0 44px; width: 44px; height: 44px; min-height: 44px;
+    padding: 0; border: 0; background: transparent; box-shadow: none;
+    color: var(--text-strong); isolation: isolate;
+  }
+  #tilla-section #menu-toggle::after {
+    content: ""; position: absolute; inset: 6px; z-index: -1; pointer-events: none;
+    border-radius: 50%; border: 1px solid var(--border-1, rgba(69,34,19,.15));
+    background: var(--sidebar-section-bg, var(--card-bg, #fff7ee));
+    box-shadow: 0 1px 2px rgba(53,43,34,.06);
+  }
+  #tilla-section #menu-toggle .btn-menu-icon { font-size: 17px; line-height: 1; }
+}
+/* These are labels inside the clickable summaries, not extra buttons. */
+:is(#btn-toggle-plus, #btn-toggle-daylog) { min-height: 34px; padding-block: 4px; }
