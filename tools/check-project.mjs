@@ -107,6 +107,28 @@ function checkModule(name) {
 for (const entry of ["js/app.js", "js/sw-register.js"]) checkModule(entry);
 const assetsMatch = read("service-worker.js").match(/const ASSETS = (\[[\s\S]*?\]);/);
 const assets = vm.runInNewContext(assetsMatch[1]);
+// Release features must also be integrated in the direct language entry pages.
+const release = read("service-worker.js").match(/const CACHE_VERSION = "([^"]+)"/)?.[1];
+for (const name of ["index.html", "en/index.html", "da/index.html"]) {
+  const html = read(name);
+  for (const fragment of [
+    `css/styles.css?v=${release}`,
+    `./js/app.js?v=${release}`,
+    'class="tilla-watercolor-canvas"',
+    'src="assets/tilla/tilla-watercolor.png"',
+    'fsm_onboarding_hint_dismissed',
+    'localStorage.getItem(hintKey)',
+    'localStorage.setItem(hintKey, "1")'
+  ]) if (!html.includes(fragment)) fail(`Incomplete release integration: ${name}: ${fragment}`);
+  if (!/id="tilla-memory-note"[\s\S]*?\bhidden\b[\s\S]*?>/.test(html)) fail(`Memory note must start hidden: ${name}`);
+}
+if (!read("css/styles.css").includes(`./map-spots.css?v=${release}`)) fail("Map styles use a different release version");
+if (!read("js/map.js").includes(`./ui/map-spots.js?v=${release}`)) fail("Map presentation uses a different release version");
+if (!read("js/app.js").includes(`./map.js?v=${release}`)) fail("Map module uses a different release version");
+if (/[\u00c3\u00c2]|\u00e2[\u0080-\u00bf]|\ufffd/.test(read("js/ui/map-spots.js"))) fail("Broken UTF-8 characters in map presentation");
+for (const name of ["data/partners.json", "data/spots.json", "data/i18n/de.json", "data/i18n/en.json", "data/i18n/da.json"]) {
+  if (/[\u00c3\u00c2\u00e2][\u0080-\u00bf]|\ufffd/.test(read(name))) fail(`Broken UTF-8 display text: ${name}`);
+}
 for (const name of reached) if (!assets.includes(name)) fail(`Module not available offline: ${name}`);
 for (const name of assets) if (name !== "./" && !fs.existsSync(path.join(root, name))) fail(`Missing offline asset: ${name}`);
 const manifest = JSON.parse(read("manifest.webmanifest"));
