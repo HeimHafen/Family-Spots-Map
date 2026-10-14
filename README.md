@@ -22,7 +22,7 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Stand: **14. Oktober 2026**, Darstellungsrelease **20261014-pin-tilla-39**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Stand: **14. Oktober 2026**, Darstellungsrelease **20261014-pin-tilla-40**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
@@ -197,3 +197,7 @@ Hinweise und Korrekturen können über die [GitHub-Issues des Projekts](https://
 ## Feinschliff in Release 39
 
 Der Kopfbereich nutzt weniger Leerraum bei unveränderter Titelgröße und iPhone-Sicherheitsabstand. Grüne Einzelmarker erhalten kräftigere Farbtöne und einen weicheren Schatten; ihre 44 × 44 Pixel großen Bedienflächen und Koordinaten bleiben erhalten. Im Abendmodus sind ausschließlich die Kartenkacheln heller abgestimmt. Tilla, Vorschau, Speicherfunktionen und Daten bleiben erhalten.
+
+## Gesamtprüfung in Release 40
+
+Die Kategorie für Kleinkinder, Barfußspiel und Motorik ist in den Sprachkatalogen vollständig übersetzt. Die deutsche Kategorieliste verwendet „Kleinkind“. Die Offline-Einstiegsseite nutzt im Abendmodus dieselbe Olive-/Leinenpalette wie die Haupt-App; ihre Hinweise auf die Offline-Vorbereitung sind sprachlich präzisiert. Preise, Plus-Regeln, geografische Daten und persönliche Speicherformate bleiben unverändert.
