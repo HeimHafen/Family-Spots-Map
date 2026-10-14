@@ -1,7 +1,8 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-43";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
+// Distinct cache for the requested return to green hearts and still Tilla.
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-green-static1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -59,7 +60,6 @@ const ASSETS = [
   "assets/icons/apple-touch-icon.png",
   "assets/tilla/tilla-hero.png",
   "assets/tilla/tilla-watercolor.png",
-  "assets/tilla/tilla-heart.png",
   "assets/spots/wildgatter-hildesheim/eingang-test.webp",
   "assets/spots/wildgatter-hildesheim/spielplatz-test.webp",
   "assets/spots/wildgatter-hildesheim/wege-test.webp",
@@ -121,6 +121,13 @@ async function validateImage(response, url) {
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
 }
+async function validateMapStyles(response, url) {
+  if (new URL(url).pathname !== new URL("css/map-spots.css", ROOT).pathname) return;
+  const css = await response.clone().text();
+  if (!css.includes(".fsm-spot-pin__dot") || !css.includes("animation: none !important")) {
+    throw new Error("Incomplete green-pin / static-Tilla presentation");
+  }
+}
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
@@ -133,6 +140,7 @@ self.addEventListener("install", event => {
           if (!response.ok) throw new Error(`Offline asset unavailable: ${path}`);
           if (new URL(url).pathname.endsWith(".json")) await validateData(response, url);
           if (new URL(url).pathname.endsWith(".png")) await validateImage(response, url);
+          await validateMapStyles(response, url);
           await cache.put(url, response);
         }));
       }
