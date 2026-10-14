@@ -1,7 +1,7 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-personal-backup-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-personal-backup-2";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -125,7 +125,7 @@ const RELEASE_HASHES = {
   "css/map-spots.css": "27cac7c328de026e412d69ad9832ddf878c6f1e1fdde8cdd5134dca1489c3952",
   "js/app.js": "b674656ec65bf28f89f2ca5a8b931a065b1c0137f6551532394208ac2e6c4f9d",
   "js/features/personal-storage.js": "e93870d4f0a2d1bd5d61e09f63a9429a12fa1217d2f3ee370328a2cfc6d42185",
-  "js/features/personal-backup.js": "7ec40038353465b517a37adf25963ce0fdf4ef889f4c10af8125669b68c1fe57"
+  "js/features/personal-backup.js": "26bdaaf37eb4d7c532cf7bfc8ac0b9ef3783340e87fc2be6d31c3bac6021f633"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
