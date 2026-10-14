@@ -1,7 +1,7 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-restore-1733-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-flat-cards-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -120,6 +120,12 @@ async function validateImage(response, url) {
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
 }
+async function validateMapPresentation(response, url) {
+  if (new URL(url).pathname !== new URL("css/map-spots.css", ROOT).pathname) return;
+  const digest = await crypto.subtle.digest("SHA-256", await response.clone().arrayBuffer());
+  const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+  if (hash !== "27cac7c328de026e412d69ad9832ddf878c6f1e1fdde8cdd5134dca1489c3952") throw new Error("Map stylesheet does not match this update");
+}
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
@@ -132,6 +138,7 @@ self.addEventListener("install", event => {
           if (!response.ok) throw new Error(`Offline asset unavailable: ${path}`);
           if (new URL(url).pathname.endsWith(".json")) await validateData(response, url);
           if (new URL(url).pathname.endsWith(".png")) await validateImage(response, url);
+          await validateMapPresentation(response, url);
           await cache.put(url, response);
         }));
       }
