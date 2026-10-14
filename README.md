@@ -22,7 +22,7 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Stand: **14. Oktober 2026**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Stand: **14. Oktober 2026**, Darstellungsrelease **20261014-pin-tilla-37**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
@@ -42,9 +42,9 @@ Favoriten, Erinnerungen, Entwürfe und Freischaltungen werden lokal im jeweilige
 
 ## Kartenpins und Einstieg
 
-Die geografische Leaflet-/OpenStreetMap-Karte bleibt erhalten. Ab Zoomstufe 13 erscheinen die Namen einzelner sichtbarer Spots, sofern die Beschriftung innerhalb des Kartenbereichs liegt und weder andere Namen noch Pins oder Bedienelemente überdeckt. Die Namensfläche des ausgewählten Pins wird während seiner geöffneten Vorschau ausgeblendet. Gruppen und bestehende Filter bestimmen weiterhin, welche Spots verfügbar sind.
+Die geografische Leaflet-/OpenStreetMap-Karte bleibt erhalten. Ab Zoomstufe 13 erscheinen die Namen einzelner sichtbarer Spots, sofern die Beschriftung innerhalb des Kartenbereichs liegt und weder andere Namen noch Pins oder Bedienelemente überdeckt. Auch der ausgewählte Pin kann seinen Namen neben der geöffneten Vorschau zeigen, wenn ausreichend Platz vorhanden ist. Die Vorschau, Cluster und Kartenbedienelemente werden bei der Platzprüfung berücksichtigt. Gruppen und bestehende Filter bestimmen weiterhin, welche Spots verfügbar sind.
 
-Die Vorschau enthält vorhandene übersetzte Daten und genau einen Schließen-Button. „Kostenlos“ wird ausschließlich aus dem vorhandenen `free`-Tag abgeleitet. Enter und Leertaste öffnen die Vorschau, Escape schließt sie. Das bewusste Schließen der Einstiegsanleitung wird unter `fsm_onboarding_hint_dismissed` lokal gespeichert; die App bleibt bei blockiertem Browserspeicher bedienbar.
+Die Vorschau enthält vorhandene übersetzte Daten und genau einen Schließen-Button. „Kostenlos“ wird ausschließlich aus dem vorhandenen `free`-Tag abgeleitet. Enter und Leertaste öffnen die Vorschau, Escape schließt sie. Tillas Zettel zählt nur tatsächlich gespeicherte Erinnerungen. Ein wiederhergestellter Bearbeitungsentwurf nach einer Löschung in einem anderen Tab zählt nicht als gespeicherte Erinnerung; der Entwurf bleibt erhalten. Das bewusste Schließen der Einstiegsanleitung wird unter `fsm_onboarding_hint_dismissed` lokal gespeichert; die App bleibt bei blockiertem Browserspeicher bedienbar.
 
 `js/ui/map-spots.js` und `css/map-spots.css` kapseln die neue Darstellung. Das transparente Maskottchen liegt in `assets/tilla/tilla-watercolor.png`. Sein Erinnerungszettel bleibt ein separates, an den Erinnerungsstand gebundenes Element.
 
@@ -175,7 +175,7 @@ Dann `http://localhost:8080/` im Browser öffnen. Für die Integritätsprüfung 
 node tools/check-project.mjs
 ```
 
-Die Prüfung kontrolliert JavaScript- und JSON-Syntax, HTML- und Spot-IDs, Koordinaten, Übersetzungsvollständigkeit, eingebundene Fallbacks, Modulabhängigkeiten, Manifest-Icons und vorhandene Offline-Dateien. Sie ersetzt keine Ortsrecherche oder manuelle Bedienprüfung.
+Die Prüfung kontrolliert außerdem die Release-Versionen, Tilla-Einbindung und gespeicherte Anleitungsschließung aller drei Startseiten sowie beschädigte UTF-8-Zeichen im Vorschau-Modul. Sie kontrolliert JavaScript- und JSON-Syntax, HTML- und Spot-IDs, Koordinaten, Übersetzungsvollständigkeit, eingebundene Fallbacks, Modulabhängigkeiten, Manifest-Icons und vorhandene Offline-Dateien. Sie ersetzt keine Ortsrecherche oder manuelle Bedienprüfung.
 
 Bei Änderungen zusätzlich die drei Sprachen, beide Designmodi, eine schmale mobile Ansicht, Tastaturbedienung, Speicherfunktionen und einen Offline-Neustart prüfen. Bei Änderungen am Service Worker auch die Aktualisierung einer bereits installierten Version testen.
 
