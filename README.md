@@ -22,16 +22,16 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Stand: **13. Oktober 2026**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Stand: **14. Oktober 2026**, Darstellungsrelease **20261014-pin-tilla-43**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
 ## Funktionen
 
-- **Karte und Spot-Liste:** gruppierte Marker, Detailansichten und Navigation über Apple Karten oder Google Maps.
+- **Karte und Spot-Liste:** gruppierte Marker, grüne Punktmarker und platzabhängige Namensbeschriftungen. Ein Pin öffnet eine kompakte Vorschau; „Spot ansehen“ führt zu den vollständigen Details. Die Navigation erfolgt über Apple Karten oder Google Maps.
 - **Suche und Filter:** Ort oder Stichwort, Stimmung, Radius, Kategorien, Altersgruppen, Favoriten und weitere praktische Schnellfilter.
 - **Standort:** optional den eigenen Standort anzeigen. Die App bleibt auch ohne Standortfreigabe bedienbar.
-- **Tilla:** kleine Spielideen und Anregungen für gemeinsame Erlebnisse unterwegs.
+- **Tilla:** gemalte Schildkröten-Begleiterin mit kleinen Spielideen. Ein Zettel erscheint in ihrer Tasche, sobald mindestens eine Erinnerung gespeichert ist; nach dem Löschen der letzten Erinnerung verschwindet er.
 - **Favoriten:** interessante Orte auf dem jeweiligen Gerät merken.
 - **Mein Tag:** Erinnerungen schreiben, bearbeiten und löschen; auch offline, sobald die App vollständig geladen wurde.
 - **Bildergalerien:** passende Ortsbilder mit Bildunterschriften und Alternativtexten in allen drei Sprachen.
@@ -39,6 +39,14 @@ Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um *
 - **Zwei Designmodi:** warme helle Gestaltung und ein Abendmodus mit olivfarbenem Hintergrund, hellen Karten und optisch abgedunkelten Kartenkacheln.
 
 Favoriten, Erinnerungen, Entwürfe und Freischaltungen werden lokal im jeweiligen Browser gespeichert. Eine geräteübergreifende Kontosynchronisation ist derzeit nicht implementiert.
+
+## Kartenpins und Einstieg
+
+Die geografische Leaflet-/OpenStreetMap-Karte bleibt erhalten. Ab Zoomstufe 13 erscheinen die Namen einzelner sichtbarer Spots, sofern die Beschriftung innerhalb des Kartenbereichs liegt und weder andere Namen noch Pins oder Bedienelemente überdeckt. Auch der ausgewählte Pin kann seinen Namen neben der geöffneten Vorschau zeigen, wenn ausreichend Platz vorhanden ist. Die Vorschau, Cluster und Kartenbedienelemente werden bei der Platzprüfung berücksichtigt. Gruppen und bestehende Filter bestimmen weiterhin, welche Spots verfügbar sind.
+
+Die Vorschau enthält vorhandene übersetzte Daten und genau einen Schließen-Button. „Kostenlos“ wird ausschließlich aus dem vorhandenen `free`-Tag abgeleitet. Enter und Leertaste öffnen die Vorschau, Escape schließt sie. Tillas Zettel zählt nur tatsächlich gespeicherte Erinnerungen. Ein wiederhergestellter Bearbeitungsentwurf nach einer Löschung in einem anderen Tab zählt nicht als gespeicherte Erinnerung; der Entwurf bleibt erhalten. Das bewusste Schließen der Einstiegsanleitung wird unter `fsm_onboarding_hint_dismissed` lokal gespeichert; die App bleibt bei blockiertem Browserspeicher bedienbar.
+
+`js/ui/map-spots.js` und `css/map-spots.css` kapseln die neue Darstellung. Das transparente Maskottchen liegt in `assets/tilla/tilla-watercolor.png`. Sein Erinnerungszettel bleibt ein separates, an den Erinnerungsstand gebundenes Element.
 
 ## Sprachen und Gestaltung
 
@@ -105,7 +113,7 @@ Nach erfolgreicher Erstinstallation sind die App-Oberfläche, Spotdaten, Spracht
 
 **Kartenkacheln benötigen Internet.** Der Service Worker lädt keine externen OpenStreetMap-Kacheln als Offline-Kartenpaket herunter. Auch externe Navigation und Quellenwebseiten sind keine Offline-Funktionen dieser App.
 
-Der aktuelle Offline-Umfang beträgt 65 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
+Der aktuelle Offline-Umfang beträgt 70 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
 
 ### Ein Update sicher veröffentlichen
 
@@ -136,7 +144,9 @@ Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien mit ES-M
 | `index.html`, `en/index.html`, `da/index.html` | Einstieg in die drei Sprachversionen |
 | `css/styles.css`, `css/components.css`, `css/theme.css`, `css/evening.css` | Layout, Komponenten, Farbvariablen und Abendmodus |
 | `js/app.js` | Initialisierung und Zusammenspiel der Anwendung |
+| `js/ui/spot-details.js` | Spot-Detailansicht, Bildergalerie, Besuchsinfos, Quellen und Kartenbuttons |
 | `js/map.js`, `js/filters/` | Karte, Marker und Filterlogik |
+| `js/ui/map-spots.js`, `css/map-spots.css` | grüne Punktmarker, Namensbeschriftungen, Spot-Vorschau und Tilla-Darstellung |
 | `js/i18n.js`, `data/i18n/`, `data/play-ideas.json` | Sprachen, Fallbacks und Spielideen |
 | `js/features/tilla.js` | Familienbegleiterin Tilla |
 | `js/features/personal-storage.js`, `js/features/daylog-drafts.js` | Lokale persönliche Daten und Entwürfe |
@@ -148,6 +158,8 @@ Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien mit ES-M
 | `tools/check-project.mjs` | Maßgebliche Integritätsprüfung für CI und Deployment |
 
 Persönliche Daten werden über IndexedDB und lokale Speichermechanismen verarbeitet; bestehende lokale Daten werden berücksichtigt. Eine globale Browserdaten-Löschung ist keine reguläre Wartungsmaßnahme.
+
+Die Spot-Detailansicht besitzt einen eigenen Controller. Er erhält aktuelle Sprache, DOM-Elemente und Aktionen über klar benannte Schnittstellen. Geöffnete Info- und Bilderbereiche bleiben bei erneutem Rendern erhalten; Speicherung und Standortberechnung bleiben in ihren bisherigen Modulen.
 
 ## Lokal starten und prüfen
 
@@ -163,7 +175,7 @@ Dann `http://localhost:8080/` im Browser öffnen. Für die Integritätsprüfung 
 node tools/check-project.mjs
 ```
 
-Die Prüfung kontrolliert JavaScript- und JSON-Syntax, HTML- und Spot-IDs, Koordinaten, Übersetzungsvollständigkeit, eingebundene Fallbacks, Modulabhängigkeiten, Manifest-Icons und vorhandene Offline-Dateien. Sie ersetzt keine Ortsrecherche oder manuelle Bedienprüfung.
+Die Prüfung kontrolliert außerdem die Release-Versionen, Tilla-Einbindung und gespeicherte Anleitungsschließung aller drei Startseiten sowie beschädigte UTF-8-Zeichen im Vorschau-Modul. Sie kontrolliert JavaScript- und JSON-Syntax, HTML- und Spot-IDs, Koordinaten, Übersetzungsvollständigkeit, eingebundene Fallbacks, Modulabhängigkeiten, Manifest-Icons und vorhandene Offline-Dateien. Sie ersetzt keine Ortsrecherche oder manuelle Bedienprüfung.
 
 Bei Änderungen zusätzlich die drei Sprachen, beide Designmodi, eine schmale mobile Ansicht, Tastaturbedienung, Speicherfunktionen und einen Offline-Neustart prüfen. Bei Änderungen am Service Worker auch die Aktualisierung einer bereits installierten Version testen.
 
@@ -181,3 +193,29 @@ Die statische Web-App wird über **GitHub Pages mit GitHub Actions** veröffentl
 - Vor einem kostenpflichtigen Regelbetrieb Berechtigungsprüfung und Kontoverwaltung ausarbeiten.
 
 Hinweise und Korrekturen können über die [GitHub-Issues des Projekts](https://github.com/HeimHafen/Family-Spots-Map/issues) eingebracht werden. Bestehende Gestaltung, Bildrechte, stabile Spot-IDs und vollständige Sprachtexte bei Änderungen berücksichtigen.
+
+## Feinschliff in Release 39
+
+Der Kopfbereich nutzt weniger Leerraum bei unveränderter Titelgröße und iPhone-Sicherheitsabstand. Grüne Einzelmarker erhalten kräftigere Farbtöne und einen weicheren Schatten; ihre 44 × 44 Pixel großen Bedienflächen und Koordinaten bleiben erhalten. Im Abendmodus sind ausschließlich die Kartenkacheln heller abgestimmt. Tilla, Vorschau, Speicherfunktionen und Daten bleiben erhalten.
+
+## Gesamtprüfung in Release 40
+
+Die Kategorie für Kleinkinder, Barfußspiel und Motorik ist in den Sprachkatalogen vollständig übersetzt. Die deutsche Kategorieliste verwendet „Kleinkind“. Die Offline-Einstiegsseite nutzt im Abendmodus dieselbe Olive-/Leinenpalette wie die Haupt-App; ihre Hinweise auf die Offline-Vorbereitung sind sprachlich präzisiert. Preise, Plus-Regeln, geografische Daten und persönliche Speicherformate bleiben unverändert.
+
+## Tillas Herz in Release 41
+
+Tilla trägt ein kleines orangefarbenes Aquarellherz mittig auf ihrem Panzer. Das gemeinsame Bildsymbol `assets/tilla/tilla-heart.png` erscheint bei „Mein Tag“, gespeicherten Favoriten und Herz-Hinweisen. Nicht gespeicherte Favoriten behalten ein leeres Umrissherz, damit der Zustand erkennbar bleibt. Der Erinnerungszettel wird weiterhin nur bei gespeicherten Erinnerungen eingeblendet. Für erzwungene Systemfarben gibt es einen SVG-Fallback. Beide PNG-Bilder werden im Offline-Paket gespeichert.
+
+## Sanftes Schaukeln in Release 43
+
+Sobald ihr geladenes Bild sichtbar ist, schaukelt Tilla einmal für 4,8 Sekunden leicht um ihre Standfläche und kommt anschließend zur Ruhe. Bild, Panzerherz und Erinnerungszettel bleiben in einem gemeinsamen Koordinatensystem. Bei aktivierter Einstellung „Bewegung reduzieren“ bleibt die Schaukeldarstellung deaktiviert. Die kurze Animation benötigt keine zusätzliche Bedienfläche und läuft nicht endlos im Hintergrund.
+
+
+## Reparatur des gemischten Veröffentlichungsstands
+
+Release 43 ersetzt die veraltete Kartengestaltung, stellt grüne Einzelpins mit
+expliziter Punktgröße wieder her und vergrößert Tillas linke Bildspalte.
+Die neue Cache-Version aktualisiert auch Geräte, die den fehlerhaften Stand 42
+bereits gespeichert haben. Die beiden Herz-Bilder aus Release 42 bleiben erhalten.
+Alle Ersatzdateien vollständig hochladen, `service-worker.js` zuletzt.
+Persönliche Browserdaten nicht löschen.
