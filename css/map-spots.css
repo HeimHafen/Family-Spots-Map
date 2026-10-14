@@ -149,3 +149,25 @@ html[data-theme="dark"] .leaflet-control-scale-line { background: #d0cbbccc; }
   #btn-play-idea.btn-play-idea { width: max-content; max-width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .fsm-disclosure-chevron { transition: none; } }
+
+/* Flatter section rows and preview action, preserving the existing widths and type. */
+:is(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) > .sidebar-section-header {
+  min-height: 38px;
+}
+:is(#filter-section, .sidebar-section--grow) > .sidebar-section-header > button {
+  min-height: 38px;
+  position: relative;
+}
+.fsm-map-popup .fsm-spot-preview__open {
+  min-height: 36px;
+  padding-block: 4px;
+  position: relative;
+}
+@media (pointer: coarse) {
+  :is(#filter-section, .sidebar-section--grow) > .sidebar-section-header > button::before {
+    content: ""; position: absolute; inset: -3px 0; border-radius: inherit;
+  }
+  .fsm-map-popup .fsm-spot-preview__open::before {
+    content: ""; position: absolute; inset: -4px 0; border-radius: inherit;
+  }
+}
