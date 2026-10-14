@@ -321,6 +321,41 @@ export class TillaCompanion {
     }
 
     this._renderState();
+    this._initVisibleSway();
+  }
+
+  // Start only when the painted figure is loaded and actually visible.
+  // A slow initial load must not use up the short animation off screen.
+  _initVisibleSway() {
+    const canvas = document.querySelector("#tilla-section .tilla-watercolor-canvas");
+    const image = canvas?.querySelector("img");
+    if (!canvas || !image) return;
+    let visible = !("IntersectionObserver" in window);
+    let started = false;
+    const start = () => {
+      if (started || !visible || !image.complete || !image.naturalWidth || document.hidden) return;
+      started = true;
+      canvas.classList.add("is-swaying");
+      this._swayObserver?.disconnect();
+      document.removeEventListener("visibilitychange", start);
+      image.removeEventListener("load", start);
+    };
+    if ("IntersectionObserver" in window) {
+      this._swayObserver = new IntersectionObserver(entries => {
+        visible = entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= 0.5);
+        start();
+      }, { threshold: [0, 0.5] });
+      this._swayObserver.observe(canvas);
+    }
+    image.addEventListener("load", start);
+    document.addEventListener("visibilitychange", start);
+    this._disposeSway = () => {
+      this._swayObserver?.disconnect();
+      image.removeEventListener("load", start);
+      document.removeEventListener("visibilitychange", start);
+      canvas.classList.remove("is-swaying");
+    };
+    start();
   }
 
   /**
@@ -481,6 +516,7 @@ export class TillaCompanion {
    */
   destroy() {
     this._stopMemoryAnimation();
+    this._disposeSway?.();
 
     this.memoryNoteEl?.removeEventListener(
       "animationend",
