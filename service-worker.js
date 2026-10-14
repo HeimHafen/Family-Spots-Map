@@ -1,7 +1,7 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-flat-cards-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-personal-backup-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -10,6 +10,7 @@ const ASSETS = [
   "js/data/dataLoader.js",
   "js/features/plus.js",
   "js/features/personal-storage.js",
+  "js/features/personal-backup.js",
   "js/features/daylog-drafts.js",
   "js/features/tilla.js",
   "js/filters.js",
@@ -120,11 +121,19 @@ async function validateImage(response, url) {
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
 }
+const RELEASE_HASHES = {
+  "css/map-spots.css": "27cac7c328de026e412d69ad9832ddf878c6f1e1fdde8cdd5134dca1489c3952",
+  "js/app.js": "b674656ec65bf28f89f2ca5a8b931a065b1c0137f6551532394208ac2e6c4f9d",
+  "js/features/personal-storage.js": "e93870d4f0a2d1bd5d61e09f63a9429a12fa1217d2f3ee370328a2cfc6d42185",
+  "js/features/personal-backup.js": "7ec40038353465b517a37adf25963ce0fdf4ef889f4c10af8125669b68c1fe57"
+};
 async function validateMapPresentation(response, url) {
-  if (new URL(url).pathname !== new URL("css/map-spots.css", ROOT).pathname) return;
+  const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
+  const expected = RELEASE_HASHES[relative];
+  if (!expected) return;
   const digest = await crypto.subtle.digest("SHA-256", await response.clone().arrayBuffer());
   const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
-  if (hash !== "27cac7c328de026e412d69ad9832ddf878c6f1e1fdde8cdd5134dca1489c3952") throw new Error("Map stylesheet does not match this update");
+  if (hash !== expected) throw new Error(`File does not match this update: ${relative}`);
 }
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
