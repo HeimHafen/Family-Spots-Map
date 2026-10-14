@@ -22,16 +22,16 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Stand: **13. Oktober 2026**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Stand: **14. Oktober 2026**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
 ## Funktionen
 
-- **Karte und Spot-Liste:** gruppierte Marker, Detailansichten und Navigation über Apple Karten oder Google Maps.
+- **Karte und Spot-Liste:** gruppierte Marker, Kategorie-Symbolpins und platzabhängige Namensbeschriftungen. Ein Pin öffnet eine kompakte Vorschau; „Spot ansehen“ führt zu den vollständigen Details. Die Navigation erfolgt über Apple Karten oder Google Maps.
 - **Suche und Filter:** Ort oder Stichwort, Stimmung, Radius, Kategorien, Altersgruppen, Favoriten und weitere praktische Schnellfilter.
 - **Standort:** optional den eigenen Standort anzeigen. Die App bleibt auch ohne Standortfreigabe bedienbar.
-- **Tilla:** kleine Spielideen und Anregungen für gemeinsame Erlebnisse unterwegs.
+- **Tilla:** gemalte Schildkröten-Begleiterin mit kleinen Spielideen. Ein Zettel erscheint in ihrer Tasche, sobald mindestens eine Erinnerung gespeichert ist; nach dem Löschen der letzten Erinnerung verschwindet er.
 - **Favoriten:** interessante Orte auf dem jeweiligen Gerät merken.
 - **Mein Tag:** Erinnerungen schreiben, bearbeiten und löschen; auch offline, sobald die App vollständig geladen wurde.
 - **Bildergalerien:** passende Ortsbilder mit Bildunterschriften und Alternativtexten in allen drei Sprachen.
@@ -39,6 +39,14 @@ Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um *
 - **Zwei Designmodi:** warme helle Gestaltung und ein Abendmodus mit olivfarbenem Hintergrund, hellen Karten und optisch abgedunkelten Kartenkacheln.
 
 Favoriten, Erinnerungen, Entwürfe und Freischaltungen werden lokal im jeweiligen Browser gespeichert. Eine geräteübergreifende Kontosynchronisation ist derzeit nicht implementiert.
+
+## Kartenpins und Einstieg
+
+Die geografische Leaflet-/OpenStreetMap-Karte bleibt erhalten. Ab Zoomstufe 13 erscheinen die Namen einzelner sichtbarer Spots, sofern die Beschriftung innerhalb des Kartenbereichs liegt und weder andere Namen noch Pins oder Bedienelemente überdeckt. Die Namensfläche des ausgewählten Pins wird während seiner geöffneten Vorschau ausgeblendet. Gruppen und bestehende Filter bestimmen weiterhin, welche Spots verfügbar sind.
+
+Die Vorschau enthält vorhandene übersetzte Daten und genau einen Schließen-Button. „Kostenlos“ wird ausschließlich aus dem vorhandenen `free`-Tag abgeleitet. Enter und Leertaste öffnen die Vorschau, Escape schließt sie. Das bewusste Schließen der Einstiegsanleitung wird unter `fsm_onboarding_hint_dismissed` lokal gespeichert; die App bleibt bei blockiertem Browserspeicher bedienbar.
+
+`js/ui/map-spots.js` und `css/map-spots.css` kapseln die neue Darstellung. Das transparente Maskottchen liegt in `assets/tilla/tilla-watercolor.png`. Sein Erinnerungszettel bleibt ein separates, an den Erinnerungsstand gebundenes Element.
 
 ## Sprachen und Gestaltung
 
@@ -105,7 +113,7 @@ Nach erfolgreicher Erstinstallation sind die App-Oberfläche, Spotdaten, Spracht
 
 **Kartenkacheln benötigen Internet.** Der Service Worker lädt keine externen OpenStreetMap-Kacheln als Offline-Kartenpaket herunter. Auch externe Navigation und Quellenwebseiten sind keine Offline-Funktionen dieser App.
 
-Der aktuelle Offline-Umfang beträgt 66 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
+Der aktuelle Offline-Umfang beträgt 69 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
 
 ### Ein Update sicher veröffentlichen
 
@@ -138,6 +146,7 @@ Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien mit ES-M
 | `js/app.js` | Initialisierung und Zusammenspiel der Anwendung |
 | `js/ui/spot-details.js` | Spot-Detailansicht, Bildergalerie, Besuchsinfos, Quellen und Kartenbuttons |
 | `js/map.js`, `js/filters/` | Karte, Marker und Filterlogik |
+| `js/ui/map-spots.js`, `css/map-spots.css` | Kategoriepins, Namensbeschriftungen, Spot-Vorschau und Tilla-Darstellung |
 | `js/i18n.js`, `data/i18n/`, `data/play-ideas.json` | Sprachen, Fallbacks und Spielideen |
 | `js/features/tilla.js` | Familienbegleiterin Tilla |
 | `js/features/personal-storage.js`, `js/features/daylog-drafts.js` | Lokale persönliche Daten und Entwürfe |
