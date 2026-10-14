@@ -22,7 +22,7 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Stand: **14. Oktober 2026**, Darstellungsrelease **20261014-pin-tilla-43**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Stand: **14. Oktober 2026**, Darstellungsrelease **20261014-pin-tilla-40**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
@@ -201,14 +201,3 @@ Der Kopfbereich nutzt weniger Leerraum bei unveränderter Titelgröße und iPhon
 ## Gesamtprüfung in Release 40
 
 Die Kategorie für Kleinkinder, Barfußspiel und Motorik ist in den Sprachkatalogen vollständig übersetzt. Die deutsche Kategorieliste verwendet „Kleinkind“. Die Offline-Einstiegsseite nutzt im Abendmodus dieselbe Olive-/Leinenpalette wie die Haupt-App; ihre Hinweise auf die Offline-Vorbereitung sind sprachlich präzisiert. Preise, Plus-Regeln, geografische Daten und persönliche Speicherformate bleiben unverändert.
-
-
-## Rückkehr zu grünen Herzen und ruhiger Tilla
-
-Die Gestaltung kehrt zum Stand vor den orangefarbenen App-Herzen und dem
-Schaukeln zurück. Tilla bleibt ruhig und behält ihr gemaltes Herz auf dem Panzer.
-Mein Tag, Favoriten und Hinweise verwenden wieder grüne Herzen.
-Grüne Einzelpins, Gruppen und die bisherigen Filter-/Plus-Regeln bleiben erhalten.
-Die Punkte besitzen eine explizite Größe; hinein- und herauszoomen bleibt möglich.
-Das separate orangefarbene Herzbild wird nicht mehr verwendet oder offline geladen.
-service-worker.js erst ersetzen, wenn alle übrigen Ersatzdateien hochgeladen sind.
