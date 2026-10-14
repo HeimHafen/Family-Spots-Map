@@ -6,7 +6,14 @@
   filter: none;
 }
 .fsm-spot-pin { position: relative; width: 44px; height: 44px; }
-.fsm-spot-pin__dot { position: absolute; left: 13px; top: 13px; }
+.fsm-spot-pin__dot {
+  position: absolute; left: 13px; top: 13px;
+  background: radial-gradient(circle at 30% 20%, #a8ce77 0, #78ab46 45%, #598530 100%);
+  box-shadow: 0 0 0 2px #fff9ed, 0 3px 8px #30291f45;
+}
+html[data-theme="dark"] .fsm-spot-pin__dot {
+  background: radial-gradient(circle at 30% 20%, #c4e29e 0, #98c963 45%, #78a548 100%);
+}
 .fsm-map-marker[aria-expanded="true"] .fsm-spot-pin__dot {
   box-shadow: 0 0 0 2px #fff9ed, 0 0 0 5px #8fbf5a66, 0 4px 10px #30291f40;
 }
