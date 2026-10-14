@@ -113,7 +113,7 @@ Nach erfolgreicher Erstinstallation sind die App-Oberfläche, Spotdaten, Spracht
 
 **Kartenkacheln benötigen Internet.** Der Service Worker lädt keine externen OpenStreetMap-Kacheln als Offline-Kartenpaket herunter. Auch externe Navigation und Quellenwebseiten sind keine Offline-Funktionen dieser App.
 
-Der aktuelle Offline-Umfang beträgt 70 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
+Der aktuelle Offline-Umfang beträgt 69 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
 
 ### Ein Update sicher veröffentlichen
 
@@ -202,20 +202,13 @@ Der Kopfbereich nutzt weniger Leerraum bei unveränderter Titelgröße und iPhon
 
 Die Kategorie für Kleinkinder, Barfußspiel und Motorik ist in den Sprachkatalogen vollständig übersetzt. Die deutsche Kategorieliste verwendet „Kleinkind“. Die Offline-Einstiegsseite nutzt im Abendmodus dieselbe Olive-/Leinenpalette wie die Haupt-App; ihre Hinweise auf die Offline-Vorbereitung sind sprachlich präzisiert. Preise, Plus-Regeln, geografische Daten und persönliche Speicherformate bleiben unverändert.
 
-## Tillas Herz in Release 41
 
-Tilla trägt ein kleines orangefarbenes Aquarellherz mittig auf ihrem Panzer. Das gemeinsame Bildsymbol `assets/tilla/tilla-heart.png` erscheint bei „Mein Tag“, gespeicherten Favoriten und Herz-Hinweisen. Nicht gespeicherte Favoriten behalten ein leeres Umrissherz, damit der Zustand erkennbar bleibt. Der Erinnerungszettel wird weiterhin nur bei gespeicherten Erinnerungen eingeblendet. Für erzwungene Systemfarben gibt es einen SVG-Fallback. Beide PNG-Bilder werden im Offline-Paket gespeichert.
+## Rückkehr zu grünen Herzen und ruhiger Tilla
 
-## Sanftes Schaukeln in Release 43
-
-Sobald ihr geladenes Bild sichtbar ist, schaukelt Tilla einmal für 4,8 Sekunden leicht um ihre Standfläche und kommt anschließend zur Ruhe. Bild, Panzerherz und Erinnerungszettel bleiben in einem gemeinsamen Koordinatensystem. Bei aktivierter Einstellung „Bewegung reduzieren“ bleibt die Schaukeldarstellung deaktiviert. Die kurze Animation benötigt keine zusätzliche Bedienfläche und läuft nicht endlos im Hintergrund.
-
-
-## Reparatur des gemischten Veröffentlichungsstands
-
-Release 43 ersetzt die veraltete Kartengestaltung, stellt grüne Einzelpins mit
-expliziter Punktgröße wieder her und vergrößert Tillas linke Bildspalte.
-Die neue Cache-Version aktualisiert auch Geräte, die den fehlerhaften Stand 42
-bereits gespeichert haben. Die beiden Herz-Bilder aus Release 42 bleiben erhalten.
-Alle Ersatzdateien vollständig hochladen, `service-worker.js` zuletzt.
-Persönliche Browserdaten nicht löschen.
+Die Gestaltung kehrt zum Stand vor den orangefarbenen App-Herzen und dem
+Schaukeln zurück. Tilla bleibt ruhig und behält ihr gemaltes Herz auf dem Panzer.
+Mein Tag, Favoriten und Hinweise verwenden wieder grüne Herzen.
+Grüne Einzelpins, Gruppen und die bisherigen Filter-/Plus-Regeln bleiben erhalten.
+Die Punkte besitzen eine explizite Größe; hinein- und herauszoomen bleibt möglich.
+Das separate orangefarbene Herzbild wird nicht mehr verwendet oder offline geladen.
+service-worker.js erst ersetzen, wenn alle übrigen Ersatzdateien hochgeladen sind.
