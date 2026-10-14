@@ -1,5 +1,5 @@
 // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261013-details-module-34";
+const CACHE_VERSION = "20261014-pin-tilla-35";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 const ROOT = new URL("./", self.location.href);
@@ -20,6 +20,7 @@ const ASSETS = [
   "js/filters/tags.js",
   "js/i18n.js",
   "js/map.js",
+  "js/ui/map-spots.js",
   "js/router.js",
   "js/storage.js",
   "js/sw-register.js",
@@ -38,6 +39,7 @@ const ASSETS = [
   "offline.html",
   "manifest.webmanifest",
   "css/styles.css",
+  "css/map-spots.css",
   "css/evening.css",
   "css/theme.css",
   "css/base.css",
@@ -56,6 +58,7 @@ const ASSETS = [
   "assets/icons/icon-512.png",
   "assets/icons/apple-touch-icon.png",
   "assets/tilla/tilla-hero.png",
+  "assets/tilla/tilla-watercolor.png",
   "assets/spots/wildgatter-hildesheim/eingang-test.webp",
   "assets/spots/wildgatter-hildesheim/spielplatz-test.webp",
   "assets/spots/wildgatter-hildesheim/wege-test.webp",
