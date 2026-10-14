@@ -128,3 +128,65 @@ export function changeDaylog(operation) {
     return { value: { entries }, result: entries };
   });
 }
+
+// A backup/import reads both stores under the same gate transaction. Imports
+// merge both datasets in one commit, including rollback of the legacy mirrors.
+export async function personalSnapshot(imported = null) {
+  const db = await database();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("gate", imported ? "readwrite" : "readonly");
+    const store = tx.objectStore("gate");
+    const keys = [FAVORITES_KEY, DAYLOG_STORAGE_KEY];
+    const values = [], mirrors = [];
+    let remaining = keys.length, result, error;
+    keys.forEach((key, index) => {
+      const request = store.get(key);
+      request.onsuccess = () => {
+        try {
+          values[index] = request.result === undefined ? legacyPayload(key) : request.result;
+          if (--remaining) return;
+          const favorites = favoritesFrom(values[0]);
+          const entries = daylogFrom(values[1]);
+          const counts = { favorites: 0, entries: 0, conflicts: 0 };
+          if (imported) {
+            for (const id of imported.favorites) if (!favorites.has(id)) { favorites.add(id); counts.favorites++; }
+            const ids = new Set(entries.map(entry => entry.id));
+            const signature = entry => JSON.stringify([entry.ts, entry.text]);
+            const seen = new Set(entries.map(signature));
+            for (const entry of imported.entries) {
+              if (seen.has(signature(entry))) continue;
+              let id = entry.id, suffix = 0;
+              if (ids.has(id)) {
+                counts.conflicts++;
+                do { id = `${entry.id.slice(0, 480)}-import-${++suffix}`; } while (ids.has(id));
+              }
+              entries.push({ ...entry, id }); ids.add(id); seen.add(signature(entry)); counts.entries++;
+            }
+            const next = [[...favorites], { entries }];
+            // All writes are synchronous inside the transaction callback. No
+            // other gate writer can change either dataset until commit/abort.
+            keys.forEach((key, i) => {
+              const previous = localStorage.getItem(key), written = JSON.stringify(next[i]);
+              localStorage.setItem(key, written);
+              mirrors.push({ key, previous, written });
+              store.put(next[i], key);
+            });
+          }
+          result = { favorites: [...favorites], entries, counts };
+        } catch (caught) { error = caught; tx.abort(); }
+      };
+    });
+    tx.oncomplete = () => resolve(result);
+    tx.onabort = tx.onerror = () => {
+      for (const mirror of mirrors.reverse()) {
+        try {
+          if (localStorage.getItem(mirror.key) === mirror.written) {
+            if (mirror.previous === null) localStorage.removeItem(mirror.key);
+            else localStorage.setItem(mirror.key, mirror.previous);
+          }
+        } catch { /* Committed IndexedDB data is still retained. */ }
+      }
+      reject(error || tx.error || new Error("personal_storage_failed"));
+    };
+  });
+}
