@@ -74,3 +74,68 @@ html[data-theme="dark"] .fsm-map-popup .leaflet-popup-content-wrapper { box-shad
 @media(prefers-reduced-motion: reduce) {
   #tilla-section #tilla-memory-note.is-storing:not([hidden]) { animation: none; }
 }
+
+/* Refinement of the existing app, shared by all three entry pages. */
+.fsm-spot-preview { padding: 13px 14px; }
+.fsm-map-popup .fsm-spot-preview h3 { font-size: 14px; line-height: 1.35; margin-right: 30px; }
+.fsm-map-popup .fsm-spot-preview p { margin: 5px 0; }
+.fsm-map-popup .fsm-spot-preview__meta { font-size: 11px; line-height: 1.45; }
+.fsm-spot-preview__summary { font-size: 12px; line-height: 1.5; -webkit-line-clamp: 2; }
+.fsm-spot-preview__free { font-size: 11px; padding: 2px 8px; }
+.fsm-spot-preview__close { top: 0; right: 0; display: grid; place-items: center; padding: 10px; }
+.fsm-spot-preview__close svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.fsm-spot-preview__open { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 9px; font-size: 12px; padding: 8px 12px; }
+.fsm-spot-preview__open span { display: inline-flex; }
+.fsm-spot-preview__open svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.fsm-map-popup .leaflet-popup-scrolled { border: 0; overflow-y: auto; overscroll-behavior: contain; }
+.fsm-map-marker[aria-expanded="true"] .fsm-spot-pin__name { font-weight: 750; }
+.leaflet-control-scale-line { border-color: #48503d; background: #fff9edcc; color: #30291f; text-shadow: none; border-radius: 0 0 3px 3px; }
+html[data-theme="dark"] .leaflet-control-scale-line { background: #d0cbbccc; }
+
+/* Enlarge the painted figure by cropping the asset's transparent side margins.
+   Image and conditional note remain in one coordinate system. */
+#tilla-section .tilla-sidebar-card {
+  grid-template-columns: clamp(94px, 29vw, 124px) minmax(0, 1fr);
+  gap: 6px 10px;
+  padding: 10px;
+  overflow: hidden;
+}
+#tilla-section .tilla-sidebar-avatar {
+  width: 100%;
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  min-width: 0;
+  pointer-events: none;
+}
+#tilla-section .tilla-watercolor-canvas { width: 140%; margin-inline-start: -17%; }
+#tilla-sidebar-text { min-block-size: 0; margin: 0; font-size: 13px; line-height: 1.5; }
+#tilla-section .tilla-sidebar-actions { grid-column: 1 / -1; grid-row: 2; }
+#btn-play-idea.btn-play-idea {
+  width: max-content;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 7px 12px;
+  gap: 5px;
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: normal;
+}
+#btn-play-idea > span:not(.tilla-play-emoji) { flex: 0 1 auto; min-width: 0; white-space: normal; }
+#btn-play-idea .tilla-play-emoji { font-size: 18px; }
+
+.fsm-disclosure-chevron { flex: 0 0 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 160ms ease; }
+:is(#btn-toggle-filters, #btn-toggle-spots) { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; }
+:is(#btn-toggle-filters, #btn-toggle-spots)[aria-expanded="true"] .fsm-disclosure-chevron { transform: rotate(180deg); }
+:is(#filter-section, .sidebar-section--grow, #plus-section, #daylog-section) > .sidebar-section-header { min-height: 44px; }
+:is(#filter-section, .sidebar-section--grow) > .sidebar-section-header > button { min-height: 44px; }
+
+@media (min-width: 420px) and (max-width: 899px) {
+  #tilla-sidebar-text { font-size: 14px; line-height: 1.45; }
+}
+@media (max-width: 359px), (min-width: 900px) {
+  #tilla-section .tilla-sidebar-avatar { grid-row: 1; }
+  #tilla-section .tilla-sidebar-actions { grid-column: 1 / -1; grid-row: 2; }
+  #btn-play-idea.btn-play-idea { width: max-content; max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .fsm-disclosure-chevron { transition: none; } }
