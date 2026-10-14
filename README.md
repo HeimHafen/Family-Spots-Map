@@ -22,13 +22,13 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Stand: **14. Oktober 2026**, Darstellungsrelease **20261014-pin-tilla-37**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Stand: **14. Oktober 2026**, Darstellungsrelease **20261014-pin-tilla-39**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
 ## Funktionen
 
-- **Karte und Spot-Liste:** gruppierte Marker, Kategorie-Symbolpins und platzabhängige Namensbeschriftungen. Ein Pin öffnet eine kompakte Vorschau; „Spot ansehen“ führt zu den vollständigen Details. Die Navigation erfolgt über Apple Karten oder Google Maps.
+- **Karte und Spot-Liste:** gruppierte Marker, grüne Punktmarker und platzabhängige Namensbeschriftungen. Ein Pin öffnet eine kompakte Vorschau; „Spot ansehen“ führt zu den vollständigen Details. Die Navigation erfolgt über Apple Karten oder Google Maps.
 - **Suche und Filter:** Ort oder Stichwort, Stimmung, Radius, Kategorien, Altersgruppen, Favoriten und weitere praktische Schnellfilter.
 - **Standort:** optional den eigenen Standort anzeigen. Die App bleibt auch ohne Standortfreigabe bedienbar.
 - **Tilla:** gemalte Schildkröten-Begleiterin mit kleinen Spielideen. Ein Zettel erscheint in ihrer Tasche, sobald mindestens eine Erinnerung gespeichert ist; nach dem Löschen der letzten Erinnerung verschwindet er.
@@ -146,7 +146,7 @@ Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien mit ES-M
 | `js/app.js` | Initialisierung und Zusammenspiel der Anwendung |
 | `js/ui/spot-details.js` | Spot-Detailansicht, Bildergalerie, Besuchsinfos, Quellen und Kartenbuttons |
 | `js/map.js`, `js/filters/` | Karte, Marker und Filterlogik |
-| `js/ui/map-spots.js`, `css/map-spots.css` | Kategoriepins, Namensbeschriftungen, Spot-Vorschau und Tilla-Darstellung |
+| `js/ui/map-spots.js`, `css/map-spots.css` | grüne Punktmarker, Namensbeschriftungen, Spot-Vorschau und Tilla-Darstellung |
 | `js/i18n.js`, `data/i18n/`, `data/play-ideas.json` | Sprachen, Fallbacks und Spielideen |
 | `js/features/tilla.js` | Familienbegleiterin Tilla |
 | `js/features/personal-storage.js`, `js/features/daylog-drafts.js` | Lokale persönliche Daten und Entwürfe |
@@ -193,3 +193,7 @@ Die statische Web-App wird über **GitHub Pages mit GitHub Actions** veröffentl
 - Vor einem kostenpflichtigen Regelbetrieb Berechtigungsprüfung und Kontoverwaltung ausarbeiten.
 
 Hinweise und Korrekturen können über die [GitHub-Issues des Projekts](https://github.com/HeimHafen/Family-Spots-Map/issues) eingebracht werden. Bestehende Gestaltung, Bildrechte, stabile Spot-IDs und vollständige Sprachtexte bei Änderungen berücksichtigen.
+
+## Feinschliff in Release 39
+
+Der Kopfbereich nutzt weniger Leerraum bei unveränderter Titelgröße und iPhone-Sicherheitsabstand. Grüne Einzelmarker erhalten kräftigere Farbtöne und einen weicheren Schatten; ihre 44 × 44 Pixel großen Bedienflächen und Koordinaten bleiben erhalten. Im Abendmodus sind ausschließlich die Kartenkacheln heller abgestimmt. Tilla, Vorschau, Speicherfunktionen und Daten bleiben erhalten.
