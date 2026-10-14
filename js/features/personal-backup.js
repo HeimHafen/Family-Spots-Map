@@ -45,7 +45,7 @@ const copy = {
     invalid: "Diese Datei ist keine unterstützte Sicherung oder größer als 5 MB. Es wurde nichts importiert.",
     failed: "Die Sicherung konnte nicht verarbeitet werden. Bitte prüfe den verfügbaren Speicher und versuche es erneut.",
     draft: "Bitte speichere oder schließe deine offenen Erinnerungstexte vor dem Import.",
-    imported: (e, f, c) => `Import abgeschlossen: ${e} Erinnerungen und ${f} Favoriten hinzugefügt.${c ? " Abweichende Versionen wurden als zusätzliche Erinnerungen erhalten." : ""}`
+    imported: (e, f, c) => e === 0 && f === 0 ? "Die Sicherung ist bereits vollständig vorhanden. Es wurden keine doppelten Einträge hinzugefügt." : `Import abgeschlossen: ${e} ${e === 1 ? "Erinnerung" : "Erinnerungen"} und ${f} ${f === 1 ? "Favorit" : "Favoriten"} hinzugefügt.${c ? " Abweichende Versionen wurden als zusätzliche Erinnerungen erhalten." : ""}`
   },
   en: {
     title: "Back up memories & favourites", export: "Export data", import: "Import data",
@@ -55,7 +55,7 @@ const copy = {
     invalid: "This file is not a supported backup or exceeds 5 MB. Nothing was imported.",
     failed: "The backup could not be processed. Please check available storage and try again.",
     draft: "Please save or close your unfinished memory texts before importing.",
-    imported: (e, f, c) => `Import complete: ${e} memories and ${f} favourites added.${c ? " Different versions were kept as additional memories." : ""}`
+    imported: (e, f, c) => e === 0 && f === 0 ? "Everything in this backup is already present. No duplicate entries were added." : `Import complete: ${e} ${e === 1 ? "memory" : "memories"} and ${f} ${f === 1 ? "favourite" : "favourites"} added.${c ? " Different versions were kept as additional memories." : ""}`
   },
   da: {
     title: "Sikkerhedskopi af minder og favoritter", export: "Eksportér data", import: "Importér data",
@@ -65,7 +65,7 @@ const copy = {
     invalid: "Filen er ikke en understøttet sikkerhedskopi eller er større end 5 MB. Intet blev importeret.",
     failed: "Sikkerhedskopien kunne ikke behandles. Kontrollér den ledige lagerplads, og prøv igen.",
     draft: "Gem eller luk dine ufærdige mindetekster før import.",
-    imported: (e, f, c) => `Import afsluttet: ${e} minder og ${f} favoritter tilføjet.${c ? " Forskellige versioner blev bevaret som ekstra minder." : ""}`
+    imported: (e, f, c) => e === 0 && f === 0 ? "Alt i sikkerhedskopien findes allerede. Ingen dubletter blev tilføjet." : `Import afsluttet: ${e} ${e === 1 ? "minde" : "minder"} og ${f} ${f === 1 ? "favorit" : "favoritter"} tilføjet.${c ? " Forskellige versioner blev bevaret som ekstra minder." : ""}`
   }
 };
 
@@ -97,6 +97,10 @@ export function initPersonalBackup({ afterImport, hasDraft }) {
   };
   const announce = key => { statusKey = key; status.hidden = false; translate(); };
   const busy = value => { exportButton.disabled = importButton.disabled = value; section.setAttribute("aria-busy", String(value)); };
+  const restoreFocus = button => {
+    if (document.activeElement === document.body || document.activeElement === input) button.focus({ preventScroll: true });
+  };
+  input.addEventListener("cancel", () => restoreFocus(importButton));
   translate(); new MutationObserver(translate).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
   exportButton.addEventListener("click", async () => {
     busy(true);
@@ -109,7 +113,7 @@ export function initPersonalBackup({ afterImport, hasDraft }) {
       setTimeout(() => URL.revokeObjectURL(url), 60000);
       announce("exported");
     } catch (error) { announce(error.code === "invalid_backup" ? "exportLarge" : "failed"); }
-    finally { busy(false); }
+    finally { busy(false); restoreFocus(exportButton); }
   });
   importButton.addEventListener("click", () => {
     if (hasDraft()) { announce("draft"); return; }
@@ -127,6 +131,6 @@ export function initPersonalBackup({ afterImport, hasDraft }) {
       counts = result.counts; announce("imported");
       await afterImport();
     } catch (error) { announce(error.code === "invalid_backup" ? "invalid" : "failed"); }
-    finally { input.value = ""; busy(false); importButton.focus(); }
+    finally { input.value = ""; busy(false); restoreFocus(importButton); }
   });
 }
