@@ -15,7 +15,7 @@ const paths = {
 };
 const kinds = {
   animals: ["zoo", "tierpark", "wildpark", "bauernhof"],
-  play: ["spielplatz", "abenteuerspielplatz", "indoor-spielplatz", "waldspielplatz", "wasserspielplatz", "bewegungspark", "bolzplatz", "pumptrack", "skatepark", "verkehrsgarten"],
+  play: ["spielplatz", "abenteuerspielplatz", "indoor-spielplatz", "waldspielplatz", "wasserspielplatz", "bewegungspark", "bolzplatz", "pumptrack", "skatepark", "verkehrsgarten", "multifunktionsfeld"],
   water: ["schwimmbad", "badesee", "strand"],
   rv: ["stellplatz-spielplatz-naehe-kostenlos", "wohnmobil-service-station", "rastplatz-spielplatz-dusche", "campingplatz-familien"],
   culture: ["kinder-museum", "museum-kinder", "freilichtmuseum", "bibliothek"],
@@ -28,9 +28,8 @@ const kinds = {
 function kindFor(spot) {
   const categories = getSpotCategorySlugs(spot);
   // The primary category decides; secondary playgrounds must not turn a zoo into a playground pin.
-  for (const category of categories) {
-    for (const [kind, values] of Object.entries(kinds)) if (values.includes(category)) return kind;
-  }
+  const category = categories[0];
+  for (const [kind, values] of Object.entries(kinds)) if (values.includes(category)) return kind;
   return "nature";
 }
 
@@ -51,9 +50,9 @@ export function createSpotPin(spot) {
 }
 
 const copy = {
-  de: {open: "Spot ansehen", close: "Vorschau schlieÃen", free: "Kostenlos"},
+  de: {open: "Spot ansehen", close: "Vorschau schließen", free: "Kostenlos"},
   en: {open: "View spot", close: "Close preview", free: "Free"},
-  da: {open: "Se spot", close: "Luk forhÃ¥ndsvisning", free: "Gratis"}
+  da: {open: "Se spot", close: "Luk forhåndsvisning", free: "Gratis"}
 };
 
 export function createSpotPreview(spot, { lang, metaParts, onOpen, onClose }) {
@@ -68,14 +67,14 @@ export function createSpotPreview(spot, { lang, metaParts, onOpen, onClose }) {
   close.type = "button";
   close.className = "fsm-spot-preview__close";
   close.setAttribute("aria-label", labels.close);
-  close.textContent = "Ã";
+  close.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg>';
   close.addEventListener("click", onClose);
   card.append(title, close);
   const parts = (metaParts || []).filter(part => part && part !== spot.city).slice(0, 2);
   if (parts.length) {
     const meta = document.createElement("p");
     meta.className = "fsm-spot-preview__meta";
-    meta.textContent = parts.join(" Â· ");
+    meta.textContent = parts.join(" · ");
     card.appendChild(meta);
   }
   if (Array.isArray(spot.tags) && spot.tags.includes("free")) {
@@ -97,7 +96,7 @@ export function createSpotPreview(spot, { lang, metaParts, onOpen, onClose }) {
   open.textContent = labels.open;
   const arrow = document.createElement("span");
   arrow.setAttribute("aria-hidden", "true");
-  arrow.textContent = " âº";
+  arrow.innerHTML = '<svg viewBox="0 0 24 24" focusable="false"><path d="m9 5 7 7-7 7"/></svg>';
   open.appendChild(arrow);
   open.addEventListener("click", () => onOpen(open));
   card.appendChild(open);
@@ -120,8 +119,10 @@ export function attachSpotLabels(map) {
     for (const { marker } of entries) {
       const popup = marker.getPopup();
       const maxWidth = Math.min(300, Math.max(190, size.x - 60));
-      if (popup && popup.options.maxWidth !== maxWidth) {
+      const maxHeight = Math.max(100, Math.min(300, size.y - 110));
+      if (popup && (popup.options.maxWidth !== maxWidth || popup.options.maxHeight !== maxHeight)) {
         popup.options.maxWidth = maxWidth;
+        popup.options.maxHeight = maxHeight;
         if (marker.isPopupOpen()) popup.update();
       }
     }
@@ -129,23 +130,28 @@ export function attachSpotLabels(map) {
       const p = map.latLngToContainerPoint(marker.getLatLng());
       return {marker, left: p.x - 22, right: p.x + 22, top: p.y - 52, bottom: p.y};
     });
-    container.querySelectorAll(".leaflet-control, .leaflet-popup").forEach(el => {
+    container.querySelectorAll(".leaflet-control, .leaflet-popup, .marker-cluster, .fsm-map-offline-status").forEach(el => {
       const r = el.getBoundingClientRect();
       if (r.width && r.height) reserved.push({left: r.left - bounds.left, right: r.right - bounds.left, top: r.top - bounds.top, bottom: r.bottom - bounds.top});
     });
     entries.sort((a, b) => {
-      const focused = entry => entry.el === document.activeElement ? 0 : 1;
+      const focused = entry => entry.marker.isPopupOpen() ? 0 : entry.el === document.activeElement ? 1 : 2;
       return focused(a) - focused(b) || String(a.marker._fsmSpotId).localeCompare(String(b.marker._fsmSpotId));
     });
     for (const { marker, el } of entries) {
       const label = el.querySelector(".fsm-spot-pin__name");
       if (!label) continue;
       el.classList.remove("fsm-label-visible", "fsm-label-left");
+      label.style.maxWidth = "190px";
       el.setAttribute("aria-expanded", String(marker.isPopupOpen()));
-      if (map.getZoom() < 13 || marker.isPopupOpen()) continue;
+      if (map.getZoom() < 13) continue;
       const p = map.latLngToContainerPoint(marker.getLatLng());
-      const width = label.offsetWidth, height = label.offsetHeight;
       for (const left of [false, true]) {
+        // Fit long names to the actual space beside their geographic pin.
+        const available = left ? p.x - 32 : size.x - p.x - 32;
+        if (available < 86) continue;
+        label.style.maxWidth = `${Math.min(190, available)}px`;
+        const width = label.offsetWidth, height = label.offsetHeight;
         const x = left ? p.x - 24 - width : p.x + 24;
         const box = {left: x, right: x + width, top: p.y - 43, bottom: p.y - 43 + height};
         if (box.left < 8 || box.right > size.x - 8 || box.top < 8 || box.bottom > size.y - 8 || reserved.some(other => other.marker !== marker && overlap(box, other))) continue;
