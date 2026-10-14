@@ -6,7 +6,7 @@
 "use strict";
 
 import { getSpotName } from "./filters/tags.js?v=20261010-unified-4";
-import { createSpotPin, createSpotPreview, attachSpotLabels, setSpotLabelMarkers, scheduleSpotLabels, spotPinId } from "./ui/map-spots.js?v=20261014-pin-tilla-43";
+import { createSpotPin, createSpotPreview, attachSpotLabels, setSpotLabelMarkers, scheduleSpotLabels, spotPinId } from "./ui/map-spots.js?v=20261014-pin-tilla-40";
 
 // Keep existing marker DOM nodes when only distances or the viewport changed.
 const markerRenderSignatures = new WeakMap();
