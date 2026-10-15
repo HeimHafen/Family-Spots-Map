@@ -223,7 +223,7 @@ export function saveFavoritesToStorage(favoritesSet) {
  *
  * Eigenschaften:
  *  - abwärtskompatibel zum alten "1"/"0"-Format
- *  - setzt bei abgelaufenen Codes active=false und speichert das zurück
+ *  - gibt bei abgelaufenen Codes active=false zurück, ohne beim Lesen zu schreiben
  *
  * @returns {any|null}
  */
@@ -267,21 +267,18 @@ export function getPlusStatus() {
     status.expiresAt = status.validUntil;
   }
 
-  // Ablauf prüfen
-  if (status.expiresAt) {
+  // Fixed grants can outlive the currently displayed subscription (for example
+  // a legacy unlimited status). Evaluate each grant without writing on reads.
+  if (status.grantVersion === 1 && Array.isArray(status.grants)) {
+    status.active = !!status.active && status.grants.some(grant => grant && grant.active !== false &&
+      (grant.expiresAt === null || (typeof grant.expiresAt === "string" && Date.parse(grant.expiresAt) > Date.now())));
+  } else if (status.expiresAt) {
     const ts = Date.parse(status.expiresAt);
     if (!Number.isNaN(ts) && ts < Date.now()) {
       // Abgelaufen → als inaktiv markieren
       if (status.active !== false) {
         status.active = false;
-        try {
-          safeSet(PLUS_STORAGE_KEY, JSON.stringify(status));
-        } catch (err) {
-          console.warn(
-            "[Family Spots] Konnte abgelaufenen Plus-Status nicht aktualisieren:",
-            err
-          );
-        }
+        // Reads stay side-effect-free so they cannot race a redemption in another tab.
       }
     }
   }
@@ -311,6 +308,10 @@ export function savePlusStatus(status) {
     expiresAt: status.expiresAt || status.validUntil || null,
     // Wenn active explizit gesetzt ist, respektieren – sonst default true
     active: status.active !== undefined ? !!status.active : true,
+    // Preserve the fixed grants and redemption history in the same atomic write.
+    ...(status.grantVersion === 1 && Array.isArray(status.grants)
+      ? { grantVersion: 1, grants: status.grants }
+      : {}),
     // Add-ons, falls vorhanden, übernehmen (string-normalisiert)
     ...(Array.isArray(status.addons)
       ? { addons: status.addons.map(String) }
@@ -334,6 +335,8 @@ export function savePlusStatus(status) {
 export function loadPlusActive() {
   const status = getPlusStatus();
   if (!status || !status.active) return false;
+
+  if (status.grantVersion === 1 && Array.isArray(status.grants)) return !!status.active;
 
   const expires = status.expiresAt || status.validUntil;
   if (!expires) return true;
