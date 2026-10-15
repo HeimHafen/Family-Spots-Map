@@ -1,23 +1,29 @@
-import { personalSnapshot } from "./personal-storage.js";
+import { photoIds, personalSnapshot } from "./personal-storage.js";
+
+import { writeZip, readZip, MAX_ARCHIVE_BYTES } from "./backup-zip.js";
+import { validatePhoto } from "./memory-images.js";
 
 const FORMAT = "family-spots-personal-backup";
 export const MAX_BACKUP_BYTES = 5 * 1024 * 1024;
 const stamp = n => Number.isSafeInteger(n) && n >= 0 && Number.isFinite(new Date(n).getTime());
 const invalid = () => { const e = new Error("invalid_backup"); e.code = "invalid_backup"; return e; };
 
-export function parseBackup(text) {
-  if (typeof text !== "string" || new Blob([text]).size > MAX_BACKUP_BYTES) throw invalid();
+export function parseBackup(text, version = 1) {
+  if (![1, 2].includes(version) || typeof text !== "string" || new Blob([text]).size > MAX_BACKUP_BYTES) throw invalid();
   let data;
   try { data = JSON.parse(text); } catch { throw invalid(); }
-  if (!data || data.format !== FORMAT || data.version !== 1 ||
+  if (!data || data.format !== FORMAT || data.version !== version ||
       !Array.isArray(data.favorites) || !Array.isArray(data.entries) ||
       data.favorites.length > 20000 || data.entries.length > 20000) throw invalid();
   if (data.favorites.some(id => typeof id !== "string" || !id.trim() || id.length > 512)) throw invalid();
+  const safePhotos = entry => { try { return photoIds(entry); } catch { throw invalid(); } };
   const entries = data.entries.map(entry => {
+    if (version === 1 && entry?.photos?.length) throw invalid();
     if (!entry || typeof entry.id !== "string" || !entry.id.trim() || entry.id.length > 512 ||
-        typeof entry.text !== "string" || !entry.text.trim() || entry.text.length > 100000 ||
+        typeof entry.text !== "string" || (!entry.text.trim() && !(version === 2 && safePhotos(entry).length)) || entry.text.length > 100000 ||
         !stamp(entry.ts) || (entry.updatedTs !== undefined && !stamp(entry.updatedTs))) throw invalid();
     return { id: entry.id, text: entry.text.trim(), ts: entry.ts,
+      ...(version === 2 && safePhotos(entry).length ? { photos: safePhotos(entry).slice() } : {}),
       ...(entry.updatedTs !== undefined ? { updatedTs: entry.updatedTs } : {}) };
   });
   return { favorites: [...new Set(data.favorites)], entries };
@@ -25,6 +31,7 @@ export function parseBackup(text) {
 
 export async function exportPersonalBackup() {
   const { favorites, entries } = await personalSnapshot();
+  if (entries.some(entry => photoIds(entry).length)) throw invalid(); // Use the complete archive API for photos.
   const data = { format: FORMAT, version: 1, exportedAt: new Date().toISOString(), favorites, entries };
   const text = JSON.stringify(data, null, 2);
   // Never offer a backup which this version cannot restore.
@@ -36,40 +43,76 @@ export async function importPersonalBackup(text) {
   return personalSnapshot(data);
 }
 
+// A single consistent snapshot includes both memory metadata and all image blobs.
+export async function exportPersonalArchive() {
+  const { favorites, entries, photos } = await personalSnapshot();
+  const manifest = JSON.stringify({ format: FORMAT, version: 2, exportedAt: new Date().toISOString(), favorites, entries }, null, 2);
+  parseBackup(manifest, 2);
+  const files = [{ name: "manifest.json", blob: new Blob([manifest], { type: "application/json" }) }];
+  for (const id of Object.keys(photos).sort()) {
+    await validatePhoto(photos[id], id);
+    files.push({ name: `photos/${id}.jpg`, blob: photos[id] });
+  }
+  return writeZip(files);
+}
+export async function importPersonalFile(file, mayImport = () => true) {
+  if (!(file instanceof Blob) || file.size > MAX_ARCHIVE_BYTES) throw invalid();
+  const signature = new Uint8Array(await file.slice(0, 4).arrayBuffer());
+  let data;
+  if (signature[0] === 80 && signature[1] === 75) {
+    const files = await readZip(file);
+    data = parseBackup(await files.get("manifest.json").text(), 2);
+    const ids = new Set(data.entries.flatMap(photoIds));
+    if (files.size !== ids.size + 1) throw invalid();
+    data.photos = {};
+    for (const id of ids) {
+      const blob = files.get(`photos/${id}.jpg`);
+      try { await validatePhoto(blob, id); } catch { throw invalid(); }
+      data.photos[id] = blob;
+    }
+  } else {
+    if (file.size > MAX_BACKUP_BYTES) throw invalid();
+    data = parseBackup(await file.text());
+  }
+  // Recheck after asynchronous image validation; never import over a new draft.
+  if (!mayImport()) { const error = new Error("draft"); error.code = "draft"; throw error; }
+  return personalSnapshot(data);
+}
+
 const copy = {
   de: {
     title: "Erinnerungen & Favoriten sichern", export: "Daten exportieren", import: "Daten importieren",
-    hint: "Sichere deine gespeicherten Erinnerungen und Favoriten als Datei. Beim Import bleiben vorhandene Daten erhalten. Entwürfe und Plus-Zugänge sind nicht enthalten. Bewahre die Datei privat auf.",
+    hint: "Sichere deine gespeicherten Erinnerungen und Favoriten als Datei. Beim Import bleiben vorhandene Daten erhalten. Die ZIP-Datei enthält auch gespeicherte Fotos. Bisherige JSON-Sicherungen lassen sich weiterhin importieren. Entwürfe und Plus-Zugänge sind nicht enthalten. Bewahre die Datei privat auf.",
     exported: "Die Sicherungsdatei wurde zum Download bereitgestellt. Bitte bewahre sie sicher auf.",
     exportLarge: "Die Sicherung ist für dieses Dateiformat zu groß oder enthält nicht unterstützte Daten. Deine gespeicherten Daten bleiben erhalten.",
-    invalid: "Diese Datei ist keine unterstützte Sicherung oder größer als 5 MB. Es wurde nichts importiert.",
+    invalid: "Diese Datei ist keine unterstützte Sicherung oder zu groß (ZIP: höchstens 100 MB, JSON: 5 MB). Es wurde nichts importiert.",
     failed: "Die Sicherung konnte nicht verarbeitet werden. Bitte prüfe den verfügbaren Speicher und versuche es erneut.",
-    draft: "Bitte speichere offene Erinnerungstexte vor dem Import oder brich die Bearbeitung ab.",
+    draft: "Bitte speichere deine offenen Erinnerungen samt Fotos vor dem Import oder brich die Bearbeitung ab.",
     imported: (e, f, c) => e === 0 && f === 0 ? "Die Sicherung ist bereits vollständig vorhanden. Es wurden keine doppelten Einträge hinzugefügt." : `Import abgeschlossen: ${e} ${e === 1 ? "Erinnerung" : "Erinnerungen"} und ${f} ${f === 1 ? "Favorit" : "Favoriten"} hinzugefügt.${c ? " Abweichende Versionen wurden als zusätzliche Erinnerungen erhalten." : ""}`
   },
   en: {
     title: "Back up memories & favourites", export: "Export data", import: "Import data",
-    hint: "Save your stored memories and favourites to a file. Importing keeps existing data. Drafts and Plus access are not included. Keep the file private.",
+    hint: "Save your stored memories and favourites to a file. Importing keeps existing data. The ZIP file also includes saved photos. Previous JSON backups can still be imported. Drafts and Plus access are not included. Keep the file private.",
     exported: "The backup file is ready to download. Please keep it somewhere safe.",
     exportLarge: "The backup is too large for this file format or contains unsupported data. Your stored data has been kept.",
-    invalid: "This file is not a supported backup or exceeds 5 MB. Nothing was imported.",
+    invalid: "This file is not a supported backup or is too large (ZIP: up to 100 MB, JSON: 5 MB). Nothing was imported.",
     failed: "The backup could not be processed. Please check available storage and try again.",
-    draft: "Please save unfinished memories before importing, or cancel any open edits.",
+    draft: "Please save unfinished memories, including selected photos, or cancel editing before importing.",
     imported: (e, f, c) => e === 0 && f === 0 ? "Everything in this backup is already present. No duplicate entries were added." : `Import complete: ${e} ${e === 1 ? "memory" : "memories"} and ${f} ${f === 1 ? "favourite" : "favourites"} added.${c ? " Different versions were kept as additional memories." : ""}`
   },
   da: {
     title: "Sikkerhedskopi af minder og favoritter", export: "Eksportér data", import: "Importér data",
-    hint: "Gem en sikkerhedskopi af dine minder og favoritter i en fil. Eksisterende data bevares ved import. Kladder og Plus-adgang er ikke med. Opbevar filen privat.",
+    hint: "Gem en sikkerhedskopi af dine minder og favoritter i en fil. Eksisterende data bevares ved import. ZIP-filen indeholder også gemte billeder. Tidligere JSON-sikkerhedskopier kan stadig importeres. Kladder og Plus-adgang er ikke med. Opbevar filen privat.",
     exported: "Sikkerhedskopien er klar til download. Opbevar den et sikkert sted.",
     exportLarge: "Sikkerhedskopien er for stor til dette filformat eller indeholder data, som ikke understøttes. Dine gemte data er bevaret.",
-    invalid: "Filen er ikke en understøttet sikkerhedskopi eller er større end 5 MB. Intet blev importeret.",
+    invalid: "Filen er ikke en understøttet sikkerhedskopi eller er for stor (ZIP: højst 100 MB, JSON: 5 MB). Intet blev importeret.",
     failed: "Sikkerhedskopien kunne ikke behandles. Kontrollér den ledige lagerplads, og prøv igen.",
-    draft: "Gem ufærdige minder før import, eller annuller en åben redigering.",
+    draft: "Gem ufærdige minder med de valgte billeder, eller annuller redigeringen før import.",
     imported: (e, f, c) => e === 0 && f === 0 ? "Alt i sikkerhedskopien findes allerede. Ingen dubletter blev tilføjet." : `Import afsluttet: ${e} ${e === 1 ? "minde" : "minder"} og ${f} ${f === 1 ? "favorit" : "favoritter"} tilføjet.${c ? " Forskellige versioner blev bevaret som ekstra minder." : ""}`
   }
 };
 
-export function initPersonalBackup({ afterImport, hasDraft }) {
+export function initPersonalBackup({ afterImport, hasDraft, setBusy = () => {} }) {
   const host = document.querySelector("#daylog-section .filter-group");
   if (!host || document.getElementById("personal-backup")) return;
   const section = document.createElement("div"); section.id = "personal-backup";
@@ -84,7 +127,7 @@ export function initPersonalBackup({ afterImport, hasDraft }) {
     button.setAttribute("aria-describedby", hint.id);
   }
   exportButton.id = "personal-backup-export"; importButton.id = "personal-backup-import";
-  const input = document.createElement("input"); input.type = "file"; input.accept = ".json,application/json"; input.hidden = true;
+  const input = document.createElement("input"); input.type = "file"; input.accept = ".zip,.json,application/zip,application/json"; input.hidden = true;
   const status = document.createElement("p"); status.id = "personal-backup-status"; status.setAttribute("role", "status"); status.setAttribute("aria-atomic", "true"); status.className = "filter-group-helper"; status.style.margin = "0";
   status.hidden = true;
   row.append(exportButton, importButton); section.append(heading, hint, row, input, status); host.append(section);
@@ -96,7 +139,7 @@ export function initPersonalBackup({ afterImport, hasDraft }) {
     if (statusKey) status.textContent = statusKey === "imported" ? t.imported(counts.entries, counts.favorites, counts.conflicts) : t[statusKey];
   };
   const announce = key => { statusKey = key; status.hidden = false; translate(); };
-  const busy = value => { exportButton.disabled = importButton.disabled = value; section.setAttribute("aria-busy", String(value)); };
+  const busy = value => { setBusy(value); exportButton.disabled = importButton.disabled = value; section.setAttribute("aria-busy", String(value)); };
   const restoreFocus = button => {
     if (document.activeElement === document.body || document.activeElement === input) button.focus({ preventScroll: true });
   };
@@ -105,10 +148,10 @@ export function initPersonalBackup({ afterImport, hasDraft }) {
   exportButton.addEventListener("click", async () => {
     busy(true);
     try {
-      const text = await exportPersonalBackup();
-      const url = URL.createObjectURL(new Blob([text], { type: "application/json;charset=utf-8" }));
+      const archive = await exportPersonalArchive();
+      const url = URL.createObjectURL(archive);
       const link = document.createElement("a"); link.href = url;
-      link.download = `family-spots-sicherung-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+      link.download = `family-spots-sicherung-${new Date().toISOString().replace(/[:.]/g, "-")}.zip`;
       document.body.append(link); link.click(); link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 60000);
       announce("exported");
@@ -124,13 +167,10 @@ export function initPersonalBackup({ afterImport, hasDraft }) {
     if (hasDraft()) { announce("draft"); input.value = ""; return; }
     busy(true);
     try {
-      if (file.size > MAX_BACKUP_BYTES) throw invalid();
-      const text = await file.text();
-      if (hasDraft()) { announce("draft"); return; }
-      const result = await importPersonalBackup(text);
+      const result = await importPersonalFile(file, () => !hasDraft());
       counts = result.counts; announce("imported");
       await afterImport();
-    } catch (error) { announce(error.code === "invalid_backup" ? "invalid" : "failed"); }
+    } catch (error) { announce(error.code === "draft" ? "draft" : error.code === "invalid_backup" ? "invalid" : "failed"); }
     finally { input.value = ""; busy(false); restoreFocus(importButton); }
   });
 }
