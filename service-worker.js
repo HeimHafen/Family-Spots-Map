@@ -1,7 +1,7 @@
  // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-bovbjerg-galerie-20261015-3";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-plus-grants-20261015-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -136,7 +136,7 @@ const RELEASE_HASHES = {
   "data/spots.json": "2f9bd236c0dbd8a86967a853c887e31449d4a035cdae293328a75fb3ef975a71",
   "en/index.html": "91c8013891639c4a93c8abff046ab669c2ee04e6ce2094739fc03d625137f4af",
   "index.html": "de6212dc45a76db93cab53f41acdb044429a8cd3bb279efc97f7be55a738d50d",
-  "js/app.js": "56a36260f386ef233fc7565cd1f4f3814e856829f1bae98ca1caf646456ac5cb",
+  "js/app.js": "ab9d29b624c4f0f4cc1a2cbff4b35d982dc1ae7529a2efb2b7a46bb12d92338b",
   "js/config.js": "90ae28f0ec58da6ac9374e53d595d663c02c43adecf6960519e5972931ecd351",
   "js/features/personal-backup.js": "c6aea81b23a724e6124582802404e1c3af23aac5df62e23f08f021889205e51d",
   "js/features/personal-storage.js": "e93870d4f0a2d1bd5d61e09f63a9429a12fa1217d2f3ee370328a2cfc6d42185",
@@ -150,7 +150,9 @@ const RELEASE_HASHES = {
   "assets/spots/bovbjerg-fyr/strandtreppe.jpeg": "1996690336f41ac45960ed55918c8df95984912a839acbe0a289d80ec3626390",
   "assets/spots/bovbjerg-fyr/holzspiel.jpeg": "bc2d6e5273ea77bdcb138d40f77e594050e72075b0c59480617599f7ce141428",
   "assets/spots/bovbjerg-fyr/pony-nahaufnahme.jpeg": "c4e824f10705788a727e2606f64f5b3bc18b2c851092cf2ce9470bf79f7ac937",
-  "assets/spots/bovbjerg-fyr/steilkueste.jpeg": "e46330a1c3a585251620171acf2cedff3b85ba786cbd5158de909590ddc76cfa"
+  "assets/spots/bovbjerg-fyr/steilkueste.jpeg": "e46330a1c3a585251620171acf2cedff3b85ba786cbd5158de909590ddc76cfa",
+  "js/features/plus.js": "72ba72f995ff79aa9a19b9f38371fd1129ccec9bbff4d65a2727ecc3a5d6475f",
+  "js/storage.js": "a094c5be5f607c9a65f4b6ba654d837b9e0361bccf9cc5769384830c4bbce4ea"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
