@@ -1,7 +1,7 @@
  // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-bovbjerg-20261015-2";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-bovbjerg-galerie-20261015-3";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -77,7 +77,7 @@ const ASSETS = [
   "assets/spots/bovbjerg-fyr/leuchtturm-pony.jpeg",
   "assets/spots/bovbjerg-fyr/strandtreppe.jpeg",
   "assets/spots/bovbjerg-fyr/holzspiel.jpeg",
-  "assets/spots/bovbjerg-fyr/leuchtturm-flagge.jpeg",
+  "assets/spots/bovbjerg-fyr/steilkueste.jpeg",
   "assets/spots/bovbjerg-fyr/pony-nahaufnahme.jpeg"
 ];
 const REQUIRED = new Set(ASSETS.map(path => new URL(path, ROOT).href));
@@ -133,7 +133,7 @@ const RELEASE_HASHES = {
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
-  "data/spots.json": "ba6f4bb679ba764ff8914cfdf8cda32a3f917adef6959ab46e4e93669d9c6b9c",
+  "data/spots.json": "2f9bd236c0dbd8a86967a853c887e31449d4a035cdae293328a75fb3ef975a71",
   "en/index.html": "91c8013891639c4a93c8abff046ab669c2ee04e6ce2094739fc03d625137f4af",
   "index.html": "de6212dc45a76db93cab53f41acdb044429a8cd3bb279efc97f7be55a738d50d",
   "js/app.js": "56a36260f386ef233fc7565cd1f4f3814e856829f1bae98ca1caf646456ac5cb",
@@ -149,8 +149,8 @@ const RELEASE_HASHES = {
   "assets/spots/bovbjerg-fyr/leuchtturm-pony.jpeg": "dedd90020fb6c6d61fbf7106f5fc5fbe0841b0e8e5fe48492dbc7261010b84aa",
   "assets/spots/bovbjerg-fyr/strandtreppe.jpeg": "1996690336f41ac45960ed55918c8df95984912a839acbe0a289d80ec3626390",
   "assets/spots/bovbjerg-fyr/holzspiel.jpeg": "bc2d6e5273ea77bdcb138d40f77e594050e72075b0c59480617599f7ce141428",
-  "assets/spots/bovbjerg-fyr/leuchtturm-flagge.jpeg": "60c1a662cc9b00d8e263f5f6d2273d17d2897310f320334b6181ba56442b549f",
-  "assets/spots/bovbjerg-fyr/pony-nahaufnahme.jpeg": "c4e824f10705788a727e2606f64f5b3bc18b2c851092cf2ce9470bf79f7ac937"
+  "assets/spots/bovbjerg-fyr/pony-nahaufnahme.jpeg": "c4e824f10705788a727e2606f64f5b3bc18b2c851092cf2ce9470bf79f7ac937",
+  "assets/spots/bovbjerg-fyr/steilkueste.jpeg": "e46330a1c3a585251620171acf2cedff3b85ba786cbd5158de909590ddc76cfa"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
