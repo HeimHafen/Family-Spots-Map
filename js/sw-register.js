@@ -5,9 +5,9 @@
   let requestedUpdate = false;
   let reloaded = false;
   const copy = {
-    de: ["Eine neue Version ist bereit.", "Aktualisieren", "Später", "Bitte speichere deinen Text vor dem Aktualisieren."],
-    en: ["A new version is ready.", "Update", "Later", "Please save your text before updating."],
-    da: ["En ny version er klar.", "Opdater", "Senere", "Gem venligst din tekst før opdatering."]
+    de: ["Eine neue Version ist bereit.", "Aktualisieren", "Später", "Bitte speichere deine offenen Erinnerungen und Fotos vor dem Aktualisieren."],
+    en: ["A new version is ready.", "Update", "Later", "Please save unfinished memories and photos before updating."],
+    da: ["En ny version er klar.", "Opdater", "Senere", "Gem ufærdige minder og billeder før opdatering."]
   };
   let blockedByDraft = false;
   function translate() {
@@ -18,7 +18,7 @@
     laterButton.textContent = texts[2];
   }
   function hasDraft() {
-    return [...document.querySelectorAll("#daylog-text, .daylog-entry-input")].some(el => el.value.trim());
+    return document.documentElement.dataset.memoryDraft === "true" || document.documentElement.dataset.personalBackupBusy === "true" || !!document.querySelector(".daylog-entry-input") || [...document.querySelectorAll("#daylog-text, .daylog-entry-input")].some(el => el.value.trim());
   }
   function showUpdate(worker) {
     waitingWorker = worker;
