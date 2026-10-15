@@ -81,8 +81,8 @@ export async function importPersonalFile(file, mayImport = () => true) {
 
 const copy = {
   de: {
-    title: "Erinnerungen & Favoriten sichern", export: "Daten exportieren", import: "Daten importieren",
-    hint: "Sichere deine gespeicherten Erinnerungen und Favoriten als Datei. Beim Import bleiben vorhandene Daten erhalten. Die ZIP-Datei enthält auch gespeicherte Fotos. Bisherige JSON-Sicherungen lassen sich weiterhin importieren. Entwürfe und Plus-Zugänge sind nicht enthalten. Bewahre die Datei privat auf.",
+    title: "Erinnerungen & Favoriten sichern", brief: "Erinnerungen, Fotos und Favoriten gemeinsam als Datei sichern.", info: "Hinweise zur Sicherung", export: "Daten exportieren", import: "Daten importieren",
+    hint: "Beim Import bleiben vorhandene Daten erhalten. Die ZIP-Datei enthält auch gespeicherte Fotos. Bisherige JSON-Sicherungen lassen sich weiterhin importieren. Entwürfe und Plus-Zugänge sind nicht enthalten. Bewahre die Datei privat auf.",
     exported: "Die Sicherungsdatei wurde zum Download bereitgestellt. Bitte bewahre sie sicher auf.",
     exportLarge: "Die Sicherung ist für dieses Dateiformat zu groß oder enthält nicht unterstützte Daten. Deine gespeicherten Daten bleiben erhalten.",
     invalid: "Diese Datei ist keine unterstützte Sicherung oder zu groß (ZIP: höchstens 100 MB, JSON: 5 MB). Es wurde nichts importiert.",
@@ -91,8 +91,8 @@ const copy = {
     imported: (e, f, c) => e === 0 && f === 0 ? "Die Sicherung ist bereits vollständig vorhanden. Es wurden keine doppelten Einträge hinzugefügt." : `Import abgeschlossen: ${e} ${e === 1 ? "Erinnerung" : "Erinnerungen"} und ${f} ${f === 1 ? "Favorit" : "Favoriten"} hinzugefügt.${c ? " Abweichende Versionen wurden als zusätzliche Erinnerungen erhalten." : ""}`
   },
   en: {
-    title: "Back up memories & favourites", export: "Export data", import: "Import data",
-    hint: "Save your stored memories and favourites to a file. Importing keeps existing data. The ZIP file also includes saved photos. Previous JSON backups can still be imported. Drafts and Plus access are not included. Keep the file private.",
+    title: "Back up memories & favourites", brief: "Back up memories, photos and favourites together in one file.", info: "Backup information", export: "Export data", import: "Import data",
+    hint: "Importing keeps existing data. The ZIP file also includes saved photos. Previous JSON backups can still be imported. Drafts and Plus access are not included. Keep the file private.",
     exported: "The backup file is ready to download. Please keep it somewhere safe.",
     exportLarge: "The backup is too large for this file format or contains unsupported data. Your stored data has been kept.",
     invalid: "This file is not a supported backup or is too large (ZIP: up to 100 MB, JSON: 5 MB). Nothing was imported.",
@@ -101,8 +101,8 @@ const copy = {
     imported: (e, f, c) => e === 0 && f === 0 ? "Everything in this backup is already present. No duplicate entries were added." : `Import complete: ${e} ${e === 1 ? "memory" : "memories"} and ${f} ${f === 1 ? "favourite" : "favourites"} added.${c ? " Different versions were kept as additional memories." : ""}`
   },
   da: {
-    title: "Sikkerhedskopi af minder og favoritter", export: "Eksportér data", import: "Importér data",
-    hint: "Gem en sikkerhedskopi af dine minder og favoritter i en fil. Eksisterende data bevares ved import. ZIP-filen indeholder også gemte billeder. Tidligere JSON-sikkerhedskopier kan stadig importeres. Kladder og Plus-adgang er ikke med. Opbevar filen privat.",
+    title: "Sikkerhedskopi af minder og favoritter", brief: "Gem minder, billeder og favoritter sammen i én fil.", info: "Om sikkerhedskopiering", export: "Eksportér data", import: "Importér data",
+    hint: "Eksisterende data bevares ved import. ZIP-filen indeholder også gemte billeder. Tidligere JSON-sikkerhedskopier kan stadig importeres. Kladder og Plus-adgang er ikke med. Opbevar filen privat.",
     exported: "Sikkerhedskopien er klar til download. Opbevar den et sikkert sted.",
     exportLarge: "Sikkerhedskopien er for stor til dette filformat eller indeholder data, som ikke understøttes. Dine gemte data er bevaret.",
     invalid: "Filen er ikke en understøttet sikkerhedskopi eller er for stor (ZIP: højst 100 MB, JSON: 5 MB). Intet blev importeret.",
@@ -115,30 +115,35 @@ const copy = {
 export function initPersonalBackup({ afterImport, hasDraft, setBusy = () => {} }) {
   const host = document.querySelector("#daylog-section .filter-group");
   if (!host || document.getElementById("personal-backup")) return;
-  const section = document.createElement("div"); section.id = "personal-backup";
-  section.style.cssText = "margin-top:18px;display:grid;gap:10px;min-width:0";
-  const heading = document.createElement("h3"); heading.style.cssText = "margin:0;font:inherit;font-weight:600";
-  const hint = document.createElement("p"); hint.className = "filter-group-helper"; hint.id = "personal-backup-hint"; hint.style.margin = "0";
-  const row = document.createElement("div"); row.style.cssText = "display:flex;flex-wrap:wrap;gap:8px";
+  const section = document.createElement("details"); section.id = "personal-backup"; section.className = "memory-backup";
+  const summary = document.createElement("summary");
+  const heading = document.createElement("span"); summary.append(heading);
+  const body = document.createElement("div"); body.className = "memory-backup-body";
+  const brief = document.createElement("p"); brief.className = "filter-group-helper"; brief.id = "personal-backup-hint";
+  const help = document.createElement("details"); help.className = "memory-help";
+  const helpTitle = document.createElement("summary");
+  const hint = document.createElement("p"); hint.className = "filter-group-helper";
+  help.append(helpTitle, hint);
+  const row = document.createElement("div"); row.className = "memory-backup-actions";
   const exportButton = document.createElement("button"), importButton = document.createElement("button");
   for (const button of [exportButton, importButton]) {
     button.type = "button"; button.className = "btn-ghost btn-small";
     button.style.cssText = "min-height:44px;max-width:100%;white-space:normal";
-    button.setAttribute("aria-describedby", hint.id);
+    button.setAttribute("aria-describedby", brief.id);
   }
   exportButton.id = "personal-backup-export"; importButton.id = "personal-backup-import";
   const input = document.createElement("input"); input.type = "file"; input.accept = ".zip,.json,application/zip,application/json"; input.hidden = true;
   const status = document.createElement("p"); status.id = "personal-backup-status"; status.setAttribute("role", "status"); status.setAttribute("aria-atomic", "true"); status.className = "filter-group-helper"; status.style.margin = "0";
   status.hidden = true;
-  row.append(exportButton, importButton); section.append(heading, hint, row, input, status); host.append(section);
+  row.append(exportButton, importButton); body.append(brief, row, help, input, status); section.append(summary, body); host.append(section);
   const language = () => copy[document.documentElement.lang] || copy.de;
   let statusKey = null, counts = null;
   const translate = () => {
-    const t = language(); heading.textContent = t.title; hint.textContent = t.hint;
+    const t = language(); heading.textContent = t.title; brief.textContent = t.brief; hint.textContent = t.hint; helpTitle.textContent = t.info;
     exportButton.textContent = t.export; importButton.textContent = t.import;
     if (statusKey) status.textContent = statusKey === "imported" ? t.imported(counts.entries, counts.favorites, counts.conflicts) : t[statusKey];
   };
-  const announce = key => { statusKey = key; status.hidden = false; translate(); };
+  const announce = key => { section.open = true; statusKey = key; status.hidden = false; translate(); };
   const busy = value => { setBusy(value); exportButton.disabled = importButton.disabled = value; section.setAttribute("aria-busy", String(value)); };
   const restoreFocus = button => {
     if (document.activeElement === document.body || document.activeElement === input) button.focus({ preventScroll: true });
