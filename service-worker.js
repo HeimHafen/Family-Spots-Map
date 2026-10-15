@@ -1,7 +1,7 @@
  // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-memory-photos-20261015-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-daylog-polish-20261015-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -139,9 +139,9 @@ const RELEASE_HASHES = {
   "data/spots.json": "2f9bd236c0dbd8a86967a853c887e31449d4a035cdae293328a75fb3ef975a71",
   "en/index.html": "91c8013891639c4a93c8abff046ab669c2ee04e6ce2094739fc03d625137f4af",
   "index.html": "de6212dc45a76db93cab53f41acdb044429a8cd3bb279efc97f7be55a738d50d",
-  "js/app.js": "5621f9351820de3d80dbfd67f3ce4458f5655568bcaf0ce469225444599cef35",
+  "js/app.js": "47b5fcac4e40d1822f2696b32f429641b14d1fd3763875318062165c012773f0",
   "js/config.js": "90ae28f0ec58da6ac9374e53d595d663c02c43adecf6960519e5972931ecd351",
-  "js/features/personal-backup.js": "72c4197db488b081a93584641a6e6351074c85773fbfaa71f2b84962891dd8d9",
+  "js/features/personal-backup.js": "8163fb48c3bcb36cb8afcfc24a68c78407642bd78e107528a16cba1c6b3ecf04",
   "js/features/personal-storage.js": "122b893a06146c84f4e65b6ebccca8821230ef027c287a5768c6516fcc838de3",
   "js/features/tilla.js": "273f8254f619fe45f30ec0cee1257c77f347ade94e3f48d36be6ffdd6f553547",
   "js/i18n.js": "142bb7477a1c3282c1c2f3284541dea5d86bcb6a17aa501c7127bd511da10508",
@@ -156,11 +156,11 @@ const RELEASE_HASHES = {
   "assets/spots/bovbjerg-fyr/steilkueste.jpeg": "e46330a1c3a585251620171acf2cedff3b85ba786cbd5158de909590ddc76cfa",
   "js/features/plus.js": "72ba72f995ff79aa9a19b9f38371fd1129ccec9bbff4d65a2727ecc3a5d6475f",
   "js/storage.js": "a094c5be5f607c9a65f4b6ba654d837b9e0361bccf9cc5769384830c4bbce4ea",
-  "js/features/daylog-photos.js": "ec40486957fba7e43426c3e44cd678ad5c9ade8f997d5e770572b5962ef3e801",
+  "js/features/daylog-photos.js": "7860ea2020f9b81945b2d863cfe5a67d9c409fc71686f457972c8cf92b0c07f6",
   "js/features/memory-images.js": "cff8360540e1f9f59df71f9b1f471519d8417a4224a29224efcd42e6a15bde4d",
   "js/features/backup-zip.js": "50e5f298fe2342be538238a9c62e52d268eb6c20816d56d32d7315c3a4a86ef1",
   "js/sw-register.js": "6a1411fec45b1f139abb9e86bbb72275d71a3333ecf6ca5c90ccafc5978a3257",
-  "css/components.css": "a6d7a542b39dce879ef114b28b5d9411cdb5d91b027ec8b6576e99db40e25109"
+  "css/components.css": "a325403d9f349bd95cff3424bece7af963bcd783082e1e9987e9e956a60924a4"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
