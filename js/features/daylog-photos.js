@@ -3,17 +3,17 @@ import { preparePhoto, MAX_PHOTOS } from "./memory-images.js";
 
 const words = {
   de: {
-    add: "Fotos hinzufügen", hint: "Bis zu 3 Fotos · Text ist optional. JPEG, PNG oder WebP, je Bild bis 25 MB. Die App speichert verkleinerte Kopien nur in diesem Browser. Bitte sichere wichtige Erinnerungen regelmäßig.",
+    add: "Fotos hinzufügen", brief: "Text optional · Fotos nur in diesem Browser.", info: "Hinweise zu Fotos", hint: "Bis zu 3 Fotos · Text ist optional. JPEG, PNG oder WebP, je Bild bis 25 MB. Die App speichert verkleinerte Kopien nur in diesem Browser. Bitte sichere wichtige Erinnerungen regelmäßig.",
     count: n => `${n} von 3 Fotos`, remove: n => `Foto ${n} entfernen`, view: n => `Foto ${n} vergrößern`, image: n => `Foto ${n} dieser Erinnerung`, close: "Schließen", preparing: "Fotos werden vorbereitet …", limit: "Du kannst bis zu drei verschiedene Fotos je Erinnerung hinzufügen.",
     photo_size: "Dieses Bild ist zu groß. Bitte wähle eine Datei bis 25 MB und höchstens 60 Megapixel.", photo_format: "Bitte wähle ein Foto im Format JPEG, PNG oder WebP. HEIC-Bilder bitte vorher als JPEG exportieren.", invalid_photo: "Dieses Bild konnte nicht geöffnet werden. Bitte versuche es mit einem anderen Foto.", missing: "Ein gespeichertes Foto konnte nicht geladen werden. Bitte lade die Seite erneut. Die Erinnerung wurde nicht verändert.", draft: "Die Fotoauswahl bleibt hier erhalten, konnte aber nicht für das Neuladen gesichert werden. Bitte speichere deine Erinnerung vor dem Schließen."
   },
   en: {
-    add: "Add photos", hint: "Up to 3 photos · Text is optional. JPEG, PNG or WebP, up to 25 MB each. The app saves smaller copies only in this browser. Please back up important memories regularly.",
+    add: "Add photos", brief: "Text optional · Photos stay in this browser.", info: "Photo information", hint: "Up to 3 photos · Text is optional. JPEG, PNG or WebP, up to 25 MB each. The app saves smaller copies only in this browser. Please back up important memories regularly.",
     count: n => `${n} of 3 photos`, remove: n => `Remove photo ${n}`, view: n => `Enlarge photo ${n}`, image: n => `Photo ${n} of this memory`, close: "Close", preparing: "Preparing photos …", limit: "You can add up to three different photos per memory.",
     photo_size: "This image is too large. Please choose a file up to 25 MB and no more than 60 megapixels.", photo_format: "Please choose a JPEG, PNG or WebP photo. Export HEIC images as JPEG first.", invalid_photo: "This image could not be opened. Please try another photo.", missing: "A saved photo could not be loaded. Please reload the page. The memory has not been changed.", draft: "Your selected photos are still here, but could not be saved for a reload. Please save your memory before closing the page."
   },
   da: {
-    add: "Tilføj billeder", hint: "Op til 3 billeder · Tekst er valgfri. JPEG, PNG eller WebP, højst 25 MB pr. billede. Appen gemmer mindre kopier kun i denne browser. Tag jævnligt en sikkerhedskopi af vigtige minder.",
+    add: "Tilføj billeder", brief: "Tekst valgfri · Billeder gemmes i denne browser.", info: "Om billeder", hint: "Op til 3 billeder · Tekst er valgfri. JPEG, PNG eller WebP, højst 25 MB pr. billede. Appen gemmer mindre kopier kun i denne browser. Tag jævnligt en sikkerhedskopi af vigtige minder.",
     count: n => `${n} af 3 billeder`, remove: n => `Fjern billede ${n}`, view: n => `Forstør billede ${n}`, image: n => `Billede ${n} fra dette minde`, close: "Luk", preparing: "Billederne klargøres …", limit: "Du kan tilføje op til tre forskellige billeder pr. minde.",
     photo_size: "Billedet er for stort. Vælg en fil på højst 25 MB og højst 60 megapixel.", photo_format: "Vælg et billede i JPEG-, PNG- eller WebP-format. Eksportér først HEIC-billeder som JPEG.", invalid_photo: "Billedet kunne ikke åbnes. Prøv et andet billede.", missing: "Et gemt billede kunne ikke indlæses. Indlæs siden igen. Mindet er ikke ændret.", draft: "Dine valgte billeder er stadig her, men kunne ikke gemmes til næste indlæsning. Gem dit minde, før du lukker siden."
   }
@@ -102,13 +102,25 @@ export function initDaylogPhotos({ notify, onDirty, isLocked }) {
   function paint(key) {
     const mount = mounts.get(key); if (!mount) return;
     for (const url of mount.urls) URL.revokeObjectURL(url); mount.urls.clear();
-    const { root } = mount, s = entrySlot(key); root.replaceChildren();
+    const { root } = mount, s = entrySlot(key);
+    const previousHelp = root.querySelector("details");
+    const helpOpen = !!previousHelp?.open;
+    const helpFocused = previousHelp?.querySelector("summary") === document.activeElement;
+    root.replaceChildren();
     const row = document.createElement("div"); row.className = "memory-photo-controls";
     const input = document.createElement("input"); input.type = "file"; input.accept = "image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"; input.multiple = true; input.hidden = true;
     const add = makeButton(t().add, () => { if (!busy()) input.click(); }, "btn-ghost btn-small memory-photo-add"); add.disabled = busy() || s.ids.length >= MAX_PHOTOS;
     const count = document.createElement("span"); count.className = "filter-group-helper"; count.textContent = pending ? t().preparing : t().count(s.ids.length); count.setAttribute("role", "status");
     row.append(add, count, input); root.append(row);
-    if (key === "new") { const hint = document.createElement("p"); hint.className = "filter-group-helper memory-photo-hint"; hint.id = "memory-photo-hint"; hint.textContent = t().hint; add.setAttribute("aria-describedby", hint.id); root.append(hint); }
+    if (key === "new") {
+      const brief = document.createElement("p"); brief.className = "filter-group-helper memory-photo-hint";
+      brief.id = "memory-photo-hint"; brief.textContent = t().brief; add.setAttribute("aria-describedby", brief.id);
+      const help = document.createElement("details"); help.className = "memory-help"; help.open = helpOpen;
+      const summary = document.createElement("summary"); summary.textContent = t().info;
+      const hint = document.createElement("p"); hint.className = "filter-group-helper"; hint.textContent = t().hint;
+      help.append(summary, hint); root.append(brief, help);
+      if (helpFocused) summary.focus({ preventScroll: true });
+    }
     const grid = document.createElement("div"); grid.className = "memory-photo-grid";
     s.ids.forEach((id, i) => grid.append(thumbnail(id, i + 1, true, key, mount.urls))); root.append(grid);
     input.addEventListener("cancel", () => add.focus({ preventScroll: true }));
@@ -152,7 +164,7 @@ export function initDaylogPhotos({ notify, onDirty, isLocked }) {
     mountMain(host) { main = mountEditor("new", host); },
     mountEditor,
     beginRender() { for (const url of galleryURLs) URL.revokeObjectURL(url); galleryURLs.clear(); for (const [key, m] of mounts) if (key !== "new") { for (const url of m.urls) URL.revokeObjectURL(url); mounts.delete(key); } },
-    gallery(ids, host) { if (!ids?.length) return; const grid = document.createElement("div"); grid.className = "memory-photo-grid"; host.append(grid); ids.forEach((id, i) => grid.append(thumbnail(id, i + 1, false, null, galleryURLs))); },
+    gallery(ids, host) { if (!ids?.length) return; const grid = document.createElement("div"); grid.className = "memory-photo-grid memory-photo-gallery"; grid.dataset.count = String(ids.length); host.append(grid); ids.forEach((id, i) => grid.append(thumbnail(id, i + 1, false, null, galleryURLs))); },
     async operation(key) {
       if (pending) throw new Error("photos_busy");
       pending++; changed();
