@@ -48,8 +48,8 @@ export function createSpotDetailsController({
   // Einheitliche Besuchsinformationen; alle Texte werden als Textknoten eingesetzt.
   const VISIT_DETAIL_LABELS = {
     de: {title: "Euren Besuch planen", suitability: "Für wen geeignet?", duration: "Zeitbedarf", arrival: "Adresse und Anreise", admission: "Eintritt und Buchung", hours: "Öffnungszeiten", comfort: "Familienkomfort", food: "Essen und Trinken", accessibility: "Zugänglichkeit", tips: "Gut zu wissen", unknown: "Nicht bestätigt.", sources: "Quellen und Aktualität", source: "Quelle", checked: "Besuchshinweise geprüft", noSources: "Keine bestätigten Besuchshinweise verfügbar.", note: "Die Quellen bestätigen einzelne Angaben. Preise, Zeiten und Bedingungen bitte vor der Anreise prüfen.", partial: "Weitere Angaben nicht bestätigt."},
-    en: {title: "Plan your visit", suitability: "Who is it suitable for?", duration: "Time needed", arrival: "Address and getting there", admission: "Admission and booking", hours: "Opening hours", comfort: "Family facilities", food: "Food and drinks", accessibility: "Accessibility", tips: "Good to know", unknown: "Not confirmed.", sources: "Sources and updates", source: "Source", checked: "Visitor information checked", noSources: "No confirmed visitor information available.", note: "Sources confirm individual details. Check prices, times and conditions before travelling.", partial: "Further details not confirmed."},
-    da: {title: "Planlæg jeres besøg", suitability: "Hvem passer stedet til?", duration: "Tidsforbrug", arrival: "Adresse og transport", admission: "Entré og booking", hours: "Åbningstider", comfort: "Familiefaciliteter", food: "Mad og drikke", accessibility: "Tilgængelighed", tips: "Godt at vide", unknown: "Ikke bekræftet.", sources: "Kilder og opdateringer", source: "Kilde", checked: "Besøgsinformation kontrolleret", noSources: "Ingen bekræftede besøgsoplysninger tilgængelige.", note: "Kilderne bekræfter enkelte oplysninger. Kontrollér priser, tider og vilkår før besøget.", partial: "Yderligere oplysninger er ikke bekræftet."}
+    en: {title: "Plan your visit", suitability: "Who is it suitable for?", duration: "Suggested visit length", arrival: "Address and getting there", admission: "Admission and booking", hours: "Opening hours", comfort: "Family facilities", food: "Food and drinks", accessibility: "Accessibility", tips: "Good to know", unknown: "Not confirmed.", sources: "Sources and updates", source: "Source", checked: "Visitor information checked", noSources: "No confirmed visitor information available.", note: "Sources confirm individual details. Check prices, times and conditions before travelling.", partial: "Further details not confirmed."},
+    da: {title: "Planlæg jeres besøg", suitability: "Hvem passer stedet til?", duration: "Tidsforbrug", arrival: "Adresse og transport", admission: "Entré og booking", hours: "Åbningstider", comfort: "Familiefaciliteter", food: "Mad og drikke", accessibility: "Tilgængelighed", tips: "Godt at vide", unknown: "Ikke bekræftet.", sources: "Kilder og aktualitet", source: "Kilde", checked: "Besøgsoplysninger tjekket", noSources: "Ingen bekræftede besøgsoplysninger tilgængelige.", note: "Kilderne bekræfter enkelte oplysninger. Kontrollér priser, tider og vilkår før besøget.", partial: "Yderligere oplysninger er ikke bekræftet."}
   };
 
   const expandedVisitInfoSpots = new Set();
@@ -511,7 +511,7 @@ export function createSpotDetailsController({
     icon.appendChild(path);
     const label = document.createElement("span");
     label.textContent = provider === "apple"
-      ? {de: "Apple Karten", en: "Apple Maps", da: "Apple Kort"}[currentLang]
+      ? {de: "Apple Karten", en: "Apple Maps", da: "Apple Maps"}[currentLang]
       : "Google Maps";
     link.setAttribute("aria-label", t(provider === "apple" ? "route_apple" : "route_google"));
     link.append(icon, label);
