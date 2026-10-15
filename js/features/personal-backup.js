@@ -39,12 +39,12 @@ export async function importPersonalBackup(text) {
 const copy = {
   de: {
     title: "Erinnerungen & Favoriten sichern", export: "Daten exportieren", import: "Daten importieren",
-    hint: "Sichere gespeicherte Erinnerungen und Favoriten als Datei. Beim Import bleiben vorhandene Daten erhalten. Entwürfe und Plus-Zugänge sind nicht enthalten. Bewahre die Datei privat auf.",
+    hint: "Sichere deine gespeicherten Erinnerungen und Favoriten als Datei. Beim Import bleiben vorhandene Daten erhalten. Entwürfe und Plus-Zugänge sind nicht enthalten. Bewahre die Datei privat auf.",
     exported: "Die Sicherungsdatei wurde zum Download bereitgestellt. Bitte bewahre sie sicher auf.",
     exportLarge: "Die Sicherung ist für dieses Dateiformat zu groß oder enthält nicht unterstützte Daten. Deine gespeicherten Daten bleiben erhalten.",
     invalid: "Diese Datei ist keine unterstützte Sicherung oder größer als 5 MB. Es wurde nichts importiert.",
     failed: "Die Sicherung konnte nicht verarbeitet werden. Bitte prüfe den verfügbaren Speicher und versuche es erneut.",
-    draft: "Bitte speichere oder schließe deine offenen Erinnerungstexte vor dem Import.",
+    draft: "Bitte speichere offene Erinnerungstexte vor dem Import oder brich die Bearbeitung ab.",
     imported: (e, f, c) => e === 0 && f === 0 ? "Die Sicherung ist bereits vollständig vorhanden. Es wurden keine doppelten Einträge hinzugefügt." : `Import abgeschlossen: ${e} ${e === 1 ? "Erinnerung" : "Erinnerungen"} und ${f} ${f === 1 ? "Favorit" : "Favoriten"} hinzugefügt.${c ? " Abweichende Versionen wurden als zusätzliche Erinnerungen erhalten." : ""}`
   },
   en: {
@@ -54,17 +54,17 @@ const copy = {
     exportLarge: "The backup is too large for this file format or contains unsupported data. Your stored data has been kept.",
     invalid: "This file is not a supported backup or exceeds 5 MB. Nothing was imported.",
     failed: "The backup could not be processed. Please check available storage and try again.",
-    draft: "Please save or close your unfinished memory texts before importing.",
+    draft: "Please save unfinished memories before importing, or cancel any open edits.",
     imported: (e, f, c) => e === 0 && f === 0 ? "Everything in this backup is already present. No duplicate entries were added." : `Import complete: ${e} ${e === 1 ? "memory" : "memories"} and ${f} ${f === 1 ? "favourite" : "favourites"} added.${c ? " Different versions were kept as additional memories." : ""}`
   },
   da: {
     title: "Sikkerhedskopi af minder og favoritter", export: "Eksportér data", import: "Importér data",
-    hint: "Gem dine gemte minder og favoritter i en fil. Ved import bevares eksisterende data. Kladder og Plus-adgang er ikke inkluderet. Opbevar filen privat.",
+    hint: "Gem en sikkerhedskopi af dine minder og favoritter i en fil. Eksisterende data bevares ved import. Kladder og Plus-adgang er ikke med. Opbevar filen privat.",
     exported: "Sikkerhedskopien er klar til download. Opbevar den et sikkert sted.",
     exportLarge: "Sikkerhedskopien er for stor til dette filformat eller indeholder data, som ikke understøttes. Dine gemte data er bevaret.",
     invalid: "Filen er ikke en understøttet sikkerhedskopi eller er større end 5 MB. Intet blev importeret.",
     failed: "Sikkerhedskopien kunne ikke behandles. Kontrollér den ledige lagerplads, og prøv igen.",
-    draft: "Gem eller luk dine ufærdige mindetekster før import.",
+    draft: "Gem ufærdige minder før import, eller annuller en åben redigering.",
     imported: (e, f, c) => e === 0 && f === 0 ? "Alt i sikkerhedskopien findes allerede. Ingen dubletter blev tilføjet." : `Import afsluttet: ${e} ${e === 1 ? "minde" : "minder"} og ${f} ${f === 1 ? "favorit" : "favoritter"} tilføjet.${c ? " Forskellige versioner blev bevaret som ekstra minder." : ""}`
   }
 };
