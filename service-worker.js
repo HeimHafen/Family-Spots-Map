@@ -1,4 +1,4 @@
- // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
+  // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-filter-ui-20261016-1";
