@@ -1,7 +1,7 @@
  // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-daylog-polish-20261015-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-language-review-20261015-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -131,20 +131,20 @@ async function validateImage(response, url) {
 }
 const RELEASE_HASHES = {
   "css/map-spots.css": "9292e7042db3ff747bd95fef66e89c5db1d2c0c038afb1cd2c6cf6a1c4c4c8b2",
-  "da/index.html": "62d43012a9643576df98499502da56f4184f99aa2d7e135abab3d972bc670017",
-  "data/i18n/da.json": "de22266d612b2e2d157629bbe6b5a9bcf716b67b43fc614bd7744064159ab4f9",
+  "da/index.html": "3fc83e60a9fac0b6791843337103c2b05608e84249a96df023e91ea511d78440",
+  "data/i18n/da.json": "f85373e9ba4d1f955176956c4ece9cdbda16074ef4df0691dc18462bba1289b6",
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
-  "data/spots.json": "2f9bd236c0dbd8a86967a853c887e31449d4a035cdae293328a75fb3ef975a71",
-  "en/index.html": "91c8013891639c4a93c8abff046ab669c2ee04e6ce2094739fc03d625137f4af",
-  "index.html": "de6212dc45a76db93cab53f41acdb044429a8cd3bb279efc97f7be55a738d50d",
+  "data/spots.json": "a2d01c9b0962a57f5cdcd6305c15eb7c27bb75991d4848b6138a3d62cbe688bc",
+  "en/index.html": "a46b4d735e14c8cfacfb671a271515836366e7967e366e4e6278e23299259164",
+  "index.html": "7c0330a2bdf27c89baff526b5a5c2e3b7450fea254bc1308ccd9fa837f8b93ce",
   "js/app.js": "47b5fcac4e40d1822f2696b32f429641b14d1fd3763875318062165c012773f0",
-  "js/config.js": "90ae28f0ec58da6ac9374e53d595d663c02c43adecf6960519e5972931ecd351",
+  "js/config.js": "15ec00d8248de55999423fe768c3022f751476b6a55f94007290fdac96aa943c",
   "js/features/personal-backup.js": "8163fb48c3bcb36cb8afcfc24a68c78407642bd78e107528a16cba1c6b3ecf04",
   "js/features/personal-storage.js": "122b893a06146c84f4e65b6ebccca8821230ef027c287a5768c6516fcc838de3",
-  "js/features/tilla.js": "273f8254f619fe45f30ec0cee1257c77f347ade94e3f48d36be6ffdd6f553547",
-  "js/i18n.js": "142bb7477a1c3282c1c2f3284541dea5d86bcb6a17aa501c7127bd511da10508",
+  "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
+  "js/i18n.js": "b339dbab2001148183850bc0ec18d778c4189e7f3a923d40766ef5368472c11c",
   "js/map.js": "ae174db6cb55a4f9f2b9519c76bc25b456c24a1d0fbb2ca52b3bd48ea7453316",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "91108400c12fa6f50edf87f66fc9c4fec3f20c8149cabd35c859677c06a8974a",
