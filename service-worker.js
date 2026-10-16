@@ -1,10 +1,11 @@
  // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-diary-view-20261016-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-filter-ui-20261016-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
+  "js/ui/filter-select.js",
   "js/config.js",
   "js/data.js",
   "js/data/dataLoader.js",
@@ -138,10 +139,10 @@ const RELEASE_HASHES = {
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
-  "data/spots.json": "a2d01c9b0962a57f5cdcd6305c15eb7c27bb75991d4848b6138a3d62cbe688bc",
+  "data/spots.json": "c777753984be7376d1ab190f8652e0952c85a641488cacc30b371b6f8ecaf8f8",
   "en/index.html": "bfff2dab25015603de4b5285dd77c54f5c646a06cadf331947d493c93c3c39f9",
   "index.html": "f176a4423643461dd1f79580ecb5fee565d11679ac96e91ee8ecd469239aa116",
-  "js/app.js": "b915d9efecfa3de341b7b6f37545555a3b3788aae3c63b7c04d417b3b6bb0dfe",
+  "js/app.js": "d14b12be12f8a4fd9dac42e432629fc27feb98314f10050e8e30a17e18f25529",
   "js/config.js": "15ec00d8248de55999423fe768c3022f751476b6a55f94007290fdac96aa943c",
   "js/features/personal-backup.js": "8163fb48c3bcb36cb8afcfc24a68c78407642bd78e107528a16cba1c6b3ecf04",
   "js/features/personal-storage.js": "122b893a06146c84f4e65b6ebccca8821230ef027c287a5768c6516fcc838de3",
@@ -162,10 +163,11 @@ const RELEASE_HASHES = {
   "js/features/memory-images.js": "cff8360540e1f9f59df71f9b1f471519d8417a4224a29224efcd42e6a15bde4d",
   "js/features/backup-zip.js": "50e5f298fe2342be538238a9c62e52d268eb6c20816d56d32d7315c3a4a86ef1",
   "js/sw-register.js": "6a1411fec45b1f139abb9e86bbb72275d71a3333ecf6ca5c90ccafc5978a3257",
-  "css/components.css": "a325403d9f349bd95cff3424bece7af963bcd783082e1e9987e9e956a60924a4",
+  "css/components.css": "1cbd80e28526a7ddee8babc6fd92e59c505ecf5bace68adb209fc557134d96f0",
   "css/diary.css": "d7c9309c8addb0355e4a0b7fe85c2d69f17add5ed12986b48b980673d210bec3",
   "js/features/diary-view.js": "2b543c94895fbb80180f1948653f98631c008724e495d25009b49f4189183176",
-  "js/router.js": "83fc99bdeacaa904549b54b1ef96c9b9b38e5c165c7490a192fae18a7e4c1ca2"
+  "js/router.js": "83fc99bdeacaa904549b54b1ef96c9b9b38e5c165c7490a192fae18a7e4c1ca2",
+  "js/ui/filter-select.js": "1ba89b80f82077b65a5ba7c6d8fad257d44e6dd24f788fa0ada6938538b5d865"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
