@@ -1,7 +1,7 @@
  // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-language-review-20261015-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-diary-view-20261016-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -81,7 +81,9 @@ const ASSETS = [
   "assets/spots/bovbjerg-fyr/strandtreppe.jpeg",
   "assets/spots/bovbjerg-fyr/holzspiel.jpeg",
   "assets/spots/bovbjerg-fyr/steilkueste.jpeg",
-  "assets/spots/bovbjerg-fyr/pony-nahaufnahme.jpeg"
+  "assets/spots/bovbjerg-fyr/pony-nahaufnahme.jpeg",
+  "css/diary.css",
+  "js/features/diary-view.js"
 ];
 const REQUIRED = new Set(ASSETS.map(path => new URL(path, ROOT).href));
 function cacheKey(value) {
@@ -131,15 +133,15 @@ async function validateImage(response, url) {
 }
 const RELEASE_HASHES = {
   "css/map-spots.css": "9292e7042db3ff747bd95fef66e89c5db1d2c0c038afb1cd2c6cf6a1c4c4c8b2",
-  "da/index.html": "3fc83e60a9fac0b6791843337103c2b05608e84249a96df023e91ea511d78440",
+  "da/index.html": "6de93eaaa8e533269a3dd0d5a01fbd993f2d7f6d23c51c7d4816c6e7943c4065",
   "data/i18n/da.json": "f85373e9ba4d1f955176956c4ece9cdbda16074ef4df0691dc18462bba1289b6",
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "a2d01c9b0962a57f5cdcd6305c15eb7c27bb75991d4848b6138a3d62cbe688bc",
-  "en/index.html": "a46b4d735e14c8cfacfb671a271515836366e7967e366e4e6278e23299259164",
-  "index.html": "7c0330a2bdf27c89baff526b5a5c2e3b7450fea254bc1308ccd9fa837f8b93ce",
-  "js/app.js": "47b5fcac4e40d1822f2696b32f429641b14d1fd3763875318062165c012773f0",
+  "en/index.html": "bfff2dab25015603de4b5285dd77c54f5c646a06cadf331947d493c93c3c39f9",
+  "index.html": "f176a4423643461dd1f79580ecb5fee565d11679ac96e91ee8ecd469239aa116",
+  "js/app.js": "b915d9efecfa3de341b7b6f37545555a3b3788aae3c63b7c04d417b3b6bb0dfe",
   "js/config.js": "15ec00d8248de55999423fe768c3022f751476b6a55f94007290fdac96aa943c",
   "js/features/personal-backup.js": "8163fb48c3bcb36cb8afcfc24a68c78407642bd78e107528a16cba1c6b3ecf04",
   "js/features/personal-storage.js": "122b893a06146c84f4e65b6ebccca8821230ef027c287a5768c6516fcc838de3",
@@ -156,11 +158,14 @@ const RELEASE_HASHES = {
   "assets/spots/bovbjerg-fyr/steilkueste.jpeg": "e46330a1c3a585251620171acf2cedff3b85ba786cbd5158de909590ddc76cfa",
   "js/features/plus.js": "72ba72f995ff79aa9a19b9f38371fd1129ccec9bbff4d65a2727ecc3a5d6475f",
   "js/storage.js": "a094c5be5f607c9a65f4b6ba654d837b9e0361bccf9cc5769384830c4bbce4ea",
-  "js/features/daylog-photos.js": "7860ea2020f9b81945b2d863cfe5a67d9c409fc71686f457972c8cf92b0c07f6",
+  "js/features/daylog-photos.js": "572e80e51a1ff2eb1445ed6ff600a89832890fd1f6651fc7e068001fe0e359c0",
   "js/features/memory-images.js": "cff8360540e1f9f59df71f9b1f471519d8417a4224a29224efcd42e6a15bde4d",
   "js/features/backup-zip.js": "50e5f298fe2342be538238a9c62e52d268eb6c20816d56d32d7315c3a4a86ef1",
   "js/sw-register.js": "6a1411fec45b1f139abb9e86bbb72275d71a3333ecf6ca5c90ccafc5978a3257",
-  "css/components.css": "a325403d9f349bd95cff3424bece7af963bcd783082e1e9987e9e956a60924a4"
+  "css/components.css": "a325403d9f349bd95cff3424bece7af963bcd783082e1e9987e9e956a60924a4",
+  "css/diary.css": "d7c9309c8addb0355e4a0b7fe85c2d69f17add5ed12986b48b980673d210bec3",
+  "js/features/diary-view.js": "2b543c94895fbb80180f1948653f98631c008724e495d25009b49f4189183176",
+  "js/router.js": "83fc99bdeacaa904549b54b1ef96c9b9b38e5c165c7490a192fae18a7e4c1ca2"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
