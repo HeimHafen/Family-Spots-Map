@@ -4,17 +4,17 @@ import { preparePhoto, MAX_PHOTOS } from "./memory-images.js";
 const words = {
   de: {
     add: "Fotos hinzufügen", brief: "Text optional · Fotos nur in diesem Browser.", info: "Hinweise zu Fotos", hint: "Bis zu 3 Fotos · Text ist optional. JPEG, PNG oder WebP, je Bild bis 25 MB. Die App speichert verkleinerte Kopien nur in diesem Browser. Bitte sichere wichtige Erinnerungen regelmäßig.",
-    count: n => `${n} von 3 Fotos`, remove: n => `Foto ${n} entfernen`, view: n => `Foto ${n} vergrößern`, image: n => `Foto ${n} dieser Erinnerung`, close: "Schließen", preparing: "Fotos werden vorbereitet …", limit: "Du kannst bis zu drei verschiedene Fotos je Erinnerung hinzufügen.",
+    count: n => `${n} von 3 Fotos`, remove: n => `Foto ${n} entfernen`, view: n => `Foto ${n} vergrößern`, image: n => `Foto ${n} dieser Erinnerung`, close: "Schließen", previous: "Vorheriges Foto", next: "Nächstes Foto", gallery: n => `Fotos ansehen (${n})`, position: (n, total) => `Foto ${n} von ${total}`, preparing: "Fotos werden vorbereitet …", limit: "Du kannst bis zu drei verschiedene Fotos je Erinnerung hinzufügen.",
     photo_size: "Dieses Bild ist zu groß. Bitte wähle eine Datei bis 25 MB und höchstens 60 Megapixel.", photo_format: "Bitte wähle ein Foto im Format JPEG, PNG oder WebP. HEIC-Bilder bitte vorher als JPEG exportieren.", invalid_photo: "Dieses Bild konnte nicht geöffnet werden. Bitte versuche es mit einem anderen Foto.", missing: "Ein gespeichertes Foto konnte nicht geladen werden. Bitte lade die Seite erneut. Die Erinnerung wurde nicht verändert.", draft: "Die Fotoauswahl bleibt hier erhalten, konnte aber nicht für das Neuladen gesichert werden. Bitte speichere deine Erinnerung vor dem Schließen."
   },
   en: {
     add: "Add photos", brief: "Text optional · Photos stay in this browser.", info: "Photo information", hint: "Up to 3 photos · Text is optional. JPEG, PNG or WebP, up to 25 MB each. The app saves smaller copies only in this browser. Please back up important memories regularly.",
-    count: n => `${n} of 3 photos`, remove: n => `Remove photo ${n}`, view: n => `Enlarge photo ${n}`, image: n => `Photo ${n} of this memory`, close: "Close", preparing: "Preparing photos …", limit: "You can add up to three different photos per memory.",
+    count: n => `${n} of 3 photos`, remove: n => `Remove photo ${n}`, view: n => `Enlarge photo ${n}`, image: n => `Photo ${n} of this memory`, close: "Close", previous: "Previous photo", next: "Next photo", gallery: n => `View photos (${n})`, position: (n, total) => `Photo ${n} of ${total}`, preparing: "Preparing photos …", limit: "You can add up to three different photos per memory.",
     photo_size: "This image is too large. Please choose a file up to 25 MB and no more than 60 megapixels.", photo_format: "Please choose a JPEG, PNG or WebP photo. Export HEIC images as JPEG first.", invalid_photo: "This image could not be opened. Please try another photo.", missing: "A saved photo could not be loaded. Please reload the page. The memory has not been changed.", draft: "Your selected photos are still here, but could not be saved for a reload. Please save your memory before closing the page."
   },
   da: {
     add: "Tilføj billeder", brief: "Tekst valgfri · Billeder gemmes i denne browser.", info: "Om billeder", hint: "Op til 3 billeder · Tekst er valgfri. JPEG, PNG eller WebP, højst 25 MB pr. billede. Appen gemmer mindre kopier kun i denne browser. Tag jævnligt en sikkerhedskopi af vigtige minder.",
-    count: n => `${n} af 3 billeder`, remove: n => `Fjern billede ${n}`, view: n => `Forstør billede ${n}`, image: n => `Billede ${n} fra dette minde`, close: "Luk", preparing: "Billederne klargøres …", limit: "Du kan tilføje op til tre forskellige billeder pr. minde.",
+    count: n => `${n} af 3 billeder`, remove: n => `Fjern billede ${n}`, view: n => `Forstør billede ${n}`, image: n => `Billede ${n} fra dette minde`, close: "Luk", previous: "Forrige billede", next: "Næste billede", gallery: n => `Se billeder (${n})`, position: (n, total) => `Billede ${n} af ${total}`, preparing: "Billederne klargøres …", limit: "Du kan tilføje op til tre forskellige billeder pr. minde.",
     photo_size: "Billedet er for stort. Vælg en fil på højst 25 MB og højst 60 megapixel.", photo_format: "Vælg et billede i JPEG-, PNG- eller WebP-format. Eksportér først HEIC-billeder som JPEG.", invalid_photo: "Billedet kunne ikke åbnes. Prøv et andet billede.", missing: "Et gemt billede kunne ikke indlæses. Indlæs siden igen. Mindet er ikke ændret.", draft: "Dine valgte billeder er stadig her, men kunne ikke gemmes til næste indlæsning. Gem dit minde, før du lukker siden."
   }
 };
@@ -57,33 +57,66 @@ export function initDaylogPhotos({ notify, onDirty, isLocked }) {
   const makeButton = (label, handler, className = "btn-ghost btn-small") => {
     const button = document.createElement("button"); button.type = "button"; button.className = className; button.textContent = label; button.addEventListener("click", handler); return button;
   };
-  function closeViewer() { if (dialog?.open) dialog.close(); }
-  async function view(id, n, source) {
+  let viewerIds = [], viewerIndex = 0, viewerGeneration = 0;
+  function closeViewer() { ++viewerGeneration; if (dialog?.open) dialog.close(); }
+  async function showViewerPhoto(index) {
+    if (index < 0 || index >= viewerIds.length) return;
+    const generation = ++viewerGeneration;
     try {
-      const blob = await blobFor(id);
-      if (!source.isConnected) return;
-      if (!dialog) {
-        dialog = document.createElement("dialog"); dialog.className = "memory-photo-dialog";
-        const close = makeButton(t().close, closeViewer, "btn-ghost memory-photo-close");
-        const image = document.createElement("img"); dialog.append(close, image); document.body.append(dialog);
-        dialog.addEventListener("keydown", event => {
-          // The viewer has exactly one interactive control. Keep Tab and
-          // Shift+Tab there while native <dialog> handles Escape and inertness.
-          if (event.key === "Tab") { event.preventDefault(); close.focus(); }
-        });
-        dialog.addEventListener("click", e => { if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeViewer(); } });
-        dialog.addEventListener("close", () => { if (dialogURL) URL.revokeObjectURL(dialogURL); dialogURL = null; image.removeAttribute("src"); (opener?.isConnected ? opener : document.getElementById("daylog-text"))?.focus({ preventScroll: true }); });
-      }
+      const blob = await blobFor(viewerIds[index]);
+      if (generation !== viewerGeneration || (!dialog.open && (!opener?.isConnected || !opener.getClientRects().length))) return;
       if (dialogURL) URL.revokeObjectURL(dialogURL);
-      dialogURL = URL.createObjectURL(blob); opener = source;
-      dialog.querySelector("button").textContent = t().close;
-      dialog.querySelector("img").src = dialogURL; dialog.querySelector("img").alt = t().image(n); dialog.setAttribute("aria-label", t().image(n));
-      if (!dialog.open) dialog.showModal(); dialog.querySelector("button").focus();
-    } catch { notify(t().missing); }
+      dialogURL = URL.createObjectURL(blob); viewerIndex = index;
+      const focused = document.activeElement;
+      const image = dialog.querySelector("img");
+      image.src = dialogURL; image.alt = t().image(index + 1);
+      dialog.setAttribute("aria-label", t().position(index + 1, viewerIds.length));
+      dialog.querySelector(".memory-photo-viewer-status").textContent = t().position(index + 1, viewerIds.length);
+      dialog.querySelector("[data-photo-direction=previous]").disabled = index === 0;
+      dialog.querySelector("[data-photo-direction=next]").disabled = index === viewerIds.length - 1;
+      // Keep keyboard focus when the navigation button just became disabled.
+      if (focused?.disabled && (document.activeElement === focused || document.activeElement === document.body)) dialog.querySelector(".memory-photo-close").focus({ preventScroll: true });
+      if (!dialog.open && opener?.isConnected) { dialog.showModal(); dialog.querySelector(".memory-photo-close").focus(); }
+    } catch { if (generation === viewerGeneration) notify(t().missing); }
   }
-  function thumbnail(id, n, editable, key, owner) {
+  function view(id, n, source, ids = [id]) {
+    if (!source.isConnected) return;
+    if (!dialog) {
+      dialog = document.createElement("dialog"); dialog.className = "memory-photo-dialog";
+      const close = makeButton(t().close, closeViewer, "btn-ghost memory-photo-close");
+      const image = document.createElement("img");
+      const nav = document.createElement("div"); nav.className = "memory-photo-viewer-nav";
+      const previous = makeButton("", () => showViewerPhoto(viewerIndex - 1)); previous.dataset.photoDirection = "previous";
+      const next = makeButton("", () => showViewerPhoto(viewerIndex + 1)); next.dataset.photoDirection = "next";
+      const status = document.createElement("span"); status.className = "memory-photo-viewer-status"; status.setAttribute("role", "status");
+      nav.append(previous, status, next); dialog.append(close, image, nav); document.body.append(dialog);
+      dialog.addEventListener("keydown", event => {
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); showViewerPhoto(viewerIndex + (event.key === "ArrowLeft" ? -1 : 1)); }
+        if (event.key === "Tab") {
+          const controls = [...dialog.querySelectorAll("button")].filter(e => !e.disabled && !e.closest("[hidden]"));
+          const first = controls[0], last = controls[controls.length - 1];
+          if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+          else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+      });
+      dialog.addEventListener("click", e => { if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeViewer(); } });
+      dialog.addEventListener("close", () => {
+        ++viewerGeneration;
+        if (dialogURL) URL.revokeObjectURL(dialogURL); dialogURL = null; image.removeAttribute("src");
+        const fallback = document.getElementById("diary-new-memory") || document.getElementById("daylog-text");
+        (opener?.isConnected ? opener : fallback)?.focus({ preventScroll: true });
+      });
+    }
+    viewerIds = ids.slice(); opener = source;
+    dialog.querySelector(".memory-photo-close").textContent = t().close;
+    dialog.querySelector("[data-photo-direction=previous]").textContent = t().previous;
+    dialog.querySelector("[data-photo-direction=next]").textContent = t().next;
+    dialog.querySelector(".memory-photo-viewer-nav").hidden = viewerIds.length < 2;
+    showViewerPhoto(Math.max(0, viewerIds.indexOf(id)));
+  }
+  function thumbnail(id, n, editable, key, owner, ids = [id]) {
     const figure = document.createElement("div"); figure.className = "memory-photo-tile";
-    const button = makeButton("", () => view(id, n, button), "memory-photo-thumb"); button.setAttribute("aria-label", t().view(n));
+    const button = makeButton("", () => view(id, n, button, ids), "memory-photo-thumb"); button.setAttribute("aria-label", t().view(n));
     const img = document.createElement("img"); img.alt = t().image(n); img.loading = "lazy"; img.width = 160; img.height = 120; button.append(img); figure.append(button);
     blobFor(id).then(blob => {
       if (!img.isConnected) return;
@@ -164,7 +197,12 @@ export function initDaylogPhotos({ notify, onDirty, isLocked }) {
     mountMain(host) { main = mountEditor("new", host); },
     mountEditor,
     beginRender() { for (const url of galleryURLs) URL.revokeObjectURL(url); galleryURLs.clear(); for (const [key, m] of mounts) if (key !== "new") { for (const url of m.urls) URL.revokeObjectURL(url); mounts.delete(key); } },
-    gallery(ids, host) { if (!ids?.length) return; const grid = document.createElement("div"); grid.className = "memory-photo-grid memory-photo-gallery"; grid.dataset.count = String(ids.length); host.append(grid); ids.forEach((id, i) => grid.append(thumbnail(id, i + 1, false, null, galleryURLs))); },
+    gallery(ids, host) {
+      if (!ids?.length) return;
+      const grid = document.createElement("div"); grid.className = "memory-photo-grid memory-photo-gallery"; grid.dataset.count = String(ids.length); host.append(grid);
+      ids.forEach((id, i) => { const tile = thumbnail(id, i + 1, false, null, galleryURLs, ids); if (i > 0) tile.hidden = true; grid.append(tile); });
+      const open = makeButton(t().gallery(ids.length), () => view(ids[0], 1, open, ids), "diary-photos-open"); host.append(open);
+    },
     async operation(key) {
       if (pending) throw new Error("photos_busy");
       pending++; changed();
@@ -184,9 +222,18 @@ export function initDaylogPhotos({ notify, onDirty, isLocked }) {
         for (const id of blobs.keys()) if (!retained.has(id)) blobs.delete(id);
       } finally { pending--; changed(); if (key === "new") paint("new"); }
     },
-    refresh() { for (const key of mounts.keys()) paint(key); if (dialog?.open) dialog.querySelector("button").textContent = t().close; changed(); }
+    refresh() { for (const key of mounts.keys()) paint(key); if (dialog?.open) {
+      dialog.querySelector(".memory-photo-close").textContent = t().close;
+      dialog.querySelector("[data-photo-direction=previous]").textContent = t().previous;
+      dialog.querySelector("[data-photo-direction=next]").textContent = t().next;
+      dialog.querySelector(".memory-photo-viewer-status").textContent = t().position(viewerIndex + 1, viewerIds.length);
+      dialog.querySelector("img").alt = t().image(viewerIndex + 1);
+      dialog.setAttribute("aria-label", t().position(viewerIndex + 1, viewerIds.length));
+    } changed(); }
   };
   new MutationObserver(() => api.refresh()).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  new MutationObserver(() => { if (document.body.dataset.appView !== "diary") closeViewer(); })
+    .observe(document.body, { attributes: true, attributeFilter: ["data-app-view"] });
   window.addEventListener("beforeunload", e => { if (pending || api.hasDraft()) { e.preventDefault(); e.returnValue = ""; } });
   return api;
 }
