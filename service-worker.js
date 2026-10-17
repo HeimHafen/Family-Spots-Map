@@ -1,7 +1,7 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-restore-reference-20261017-4";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-backup-safe-20261017-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -144,7 +144,7 @@ const RELEASE_HASHES = {
   "index.html": "f176a4423643461dd1f79580ecb5fee565d11679ac96e91ee8ecd469239aa116",
   "js/app.js": "d14b12be12f8a4fd9dac42e432629fc27feb98314f10050e8e30a17e18f25529",
   "js/config.js": "15ec00d8248de55999423fe768c3022f751476b6a55f94007290fdac96aa943c",
-  "js/features/personal-backup.js": "8163fb48c3bcb36cb8afcfc24a68c78407642bd78e107528a16cba1c6b3ecf04",
+  "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "122b893a06146c84f4e65b6ebccca8821230ef027c287a5768c6516fcc838de3",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "b339dbab2001148183850bc0ec18d778c4189e7f3a923d40766ef5368472c11c",
@@ -161,7 +161,7 @@ const RELEASE_HASHES = {
   "js/storage.js": "a094c5be5f607c9a65f4b6ba654d837b9e0361bccf9cc5769384830c4bbce4ea",
   "js/features/daylog-photos.js": "572e80e51a1ff2eb1445ed6ff600a89832890fd1f6651fc7e068001fe0e359c0",
   "js/features/memory-images.js": "cff8360540e1f9f59df71f9b1f471519d8417a4224a29224efcd42e6a15bde4d",
-  "js/features/backup-zip.js": "50e5f298fe2342be538238a9c62e52d268eb6c20816d56d32d7315c3a4a86ef1",
+  "js/features/backup-zip.js": "c9ece03d64d8a27e9ae534cd86c3e4e5028a71e815e702d50524b44ae8bbafbe",
   "js/sw-register.js": "6a1411fec45b1f139abb9e86bbb72275d71a3333ecf6ca5c90ccafc5978a3257",
   "css/components.css": "cf4fc77852de4ff4c15b50f92d204cd32a57f31875d49e108fb0f1d85f5a96c8",
   "css/diary.css": "9581e725113ff4106a0b9c9bcbbd4f54f278da25cd80f7e52d44d20f431f1940",
