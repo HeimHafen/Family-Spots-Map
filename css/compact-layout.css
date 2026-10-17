@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "FSM Fredoka";
+  src: url("../assets/fonts/fredoka-variable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 300 700;
+  font-stretch: 75% 125%;
+  font-display: swap;
+}
 /* Compact map entrance, shared by all languages and both colour modes. */
 html[data-theme] { --compact-card: #fff3df; --compact-border: rgba(129,76,32,.19); --compact-ink: #422514; --compact-crown: #ce8910; }
 html[data-theme="dark"] { --compact-card: #eee9d3; --compact-border: rgba(236,231,205,.16); --compact-ink: #342b18; --compact-crown: #dca027; --filter-map: saturate(.86) brightness(.96); }
@@ -108,4 +116,69 @@ html[data-theme] .fsm-spot-pin__dot::after { display: none; }
 
 @layer components {
   html[data-theme] #tilla-section #tilla-title { font-size: 16px !important; line-height: 1.3 !important; }
+}
+
+/* Match the approved reference with a bundled rounded display face.
+   Body copy and form controls retain the established readable text face. */
+html[data-theme] #app-title.header-title {
+  text-align: start;
+  font-family: "FSM Fredoka", "Arial Rounded MT Bold", system-ui, sans-serif;
+  font-weight: 600;
+  font-stretch: 90%;
+  font-size: clamp(21px, calc(8.2vw - 4.2px), 28px);
+  letter-spacing: -.02em;
+}
+#app-title.header-title .header-flag { font-size: 1em; margin-inline: 0 3px; width: 1em; height: .78em; }
+html[data-theme] .app-header-top { gap: 8px; }
+html[data-theme] .app-header { background: transparent; }
+html[data-theme] #view-map .sidebar-section-title,
+html[data-theme] #btn-play-idea {
+  font-family: "FSM Fredoka", "Arial Rounded MT Bold", system-ui, sans-serif;
+  font-weight: 600;
+}
+html[data-theme] #view-map .sidebar-section-title { font-size: 18px; letter-spacing: 0; }
+html[data-theme] #tilla-section { padding: 12px; }
+html[data-theme] #tilla-section .tilla-sidebar-card {
+  grid-template-columns: minmax(0,min(44%,170px)) minmax(0,1fr);
+  gap: 8px;
+}
+#tilla-compact-text { font-size: 16px; line-height: 1.36; }
+html[data-theme] #btn-play-idea { min-height: 42px; font-size: 13px; padding-inline: 6px; font-weight: 500; letter-spacing: 0; }
+.tilla-more > summary { font-size: 14px; min-height: 36px; }
+html[data-theme] :is(#btn-toggle-filters,#btn-toggle-spots,#btn-toggle-plus),
+#btn-open-diary .diary-launcher-action { font-size: 14px; }
+html[data-theme] #view-map .sidebar-section { box-shadow: 0 2px 5px #71411914; }
+html[data-theme="light"] body { background: #fae7d6; }
+html[data-theme="dark"] body { background: #444d30; }
+@layer components {
+  html[data-theme] #tilla-section #tilla-title { font-size: 18px !important; line-height: 1.3 !important; }
+}
+@media (max-width: 899px) {
+  body:not([data-app-view="diary"]) > .app {
+    margin: 6px;
+    border: 1px solid #e7b68c;
+    border-radius: 18px;
+    background: radial-gradient(ellipse at 0 0,#ffdfb6 0,transparent 52%), #ffe5cc;
+    box-shadow: 0 1px 5px #9c643221;
+  }
+  html[data-theme="dark"] body:not([data-app-view="diary"]) > .app {
+    border-color: #72794d;
+    background: radial-gradient(ellipse at 0 0,#515c36 0,transparent 55%), #444d30;
+    box-shadow: 0 1px 5px #15200e40;
+  }
+  html[data-theme] .app-header { padding-inline: 10px; }
+  body:not([data-app-view="diary"]) .app-main { padding-inline: 8px; padding-bottom: 16px; }
+  html[data-theme] #header-tagline { font-size: 14px; }
+}
+@media (max-width: 359px) {
+  html[data-theme] #view-map .sidebar-section-title { font-size: 16px; }
+  html[data-theme] #tilla-section .tilla-sidebar-card { grid-template-columns: 39% minmax(0,1fr); }
+  #tilla-compact-text { font-size: 14px; }
+  html[data-theme] #btn-play-idea { font-size: 12px; }
+  html[data-theme] :is(#btn-toggle-filters,#btn-toggle-spots,#btn-toggle-plus),
+  #btn-open-diary .diary-launcher-action { font-size: 12px; }
+}
+@media (min-width: 900px) {
+  html[data-theme] #app-title.header-title { font-size: 28px; }
+  #tilla-compact-text { font-size: 14px; }
 }
