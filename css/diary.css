@@ -65,3 +65,10 @@ body[data-app-view="diary"] #main-content { padding-bottom: max(24px, env(safe-a
 
 .diary-view .daylog-entry-actions > button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: inherit; font-weight: 600; }
 .diary-action-icon { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* The diary title receives focus for screen-reader navigation, not a button ring. */
+.diary-view #diary-title:focus,
+.diary-view #diary-title:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
