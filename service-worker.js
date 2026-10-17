@@ -1,9 +1,11 @@
-  // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
+    // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-compact-crown-20261017-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-reference-font-20261017-2";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
+  "assets/fonts/Fredoka-OFL.txt",
+  "assets/fonts/fredoka-variable.ttf",
   "js/features/compact-tilla.js",
   "css/compact-layout.css",
   "js/app.js",
@@ -170,8 +172,10 @@ const RELEASE_HASHES = {
   "js/features/diary-view.js": "2b543c94895fbb80180f1948653f98631c008724e495d25009b49f4189183176",
   "js/router.js": "83fc99bdeacaa904549b54b1ef96c9b9b38e5c165c7490a192fae18a7e4c1ca2",
   "js/ui/filter-select.js": "1ba89b80f82077b65a5ba7c6d8fad257d44e6dd24f788fa0ada6938538b5d865",
-  "css/compact-layout.css": "0c0b656e8b72a42eecffec1ea479ada6aa3493f97a53c99ef416cc0c00c562df",
-  "js/features/compact-tilla.js": "e471d135dcc38832829d8aca8ac2123e0c35bea596b440b9cf549a9413903258"
+  "css/compact-layout.css": "32af39393f087769c5cc58d570f0989c05fe2ad75d4d5d7be0cf1abbcc799a58",
+  "js/features/compact-tilla.js": "e471d135dcc38832829d8aca8ac2123e0c35bea596b440b9cf549a9413903258",
+  "assets/fonts/fredoka-variable.ttf": "2ba02e68b152868aef9ba28e24b3648c7d457fe6f25c761f2c2c53fb61a73fc8",
+  "assets/fonts/Fredoka-OFL.txt": "5c9e7eee5c6b25f4b05b8d53b2e470ea4962f9ced742d044a98f7d95d1375bab"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
