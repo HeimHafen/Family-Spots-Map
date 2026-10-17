@@ -1,6 +1,7 @@
 // Deliberately uncompressed ZIP: JPEGs are already compressed. The strict reader
 // accepts archives from this app, bounds every record and checks every CRC.
 export const MAX_ARCHIVE_BYTES = 100 * 1024 * 1024;
+export const MAX_MANIFEST_BYTES = 16 * 1024 * 1024;
 const encoder = new TextEncoder(), decoder = new TextDecoder("utf-8", { fatal: true });
 const table = new Uint32Array(256);
 for (let n = 0; n < 256; n++) { let c = n; for (let j = 0; j < 8; j++) c = (c & 1) ? 0xedb88320 ^ (c >>> 1) : c >>> 1; table[n] = c >>> 0; }
@@ -27,28 +28,36 @@ export async function writeZip(files) {
   if (offset + centralSize + 22 > MAX_ARCHIVE_BYTES) throw invalid();
   return new Blob([...local, ...central, end], { type: "application/zip" });
 }
+// Read bounded records and Blob slices instead of copying the entire archive
+// into one ArrayBuffer (important when restoring photos on mobile devices).
 export async function readZip(blob) {
   if (!(blob instanceof Blob) || blob.size < 22 || blob.size > MAX_ARCHIVE_BYTES) throw invalid();
-  const bytes = new Uint8Array(await blob.arrayBuffer()), view = new DataView(bytes.buffer), end = bytes.length - 22;
-  const u16 = p => view.getUint16(p, true), u32 = p => view.getUint32(p, true);
   try {
-    if (u32(end) !== 0x06054b50 || u16(end + 4) || u16(end + 6) || u16(end + 20) || u16(end + 8) !== u16(end + 10)) throw invalid();
-    const count = u16(end + 8), start = u32(end + 16);
-    if (!count || count > 60001 || start + u32(end + 12) !== end) throw invalid();
-    const files = new Map(); let p = start, localEnd = 0;
+    const end = blob.size - 22;
+    const footer = new DataView(await blob.slice(end).arrayBuffer());
+    if (footer.getUint32(0, true) !== 0x06054b50 || footer.getUint16(4, true) || footer.getUint16(6, true) || footer.getUint16(20, true) || footer.getUint16(8, true) !== footer.getUint16(10, true)) throw invalid();
+    const count = footer.getUint16(8, true), start = footer.getUint32(16, true), centralSize = footer.getUint32(12, true);
+    if (!count || count > 60001 || start + centralSize !== end || centralSize > count * 128) throw invalid();
+    const bytes = new Uint8Array(await blob.slice(start, end).arrayBuffer());
+    const view = new DataView(bytes.buffer);
+    const u16 = p => view.getUint16(p, true), u32 = p => view.getUint32(p, true);
+    const files = new Map(); let p = 0, localEnd = 0;
     for (let i = 0; i < count; i++) {
-      if (p + 46 > end || u32(p) !== 0x02014b50 || u16(p + 8) !== 0x800 || u16(p + 10) || u16(p + 30) || u16(p + 32) || u16(p + 34) || u16(p + 36) || u32(p + 38)) throw invalid();
+      if (p + 46 > bytes.length || u32(p) !== 0x02014b50 || u16(p + 8) !== 0x800 || u16(p + 10) || u16(p + 30) || u16(p + 32) || u16(p + 34) || u16(p + 36) || u32(p + 38)) throw invalid();
       const length = u16(p + 28), size = u32(p + 24), checksum = u32(p + 16), offset = u32(p + 42);
-      if (p + 46 + length > end || size !== u32(p + 20) || offset !== localEnd || offset + 30 > start) throw invalid();
+      if (p + 46 + length > bytes.length || size !== u32(p + 20) || offset !== localEnd || offset + 30 + length > start) throw invalid();
       const name = decoder.decode(bytes.subarray(p + 46, p + 46 + length));
-      if (!safeName(name) || files.has(name) || (name === "manifest.json" ? size > 5 * 1024 * 1024 : size > 1024 * 1024)) throw invalid();
-      if (u32(offset) !== 0x04034b50 || u16(offset + 6) !== 0x800 || u16(offset + 8) || u32(offset + 14) !== checksum || u32(offset + 18) !== size || u32(offset + 22) !== size || u16(offset + 26) !== length || u16(offset + 28)) throw invalid();
+      if (!safeName(name) || files.has(name) || (name === "manifest.json" ? size > MAX_MANIFEST_BYTES : size > 1024 * 1024)) throw invalid();
+      const header = new Uint8Array(await blob.slice(offset, offset + 30 + length).arrayBuffer()), local = new DataView(header.buffer);
+      if (local.getUint32(0, true) !== 0x04034b50 || local.getUint16(6, true) !== 0x800 || local.getUint16(8, true) || local.getUint32(14, true) !== checksum || local.getUint32(18, true) !== size || local.getUint32(22, true) !== size || local.getUint16(26, true) !== length || local.getUint16(28, true)) throw invalid();
       const from = offset + 30 + length, to = from + size;
-      if (to > start || decoder.decode(bytes.subarray(offset + 30, from)) !== name || crc(bytes.subarray(from, to)) !== checksum) throw invalid();
-      files.set(name, new Blob([bytes.subarray(from, to)], { type: name === "manifest.json" ? "application/json" : "image/jpeg" }));
+      if (to > start || decoder.decode(header.subarray(30)) !== name) throw invalid();
+      const file = blob.slice(from, to, name === "manifest.json" ? "application/json" : "image/jpeg");
+      if (crc(new Uint8Array(await file.arrayBuffer())) !== checksum) throw invalid();
+      files.set(name, file);
       localEnd = to; p += 46 + length;
     }
-    if (p !== end || localEnd !== start || !files.has("manifest.json")) throw invalid();
+    if (p !== bytes.length || localEnd !== start || !files.has("manifest.json")) throw invalid();
     return files;
   } catch { throw invalid(); }
 }
