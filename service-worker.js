@@ -1,11 +1,9 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-compact-crown-20261017-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-restore-reference-20261017-4";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
-  "js/features/compact-tilla.js",
-  "css/compact-layout.css",
   "js/app.js",
   "js/ui/filter-select.js",
   "js/config.js",
@@ -136,22 +134,22 @@ async function validateImage(response, url) {
 }
 const RELEASE_HASHES = {
   "css/map-spots.css": "9292e7042db3ff747bd95fef66e89c5db1d2c0c038afb1cd2c6cf6a1c4c4c8b2",
-  "da/index.html": "22c204932f3764ef9be3c7ea67e79a011faaf3699b17e349110cb3a9c23482bd",
+  "da/index.html": "6de93eaaa8e533269a3dd0d5a01fbd993f2d7f6d23c51c7d4816c6e7943c4065",
   "data/i18n/da.json": "f85373e9ba4d1f955176956c4ece9cdbda16074ef4df0691dc18462bba1289b6",
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "c777753984be7376d1ab190f8652e0952c85a641488cacc30b371b6f8ecaf8f8",
-  "en/index.html": "e7a0b36829781d5c32a0ccb8179d8c041f3333d5c43116a4de9333cd26420bb9",
-  "index.html": "514e1882e650f3f0541dc376628cee1824a723f5a4499368404a9b90d92898f4",
-  "js/app.js": "a810ed1ae8538536af503176771dddb03459e1629f772bd498498d47cc281015",
+  "en/index.html": "bfff2dab25015603de4b5285dd77c54f5c646a06cadf331947d493c93c3c39f9",
+  "index.html": "f176a4423643461dd1f79580ecb5fee565d11679ac96e91ee8ecd469239aa116",
+  "js/app.js": "d14b12be12f8a4fd9dac42e432629fc27feb98314f10050e8e30a17e18f25529",
   "js/config.js": "15ec00d8248de55999423fe768c3022f751476b6a55f94007290fdac96aa943c",
   "js/features/personal-backup.js": "8163fb48c3bcb36cb8afcfc24a68c78407642bd78e107528a16cba1c6b3ecf04",
   "js/features/personal-storage.js": "122b893a06146c84f4e65b6ebccca8821230ef027c287a5768c6516fcc838de3",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "b339dbab2001148183850bc0ec18d778c4189e7f3a923d40766ef5368472c11c",
   "js/map.js": "ae174db6cb55a4f9f2b9519c76bc25b456c24a1d0fbb2ca52b3bd48ea7453316",
-  "js/ui/menu.js": "ae221edc61bdbc282d9357b2db87a7a06140b8474429f5c94e373db71b1fd64a",
+  "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "91108400c12fa6f50edf87f66fc9c4fec3f20c8149cabd35c859677c06a8974a",
   "offline.html": "ab84afa963f01f0dc9401444da5e17bb01855b8d1a0482398409e43dac3f1c3c",
   "assets/spots/bovbjerg-fyr/leuchtturm-pony.jpeg": "dedd90020fb6c6d61fbf7106f5fc5fbe0841b0e8e5fe48492dbc7261010b84aa",
@@ -166,12 +164,10 @@ const RELEASE_HASHES = {
   "js/features/backup-zip.js": "50e5f298fe2342be538238a9c62e52d268eb6c20816d56d32d7315c3a4a86ef1",
   "js/sw-register.js": "6a1411fec45b1f139abb9e86bbb72275d71a3333ecf6ca5c90ccafc5978a3257",
   "css/components.css": "cf4fc77852de4ff4c15b50f92d204cd32a57f31875d49e108fb0f1d85f5a96c8",
-  "css/diary.css": "d7c9309c8addb0355e4a0b7fe85c2d69f17add5ed12986b48b980673d210bec3",
+  "css/diary.css": "9581e725113ff4106a0b9c9bcbbd4f54f278da25cd80f7e52d44d20f431f1940",
   "js/features/diary-view.js": "2b543c94895fbb80180f1948653f98631c008724e495d25009b49f4189183176",
   "js/router.js": "83fc99bdeacaa904549b54b1ef96c9b9b38e5c165c7490a192fae18a7e4c1ca2",
-  "js/ui/filter-select.js": "1ba89b80f82077b65a5ba7c6d8fad257d44e6dd24f788fa0ada6938538b5d865",
-  "css/compact-layout.css": "0c0b656e8b72a42eecffec1ea479ada6aa3493f97a53c99ef416cc0c00c562df",
-  "js/features/compact-tilla.js": "e471d135dcc38832829d8aca8ac2123e0c35bea596b440b9cf549a9413903258"
+  "js/ui/filter-select.js": "1ba89b80f82077b65a5ba7c6d8fad257d44e6dd24f788fa0ada6938538b5d865"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
