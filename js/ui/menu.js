@@ -6,28 +6,11 @@ export function initMenu() {
   const menu = qs("#app-menu");
   const header = qs(".app-header");
   const home = menuToggle?.parentElement;
-  const tillaHeader = qs("#tilla-section > .sidebar-section-header");
-  const mapView = qs("#view-map"), sidebar = qs("#sidebar");
-  const mobile = window.matchMedia("(max-width: 899px)");
+  // The app-wide menu stays in the header on every screen size.
   function placeMenu() {
-    if (!menuToggle || !home || !header) return;
-    const nearTilla = mobile.matches && tillaHeader &&
-      mapView?.classList.contains("view--active") &&
-      !sidebar?.classList.contains("hidden") &&
-      getComputedStyle(mapView).display !== "none" &&
-      getComputedStyle(sidebar).display !== "none" &&
-      getComputedStyle(tillaHeader.parentElement).display !== "none";
-    const target = nearTilla ? tillaHeader : home;
-    const focused = document.activeElement === menuToggle;
-    if (menuToggle.parentElement !== target) target.append(menuToggle);
-    header.classList.toggle("fsm-menu-near-tilla", !!nearTilla);
-    if (focused) menuToggle.focus({ preventScroll: true });
+    if (menuToggle && home && menuToggle.parentElement !== home) home.append(menuToggle);
+    header?.classList.remove("fsm-menu-near-tilla");
   }
-  const placementObserver = new MutationObserver(placeMenu);
-  for (const element of [mapView, sidebar, tillaHeader?.parentElement]) {
-    if (element) placementObserver.observe(element, { attributes: true, attributeFilter: ["class", "style", "hidden"] });
-  }
-  mobile.addEventListener("change", placeMenu);
   placeMenu();
   const controller = menu ? createModalController(menu) : null;
   // Start on the dialog title, so opening the menu does not highlight an action.
@@ -47,8 +30,7 @@ export function initMenu() {
   }
   function closeMenu() {
     if (!menu || menu.hidden) return;
-    // Route/map-only actions may hide Tilla before the dialog closes. Move
-    // the same trigger first so focus returns to a visible menu button.
+    // Keep the original trigger available for focus restoration.
     placeMenu();
     controller.deactivate();
     menu.hidden = true;
