@@ -1,7 +1,7 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-spots-plus-spacing-20261018-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-spots-editorial-20261018-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -139,7 +139,7 @@ const RELEASE_HASHES = {
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
-  "data/spots.json": "c777753984be7376d1ab190f8652e0952c85a641488cacc30b371b6f8ecaf8f8",
+  "data/spots.json": "206cbe895365425c67be53a0b32bacb6ce10bcb79c7c69d5c5f59837cee589bd",
   "en/index.html": "a9250d7a0bd5506fef2d5b16b694ac99fbda74699ab4742efa0c678eeb030a8d",
   "index.html": "60a62de4e4e4f7da2f96750186357b061f6103e9de156e645e017fb5c81f7524",
   "js/app.js": "d14b12be12f8a4fd9dac42e432629fc27feb98314f10050e8e30a17e18f25529",
