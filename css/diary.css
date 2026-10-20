@@ -4,15 +4,15 @@ body[data-app-view="diary"] > .app > .app-header,
 body[data-app-view="diary"] .bottom-nav { display: none !important; }
 body[data-app-view="diary"] .app-main { display: block; padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
 .diary-view { width: 100%; max-width: 840px; margin: 0 auto; min-width: 0; color: var(--text-strong, #352417); }
-.diary-navigation { margin: 0 0 22px; }
-.diary-back { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 10px 16px; border: 1px solid var(--border-color, #d7cab5); border-radius: 18px; background: var(--card-bg, #fff7e7); box-shadow: 0 2px 6px #49301a12; color: inherit; font: inherit; font-weight: 600; text-align: start; cursor: pointer; }
-.diary-back svg, .diary-new svg { width: 22px; height: 22px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.diary-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 22px; margin: 0 0 22px; }
+.diary-navigation { margin: 0 0 18px; }
+.diary-back { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 40px; padding: 6px 12px; position: relative; border: 1px solid var(--border-color, #d7cab5); border-radius: 14px; background: var(--card-bg, #fff7e7); box-shadow: 0 2px 6px #49301a12; color: inherit; font: inherit; font-size: .875rem; font-weight: 600; text-align: start; cursor: pointer; }
+.diary-back svg, .diary-new svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.diary-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 0 0 16px; }
 .diary-heading > div { min-width: 0; }
-#diary-title { display: flex; align-items: center; gap: 12px; margin: 0; font-size: clamp(1.85rem, 5.2vw, 2.75rem); font-weight: 750; line-height: 1.15; letter-spacing: -.025em; }
-#diary-title .fsm-daylog-heart { width: 32px; height: 32px; flex-shrink: 0; }
-.diary-heading p { margin: 6px 0 0; color: var(--text-soft, #695344); font-size: 1rem; line-height: 1.5; }
-#diary-new-memory { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; max-width: 100%; padding: 10px 17px; border-radius: 999px; font-size: 1rem; line-height: 1.35; white-space: normal; }
+#diary-title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 750; line-height: 1.15; letter-spacing: -.025em; }
+#diary-title .fsm-daylog-heart { width: 24px; height: 24px; flex-shrink: 0; }
+.diary-heading p { margin: 6px 0 0; color: var(--text-soft, #695344); font-size: .875rem; line-height: 1.5; }
+#diary-new-memory { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 38px; max-width: 100%; padding: 6px 14px; position: relative; border-radius: 999px; font-size: .875rem; line-height: 1.35; white-space: normal; }
 #diary-new-memory span { min-width: 0; }
 .diary-view #daylog-section { display: block; padding: 0; margin: 0; border: 0; background: transparent; box-shadow: none; }
 .diary-view #daylog-section > .diary-content { display: block; padding: 0; margin: 0; }
@@ -51,7 +51,7 @@ body[data-app-view="diary"] .app-main { display: block; padding: max(16px, env(s
 .memory-photo-dialog > img { max-height: calc(90dvh - 150px); }
 @media (max-width: 480px) {
   body[data-app-view="diary"] .app-main { padding-inline: 12px; }
-  .diary-heading { gap: 14px; }
+  .diary-heading { gap: 10px; }
   .diary-composer, .diary-view #daylog-list > .daylog-entry { padding: 16px; border-radius: 20px; }
   .diary-view .daylog-entry-text { font-size: 1rem; }
 }
@@ -72,3 +72,10 @@ body[data-app-view="diary"] #main-content { padding-bottom: max(24px, env(safe-a
   outline: none;
   box-shadow: none;
 }
+
+@media (pointer: coarse) {
+  .diary-back::before, #diary-new-memory::before { content: ""; position: absolute; inset: -3px 0; border-radius: inherit; }
+}
+
+html[data-theme="dark"] #diary-title,
+html[data-theme="dark"] .diary-heading p { color: #f3eddc; }
