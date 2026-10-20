@@ -1,7 +1,7 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-favorites-row-20261020-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-favorites-menu-20261020-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -133,16 +133,16 @@ async function validateImage(response, url) {
   if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
 }
 const RELEASE_HASHES = {
-  "css/map-spots.css": "8b28b3d425d34b78cffc6528240819e5ae911a20d6de7cf8f115b79efe946f72",
-  "da/index.html": "0c622806c1db8a5ce8dfef7d31c747603e5da7525d088f805ce3ebdeb7848424",
+  "css/map-spots.css": "f5592902c7ec66a0c60625f2436bb4983150e341e27742e626ab171c7198f1bd",
+  "da/index.html": "209386477fb4d848aa94c9f090f0dcda22ba578a743813e0a199649a052459ff",
   "data/i18n/da.json": "f85373e9ba4d1f955176956c4ece9cdbda16074ef4df0691dc18462bba1289b6",
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "9a91c0615ab04e6647299683428c0a42afed0711c40beaf2cb604b2150c79375",
-  "en/index.html": "ae37c0eca37d427e03b262a71223593392056324f94464456db3af140ed1a45b",
-  "index.html": "6d9a832e986b3762857e6534561cf768e556760831277dd7e1367a5822b1d8ea",
-  "js/app.js": "952d090ff0f71080d8dbc80bb62d755b54497b24edc18805a4fa5d8a8c0cba36",
+  "en/index.html": "e322164f85c9679baf14367810a5a900e5a1f8402b57160379479444c958b679",
+  "index.html": "4ba65852ab914e2d2a21bceca1ce98043d697b6d3d11f2c2c45ca02c48efba54",
+  "js/app.js": "0efff9154e6767b092154715ac33cdfa3011b270706ac600b3ecfd71ae3f3577",
   "js/config.js": "371e58fb1789da750f47ae825e7558985021710359414c99bc5776510e8096d9",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "122b893a06146c84f4e65b6ebccca8821230ef027c287a5768c6516fcc838de3",
