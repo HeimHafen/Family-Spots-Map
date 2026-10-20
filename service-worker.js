@@ -1,7 +1,7 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-favorites-polish-20261020-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-five-spot-photos-20261020-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -84,7 +84,17 @@ const ASSETS = [
   "assets/spots/bovbjerg-fyr/steilkueste.jpeg",
   "assets/spots/bovbjerg-fyr/pony-nahaufnahme.jpeg",
   "css/diary.css",
-  "js/features/diary-view.js"
+  "js/features/diary-view.js",
+  "assets/spots/neerlandiavej/kletterturm-rutsche.jpeg",
+  "assets/spots/neerlandiavej/spielplatz-ueberblick.jpeg",
+  "assets/spots/barendsvej/klettergeruest-schaukeln.jpeg",
+  "assets/spots/felto-filzwelt-soltau/backsteinfassade-eingang.jpeg",
+  "assets/spots/skatepark-lemvig/rampen-am-hafen.jpeg",
+  "assets/spots/skatepark-lemvig/kurven-blick-aufs-wasser.jpeg",
+  "assets/spots/skatepark-lemvig/basketballflaeche.jpeg",
+  "assets/spots/skatepark-lemvig/rampe-gegenlicht.jpeg",
+  "assets/spots/skatepark-springe/anlage-ueberblick.jpeg",
+  "assets/spots/skatepark-springe/rampen-zweite-perspektive.jpeg"
 ];
 const REQUIRED = new Set(ASSETS.map(path => new URL(path, ROOT).href));
 function cacheKey(value) {
@@ -139,7 +149,7 @@ const RELEASE_HASHES = {
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
-  "data/spots.json": "9a91c0615ab04e6647299683428c0a42afed0711c40beaf2cb604b2150c79375",
+  "data/spots.json": "6cdeb56c41c991e7bf8a445173ffc4bc5532f659897bf7acb8879d9fc340fff9",
   "en/index.html": "e322164f85c9679baf14367810a5a900e5a1f8402b57160379479444c958b679",
   "index.html": "4ba65852ab914e2d2a21bceca1ce98043d697b6d3d11f2c2c45ca02c48efba54",
   "js/app.js": "8499d43be8028cc6dfb4c3d61c7b5b4978c2900df512535c3b08fb09f85994a0",
@@ -167,7 +177,17 @@ const RELEASE_HASHES = {
   "css/diary.css": "8d28b5faebb8f0103c2cd41eb28a59d7f25cd14ac12e43c90d8c3d9041ee89ea",
   "js/features/diary-view.js": "2b543c94895fbb80180f1948653f98631c008724e495d25009b49f4189183176",
   "js/router.js": "83fc99bdeacaa904549b54b1ef96c9b9b38e5c165c7490a192fae18a7e4c1ca2",
-  "js/ui/filter-select.js": "1ba89b80f82077b65a5ba7c6d8fad257d44e6dd24f788fa0ada6938538b5d865"
+  "js/ui/filter-select.js": "1ba89b80f82077b65a5ba7c6d8fad257d44e6dd24f788fa0ada6938538b5d865",
+  "assets/spots/neerlandiavej/kletterturm-rutsche.jpeg": "099193f4efe8bb7e84dab69524d9b985db7b8556b4b7fc32cd93b0f10e8c9a14",
+  "assets/spots/neerlandiavej/spielplatz-ueberblick.jpeg": "c880caa15b73ecaea4225bc691d19f8457fe0fcea691631cb4682c602fe82346",
+  "assets/spots/barendsvej/klettergeruest-schaukeln.jpeg": "07764f48e966b7669ad278f0988717819d73f22694f746469513ca5dea994021",
+  "assets/spots/felto-filzwelt-soltau/backsteinfassade-eingang.jpeg": "90a3575cc19b3b0d39444b5dbadec6593b58c5ca82a9cc5e26bab60a8da58262",
+  "assets/spots/skatepark-lemvig/rampen-am-hafen.jpeg": "6aa1f834749ddc387525ce8bed3fe4af1c6dcaa1e3eb647d0c2ef0a1d58c7d2d",
+  "assets/spots/skatepark-lemvig/kurven-blick-aufs-wasser.jpeg": "1daf9603aeaa2db59679813b0c40880c0bec727e6f513c980ed5454f65408cf7",
+  "assets/spots/skatepark-lemvig/basketballflaeche.jpeg": "de6f37750d5424e333cc0cf10509ab436a175a6c86b00e552961866f2f6b45e8",
+  "assets/spots/skatepark-lemvig/rampe-gegenlicht.jpeg": "890cbbe86c7a9906de4b6b16192a09907328dafea5daba84bbe422aa49d55603",
+  "assets/spots/skatepark-springe/anlage-ueberblick.jpeg": "c1054e6f29c680e206e4db94fee98a5fc9ed3bb04ca78c66f333847eea9549c8",
+  "assets/spots/skatepark-springe/rampen-zweite-perspektive.jpeg": "778c7426daed76365f05d8ec2056ba7a53adc3c262d5ddd6eafb83e6b14f8c18"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
