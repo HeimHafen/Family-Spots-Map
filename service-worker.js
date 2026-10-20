@@ -1,7 +1,7 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261014-pin-tilla-40";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-soltau-parking-20261019-1";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-diary-favorites-20261019-1";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -133,16 +133,16 @@ async function validateImage(response, url) {
   if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
 }
 const RELEASE_HASHES = {
-  "css/map-spots.css": "9292e7042db3ff747bd95fef66e89c5db1d2c0c038afb1cd2c6cf6a1c4c4c8b2",
-  "da/index.html": "0d6cd6e23e6566faf51c23ebd7e40c68c116515ba69a9fc6caf9a7a1439a8cb4",
+  "css/map-spots.css": "b1a256e4d7bd2f5612d11f64e9fe8d652ddbc725a7985f974382fe9edebc8401",
+  "da/index.html": "d72283556648dc9cb020bf9b959f9f502237da256b0e1e58e5320091e92eb667",
   "data/i18n/da.json": "f85373e9ba4d1f955176956c4ece9cdbda16074ef4df0691dc18462bba1289b6",
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "9a91c0615ab04e6647299683428c0a42afed0711c40beaf2cb604b2150c79375",
-  "en/index.html": "a9250d7a0bd5506fef2d5b16b694ac99fbda74699ab4742efa0c678eeb030a8d",
-  "index.html": "60a62de4e4e4f7da2f96750186357b061f6103e9de156e645e017fb5c81f7524",
-  "js/app.js": "d14b12be12f8a4fd9dac42e432629fc27feb98314f10050e8e30a17e18f25529",
+  "en/index.html": "695b296b8281b54b4a217fef2387d705547447003183af593837bcda71ae1441",
+  "index.html": "7a25d66d8e47294f62581ad1796957967890aa20c8d9cc8b4225cc5e5d3bb04f",
+  "js/app.js": "952d090ff0f71080d8dbc80bb62d755b54497b24edc18805a4fa5d8a8c0cba36",
   "js/config.js": "371e58fb1789da750f47ae825e7558985021710359414c99bc5776510e8096d9",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "122b893a06146c84f4e65b6ebccca8821230ef027c287a5768c6516fcc838de3",
@@ -164,7 +164,7 @@ const RELEASE_HASHES = {
   "js/features/backup-zip.js": "c9ece03d64d8a27e9ae534cd86c3e4e5028a71e815e702d50524b44ae8bbafbe",
   "js/sw-register.js": "6a1411fec45b1f139abb9e86bbb72275d71a3333ecf6ca5c90ccafc5978a3257",
   "css/components.css": "620c8c45849230e58f4ace30e64e7a19f05551755780d5124983ac87a9e78bf6",
-  "css/diary.css": "9581e725113ff4106a0b9c9bcbbd4f54f278da25cd80f7e52d44d20f431f1940",
+  "css/diary.css": "8d28b5faebb8f0103c2cd41eb28a59d7f25cd14ac12e43c90d8c3d9041ee89ea",
   "js/features/diary-view.js": "2b543c94895fbb80180f1948653f98631c008724e495d25009b49f4189183176",
   "js/router.js": "83fc99bdeacaa904549b54b1ef96c9b9b38e5c165c7490a192fae18a7e4c1ca2",
   "js/ui/filter-select.js": "1ba89b80f82077b65a5ba7c6d8fad257d44e6dd24f788fa0ada6938538b5d865"
