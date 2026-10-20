@@ -204,13 +204,6 @@ html[data-theme="dark"] .leaflet-control-scale-line { background: #d0cbbccc; }
 /* These are labels inside the clickable summaries, not extra buttons. */
 :is(#btn-toggle-plus, #btn-toggle-daylog) { min-height: 34px; padding-block: 4px; }
 
-/* Favourites have a dedicated row below the Spots heading. */
-#btn-open-favorites.favorites-shortcut { position: relative; display: flex; align-items: center; justify-content: flex-start; gap: 8px; width: 100%; min-height: 40px; margin: 0; padding: 6px 0; border: 0; border-top: 1px solid var(--border-color, #d7cab5); border-radius: 0; background: transparent; color: var(--text-strong, #352417); font: inherit; font-size: 14px; font-weight: 600; line-height: 1.3; text-align: start; cursor: pointer; }
+/* Favourites use the same presentation as the other menu actions. */
 #btn-open-favorites[hidden] { display: none !important; }
-#btn-open-favorites svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0; }
-#btn-open-favorites [data-favorite-count] { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; min-height: 24px; padding: 2px 7px; margin-inline-start: auto; border-radius: 999px; background: #8fbc5c22; font-size: 12px; font-variant-numeric: tabular-nums; }
-#btn-open-favorites[aria-pressed="true"] { color: var(--text-strong, #352417); }
-#btn-open-favorites[aria-pressed="true"] svg { fill: #73a53c; stroke: #46682c; }
-#btn-open-favorites[aria-pressed="true"] [data-favorite-count] { background: #f7d5ab; color: #352417; }
-#btn-open-favorites:focus-visible { outline: 2px solid #c36a12; outline-offset: 1px; border-radius: 6px; }
-@media (pointer: coarse) { #btn-open-favorites::before { content: ""; position: absolute; inset: -2px 0; } }
+#btn-open-favorites [data-favorite-count] { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; min-width: 26px; min-height: 24px; padding: 2px 7px; border-radius: 999px; background: #8fbc5c22; color: inherit; font-size: 12px; font-variant-numeric: tabular-nums; }
