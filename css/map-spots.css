@@ -207,3 +207,7 @@ html[data-theme="dark"] .leaflet-control-scale-line { background: #d0cbbccc; }
 /* Favourites use the same presentation as the other menu actions. */
 #btn-open-favorites[hidden] { display: none !important; }
 #btn-open-favorites [data-favorite-count] { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; min-width: 26px; min-height: 24px; padding: 2px 7px; border-radius: 999px; background: #8fbc5c22; color: inherit; font-size: 12px; font-variant-numeric: tabular-nums; }
+
+/* A quiet way back, visible only inside the open favourites list. */
+#spot-list > .favorites-back { align-self: flex-start; justify-self: start; position: relative; display: inline-flex; align-items: center; min-height: 36px; max-width: 100%; margin: 0 0 4px; padding: 6px 2px; border: 0; background: transparent; color: var(--text-strong, #352417); font-size: 13px; line-height: 1.4; white-space: normal; text-align: start; text-decoration: underline; text-underline-offset: 3px; }
+@media (pointer: coarse) { #spot-list > .favorites-back::before { content: ""; position: absolute; inset: -4px 0; } }
