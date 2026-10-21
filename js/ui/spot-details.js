@@ -145,9 +145,9 @@ export function createSpotDetailsController({
   function appendParkingInformation(container, spot) {
     const lang = ["de", "en", "da"].includes(getLanguage()) ? getLanguage() : "de";
     const labels = {
-      de: {title: "Parken & Fußweg", location: "Wo parken?", cost: "Kosten & Parkdauer", walk: "Letztes Stück zu Fuß", vehicle: "Wohnmobil & Fahrzeug", note: "Gut zu wissen", unknown: "Noch keine verlässlich zugeordnete Parkmöglichkeit hinterlegt.", unclear: "Der genaue Standort ist noch ungeklärt. Deshalb empfehlen wir hier noch keinen Parkplatz.", missing: "Nicht bestätigte Kosten, Fußwege und Fahrzeuggrenzen bleiben offen.", source: "Parkhinweise und Quelle", checked: "Parkhinweise geprüft", existing: "Bisherige Hinweise; nicht erneut bestätigt.", mixed: "Offizielle Wegbeschreibung und unsere Besuchserfahrung; aktuelle Parkregeln offen.", booking: "Stellplatzbuchung; keine bestätigte Tagesparkfläche.", search: "Parkplatzsuche öffnen", point: "Gemeldeten Parkplatz öffnen", mapsNote: "Die Kartensuche zeigt die genannte Parkmöglichkeit; bitte Zufahrt und Beschilderung prüfen."},
-      en: {title: "Parking & walk", location: "Where to park", cost: "Charges & time limits", walk: "Final walk", vehicle: "Motorhome & vehicle", note: "Good to know", unknown: "No reliably identified parking option recorded yet.", unclear: "The exact location is still unconfirmed, so we cannot recommend parking here yet.", missing: "Unconfirmed charges, walking routes and vehicle limits remain unknown.", source: "Parking information and source", checked: "Parking information checked", existing: "Existing guidance; not rechecked.", mixed: "Official walking information and our visit experience; current parking rules unconfirmed.", booking: "Pitch booking; no confirmed day-visitor parking.", search: "Open parking search", point: "Open reported parking location", mapsNote: "The map search shows the named parking option; check access and signs."},
-      da: {title: "Parkering & gangrute", location: "Hvor kan I parkere?", cost: "Pris & tidsgrænser", walk: "Sidste stykke til fods", vehicle: "Autocamper & køretøj", note: "Godt at vide", unknown: "Der er endnu ikke registreret en sikkert identificeret parkeringsmulighed.", unclear: "Den præcise placering er uafklaret, så vi anbefaler endnu ikke parkering her.", missing: "Ubekræftede priser, gangruter og køretøjsgrænser er stadig uafklarede.", source: "Parkeringsoplysninger og kilde", checked: "Parkeringsoplysninger tjekket", existing: "Tidligere oplysninger; ikke tjekket igen.", mixed: "Officiel rutebeskrivelse og vores besøgserfaring; aktuelle parkeringsregler uafklarede.", booking: "Bestilling af plads; ingen bekræftet parkering til dagsgæster.", search: "Åbn parkeringssøgning", point: "Åbn det oplyste parkeringssted", mapsNote: "Kortsøgningen viser den nævnte parkering; tjek indkørsel og skiltning."}
+      de: {title: "Parken & Fußweg", location: "Wo parken?", cost: "Kosten & Parkdauer", walk: "Letztes Stück zu Fuß", vehicle: "Wohnmobil & Fahrzeug", note: "Gut zu wissen", unknown: "Noch keine verlässlich zugeordnete Parkmöglichkeit hinterlegt.", unclear: "Der genaue Standort ist noch ungeklärt. Deshalb empfehlen wir hier noch keinen Parkplatz.", missing: "Weitere Details sind noch offen.", source: "Parkhinweise und Quelle", checked: "Parkhinweise geprüft", existing: "Vorhandene Hinweise; nicht erneut geprüft.", mixed: "Offizielle Wegbeschreibung und unsere Besuchserfahrung; aktuelle Parkregeln offen.", booking: "Stellplatzbuchung; keine bestätigte Tagesparkfläche.", search: "Parkplatzsuche öffnen", point: "Gemeldeten Parkplatz öffnen", mapsNote: "Die Kartensuche zeigt die genannte Parkmöglichkeit; bitte Zufahrt und Beschilderung prüfen."},
+      en: {title: "Parking & walking route", location: "Where to park", cost: "Charges & time limits", walk: "Final walk", vehicle: "Motorhome & vehicle", note: "Good to know", unknown: "No reliably identified parking option recorded yet.", unclear: "The exact location is still unconfirmed, so we cannot recommend parking here yet.", missing: "Further details are still unconfirmed.", source: "Parking information and source", checked: "Parking information checked", existing: "Existing guidance; not rechecked.", mixed: "Official walking information and our visit experience; current parking rules unconfirmed.", booking: "Pitch booking; no confirmed day-visitor parking.", search: "Open parking search", point: "Open reported parking location", mapsNote: "The map search shows the named parking option; check access and signs."},
+      da: {title: "Parkering & gangrute", location: "Hvor kan I parkere?", cost: "Pris & tidsgrænser", walk: "Sidste stykke til fods", vehicle: "Autocamper & køretøj", note: "Godt at vide", unknown: "Der er endnu ikke registreret en sikkert identificeret parkeringsmulighed.", unclear: "Den præcise placering er uafklaret, så vi anbefaler endnu ikke parkering her.", missing: "Flere detaljer er endnu ikke bekræftet.", source: "Parkeringsoplysninger og kilde", checked: "Parkeringsoplysninger tjekket", existing: "Tidligere oplysninger; ikke tjekket igen.", mixed: "Officiel rutebeskrivelse og vores besøgserfaring; aktuelle parkeringsregler uafklarede.", booking: "Bestilling af plads; ingen bekræftet parkering til dagsgæster.", search: "Åbn parkeringssøgning", point: "Åbn det oplyste parkeringssted", mapsNote: "Kortsøgningen viser den nævnte parkering; tjek indkørsel og skiltning."}
     }[lang];
     const info = spot.parking_information;
     const details = document.createElement("details");
@@ -159,12 +159,25 @@ export function createSpotDetailsController({
       if (details.open) expandedParkingSpots.add(id); else expandedParkingSpots.delete(id);
     });
     const summary = document.createElement("summary");
-    summary.textContent = labels.title;
+    const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    arrow.setAttribute("viewBox", "0 0 24 24");
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.setAttribute("focusable", "false");
+    arrow.classList.add("spot-parking__arrow");
+    const path = document.createElementNS(arrow.namespaceURI, "path");
+    path.setAttribute("d", "M9 5l7 7-7 7");
+    arrow.appendChild(path);
+    const label = document.createElement("span");
+    label.textContent = labels.title;
+    summary.append(arrow, label);
     details.appendChild(summary);
+    const body = document.createElement("div");
+    body.className = "spot-parking__body";
+    details.appendChild(body);
     if (!info || info.schema_version !== 1 || ["unknown", "location_unconfirmed"].includes(info.status)) {
       const p = document.createElement("p");
       p.textContent = info?.status === "location_unconfirmed" ? labels.unclear : labels.unknown;
-      details.appendChild(p);
+      body.appendChild(p);
       container.appendChild(details);
       return;
     }
@@ -182,32 +195,49 @@ export function createSpotDetailsController({
       row.append(term, definition);
       list.appendChild(row);
     }
-    details.appendChild(list);
+    body.appendChild(list);
     const navigation = info.navigation;
-    let mapUrl;
+    function appendParkingMaps(title, query, coordinates, target) {
+      const group = document.createElement("div");
+      group.className = "spot-parking__destination";
+      group.setAttribute("role", "group");
+      group.setAttribute("aria-label", title);
+      const heading = document.createElement("p");
+      heading.className = "spot-parking__destination-label";
+      heading.textContent = title;
+      const providers = document.createElement("div");
+      providers.className = "spot-parking__providers";
+      const urls = {
+        apple: coordinates
+          ? `https://maps.apple.com/?ll=${encodeURIComponent(query)}&q=${encodeURIComponent(query)}`
+          : `https://maps.apple.com/?q=${encodeURIComponent(query)}`,
+        google: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+      };
+      for (const provider of ["apple", "google"]) {
+        const link = document.createElement("a");
+        link.className = "spot-details-route-link " + (target === "primary" ? "spot-parking__map" : "spot-parking__alternative");
+        link.href = urls[provider];
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.dataset.parkingTarget = target;
+        setMapRouteLinkContent(link, provider);
+        link.setAttribute("aria-label", `${title}: ${link.textContent.trim()}`);
+        providers.appendChild(link);
+      }
+      group.append(heading, providers);
+      body.appendChild(group);
+    }
+    let hasParkingTarget = false;
     if (navigation?.kind === "search" && typeof navigation.query === "string" && navigation.query.trim()) {
-      mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(navigation.query)}`;
+      appendParkingMaps(labels.search, navigation.query, false, "primary");
+      hasParkingTarget = true;
     } else if (navigation?.kind === "coordinates" && Number.isFinite(navigation.lat) && Math.abs(navigation.lat) <= 90 && Number.isFinite(navigation.lon) && Math.abs(navigation.lon) <= 180) {
-      mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(navigation.lat + "," + navigation.lon)}`;
+      appendParkingMaps(labels.point, navigation.lat + "," + navigation.lon, true, "primary");
+      hasParkingTarget = true;
     }
-    if (mapUrl) {
-      const a = document.createElement("a");
-      a.className = "btn-ghost btn-small spot-parking__map";
-      a.href = mapUrl;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.textContent = navigation.kind === "search" ? labels.search : labels.point;
-      details.appendChild(a);
-    }
-    for (const alternative of Array.isArray(info.alternatives) ? info.alternatives : []) {
+    for (const [index, alternative] of (Array.isArray(info.alternatives) ? info.alternatives : []).entries()) {
       if (alternative?.kind !== "search" || typeof alternative.query !== "string" || !alternative.query.trim() || !alternative.label?.[lang]) continue;
-      const a = document.createElement("a");
-      a.className = "btn-ghost btn-small spot-parking__alternative";
-      a.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(alternative.query)}`;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.textContent = alternative.label[lang];
-      details.appendChild(a);
+      appendParkingMaps(alternative.label[lang], alternative.query, false, `alternative-${index}`);
     }
     const evidence = document.createElement("p");
     evidence.className = "spot-parking__evidence";
@@ -234,18 +264,18 @@ export function createSpotDetailsController({
         evidence.append(" · ", a);
       } catch { /* Invalid evidence must not break the detail view. */ }
     }
-    details.appendChild(evidence);
+    body.appendChild(evidence);
     if (!["cost", "walk", "vehicle"].every(key => info.facts?.[key]?.[lang])) {
       const p = document.createElement("p");
       p.className = "spot-parking__evidence";
       p.textContent = labels.missing;
-      details.appendChild(p);
+      body.appendChild(p);
     }
-    if (navigation?.kind === "search" && mapUrl) {
+    if (navigation?.kind === "search" && hasParkingTarget) {
       const p = document.createElement("p");
       p.className = "spot-parking__evidence";
       p.textContent = labels.mapsNote;
-      details.appendChild(p);
+      body.appendChild(p);
     }
     container.appendChild(details);
   }
@@ -387,6 +417,8 @@ export function createSpotDetailsController({
     const active = document.activeElement;
     const activeSelector = spotDetailEl.contains(active)
       ? active.matches(".spot-gallery__link") ? `.spot-gallery__link[data-gallery-index="${Number(active.dataset.galleryIndex)}"]`
+      : active.matches("[data-parking-target][data-route-provider]")
+        ? `[data-parking-target="${active.dataset.parkingTarget}"][data-route-provider="${active.dataset.routeProvider}"]`
       : [".spot-details-title", ".spot-visit-info__toggle", ".spot-details-favorite", ".spot-details-close", ".spot-gallery__summary", ".spot-parking > summary", ".spot-parking__map", '.spot-details-route-link[data-route-provider="apple"]', '.spot-details-route-link[data-route-provider="google"]']
         .find(selector => active.matches(selector)) : null;
     openDetailSpot = spot;
@@ -636,7 +668,7 @@ export function createSpotDetailsController({
     const spotDetailEl = getElement();
     if (!openDetailSpot || !spotDetailEl) return;
     const urls = getRouteUrlsForSpotFromUserLocation(openDetailSpot);
-    const links = spotDetailEl.querySelectorAll(".spot-details-route-link");
+    const links = spotDetailEl.querySelectorAll(".spot-details-routes > .spot-details-route-link");
     if (urls && links.length === 2) {
       links[0].href = urls.apple;
       links[1].href = urls.google;
