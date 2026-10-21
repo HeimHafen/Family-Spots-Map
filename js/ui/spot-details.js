@@ -1,6 +1,7 @@
 // Spot detail view: rendering, gallery, visitor information and route links.
 // Personal data and map/location calculations remain in their existing owners.
 import { FEATURES, LANG_EN, LANG_DA } from "../config.js";
+import { createCrownIcon } from "../utils/dom.js?v=20261010-unified-4";
 
 /**
  * Create one detail-view controller for the application lifetime.
@@ -430,7 +431,8 @@ export function createSpotDetailsController({
         if (badge.icon) {
           const iconEl = document.createElement("span");
           iconEl.className = "badge__icon";
-          iconEl.textContent = badge.icon;
+          if (badge.icon === "crown") iconEl.appendChild(createCrownIcon());
+          else iconEl.textContent = badge.icon;
 
           badgeEl.appendChild(iconEl);
         }
