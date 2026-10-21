@@ -140,6 +140,116 @@ export function createSpotDetailsController({
     container.appendChild(details);
   }
 
+  const expandedParkingSpots = new Set();
+
+  function appendParkingInformation(container, spot) {
+    const lang = ["de", "en", "da"].includes(getLanguage()) ? getLanguage() : "de";
+    const labels = {
+      de: {title: "Parken & Fußweg", location: "Wo parken?", cost: "Kosten & Parkdauer", walk: "Letztes Stück zu Fuß", vehicle: "Wohnmobil & Fahrzeug", note: "Gut zu wissen", unknown: "Noch keine verlässlich zugeordnete Parkmöglichkeit hinterlegt.", unclear: "Der genaue Standort ist noch ungeklärt. Deshalb empfehlen wir hier noch keinen Parkplatz.", missing: "Nicht bestätigte Kosten, Fußwege und Fahrzeuggrenzen bleiben offen.", source: "Parkhinweise und Quelle", checked: "Parkhinweise geprüft", existing: "Bisherige Hinweise; nicht erneut bestätigt.", mixed: "Offizielle Wegbeschreibung und unsere Besuchserfahrung; aktuelle Parkregeln offen.", booking: "Stellplatzbuchung; keine bestätigte Tagesparkfläche.", search: "Parkplatzsuche öffnen", point: "Gemeldeten Parkplatz öffnen", mapsNote: "Die Kartensuche zeigt die genannte Parkmöglichkeit; bitte Zufahrt und Beschilderung prüfen."},
+      en: {title: "Parking & walk", location: "Where to park", cost: "Charges & time limits", walk: "Final walk", vehicle: "Motorhome & vehicle", note: "Good to know", unknown: "No reliably identified parking option recorded yet.", unclear: "The exact location is still unconfirmed, so we cannot recommend parking here yet.", missing: "Unconfirmed charges, walking routes and vehicle limits remain unknown.", source: "Parking information and source", checked: "Parking information checked", existing: "Existing guidance; not rechecked.", mixed: "Official walking information and our visit experience; current parking rules unconfirmed.", booking: "Pitch booking; no confirmed day-visitor parking.", search: "Open parking search", point: "Open reported parking location", mapsNote: "The map search shows the named parking option; check access and signs."},
+      da: {title: "Parkering & gangrute", location: "Hvor kan I parkere?", cost: "Pris & tidsgrænser", walk: "Sidste stykke til fods", vehicle: "Autocamper & køretøj", note: "Godt at vide", unknown: "Der er endnu ikke registreret en sikkert identificeret parkeringsmulighed.", unclear: "Den præcise placering er uafklaret, så vi anbefaler endnu ikke parkering her.", missing: "Ubekræftede priser, gangruter og køretøjsgrænser er stadig uafklarede.", source: "Parkeringsoplysninger og kilde", checked: "Parkeringsoplysninger tjekket", existing: "Tidligere oplysninger; ikke tjekket igen.", mixed: "Officiel rutebeskrivelse og vores besøgserfaring; aktuelle parkeringsregler uafklarede.", booking: "Bestilling af plads; ingen bekræftet parkering til dagsgæster.", search: "Åbn parkeringssøgning", point: "Åbn det oplyste parkeringssted", mapsNote: "Kortsøgningen viser den nævnte parkering; tjek indkørsel og skiltning."}
+    }[lang];
+    const info = spot.parking_information;
+    const details = document.createElement("details");
+    details.className = "spot-parking";
+    const id = getSpotId(spot);
+    details.open = expandedParkingSpots.has(id);
+    details.addEventListener("toggle", () => {
+      if (!details.isConnected) return;
+      if (details.open) expandedParkingSpots.add(id); else expandedParkingSpots.delete(id);
+    });
+    const summary = document.createElement("summary");
+    summary.textContent = labels.title;
+    details.appendChild(summary);
+    if (!info || info.schema_version !== 1 || ["unknown", "location_unconfirmed"].includes(info.status)) {
+      const p = document.createElement("p");
+      p.textContent = info?.status === "location_unconfirmed" ? labels.unclear : labels.unknown;
+      details.appendChild(p);
+      container.appendChild(details);
+      return;
+    }
+    const list = document.createElement("dl");
+    list.className = "spot-parking__facts";
+    for (const key of ["location", "cost", "walk", "vehicle", "note"]) {
+      const value = info.facts?.[key]?.[lang];
+      if (typeof value !== "string" || !value.trim()) continue;
+      const row = document.createElement("div");
+      row.dataset.parkingFact = key;
+      const term = document.createElement("dt");
+      term.textContent = labels[key];
+      const definition = document.createElement("dd");
+      definition.textContent = value;
+      row.append(term, definition);
+      list.appendChild(row);
+    }
+    details.appendChild(list);
+    const navigation = info.navigation;
+    let mapUrl;
+    if (navigation?.kind === "search" && typeof navigation.query === "string" && navigation.query.trim()) {
+      mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(navigation.query)}`;
+    } else if (navigation?.kind === "coordinates" && Number.isFinite(navigation.lat) && Math.abs(navigation.lat) <= 90 && Number.isFinite(navigation.lon) && Math.abs(navigation.lon) <= 180) {
+      mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(navigation.lat + "," + navigation.lon)}`;
+    }
+    if (mapUrl) {
+      const a = document.createElement("a");
+      a.className = "btn-ghost btn-small spot-parking__map";
+      a.href = mapUrl;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = navigation.kind === "search" ? labels.search : labels.point;
+      details.appendChild(a);
+    }
+    for (const alternative of Array.isArray(info.alternatives) ? info.alternatives : []) {
+      if (alternative?.kind !== "search" || typeof alternative.query !== "string" || !alternative.query.trim() || !alternative.label?.[lang]) continue;
+      const a = document.createElement("a");
+      a.className = "btn-ghost btn-small spot-parking__alternative";
+      a.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(alternative.query)}`;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = alternative.label[lang];
+      details.appendChild(a);
+    }
+    const evidence = document.createElement("p");
+    evidence.className = "spot-parking__evidence";
+    if (info.status === "source_supported" && /^\d{4}-\d{2}-\d{2}$/.test(info.checked_at || "")) {
+      evidence.textContent = labels.checked + ": ";
+      const time = document.createElement("time");
+      time.dateTime = info.checked_at;
+      time.textContent = new Intl.DateTimeFormat({de: "de-DE", en: "en-GB", da: "da-DK"}[lang], {dateStyle: "medium", timeZone: "UTC"}).format(new Date(info.checked_at + "T12:00:00Z"));
+      evidence.appendChild(time);
+    } else {
+      evidence.textContent = info.status === "mixed" ? labels.mixed : info.status === "booking_required" ? labels.booking : labels.existing;
+    }
+    const sourceUrls = [...new Set(info.source_urls || [])];
+    for (const value of sourceUrls) {
+      try {
+        const url = new URL(value);
+        if (url.protocol !== "https:" || url.username || url.password) continue;
+        const a = document.createElement("a");
+        a.href = url.href;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = url.hostname.replace(/^www\./, "");
+        a.title = labels.source;
+        evidence.append(" · ", a);
+      } catch { /* Invalid evidence must not break the detail view. */ }
+    }
+    details.appendChild(evidence);
+    if (!["cost", "walk", "vehicle"].every(key => info.facts?.[key]?.[lang])) {
+      const p = document.createElement("p");
+      p.className = "spot-parking__evidence";
+      p.textContent = labels.missing;
+      details.appendChild(p);
+    }
+    if (navigation?.kind === "search" && mapUrl) {
+      const p = document.createElement("p");
+      p.className = "spot-parking__evidence";
+      p.textContent = labels.mapsNote;
+      details.appendChild(p);
+    }
+    container.appendChild(details);
+  }
+
   function appendVisitDetails(container, spot) {
     const currentLang = getLanguage();
     const details = spot?.visit_details;
@@ -277,7 +387,7 @@ export function createSpotDetailsController({
     const active = document.activeElement;
     const activeSelector = spotDetailEl.contains(active)
       ? active.matches(".spot-gallery__link") ? `.spot-gallery__link[data-gallery-index="${Number(active.dataset.galleryIndex)}"]`
-      : [".spot-details-title", ".spot-visit-info__toggle", ".spot-details-favorite", ".spot-details-close", ".spot-gallery__summary", '.spot-details-route-link[data-route-provider="apple"]', '.spot-details-route-link[data-route-provider="google"]']
+      : [".spot-details-title", ".spot-visit-info__toggle", ".spot-details-favorite", ".spot-details-close", ".spot-gallery__summary", ".spot-parking > summary", ".spot-parking__map", '.spot-details-route-link[data-route-provider="apple"]', '.spot-details-route-link[data-route-provider="google"]']
         .find(selector => active.matches(selector)) : null;
     openDetailSpot = spot;
 
@@ -472,6 +582,8 @@ export function createSpotDetailsController({
 
       spotDetailEl.appendChild(routesEl);
     }
+
+    appendParkingInformation(spotDetailEl, spot);
 
     if (tags.length) {
       const tagsEl = document.createElement("div");
