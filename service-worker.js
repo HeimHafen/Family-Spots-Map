@@ -1,7 +1,7 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261021-spots-crown-41";
+const CACHE_VERSION = "20261021-parking-43";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-130-spots-unified-crown-review-4";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-130-spots-parking-review-6";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/app.js",
@@ -64,9 +64,6 @@ const ASSETS = [
   "assets/icons/apple-touch-icon.png",
   "assets/tilla/tilla-hero.png",
   "assets/tilla/tilla-watercolor.png",
-  "assets/spots/wildgatter-hildesheim/eingang-test.webp",
-  "assets/spots/wildgatter-hildesheim/spielplatz-test.webp",
-  "assets/spots/wildgatter-hildesheim/wege-test.webp",
   "assets/spots/vejlby-klit/uebersicht.webp",
   "assets/spots/vejlby-klit/toiletten.webp",
   "assets/spots/vejlby-klit/muell-picknick.webp",
@@ -144,23 +141,23 @@ async function validateImage(response, url) {
 }
 const RELEASE_HASHES = {
   "css/map-spots.css": "1994014d437c19ad232af2ea0b8c8d572c1ea0d1ca44d8dc91c671072b8058f2",
-  "da/index.html": "82ac294d484383455341918f0ac1487d2a3e5f8970a0a5b2c53db7b753c32ef3",
+  "da/index.html": "e376ee7fd8e5fe9aedc0650bb615af53fbcbb4a73593f2aef4477962b7ff934a",
   "data/i18n/da.json": "f85373e9ba4d1f955176956c4ece9cdbda16074ef4df0691dc18462bba1289b6",
   "data/i18n/de.json": "4cf4603fe87577abd95a59738aee1333d34c86dac26bdbfca5db41961bbfd79c",
   "data/i18n/en.json": "698aaa21787456b065d24165016326728236f8a421019bd18baa61161e209c5b",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
-  "data/spots.json": "a212a6197d3a638055dd61df35fc91e4ee70262695084652b6e50e3a2c6e366e",
-  "en/index.html": "463faa4432a40480177d27318562c376b31d1e29a12fc5fbbb0a446f885a7fee",
-  "index.html": "b6111d53247b88ea93f0510e25657e8614d9564add11bf72e53c12bb15b50399",
-  "js/app.js": "bb790178b17fba111604f9ba5c853e343ef5d73ac2e2b8057d7250ac0fb47702",
-  "js/config.js": "fb4ad6a882f3cf6843e658ec7006d5828dab1680ff5958fbf802f56c1f9ab0f0",
+  "data/spots.json": "6920c904b2bec290057a9462a84226312580e6eb8773b796ce4cd6277db29162",
+  "en/index.html": "7030b46af7f3f30d2d88006d1fe09834464a8d8cb7699814865f6607e563984d",
+  "index.html": "55d923259260fe8c2fa52ecae44f14d8ea97fbe25a2cfa558e1a3fa3aea4502c",
+  "js/app.js": "a3c6de56c2fc3ef100368e30beb4b9e48379d8f1e0925f624d1f54de633f569d",
+  "js/config.js": "e04c6ad0096242df5847231bddac324b748db92425d9f0a1b0a05179e9714b4c",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "122b893a06146c84f4e65b6ebccca8821230ef027c287a5768c6516fcc838de3",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "b339dbab2001148183850bc0ec18d778c4189e7f3a923d40766ef5368472c11c",
-  "js/map.js": "e14c35fbeb44023f643b4ffaddc6d4d54ebc59ca6bdcbfe09ff841d07859a26a",
+  "js/map.js": "fbd766d3767531f8b8c3ca3a153a366521e12e5446f87f3de0d31a9ad0e29051",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
-  "js/ui/spot-details.js": "466cf1a588c1d9ff08c50cc3a536f843acaa8ee15fa356918a8f2f5f9f879133",
+  "js/ui/spot-details.js": "2eb6e4644d00a5401d1f4c8e8d18f2746ced323f78ee98fe135dd967edeeffc1",
   "offline.html": "ab84afa963f01f0dc9401444da5e17bb01855b8d1a0482398409e43dac3f1c3c",
   "assets/spots/bovbjerg-fyr/leuchtturm-pony.jpeg": "dedd90020fb6c6d61fbf7106f5fc5fbe0841b0e8e5fe48492dbc7261010b84aa",
   "assets/spots/bovbjerg-fyr/strandtreppe.jpeg": "1996690336f41ac45960ed55918c8df95984912a839acbe0a289d80ec3626390",
