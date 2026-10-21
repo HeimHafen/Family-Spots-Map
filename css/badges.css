@@ -191,3 +191,14 @@
   font-size: 1em; /* skaliert mit Text */
   line-height: 1;
 }
+/* Keep the established gold crown compact in every Plus badge. */
+.badge--plus .spots-plus-crown {
+  display: block;
+  flex: none;
+  width: 1.05em;
+  height: .95em;
+  color: #c99122;
+}
+@media (forced-colors: active) {
+  .badge--plus .spots-plus-crown { color: CanvasText; }
+}
