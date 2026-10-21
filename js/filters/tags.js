@@ -128,6 +128,7 @@ export function buildSpotSearchText(spot) {
   const parts = [
     getSpotName(spot),
     spot.title, spot.title_de, spot.title_en, spot.title_da,
+    ...(Array.isArray(spot.search_aliases) ? spot.search_aliases : []),
     ...["de", "en", "da"].flatMap(lang => spot[`tags_${lang}`] || []),
     getSpotSubtitle(spot),
     spot.category,
