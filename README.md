@@ -22,17 +22,17 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Stand: **14. Oktober 2026**, Darstellungsrelease **20261014-pin-tilla-40**. Der Datensatz umfasst **114 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Stand: **21. Oktober 2026**, Darstellungsrelease **20261021-spots-crown-41**. Der Datensatz umfasst **130 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
 ## Funktionen
 
 - **Karte und Spot-Liste:** gruppierte Marker, grüne Punktmarker und platzabhängige Namensbeschriftungen. Ein Pin öffnet eine kompakte Vorschau; „Spot ansehen“ führt zu den vollständigen Details. Die Navigation erfolgt über Apple Karten oder Google Maps.
-- **Suche und Filter:** Ort oder Stichwort, Stimmung, Radius, Kategorien, Altersgruppen, Favoriten und weitere praktische Schnellfilter.
+- **Suche und Filter:** Ort oder Stichwort, Stimmung, Radius, Kategorien, Favoriten und weitere praktische Schnellfilter. Stimmung nutzt vorhandene Themen- und Kategorie-Merkmale. Die Altersauswahl bleibt bis zum Vorliegen gepflegter Altersprofile inaktiv und erklärt dies direkt in der Oberfläche.
 - **Standort:** optional den eigenen Standort anzeigen. Die App bleibt auch ohne Standortfreigabe bedienbar.
 - **Tilla:** gemalte Schildkröten-Begleiterin mit kleinen Spielideen. Ein Zettel erscheint in ihrer Tasche, sobald mindestens eine Erinnerung gespeichert ist; nach dem Löschen der letzten Erinnerung verschwindet er.
-- **Favoriten:** interessante Orte auf dem jeweiligen Gerät merken.
+- **Favoriten:** interessante Orte auf dem jeweiligen Gerät merken und direkt über das Menü aufrufen.
 - **Mein Tag:** Erinnerungen schreiben, bearbeiten und löschen; auch offline, sobald die App vollständig geladen wurde.
 - **Bildergalerien:** passende Ortsbilder mit Bildunterschriften und Alternativtexten in allen drei Sprachen.
 - **Besuchsplanung:** strukturierte Informationen zu Eignung, Zeitbedarf, Anreise, Kosten, Öffnungszeiten, Familienkomfort, Essen, Zugänglichkeit und praktischen Tipps.
