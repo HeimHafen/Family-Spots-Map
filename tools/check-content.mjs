@@ -20,6 +20,32 @@ for(const s of spots){
   if(!Array.isArray(s[`tags_${lang}`])||s[`tags_${lang}`].some(t=>typeof t!=='string'||!t.trim()))fail(`${s.id}: invalid display tags/${lang}`);
  }
  for(const category of s.categories||[])for(let i=0;i<3;i++)if(!tables[i][category])fail(`${s.id}: unknown category ${category} in language ${i}`);
+ if(s.parking_information?.status==='location_unconfirmed'&&s.quality_review_status!=='location_assignment_unconfirmed')fail(`${s.id}: unconfirmed location lacks route guard metadata`);
+ if(s.quality_review_status==='location_assignment_unconfirmed'&&s.verified)fail(`${s.id}: unresolved location cannot be verified`);
+ if((s.photos||[]).some(p=>p.kind==='ai_test'))fail(`${s.id}: test imagery must not appear in the public gallery`);
+ const parking=s.parking_information;
+ const statuses=['unknown','location_unconfirmed','source_supported','existing_partial','mixed','booking_required'];
+ if(parking?.schema_version!==1||!statuses.includes(parking.status))fail(`${s.id}: invalid parking information`);
+ if(parking){
+  if(parking.checked_at&&!validDate(parking.checked_at))fail(`${s.id}: invalid parking date`);
+  if(parking.status==='source_supported'&&(!parking.source_urls?.length||!validDate(parking.checked_at)))fail(`${s.id}: checked parking lacks source/date`);
+  if(['unknown','location_unconfirmed'].includes(parking.status)&&(parking.navigation||parking.alternatives?.length||Object.keys(parking.facts||{}).length))fail(`${s.id}: unconfirmed parking must not have a navigation recommendation`);
+  for(const [key,text]of Object.entries(parking.facts||{})){
+   if(!['location','cost','walk','vehicle','note'].includes(key))fail(`${s.id}: unknown parking fact ${key}`);
+   for(const lang of ['de','en','da'])if(typeof text[lang]!=='string'||!text[lang].trim())fail(`${s.id}: missing parking ${key}/${lang}`);
+  }
+  for(const url of parking.source_urls||[])if(!/^https:\/\//.test(url))fail(`${s.id}: unsafe parking source`);
+  for(const n of parking.alternatives||[]){
+   if(n.kind!=='search'||typeof n.query!=='string'||!n.query.trim()||n.query.length>240)fail(`${s.id}: invalid alternative parking search`);
+   for(const lang of ['de','en','da'])if(!n.label?.[lang]?.trim())fail(`${s.id}: missing alternative parking label/${lang}`);
+  }
+  const n=parking.navigation;
+  if(n){
+   if(n.kind==='search'){if(typeof n.query!=='string'||!n.query.trim()||n.query.length>240)fail(`${s.id}: invalid parking search`);}
+   else if(n.kind==='coordinates'){if(!Number.isFinite(n.lat)||Math.abs(n.lat)>90||!Number.isFinite(n.lon)||Math.abs(n.lon)>180)fail(`${s.id}: invalid parking coordinates`);}
+   else fail(`${s.id}: invalid parking navigation kind`);
+  }
+ }
  if(s.source_checked_at&&!validDate(s.source_checked_at))fail(`${s.id}: invalid source date`);
  if(s.verified&&!s.visitor_information?.confirmed_topics?.length)fail(`${s.id}: check badge has no documented confirmed topic`);
  for(const other of [...(s.related_spot_ids||[]),...(s.same_place_as?[s.same_place_as]:[])])if(other===s.id||!ids.has(other))fail(`${s.id}: broken place reference ${other}`);
@@ -34,5 +60,7 @@ for(const s of spots){
 }
 for(const c of ['zoo','tierpark','bauernhof'])for(const tag of ['stroller-friendly','wheelchair','accessible','petting-zoo'])if(tags[c]?.includes(tag))fail(`${c}: generic category promises ${tag}`);
 if(tags['stellplatz-spielplatz-naehe-kostenlos']?.includes('overnight'))fail('Free parking cannot imply overnight permission');
+const access=vm.runInNewContext('('+config.match(/export const CATEGORY_ACCESS = Object.freeze\((\{[\s\S]*?\n\})\);/)[1]+')');
+if(access.perCategory.wasserspielplatz?.level!=='free')fail('Public water playgrounds must remain freely visible');
 console.log(`Content contract: ${spots.length} records, ${translatedSections} trilingual information items, ${errors} errors.`);
 if(errors)process.exitCode=1;
