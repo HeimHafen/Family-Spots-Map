@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -107,6 +108,21 @@ function checkModule(name) {
 for (const entry of ["js/app.js", "js/sw-register.js"]) checkModule(entry);
 const assetsMatch = read("service-worker.js").match(/const ASSETS = (\[[\s\S]*?\]);/);
 const assets = vm.runInNewContext(assetsMatch[1]);
+// Stop publication when only part of a coordinated release was uploaded.
+const hashMatch = read("service-worker.js").match(/const RELEASE_HASHES = (\{[\s\S]*?\n\});/);
+if (!hashMatch) fail("Release checksums are missing from the service worker");
+else {
+  let hashes;
+  try { hashes = JSON.parse(hashMatch[1]); } catch { fail("Invalid release checksum table"); }
+  for (const [name, expected] of Object.entries(hashes || {})) {
+    if (!assets.includes(name)) { fail(`Checksum refers to a non-cached asset: ${name}`); continue; }
+    if (!/^[a-f0-9]{64}$/.test(expected)) { fail(`Invalid release checksum: ${name}`); continue; }
+    if (!fs.existsSync(path.join(root, name))) { fail(`Missing release file: ${name}`); continue; }
+    const actual = createHash("sha256").update(fs.readFileSync(path.join(root, name))).digest("hex");
+    if (actual !== expected) fail(`Release checksum mismatch: ${name}. Upload the matching file and service-worker.js together.`);
+  }
+}
+
 // Release features must also be integrated in the direct language entry pages.
 const release = read("service-worker.js").match(/const CACHE_VERSION = "([^"]+)"/)?.[1];
 for (const name of ["index.html", "en/index.html", "da/index.html"]) {
@@ -164,3 +180,6 @@ process.exitCode = failures ? 1 : 0;
 
 // Keep backup compatibility and corruption guards in the publication gate.
 await import('./check-backups.mjs');
+
+// Keep the multilingual content and evidence contract in the publication gate.
+await import('./check-content.mjs');
