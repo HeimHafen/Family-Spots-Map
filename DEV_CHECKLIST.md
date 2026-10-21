@@ -1,6 +1,6 @@
 # Family Spots Map – Freigabeprüfung
 
-Stand: 21. Oktober 2026 · 130 Spots · Release 20261021-spots-crown-41
+Stand: 21. Oktober 2026 · 130 Spots · Release 20261021-parking-43 · Fassung 6
 
 Diese Liste beschreibt den überprüften aktuellen Stand. Sie ersetzt die historische
 Checkliste von Dezember 2025, deren offene Punkte teilweise bereits umgesetzt waren.
@@ -40,7 +40,7 @@ Installation auf einem physischen iPhone sind separat in der Praxis zu prüfen.
   Tourenangabe vorliegt.
 - Fehlende Angaben zu Ausstattung und Zugänglichkeit transparent benennen.
 - Karten-Screenshots und fremde Vorschaufotos nicht als eigene Galerie-Fotos verwenden.
-- Tatsächliche Ortsfotos und KI-Testbilder eindeutig unterscheiden.
+- Keine KI-Testmotive in aktiven Ortsgalerien veröffentlichen.
 
 ## Bestehende Grenzen
 
@@ -49,3 +49,28 @@ Installation auf einem physischen iPhone sind separat in der Praxis zu prüfen.
 - Persönliche Daten liegen im Browser; keine geräteübergreifende Kontosynchronisation.
 - Plus-Freischaltungen werden lokal verarbeitet; keine serverseitige Zahlungsprüfung.
 - Kartenkacheln werden über das Internet geladen und nicht offline vorgehalten.
+
+
+## Parken und öffentliche Wasserspielplätze – 21.10.2026
+
+Öffentliche Wasserspielplätze sind frei sichtbar und nicht Teil des Wasser-Add-ons.
+Alle 130 Einträge haben einen eigenen Parkhinweis-Status. Konkrete Angaben und
+offene Punkte werden getrennt dargestellt. Parkplatzziele werden nur aus
+zugeordneten Parkhinweisen oder übermittelten Parkplatzpunkten erzeugt; eine
+Zielkoordinate des Ausflugs ist nicht automatisch eine Parkzufahrt.
+Parkhinweise haben eigene Quellen und Prüfdaten. Bestehende ungeprüfte Hinweise
+und eigene Besuchserfahrungen werden nicht als frisch geprüft gekennzeichnet.
+Für neue Beiträge: Zufahrt, Beschilderung, Gebühren/Parkscheibe, Fußweg und
+Fahrzeuggrenzen einzeln dokumentieren. Kein Schluss von Tagesparken auf Übernachten.
+
+
+## Abschließende Nachprüfung – Fassung 6
+
+- Historische Pins mit ungeklärter Standortzuordnung erzeugen keine Routenlinks.
+- Widersprüchliche Standort-Metadaten bei Berliner Seilfabrik bereinigt.
+- Drei KI-Testbilder aus aktiver Wildgatter-Galerie und Offline-Liste entfernt;
+  alle 20 bereitgestellten Ortsfotos erhalten und als Bilddateien dekodiert.
+- Inhaltliche Freigabeprüfung weist aktive KI-Testbilder und widersprüchliche
+  Standortkennzeichnungen künftig ab.
+- Paketprüfung und Bedienabläufe einschließlich Foto-Erinnerung erneut geprüft;
+  genaue Ergebnisse und verbleibende Grenzen stehen im begleitenden Prüfbericht.
