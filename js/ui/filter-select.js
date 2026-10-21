@@ -15,6 +15,7 @@ export function initFilterSelects() {
     const text = document.createElement('span'); text.id = `${id}-value`;
     trigger.append(text);
     trigger.setAttribute('aria-labelledby', `${id}-label ${text.id}`);
+    if (select.hasAttribute('aria-describedby')) trigger.setAttribute('aria-describedby', select.getAttribute('aria-describedby'));
     const list = document.createElement('div');
     list.className = 'filter-picker__list'; list.id = `${id}-listbox`;
     list.setAttribute('role', 'listbox'); list.setAttribute('aria-labelledby', `${id}-label`);
