@@ -71,7 +71,7 @@ Historische Meldungen dürfen nicht als aktuelle Ausstattung oder aktuelle Öffn
 - **Wildgatter Hildesheim – Steinberg:** Besuchsplanung mit etwa 90–120 Minuten, Tierbeobachtung, Spielpause, Anreise, öffentlichen Toiletten mit Wickeltisch und Gastronomie. Offene Fragen zu Toilettenzugang und geeigneten Wegen bleiben erkennbar.
 - **Wohnmobil-Stopp Vejlby Klit:** eigene Ortsbilder, Strandnähe, Toiletten, Mülltrennung, Picknickbänke und Hinweise auf die Spielplätze Neerlandiavej und Barendsvej. Mejrup ist als separater Versorgungspunkt für die An- oder Weiterreise beschrieben. Eine verbindliche Höchststandzeit wird nicht behauptet.
 
-Die Wildgatter-Galerie enthält derzeit ausdrücklich gekennzeichnete **KI-Testmotive** für den Darstellungstest. Sie dokumentieren keine tatsächlichen Eingänge, Spielgeräte oder Wege. Die Vejlby-Galerie enthält bereitgestellte eigene Ortsfotos.
+Die drei früheren KI-Testmotive vom Wildgatter sind aus der aktiven Galerie und dem Offline-Cache entfernt. Die Dateien können im Projektarchiv verbleiben; sie dokumentieren keine tatsächlichen Eingänge, Spielgeräte oder Wege. Aktive Galerien verwenden bereitgestellte Ortsfotos.
 
 ## Daten und Bilder pflegen
 
@@ -96,9 +96,9 @@ Die neun Abschnittsschlüssel in `visit_details.sections` sind `suitability`, `d
 ### Neue Bilder
 
 1. Einen klar benannten Ordner unter `assets/spots/` anlegen, beispielsweise `assets/spots/vejlby-klit/`.
-2. Ortsbilder mit nachvollziehbaren Rechten als WebP, JPEG oder PNG hochladen. Die bestehenden Galerien verwenden WebP.
+2. Ortsbilder mit nachvollziehbaren Rechten als WebP, JPEG oder PNG hochladen. Die bestehenden Galerien verwenden WebP und JPEG.
 3. Unter `photos` den exakten relativen Pfad, `width`, `height`, `caption` und `alt` ergänzen. Bildunterschriften und Alternativtexte müssen in allen drei Sprachen vorliegen.
-4. Für tatsächliche Fotos `kind: "photo"` verwenden. Testmotive dürfen nicht als Ortsdokumentation erscheinen; die vorhandene Kennzeichnung ist `kind: "ai_test"`.
+4. Für tatsächliche Fotos `kind: "photo"` verwenden. Testmotive dürfen nicht in aktiven Ortsgalerien erscheinen. `kind: "ai_test"` wird in der Inhaltsprüfung abgewiesen.
 5. Für offline verfügbare Bilder den Pfad in `ASSETS` im Service Worker aufnehmen und die Cache-Version erhöhen.
 
 **Ordner- und Dateinamen dürfen keine unbeabsichtigten Leerzeichen enthalten.** `assets/spots/vejlby-klit/` und ein Ordner mit Leerzeichen vor `vejlby-klit` sind unterschiedliche Pfade. Die Groß-/Kleinschreibung muss ebenfalls stimmen.
@@ -201,3 +201,16 @@ Der Kopfbereich nutzt weniger Leerraum bei unveränderter Titelgröße und iPhon
 ## Gesamtprüfung in Release 40
 
 Die Kategorie für Kleinkinder, Barfußspiel und Motorik ist in den Sprachkatalogen vollständig übersetzt. Die deutsche Kategorieliste verwendet „Kleinkind“. Die Offline-Einstiegsseite nutzt im Abendmodus dieselbe Olive-/Leinenpalette wie die Haupt-App; ihre Hinweise auf die Offline-Vorbereitung sind sprachlich präzisiert. Preise, Plus-Regeln, geografische Daten und persönliche Speicherformate bleiben unverändert.
+
+
+## Parken und öffentliche Wasserspielplätze – 21.10.2026
+
+Öffentliche Wasserspielplätze sind frei sichtbar und nicht Teil des Wasser-Add-ons.
+Alle 130 Einträge haben einen eigenen Parkhinweis-Status. Konkrete Angaben und
+offene Punkte werden getrennt dargestellt. Parkplatzziele werden nur aus
+zugeordneten Parkhinweisen oder übermittelten Parkplatzpunkten erzeugt; eine
+Zielkoordinate des Ausflugs ist nicht automatisch eine Parkzufahrt.
+Parkhinweise haben eigene Quellen und Prüfdaten. Bestehende ungeprüfte Hinweise
+und eigene Besuchserfahrungen werden nicht als frisch geprüft gekennzeichnet.
+Für neue Beiträge: Zufahrt, Beschilderung, Gebühren/Parkscheibe, Fußweg und
+Fahrzeuggrenzen einzeln dokumentieren. Kein Schluss von Tagesparken auf Übernachten.
