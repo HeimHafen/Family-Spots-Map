@@ -50,3 +50,24 @@ export function setTextWithHearts(element, text) {
   });
   element.replaceChildren(fragment);
 }
+
+/** Decorative Plus crown, matching the established Spots Plus heading. */
+export function createCrownIcon(ownerDocument = document) {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = ownerDocument.createElementNS(ns, "svg");
+  for (const [name, value] of Object.entries({class: "spots-plus-crown", viewBox: "0 0 32 26", width: "22", height: "20", "aria-hidden": "true", focusable: "false"})) svg.setAttribute(name, value);
+  const group = ownerDocument.createElementNS(ns, "g");
+  group.setAttribute("fill", "currentColor");
+  for (const [tag, attrs] of [
+    ["path", {d: "M4 8.5l5 5 1-6 4 5 2-8 2 8 4-5 1 6 5-5-3 13H7z"}],
+    ["circle", {cx: 4, cy: 7, r: 2}], ["circle", {cx: 10, cy: 6, r: 1.6}],
+    ["circle", {cx: 16, cy: 3, r: 2}], ["circle", {cx: 22, cy: 6, r: 1.6}],
+    ["circle", {cx: 28, cy: 7, r: 2}], ["rect", {x: 7, y: 23, width: 18, height: 2, rx: .7}]
+  ]) {
+    const element = ownerDocument.createElementNS(ns, tag);
+    for (const [name, value] of Object.entries(attrs)) element.setAttribute(name, String(value));
+    group.appendChild(element);
+  }
+  svg.appendChild(group);
+  return svg;
+}
