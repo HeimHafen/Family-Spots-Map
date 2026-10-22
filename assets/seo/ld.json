@@ -5,12 +5,16 @@
   "operatingSystem": "iOS, Android, Web",
   "applicationCategory": "TravelApplication",
   "url": "https://heimhafen.github.io/Family-Spots-Map/",
-  "inLanguage": ["de", "en", "da"],
+  "inLanguage": [
+    "de",
+    "en",
+    "da"
+  ],
   "description": "Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern.",
   "offers": {
     "@type": "Offer",
     "price": "19.90",
     "priceCurrency": "EUR",
-    "description": "Jahresabo für die Grundkarte"
+    "description": "Jahresabo Family Spots Plus; Grundkarte ohne Freischaltung nutzbar, Zusatzpakete separat"
   }
 }
