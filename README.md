@@ -231,3 +231,31 @@ Browserleisten werden nicht zwangsweise ausgeblendet. Kartenkacheln benötigen a
 Von 130 Parkhinweis-Einträgen haben 76 den Status `unknown` und zwei den Status `location_unconfirmed`. Weitere 52 Einträge enthalten Angaben unterschiedlicher Vollständigkeit. Ein vorhandener Hinweis bestätigt nicht automatisch Gebühren, Fußweg, Fahrzeuggrenzen oder erlaubtes Übernachten.
 
 Die beiden älteren Einträge `limespark_erlensee_alt` und `asp_berlin_seilfabrik` haben eine unbestätigte Standortzuordnung und werden nicht als bestätigte Anfahrtsziele behandelt. Technische Prüfungen ersetzen keine aktuelle Ortsrecherche.
+
+## Sichere Pflege und zusammengehörige Updates
+
+Die Gestaltung bleibt erhalten. „Kostenlos“ filtert ausschließlich bestätigte
+`free`-Merkmale. Mit „folgt“ markierte Schnellfilter haben im gesamten aktuellen
+Datenbestand noch keine passenden Merkmale; andere Filter oder ein fehlendes
+Plus-Paket machen einen gepflegten Filter nicht zu einem ungepflegten Filter.
+Ländernamen werden für die Anzeige übersetzt; gespeicherte Ländercodes bleiben erhalten.
+
+Vor dem endgültigen Löschen einer Erinnerung fragt die App nach. Abbrechen erhält
+Text und Fotos. Nur vollständig leere, bekannte Foto-Neuauswahlen werden aus dem
+Entwurfsspeicher entfernt. Leere Bearbeitungs-Slots bleiben erhalten, weil sie das
+bewusste Entfernen alter Fotos abbilden können. Fotoentwürfe mit Bildern, unbekannte
+Datenformen und alte Tab-Entwürfe werden nicht automatisch gelöscht.
+
+Für spätere Änderungen kann ein zusammengehöriger Release vorbereitet werden:
+
+```sh
+node tools/prepare-release.mjs 20261022-quality-47
+node tools/check-project.mjs
+```
+
+Bei einem neuen Update einen neuen eindeutigen Versionsnamen verwenden. Das Werkzeug
+aktualisiert die vorhandenen Versionsverweise und Prüfsummen. Es entscheidet nicht,
+welche neuen Fotos offline verfügbar sein sollen: Neue Bildpfade weiterhin bewusst
+in `ASSETS` aufnehmen. Fehlende Offline-Dateien führen vor dem Schreiben zum Abbruch.
+Das Werkzeug ersetzt weder die Projektprüfung noch eine Sicherung oder Browserprüfung.
+Alle geänderten Dateien erst nach bestandener Prüfung gemeinsam veröffentlichen.
