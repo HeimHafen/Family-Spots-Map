@@ -22,7 +22,7 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Stand: **21. Oktober 2026**, Darstellungsrelease **20261021-spots-crown-41**. Der Datensatz umfasst **130 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Dokumentationsstand: **22. Oktober 2026**, Korrekturfassung **12 – kompakte Kartensteuerung**. Der Datensatz umfasst **130 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
@@ -30,6 +30,7 @@ Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um *
 
 - **Karte und Spot-Liste:** gruppierte Marker, grüne Punktmarker und platzabhängige Namensbeschriftungen. Ein Pin öffnet eine kompakte Vorschau; „Spot ansehen“ führt zu den vollständigen Details. Die Navigation erfolgt über Apple Karten oder Google Maps.
 - **Suche und Filter:** Ort oder Stichwort, Stimmung, Radius, Kategorien, Favoriten und weitere praktische Schnellfilter. Stimmung nutzt vorhandene Themen- und Kategorie-Merkmale. Die Altersauswahl bleibt bis zum Vorliegen gepflegter Altersprofile inaktiv und erklärt dies direkt in der Oberfläche.
+- **Vollbildkarte:** Ein dezenter Symbolbutton oben rechts vergrößert die Karte auf die verfügbare App-Fläche. Ein Kreuz schließt sie. Kartenausschnitt, Zoom und Filter bleiben erhalten. „Spot ansehen“ öffnet die gewohnte Detailansicht. Die Symbole besitzen übersetzte zugängliche Namen und eine 44 × 44 Pixel große Berührungsfläche; die sichtbare Fläche ist 32 × 32 Pixel groß.
 - **Standort:** optional den eigenen Standort anzeigen. Die App bleibt auch ohne Standortfreigabe bedienbar.
 - **Tilla:** gemalte Schildkröten-Begleiterin mit kleinen Spielideen. Ein Zettel erscheint in ihrer Tasche, sobald mindestens eine Erinnerung gespeichert ist; nach dem Löschen der letzten Erinnerung verschwindet er.
 - **Favoriten:** interessante Orte auf dem jeweiligen Gerät merken und direkt über das Menü aufrufen.
@@ -60,7 +61,7 @@ Das Design verwendet gemeinsame Abstände, abgerundete Bedienelemente und kompak
 
 Ortsinformationen sollen Familien eine konkrete Entscheidung erleichtern: Was erwartet uns? Wie kommen wir hin? Gibt es Toiletten? Welche Wege sind geeignet? Was sollten wir mitnehmen?
 
-**„Verifiziert“** kennzeichnet einen ausreichend geprüften Informationsstand innerhalb des dokumentierten Prüfumfangs. Es ist keine Zusage, dass jede Einrichtung jederzeit verfügbar oder jeder Weg barrierefrei ist. Wesentliche offene Punkte werden im jeweiligen Besuchstext klar benannt.
+**„Infos geprüft“** kennzeichnet einen ausreichend geprüften Informationsstand innerhalb des dokumentierten Prüfumfangs. Es ist keine Zusage, dass jede Einrichtung jederzeit verfügbar oder jeder Weg barrierefrei ist. Wesentliche offene Punkte werden im jeweiligen Besuchstext klar benannt.
 
 Für die öffentliche Darstellung wird nicht zwischen persönlich besuchten und online geprüften Orten unterschieden. Quellen, Prüfdatum und verbleibende Unsicherheiten werden in den Daten festgehalten. Geeignete Quellenlinks sind unter **„Quellen und Aktualität“** verfügbar.
 
@@ -99,7 +100,7 @@ Die neun Abschnittsschlüssel in `visit_details.sections` sind `suitability`, `d
 2. Ortsbilder mit nachvollziehbaren Rechten als WebP, JPEG oder PNG hochladen. Die bestehenden Galerien verwenden WebP und JPEG.
 3. Unter `photos` den exakten relativen Pfad, `width`, `height`, `caption` und `alt` ergänzen. Bildunterschriften und Alternativtexte müssen in allen drei Sprachen vorliegen.
 4. Für tatsächliche Fotos `kind: "photo"` verwenden. Testmotive dürfen nicht in aktiven Ortsgalerien erscheinen. `kind: "ai_test"` wird in der Inhaltsprüfung abgewiesen.
-5. Für offline verfügbare Bilder den Pfad in `ASSETS` im Service Worker aufnehmen und die Cache-Version erhöhen.
+5. Für offline verfügbare Bilder den Pfad in `ASSETS` im Service Worker aufnehmen und eine neue Cache-Kennung verwenden und die Release-Prüfsummen aktualisieren.
 
 **Ordner- und Dateinamen dürfen keine unbeabsichtigten Leerzeichen enthalten.** `assets/spots/vejlby-klit/` und ein Ordner mit Leerzeichen vor `vejlby-klit` sind unterschiedliche Pfade. Die Groß-/Kleinschreibung muss ebenfalls stimmen.
 
@@ -113,13 +114,13 @@ Nach erfolgreicher Erstinstallation sind die App-Oberfläche, Spotdaten, Spracht
 
 **Kartenkacheln benötigen Internet.** Der Service Worker lädt keine externen OpenStreetMap-Kacheln als Offline-Kartenpaket herunter. Auch externe Navigation und Quellenwebseiten sind keine Offline-Funktionen dieser App.
 
-Der aktuelle Offline-Umfang beträgt 69 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
+Der aktuelle Offline-Umfang beträgt 89 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
 
 ### Ein Update sicher veröffentlichen
 
 1. Neue Bild- oder andere Asset-Dateien zuerst hochladen oder sämtliche zusammengehörigen Änderungen gemeinsam committen.
 2. Daten, JavaScript und CSS vollständig aktualisieren.
-3. Die Offline-Dateiliste prüfen und bei Änderungen an gecachten App-Dateien die `CACHE_VERSION` erhöhen. Bei getrennten Commits den Service Worker zuletzt ändern.
+3. Die Offline-Dateiliste prüfen und bei Änderungen an gecachten App-Dateien eine neue Cache-Kennung verwenden und die Einträge in `RELEASE_HASHES` an die tatsächlichen Dateiinhalte anpassen. Die aktuelle Korrekturfassung verwendet dafür einen eigenen Suffix im `CACHE_NAME`. Bei getrennten Commits den Service Worker zuletzt ändern.
 4. Die erfolgreiche Projektprüfung und das erfolgreiche GitHub-Pages-Deployment abwarten.
 5. In der App das angebotene Update bestätigen und anschließend den betroffenen Spot auch offline prüfen.
 
@@ -146,6 +147,7 @@ Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien mit ES-M
 | `js/app.js` | Initialisierung und Zusammenspiel der Anwendung |
 | `js/ui/spot-details.js` | Spot-Detailansicht, Bildergalerie, Besuchsinfos, Quellen und Kartenbuttons |
 | `js/map.js`, `js/filters/` | Karte, Marker und Filterlogik |
+| `js/ui/map-fullscreen.js` | Vollbildkarte, Rückkehr, Fokusführung und übersetzte Symbolbeschriftungen |
 | `js/ui/map-spots.js`, `css/map-spots.css` | grüne Punktmarker, Namensbeschriftungen, Spot-Vorschau und Tilla-Darstellung |
 | `js/i18n.js`, `data/i18n/`, `data/play-ideas.json` | Sprachen, Fallbacks und Spielideen |
 | `js/features/tilla.js` | Familienbegleiterin Tilla |
@@ -186,7 +188,7 @@ Die statische Web-App wird über **GitHub Pages mit GitHub Actions** veröffentl
 ## Nächste Schritte
 
 - Weitere Spots mit konkreten, aktuellen Familieninformationen ausarbeiten.
-- Die Spielplätze Neerlandiavej und Barendsvej ergänzen.
+- Vorhandene Einträge, etwa Neerlandiavej und Barendsvej, mit weiteren bestätigten Besuchsinformationen ergänzen.
 - Eine hochwertige Auswahl rund um Hannover und Hildesheim für den Familientest vorbereiten.
 - Rückmeldungen der Testfamilien zu Orientierung, Lesbarkeit, Informationen und Offline-Nutzung aufnehmen.
 - Echte Ortsfotos und geeignete Quellen weiter ergänzen.
@@ -214,3 +216,18 @@ Parkhinweise haben eigene Quellen und Prüfdaten. Bestehende ungeprüfte Hinweis
 und eigene Besuchserfahrungen werden nicht als frisch geprüft gekennzeichnet.
 Für neue Beiträge: Zufahrt, Beschilderung, Gebühren/Parkscheibe, Fußweg und
 Fahrzeuggrenzen einzeln dokumentieren. Kein Schluss von Tagesparken auf Übernachten.
+
+
+## Kompakte Kartensteuerung – Fassung 12
+
+Der Vollbild- und der Schließen-Button zeigen ausschließlich ein Symbol. Der cremefarbene Hintergrund ist 32 × 32 Pixel groß; die Berührungsfläche bleibt 44 × 44 Pixel groß. Die zugänglichen Namen und Hinweise sind in Deutsch, Englisch und Dänisch vorhanden. Ein Fokusrahmen erscheint bei Tastaturbedienung.
+
+Die Vollbildansicht verwendet weiterhin dieselbe Leaflet-Instanz. Beim Schließen bleiben Kartenausschnitt, Zoom und Filter erhalten. Escape schließt zunächst eine offene Vorschau und danach die Vollbildkarte. Tab und Umschalt+Tab bleiben innerhalb der Vollbildansicht. Nach einem vollständigen Neuladen startet die App in der normalen Ansicht mit geschlossener Spot-Liste.
+
+Browserleisten werden nicht zwangsweise ausgeblendet. Kartenkacheln benötigen auch in der Vollbildansicht Internet.
+
+### Verbleibende Datenlücken
+
+Von 130 Parkhinweis-Einträgen haben 76 den Status `unknown` und zwei den Status `location_unconfirmed`. Weitere 52 Einträge enthalten Angaben unterschiedlicher Vollständigkeit. Ein vorhandener Hinweis bestätigt nicht automatisch Gebühren, Fußweg, Fahrzeuggrenzen oder erlaubtes Übernachten.
+
+Die beiden älteren Einträge `limespark_erlensee_alt` und `asp_berlin_seilfabrik` haben eine unbestätigte Standortzuordnung und werden nicht als bestätigte Anfahrtsziele behandelt. Technische Prüfungen ersetzen keine aktuelle Ortsrecherche.
