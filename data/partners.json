@@ -1,0 +1,117 @@
+{
+  "codes": [
+    {
+      "code": "FS-TRIAL-DK",
+      "plan": "family_plus",
+      "days": 30,
+      "partner": "DK-Ferie",
+      "source": "partner",
+      "enabled": true
+    },
+    {
+      "code": "FS-CAMPER-90",
+      "plan": "family_plus",
+      "days": 90,
+      "partner": "CamperPlus",
+      "source": "partner",
+      "addons": [
+        "addon_rv"
+      ],
+      "enabled": true
+    },
+    {
+      "code": "FS-PRO-2025",
+      "plan": "family_plus",
+      "days": 365,
+      "partner": "Launch",
+      "source": "campaign",
+      "addons": [
+        "addon_rv",
+        "addon_water"
+      ],
+      "enabled": true
+    },
+    {
+      "code": "FS-TEST-7",
+      "plan": "family_plus",
+      "days": 7,
+      "partner": "Internal",
+      "source": "testing",
+      "addons": [
+        "addon_rv",
+        "addon_water"
+      ],
+      "enabled": true
+    },
+    {
+      "code": "FS-ABF-2025",
+      "plan": "family_plus",
+      "days": 14,
+      "partner": "ABF Hannover",
+      "source": "event",
+      "addons": [
+        "addon_abf"
+      ],
+      "enabled": true
+    },
+    {
+      "code": "FS-ABF-STAND",
+      "plan": "family_plus",
+      "days": 7,
+      "partner": "ABF Hannover – Standaktion",
+      "source": "event",
+      "addons": [
+        "addon_abf"
+      ],
+      "enabled": true
+    },
+    {
+      "code": "FS-OWNER-158940A9",
+      "plan": "family_plus",
+      "source": "development_owner",
+      "partner": "Projektentwicklung",
+      "addons": [
+        "addon_water",
+        "addon_rv"
+      ],
+      "enabled": true,
+      "permanent": true
+    },
+    {
+      "code": "FS-FAMILIE-1-4BAE3880",
+      "plan": "family_plus",
+      "source": "family_test",
+      "partner": "Familientest 1",
+      "addons": [
+        "addon_water",
+        "addon_rv"
+      ],
+      "enabled": true,
+      "days": 90
+    },
+    {
+      "code": "FS-FAMILIE-2-F42DDC51",
+      "plan": "family_plus",
+      "source": "family_test",
+      "partner": "Familientest 2",
+      "addons": [
+        "addon_water",
+        "addon_rv"
+      ],
+      "enabled": true,
+      "days": 90
+    },
+    {
+      "code": "FS-FAMILIE-3-3AB9648F",
+      "plan": "family_plus",
+      "source": "family_test",
+      "partner": "Familientest 3",
+      "addons": [
+        "addon_water",
+        "addon_rv"
+      ],
+      "enabled": true,
+      "days": 90
+    }
+  ]
+}
