@@ -1,7 +1,7 @@
 // Progressive enhancement: retain the original selects as the filter data source.
 // App-owned listboxes avoid platform-specific picker colours on mobile.
 export function initFilterSelects() {
-  for (const id of ['filter-category', 'filter-age']) {
+  for (const id of ['filter-age']) {
     const select = document.getElementById(id);
     if (!select || select.dataset.enhanced) continue;
     const wrap = document.createElement('div');
