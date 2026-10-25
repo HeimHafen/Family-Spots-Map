@@ -1,3 +1,4 @@
+import { PLACE_TYPES, WORLDS, getPlaceTypes, getWorlds } from "../categories.js";
 // js/filters/tags.js
 "use strict";
 
@@ -143,6 +144,8 @@ export function buildSpotSearchText(spot) {
   if (spot._searchText) return spot._searchText;
 
   const parts = [
+    ...PLACE_TYPES.filter(item => getPlaceTypes(spot).includes(item.id)).flatMap(item => Object.values(item.label)),
+    ...WORLDS.filter(item => getWorlds(spot).includes(item.id)).flatMap(item => Object.values(item.label)),
     getSpotName(spot),
     spot.title, spot.title_de, spot.title_en, spot.title_da,
     ...(Array.isArray(spot.search_aliases) ? spot.search_aliases : []),
