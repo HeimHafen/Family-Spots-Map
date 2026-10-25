@@ -1,0 +1,24 @@
+/* Uses the application's palette; native checkboxes retain keyboard and VoiceOver behaviour. */
+.category-explorer { margin-block: 1rem 1.4rem; min-width: 0; }
+.category-explorer h3 { margin: 0 0 .5rem; font-size: 1.12rem; }
+.category-explorer__worlds,.category-explorer__types,.category-explorer__selection { display:flex; flex-wrap:wrap; gap:.5rem; margin-block:.65rem; }
+.category-explorer__chip { font:inherit; font-size:.9rem; color:inherit; background:transparent; border:1px solid currentColor; border-radius:1rem; padding:.55rem .75rem; min-height:44px; cursor:pointer; overflow-wrap:anywhere; max-width:100%; }
+.category-explorer__chip[aria-pressed="true"] { font-weight:750; border-width:2px; text-decoration:underline; text-underline-offset:3px; }
+.category-explorer__chip:disabled { opacity:.55; cursor:default; }
+.category-explorer__chip:focus-visible,.category-explorer input:focus-visible,.category-explorer summary:focus-visible { outline:3px solid currentColor; outline-offset:3px; }
+.category-explorer__fieldset { border:0; padding:0; margin:1rem 0; min-inline-size:0; }
+.category-explorer legend { font-weight:700; padding:0; }
+.category-explorer__choice { display:flex; align-items:center; gap:.55rem; flex:1 1 210px; min-height:44px; padding:.4rem .55rem; border:1px solid currentColor; border-radius:.65rem; cursor:pointer; min-width:0; }
+.category-explorer__choice span { overflow-wrap:anywhere; }
+.category-explorer__choice input { flex:0 0 auto; width:1.15rem; height:1.15rem; margin:0; accent-color:currentColor; }
+.category-explorer__choice:has(input:disabled) { opacity:.65; cursor:default; }
+.category-explorer__choice:has(input:checked) { font-weight:700; }
+.category-explorer summary { cursor:pointer; padding:.65rem 0; min-height:44px; }
+.category-explorer__footer { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.6rem; border-top:1px solid currentColor; padding-top:.8rem; }
+.category-explorer__footer p { margin:0; font-weight:700; }
+.category-explorer [hidden] { display:none !important; }
+@media(max-width:420px) { .category-explorer__choice { flex-basis:100%; } .category-explorer__chip { font-size:.86rem; } }
+/* Keep the eight entry choices compact on phones without shortening their labels. */
+.category-explorer__worlds { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+.category-explorer__worlds > [data-world=""] { grid-column:1 / -1; }
+.category-explorer__worlds > button { width:100%; text-align:left; }
