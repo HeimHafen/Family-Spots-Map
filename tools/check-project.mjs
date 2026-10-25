@@ -183,3 +183,6 @@ await import('./check-backups.mjs');
 
 // Keep the multilingual content and evidence contract in the publication gate.
 await import('./check-content.mjs');
+
+// Category compatibility and evidence rules are part of the publication gate.
+await import("./check-categories.mjs");
