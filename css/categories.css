@@ -22,3 +22,33 @@
 .category-explorer__worlds { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
 .category-explorer__worlds > [data-world=""] { grid-column:1 / -1; }
 .category-explorer__worlds > button { width:100%; text-align:left; }
+
+/* The existing dialog now owns one scroll area and one persistent action bar. */
+#filter-modal .filter-modal-inner {
+  display:flex; flex-direction:column; overflow:hidden;
+  padding:0; max-height:calc(100vh - 32px); max-height:calc(100dvh - 32px);
+  background:var(--surface-0, #fff8ef); color:var(--text-body, #352b22);
+}
+#filter-modal .filter-modal-header { flex:0 0 auto; padding:14px 18px 10px; margin:0; }
+#filter-modal #filter-modal-close { display:grid; place-items:center; width:44px; height:44px; padding:0; flex:0 0 44px; border-radius:50%; }
+#filter-modal .filter-modal-body { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:0 18px 16px; scroll-padding-block:12px; -webkit-overflow-scrolling:touch; }
+#filter-modal .filter-modal-footer { flex:0 0 auto; display:flex; align-items:center; gap:10px; margin:0; padding:12px 18px max(12px,env(safe-area-inset-bottom)); border-top:1px solid var(--border-2, #b7a18d); background:var(--surface-0, #fff8ef); }
+#filter-modal #filter-modal-reset { flex:0 1 auto; min-height:44px; padding:8px; }
+#filter-modal #filter-modal-apply { flex:1 1 auto; min-height:46px; white-space:normal; line-height:1.3; }
+#filter-modal [hidden] { display:none !important; }
+#filter-modal .category-explorer { margin-top:0; }
+#filter-modal .category-explorer__chip { border-color:var(--border-2, #b7a18d); }
+#filter-modal .category-explorer__chip[aria-pressed="true"] { background:var(--accent-soft); border-color:currentColor; text-decoration:none; }
+#filter-modal .category-explorer__selection:empty { display:none; }
+#filter-modal .category-explorer__selection { margin-bottom:0; }
+#advanced-filters { margin-top:1rem; }
+.spot-results-context { margin:.25rem 0 .65rem; color:var(--text-muted); font-size:.9rem; overflow-wrap:anywhere; }
+.spot-card-description { margin:.5rem 0; font-size:.95rem; line-height:1.5; }
+.spot-card-actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.65rem; }
+.spot-card-actions button { min-height:44px; }
+#spots-title { scroll-margin-top:20px; }
+#spots-title:focus-visible { outline:3px solid currentColor; outline-offset:4px; }
+@media(max-width:380px) { #filter-modal .filter-modal-header,#filter-modal .filter-modal-body { padding-inline:12px; } #filter-modal .filter-modal-footer { padding-inline:12px; } #filter-modal #filter-modal-apply { font-size:.9rem; } }
+
+/* Give phone results enough room for a complete card and both actions. */
+@media screen and (max-width:767px) { #spot-list { max-height:70vh; max-height:70dvh; } }
