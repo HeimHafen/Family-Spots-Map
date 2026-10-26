@@ -22,7 +22,7 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Dokumentationsstand: **22. Oktober 2026**, Korrekturfassung **12 – kompakte Kartensteuerung**. Der Datensatz umfasst **130 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Dokumentationsstand: **26. Oktober 2026**, Release **20261026-filter-53 – direkte Ergebnisse und verständliche Filter**. Der Datensatz umfasst **135 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
@@ -114,7 +114,7 @@ Nach erfolgreicher Erstinstallation sind die App-Oberfläche, Spotdaten, Spracht
 
 **Kartenkacheln benötigen Internet.** Der Service Worker lädt keine externen OpenStreetMap-Kacheln als Offline-Kartenpaket herunter. Auch externe Navigation und Quellenwebseiten sind keine Offline-Funktionen dieser App.
 
-Der aktuelle Offline-Umfang beträgt 89 Dateien. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
+Der aktuelle Offline-Umfang beträgt 102 Einträge einschließlich des Stammseiten-Eintrags `./`. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
 
 ### Ein Update sicher veröffentlichen
 
@@ -259,3 +259,39 @@ welche neuen Fotos offline verfügbar sein sollen: Neue Bildpfade weiterhin bewu
 in `ASSETS` aufnehmen. Fehlende Offline-Dateien führen vor dem Schreiben zum Abbruch.
 Das Werkzeug ersetzt weder die Projektprüfung noch eine Sicherung oder Browserprüfung.
 Alle geänderten Dateien erst nach bestandener Prüfung gemeinsam veröffentlichen.
+
+## Direkte Ergebnisse und gemeinsame Filterauswertung – Release 53
+
+„Spots finden“ führt über Thema, Ortsart und Ausstattung zur bestehenden Liste.
+Der sichtbare Ergebnisbutton nennt die aktuelle Trefferzahl und öffnet die Liste.
+Karte, Liste, Optionszahlen und Hilfen nutzen dieselben Auswahlregeln.
+`js/filter-model.js` wertet den bereits nach Zugang, Suche, Radius und weiteren
+Basisfiltern eingegrenzten Bestand aus. Es verändert keine Spotdaten.
+
+Mehrere Ortsarten sind Alternativen (ODER). Drinnen und Draußen sind ebenfalls
+Alternativen; andere gewählte Ausstattungen müssen alle vorhanden sein (UND).
+Unbekannte Ausstattung ist kein bestätigter Treffer. Zahlen an nicht gewählten
+Ortsarten/Ausstattungen zeigen die Trefferzahl nach Hinzufügen; bei gewählten
+Optionen die aktuelle Trefferzahl. Themenzahlen zeigen den Wechsel zu diesem
+Thema bei beibehaltener Ausstattung, aber ohne die bisherigen Ortsarten.
+
+Die vier Schnellwahlen setzen sichtbare Kategorieauswahlen statt einer zweiten
+Stimmungseinschränkung: Natur entdecken → Natur, Bewegung → Spielen & Bewegung,
+Tier-Tag → Tiere & Bauernhöfe, Wasser & Sand → Wasserspielplätze, Schwimmbäder,
+Badeseen und Strände. Zugangsbeschränkungen bleiben wirksam. Eine Schnellwahl
+behält Ausstattung, Suche, Radius und persönliche Filter bei. Ein zweiter Klick
+auf dieselbe Schnellwahl entfernt deren Themen-/Ortsartauswahl.
+
+Bei null Treffern nennt die Oberfläche die aktive Auswahl und bietet höchstens
+zwei Rückwege. Ein gezielt vorgeschlagenes Entfernen einer Ausstattung wird
+nur angeboten, wenn es im aktuellen Bestand tatsächlich Treffer zurückbringt.
+Die App lockert keine Bedingung ohne bewussten Klick. Die Prüfung anderer
+Öffnungszeiten, Preise und externer Quellen bleibt eine redaktionelle Aufgabe.
+
+Der Radius bleibt standortbezogen. Ohne frischen Standort wird seine fehlende
+Wirkung angezeigt. Entfernungen sind Luftlinien, keine Fahrstrecken. Ein frei
+wählbarer Ortsmittelpunkt ist in dieser Fassung nicht implementiert.
+
+Die früher beschriebene Schnellfiltergruppe wird durch diese Oberfläche ersetzt;
+der Altersfilter erscheint erst bei gepflegten Altersprofilen. Die 130 Einträge
+in älteren Abschnitten dokumentieren frühere Bestände, nicht die heutige Gesamtzahl.
