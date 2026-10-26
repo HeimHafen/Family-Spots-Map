@@ -49,6 +49,7 @@ html[data-theme="dark"] {
   --header-icon-border: transparent;
   --language-pill-bg: #d4d0c5;
   --sidebar-bg: #48503d;
+  --sidebar-section-bg: #bfbcaf;
   --sidebar-section-border: transparent;
   --map-card-bg: #263028;
   --map-card-border: transparent;
@@ -111,9 +112,6 @@ html[data-theme="dark"] .badge--big { background: rgba(95, 45, 125, .08); color:
 
 /* Gewichtung durch Farben, ohne neue Abstände oder Größen. */
 html[data-theme="dark"] #tilla-section { --sidebar-section-bg: #d2cbbd; }
-html[data-theme="dark"] :is(#filter-section, #plus-section, #daylog-section, .sidebar-section--grow) {
-  --sidebar-section-bg: #bfbcaf;
-}
 html[data-theme="dark"] .header-tagline {
   background: #c3c0b3;
   font-weight: 500;
