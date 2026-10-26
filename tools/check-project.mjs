@@ -186,3 +186,6 @@ await import('./check-content.mjs');
 
 // Category compatibility and evidence rules are part of the publication gate.
 await import("./check-categories.mjs");
+
+// Keep result count and action states in the publication gate.
+await import('./check-results.mjs');
