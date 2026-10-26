@@ -27,12 +27,12 @@
 #filter-modal .filter-modal-inner {
   display:flex; flex-direction:column; overflow:hidden;
   padding:0; max-height:calc(100vh - 32px); max-height:calc(100dvh - 32px);
-  background:var(--surface-0, #fff8ef); color:var(--text-body, #352b22);
+  background:var(--sidebar-section-bg, var(--card-bg, #f9eedc)); color:var(--text-body, #352b22);
 }
 #filter-modal .filter-modal-header { flex:0 0 auto; padding:14px 18px 10px; margin:0; }
 #filter-modal #filter-modal-close { display:grid; place-items:center; width:44px; height:44px; padding:0; flex:0 0 44px; border-radius:50%; }
 #filter-modal .filter-modal-body { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:0 18px 16px; scroll-padding-block:12px; -webkit-overflow-scrolling:touch; }
-#filter-modal .filter-modal-footer { flex:0 0 auto; display:flex; align-items:center; gap:10px; margin:0; padding:12px 18px max(12px,env(safe-area-inset-bottom)); border-top:1px solid var(--border-2, #b7a18d); background:var(--surface-0, #fff8ef); }
+#filter-modal .filter-modal-footer { flex:0 0 auto; display:flex; align-items:center; gap:10px; margin:0; padding:12px 18px max(12px,env(safe-area-inset-bottom)); border-top:1px solid var(--border-2, #b7a18d); background:transparent; }
 #filter-modal #filter-modal-reset { flex:0 1 auto; min-height:44px; padding:8px; }
 #filter-modal #filter-modal-apply { flex:1 1 auto; min-height:46px; white-space:normal; line-height:1.3; }
 #filter-modal [hidden] { display:none !important; }
@@ -52,3 +52,15 @@
 
 /* Give phone results enough room for a complete card and both actions. */
 @media screen and (max-width:767px) { #spot-list { max-height:70vh; max-height:70dvh; } }
+
+/* The result header uses the same compact row geometry as Filter and Spots Plus. */
+.sidebar-section--grow:has(#spot-list[hidden]) { flex:0 0 auto; }
+#filter-modal #filter-modal-apply {
+  --cta-bg:var(--tilla-shell, #f3831a);
+  --cta-fg:var(--on-tilla-shell, #111827);
+  background-color:var(--cta-bg); color:var(--cta-fg);
+}
+@media (hover:hover) and (pointer:fine) {
+  #filter-modal #filter-modal-apply:not(:disabled):hover { background-color:var(--tilla-shell-hover, #e17112); }
+}
+#filter-modal #filter-modal-apply:not(:disabled):active { background-color:var(--tilla-shell-active, #d1630e); }
