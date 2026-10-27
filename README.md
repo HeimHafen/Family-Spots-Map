@@ -22,13 +22,13 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Dokumentationsstand: **27. Oktober 2026**, Release **20261027-region-56 – regionale Erweiterung**. Der Datensatz umfasst **151 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Dokumentationsstand: **27. Oktober 2026**, Release **20261027-categories-57 – präzisere Kategorien**. Der Datensatz umfasst **151 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
 ## Regionale Erweiterung Hannover / Hildesheim
 
-Release 56 ergänzt 16 Ziele, darunter Camping Birkensee in Laatzen. Die 135 bisherigen Datensätze einschließlich der Besuchshinweise aus Release 55 bleiben unverändert. Die Region umfasst die Vereinigung zweier 50-km-Luftlinienkreise um angenäherte Stadtzentren Hannover/Hildesheim; nicht jeder Spot liegt in beiden Kreisen. Das ist keine Fahrstreckenangabe und keine vollständige Bestandsaufnahme aller Orte.
+Release 56 ergänzte 16 Ziele, darunter Camping Birkensee in Laatzen. Dabei blieben die 135 bisherigen Datensätze einschließlich der Besuchshinweise aus Release 55 unverändert. Die Region umfasst die Vereinigung zweier 50-km-Luftlinienkreise um angenäherte Stadtzentren Hannover/Hildesheim; nicht jeder Spot liegt in beiden Kreisen. Das ist keine Fahrstreckenangabe und keine vollständige Bestandsaufnahme aller Orte.
 
 Die 16 neuen Ziele besitzen dreisprachige Kurztexte und strukturierte Besuchshinweise mit Quellen. Fehlende WC-, Wickel-, Wege- oder Zeitangaben bleiben offen. Koordinaten dienen als Zielorientierung; sie sind keine vor Ort vermessenen Eingänge oder garantierten Parkplätze. Fotos und Vor-Ort-Prüfungen werden später ergänzt.
 
@@ -303,3 +303,27 @@ wählbarer Ortsmittelpunkt ist in dieser Fassung nicht implementiert.
 Die früher beschriebene Schnellfiltergruppe wird durch diese Oberfläche ersetzt;
 der Altersfilter erscheint erst bei gepflegten Altersprofilen. Die 130 Einträge
 in älteren Abschnitten dokumentieren frühere Bestände, nicht die heutige Gesamtzahl.
+
+
+## Release 57: geprüfte Kategorieprofile
+
+Die acht Hauptthemen bleiben erhalten; drei zusätzliche Ortsarten ergänzen den Bestand:
+Naturzentrum & Mitmachstation, Erlebnishof und SwinGolf. Damit sind 53 Haupt-Ortsarten,
+vier ergänzende Versorgungsarten und Familienveranstaltungen vorbereitet. Leere Ortsarten
+werden in der Auswahl nicht angeboten.
+
+Vier Datensätze besitzen jetzt ein `category_profile` mit `schema_version: 1`,
+`status: "source_supported"`, tatsächlichem `checked_at`, Quellen und `place_types`:
+Waldstation Eilenriede, Erlebnishof Lahmann, Spielplatz Welfengarten und Spielpark Wakitu.
+Filter und Listen-/Detailmetadaten verwenden dieselben übersetzten Zuordnungen.
+Unvollständige Profile fallen zur Laufzeit auf die Originalkategorien zurück;
+der Projektcheck weist ungültige gespeicherte Profile zurück.
+
+Die Original-Kategorieschlüssel bleiben für die bestehende Zugangslogik erhalten.
+Kategorieprofile bestätigen keine Ausstattung, Altersgruppe oder Übernachtungserlaubnis.
+IDs, Reihenfolge, Koordinaten, Fotos, Speicherformate und Zugangsregeln bleiben erhalten.
+147 Datensätze sind inhaltlich unverändert; bei vier ändern sich nur Kategorieprofile,
+bei zwei davon zusätzlich Suchbegriffe und bei zwei die bisherigen Abenteuer-Spielplatz-Tags.
+53 übrige ursprüngliche Abenteuerspielplatz-Zuordnungen benötigen weiterhin eine
+individuelle redaktionelle Prüfung. Diese Veröffentlichung behauptet keine erneute
+inhaltliche Vollprüfung sämtlicher 151 Ziele.
