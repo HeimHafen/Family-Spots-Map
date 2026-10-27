@@ -22,9 +22,17 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Dokumentationsstand: **26. Oktober 2026**, Release **20261026-filter-53 – direkte Ergebnisse und verständliche Filter**. Der Datensatz umfasst **135 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Dokumentationsstand: **27. Oktober 2026**, Release **20261027-region-56 – regionale Erweiterung**. Der Datensatz umfasst **151 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
+
+## Regionale Erweiterung Hannover / Hildesheim
+
+Release 56 ergänzt 16 Ziele, darunter Camping Birkensee in Laatzen. Die 135 bisherigen Datensätze einschließlich der Besuchshinweise aus Release 55 bleiben unverändert. Die Region umfasst die Vereinigung zweier 50-km-Luftlinienkreise um angenäherte Stadtzentren Hannover/Hildesheim; nicht jeder Spot liegt in beiden Kreisen. Das ist keine Fahrstreckenangabe und keine vollständige Bestandsaufnahme aller Orte.
+
+Die 16 neuen Ziele besitzen dreisprachige Kurztexte und strukturierte Besuchshinweise mit Quellen. Fehlende WC-, Wickel-, Wege- oder Zeitangaben bleiben offen. Koordinaten dienen als Zielorientierung; sie sind keine vor Ort vermessenen Eingänge oder garantierten Parkplätze. Fotos und Vor-Ort-Prüfungen werden später ergänzt.
+
+Birkensee: aktueller Betreiber AZUR, Seezugang laut Betreiber nur für Camping- und Hotelgäste; Einzelnacht-Verfügbarkeit, Schrankenzeiten und tatsächliche ÖPNV-Wege vorher klären. Badeinsel Steinhude: aktuelle amtliche Badehinweise beachten. PS.SPEICHER: widersprüchliche Winterzeiten vor Besuch bestätigen. Bestehende Plus- und Add-on-Regeln bleiben unverändert; 151 bezeichnet den gesamten Datenbestand, nicht eine für jeden Zugang identische Trefferzahl.
 
 ## Funktionen
 
