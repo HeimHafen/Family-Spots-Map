@@ -17,6 +17,8 @@ const sectionKeys=['suitability','duration','arrival','admission','hours','comfo
 if(ids.size!==spots.length)fail('Spot IDs must be unique to preserve favourites and links');
 const validDate=date=>typeof date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(date)&&!Number.isNaN(Date.parse(date));
 for(const s of spots){
+ const visibleCopy=JSON.stringify([s.summary_de,s.summary_en,s.summary_da,s.visit_overview,s.visit_details]);
+ if(/Projektgründer|project founder|projektets grundlægger|persönlich empfohlen|personally recommended|personligt anbefalet/i.test(visibleCopy))fail(`${s.id}: personal endorsements are not part of neutral place information`);
  const sections=s.visit_details?.sections||{};
  if(s.visit_details?.schema_version!==1||Object.keys(sections).length!==sectionKeys.length||sectionKeys.some(key=>!Array.isArray(sections[key]?.items)))fail(`${s.id}: incomplete visit-planning structure`);
  const info=s.visitor_information;
