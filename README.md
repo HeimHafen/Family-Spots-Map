@@ -22,7 +22,7 @@ Die Anwendung lässt sich im Browser nutzen und über die jeweilige Browserfunkt
 
 ## Aktueller Stand
 
-Dokumentationsstand: **27. Oktober 2026**, Release **20261027-categories-57 – präzisere Kategorien**. Der Datensatz umfasst **151 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
+Dokumentationsstand: **27. Oktober 2026**, Release **20261028-ui-61 – DE/DK-Spotpaket**. Der Datensatz umfasst **164 Spots**. Umfangreiche Besuchsinformationen werden schrittweise ergänzt; nicht alle Spots besitzen bereits denselben Informationsumfang.
 
 Die nächsten inhaltlichen Schwerpunkte sind hochwertige Familienziele rund um **Hannover und Hildesheim**, anschließend ein Praxistest mit **zwei bis drei Familien**. Die bereits vorhandenen dänischen Spots ergänzen den Reisebereich.
 
@@ -327,3 +327,18 @@ bei zwei davon zusätzlich Suchbegriffe und bei zwei die bisherigen Abenteuer-Sp
 53 übrige ursprüngliche Abenteuerspielplatz-Zuordnungen benötigen weiterhin eine
 individuelle redaktionelle Prüfung. Diese Veröffentlichung behauptet keine erneute
 inhaltliche Vollprüfung sämtlicher 151 Ziele.
+
+
+## Release 59: gemeinsames DE/DK-Spotpaket
+
+Elf Ziele gemeinsam ausgearbeitet: Hof Löbke ergänzt statt dupliziert; zehn neue Ziele einschließlich hiclimb und Buller&Bü. Insgesamt 161 Datensätze. Alle Spots nutzen dieselben neun Besuchsinformations-Rubriken sowie Parkinformationen und Quellen. Fehlende Angaben bleiben unbestätigt, keine persönlichen Empfehlungen oder Besuchsbehauptungen. Die übrigen 150 Datensätze, IDs, Fotos, Farben und Zugangsregeln bleiben unverändert. Dieses Paket ersetzt das noch nicht übernommene Buller&Bü-Einzelpaket 58.
+
+
+## Release 60: gemeinsames Paket mit drei Rethener Spielplätzen
+
+164 Spots insgesamt. Enthält das noch nicht übernommene Release 59 vollständig und zusätzlich Spielhang Elisabeth-Selbert-Straße (Nr. 97), Wildnisspielplatz Rethen (Nr. 111) und Flohrscher Hof (Nr. 113). Identität und Punkte anhand der Stadtkarte abgeglichen. Keine aus Adressmarkierungen abgeleiteten Hausnummern, keine unbestätigten Geräte-, WC-, Parkplatz- oder Barrierefreiheitsangaben. Neun einheitliche Informationsrubriken in DE/EN/DA. Die Daten des Pakets 59 bleiben unverändert. Nur dieses Gesamtpaket übernehmen; 58/59 vorher nicht einspielen.
+
+
+## Release 61: kompakter Filter im bestehenden Farbsystem
+
+Gesamtpaket mit unverändert 164 Spots aus Release 60. Trefferzahlen als separate rechte Spalte bei Themen, Ortsarten und Ausstattung. Flachere Bedienelemente mit weichen Rundungen, ruhige Ausstattungszeilen und 44px-Mindesthöhe des Ergebnisbuttons. Vorhandene Farbvariablen einschließlich Abendmodus werden verwendet. Bei schmalen Displays einspaltige Themenliste; lange Namen dürfen umbrechen. Filterlogik, Berechtigungen und persönliche Speicherformate bleiben unverändert. Ersetzt die noch nicht übernommenen Pakete 58–60.
