@@ -1,0 +1,2130 @@
+<!doctype html>
+<html lang="da" data-theme="light">
+<head>
+  <base href="../" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>Family Spots Map – Familieeventyr</title>
+  <meta
+    name="description"
+    content="Håndplukkede steder for familier: legepladser, dyr, vand og små ture, der bliver til minder."
+  />
+
+  <!-- Baseline Privacy / UX -->
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="robots" content="index,follow" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#f7e1d0" />
+
+  <!-- ======================================================
+       EARLY THEME INIT
+       Verhindert falsche Farben vor CSS/JS.
+       ====================================================== -->
+  <script>
+    (function () {
+      var theme = null;
+      try {
+        var keys = ["fs_theme", "fsm_theme", "theme"];
+        for (var i = 0; i < keys.length; i++) {
+          var value = localStorage.getItem(keys[i]);
+          if (value === "dark" || value === "light") { theme = value; break; }
+        }
+      } catch (e) { /* Storage is optional. */ }
+      if (!theme) theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", theme);
+      document.documentElement.style.colorScheme = "light";
+      document.querySelector('meta[name="color-scheme"]').content = "light";
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#48503d" : "#f7e1d0";
+    })();
+  </script>
+
+  <!-- ======================================================
+       CRITICAL CSS
+       Background + Textfarben konsistent.
+       ====================================================== -->
+  <style>
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #f7e1d0;
+      color: #111827;
+    }
+
+    html[data-theme="dark"],
+    html[data-theme="dark"] body {
+      background: #48503d;
+      color: #352b22;
+    }
+
+    /* Form-Controls erben die Textfarbe, auch unter iOS/Safari. */
+    input,
+    textarea,
+    select,
+    button {
+      color: inherit;
+    }
+
+    /* Placeholder: lesbar in Light/Dark. */
+    ::placeholder {
+      color: rgba(107, 114, 128, 0.95);
+      opacity: 1;
+    }
+
+    html[data-theme="dark"] ::placeholder {
+      color: #5a4d3d;
+      opacity: 1;
+    }
+
+    /* Menü-Icons als Inline-SVG. */
+    .app-menu-item-icon svg {
+      display: block;
+    }
+
+    /* Tilla-Titel kompakter, wie "Filter". */
+    .tilla-sidebar-section .sidebar-section-title {
+      font-size: 1rem !important;
+      line-height: 1.25 !important;
+      margin: 0 !important;
+    }
+
+    /* Onboarding-Hinweis: Close-Button sichtbar und positioniert. */
+    .fsm-onboarding-hint {
+      position: relative;
+    }
+
+    .fsm-onboarding-hint__close {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+
+      position: absolute;
+      top: 10px;
+      right: 10px;
+
+      width: 34px;
+      height: 34px;
+
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(255, 255, 255, 0.82);
+
+      color: rgba(15, 23, 42, 0.85);
+      font-size: 20px;
+      line-height: 1;
+
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html[data-theme="dark"] .fsm-onboarding-hint__close {
+      background: rgba(15, 23, 42, 0.62);
+      color: rgba(229, 231, 235, 0.95);
+      border-color: rgba(148, 163, 184, 0.25);
+    }
+
+    .fsm-onboarding-hint__close:active {
+      transform: translateY(1px);
+      opacity: 0.92;
+    }
+  </style>
+
+  <!-- Theme color (Light / Dark) -->
+
+  <meta name="apple-mobile-web-app-title" content="Family Spots Map" />
+  <meta name="application-name" content="Family Spots Map" />
+
+  <!-- Canonical & hreflang -->
+  <link
+    rel="canonical"
+    href="https://heimhafen.github.io/Family-Spots-Map/da/"
+  />
+  <link
+    rel="alternate"
+    hreflang="de"
+    href="https://heimhafen.github.io/Family-Spots-Map/"
+  />
+  <link
+    rel="alternate"
+    hreflang="en"
+    href="https://heimhafen.github.io/Family-Spots-Map/en/"
+  />
+  <link
+    rel="alternate"
+    hreflang="da"
+    href="https://heimhafen.github.io/Family-Spots-Map/da/"
+  />
+
+  <!-- Open Graph -->
+  <meta
+    property="og:title"
+    content="Family Spots Map – Familieeventyr"
+  />
+  <meta
+    property="og:description"
+    content="Håndplukkede steder for familier: legepladser, dyr, vand og små ture, der bliver til minder."
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    property="og:url"
+    content="https://heimhafen.github.io/Family-Spots-Map/da/"
+  />
+  <meta
+    property="og:image"
+    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
+  />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="da_DK" />
+  <meta property="og:site_name" content="Family Spots Map" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta
+    name="twitter:title"
+    content="Family Spots Map – Familieeventyr"
+  />
+  <meta
+    name="twitter:description"
+    content="Håndplukkede steder for familier: legepladser, dyr, vand og små ture, der bliver til minder."
+  />
+  <meta
+    name="twitter:image"
+    content="https://heimhafen.github.io/Family-Spots-Map/assets/social/og-image.png"
+  />
+
+  <!-- Structured Data: WebApplication -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Family Spots Map",
+      "operatingSystem": "iOS, Android, Web",
+      "applicationCategory": "TravelApplication",
+      "url": "https://heimhafen.github.io/Family-Spots-Map/",
+      "inLanguage": ["de", "en", "da"],
+      "description": "Family Spots Map: Handverlesene Spielplätze, Zoos, Wildparks, Wasser-Spots & familienfreundliche Orte – für eure nächsten Familienabenteuer mit Kindern."
+    }
+  </script>
+
+  <!-- PWA / Apple -->
+  <link
+    rel="manifest"
+    href="/Family-Spots-Map/manifest.webmanifest"
+  />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  />
+
+
+
+  <!-- Favicon / Icons -->
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="assets/icons/icon-192.png"
+  />
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="assets/icons/apple-touch-icon.png"
+  />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="./vendor/leaflet/leaflet.css"
+  />
+  <link
+    rel="stylesheet"
+    href="./vendor/markercluster/MarkerCluster.css"
+  />
+  <link
+    rel="stylesheet"
+    href="./vendor/markercluster/MarkerCluster.Default.css"
+  />
+
+  <!-- App Styles -->
+  <link rel="stylesheet" href="css/styles.css?v=20261029-ui-62" />
+  <link rel="stylesheet" href="css/badges.css" />
+  <link rel="stylesheet" href="css/diary.css?v=20261029-diary-2" />
+</head>
+
+<body>
+  <!-- Globaler Skip-Link -->
+  <a
+    href="#main-content"
+    class="skip-link"
+    data-i18n-de="Zum Hauptinhalt springen"
+    data-i18n-en="Skip to main content"
+    data-i18n-da="Spring til hovedindholdet"
+  >
+    Zum Hauptinhalt springen
+  </a>
+
+  <noscript>
+      <div class="noscript-warning">
+        <p lang="de">Family Spots Map benötigt JavaScript. Bitte aktiviert JavaScript, um Karte und Filter zu nutzen.</p>
+        <p lang="en">Family Spots Map needs JavaScript. Please enable JavaScript to use the map and filters.</p>
+        <p lang="da">Family Spots Map kræver JavaScript. Aktivér JavaScript for at bruge kortet og filtrene.</p>
+      </div>
+    </noscript>
+
+  <div class="app">
+    <!-- =========================================
+         HEADER
+         ========================================= -->
+    <header class="app-header" role="banner">
+      <nav
+        class="app-header-top"
+        aria-label="App-Einstellungen und Schnellzugriffe" data-i18n-aria-label="aria_settings"
+      >
+        <div class="app-header-left">
+          <span
+            class="sr-only"
+            id="language-switcher-label"
+            data-i18n-de="Sprache wechseln"
+            data-i18n-en="Change language"
+            data-i18n-da="Skift sprog"
+          >Skift sprog</span>
+
+          <!-- Unsichtbarer Sprach-Schalter für die bestehende Logik -->
+          <button
+            id="language-switcher" tabindex="-1"
+            class="btn-icon language-switcher sr-only"
+            type="button"
+            aria-labelledby="language-switcher-label"
+          >
+            <img
+              id="language-switcher-flag"
+              class="language-switcher-flag"
+              src="assets/flags/flag-de.svg"
+              alt=""
+              width="24"
+              height="24"
+              loading="lazy"
+              decoding="async"
+            />
+          </button>
+        </div>
+
+        <div class="app-header-right">
+          <button
+            id="menu-toggle"
+            class="btn-icon btn-menu"
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="app-menu"
+          >
+            <span class="btn-menu-icon" aria-hidden="true">☰</span>
+            <span
+              class="sr-only"
+              data-i18n-de="Menü öffnen"
+              data-i18n-en="Open menu"
+              data-i18n-da="Åbn menu"
+            >Åbn menu</span>
+          </button>
+        </div>
+      </nav>
+
+      <div class="app-header-main">
+        <h1
+          class="header-title"
+          id="app-title"
+          tabindex="-1"
+          aria-describedby="header-tagline"
+        >
+          <span class="header-flag" aria-hidden="true">🇩🇪</span>
+          Family <span class="header-title-spots">Spots</span> Map
+          <span class="header-flag" aria-hidden="true">🇩🇰</span>
+        </h1>
+
+        <p
+          class="header-tagline"
+          id="header-tagline"
+        >I dag er en god dag til et lille familieeventyr midt i hverdagen.</p>
+      </div>
+    </header>
+
+    <!-- =========================================
+         HEADER-MENÜ (☰)
+         ========================================= -->
+    <div
+      id="app-menu"
+      class="app-menu"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="app-menu-title"
+      aria-hidden="true"
+      hidden
+    >
+      <div
+        class="app-menu-backdrop"
+        data-menu-close="1"
+        aria-hidden="true"
+      ></div>
+
+      <div class="app-menu-panel">
+        <h2 id="app-menu-title" class="sr-only" data-i18n="menu_title">Menü</h2>
+
+        <div class="app-menu-list">
+          <button id="btn-open-favorites" class="app-menu-item" type="button" data-menu-close="1" aria-controls="spot-list">
+            <span class="app-menu-item-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg></span>
+            <span class="app-menu-item-label" data-i18n-de="Favoriten" data-i18n-en="Favourites" data-i18n-da="Favoritter">Favoriten</span>
+            <span data-favorite-count aria-hidden="true">0</span>
+          </button>
+
+          <!-- Info -->
+          <button
+            id="btn-help"
+            class="app-menu-item"
+            type="button"
+            data-menu-close="1"
+          >
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="10" x2="12" y2="16"></line>
+                <circle cx="12" cy="7" r="1"></circle>
+              </svg>
+            </span>
+            <span
+              class="app-menu-item-label"
+              data-i18n-de="Über Family Spots Map"
+              data-i18n-en="About Family Spots Map"
+              data-i18n-da="Om Family Spots Map"
+            >Om Family Spots Map</span>
+          </button>
+
+          <!-- Nur Karte -->
+          <button
+            id="btn-toggle-view-menu"
+            class="app-menu-item"
+            type="button"
+            data-menu-close="1"
+          >
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <circle cx="4" cy="6" r="1"></circle>
+                <circle cx="4" cy="12" r="1"></circle>
+                <circle cx="4" cy="18" r="1"></circle>
+              </svg>
+            </span>
+            <span
+              class="app-menu-item-label"
+              id="menu-toggle-view-label"
+            >Kun kort</span>
+          </button>
+
+          <!-- Designmodus wechseln -->
+          <button
+            id="theme-toggle"
+            class="app-menu-item"
+            type="button"
+            data-menu-close="1"
+          >
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"
+                ></path>
+              </svg>
+            </span>
+            <span
+              class="app-menu-item-label"
+              id="theme-toggle-label"
+              data-i18n-de="Designmodus wechseln"
+              data-i18n-en="Switch colour theme"
+              data-i18n-da="Skift tema"
+            >Skift tema</span>
+          </button>
+
+          <!-- Standort -->
+          <button
+            id="btn-locate"
+            class="app-menu-item"
+            type="button"
+            data-menu-close="1"
+          >
+            <span class="app-menu-item-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"
+                ></path>
+                <circle cx="12" cy="10" r="2"></circle>
+              </svg>
+            </span>
+            <span
+              class="app-menu-item-label"
+              id="btn-locate-label"
+              data-i18n-de="Eigenen Standort auf der Karte anzeigen"
+              data-i18n-en="Centre the map on your location"
+              data-i18n-da="Vis din egen position på kortet"
+            >Vis din egen position på kortet</span>
+          </button>
+        </div>
+
+        <!-- Sprache: Flaggen-Chips -->
+        <div
+          class="app-menu-languages"
+          role="group"
+          aria-labelledby="menu-language-label"
+        >
+          <p
+            id="menu-language-label"
+            class="app-menu-languages-label"
+            data-i18n-de="Sprache"
+            data-i18n-en="Language"
+            data-i18n-da="Sprog"
+          >Sprog</p>
+
+          <div class="app-menu-languages-row">
+            <button
+              type="button"
+              class="app-menu-lang-chip"
+              data-lang-target="de"
+            >
+              <span class="app-menu-lang-flag" aria-hidden="true">🇩🇪</span>
+              <span class="app-menu-lang-code">DE</span>
+            </button>
+
+            <button
+              type="button"
+              class="app-menu-lang-chip"
+              data-lang-target="da"
+            >
+              <span class="app-menu-lang-flag" aria-hidden="true">🇩🇰</span>
+              <span class="app-menu-lang-code">DA</span>
+            </button>
+
+            <button
+              type="button"
+              class="app-menu-lang-chip"
+              data-lang-target="en"
+            >
+              <span class="app-menu-lang-flag" aria-hidden="true">🇬🇧</span>
+              <span class="app-menu-lang-code">EN</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================
+         MAIN
+         ========================================= -->
+    <main
+      class="app-main"
+      id="main-content"
+      role="main"
+      tabindex="-1"
+    >
+      <!-- =======================
+           MAP VIEW
+           ======================= -->
+      <section
+        id="view-map"
+        class="view view--active"
+        aria-label="Karte" data-i18n-aria-label="aria_map"
+      >
+        <!-- Sidebar -->
+        <aside
+          class="sidebar"
+          id="sidebar"
+          aria-labelledby="spots-title"
+        >
+          <!-- Tilla-Begleiterin -->
+          <section
+            id="tilla-section"
+            class="sidebar-section tilla-sidebar-section"
+            aria-labelledby="tilla-title"
+          >
+            <header class="sidebar-section-header">
+              <h2
+                class="sidebar-section-title"
+                id="tilla-title"
+                data-i18n-de="Familienbegleiterin Tilla"
+                data-i18n-en="Family companion Tilla"
+                data-i18n-da="Familieledsageren Tilla"
+              >Familieledsageren Tilla</h2>
+            </header>
+
+            <div class="tilla-sidebar-card">
+              <div class="tilla-sidebar-avatar">
+                <div class="tilla-watercolor-canvas">
+                <img
+                  src="assets/tilla/tilla-watercolor.png"
+                  alt="Tilla die Schildkröte – eure ruhige Familienbegleiterin"
+                  loading="lazy"
+                  decoding="async"
+                  width="1472"
+                  height="1069"
+                />
+
+                <!--
+                  Erinnerungszettel für Tillas Brustbeutel.
+
+                  Die Position und Animation werden in map-spots.css
+                  ergänzt. Tilla steuert die Sichtbarkeit über JavaScript.
+
+                  Der Zettel bleibt sichtbar, solange mindestens eine
+                  Erinnerung vorhanden ist. Ohne Erinnerungen bleibt
+                  dieses dekorative Element ausgeblendet.
+                -->
+                <span
+                  id="tilla-memory-note"
+                  class="tilla-memory-note"
+                  aria-hidden="true"
+                  hidden
+                ></span>
+                </div>
+              </div>
+
+              <div class="tilla-sidebar-text">
+                <p
+                  id="tilla-sidebar-text"
+                >Jeg er Tilla, jeres lille skildpadde. Lad os finde et sted i nærheden i dag — til ro, grin og et lille glimt af undren. 🌿</p>
+
+                <div class="tilla-sidebar-actions">
+                  <button
+                    id="btn-play-idea"
+                    type="button"
+                    class="btn btn-small btn-play-idea"
+                  >
+                    <span class="tilla-play-emoji" aria-hidden="true">🎲</span>
+                    <span
+                      data-i18n-de="Spielideen für unterwegs"
+                      data-i18n-en="Play ideas on the go"
+                      data-i18n-da="Legeidéer til turen"
+                    >Legeidéer til turen</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Onboarding-Hinweis (VOR den Filtern) -->
+          <section
+            class="sidebar-section fsm-onboarding-hint"
+            data-onboarding-hint
+            aria-label="Kurzer Start-Hinweis zur Karte" data-i18n-aria-label="aria_hint"
+          >
+            <p class="fsm-onboarding-hint__text">
+              <strong
+                data-i18n-de="So findet ihr euren Spot für heute:"
+                data-i18n-en="How to find your spot for today:"
+                data-i18n-da="Sådan finder I dagens spot:"
+              >Sådan finder I dagens spot:</strong>
+              <br />
+
+              <span
+                data-i18n-de="1. Standort wählen oder Karte bewegen"
+                data-i18n-en="1. Use your location or move the map"
+                data-i18n-da="1. Brug jeres position, eller flyt kortet"
+              >1. Brug jeres position, eller flyt kortet</span>
+              <br />
+
+              <span
+                data-i18n-de="2. Stimmung wählen"
+                data-i18n-en="2. Choose a mood"
+                data-i18n-da="2. Vælg stemning"
+              >2. Vælg stemning</span>
+              <br />
+
+              <span
+                data-i18n-de="3. Spot antippen und losgehen"
+                data-i18n-en="3. Tap a spot and off you go"
+                data-i18n-da="3. Tryk på et spot og kom afsted"
+              >3. Tryk på et spot og kom afsted</span>
+            </p>
+
+            <button
+              type="button"
+              class="fsm-onboarding-hint__close"
+              data-onboarding-close="1"
+              aria-label="Hinweis schließen" data-i18n-aria-label="aria_hint_close"
+            >×</button>
+          </section>
+
+          <!-- Kompakter Filter -->
+          <section
+            class="sidebar-section"
+            id="filter-section"
+            aria-labelledby="filter-title"
+          >
+            <header class="sidebar-section-header">
+              <h2
+                class="sidebar-section-title"
+                id="filter-title"
+                data-i18n-de="Filter"
+                data-i18n-en="Filters"
+                data-i18n-da="Filtre"
+              >Filtre</h2>
+
+              <button
+                id="btn-toggle-filters"
+                class="btn-ghost btn-small"
+                type="button"
+                aria-controls="filter-section"
+                aria-expanded="false"
+              >
+                <span
+                >Vis filtre</span>
+                <svg class="fsm-disclosure-chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </header>
+
+            <p
+              class="filter-group-helper filter-group-helper--compact"
+              data-i18n-de="Suche, Schnellwahl &amp; Radius – so findet ihr passende Spots."
+              data-i18n-en="Search, mood &amp; radius – everything you need to get started. Open all filters only when needed."
+              data-i18n-da="Søgning, stemning &amp; radius – alt det vigtigste til at starte med. Åbn alle filtre efter behov."
+            >Søgning, stemning &amp; radius – alt det vigtigste til at starte med. Åbn alle filtre efter behov.</p>
+
+            <!-- Suche -->
+            <div class="filter-group">
+              <label
+                class="filter-group-label"
+                for="filter-search"
+                id="filter-search-label"
+                data-i18n-de="Suche"
+                data-i18n-en="Search"
+                data-i18n-da="Søg"
+              >Søg</label>
+
+              <input
+                id="filter-search"
+                name="search"
+                class="input"
+                type="search"
+                placeholder="Ort, Spot, Stichwort …"
+                autocomplete="off"
+                data-i18n-de="Ort, Spot, Stichwort …"
+                data-i18n-en="Place, spot, keywords …"
+                data-i18n-da="Sted, spot, søgeord …"
+              />
+            </div>
+
+            <!-- Stimmung -->
+            <div class="filter-group">
+              <label
+                class="filter-group-label"
+                id="filter-mood-label"
+                data-i18n-de="Schnell zum Thema"
+                data-i18n-en="Choose a theme"
+                data-i18n-da="Vælg et tema"
+              >Stemning</label>
+
+              <p
+                class="filter-group-helper filter-group-helper--compact"
+                id="filter-mood-helper"
+                data-i18n-de="Die Schnellwahl setzt sichtbare Themenfilter. Ihr könnt sie unter „Spots finden“ anpassen."
+                data-i18n-en="Quick choices set visible theme filters. Adjust them under “Find spots”."
+                data-i18n-da="Genvejene vælger synlige temafiltre. Tilpas dem under „Find spots“."
+              >Genvejene vælger synlige temafiltre. Tilpas dem under „Find spots“.</p>
+
+              <div
+                class="mood-row"
+                role="group"
+                aria-labelledby="filter-mood-label"
+                aria-describedby="filter-mood-helper"
+              >
+                <button
+                  type="button"
+                  class="mood-chip"
+                  data-mood="relaxed"
+                  aria-pressed="false"
+                >
+                  <span class="mood-chip-emoji" aria-hidden="true">🌿</span>
+                  <span
+                    class="mood-chip-label"
+                    id="mood-relaxed-label"
+                    data-i18n-de="Natur entdecken"
+                    data-i18n-en="Explore nature"
+                    data-i18n-da="Opdag naturen"
+                  >Afslappet</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="mood-chip"
+                  data-mood="action"
+                  aria-pressed="false"
+                >
+                  <span class="mood-chip-emoji" aria-hidden="true">⛰️</span>
+                  <span
+                    class="mood-chip-label"
+                    id="mood-action-label"
+                    data-i18n-de="Bewegung"
+                    data-i18n-en="Active"
+                    data-i18n-da="Aktiv"
+                  >Aktiv</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="mood-chip"
+                  data-mood="water"
+                  aria-pressed="false"
+                >
+                  <span class="mood-chip-emoji" aria-hidden="true">💧</span>
+                  <span
+                    class="mood-chip-label"
+                    id="mood-water-label"
+                    data-i18n-de="Wasser &amp; Sand"
+                    data-i18n-en="Water &amp; sand"
+                    data-i18n-da="Vand &amp; sand"
+                  >Vand &amp; sand</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="mood-chip"
+                  data-mood="animals"
+                  aria-pressed="false"
+                >
+                  <span class="mood-chip-emoji" aria-hidden="true">🐾</span>
+                  <span
+                    class="mood-chip-label"
+                    id="mood-animals-label"
+                    data-i18n-de="Tier-Tag"
+                    data-i18n-en="Animal day"
+                    data-i18n-da="Dyredag"
+                  >Dyredag</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Micro-Abenteuer-Radius -->
+            <div class="filter-group">
+              <label
+                class="filter-group-label"
+                for="filter-radius"
+                id="filter-radius-label"
+                data-i18n-de="Micro-Abenteuer-Radius"
+                data-i18n-en="Micro-adventure radius"
+                data-i18n-da="Mikroeventyr-radius"
+              >Mikroeventyr-radius</label>
+
+              <p
+                class="filter-group-helper filter-group-helper--compact"
+                id="filter-radius-helper"
+                data-i18n-de="Wie weit darf euer Abenteuer heute gehen?"
+                data-i18n-en="How far would you like to go today?"
+                data-i18n-da="Hvor langt må jeres eventyr række i dag?"
+              >Hvor langt må jeres eventyr række i dag?</p>
+
+              <div class="radius-row">
+                <input
+                  id="filter-radius"
+                  name="radius"
+                  type="range"
+                  min="0"
+                  max="4"
+                  step="1"
+                  value="4"
+                  aria-labelledby="filter-radius-label"
+                  aria-describedby="filter-radius-helper filter-radius-description"
+                />
+
+                <span
+                  id="filter-radius-max-label"
+                  class="radius-max-label"
+                >Alle spots</span>
+              </div>
+
+              <p
+                id="filter-radius-description"
+                class="radius-description"
+              >Alle spots – ingen radiusbegrænsning. Kortet er helt jeres.</p>
+            </div>
+
+            <!-- Zusammenfassung & Button "Alle Filter öffnen" -->
+            <div class="filter-footer">
+              <button
+                id="btn-open-filter-modal"
+                class="btn btn-small"
+                type="button"
+              >
+                <span
+                  data-i18n-de="Spots finden"
+                  data-i18n-en="Find spots"
+                  data-i18n-da="Find spots"
+                >Åbn alle filtre</span>
+              </button>
+
+              <p
+                id="filter-summary"
+                class="filter-summary"
+              >Aktive filtre: basisfiltre</p>
+            </div>
+          </section>
+
+          <!-- Spot-Liste -->
+          <section
+            class="sidebar-section sidebar-section--grow"
+            aria-labelledby="spots-title"
+          >
+            <header class="sidebar-section-header">
+              <h2 class="sidebar-section-title" id="spots-title" data-i18n="spots_title">Spots</h2>
+
+              <button
+                id="btn-toggle-spots"
+                class="btn-ghost btn-small"
+                type="button"
+                aria-controls="spot-list"
+                aria-expanded="false"
+              >
+                <span
+                  data-state="hide"
+                  class="hidden"
+                  data-i18n-de="Spots ausblenden"
+                  data-i18n-en="Hide spots"
+                  data-i18n-da="Skjul spots"
+                >Skjul spots</span>
+
+                <span
+                  data-state="show"
+                  data-i18n-de="Spots anzeigen"
+                  data-i18n-en="Show spots"
+                  data-i18n-da="Vis spots"
+                >Vis spots</span>
+                <svg class="fsm-disclosure-chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+
+              <button
+                id="btn-toggle-view"
+                class="btn-ghost btn-small sr-only"
+                type="button"
+                aria-pressed="false"
+                aria-controls="sidebar"
+                tabindex="-1"
+              >
+                <span
+                >Kun kort</span>
+              </button>
+            </header>
+
+            <p id="spot-results-context" class="spot-results-context" hidden></p>
+            <div id="spot-list" class="spot-list" hidden></div>
+          </section>
+        </aside>
+
+        <!-- Karte + Details -->
+        <section class="map-section" aria-label="Karte mit Spots" data-i18n-aria-label="aria_map_spots">
+          <div id="map" class="map-container"></div>
+
+          <aside
+            id="spot-detail"
+            class="spot-details spot-details--hidden"
+          ></aside>
+        </section>
+
+        <!-- Family Spots Plus -->
+        <details
+          class="sidebar-section"
+          id="plus-section"
+          aria-labelledby="plus-section-title"
+        >
+          <summary class="sidebar-section-header">
+            <h2
+              class="sidebar-section-title"
+              id="plus-section-title"
+            >
+              <span>Spots Plus</span><svg class="spots-plus-crown" viewBox="0 0 32 26" width="22" height="20" aria-hidden="true" focusable="false"><g fill="currentColor"><path d="M4 8.5l5 5 1-6 4 5 2-8 2 8 4-5 1 6 5-5-3 13H7z"/><circle cx="4" cy="7" r="2"/><circle cx="10" cy="6" r="1.6"/><circle cx="16" cy="3" r="2"/><circle cx="22" cy="6" r="1.6"/><circle cx="28" cy="7" r="2"/><rect x="7" y="23" width="18" height="2" rx=".7"/></g></svg>
+            </h2>
+
+            <span id="btn-toggle-plus"
+              class="btn-ghost btn-small"
+            >
+              <span
+              >Vis</span>
+            </span>
+          </summary>
+
+          <div class="filter-group">
+            <p
+              id="plus-status-text"
+            >Family Spots Plus er ikke aktiveret.</p>
+          </div>
+
+          <div class="plus-code-form">
+            <label for="plus-code-input"
+              data-i18n-de="Test- oder Partnercode eingeben:"
+              data-i18n-en="Enter a test or partner code:"
+              data-i18n-da="Indtast test- eller partnerkode:"
+            >Test- oder Partnercode eingeben:</label>
+
+            <div class="plus-code-row">
+              <input
+                id="plus-code-input"
+                name="plus-code"
+                class="input"
+                type="text"
+                autocomplete="off"
+              />
+
+              <button
+                id="plus-code-submit"
+                class="btn"
+                type="button"
+              >
+                <span
+                  data-i18n-de="Code aktivieren"
+                  data-i18n-en="Activate code"
+                  data-i18n-da="Aktivér kode"
+                >Aktivér kode</span>
+              </button>
+            </div>
+
+            <p class="plus-note"
+              data-i18n-de="Kostenloser Familientest: Euer Testcode schaltet Plus und beide Zusatzbereiche 90 Tage ab der ersten Aktivierung frei. Kein Kauf, kein Abo, keine automatische Verlängerung."
+              data-i18n-en="Free family test: your test code unlocks Plus and both additional areas for 90 days from first activation. No purchase, subscription or automatic renewal."
+              data-i18n-da="Gratis familietest: Jeres testkode åbner Plus og begge ekstra områder i 90 dage fra første aktivering. Intet køb, abonnement eller automatisk fornyelse."
+            >Kostenloser Familientest: Euer Testcode schaltet Plus und beide Zusatzbereiche 90 Tage ab der ersten Aktivierung frei. Kein Kauf, kein Abo, keine automatische Verlängerung.</p>
+          </div>
+        </details>
+
+        <!-- Mein Tag opens the private diary without rebuilding the map. -->
+        <button id="btn-open-diary" type="button" class="sidebar-section diary-launcher" aria-controls="view-diary">
+          <span class="sidebar-section-title"><span data-i18n-de="Mein Tag" data-i18n-en="My day" data-i18n-da="Min dag">Mein Tag</span> <svg class="fsm-daylog-heart" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+              </svg></span>
+          <span data-i18n-de="Öffnen" data-i18n-en="Open" data-i18n-da="Åbn">Öffnen</span>
+        </button>
+      </section>
+
+      <!-- Private diary; existing storage and element IDs remain compatible. -->
+      <section id="view-diary" class="diary-view" hidden aria-hidden="true" aria-labelledby="diary-title">
+        <nav class="diary-navigation" aria-label="Tagebuch">
+          <button id="diary-return-map" type="button" class="diary-back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg><span data-i18n-de="Zurück zur Karte" data-i18n-en="Back to map" data-i18n-da="Tilbage til kortet">Zurück zur Karte</span></button>
+        </nav>
+        <header class="diary-heading">
+          <div><h1 id="diary-title" tabindex="-1"><span data-i18n-de="Mein Tag" data-i18n-en="My day" data-i18n-da="Min dag">Mein Tag</span> <svg class="fsm-daylog-heart" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+              </svg></h1><p data-i18n-de="Erinnerungen in Wort und Bild" data-i18n-en="Memories in words and pictures" data-i18n-da="Minder i ord og billeder">Erinnerungen in Wort und Bild</p></div>
+          <button id="diary-new-memory" type="button" class="btn diary-new" aria-controls="diary-composer" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span data-i18n-de="Erinnerung festhalten" data-i18n-en="Capture a memory" data-i18n-da="Gem et minde">Erinnerung festhalten</span></button>
+        </header>
+        <details id="daylog-section" open aria-labelledby="diary-title">
+          <summary hidden>Mein Tag</summary>
+          <div class="filter-group diary-content">
+            <section id="diary-composer" class="diary-composer" hidden aria-label="Erinnerung festhalten">
+
+            <label
+              for="daylog-text"
+              data-i18n-de="Wie war euer Tag?"
+              data-i18n-en="How was your day?"
+              data-i18n-da="Hvordan var jeres dag?"
+            >Hvordan var jeres dag?</label>
+
+            <p
+              class="filter-group-helper"
+              data-i18n-de="Halte einen kleinen Moment fest, an den ihr euch später erinnern möchtet – wenn du magst, mit einem Gruß an Tilla."
+              data-i18n-en="Capture a little moment you’d like to remember later – and if you like, add a small note to Tilla."
+              data-i18n-da="Gem et lille øjeblik, som I gerne vil huske senere – og hvis du har lyst, med en lille hilsen til Tilla."
+            >Gem et lille øjeblik, som I gerne vil huske senere – og hvis du har lyst, med en lille hilsen til Tilla.</p>
+
+            <textarea
+              id="daylog-text"
+              name="daylog"
+              class="input"
+              rows="3"
+              placeholder="Heute haben wir einen Ort gefunden, an dem die Zeit kurz langsamer wurde."
+            ></textarea>
+
+            <button
+              id="daylog-save"
+              class="btn btn-small"
+              type="button"
+            >
+              <span
+                data-i18n-de="Speichern 💾"
+                data-i18n-en="Save 💾"
+                data-i18n-da="Gem 💾"
+              >Gem 💾</span>
+            </button>
+
+
+              <button id="diary-composer-close" type="button" class="btn-ghost" data-i18n-de="Eingabe schließen" data-i18n-en="Close editor" data-i18n-da="Luk indtastning">Eingabe schließen</button>
+            </section>
+            <p id="diary-empty" class="diary-empty" data-i18n-de="Hier ist Platz für eure Erinnerungen. Haltet euren ersten Moment fest – mit einem Foto, ein paar Worten oder beidem." data-i18n-en="A place for your memories. Capture your first moment with a photo, a few words, or both." data-i18n-da="Her er plads til jeres minder. Gem det første øjeblik med et billede, et par ord eller begge dele.">Hier ist Platz für eure Erinnerungen. Haltet euren ersten Moment fest – mit einem Foto, ein paar Worten oder beidem.</p>
+            <div id="daylog-list" class="daylog-list"></div>
+          </div>
+        </details>
+      </section>
+
+      <!-- =========================================
+           ABOUT VIEW (DE / DA / EN)
+           ========================================= -->
+      <section
+        id="view-about"
+        class="view"
+        aria-label="Über Family Spots Map" data-i18n-aria-label="aria_about"
+      >
+        <button type="button" class="btn btn-small" data-return-map data-i18n-de="Zur Karte" data-i18n-en="Back to map" data-i18n-da="Tilbage til kortet">Tilbage til kortet</button>
+        <!-- Deutsch -->
+        <article
+          id="page-about-de"
+          class="page page-about hidden"
+          lang="de"
+          aria-hidden="true"
+        >
+          <h2>Über Family Spots Map</h2>
+
+          <p>
+            Family Spots Map ist eine Karte, behutsam gezeichnet für Familienabenteuer –<br />
+            von Eltern für Eltern.<br />
+            Nicht Ströme aus Listen, nicht anonyme Sterne,<br />
+            sondern handverlesene Spielplätze, Zoos und Wildparks,<br />
+            Wasser-Spots, Museen, Bewegungsparks<br />
+            und viele weitere Orte für gemeinsame Familienmomente.
+          </p>
+
+          <p>
+            Im Mittelpunkt stehen Qualität, Sicherheit und echte, geerdete Erlebnisse mit Kindern –<br />
+            keine Karte, die am größten sein will,<br />
+            sondern eine, auf die ihr euch verlassen könnt,<br />
+            wenn ihr mit Rucksäcken, Snacks und ein bisschen Hoffnung im Gepäck loszieht.
+          </p>
+
+          <p>
+            Family Spots Map wächst aus dem Blick einer jungen Familie,<br />
+            die selbst mit Kindern unterwegs ist –<br />
+            manchmal übermüdet, manchmal voller Tatendrang,<br />
+            doch immer auf der Suche nach einem guten Ort<br />
+            für ein paar leuchtende Stunden zwischendurch.
+          </p>
+
+          <p>
+            <strong>Tilla, unsere kleine Schildkröte, flüstert uns zu, wie kostbar gemeinsame Zeit ist.</strong><br />
+            Sie lädt euch ein, das Tempo herauszunehmen,<br />
+            kurz durchzuatmen<br />
+            und den einen Ort zu finden, an dem aus Minuten<br />
+            ein Familienmoment wird, der bleibt.
+          </p>
+
+          <hr />
+
+          <h3>So funktioniert Family Spots Map</h3>
+
+          <p>
+            <strong>Karte &amp; Filter:</strong> Zoome in eure Region,<br />
+            streif mit den Fingern über die Karte<br />
+            und lass dir zeigen, was heute zu euch passt –<br />
+            Spielplatz, Wildpark, Pumptrack<br />
+            oder ein Spot, den dein Stichwort herbeiruft.
+          </p>
+
+          <p>
+            <strong>Spot-Karten:</strong> Jeder Spot bekommt eine kleine Bühne –<br />
+            eine kurze Beschreibung, besondere Hinweise<br />
+            wie „Autosafari“, „barrierefrei“ oder „mit Wasser in der Nähe“<br />
+            und – wo möglich – das Zeichen, dass wir ihn für euch verifiziert haben.
+          </p>
+
+          <p>
+            <strong>Favoriten:</strong> Gebt euren Lieblingsorten ein Herz,<br />
+            damit ihr sie unterwegs auf einen Blick wiederfindet –<br />
+            auch dann, wenn das Netz gerade leiser wird<br />
+            und ihr euch auf euren eigenen Kompass verlasst.
+          </p>
+
+          <p>
+            <strong>Offline-Grundfunktion:</strong> Die wichtigsten Daten ruhen auf eurem Gerät,<br />
+            damit ihr eure Spots wiederentdeckt,<br />
+            selbst wenn der Empfang nur flüstert<br />
+            oder unterwegs kurz ganz verschwindet.
+          </p>
+
+          <hr />
+
+          <h3>Kuratiert &amp; verifiziert – unser Qualitätsversprechen</h3>
+
+          <p>
+            Family Spots Map ist keine anonyme Sammelplattform,<br />
+            sondern eine lebendige Karte,<br />
+            in der jeder Spot bewusst gewählt<br />
+            und immer wieder neu angesehen wird.
+          </p>
+
+          <p>
+            Das Zeichen <strong>„Infos geprüft“</strong> kennzeichnet Angaben, die wir anhand von Quellen oder eigenen Besuchen geprüft haben.<br />
+            Die Prüfung kann einzelne Angaben betreffen, etwa Lage, Kategorie oder Besuchshinweise.<br />
+            Sie bestätigt nicht automatisch die gesamte Ausstattung oder Barrierefreiheit.<br />
+            In den Besuchshinweisen zeigen wir, welche Angaben bestätigt sind und welche noch offen sind.
+          </p>
+
+          <p>
+            Und doch bleibt die Welt in Bewegung:<br />
+            Spielgeräte werden erneuert, Wege gesperrt, Regeln angepasst –<br />
+            prüft deshalb bitte immer auch die Schilder vor Ort,<br />
+            die aktuellen Informationen der Betreiber<br />
+            und euren eigenen Eindruck.
+          </p>
+
+          <hr />
+
+          <h3>Family Spots Plus – mehr für Camping, WoMo &amp; Abenteuer</h3>
+
+          <p>
+            Zusammen mit passenden Zusatzpaketen öffnet <strong>Family Spots Plus</strong> die Tür<br />
+            zu besonderen Spezial-Kategorien –<br />
+            Rastplätze mit Spielplatz &amp; Dusche,<br />
+            kostenlose Stellplätze in Spielplatznähe,<br />
+            Wohnmobil-Service-Stationen,<br />
+            familienfreundliche Campingplätze,<br />
+            Bikepacking-Spots und Wege,<br />
+            die sich wie kleine Abenteuer-Routen anfühlen.
+          </p>
+
+          <p>
+            Die App befindet sich im Familientest. Die Grundkarte ist ohne Freischaltung nutzbar.<br />Mit eurem Testcode sind alle Spots sowie die Zusatzbereiche Wasser &amp; Baden und WoMo &amp; Vanlife<br />90 Tage ab der ersten Aktivierung kostenlos freigeschaltet.<br />Es gibt keinen Kauf, kein kostenpflichtiges Abo und keine automatische Verlängerung.<br />Ein späteres Bezahlangebot und seine Preise stehen noch nicht fest.
+          </p>
+
+          <p>
+            <strong>Wie erkenne ich Plus-Kategorien?</strong><br />
+            In der Kategorien-Liste tragen Plus-Inhalte ein klares Zeichen –<br />
+            zum Beispiel „· Plus“, „· Wasser-Add-on (Plus)“<br />
+            oder „· WoMo-Add-on (Plus)“.<br />
+            Was keinen Zusatz trägt, gehört zur Basis<br />
+            und ist Teil der Grundkarte.
+          </p>
+
+          <hr />
+
+          <h3>Für Kommunen, Destinationen &amp; Campingplätze</h3>
+
+          <p>
+            Family Spots Map ist nicht nur eine Karte für Familien,<br />
+            sondern auch ein Werkzeug für Orte, die bewusst familienfreundlich auftreten möchten –<br />
+            Städte, Gemeinden, Tourismusregionen, Campingplätze und Ferienanlagen.
+          </p>
+
+          <p>Als Partner könnt ihr:</p>
+
+          <ul>
+            <li>eure Region oder Anlage mit kuratierten Familien-Spots sichtbar machen,</li>
+            <li>eigene Plus-Codes an Gäste, Bürgerinnen und Bürger ausgeben,</li>
+            <li>eure familienfreundlichen Angebote klar markieren und hervorheben,</li>
+            <li>Rückmeldungen von Familien nutzen, um Angebote weiterzuentwickeln.</li>
+          </ul>
+
+          <p>
+            So entsteht aus einer Karte ein Service-Baustein für eure Familienstrategie –<br />
+            vom familienfreundlichen Campingplatz bis zur „Kinder &amp; Familien“-Schwerpunktregion.
+          </p>
+
+          <p>
+            Interesse an einer Pilotregion oder Kooperation? Schreibe gern an
+            <a href="mailto:hallo@familyspotsmap.de?subject=Partneranfrage">hallo@familyspotsmap.de</a>.
+          </p>
+
+          <hr />
+
+          <h3>Mitmachen – hilf, die Karte besser zu machen</h3>
+
+          <p>
+            Du kennst einen Spot, der hier noch fehlt –<br />
+            einen besonderen Spielplatz,<br />
+            ein verstecktes Natur-Highlight<br />
+            oder einen Campingplatz, der sich mit Kindern genau richtig anfühlt?
+          </p>
+
+          <p>
+            Dann melde dich mit den wichtigsten Infos:<br />
+            Ort, Kategorie und kurz, warum dieser Platz<br />
+            für Familien besonders gut funktioniert.<br />
+            Vielleicht ist es der Blick, die Ruhe,<br />
+            die eine Schaukel oder das freundliche „Hallo“ vor Ort.
+          </p>
+
+          <p>
+            Gemeinsam machen wir die Karte Schritt für Schritt besser –<br />
+            so, wie Familien sie wirklich brauchen.
+          </p>
+
+          <hr />
+
+          <h3>Nutzung, Verantwortung &amp; Sicherheit</h3>
+
+          <p>
+            Family Spots Map stellt Informationen nach bestem Wissen bereit,<br />
+            kann aber keine Garantie für Vollständigkeit,<br />
+            Sicherheit oder die Einhaltung aller lokalen Regeln geben.
+          </p>
+
+          <p>Bitte achte vor Ort immer auf:</p>
+
+          <ul>
+            <li>Beschilderung und alle Hinweise, die der Ort dir gibt,</li>
+            <li>Naturschutz-Regeln, Badeaufsicht und das aktuelle Wetter,</li>
+            <li>Alter, Mut und Fähigkeiten deiner Kinder.</li>
+          </ul>
+
+          <p>
+            Die Nutzung erfolgt in eigener Verantwortung –<br />
+            ihr kennt eure Kinder<br />
+            und eure Situation am besten.
+          </p>
+
+          <hr />
+
+          <h3>Projektstatus &amp; Version</h3>
+
+          <p>
+            Family Spots Map ist ein wachsendes Herzensprojekt.<br />
+            Neue Spots, Regionen und Kategorien kommen Schritt für Schritt dazu –<br />
+            zuerst dort, wo wir selbst mit unseren Kindern unterwegs sind,<br />
+            dann gemeinsam mit Partnern und der Community.
+          </p>
+
+          <p>App-Version: <strong>20261029-ui-62</strong></p>
+
+          <p>
+            Wenn dir die Karte geholfen hat,<br />
+            einen guten Tag mit deiner Familie zu verbringen,<br />
+            einen Moment der Leichtigkeit zu finden<br />
+            oder einen Ort, an den ihr gern zurückdenkt,<br />
+            dann hat sie ihren Zweck erfüllt.
+          </p>
+        </article>
+
+        <!-- Dansk -->
+        <article
+          id="page-about-da"
+          class="page page-about"
+          lang="da"
+          aria-hidden="false"
+        >
+          <h2>Om Family Spots Map</h2>
+
+          <p>
+            Family Spots Map er et kort, tegnet med omtanke til familieeventyr –<br />
+            lavet af forældre til forældre.<br />
+            Ikke endeløse lister, ikke anonyme stjerner,<br />
+            men håndplukkede legepladser, zoologiske haver og dyreparker,<br />
+            steder til vandleg, museer, aktivitetsparker<br />
+            og mange andre steder til fælles familieminder.
+          </p>
+
+          <p>
+            I centrum står kvalitet, tryghed og virkelige oplevelser med børn –<br />
+            ikke kortet, der vil være størst,<br />
+            men det, I kan stole på,<br />
+            når I tager afsted med rygsække, snacks<br />
+            og en lille smule håb i bagagen.
+          </p>
+
+          <p>
+            Family Spots Map tager udgangspunkt i en ung familie,<br />
+            der selv er på tur med børn –<br />
+            nogle gange trætte, andre gange fulde af energi,<br />
+            men altid på jagt efter et godt sted<br />
+            til et par lyse timer midt i hverdagen.
+          </p>
+
+          <p>
+            <strong>Tilla, vores lille skildpadde, minder os om, hvor kostbar fælles tid er.</strong><br />
+            Hun inviterer jer til at sænke tempoet,<br />
+            trække vejret et øjeblik<br />
+            og finde det ene sted, hvor minutter<br />
+            bliver til et fælles minde, der bliver hos jer.
+          </p>
+
+          <hr />
+
+          <h3>Sådan fungerer Family Spots Map</h3>
+
+          <p>
+            <strong>Kort &amp; filtre:</strong> Zoom ind på jeres område,<br />
+            glid med fingrene hen over kortet<br />
+            og få vist, hvad der passer til jer i dag –<br />
+            legeplads, dyrepark, pumptrack<br />
+            eller et spot, der passer til jeres søgeord.
+          </p>
+
+          <p>
+            <strong>Spotkort:</strong> Hvert spot får en lille scene –<br />
+            en kort beskrivelse, særlige oplysninger<br />
+            som »autosafari«, »tilgængeligt« eller »vand i nærheden«<br />
+            og – hvor det er muligt – et lille tegn på,<br />
+            at vi har verificeret stedet for jer.
+          </p>
+
+          <p>
+            <strong>Favoritter:</strong> Giv jeres yndlingssteder et hjerte,<br />
+            så de hurtigt dukker op, når I er på tur –<br />
+            også når nettet bliver svagere,<br />
+            og I må stole på jeres eget indre kompas.
+          </p>
+
+          <p>
+            <strong>Offline-grundfunktion:</strong> De vigtigste data ligger lokalt på jeres enhed,<br />
+            så I kan finde jeres spots igen,<br />
+            selv når forbindelsen kun hvisker<br />
+            eller forsvinder et øjeblik undervejs.
+          </p>
+
+          <hr />
+
+          <h3>Kurateret &amp; verificeret – vores kvalitetsløfte</h3>
+
+          <p>
+            Family Spots Map er ikke en anonym samling af pins,<br />
+            men et levende kort,<br />
+            hvor hvert spot er valgt med omtanke<br />
+            og ses på igen og igen.
+          </p>
+
+          <p>
+            Mærket <strong>»Oplysninger tjekket«</strong> viser, at oplysninger er undersøgt ud fra kilder eller vores egne besøg.<br />
+            Tjekket kan omfatte enkelte oplysninger, for eksempel beliggenhed, kategori eller besøgsoplysninger.<br />
+            Mærket bekræfter ikke automatisk alle faciliteter eller fuld tilgængelighed.<br />
+            I besøgsoplysningerne viser vi, hvad der er bekræftet, og hvad der endnu ikke er afklaret.
+          </p>
+
+          <p>
+            Verden ændrer sig alligevel hele tiden:<br />
+            Legepladser bygges om, stier lukkes, regler justeres –<br />
+            så tjek altid skilte på stedet,<br />
+            de aktuelle oplysninger fra udbyderen<br />
+            og jeres egen mavefornemmelse.
+          </p>
+
+          <hr />
+
+          <h3>Family Spots Plus – mere til camping, autocamper &amp; eventyr</h3>
+
+          <p>
+            Sammen med passende tilvalg åbner <strong>Family Spots Plus</strong> døren<br />
+            til særlige ekstra-kategorier –<br />
+            rastepladser med legeplads &amp; bruser,<br />
+            gratis autocamperpladser tæt på legepladser,<br />
+            tømmestationer til autocampere,<br />
+            familievenlige campingpladser,<br />
+            bikepacking-spots og ruter,<br />
+            der føles som små eventyr.
+          </p>
+
+          <p>
+            Appen er i familietest. Grundkortet kan bruges uden aktivering.<br />Jeres testkode åbner alle spots samt områderne vand &amp; badning og autocamper &amp; vanlife<br />gratis i 90 dage fra første aktivering.<br />Der er intet køb, betalt abonnement eller automatisk fornyelse.<br />Et senere betalingstilbud og priserne er endnu ikke fastlagt.
+          </p>
+
+          <p>
+            <strong>Hvordan genkender jeg Plus-kategorier?</strong><br />
+            I kategorilisten har Plus-indhold et tydeligt mærke –<br />
+            for eksempel »· Plus«, »· vandtilvalg (Plus)«<br />
+            eller »· autocampertilvalg (Plus)«.<br />
+            Det, der ikke har ekstra mærke, hører til grundkortet.
+          </p>
+
+          <hr />
+
+          <h3>For kommuner, destinationer &amp; campingpladser</h3>
+
+          <p>
+            Family Spots Map er ikke kun et kort til familier,<br />
+            men også et værktøj for steder, der ønsker at være tydeligt familievenlige –<br />
+            byer, kommuner, destinationer, campingpladser og ferieanlæg.
+          </p>
+
+          <p>Som partner kan I:</p>
+
+          <ul>
+            <li>gøre jeres område eller anlæg synligt for familier gennem kuraterede spots,</li>
+            <li>udlevere egne Plus-koder til gæster og borgere,</li>
+            <li>markere jeres familievenlige tilbud tydeligt i kortet,</li>
+            <li>bruge tilbagemeldinger fra familier til at udvikle jeres tilbud videre.</li>
+          </ul>
+
+          <p>
+            På den måde bliver kortet en del af jeres familieindsats –<br />
+            fra den familievenlige campingplads til hele familiedestinationer.
+          </p>
+
+          <p>
+            Interesseret i et pilotprojekt eller samarbejde? Skriv til
+            <a href="mailto:hallo@familyspotsmap.de?subject=Partnerskabsforesp%C3%B8rgsel">hallo@familyspotsmap.de</a>.
+          </p>
+
+          <hr />
+
+          <h3>Vær med – hjælp kortet med at blive bedre</h3>
+
+          <p>
+            Kender du et spot, der mangler her –<br />
+            en særlig legeplads,<br />
+            en skjult naturoplevelse<br />
+            eller en campingplads, der føles helt rigtig med børn?
+          </p>
+
+          <p>
+            Så skriv med de vigtigste oplysninger:<br />
+            Sted, kategori og kort, hvorfor stedet<br />
+            fungerer ekstra godt for familier.<br />
+            Måske er det udsigten, roen,<br />
+            den ene gynge eller det venlige »hej« på stedet.
+          </p>
+
+          <p>
+            Sammen gør vi kortet lidt bedre trin for trin –<br />
+            sådan som familier virkelig har brug for det.
+          </p>
+
+          <hr />
+
+          <h3>Anvendelse, ansvar &amp; sikkerhed</h3>
+
+          <p>
+            Family Spots Map stiller informationer til rådighed<br />
+            efter bedste viden,<br />
+            men kan ikke garantere fuldstændighed,<br />
+            sikkerhed eller overholdelse af alle lokale regler.
+          </p>
+
+          <p>Vær altid opmærksom på:</p>
+
+          <ul>
+            <li>skilte og alle lokale henvisninger,</li>
+            <li>naturbeskyttelse, badeopsyn og vejret,</li>
+            <li>jeres børns alder, mod og kunnen.</li>
+          </ul>
+
+          <p>
+            Brug af appen sker på eget ansvar –<br />
+            I kender jeres børn<br />
+            og jeres situation bedst.
+          </p>
+
+          <hr />
+
+          <h3>Projektstatus &amp; version</h3>
+
+          <p>
+            Family Spots Map er et voksende hjerteprojekt.<br />
+            Nye spots, regioner og kategorier kommer til skridt for skridt –<br />
+            først dér, hvor vi selv er på tur med vores børn,<br />
+            senere sammen med partnere og fællesskabet.
+          </p>
+
+          <p>Appversion: <strong>20261029-ui-62</strong></p>
+
+          <p>
+            Hvis kortet har hjulpet jer<br />
+            til en god dag som familie,<br />
+            et øjeblik af lethed<br />
+            eller et sted, I tænker varmt tilbage på,<br />
+            så har det opfyldt sit formål.
+          </p>
+        </article>
+
+        <!-- Englisch -->
+        <article
+          id="page-about-en"
+          class="page page-about hidden"
+          lang="en"
+          aria-hidden="true"
+        >
+          <h2>About Family Spots Map</h2>
+
+          <p>
+            Family Spots Map is a carefully curated map for family adventures –<br />
+            drawn by parents for parents.<br />
+            Instead of endless lists or faceless ratings,<br />
+            you’ll find handpicked playgrounds, zoos and wildlife parks,<br />
+            places for water play, museums, activity parks<br />
+            and many more places for shared family moments.
+          </p>
+
+          <p>
+            The focus is simple:<br />
+            quality, safety and real experiences with children –<br />
+            not the biggest map,<br />
+            but the one you can rely on.
+          </p>
+
+          <p>
+            Family Spots Map is created from the perspective<br />
+            of a young family who are out and about with their own children –<br />
+            often short on time, sometimes tired,<br />
+            yet always searching for a good place<br />
+            to spend a few bright hours together.
+          </p>
+
+          <p>
+            <strong>Tilla, our little turtle, reminds us how precious shared time is.</strong><br />
+            She invites you to slow down, take a breath<br />
+            and discover a place where minutes<br />
+            quietly turn into family memories.
+          </p>
+
+          <hr />
+
+          <h3>How Family Spots Map works</h3>
+
+          <p>
+            <strong>Map &amp; filters:</strong> Zoom into your region,<br />
+            move gently across the map<br />
+            and filter for what you need –<br />
+            playground, wildlife park, pumptrack<br />
+            or a spot that matches your search.
+          </p>
+
+          <p>
+            <strong>Spot cards:</strong> Each spot offers a short story –<br />
+            a compact description, special features<br />
+            such as "drive-through safari" or "accessible"<br />
+            and a note on whether we have verified it.
+          </p>
+
+          <p>
+            <strong>Favourites:</strong> Mark your favourite places with a heart,<br />
+            so they stay close at hand while you travel –<br />
+            even when the connection fades.
+          </p>
+
+          <p>
+            <strong>Offline basics:</strong> Key data is stored locally,<br />
+            helping you to rediscover your spots<br />
+            even with poor reception.
+          </p>
+
+          <hr />
+
+          <h3>Curated &amp; verified – our quality promise</h3>
+
+          <p>
+            Family Spots Map isn’t an anonymous collection of map pins.<br />
+            Every spot is chosen consciously<br />
+            and cared for over time.
+          </p>
+
+          <p>
+            <strong>“Information checked”</strong> marks details checked using sources or our own visits.<br />
+            Checks may cover individual details, such as location, category or visitor information.<br />
+            The label does not automatically confirm every facility or full accessibility.<br />
+            The visitor information shows which details are confirmed and which remain unconfirmed.
+          </p>
+
+          <p>
+            Still, the world keeps changing.<br />
+            Conditions on site may shift –<br />
+            so please always check local information,<br />
+            signs and operator updates,<br />
+            and trust your own judgement.
+          </p>
+
+          <hr />
+
+          <h3>Family Spots Plus – more for motorhomes &amp; adventures</h3>
+
+          <p>
+            Together with matching add-ons,<br />
+            <strong>Family Spots Plus</strong> opens the door to extra specialty categories –<br />
+            rest areas with playground &amp; shower,<br />
+            free motorhome parking near playgrounds,<br />
+            motorhome service points,<br />
+            family-friendly campsites,<br />
+            bikepacking spots and special routes<br />
+            that feel like small adventures.
+          </p>
+
+          <p>
+            The app is in family testing. The base map is available without activation.<br />Your test code unlocks all spots and the water &amp; swimming and motorhome &amp; vanlife areas<br />free for 90 days from first activation.<br />There is no purchase, paid subscription or automatic renewal.<br />A future paid offer and its prices have not been finalised.
+          </p>
+
+          <p>
+            <strong>How do I recognise Plus categories?</strong><br />
+            In the category picker, Plus content carries a clear marker –<br />
+            for example “· Plus”, “· water add-on (Plus)”<br />
+            or “· motorhome add-on (Plus)”.<br />
+            Categories without a suffix belong to the base map.
+          </p>
+
+          <hr />
+
+          <h3>For municipalities, destinations &amp; partners</h3>
+
+          <p>
+            Family Spots Map is not only designed for families,<br />
+            but also for destinations that want to position themselves as family friendly –<br />
+            cities, municipalities, regions, campsites and holiday parks.
+          </p>
+
+          <p>As a partner you can:</p>
+
+          <ul>
+            <li>highlight your region or site with curated family spots,</li>
+            <li>provide Plus codes to guests, citizens or customers,</li>
+            <li>showcase your family-friendly services directly on the map,</li>
+            <li>use feedback from families to improve your services over time.</li>
+          </ul>
+
+          <p>
+            This turns the map into a building block of your family strategy –<br />
+            from a single family-friendly campsite to a full family destination.
+          </p>
+
+          <p>
+            Interested in a pilot region or partnership? Feel free to reach out to
+            <a href="mailto:hallo@familyspotsmap.de?subject=Partnership%20enquiry">hallo@familyspotsmap.de</a>.
+          </p>
+
+          <hr />
+
+          <h3>Help improve the map</h3>
+          <p>Do you know a spot that is missing here — a special playground, a hidden nature highlight or a campsite that feels right with children?</p>
+          <p>Send us its location, category and a short explanation of what makes it special for families. Together, we can improve the map step by step.</p>
+          <hr />
+          <h3>Usage, responsibility &amp; safety</h3>
+
+          <p>
+            Family Spots Map provides information<br />
+            to the best of our knowledge,<br />
+            but cannot guarantee completeness, safety<br />
+            or compliance with every local regulation.
+          </p>
+
+          <p>On site, please always pay attention to:</p>
+
+          <ul>
+            <li>signage and the local rules that guide you,</li>
+            <li>nature protection rules, lifeguards and the weather,</li>
+            <li>your children’s age, courage and abilities.</li>
+          </ul>
+
+          <p>
+            Use of the app is at your own risk —<br />
+            you know your children<br />
+            and your situation best.
+          </p>
+
+          <hr />
+
+          <h3>Project status &amp; version</h3>
+
+          <p>
+            Family Spots Map is a growing passion project.<br />
+            New spots, regions and categories are added step by step —<br />
+            first where we travel with our own children,<br />
+            then together with partners and the community.
+          </p>
+
+          <p>App version: <strong>20261029-ui-62</strong></p>
+
+          <p>
+            If this map helped you spend<br />
+            a good day with your family,<br />
+            then it has fulfilled its purpose.
+          </p>
+        </article>
+      </section>
+
+      <!-- =========================================
+           FILTER-MODAL
+           ========================================= -->
+      <div
+        id="filter-modal"
+        class="filter-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="filter-modal-title"
+        hidden
+      >
+        <div class="filter-modal-inner">
+          <header class="filter-modal-header">
+            <h2
+              id="filter-modal-title"
+              data-i18n-de="Spots finden"
+              data-i18n-en="Find spots"
+              data-i18n-da="Find spots"
+            >Alle filtre</h2>
+
+            <button id="filter-modal-close" class="btn-ghost filter-modal-close-btn" type="button" aria-label="Filter schließen">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </header>
+
+          <div class="filter-modal-body">
+            <p class="filter-group-helper" hidden
+              data-i18n-de="Hier könnt ihr die Auswahl nach Kategorie, Ausstattung und weiteren Merkmalen eingrenzen."
+              data-i18n-en="Refine the results by category, facilities and other features."
+              data-i18n-da="Afgræns resultaterne efter kategori, faciliteter og andre egenskaber."
+            >Afgræns resultaterne efter kategori, faciliteter og andre egenskaber.</p>
+
+            <section id="category-explorer"></section>
+
+            <details
+              class="filter-advanced"
+              id="advanced-filters"
+              aria-labelledby="advanced-filters-label"
+            >
+              <summary
+                class="filter-advanced-summary"
+                id="advanced-filters-summary"
+              >
+                <span
+                  class="filter-group-label"
+                  id="advanced-filters-label"
+                  data-i18n-de="Weitere Filter"
+                  data-i18n-en="More filters"
+                  data-i18n-da="Flere filtre"
+                >Flere filtre</span>
+              </summary>
+
+              <div class="filter-group" id="filter-tags-group" hidden>
+                <label
+                  class="filter-group-label"
+                  id="filter-tags-label"
+                  data-i18n-de="Schnellfilter"
+                  data-i18n-en="Quick filters"
+                  data-i18n-da="Hurtigfiltre"
+                >Hurtigfiltre</label>
+
+                <p class="filter-group-helper" id="filter-tags-helper"
+              data-i18n-de="Wählt zum Beispiel Wasser, Tiere oder Wintererlebnisse. Mehrere Schnellfilter gelten als Alternativen. Ausstattung und kostenlosen Eintritt wählt ihr oben. Mit „folgt“ markierte Filter sind noch nicht verfügbar, weil die Angaben fehlen."
+              data-i18n-en="Choose water play, animals or winter activities, for example. Multiple quick filters are treated as alternatives. Select facilities and free admission above. Filters marked “pending” are not available yet because the information has not been added."
+              data-i18n-da="Vælg for eksempel vandleg, dyr eller vinteroplevelser. Flere hurtigfiltre gælder som alternativer. Vælg faciliteter og gratis adgang ovenfor. Filtre mærket »kommer« er endnu ikke tilgængelige, fordi oplysningerne mangler."
+            >Vælg for eksempel vandleg, dyr eller vinteroplevelser. Flere hurtigfiltre gælder som alternativer. Vælg faciliteter og gratis adgang ovenfor. Filtre mærket »kommer« er endnu ikke tilgængelige, fordi oplysningerne mangler.</p>
+
+                <div
+                  id="filter-tags"
+                  class="tag-filter-row"
+                  role="group"
+                  aria-labelledby="filter-tags-label"
+                  aria-describedby="filter-tags-helper"
+                ></div>
+              </div>
+
+              <div class="filter-group" hidden>
+                <label
+                  class="filter-group-label"
+                  for="filter-category"
+                  id="filter-category-label"
+                  data-i18n-de="Kategorie"
+                  data-i18n-en="Category"
+                  data-i18n-da="Kategori"
+                >Kategori</label>
+
+                <select
+                  id="filter-category"
+                  name="category"
+                  class="input"
+                >
+                  <option
+                    value=""
+                    data-i18n-de="Alle Kategorien"
+                    data-i18n-en="All categories"
+                    data-i18n-da="Alle kategorier"
+                  >Alle kategorier</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label
+                  class="filter-group-label"
+                  for="filter-age"
+                  id="filter-age-label"
+                  data-i18n-de="Alter der Kinder"
+                  data-i18n-en="Age of children"
+                  data-i18n-da="Børnenes alder"
+                >Børnenes alder</label>
+
+                <select
+                  id="filter-age" disabled aria-describedby="filter-age-availability"
+                  name="age"
+                  class="input"
+                >
+                  <option
+                    value="all"
+                    id="filter-age-all"
+                    data-i18n-de="Alle Altersstufen"
+                    data-i18n-en="All age groups"
+                    data-i18n-da="Alle aldersgrupper"
+                  >Alle aldersgrupper</option>
+
+                  <option
+                    value="0-3"
+                    id="filter-age-0-3"
+                    data-i18n-de="0–3 Jahre"
+                    data-i18n-en="0–3 years"
+                    data-i18n-da="0–3 år"
+                  >0–3 år</option>
+
+                  <option
+                    value="4-9"
+                    id="filter-age-4-9"
+                    data-i18n-de="4–9 Jahre"
+                    data-i18n-en="4–9 years"
+                    data-i18n-da="4–9 år"
+                  >4–9 år</option>
+
+                  <option
+                    value="10+"
+                    id="filter-age-10-plus"
+                    data-i18n-de="10+ Jahre"
+                    data-i18n-en="10+ years"
+                    data-i18n-da="10+ år"
+                  >10+ år</option>
+                </select>
+                <p id="filter-age-availability" class="filter-group-helper"
+                  data-i18n-de="Altersangaben werden noch ergänzt. Bitte schaut in die Besuchshinweise des jeweiligen Spots."
+                  data-i18n-en="Age guidance is still being added. Please check each spot’s visitor information."
+                  data-i18n-da="Aldersoplysninger tilføjes løbende. Se besøgsoplysningerne ved det enkelte sted.">Altersangaben werden noch ergänzt. Bitte schaut in die Besuchshinweise des jeweiligen Spots.</p>
+              </div>
+
+              <div class="filter-group filter-group--checkbox">
+                <label
+                  class="checkbox-label"
+                  id="filter-verified-label"
+                >
+                  <input
+                    id="filter-verified"
+                    name="verified"
+                    type="checkbox"
+                  />
+                  <span
+                    data-i18n-de="Mit geprüften Infos"
+                    data-i18n-en="With checked information"
+                    data-i18n-da="Med tjekkede oplysninger"
+                  >Med tjekkede oplysninger</span>
+                </label>
+              </div>
+
+              <div class="filter-group filter-group--checkbox">
+                <label
+                  class="checkbox-label"
+                  id="filter-big-label"
+                >
+                  <input
+                    id="filter-big-adventures"
+                    name="big-adventures"
+                    type="checkbox"
+                  />
+                  <span
+                    data-i18n-de="Große Abenteuer"
+                    data-i18n-en="Big adventures"
+                    data-i18n-da="Store eventyr"
+                  >Store eventyr</span>
+                </label>
+              </div>
+
+              <div class="filter-group filter-group--checkbox">
+                <label
+                  class="checkbox-label"
+                  id="filter-favorites-label"
+                >
+                  <input
+                    id="filter-favorites"
+                    name="favorites"
+                    type="checkbox"
+                  />
+                  <span
+                    data-i18n-de="Nur Favoriten"
+                    data-i18n-en="Favourites only"
+                    data-i18n-da="Kun favoritter"
+                  >Kun favoritter</span>
+                </label>
+              </div>
+            </details>
+          </div>
+
+          <footer class="filter-modal-footer">
+            <p id="filter-results-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+            <button
+              id="filter-modal-reset"
+              class="btn-ghost"
+              type="button"
+            >
+              <span
+                data-i18n-de="Zurücksetzen"
+                data-i18n-en="Reset"
+                data-i18n-da="Nulstil"
+              >Nulstil filtre</span>
+            </button>
+
+            <button
+              id="filter-modal-apply"
+              class="btn"
+              type="button"
+            >Spots ansehen</button>
+          </footer>
+        </div>
+      </div>
+    </main>
+
+    <nav
+      class="bottom-nav"
+      aria-label="Navigation" data-i18n-aria-label="aria_navigation"
+      hidden
+      aria-hidden="true"
+    >
+      <button
+        class="bottom-nav-item"
+        type="button"
+        data-route="map"
+        aria-pressed="true"
+      >
+        <span
+          id="bottom-nav-map-label"
+          data-i18n-de="Karte"
+          data-i18n-en="Map"
+          data-i18n-da="Kort"
+        >Kort</span>
+      </button>
+
+      <button
+        class="bottom-nav-item"
+        type="button"
+        data-route="about"
+        aria-pressed="false"
+      >
+        <span
+          id="bottom-nav-about-label"
+          data-i18n-de="Über"
+          data-i18n-en="About"
+          data-i18n-da="Om"
+        >Om</span>
+      </button>
+    </nav>
+
+    <div
+      id="toast"
+      class="toast"
+      role="status"
+      aria-live="polite"
+    ></div>
+  </div>
+
+  <div class="landscape-warning" aria-hidden="true">
+    <span aria-hidden="true" data-i18n="landscape_hint">
+      Bitte Gerät drehen 📱🔄 – im Hochformat fühlt sich Tilla in der
+      Family Spots Map ein bisschen wohler.
+    </span>
+  </div>
+
+  <!-- Scripts: Leaflet + MarkerCluster -->
+  <script
+    src="./vendor/leaflet/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="anonymous"
+    defer
+  ></script>
+
+  <script
+    src="./vendor/markercluster/leaflet.markercluster.js"
+    defer
+  ></script>
+
+<!-- Offline und kontrollierte Updates -->
+  <script src="./js/sw-register.js?v=20261010-unified-4" defer></script>
+
+  <!-- App (ES-Modul) -->
+  <script type="module" src="./js/app.js?v=20261029-ui-62"></script>
+
+  <!-- Bridge: Menüpunkt "Nur Karte" nutzt die bestehende Toggle-Logik -->
+  <script type="module">
+    const menuToggle = document.getElementById("btn-toggle-view-menu");
+    const sidebarToggle = document.getElementById("btn-toggle-view");
+
+    if (menuToggle && sidebarToggle) {
+      menuToggle.addEventListener("click", () => sidebarToggle.click());
+    }
+  </script>
+
+  <!-- Onboarding-Hinweis: bewusste Schließung lokal merken. -->
+  <script type="module">
+    const hint = document.querySelector("[data-onboarding-hint]");
+    const closeBtn =
+      hint?.querySelector("[data-onboarding-close]") ||
+      hint?.querySelector(".fsm-onboarding-hint__close");
+
+    const hintKey = "fsm_onboarding_hint_dismissed";
+    try { if (localStorage.getItem(hintKey) === "1" && hint) { hint.hidden = true; hint.setAttribute("aria-hidden", "true"); } } catch {}
+
+    function dismissHint() {
+      if (!hint) return;
+      try { localStorage.setItem(hintKey, "1"); } catch {}
+
+      hint.hidden = true;
+      hint.setAttribute("aria-hidden", "true");
+      document.getElementById("btn-toggle-filters")?.focus({ preventScroll: true });
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", dismissHint);
+    }
+  </script>
+
+  <!-- The spot list starts closed on each page load; no persistent UI preference. -->
+  <script type="module">
+    const btn = document.getElementById("btn-toggle-spots");
+    const list = document.getElementById("spot-list");
+    const showLabel = btn?.querySelector('[data-state="show"]');
+    const hideLabel = btn?.querySelector('[data-state="hide"]');
+
+    function setExpanded(expanded) {
+      if (!btn || !list) return;
+      btn.setAttribute("aria-expanded", String(expanded));
+      list.hidden = !expanded;
+      const context = document.getElementById("spot-results-context");
+      if (context) context.hidden = !expanded;
+      showLabel?.classList.toggle("hidden", expanded);
+      hideLabel?.classList.toggle("hidden", !expanded);
+    }
+
+    if (btn && list) {
+      setExpanded(false);
+      btn.addEventListener("click", () => {
+        setExpanded(btn.getAttribute("aria-expanded") !== "true");
+      });
+    }
+  </script>
+</body>
+</html>
