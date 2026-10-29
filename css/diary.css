@@ -79,3 +79,154 @@ body[data-app-view="diary"] #main-content { padding-bottom: max(24px, env(safe-a
 
 html[data-theme="dark"] #diary-title,
 html[data-theme="dark"] .diary-heading p { color: #f3eddc; }
+
+/* Mein Tag / Fotoeingabe. Ausschließlich innerhalb des Tagebuch-Editors. */
+.diary-view .diary-composer > .memory-photo-editor {
+  min-width: 0;
+  margin: 18px 0 18px;
+}
+.diary-view .diary-composer .memory-photo-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin: 0 0 5px;
+}
+.diary-view .diary-composer .memory-photo-heading > strong {
+  min-width: 0;
+  font-weight: 650;
+  line-height: 1.45;
+}
+.diary-view .diary-composer .memory-photo-heading > [role="status"] {
+  margin-inline-start: auto;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.45;
+}
+.diary-view .diary-composer .memory-photo-hint {
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+.diary-view .diary-composer .memory-photo-controls {
+  margin: 0 0 12px;
+}
+.diary-view .diary-composer .memory-photo-controls .memory-photo-add {
+  max-width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  box-shadow: none;
+}
+/* Hinweise: nur eine dezente Umrandung, die komplette Zeile bleibt klickbar. */
+#view-diary #daylog-section .memory-help {
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+  border: 1px solid var(--border-color, #d7cab5);
+  border-radius: 12px;
+  background: var(--chip-bg, #f1e4cf);
+}
+#view-diary #daylog-section .memory-help > summary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+#view-diary #daylog-section .memory-help > summary > span {
+  min-width: 0;
+}
+#view-diary #daylog-section .memory-help > summary::after {
+  margin-inline-start: auto;
+}
+#view-diary #daylog-section .memory-help-icon {
+  flex: 0 0 15px;
+  width: 15px;
+  height: 15px;
+  overflow: visible;
+}
+#view-diary #daylog-section .memory-help-icon circle {
+  fill: none;
+  stroke: var(--fsm-heart-green, #7fa825);
+  stroke-width: 1.8;
+}
+#view-diary #daylog-section .memory-help-icon path {
+  fill: none;
+  stroke: var(--fsm-heart-green, #7fa825);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+#view-diary #daylog-section .memory-help > p {
+  margin: 0;
+  padding: 2px 12px 12px;
+  line-height: 1.55;
+}
+/* Tastaturfokus bleibt sichtbar, ohne auffälligen orangenen Doppelrahmen. */
+#view-diary #daylog-section .memory-help > summary:focus-visible {
+  outline: 2px solid var(--text-soft, #695344);
+  outline-offset: -3px;
+  box-shadow: none;
+}
+/* Primäraktion und ruhiger Abschluss: Originaltexte und orange Markenfarbe. */
+.diary-view .diary-composer > #daylog-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  margin: 5px 0 0;
+  text-align: center;
+}
+.diary-view .diary-composer > #diary-composer-close {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  min-height: 44px;
+  margin: 8px auto 0;
+  padding: 8px 14px;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-soft, #695344);
+  text-align: center;
+}
+.diary-view .diary-composer > #diary-composer-close:focus-visible {
+  outline: 2px solid var(--text-soft, #695344);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+/* Foto-Großansicht: neutraler Rand, auch beim Tastaturfokus. */
+.memory-photo-dialog .memory-photo-close {
+  box-sizing: border-box;
+  min-height: 44px;
+  margin: 0 0 8px auto;
+  padding: 8px 12px;
+  border: 1px solid var(--border-2, #b7a896);
+  border-radius: 12px;
+  background: var(--card-bg, #faf0de);
+  box-shadow: none;
+  color: var(--text-body, #352417);
+}
+.memory-photo-dialog .memory-photo-close:focus-visible {
+  outline: 2px solid var(--text-soft, #695344);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+@media (max-width: 360px) {
+  .diary-view .diary-composer .memory-photo-heading { gap: 2px 8px; }
+  .diary-view .diary-composer .memory-photo-heading > [role="status"] { font-size: .75rem; }
+}
+@media (forced-colors: active) {
+  #view-diary #daylog-section .memory-help > summary:focus-visible,
+  .diary-view .diary-composer > #diary-composer-close:focus-visible,
+  .memory-photo-dialog .memory-photo-close:focus-visible { outline-color: Highlight; }
+  #view-diary #daylog-section .memory-help-icon circle,
+  #view-diary #daylog-section .memory-help-icon path { stroke: CanvasText; }
+}
