@@ -1,0 +1,208 @@
+/* Family Spots Map | UI-Feinschliff 68
+   Stand 26 (quality-66) • nur Darstellung, keine neue Karten-Engine.
+   Absichtlich hinter interface.css geladen; bestehende Funktionen bleiben unverändert.
+   Helle Ansicht präzise veredelt; Abendmodus bleibt bei seinen eigenen Farbwerten.
+*/
+
+/* Einheitliche Oberflächen-Geometrie und ruhige visuelle Hierarchie */
+html.fsm-polished {
+  --fsm-f68-gap: 12px;
+  --fsm-f68-radius: 17px;
+  --fsm-f68-line: #dfd3c1;
+  --fsm-f68-muted: #746758;
+  --fsm-f68-panel: #fff9ef;
+  --fsm-f68-canvas: #f4e8d8;
+}
+html.fsm-polished[data-theme="light"] body { background: var(--fsm-f68-canvas) !important; }
+html.fsm-polished[data-theme="light"] .app-header {
+  background: #f7e4ca !important;
+  border-bottom: 1px solid #ead6b8 !important;
+  box-shadow: none !important;
+}
+html.fsm-polished #app-title.header-title {
+  font-size: clamp(1.35rem, 5.8vw, 1.9rem) !important;
+  font-weight: 650 !important;
+  letter-spacing: -.025em;
+  line-height: 1.23;
+}
+html.fsm-polished .header-tagline,
+html.fsm-polished #header-tagline {
+  line-height: 1.48 !important;
+  max-width: 37rem;
+  margin-inline: auto;
+  text-wrap: pretty;
+}
+html.fsm-polished .app-main { gap: var(--fsm-f68-gap) !important; }
+html.fsm-polished #sidebar { gap: var(--fsm-f68-gap) !important; }
+html.fsm-polished[data-theme="light"] .sidebar-section {
+  background: var(--fsm-f68-panel) !important;
+  border: 1px solid var(--fsm-f68-line) !important;
+  box-shadow: 0 2px 9px rgba(78, 57, 36, .045) !important;
+}
+html.fsm-polished .sidebar-section { border-radius: var(--fsm-f68-radius) !important; }
+html.fsm-polished .sidebar-section-title {
+  font-size: 1rem !important;
+  font-weight: 650 !important;
+  letter-spacing: -.01em;
+}
+
+/* Tilla: wiedererkennbar und freundlich, ohne der Karte den Raum zu nehmen. */
+html.fsm-polished #tilla-section { padding: 13px 15px 14px !important; }
+html.fsm-polished #tilla-section > .sidebar-section-header { margin-bottom: 9px !important; }
+html.fsm-polished #tilla-title {
+  font-size: .88rem !important;
+  font-weight: 550 !important;
+  color: var(--p-muted) !important;
+}
+html.fsm-polished #tilla-section .tilla-sidebar-card {
+  grid-template-columns: minmax(86px, 27%) minmax(0, 1fr) !important;
+  gap: 7px 12px !important;
+  align-items: center;
+}
+html.fsm-polished #tilla-section .tilla-sidebar-avatar {
+  width: 100% !important;
+  flex: none !important;
+  align-self: center;
+}
+html.fsm-polished #tilla-section .tilla-watercolor-canvas { width: 133%; margin-inline-start: -17%; }
+html.fsm-polished #tilla-sidebar-text {
+  font-size: .86rem !important;
+  line-height: 1.52 !important;
+  text-wrap: pretty;
+}
+html.fsm-polished #tilla-section .tilla-sidebar-actions { margin-top: 5px; }
+html.fsm-polished #tilla-section #btn-play-idea {
+  width: 100%; min-height: 44px !important;
+  font-size: .82rem !important;
+  font-weight: 600 !important;
+  border-radius: 11px !important;
+  padding: 9px 11px !important;
+  box-shadow: none !important;
+}
+html.fsm-polished[data-theme="light"] #tilla-section #btn-play-idea {
+  background: #f58a1a !important;
+  border: 1px solid #e77d16 !important;
+  color: #3f2b1a !important;
+}
+html.fsm-polished #tilla-section #menu-toggle {
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  opacity: .9;
+}
+html.fsm-polished #tilla-section #menu-toggle .btn-menu-icon { width: 19px; height: 19px; }
+
+/* Filter und Spot-Teaser: elegante kompakte Zeilen, ganze Fläche bedienbar */
+html.fsm-polished #filter-section,
+html.fsm-polished #spots-section { scroll-margin-top: 12px; }
+html.fsm-polished :is(#filter-section, .sidebar-section--grow) > .sidebar-section-header {
+  min-height: 44px !important;
+  gap: 12px;
+}
+html.fsm-polished :is(#btn-toggle-filters, #btn-toggle-spots) {
+  min-height: 44px !important;
+  font-size: .84rem !important;
+  line-height: 1.4;
+}
+html.fsm-polished .fsm-disclosure-chevron { opacity: .75; }
+html.fsm-polished .filter-group-label { letter-spacing: .075em; }
+html.fsm-polished :is(.filter-group-helper, .filter-summary, .plus-note) {
+  line-height: 1.58;
+  color: var(--p-muted);
+}
+html.fsm-polished #filter-section .mood-chip {
+  border-radius: 13px !important;
+  min-height: 48px;
+  line-height: 1.4;
+}
+html.fsm-polished :is(.input, #filter-search, #daylog-text) {
+  border-radius: 12px !important;
+  line-height: 1.52;
+}
+
+/* Spots: Bilder stehen im Mittelpunkt; Rest bildet eine lesbare ruhige Karte. */
+html.fsm-polished .spot-card {
+  border-radius: 18px !important;
+  padding: 16px !important;
+  box-shadow: 0 2px 10px rgba(77, 55, 31, .05) !important;
+}
+html.fsm-polished .spot-card .preview-card-image {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: clamp(175px, 46vw, 240px) !important;
+  object-fit: cover;
+  border-radius: 14px;
+  margin: 0 0 16px !important;
+}
+html.fsm-polished .spot-card-title {
+  font-size: 1.05rem !important;
+  line-height: 1.4;
+  font-weight: 650 !important;
+}
+html.fsm-polished .spot-card-description {
+  font-size: .87rem !important;
+  line-height: 1.6 !important;
+  margin-block: 10px !important;
+}
+html.fsm-polished :is(.spot-card-subtitle, .spot-card-meta) {
+  line-height: 1.5;
+}
+html.fsm-polished .spot-card-badges { gap: 5px; }
+html.fsm-polished .spot-card-actions {
+  margin-top: 13px;
+  padding-top: 10px;
+  border-top: 1px solid var(--p-line);
+}
+html.fsm-polished .spot-card-actions > button { min-height: 44px !important; }
+
+/* Filterdialog: klare Gliederung und 44px Touch-Ziele, ohne zusätzliche Deko. */
+html.fsm-polished .filter-modal-inner {
+  border-radius: 20px !important;
+  box-shadow: 0 10px 30px rgba(46, 36, 25, .16) !important;
+}
+html.fsm-polished #filter-modal-title { font-size: 1.16rem !important; font-weight: 650 !important; }
+html.fsm-polished #filter-modal .category-explorer__chip {
+  border-radius: 12px !important;
+  min-height: 48px;
+}
+html.fsm-polished #filter-modal .category-explorer__name { line-height: 1.32; }
+html.fsm-polished #filter-modal #filter-modal-apply { min-height: 48px; font-weight: 650 !important; }
+
+/* Mein Tag: stille Erinnerungsseite, gute Schriftgröße auch auf iPhone. */
+html.fsm-polished #diary-title { font-size: clamp(1.5rem, 6vw, 1.85rem) !important; font-weight: 650 !important; }
+html.fsm-polished .diary-heading p { font-size: .88rem !important; }
+html.fsm-polished #diary-new-memory { min-height: 44px; }
+html.fsm-polished .diary-composer,
+html.fsm-polished .diary-view #daylog-list > .daylog-entry {
+  border-radius: 18px !important;
+  box-shadow: 0 2px 9px rgba(72, 52, 30, .05) !important;
+}
+html.fsm-polished #daylog-text { min-height: 122px !important; }
+html.fsm-polished #daylog-save { min-height: 48px; font-weight: 650 !important; }
+html.fsm-polished .diary-view .daylog-entry-text { line-height: 1.65; }
+
+/* Feiner Fokus für Tastatur, ohne Tap-Umrandungen. */
+html.fsm-polished[data-fsm-focus-modality="keyboard"]
+  :is(#btn-play-idea, #menu-toggle, #btn-toggle-filters, #btn-toggle-spots,
+      #filter-modal-apply, #daylog-save, .spot-card-actions button):focus-visible {
+  outline: 2px solid #667e52 !important;
+  outline-offset: 3px !important;
+}
+
+@media (max-width: 420px) {
+  html.fsm-polished #app-title.header-title { font-size: clamp(1.23rem, 5.35vw, 1.55rem) !important; }
+  html.fsm-polished .app-main { padding-inline: 12px !important; }
+  html.fsm-polished #tilla-section .tilla-sidebar-card { grid-template-columns: 30% minmax(0, 1fr) !important; gap: 6px 10px !important; }
+  html.fsm-polished #tilla-sidebar-text { font-size: .82rem !important; }
+  html.fsm-polished .spot-card { padding: 14px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.fsm-polished .tilla-sidebar-card,
+  html.fsm-polished .spot-card { animation: none !important; }
+}
