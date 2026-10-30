@@ -10,6 +10,22 @@ Family Spots Map ist eine mehrsprachige Kartenanwendung für Familien: mit Spiel
 
 **Dansk:** Find familieudflugter, planlæg besøget, og gem små øjeblikke, I vil huske.
 
+## Stand 20261030-quality-66
+
+- Durchgängige Gestaltung in DE/EN/DA: gemeinsame Schrift- und Farbrollen, ruhigere Flächen, gerader Kopfbereich ohne helle Eckstücke, dezentes Menü und orange Spielideen-Aktion.
+- Bestehende Spotfotos werden zusätzlich in den Ergebnis-Karten gezeigt. Fehlgeschlagene Vorschaubilder werden entfernt, statt defekte Bildflächen anzuzeigen.
+- Die neue `css/interface.css` ist in allen drei Einstiegsseiten und im Offline-Cache eingebunden.
+
+- Vollbildkarte mit Suche, wischbarer Themenleiste und Navigation zu den bestehenden App-Bereichen. Es bleibt dieselbe Leaflet-Instanz; Themen und Suche teilen den vorhandenen Filterzustand.
+- Die Wasser-Themenwahl der Vollbildkarte entspricht exakt „Wasser & Sand“ in der Schnellwahl. Bei aktiven Ortsarten wird „Alle“ nicht mehr fälschlich markiert.
+- Schnellwahl und Auswahltext verwenden dieselben Themennamen. Ortsarten und Drinnen/Draußen werden mit „oder“ beschrieben, zusätzliche Anforderungen mit „und“.
+- Filterkarte, Ergebnisliste und Leerzustand verwenden dieselbe Auswahlbeschreibung. Ein Radius ohne verfügbaren Standort ist ausdrücklich als noch nicht aktiv gekennzeichnet; die Ergebnisaktion übernimmt auch eine gerade erst eingegebene Suche.
+- Ruhigere Fotoeingabe in „Mein Tag“ mit kontrastreichem grünem Informationssymbol und den vorhandenen Foto- und Erinnerungsformaten.
+- Zusätzliche ortsartbezogene Suchsynonyme; daraus werden keine neuen Ausstattungs-, Preis- oder Übernachtungsangaben abgeleitet.
+- Der bestehende Prüfbefehl `node tools/check-project.mjs` führt zusätzlich 2.458 Filtervertragsprüfungen aus.
+
+Die Freigabeabläufe dieses Stands wurden in Chromium, WebKit und Firefox geprüft, einschließlich Offline-Start, Filter, Vollbildnavigation und Fotoeingabe. Ein physischer iPhone-/Safari- oder Android-Test steht aus. Die lokalen Inhaltsprüfungen bestätigen Struktur und interne Verträge, nicht die Aktualität aller externen Ortsangaben.
+
 ## App öffnen
 
 | Sprache | Web-App |
