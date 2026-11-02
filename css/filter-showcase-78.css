@@ -540,3 +540,112 @@ html.fsm-polished #filter-modal #filter-modal-apply::after {
     flex-basis:16px!important;width:16px!important;height:16px!important;
   }
 }
+
+
+/* V81.2 – Feinabstimmung der Startseiten-Schnellwahl, Vollbild-Themen und Abstände.
+   Ausschließlich Präsentation; mehrere Ortsarten im Expertenfilter bleiben erlaubt.
+   Der aktive Zustand wird immer am individuellen aria-pressed Attribut gelesen. */
+
+/* Bestehenden 44px-Button absichern, ohne seine größere Klickfläche zu verlieren. */
+html.fsm-polished #filter-section #btn-open-filter-modal.btn {
+  box-sizing:border-box!important;
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  padding:0 14px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1.2!important;
+  box-shadow:none!important;
+}
+/* Eine Spur mehr Abstand *unter* dem zusammenfassenden Auswahltext. */
+html.fsm-polished #filter-section > .filter-footer {
+  padding-bottom:9px!important;
+  margin-bottom:2px!important;
+}
+html.fsm-polished #filter-section #filter-summary {
+  line-height:1.45!important;
+  margin-bottom:0!important;
+}
+/* Inaktive Schnellwahl neutral, aktive nur an EINEM aria-pressed=true Chip. */
+html.fsm-polished[data-theme="light"] #filter-section .mood-row > .mood-chip:not([aria-pressed="true"]) {
+  background:#f6ede0!important;
+  border:1px solid #ded3c2!important;
+  color:#3e4036!important;
+  box-shadow:none!important;
+}
+html.fsm-polished[data-theme="light"] #filter-section .mood-row > .mood-chip[aria-pressed="true"] {
+  background:#d9e6cd!important;
+  border:1px solid #839e77!important;
+  color:#29462d!important;
+  box-shadow:inset 0 0 0 1px rgba(64,100,55,.09)!important;
+  font-weight:600!important;
+}
+html.fsm-polished[data-theme="dark"] #filter-section .mood-row > .mood-chip:not([aria-pressed="true"]) {
+  background:#3d473a!important;
+  border:1px solid #737f6e!important;
+  color:#f0f1e8!important;
+  box-shadow:none!important;
+}
+html.fsm-polished[data-theme="dark"] #filter-section .mood-row > .mood-chip[aria-pressed="true"] {
+  background:#526b4b!important;
+  border:1px solid #9bb38b!important;
+  color:#f8f8f0!important;
+  box-shadow:inset 0 0 0 1px rgba(208,225,195,.10)!important;
+  font-weight:600!important;
+}
+html.fsm-polished #filter-section .mood-row > .mood-chip[aria-pressed="true"] .mood-chip-emoji {color:inherit!important;}
+
+/* Gleiches Auswahlprinzip im großen Themen-Dialog: satter, nicht ausgewaschen. */
+html.fsm-polished[data-theme="light"] #filter-modal .category-explorer__worlds > .category-explorer__chip[aria-pressed="true"]:not([data-world=""]) {
+  --fs78-chip-bg:#d9e6cd;
+  --fs78-chip-line:#839e77;
+  background:#d9e6cd!important;
+  border-color:#839e77!important;
+  color:#29462d!important;
+  box-shadow:inset 0 0 0 1px rgba(64,100,55,.09)!important;
+}
+html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds > .category-explorer__chip[aria-pressed="true"]:not([data-world=""]) {
+  background:#526b4b!important;
+  border-color:#9bb38b!important;
+  color:#f8f8f0!important;
+  box-shadow:inset 0 0 0 1px rgba(208,225,195,.10)!important;
+}
+
+/* Die horizontale Vollbild-Kartenleiste darf neben dem gewählten Thema nicht
+   weitere Chips als aktiv aussehen lassen. Unterschiedliche ruhige Zustände. */
+html.fsm-polished[data-theme="light"] #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme[aria-pressed="false"] {
+  background:#fff9ef!important;
+  border-color:#d9cdb9!important;
+  color:#394139!important;
+  box-shadow:0 1px 4px rgba(42,39,30,.08)!important;
+}
+html.fsm-polished[data-theme="light"] #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme[aria-pressed="true"] {
+  background:#587348!important;
+  border-color:#587348!important;
+  color:#fffdf4!important;
+  box-shadow:none!important;
+}
+html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme[aria-pressed="false"] {
+  background:#354134!important;
+  border-color:#737f6d!important;
+  color:#f3f2e9!important;
+  box-shadow:0 1px 4px rgba(0,0,0,.13)!important;
+}
+html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme[aria-pressed="true"] {
+  background:#526b4b!important;
+  border-color:#9bb58f!important;
+  color:#fefdf5!important;
+  box-shadow:none!important;
+}
+/* Sichtbarer Tastaturfokus, unabhängig vom ausgewählten Zustand. */
+html.fsm-polished #filter-section .mood-row > .mood-chip:focus-visible,
+html.fsm-polished #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme:focus-visible {
+  outline:2px solid #376a45!important;
+  outline-offset:3px!important;
+}
+html.fsm-polished[data-theme="dark"] #filter-section .mood-row > .mood-chip:focus-visible,
+html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme:focus-visible {
+  outline-color:#d5e7c9!important;
+}
