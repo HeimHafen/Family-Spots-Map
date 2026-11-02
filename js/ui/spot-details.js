@@ -549,6 +549,17 @@ export function createSpotDetailsController({
       spotDetailEl.appendChild(descEl);
     }
 
+    // Opt-in for verified public play spaces; no event data is fabricated here.
+    if (spot?.community?.enabled === true && spot?.community?.type === "bolzplatz") {
+      const labels = {de:"Treffen & Spiele ansehen", en:"View meetups & games", da:"Se møder og spil"};
+      const action = document.createElement("button");
+      action.type = "button";
+      action.className = "spot-community-open";
+      action.textContent = labels[currentLang] || labels.de;
+      action.addEventListener("click", () => document.dispatchEvent(new CustomEvent("fsm:community-open", {detail: {spot}})));
+      spotDetailEl.appendChild(action);
+    }
+
     appendSpotGallery(spotDetailEl, spot);
     const hasStructuredVisitDetails = appendVisitDetails(spotDetailEl, spot);
 

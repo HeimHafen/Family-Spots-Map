@@ -24,6 +24,7 @@ document.addEventListener("keydown", event => {
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
 import { createHomeNavigation } from "./ui/home-navigation.js";
+import { initCommunityPlay } from "./features/community-play.js?v=20261102-community-v85";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
@@ -92,7 +93,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261102-fsm-homescreen-v84-5";
+} from "./map.js?v=20261102-fsm-community-v85";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { getInitialTheme, applyTheme } from "./theme.js";
@@ -125,6 +126,7 @@ const warn = (...args) => {
 // ------------------------------------------------------
 
 const { closeMenu } = initMenu();
+initCommunityPlay({ getLanguage: () => currentLang, closeMenu });
 
 initLanguageSwitcher();
 initSkipToSpots(closeMenu);

@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261102-fsm-homescreen-v84-5");
+@import url("./categories.css?v=20261102-fsm-community-v85");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -24,7 +24,7 @@
 @import url("./evening.css?v=20261030-focus-fields-77");
 
 
-@import url("./map-spots.css?v=20261102-fsm-homescreen-v84-5");
+@import url("./map-spots.css?v=20261102-fsm-community-v85");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
