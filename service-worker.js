@@ -1,7 +1,7 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261102-fsm-unified-design-83";
+const CACHE_VERSION = "20261102-fsm-home-nav-v84";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v83-1-refinement";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/filter-model.js",
@@ -35,6 +35,7 @@ const ASSETS = [
   "js/ui/map-spots.js",
   "js/ui/map-fullscreen.js",
   "js/ui/map-toolbar.js",
+  "js/ui/home-navigation.js",
   "js/router.js",
   "js/storage.js",
   "js/sw-register.js",
@@ -54,6 +55,7 @@ const ASSETS = [
   "manifest.webmanifest",
   "css/styles.css",
   "css/map-spots.css",
+  "css/fsm-home-navigation-84.css",
   "css/evening.css",
   "css/theme.css",
   "css/base.css",
@@ -174,21 +176,21 @@ const RELEASE_HASHES = {
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "da/index.html": "3e41c9bcad9e2655e7de4ed7bbd2163053e113501f83325f19f3b11135e13c97",
+  "da/index.html": "a9c0ffe5a03840c8f3a5558526dcb934d83331cb9b73ddf05e936f4bf4385234",
   "data/i18n/da.json": "ea352b0d313a958ccd04905575575bf8a712e7242cc64852baef0594db2725ae",
   "data/i18n/de.json": "ed6a56c1cd80c3608924e2bbddbc77ead73b01cb92b0e462a213f3e77c1d8fe5",
   "data/i18n/en.json": "cc4d5111cfd35ecdc9598447de714fe6761a7986407759907e6c2f815c3421e0",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
-  "en/index.html": "edc5c6797ade2c4908e64876bb434baa3431822bf09129e4f935810f96259d63",
-  "index.html": "1f9aee1011ed257a8b587629846166f00c91f363deef99a5f6194b76287ede33",
-  "js/app.js": "61a2584e1161393b03b4756830768729c7eb97f64c93782309eb168775fdbf09",
+  "en/index.html": "c0d84a6d8e3c6e065138c9e57c65e02d54d5a048f2ab052f1f08541c55132b7e",
+  "index.html": "72897646eb8d60d507df568f483498ea9ae8586eb3ce2c3ef5b912f43c76884d",
+  "js/app.js": "a6c6ec016f98247148efecc6816675f2ed880bb6b61f1fbb7972d6abaa68abad",
   "js/config.js": "5d7ebbc76980756b7a096609229ae368739eecda70b82e87cd5472957df8c06c",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "e398f18e7a246b3ff32148d05ccf387752272e6e5cb11bc125fa91ded4968dec",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "cb1a4485643ef16e182847b2b0b1f5b5dcdef5510bf9cf6058ffda4b838d44d7",
-  "js/map.js": "a93729a4d12840ab59a0cdb4f3896dca1a71cf660389553437a99bd9e456cc3e",
+  "js/map.js": "51f285791153bea60379491771c350421ce36ff7c5b185d324097f1104dbe656",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "e6c3af4e33166ad5db667f9be58232cbf02c7fee75da20a1415a2275058b5412",
   "offline.html": "3abeb27b2196a79a73f2bfc84d4137a6519f9ded69e0f7de8e7c11a57cd06177",
@@ -222,7 +224,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "93512e7a68293f4cb09eda3ac0c0a59509e8eb1d836e4fa51a4e6c3c14a19923",
   "js/filters/tags.js": "3b8386ba863d390884eee9c6c8c7892959a4b8079155736e6d5f5df3f501af76",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "566b694b6c01dfc50bcc55bf7794dca8ddcf6cee2ccbd4243a6b542c561c3340",
+  "css/styles.css": "34358149ae55d3c2ecce2a6b7ad340631459af9972e9398197f386ff8ca4f1ab",
   "js/ui/map-fullscreen.js": "5db28946c3ee227a89f85bfda54c08c854837cd9b1dfa9621bc47c52e51d48b3",
   "js/categories.js": "399b984aee4d1508cc905805859c56206a396b6a81b23438983ed9b92b97ede7",
   "js/ui/category-explorer.js": "45a407e69a4204ffc95964e5d761b8b729da7fbb41a39927e7d98e7a713f7af9",

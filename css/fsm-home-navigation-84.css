@@ -1,0 +1,70 @@
+/* V84: Navigation consolidated; original filtering and spot data remain untouched. */
+html.fsm-home-nav-ready #sidebar > #filter-section,
+html.fsm-home-nav-ready #sidebar > .sidebar-section--grow { display: none !important; }
+html.fsm-home-nav-ready #view-map { row-gap: 12px; }
+html.fsm-home-nav-ready #view-map > .map-section { margin-top: 0 !important; }
+html.fsm-home-nav-ready #main-content { padding-bottom: 100px !important; }
+.fsm-home-nav {
+  --fsm-nav-bg: #fff8ef; --fsm-nav-text: #3b3329; --fsm-nav-line: #d9cdbc;
+  --fsm-nav-active: #78934f; --fsm-nav-active-ink: #fff9ef;
+  position: fixed; z-index: 950; bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
+  max-width: 620px; margin-inline: auto;
+  display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); align-items: stretch;
+  padding: 5px; gap: 3px; border: 1px solid var(--fsm-nav-line); border-radius: 21px;
+  background: var(--fsm-nav-bg); color: var(--fsm-nav-text);
+  box-shadow: 0 4px 16px #40362929;
+}
+.fsm-home-nav__item {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:3px; min-width:0; min-height:62px; padding:7px 1px;
+  border:0; border-radius:16px; background:transparent; color:inherit;
+  font:inherit; font-size:11px; font-weight:600; line-height:1.15;
+  text-align:center; cursor:pointer; touch-action:manipulation;
+}
+.fsm-home-nav__item > svg { width:21px; height:21px; flex:none; }
+.fsm-home-nav__item > .spots-plus-crown {color:#c99122;}
+.fsm-home-nav__item > .fsm-daylog-heart {width:21px;height:21px;fill:#7fa825;stroke:#36551c;}
+.fsm-home-nav__item[aria-current="page"] {background:var(--fsm-nav-active);color:var(--fsm-nav-active-ink);}
+.fsm-home-nav__item[hidden] {display:none !important;}
+.fsm-home-nav__item:focus-visible, .fsm-home-sheet__close:focus-visible {outline:2px solid #65844f; outline-offset:2px;}
+.fsm-home-nav__label {overflow-wrap:anywhere;}
+html[data-theme="dark"] .fsm-home-nav {
+  --fsm-nav-bg:#303b33; --fsm-nav-text:#f7f3e9; --fsm-nav-line:#71806e;
+  --fsm-nav-active:#b8d2a1; --fsm-nav-active-ink:#2c372b;
+  box-shadow:0 5px 18px #0005;
+}
+html[data-theme="dark"] .fsm-home-nav__item > .fsm-daylog-heart {fill:#87ad31;}
+/* Native modal gives keyboard focus containment and iOS-safe top-layer semantics. */
+.fsm-home-sheet {
+  box-sizing:border-box; width:min(570px, calc(100vw - 24px));
+  max-width:570px; max-height:min(87dvh, calc(100dvh - 24px));
+  margin:auto auto max(12px, env(safe-area-inset-bottom, 0px));
+  padding:12px; border:1px solid var(--fsm-home-border,#d9cdbc);
+  border-radius:26px 26px 18px 18px;
+  background:var(--fsm-home-panel,#fff8ef);
+  color:var(--fsm-home-ink,#3b3329);
+  box-shadow:0 18px 48px #0004;
+  overflow-y:auto; overscroll-behavior:contain;
+}
+.fsm-home-sheet::backdrop {background:rgba(25,27,20,.52);backdrop-filter:blur(3px);}
+.fsm-home-sheet:not([open]) {display:none !important;}
+.fsm-home-sheet__head {display:flex;align-items:center;justify-content:space-between;gap:12px;padding:3px 7px 12px;}
+.fsm-home-sheet__title {font:inherit;font-size:20px;font-weight:750;line-height:1.25;margin:0;}
+.fsm-home-sheet__close {display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid var(--fsm-home-border,#d9cdbc);border-radius:50%;background:transparent;color:inherit;cursor:pointer;}
+.fsm-home-sheet__close > svg {width:19px;height:19px;}
+.fsm-home-sheet__content > .sidebar-section {margin:0!important;max-width:100%;width:100%;}
+.fsm-home-sheet #spot-list {max-height:none!important;overflow:visible!important;}
+.fsm-home-sheet .sidebar-section--grow > .sidebar-section-header {position:sticky;top:0;z-index:1;background:var(--fsm-home-panel,#fff8ef);}
+html[data-theme="dark"] .fsm-home-sheet {--fsm-home-panel:#d4d0c5;--fsm-home-ink:#352e23;--fsm-home-border:#aaa795;}
+html[data-theme="light"] .fsm-home-sheet {--fsm-home-panel:#fff8ef;--fsm-home-ink:#3b3329;--fsm-home-border:#d9cdbc;}
+/* No second nav over the map's dedicated fullscreen nav or other routes. */
+html.fsm-map-fullscreen-open .fsm-home-nav,
+html.fsm-home-sheet-open .fsm-home-nav,
+body[data-app-view="diary"] .fsm-home-nav,
+body[data-app-view="about"] .fsm-home-nav,
+body[data-filter-modal-open="1"] .fsm-home-nav,
+body:has(#app-menu:not([hidden])) .fsm-home-nav {display:none!important;}
+@media (min-width:900px) { .fsm-home-nav {bottom:18px;} }
+@media (max-width:359px) { .fsm-home-nav__item {font-size:10px;} .fsm-home-nav {gap:0;left:6px;right:6px;} }
+@media (prefers-reduced-motion:reduce) { .fsm-home-nav *, .fsm-home-sheet * {transition:none!important;} }

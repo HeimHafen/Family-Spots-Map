@@ -23,6 +23,7 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
+import { createHomeNavigation } from "./ui/home-navigation.js";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
@@ -91,7 +92,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261102-fsm-unified-design-83";
+} from "./map.js?v=20261102-fsm-home-nav-v84";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { getInitialTheme, applyTheme } from "./theme.js";
@@ -686,6 +687,7 @@ let btnOpenFilterModalEl;
 let filterModalEl;
 let filterModalCloseEl;
 let filterModalApplyEl;
+let homeNavigation = null;
 let filterModalResetEl;
 let filterSummaryEl;
 
@@ -1528,7 +1530,7 @@ function openFilterModal() {
   if (!filterModalEl) return;
 
   isFilterModalOpen = true;
-  lastFocusBeforeFilterModal = document.activeElement;
+  lastFocusBeforeFilterModal = homeNavigation?.getButton("filters") || document.activeElement;
 
   filterModalEl.hidden = false;
   document.body?.setAttribute("data-filter-modal-open", "1");
@@ -1702,6 +1704,10 @@ function openFavoritesFromMenu() {
   onlyFavorites = true;
   if (filterFavoritesEl) filterFavoritesEl.checked = true;
   applyFiltersAndRender();
+  if (homeNavigation) {
+    homeNavigation.openPanel("spots");
+    return;
+  }
   const listToggle = document.getElementById("btn-toggle-spots");
   if (listToggle?.getAttribute("aria-expanded") === "false") listToggle.click();
   requestAnimationFrame(() => {
@@ -3108,6 +3114,10 @@ function showFilteredResults() {
   appRouter?.switchRoute("map");
   if (sidebarEl?.classList.contains("hidden")) handleToggleView();
   closeSpotDetails({ returnFocus: false });
+  if (homeNavigation) {
+    homeNavigation.openPanel("spots");
+    return;
+  }
   const toggle = document.getElementById("btn-toggle-spots");
   if (toggle?.getAttribute("aria-expanded") !== "true") toggle?.click();
   requestAnimationFrame(() => {
@@ -3138,7 +3148,8 @@ function syncSpotListLabels() {
 
 function showAllSpotsFromFavorites() {
   resetAllFilters();
-  document.getElementById("btn-toggle-spots")?.focus({ preventScroll: true });
+  if (homeNavigation) homeNavigation.openPanel("spots");
+  else document.getElementById("btn-toggle-spots")?.focus({ preventScroll: true });
 }
 
 function renderSpotList() {
@@ -4169,6 +4180,9 @@ async function init() {
         });
       }
     });
+
+    // Home navigation reuses the existing Filter, Spots, Plus and Diary state.
+    homeNavigation = createHomeNavigation({plusEnabled: FEATURES.plus, diaryEnabled: FEATURES.daylog});
 
     // Filtermodal
     btnOpenFilterModalEl?.addEventListener(
