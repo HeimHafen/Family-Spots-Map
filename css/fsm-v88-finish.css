@@ -1,0 +1,102 @@
+/* Family Spots Map · V88.1 · Freigabekandidat für das UI-Finish
+ * Nur Präsentation: grüne Eingabe-Fokusränder entfernen, dunklen Karten-Doppelrand
+ * vereinheitlichen. Bestehende Auswahlfarben/Filterzustände bleiben unverändert.
+ * Tastaturfokus bleibt neutral sichtbar (Barrierefreiheit).
+ */
+html.fsm-polished {
+  --fsm-v88-input-edge: #c9bdad;
+  --fsm-v88-input-focused: #8b8173;
+  --fsm-v88-focus-ink: #71685b;
+}
+html.fsm-polished[data-theme="dark"] {
+  --fsm-v88-input-edge: #8d9388;
+  --fsm-v88-input-focused: #c0bba9;
+  --fsm-v88-focus-ink: #e1d9ca;
+}
+/* Einfacher, ruhiger Rand bei allen Texteingaben – kein grüner Doppelring. */
+html.fsm-polished body :is(
+  input.input, textarea.input, select.input,
+  input[type="text"], input[type="search"], input[type="email"],
+  input[type="number"], input[type="url"], input[type="tel"],
+  input[type="password"], textarea, select
+) {
+  border-color: var(--fsm-v88-input-edge) !important;
+}
+html.fsm-polished body :is(
+  input.input, textarea.input, select.input,
+  input[type="text"], input[type="search"], input[type="email"],
+  input[type="number"], input[type="url"], input[type="tel"],
+  input[type="password"], textarea, select
+):is(:focus, :focus-visible) {
+  border: 1px solid var(--fsm-v88-input-focused) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+/* Kein grüner Fokus-Ring an Knöpfen, Links und Toggles.
+   Neutrale Tastatur-Markierung bleibt sichtbar und barrierearm. */
+html.fsm-polished body :is(button, a, summary, [role="button"], [tabindex]):not([tabindex="-1"]):focus-visible,
+html.fsm-polished #fsm-home-nav :is(button, [tabindex]):focus-visible,
+html.fsm-polished #fse-overlay :is(button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--fsm-v88-focus-ink) !important;
+  outline-offset: 2px !important;
+}
+/* Auf dem iPhone erscheint bei Berührung nie ein grüner Tastatur-Ring.
+   Bei echter Tastaturnavigation erhalten alle Bedienelemente einen neutralen Fokus. */
+html.fsm-polished[data-fsm-focus-modality="pointer"] body
+  :is(button, a, summary, input, textarea, select, [tabindex]):focus-visible {
+  outline: none !important;
+}
+html.fsm-polished[data-fsm-focus-modality="keyboard"] body
+  :is(button, a, summary, input, textarea, select, [tabindex]):not([tabindex="-1"]):focus-visible {
+  outline: 2px solid var(--fsm-v88-focus-ink) !important;
+  outline-offset: 2px !important;
+}
+/* IPhone: Gerade diese beiden Eingaben waren durch spezifischere V70/V83-Regeln grün.
+   Kein Fokusring beim Schreiben, der Cursor bleibt sichtbar. */
+html.fsm-polished body #filter-search:is(:focus, :focus-visible),
+html.fsm-polished body #view-diary #daylog-text:is(:focus, :focus-visible) {
+  border: 1px solid var(--fsm-v88-input-focused) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+/* Keine grünen Umrandungen der Such- oder Tagebuch-Karten bei :focus-within. */
+html.fsm-polished :is(#filter-modal, #view-diary)
+  :is(.filter-group, .diary-composer):focus-within {
+  outline: none !important;
+}
+/* Leaflet bleibt unverändert – nur das umgebende, doppelte Kartenprofil wird entfernt.
+   Ein einziger Clip-Radius, keine hellen/olivfarbenen Trennlinien in dunkler Ansicht. */
+html.fsm-polished #view-map > .map-section {
+  border: 0 !important;
+  border-radius: 20px !important;
+  background: transparent !important;
+  box-shadow: 0 3px 13px rgba(52, 44, 30, .10) !important;
+  overflow: hidden !important;
+}
+html.fsm-polished #view-map > .map-section > #map,
+html.fsm-polished #view-map > .map-section > #map:not(#fsm-map-fullscreen #map),
+html.fsm-polished #view-map > .map-section > #map.leaflet-container {
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 20px !important;
+}
+html.fsm-polished[data-theme="dark"] #view-map > .map-section {
+  background: #303a30 !important;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, .19) !important;
+}
+/* Die Navigation selbst bleibt vollständig erhalten – nur das Symbol ändert sich. */
+/* Erzwungene Systemkontraste niemals verdecken. */
+@media (forced-colors: active) {
+  html.fsm-polished body :is(input, textarea, select):focus-visible {
+    outline: 2px solid Highlight !important;
+    outline-offset: 2px !important;
+    border-color: Highlight !important;
+  }
+  html.fsm-polished body :is(button, a, summary, [tabindex]):focus-visible {
+    outline: 2px solid Highlight !important;
+  }
+  html.fsm-polished #view-map > .map-section {
+    border: 1px solid CanvasText !important;
+  }
+}
