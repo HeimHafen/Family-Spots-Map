@@ -1,0 +1,102 @@
+/* Family Spots Map V86 – Gemeinsam erleben | calm warm palette, scoped UI */
+#fsm-meetup-overlay{position:fixed;inset:0;z-index:2147483001;display:flex;align-items:flex-end;justify-content:center;isolation:isolate;color:#382b20;font-family:inherit}
+#fsm-meetup-overlay *{box-sizing:border-box}
+#fsm-meetup-overlay .fsm-meetup-shade{position:absolute;inset:0;background:rgba(26,32,23,.57);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+#fsm-meetup-overlay .fsm-meetup-panel{position:relative;display:flex;flex-direction:column;background:#fff9f0;border:1px solid #dfcdb8;border-radius:26px 26px 19px 19px;width:min(590px,calc(100vw - 14px));max-height:calc(100dvh - env(safe-area-inset-top,0px) - 16px);margin-bottom:max(4px,env(safe-area-inset-bottom,0px));overflow:hidden;box-shadow:0 18px 50px rgba(27,29,20,.35);color:inherit}
+#fsm-meetup-overlay button,#fsm-meetup-overlay input,#fsm-meetup-overlay select,#fsm-meetup-overlay textarea{font:inherit}
+#fsm-meetup-overlay button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#fsm-meetup-overlay button:focus-visible,#fsm-meetup-overlay :is(input,select,textarea,a):focus-visible{outline:3px solid #7c9c53;outline-offset:2px}
+#fsm-meetup-overlay [hidden]{display:none!important}
+#fsm-meetup-overlay .fsm-meetup-header{display:grid;grid-template-columns:40px minmax(0,1fr) 38px;gap:10px;align-items:center;padding:15px 18px 11px;background:#fff9f0;border-bottom:1px solid #e9dcca;flex:none}
+#fsm-meetup-overlay .fsm-meetup-badge{border-radius:50%;height:39px;width:39px;background:#e8efce;color:#59763a;font-size:28px;font-weight:700;display:grid;place-items:center;line-height:1}
+#fsm-meetup-overlay .fsm-meetup-heading{min-width:0}
+#fsm-meetup-overlay .fsm-meetup-eyebrow{font-size:10px;font-weight:800;color:#6b8443;letter-spacing:.065em}
+#fsm-meetup-overlay .fsm-meetup-heading h2{font-size:clamp(20px,4.6vw,25px);line-height:1.14;font-weight:780;letter-spacing:-.025em;margin:1px 0 0;color:#3c3327}
+#fsm-meetup-overlay .fsm-meetup-heading p{font-size:12px;line-height:1.38;margin:4px 0 0;color:#74695a}
+#fsm-meetup-overlay .fsm-meetup-close{border:1px solid #dfd4c5;background:transparent;color:#665745;width:32px;height:32px;border-radius:50%;padding:0;display:grid;place-items:center;font-size:20px;line-height:1;font-weight:400}
+#fsm-meetup-overlay .fsm-meetup-scroll{padding:14px 17px 17px;overflow:auto;min-height:0;overscroll-behavior:contain;scrollbar-width:thin}
+#fsm-meetup-overlay .fsm-meetup-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;background:#efe9dc;border-radius:14px;margin-bottom:12px}
+#fsm-meetup-overlay .fsm-meetup-tabs button{min-height:39px;border:0;background:transparent;border-radius:10px;color:#665d4e;font-size:13px;font-weight:730;padding:7px 6px}
+#fsm-meetup-overlay .fsm-meetup-tabs button.is-active{background:#fffdf8;color:#455e2a;box-shadow:0 1px 5px #33221117}
+#fsm-meetup-overlay .fsm-meetup-filters{margin:0 0 12px}
+#fsm-meetup-overlay .fsm-meetup-select{display:block;width:100%;min-height:43px;border:1px solid #d9ccb8;border-radius:12px;background:#fffcf6;color:#3e352b;padding:8px 12px;font-size:14px;appearance:auto}
+#fsm-meetup-overlay .fsm-meetup-spot-filter{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:9px 0 0;padding:9px 11px;border-radius:11px;background:#eaf0d9;color:#415931;font-size:12px}
+#fsm-meetup-overlay .fsm-meetup-spot-filter span{min-width:0;overflow-wrap:anywhere}
+#fsm-meetup-overlay .fsm-meetup-spot-filter button{border:none;background:transparent;color:#415931;text-decoration:underline;font-weight:750;flex:none}
+#fsm-meetup-overlay .fsm-meetup-calendar{border:1px solid #e3d5c1;border-radius:17px;overflow:hidden;background:#fffdf8}
+#fsm-meetup-overlay .fsm-meetup-month-head{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;padding:7px 9px;background:#f4eddc}
+#fsm-meetup-overlay .fsm-meetup-month-head h3{font-size:15px;line-height:1.2;text-align:center;margin:0;text-transform:capitalize;font-weight:800;color:#423626}
+#fsm-meetup-overlay .fsm-meetup-month-arrow{border:0;background:transparent;border-radius:9px;font-size:27px;line-height:1;color:#536e36;min-width:39px;min-height:39px}
+#fsm-meetup-overlay .fsm-meetup-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;padding:8px 8px 10px}
+#fsm-meetup-overlay .fsm-meetup-weekday{font-size:10px;text-transform:uppercase;font-weight:750;color:#8c8070;text-align:center;padding:4px 0}
+#fsm-meetup-overlay .fsm-meetup-day{min-height:39px;border:0;border-radius:11px;background:transparent;color:#4c4439;font-size:13px;font-weight:600;position:relative;padding:6px 0 8px}
+#fsm-meetup-overlay .fsm-meetup-day.is-today{outline:1px solid #abc083;outline-offset:-3px}
+#fsm-meetup-overlay .fsm-meetup-day.is-selected{background:#688744;color:white}
+#fsm-meetup-overlay .fsm-meetup-day.has-event:after{content:'';position:absolute;width:5px;height:5px;bottom:4px;left:calc(50% - 2.5px);background:#f18e23;border-radius:50%}
+#fsm-meetup-overlay .fsm-meetup-event-list{margin-top:16px}
+#fsm-meetup-overlay .fsm-meetup-event-list>h3{font-size:15px;color:#51422f;margin:0 0 10px;font-weight:780}
+#fsm-meetup-overlay .fsm-meetup-empty-state{text-align:center;padding:19px 13px 16px;border:1px dashed #d8c8b2;border-radius:14px;background:#faf5eb;color:#645848}
+#fsm-meetup-overlay .fsm-meetup-empty-symbol{height:33px;width:33px;display:grid;place-items:center;margin:0 auto 7px;background:#eaf0d7;border-radius:50%;color:#6b8744;font-size:22px}
+#fsm-meetup-overlay .fsm-meetup-empty-state strong{display:block;font-size:13px;line-height:1.45;color:#51452f}
+#fsm-meetup-overlay .fsm-meetup-empty-state p{font-size:12px;line-height:1.55;margin:5px 0 0}
+#fsm-meetup-overlay .fsm-meetup-muted{border:1px solid #e0c7ae;border-radius:11px;background:#fbefe3;color:#775b40;padding:12px;font-size:13px}
+#fsm-meetup-overlay .fsm-meetup-event{display:flex;gap:12px;padding:12px;background:#fffdf9;border:1px solid #e0d4c3;border-radius:13px;margin:8px 0}
+#fsm-meetup-overlay .fsm-meetup-event-date{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#e8efd5;border-radius:12px;min-width:51px;height:54px;color:#526c31}
+#fsm-meetup-overlay .fsm-meetup-event-date strong{font-size:20px;line-height:1.05}#fsm-meetup-overlay .fsm-meetup-event-date small{font-size:11px;text-transform:uppercase}
+#fsm-meetup-overlay .fsm-meetup-event-info{min-width:0}
+#fsm-meetup-overlay .fsm-meetup-event-info h4{font-size:15px;margin:3px 0;color:#3d3428}
+#fsm-meetup-overlay .fsm-meetup-event-info p{font-size:12px;line-height:1.4;margin:4px 0;color:#736456}
+#fsm-meetup-overlay .fsm-meetup-verified{font-size:10px;font-weight:800;color:#658442}
+#fsm-meetup-overlay .fsm-meetup-event-link{display:inline-block;margin-top:5px;font-size:12px;text-decoration:underline;font-weight:750;color:#557537}
+#fsm-meetup-overlay .fsm-meetup-drafts-intro{border-radius:12px;padding:12px 13px;background:#eaf0d9;color:#53683f;font-size:13px;line-height:1.5;margin:0 0 11px}
+#fsm-meetup-overlay .fsm-meetup-draft-card{border:1px solid #ded0ba;border-radius:13px;padding:13px;margin-top:9px;background:#fffcf6}
+#fsm-meetup-overlay .fsm-meetup-private-tag{font-size:10px;font-weight:800;color:#698749;letter-spacing:.04em}
+#fsm-meetup-overlay .fsm-meetup-draft-card h4{font-size:15px;margin:6px 0}
+#fsm-meetup-overlay .fsm-meetup-draft-card p{font-size:12px;line-height:1.5;margin:4px 0;color:#6f6558;overflow-wrap:anywhere}
+#fsm-meetup-overlay .fsm-meetup-draft-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+#fsm-meetup-overlay .fsm-meetup-draft-actions button{background:#ebf0df;border:1px solid #c1d0b0;border-radius:10px;padding:8px 10px;min-height:36px;font-size:12px;font-weight:750;color:#4f6a37}
+#fsm-meetup-overlay .fsm-meetup-draft-actions button.fsm-meetup-remove{background:transparent;border-color:#e0d3c6;color:#795b4c}
+#fsm-meetup-overlay .fsm-meetup-form-heading{font-size:18px;margin:2px 0 13px;color:#3f382e}
+#fsm-meetup-overlay .fsm-meetup-form{display:grid;gap:12px}
+#fsm-meetup-overlay .fsm-meetup-field{display:grid;gap:6px;font-size:12px;font-weight:750;color:#4b4337}
+#fsm-meetup-overlay .fsm-meetup-field :is(input,select,textarea){border:1px solid #d5c7b2;border-radius:11px;padding:11px;min-height:43px;background:#fffcf5;color:#3d3329;font-size:14px;max-width:100%;width:100%}
+#fsm-meetup-overlay .fsm-meetup-field textarea{resize:vertical;min-height:76px}
+#fsm-meetup-overlay .fsm-meetup-adult{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.5;color:#514b3c}
+#fsm-meetup-overlay .fsm-meetup-adult input{width:19px;height:19px;accent-color:#6b8b42;flex:none;margin:1px 0 0}
+#fsm-meetup-overlay .fsm-meetup-privacy{font-size:12px;line-height:1.45;background:#f3ecdf;border-radius:11px;padding:10px 11px;color:#736554;margin:0}
+#fsm-meetup-overlay .fsm-meetup-form-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#fsm-meetup-overlay .fsm-meetup-form-actions button{min-height:43px;border:1px solid #d8c6ab;border-radius:12px;background:#fffdf6;color:#5d4f3a;font-size:13px;font-weight:750}
+#fsm-meetup-overlay button.fsm-meetup-orange{background:#f89a27;border:1px solid #e68417;color:#372c21;border-radius:12px;min-height:44px;font-size:14px;font-weight:780;padding:10px 16px}
+#fsm-meetup-overlay .fsm-meetup-footer{padding:11px 17px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid #e6d8c6;flex:none;background:#fff8ec;display:flex;flex-direction:column;gap:3px;align-items:center;text-align:center}
+#fsm-meetup-overlay .fsm-meetup-footer .fsm-meetup-orange{width:100%}
+#fsm-meetup-overlay .fsm-meetup-footer p{font-size:11px;color:#796c59;margin:6px 0 0;line-height:1.35}
+#fsm-meetup-overlay .fsm-meetup-footer small{font-size:10px;color:#648044;line-height:1.3}
+#fsm-meetup-overlay .fsm-meetup-notice{background:#eff3dd;border-top:1px solid #a6be82;color:#405c28;font-size:12px;line-height:1.5;padding:10px 17px}
+#fsm-meetup-overlay .fsm-meetup-notice[data-kind=error]{background:#fff0e8;color:#953f30}
+@media(max-width:390px){#fsm-meetup-overlay .fsm-meetup-header{padding-inline:12px;grid-template-columns:34px minmax(0,1fr) 33px;gap:8px}#fsm-meetup-overlay .fsm-meetup-badge{width:34px;height:34px}#fsm-meetup-overlay .fsm-meetup-scroll,#fsm-meetup-overlay .fsm-meetup-footer{padding-inline:12px}#fsm-meetup-overlay .fsm-meetup-heading h2{font-size:20px}#fsm-meetup-overlay .fsm-meetup-day{min-height:36px}}
+@media(max-height:610px){#fsm-meetup-overlay .fsm-meetup-header{padding-block:8px}#fsm-meetup-overlay .fsm-meetup-scroll{padding-block:7px}#fsm-meetup-overlay .fsm-meetup-footer{padding-block:7px}}
+@media(prefers-reduced-motion:no-preference){#fsm-meetup-overlay .fsm-meetup-panel{animation:fsm-meetup-enter .17s ease-out}@keyframes fsm-meetup-enter{from{transform:translateY(16px);opacity:.9}to{transform:translateY(0);opacity:1}}}
+:root[data-theme=dark] #fsm-meetup-overlay,[data-theme=dark] #fsm-meetup-overlay{color:#f4f1e7}
+:root[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-panel,.fsm-meetup-header,.fsm-meetup-footer),[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-panel,.fsm-meetup-header,.fsm-meetup-footer){background:#283a30;border-color:#526c55}
+:root[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-calendar,.fsm-meetup-event,.fsm-meetup-draft-card),[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-calendar,.fsm-meetup-event,.fsm-meetup-draft-card){background:#304537;border-color:#536954}
+:root[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-month-head,.fsm-meetup-tabs,.fsm-meetup-empty-state,.fsm-meetup-privacy),[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-month-head,.fsm-meetup-tabs,.fsm-meetup-empty-state,.fsm-meetup-privacy){background:#344836;border-color:#5b7358}
+:root[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-heading h2,.fsm-meetup-month-head h3,.fsm-meetup-event-list>h3,.fsm-meetup-empty-state strong,.fsm-meetup-event-info h4,.fsm-meetup-form-heading,.fsm-meetup-spot-filter,.fsm-meetup-spot-filter button),[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-heading h2,.fsm-meetup-month-head h3,.fsm-meetup-event-list>h3,.fsm-meetup-empty-state strong,.fsm-meetup-event-info h4,.fsm-meetup-form-heading,.fsm-meetup-spot-filter,.fsm-meetup-spot-filter button){color:#f1f1dd}
+:root[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-heading p,.fsm-meetup-empty-state,.fsm-meetup-weekday,.fsm-meetup-draft-card p,.fsm-meetup-event-info p,.fsm-meetup-footer p,.fsm-meetup-privacy,.fsm-meetup-day),[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-heading p,.fsm-meetup-empty-state,.fsm-meetup-weekday,.fsm-meetup-draft-card p,.fsm-meetup-event-info p,.fsm-meetup-footer p,.fsm-meetup-privacy,.fsm-meetup-day){color:#d8d9c9}
+:root[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-select,.fsm-meetup-field input,.fsm-meetup-field select,.fsm-meetup-field textarea),[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-select,.fsm-meetup-field input,.fsm-meetup-field select,.fsm-meetup-field textarea){background:#364b3d;border-color:#6a7e62;color:#f3f0e5}
+:root[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-drafts-intro,.fsm-meetup-spot-filter,.fsm-meetup-badge,.fsm-meetup-event-date),[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-drafts-intro,.fsm-meetup-spot-filter,.fsm-meetup-badge,.fsm-meetup-event-date){background:#415a41;color:#e9f2d7}
+:root[data-theme=dark] #fsm-meetup-overlay .fsm-meetup-tabs button.is-active,[data-theme=dark] #fsm-meetup-overlay .fsm-meetup-tabs button.is-active{background:#4a6246;color:#fff}
+:root[data-theme=dark] #fsm-meetup-overlay .fsm-meetup-tabs button,[data-theme=dark] #fsm-meetup-overlay .fsm-meetup-tabs button{color:#f0f1e0}
+:root[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-close,.fsm-meetup-month-arrow),[data-theme=dark] #fsm-meetup-overlay :is(.fsm-meetup-close,.fsm-meetup-month-arrow){color:#eaf1dc}
+:root[data-theme=dark] #fsm-meetup-overlay .fsm-meetup-form-actions button:not(.fsm-meetup-orange),[data-theme=dark] #fsm-meetup-overlay .fsm-meetup-form-actions button:not(.fsm-meetup-orange){background:#364b3d;color:#f1f0e7}
+/* Compact, re-usable spot connector: every real spot, not just football. */
+#spot-detail .fsm-meetup-spot-bridge{border:1px solid #d9c8ae;background:#faf5e9;border-radius:16px;margin:12px 0 14px;padding:13px 14px;color:#463929}
+#spot-detail .fsm-meetup-spot-bridge h4{font-family:inherit;font-size:16px;line-height:1.3;margin:0 0 5px;color:#4c6338}
+#spot-detail .fsm-meetup-spot-bridge p{font-size:13px;line-height:1.5;margin:0 0 11px;color:#6a6254}
+#spot-detail .fsm-meetup-spot-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#spot-detail .fsm-meetup-spot-actions button{border:1px solid #799755;border-radius:11px;padding:9px 6px;min-height:44px;font-family:inherit;font-weight:730;font-size:12px;line-height:1.25;background:#e9efda;color:#4d653b;cursor:pointer}
+#spot-detail .fsm-meetup-spot-actions button:first-child{background:#799755;color:#fff}
+#spot-detail .fsm-meetup-spot-actions button:focus-visible{outline:3px solid #f3a43c;outline-offset:2px}
+:root[data-theme=dark] #spot-detail .fsm-meetup-spot-bridge,[data-theme=dark] #spot-detail .fsm-meetup-spot-bridge{background:#354b3c;border-color:#687759;color:#f5eee0}
+:root[data-theme=dark] #spot-detail .fsm-meetup-spot-bridge :is(h4,p),[data-theme=dark] #spot-detail .fsm-meetup-spot-bridge :is(h4,p){color:#e9efdc}
+
+:root[data-theme=dark] #fsm-meetup-overlay .fsm-meetup-footer small,[data-theme=dark] #fsm-meetup-overlay .fsm-meetup-footer small{color:#cadbad}
