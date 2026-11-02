@@ -81,3 +81,92 @@ body:has(#app-menu:not([hidden])) .fsm-home-nav {display:none!important;}
 @media (min-width:900px) { .fsm-home-nav {bottom:18px;} }
 @media (max-width:359px) { .fsm-home-nav__item {font-size:10px;} .fsm-home-nav {gap:0;left:6px;right:6px;} }
 @media (prefers-reduced-motion:reduce) { .fsm-home-nav *, .fsm-home-sheet * {transition:none!important;} }
+
+
+/* V84.2 – ruhiger Schließen-Button; matches the approved visual reference.
+   IMPORTANT: 44 × 44 px interactive hit area; 34 px visual circle only.
+   Shared across Filter einstellen, Spots ansehen and Spots Plus sheets.
+   The separate advanced "Spots finden" dialog uses the same treatment.
+   No click handler or functionality is changed. */
+.fsm-home-sheet .fsm-home-sheet__close,
+html.fsm-polished #filter-modal #filter-modal-close {
+  position: relative !important;
+  isolation: isolate;
+  display: inline-grid !important;
+  place-items: center !important;
+  box-sizing: border-box !important;
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: #645b4f !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.fsm-home-sheet .fsm-home-sheet__close::before,
+html.fsm-polished #filter-modal #filter-modal-close::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(101, 85, 65, .21);
+  border-radius: 50%;
+  background: rgba(255, 249, 239, .22);
+  box-shadow: none;
+  pointer-events: none;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+/* The path only occupies 12/24 units of the SVG viewBox, so a 22px
+   canvas produces an 11px X – small and thin as approved. */
+.fsm-home-sheet .fsm-home-sheet__close > svg,
+html.fsm-polished #filter-modal #filter-modal-close > svg {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 22px !important;
+  height: 22px !important;
+  flex: none;
+  stroke: currentColor;
+  pointer-events: none;
+}
+.fsm-home-sheet .fsm-home-sheet__close > svg path,
+html.fsm-polished #filter-modal #filter-modal-close > svg path {
+  stroke-width: 1.45 !important;
+  stroke-linecap: round !important;
+}
+html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-close {
+  color: #e6e9e1 !important;
+}
+html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-close::before {
+  background: rgba(255, 255, 255, .045);
+  border-color: rgba(226, 237, 221, .19);
+}
+@media (hover: hover) {
+  .fsm-home-sheet .fsm-home-sheet__close:hover::before,
+  html.fsm-polished #filter-modal #filter-modal-close:hover::before {
+    background: rgba(213, 198, 173, .20);
+    border-color: rgba(101, 85, 65, .31);
+  }
+}
+.fsm-home-sheet .fsm-home-sheet__close:focus-visible,
+html.fsm-polished #filter-modal #filter-modal-close:focus-visible {
+  outline: 2px solid #587a50 !important;
+  outline-offset: 1px !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fsm-home-sheet .fsm-home-sheet__close::before,
+  html.fsm-polished #filter-modal #filter-modal-close::before {
+    transition: none;
+  }
+}
