@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261102-fsm-community-v85";
+const CACHE_VERSION = "20261102-fsm-spot-open-v85-1";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -180,23 +180,23 @@ const RELEASE_HASHES = {
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "da/index.html": "a193fa96864b4f6990fd27fbf54ce3112b1e5f028b2e31649b6da5eec55c8b78",
+  "da/index.html": "afee3c3550590492c8133183f71a8776590b9ddff53ddff2626b1ff06fac6a45",
   "data/i18n/da.json": "ea352b0d313a958ccd04905575575bf8a712e7242cc64852baef0594db2725ae",
   "data/i18n/de.json": "ed6a56c1cd80c3608924e2bbddbc77ead73b01cb92b0e462a213f3e77c1d8fe5",
   "data/i18n/en.json": "cc4d5111cfd35ecdc9598447de714fe6761a7986407759907e6c2f815c3421e0",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
-  "en/index.html": "994c280f607f17582e443e26038e874bfe8e4f968ece7afd5bad93cd64fa1d7b",
-  "index.html": "f0f9c81da729d2465718c0332ec9dbbd4139b5e3b5c5eed1ad1a7b33cbc8525e",
-  "js/app.js": "2223dc499bab145e8b9f3c5f2e5d2dcb46264bc78689fa5ed5fe9597e8e7b9be",
+  "en/index.html": "85cf762f0021e342eb30a87adc5d2114b108d215f27263ac4e1afe6c354ba7b7",
+  "index.html": "fe1329eb1d4893b12a444d22fc2cb73c688a3e4ec508529518512f31c4fa752b",
+  "js/app.js": "ed37963873c4905f079799b66c600040ce3f2f310afc712673b3a90b5a0168f1",
   "js/config.js": "5d7ebbc76980756b7a096609229ae368739eecda70b82e87cd5472957df8c06c",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "e398f18e7a246b3ff32148d05ccf387752272e6e5cb11bc125fa91ded4968dec",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "cb1a4485643ef16e182847b2b0b1f5b5dcdef5510bf9cf6058ffda4b838d44d7",
-  "js/map.js": "689e297bd8ebe8dcfdad007b62df34167bf7bcfcdb6c325a3f4d6976dd56abfa",
+  "js/map.js": "85acfe71523c23671721b59850f9fc2e590fa21e78724d94da669512bb5db23e",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
-  "js/ui/spot-details.js": "77e33d88254040199361fed7ba51688a7d8dd04e65fe88643f779b7044e8b20a",
+  "js/ui/spot-details.js": "979a9ef59041f9caacab46de883198004b913b1312abbfe9a71fb17a5c58bdf1",
   "offline.html": "3abeb27b2196a79a73f2bfc84d4137a6519f9ded69e0f7de8e7c11a57cd06177",
   "assets/spots/bovbjerg-fyr/leuchtturm-pony.jpeg": "dedd90020fb6c6d61fbf7106f5fc5fbe0841b0e8e5fe48492dbc7261010b84aa",
   "assets/spots/bovbjerg-fyr/strandtreppe.jpeg": "1996690336f41ac45960ed55918c8df95984912a839acbe0a289d80ec3626390",
@@ -228,8 +228,8 @@ const RELEASE_HASHES = {
   "css/badges.css": "93512e7a68293f4cb09eda3ac0c0a59509e8eb1d836e4fa51a4e6c3c14a19923",
   "js/filters/tags.js": "3b8386ba863d390884eee9c6c8c7892959a4b8079155736e6d5f5df3f501af76",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "049973d7153909e22d5ca4d1110a183b7ce0f219dd5346b662765994b78967cb",
-  "js/ui/map-fullscreen.js": "5db28946c3ee227a89f85bfda54c08c854837cd9b1dfa9621bc47c52e51d48b3",
+  "css/styles.css": "9221759b208bf65964f9af59e282c367a4817b28eac76155f2a5c412d6986eca",
+  "js/ui/map-fullscreen.js": "58218777034e262f8cee4b3fc9ded0c94516a836140a78199d3d23a7066618ac",
   "js/categories.js": "399b984aee4d1508cc905805859c56206a396b6a81b23438983ed9b92b97ede7",
   "js/ui/category-explorer.js": "45a407e69a4204ffc95964e5d761b8b729da7fbb41a39927e7d98e7a713f7af9",
   "css/categories.css": "07ca5cfa691f69421f55668be6969bb7520451867aea2e94aeab5b68894d164e",
@@ -237,7 +237,7 @@ const RELEASE_HASHES = {
   "css/interface.css": "c4a6ea58ef8af12716c71af48b1a746351456268cd2d2731aab543214e52a8fa",
   "css/fsm-ui-finish-71.css": "0af65a5df778b74eb503045dca5765d180a18f80649f5680c29fc2b7a75f922e",
   "css/fsm-home-navigation-84.css": "3916cecf58f53593d0b94b24c2a504b86302edbdbfd551c4cded340bf73b91e7",
-  "js/ui/home-navigation.js": "2ae204b0d600c39529ca2ceec15cf6ccc99b47d9ee615dea88b38b04e564504b"
+  "js/ui/home-navigation.js": "3b6abcf19e6aee41093f10486ecae1b8b975005ac0b03e08de3710b838ec78a5"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);

@@ -158,12 +158,11 @@ export function initMapFullscreen(map) {
     // The close event is queued: an immediate reopen must not be undone by it.
     if (!dialog.open) restoreMap();
   });
-  element.addEventListener("click", event => {
-    if (dialog.open && event.target.closest(".fsm-spot-preview__open")) {
-      // Restore before the existing preview handler opens and focuses details.
-      restoreMap({ focus: false });
-    }
-  }, true);
+  // Do not move the map out of the native dialog during the capture phase of
+  // the spot button's click: on iOS this may abort the button's own listener.
+  // The app announces an actual detail transition, not just a pointer click.
+  const onBeforeSpotDetails = () => { if (dialog.open) restoreMap({focus:false}); };
+  document.addEventListener("fsm:before-spot-details", onBeforeSpotDetails);
   window.addEventListener("resize", resizeMap);
   window.visualViewport?.addEventListener("resize", updateViewport);
   window.visualViewport?.addEventListener("scroll", updateViewport);
@@ -180,6 +179,7 @@ export function initMapFullscreen(map) {
     window.visualViewport?.removeEventListener("scroll", updateViewport);
     window.removeEventListener("hashchange", onRouteChange);
     map.off("popupopen", padPopup);
+    document.removeEventListener("fsm:before-spot-details", onBeforeSpotDetails);
     toolbar.destroy();
     dialog.remove();
   });

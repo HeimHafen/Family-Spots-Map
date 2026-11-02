@@ -648,8 +648,17 @@ export function createSpotDetailsController({
     if (typeof spotDetailEl.scrollTop === "number") {
       spotDetailEl.scrollTop = !focus && sameSpot ? previousScroll : 0;
     }
-    if (focus) titleEl.focus();
-    else if (activeSelector) spotDetailEl.querySelector(activeSelector)?.focus({ preventScroll: true });
+    if (focus) {
+      // Explicitly reveal details below the map after a popup or modal closes.
+      // Safari can focus a programmatically focusable heading without scrolling
+      // the page, making the successful action look like a dead button.
+      titleEl.focus({preventScroll: true});
+      requestAnimationFrame(() => {
+        if (spotDetailEl.isConnected && !spotDetailEl.classList.contains("spot-details--hidden")) {
+          spotDetailEl.scrollIntoView({block: "start", behavior: "auto"});
+        }
+      });
+    } else if (activeSelector) spotDetailEl.querySelector(activeSelector)?.focus({ preventScroll: true });
   }
 
   // Monochrome brand glyphs from Simple Icons (CC0); no remote icon dependency.

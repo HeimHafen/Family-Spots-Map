@@ -144,6 +144,10 @@ export function createHomeNavigation({ plusEnabled = true, diaryEnabled = true }
     if (!event.target.closest(".spot-card-open, .favorites-back")) return;
     if (activeSection === "spots") requestAnimationFrame(() => closePanel({focus:false}));
   }, true);
+  // "Details ansehen" also exists inside the original Spot cards. When that
+  // card has been moved into the native Spots sheet, dismiss it synchronously
+  // before the shared #spot-detail (outside the dialog) becomes visible.
+  document.addEventListener("fsm:before-spot-details", () => closePanel({focus:false}));
   window.addEventListener("popstate", () => closePanel({focus:false}));
   document.body.append(nav, sheet);
   document.documentElement.classList.add("fsm-home-nav-ready");

@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261102-fsm-community-v85");
+@import url("./categories.css?v=20261102-fsm-spot-open-v85-1");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -24,7 +24,7 @@
 @import url("./evening.css?v=20261030-focus-fields-77");
 
 
-@import url("./map-spots.css?v=20261102-fsm-community-v85");
+@import url("./map-spots.css?v=20261102-fsm-spot-open-v85-1");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
@@ -304,4 +304,14 @@ html[data-fsm-focus-modality="keyboard"] body
     outline: 2px solid Highlight !important;
     box-shadow: none !important;
   }
+}
+
+/* V85.1 – mobile map preview → original Spot details. Keep sufficient scroll
+   range to reveal the existing panel above the fixed five-item navigation.
+   No permanent blank space while details are closed. */
+@media (max-width: 899px) {
+  #view-map:has(#spot-detail:not(.spot-details--hidden)) {
+    padding-block-end: max(180px, calc(100svh - 160px)) !important;
+  }
+  #spot-detail:not(.spot-details--hidden) { scroll-margin-block-start: 12px; }
 }

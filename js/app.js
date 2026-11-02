@@ -93,7 +93,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261102-fsm-community-v85";
+} from "./map.js?v=20261102-fsm-spot-open-v85-1";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { getInitialTheme, applyTheme } from "./theme.js";
@@ -3514,6 +3514,9 @@ function focusSpotOnMap(spot, trigger, { details = true } = {}) {
 
 // The detail controller owns rendering and its expanded/open state.
 function showSpotDetails(spot, options) {
+  // A detail must never open behind the native Spots sheet or fullscreen map.
+  // Each owner closes its own top-layer UI before the existing detail renders.
+  document.dispatchEvent(new CustomEvent("fsm:before-spot-details"));
   spotDetails.show(spot, options);
 }
 
