@@ -560,27 +560,6 @@ export function createSpotDetailsController({
       spotDetailEl.appendChild(action);
     }
 
-    // A shared calendar for ALL spot types; no change to map or existing navigation.
-    // This is an invitation to discover or privately prepare meetups, not a public sign-up.
-    {
-      const words = {
-        de: {heading:"Gemeinsam erleben ♡", intro:"Orte entdecken, Menschen verbinden und gemeinsame Erinnerungen schaffen.", view:"Treffen entdecken", plan:"Treffen planen"},
-        en: {heading:"Experience together ♡", intro:"Explore places, meet people and create memories together.", view:"Discover meetups", plan:"Plan a meetup"},
-        da: {heading:"Oplev sammen ♡", intro:"Opdag steder, mød mennesker og skab minder sammen.", view:"Find møder", plan:"Planlæg et møde"}
-      }[currentLang] || {heading:"Gemeinsam erleben ♡",intro:"Gemeinsam Zeit verbringen.",view:"Treffen entdecken",plan:"Treffen planen"};
-      const card = document.createElement("section");
-      card.className = "fsm-meetup-spot-bridge";
-      const heading = document.createElement("h4");heading.textContent = words.heading;
-      const lead = document.createElement("p");lead.textContent = words.intro;
-      const actions = document.createElement("div");actions.className = "fsm-meetup-spot-actions";
-      for (const [label, planning] of [[words.view,false],[words.plan,true]]) {
-        const button = document.createElement("button");button.type = "button";button.textContent = label;
-        button.addEventListener("click", () => document.dispatchEvent(new CustomEvent("fsm:gemeinsam-open", {detail:{spot,planning}})));
-        actions.appendChild(button);
-      }
-      card.append(heading,lead,actions);spotDetailEl.appendChild(card);
-    }
-
     appendSpotGallery(spotDetailEl, spot);
     const hasStructuredVisitDetails = appendVisitDetails(spotDetailEl, spot);
 

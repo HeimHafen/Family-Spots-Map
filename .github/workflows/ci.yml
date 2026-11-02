@@ -19,4 +19,4 @@ jobs:
         with:
           node-version: "22"
       - name: Check syntax, JSON, translations, data and offline dependencies
-        run: node tools/check-project.mjs && node tools/check-community.mjs
+        run: node tools/check-project.mjs

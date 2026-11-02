@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261102-fsm-v86";
+const CACHE_VERSION = "20261102-fsm-v87-restore-v85-1";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -46,7 +46,6 @@ const ASSETS = [
   "js/ui/modal.js",
   "js/ui/spot-details.js",
   "js/features/community-play.js",
-  "js/features/gemeinsam-erleben.js",
   "js/ui/skip-to-spots.js",
   "js/utils/dom.js",
   "./",
@@ -59,7 +58,6 @@ const ASSETS = [
   "css/map-spots.css",
   "css/fsm-home-navigation-84.css",
   "css/community-play.css",
-  "css/gemeinsam-erleben.css",
   "css/evening.css",
   "css/theme.css",
   "css/base.css",
@@ -87,7 +85,6 @@ const ASSETS = [
   "assets/spots/vejlby-klit/abendstimmung.webp",
   "data/spots.json",
   "data/community-play.json",
-  "data/events.json",
   "data/i18n/de.json",
   "data/i18n/en.json",
   "data/i18n/da.json",
@@ -152,8 +149,6 @@ async function validateData(response, url) {
   if (relative === "data/spots.json") {
     const spots = Array.isArray(data) ? data : data?.spots;
     if (!Array.isArray(spots) || spots.some(spot => !isRecord(spot))) throw new Error("Invalid spot data");
-  } else if (relative === "data/events.json") {
-    if (!Array.isArray(data) || data.length > 2000 || data.some(item => !isRecord(item))) throw new Error("Invalid event data");
   } else if (relative === "data/partners.json") {
     const codes = Array.isArray(data) ? data : data?.codes;
     if (!Array.isArray(codes) || codes.some(code => !isRecord(code))) throw new Error("Invalid partner data");
@@ -185,23 +180,23 @@ const RELEASE_HASHES = {
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "da/index.html": "1645f62b70b8c6792b03ffed9ec421fc1090216fe408fb1bd9e1ef41d90eeaba",
+  "da/index.html": "03ba0267b18ce9a548865608b2f02eee1fb9246a099b2d3bbdcabc745c4eda84",
   "data/i18n/da.json": "ea352b0d313a958ccd04905575575bf8a712e7242cc64852baef0594db2725ae",
   "data/i18n/de.json": "ed6a56c1cd80c3608924e2bbddbc77ead73b01cb92b0e462a213f3e77c1d8fe5",
   "data/i18n/en.json": "cc4d5111cfd35ecdc9598447de714fe6761a7986407759907e6c2f815c3421e0",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
-  "en/index.html": "45571c728f8560755b75ef7d782690be58395353c6b5806af836494580d58a7c",
-  "index.html": "f6af7ee0994bd4ed0cdd3c3700f5ef2861a469bb074508cbfc305632aa04e40b",
-  "js/app.js": "b699e77d4316d08c19093f9e5549f812b15062bfa8d7fd05ef0e84587e62ddc7",
+  "en/index.html": "f91e3dd17bdf6b16d80a543e769b540f8ceedf496763d4946af8642a34aeb747",
+  "index.html": "806f395d2d015fffc10fc0beb2233e5c862876ea4787186cb2bd78d5b1c1a599",
+  "js/app.js": "a0decbcaf19173703d94aae7a90e7d2cc79de83ddd3f78805b1e772d8b113914",
   "js/config.js": "5d7ebbc76980756b7a096609229ae368739eecda70b82e87cd5472957df8c06c",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "e398f18e7a246b3ff32148d05ccf387752272e6e5cb11bc125fa91ded4968dec",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "cb1a4485643ef16e182847b2b0b1f5b5dcdef5510bf9cf6058ffda4b838d44d7",
-  "js/map.js": "661e7bc44773cfc9928b9b09f301a857ea53451690feab7f73d114685c9471b3",
+  "js/map.js": "49ba43ff827a36669edf7b37c7184e1559630bd4efbf05f8b656fef4a0afde5b",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
-  "js/ui/spot-details.js": "f3725a351f37d12dab05b98db2d74bc612d5d2ed2c794d12bb37c94337acb4e1",
+  "js/ui/spot-details.js": "979a9ef59041f9caacab46de883198004b913b1312abbfe9a71fb17a5c58bdf1",
   "offline.html": "3abeb27b2196a79a73f2bfc84d4137a6519f9ded69e0f7de8e7c11a57cd06177",
   "assets/spots/bovbjerg-fyr/leuchtturm-pony.jpeg": "dedd90020fb6c6d61fbf7106f5fc5fbe0841b0e8e5fe48492dbc7261010b84aa",
   "assets/spots/bovbjerg-fyr/strandtreppe.jpeg": "1996690336f41ac45960ed55918c8df95984912a839acbe0a289d80ec3626390",
@@ -233,7 +228,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "93512e7a68293f4cb09eda3ac0c0a59509e8eb1d836e4fa51a4e6c3c14a19923",
   "js/filters/tags.js": "3b8386ba863d390884eee9c6c8c7892959a4b8079155736e6d5f5df3f501af76",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "89d091def413a9e3a63c25bb60c8c755d9d600a4db21a46f3995cbd5a6055cfd",
+  "css/styles.css": "5e6b297018511ed489236cc60d445eb1315bdc9de7677064d4209b34b274ffff",
   "js/ui/map-fullscreen.js": "58218777034e262f8cee4b3fc9ded0c94516a836140a78199d3d23a7066618ac",
   "js/categories.js": "399b984aee4d1508cc905805859c56206a396b6a81b23438983ed9b92b97ede7",
   "js/ui/category-explorer.js": "45a407e69a4204ffc95964e5d761b8b729da7fbb41a39927e7d98e7a713f7af9",
@@ -242,13 +237,7 @@ const RELEASE_HASHES = {
   "css/interface.css": "c4a6ea58ef8af12716c71af48b1a746351456268cd2d2731aab543214e52a8fa",
   "css/fsm-ui-finish-71.css": "0af65a5df778b74eb503045dca5765d180a18f80649f5680c29fc2b7a75f922e",
   "css/fsm-home-navigation-84.css": "3916cecf58f53593d0b94b24c2a504b86302edbdbfd551c4cded340bf73b91e7",
-  "js/ui/home-navigation.js": "3b6abcf19e6aee41093f10486ecae1b8b975005ac0b03e08de3710b838ec78a5",
-  "js/features/gemeinsam-erleben.js": "3bce7a804d63f9a6cd5918435cc2369c1dbb79c1b4e137c6ea1bbdfa41ceaad7",
-  "css/gemeinsam-erleben.css": "7dbf96fe2590c3111843f0bed94a423afbb31e3de4f64062a2f30d0a9ab6ec87",
-  "data/events.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-  "js/features/community-play.js": "48e21067c571acdee5de6b346effe3a1576a4ebdcc0d7cba768377d6d3521089",
-  "css/community-play.css": "7c71dd2ae1a70323e85199b49754494e4c9225c3fc39f3dd6148637fa6d19f6d",
-  "data/community-play.json": "c7ccee0f7da216162b0fe35b45f8b6e5e7a562bdbe9341a7c9cb8ac0c1b99b8e"
+  "js/ui/home-navigation.js": "3b6abcf19e6aee41093f10486ecae1b8b975005ac0b03e08de3710b838ec78a5"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);
