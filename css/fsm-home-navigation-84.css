@@ -170,3 +170,105 @@ html.fsm-polished #filter-modal #filter-modal-close:focus-visible {
     transition: none;
   }
 }
+
+
+/* V84.3 — approved compact sheet layout. All original controls and state
+   handlers stay in place; only redundant disclosure UI is hidden when its
+   contents are presented in the navigation dialog. No unscoped selectors. */
+html.fsm-home-nav-ready #fsm-home-sheet #filter-section > .sidebar-section-header {
+  display: none !important;
+}
+/* The sheet already has an X; hiding this second accordion control does not
+   remove the native control from the DOM or interfere with state updates. */
+html.fsm-home-nav-ready #fsm-home-sheet .sidebar-section--grow #btn-toggle-spots {
+  display: none !important;
+}
+/* In the filter panel the separate inner card was an unnecessary second frame. */
+html.fsm-home-nav-ready #fsm-home-sheet #filter-section.sidebar-section {
+  box-sizing: border-box;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 2px 9px 14px !important;
+}
+html.fsm-home-nav-ready #fsm-home-sheet #filter-section > .filter-group-helper {
+  margin-top: 0 !important;
+}
+/* Keep the Spots heading and live result count, without "Spots ausblenden". */
+html.fsm-home-nav-ready #fsm-home-sheet .sidebar-section--grow > .sidebar-section-header {
+  position: static !important;
+  background: transparent !important;
+  padding-block: 0 5px !important;
+}
+html.fsm-home-nav-ready #fsm-home-sheet .sidebar-section--grow > #spot-results-context {
+  margin-top: 2px !important;
+}
+/* An unobtrusive search pictogram, without introducing an extra input. */
+html.fsm-home-nav-ready #fsm-home-sheet #filter-search {
+  padding-inline-start: 39px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23847768' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='10.8' cy='10.8' r='6.6'/%3E%3Cpath d='m16 16 4.4 4.4'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-size: 18px 18px !important;
+  background-position: left 13px center !important;
+}
+/* The visible compact dialog does not repeat a second selection summary.
+   The live summary stays available to assistive technologies. */
+html.fsm-home-nav-ready #fsm-home-sheet #filter-summary {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+/* Shared search symbol, without changing the existing Find Spots action. */
+html.fsm-home-nav-ready #fsm-home-sheet #btn-open-filter-modal {
+  padding-inline-start: 35px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b3329' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='10' cy='10' r='6'/%3E%3Cpath d='m14.5 14.5 5 5'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: left 11px center !important;
+  background-size: 16px 16px !important;
+}
+/* Tiny visible glyph plus compact ring, but retain 44x44 accessible target.
+   This intentionally supersedes the earlier V84.2 34px/11px design. */
+html.fsm-home-nav-ready #fsm-home-sheet .fsm-home-sheet__close,
+html.fsm-polished #filter-modal #filter-modal-close {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+html.fsm-home-nav-ready #fsm-home-sheet .fsm-home-sheet__close::before,
+html.fsm-polished #filter-modal #filter-modal-close::before {
+  width: 28px !important;
+  height: 28px !important;
+  border-width: 1px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html.fsm-home-nav-ready #fsm-home-sheet .fsm-home-sheet__close > svg,
+html.fsm-polished #filter-modal #filter-modal-close > svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+html.fsm-home-nav-ready #fsm-home-sheet .fsm-home-sheet__close > svg path,
+html.fsm-polished #filter-modal #filter-modal-close > svg path {
+  stroke-width: 1.35 !important;
+  stroke-linecap: round !important;
+}
+/* Avoid the ring being hidden behind a border on very narrow iPhones. */
+@media (max-width: 359px) {
+  html.fsm-home-nav-ready #fsm-home-sheet #filter-section.sidebar-section {
+    padding-inline: 4px !important;
+  }
+}
+@media (forced-colors: active) {
+  html.fsm-home-nav-ready #fsm-home-sheet .fsm-home-sheet__close::before,
+  html.fsm-polished #filter-modal #filter-modal-close::before {
+    border-color: ButtonText !important;
+  }
+}

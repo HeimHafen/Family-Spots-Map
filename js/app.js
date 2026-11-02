@@ -92,7 +92,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261102-fsm-home-nav-v84-2";
+} from "./map.js?v=20261102-fsm-home-nav-v84-3";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { getInitialTheme, applyTheme } from "./theme.js";

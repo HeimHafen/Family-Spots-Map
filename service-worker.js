@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261102-fsm-home-nav-v84-2";
+const CACHE_VERSION = "20261102-fsm-home-nav-v84-3";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -176,21 +176,21 @@ const RELEASE_HASHES = {
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "da/index.html": "e338448f3e195dadcd5ca38bad4d3f305ec1a311bdf8efe8c6a7b6bacf8c243e",
+  "da/index.html": "ac096b48c641168d7f4a41f4654a16cacc626d35a85ee470d08622d5900c9a64",
   "data/i18n/da.json": "ea352b0d313a958ccd04905575575bf8a712e7242cc64852baef0594db2725ae",
   "data/i18n/de.json": "ed6a56c1cd80c3608924e2bbddbc77ead73b01cb92b0e462a213f3e77c1d8fe5",
   "data/i18n/en.json": "cc4d5111cfd35ecdc9598447de714fe6761a7986407759907e6c2f815c3421e0",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
-  "en/index.html": "bfd9e51ba3438a4a741b0dc7fd280c357069700d8ee3635ed465ee1d17e545b1",
-  "index.html": "3b085d5e5a3904bad400041484987d31da1e1129858971f738069b095e0b0d89",
-  "js/app.js": "2388a28dd98635b9f0b68f6095e492ce19a4330b4bebef9a5e85a2ed55052e02",
+  "en/index.html": "b595e341e7e29896a72fe80974a927198cc08a4b2209639eb81b989c4c67b40f",
+  "index.html": "8851d0bea3ef7d49057760e496ceffe26214975e6e378af94fbabd43d1ff48ff",
+  "js/app.js": "646fd78f1c23f19de10e195ee4d19edd9acf37e1324701c29145a4b7dda9a57a",
   "js/config.js": "5d7ebbc76980756b7a096609229ae368739eecda70b82e87cd5472957df8c06c",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "e398f18e7a246b3ff32148d05ccf387752272e6e5cb11bc125fa91ded4968dec",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "cb1a4485643ef16e182847b2b0b1f5b5dcdef5510bf9cf6058ffda4b838d44d7",
-  "js/map.js": "24a570bb9c0f959ee866471a58c47cc14c1af0b3c78171017d1a4e7457dc9f12",
+  "js/map.js": "d61eaf19be6606e144b361340293b0443a6b59a3ca49a1c9adae3f35cbe3689f",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "e6c3af4e33166ad5db667f9be58232cbf02c7fee75da20a1415a2275058b5412",
   "offline.html": "3abeb27b2196a79a73f2bfc84d4137a6519f9ded69e0f7de8e7c11a57cd06177",
@@ -224,7 +224,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "93512e7a68293f4cb09eda3ac0c0a59509e8eb1d836e4fa51a4e6c3c14a19923",
   "js/filters/tags.js": "3b8386ba863d390884eee9c6c8c7892959a4b8079155736e6d5f5df3f501af76",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "cc181b3dfa91fc72195232d59b7bd427b15681a50107efd5db93c28b01ea94bf",
+  "css/styles.css": "e37a9be59276e8cdc68fbff254c4f6c0b6b272703fe0bdf0552a26760d42c048",
   "js/ui/map-fullscreen.js": "5db28946c3ee227a89f85bfda54c08c854837cd9b1dfa9621bc47c52e51d48b3",
   "js/categories.js": "399b984aee4d1508cc905805859c56206a396b6a81b23438983ed9b92b97ede7",
   "js/ui/category-explorer.js": "45a407e69a4204ffc95964e5d761b8b729da7fbb41a39927e7d98e7a713f7af9",
@@ -232,7 +232,7 @@ const RELEASE_HASHES = {
   "js/ui/filter-results.js": "c93fa5155dce5dff2d42f73fdb6ba3c6012136549ecd355884ca1d252dddafae",
   "css/interface.css": "c4a6ea58ef8af12716c71af48b1a746351456268cd2d2731aab543214e52a8fa",
   "css/fsm-ui-finish-71.css": "0af65a5df778b74eb503045dca5765d180a18f80649f5680c29fc2b7a75f922e",
-  "css/fsm-home-navigation-84.css": "45e2a77f87aea64b7644d83fb56ccabd141b9bea1cc6a853e5c8a97d416a1fc6",
+  "css/fsm-home-navigation-84.css": "ec04293e8a327ac6171d5a55887ea35ffe5323e6de813ce805541bb7b91c12ca",
   "js/ui/home-navigation.js": "2ae204b0d600c39529ca2ceec15cf6ccc99b47d9ee615dea88b38b04e564504b"
 };
 async function validateMapPresentation(response, url) {
