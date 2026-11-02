@@ -37,6 +37,8 @@
       document.documentElement.style.colorScheme = "light";
       document.querySelector('meta[name="color-scheme"]').content = "light";
       document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#48503d" : "#f7e1d0";
+      // iOS add-to-Home-Screen fallback for Safari versions with unreliable display-mode media queries.
+      if (navigator.standalone === true) document.documentElement.classList.add("fsm-ios-standalone");
     })();
   </script>
 
@@ -228,12 +230,12 @@
     rel="icon"
     type="image/png"
     sizes="192x192"
-    href="assets/icons/icon-192.png"
+    href="assets/icons/fsm-home-v845-192.png"
   />
   <link
     rel="apple-touch-icon"
     sizes="180x180"
-    href="assets/icons/apple-touch-icon.png"
+    href="assets/icons/fsm-home-v845-apple-180.png"
   />
 
   <!-- Leaflet CSS -->
@@ -251,16 +253,16 @@
   />
 
   <!-- App Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=20261102-fsm-home-nav-v84-4" />
+  <link rel="stylesheet" href="css/styles.css?v=20261102-fsm-homescreen-v84-5" />
   <link rel="stylesheet" href="css/badges.css" />
   <link rel="stylesheet" href="css/diary.css?v=20261030-diary-3" />
 <link rel="stylesheet" href="css/interface.css?v=20261030-focus-fields-77">
   <link rel="stylesheet" href="css/fsm-ui-finish-70.css?v=20261030-focus-fields-77" />
   <link rel="stylesheet" href="css/fsm-ui-finish-71.css?v=20261030-focus-fields-77" />
-  <link rel="stylesheet" href="css/filter-showcase-78.css?v=20261102-fsm-home-nav-v84-4" />
-  <link rel="stylesheet" href="css/fsm-ui-consistency.css?v=20261102-fsm-home-nav-v84-4" />
+  <link rel="stylesheet" href="css/filter-showcase-78.css?v=20261102-fsm-homescreen-v84-5" />
+  <link rel="stylesheet" href="css/fsm-ui-consistency.css?v=20261102-fsm-homescreen-v84-5" />
   <link rel="stylesheet" href="css/fsm-design-system-83.css?v=20261102-fsm-refinement-v83-1" />
-  <link rel="stylesheet" href="css/fsm-home-navigation-84.css?v=20261102-fsm-home-nav-v84-4" />
+  <link rel="stylesheet" href="css/fsm-home-navigation-84.css?v=20261102-fsm-homescreen-v84-5" />
 <script>document.documentElement.classList.add("fsm-polished");</script>
 </head>
 
@@ -655,49 +657,6 @@
                 </div>
               </div>
             </div>
-          </section>
-
-          <!-- Onboarding-Hinweis (VOR den Filtern) -->
-          <section
-            class="sidebar-section fsm-onboarding-hint"
-            data-onboarding-hint
-            aria-label="Kurzer Start-Hinweis zur Karte" data-i18n-aria-label="aria_hint"
-          >
-            <p class="fsm-onboarding-hint__text">
-              <strong
-                data-i18n-de="So findet ihr euren Spot für heute:"
-                data-i18n-en="How to find your spot for today:"
-                data-i18n-da="Sådan finder I dagens spot:"
-              >How to find your spot for today:</strong>
-              <br />
-
-              <span
-                data-i18n-de="1. Standort wählen oder Karte bewegen"
-                data-i18n-en="1. Use your location or move the map"
-                data-i18n-da="1. Brug jeres position, eller flyt kortet"
-              >1. Use your location or move the map</span>
-              <br />
-
-              <span
-                data-i18n-de="2. Stimmung wählen"
-                data-i18n-en="2. Choose a mood"
-                data-i18n-da="2. Vælg stemning"
-              >2. Choose a mood</span>
-              <br />
-
-              <span
-                data-i18n-de="3. Spot antippen und losgehen"
-                data-i18n-en="3. Tap a spot and off you go"
-                data-i18n-da="3. Tryk på et spot og kom afsted"
-              >3. Tap a spot and off you go</span>
-            </p>
-
-            <button
-              type="button"
-              class="fsm-onboarding-hint__close"
-              data-onboarding-close="1"
-              aria-label="Hinweis schließen" data-i18n-aria-label="aria_hint_close"
-            >×</button>
           </section>
 
           <!-- Kompakter Filter -->
@@ -1333,7 +1292,7 @@
             dann gemeinsam mit Partnern und der Community.
           </p>
 
-          <p>App-Version: <strong>20261102-fsm-home-nav-v84-4</strong></p>
+          <p>App-Version: <strong>20261102-fsm-homescreen-v84-5</strong></p>
 
           <p>
             Wenn dir die Karte geholfen hat,<br />
@@ -1562,7 +1521,7 @@
             senere sammen med partnere og fællesskabet.
           </p>
 
-          <p>Appversion: <strong>20261102-fsm-home-nav-v84-4</strong></p>
+          <p>Appversion: <strong>20261102-fsm-homescreen-v84-5</strong></p>
 
           <p>
             Hvis kortet har hjulpet jer<br />
@@ -1765,7 +1724,7 @@
             then together with partners and the community.
           </p>
 
-          <p>App version: <strong>20261102-fsm-home-nav-v84-4</strong></p>
+          <p>App version: <strong>20261102-fsm-homescreen-v84-5</strong></p>
 
           <p>
             If this map helped you spend<br />
@@ -2075,7 +2034,7 @@
   <script src="./js/sw-register.js?v=20261010-unified-4" defer></script>
 
   <!-- App (ES-Modul) -->
-  <script type="module" src="./js/app.js?v=20261102-fsm-home-nav-v84-4"></script>
+  <script type="module" src="./js/app.js?v=20261102-fsm-homescreen-v84-5"></script>
 
   <!-- Bridge: Menüpunkt "Nur Karte" nutzt die bestehende Toggle-Logik -->
   <script type="module">
@@ -2084,30 +2043,6 @@
 
     if (menuToggle && sidebarToggle) {
       menuToggle.addEventListener("click", () => sidebarToggle.click());
-    }
-  </script>
-
-  <!-- Onboarding-Hinweis: bewusste Schließung lokal merken. -->
-  <script type="module">
-    const hint = document.querySelector("[data-onboarding-hint]");
-    const closeBtn =
-      hint?.querySelector("[data-onboarding-close]") ||
-      hint?.querySelector(".fsm-onboarding-hint__close");
-
-    const hintKey = "fsm_onboarding_hint_dismissed";
-    try { if (localStorage.getItem(hintKey) === "1" && hint) { hint.hidden = true; hint.setAttribute("aria-hidden", "true"); } } catch {}
-
-    function dismissHint() {
-      if (!hint) return;
-      try { localStorage.setItem(hintKey, "1"); } catch {}
-
-      hint.hidden = true;
-      hint.setAttribute("aria-hidden", "true");
-      document.getElementById("btn-toggle-filters")?.focus({ preventScroll: true });
-    }
-
-    if (closeBtn) {
-      closeBtn.addEventListener("click", dismissHint);
     }
   </script>
 

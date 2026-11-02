@@ -391,3 +391,38 @@ html.fsm-home-nav-ready #fsm-home-sheet #plus-section .plus-code-form:not([hidde
   html.fsm-home-nav-ready #fsm-home-sheet #plus-section #plus-status-text { border-color: CanvasText !important; }
   html.fsm-home-nav-ready #fsm-home-sheet #plus-section #plus-status-text::before { background-color: CanvasText; }
 }
+
+
+/* V84.5 — iOS Home Screen safe-area correction.
+   fsm-ui-finish-70.css previously forced a 15px top padding (!important),
+   covering the status bar in iOS standalone / black-translucent mode.
+   Only installed WebKit apps are targeted; normal Safari and Android retain
+   their existing header spacing, and both FSM themes use identical geometry. */
+@media (display-mode: standalone) and (orientation: portrait) {
+  @supports (-webkit-touch-callout: none) {
+    html.fsm-polished .app-header {
+      padding-top: max(66px, calc(env(safe-area-inset-top, 0px) + 12px)) !important;
+    }
+  }
+}
+@media (display-mode: standalone) and (orientation: landscape) {
+  @supports (-webkit-touch-callout: none) {
+    html.fsm-polished .app-header {
+      padding-top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+    }
+  }
+}
+
+/* Standalone-mode compatibility fallback: do not affect regular Safari tabs. */
+@supports (-webkit-touch-callout: none) {
+  @media (orientation: portrait) {
+    html.fsm-polished.fsm-ios-standalone .app-header {
+      padding-top: max(66px, calc(env(safe-area-inset-top, 0px) + 12px)) !important;
+    }
+  }
+  @media (orientation: landscape) {
+    html.fsm-polished.fsm-ios-standalone .app-header {
+      padding-top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+    }
+  }
+}

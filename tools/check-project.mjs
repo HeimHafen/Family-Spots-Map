@@ -131,11 +131,9 @@ for (const name of ["index.html", "en/index.html", "da/index.html"]) {
     `css/styles.css?v=${release}`,
     `./js/app.js?v=${release}`,
     'class="tilla-watercolor-canvas"',
-    'src="assets/tilla/tilla-watercolor.png"',
-    'fsm_onboarding_hint_dismissed',
-    'localStorage.getItem(hintKey)',
-    'localStorage.setItem(hintKey, "1")'
+    'src="assets/tilla/tilla-watercolor.png"'
   ]) if (!html.includes(fragment)) fail(`Incomplete release integration: ${name}: ${fragment}`);
+  if (html.includes('data-onboarding-hint') || html.includes('fsm_onboarding_hint_dismissed')) fail(`Deprecated onboarding hint remains in ${name}`);
   if (!/id="tilla-memory-note"[\s\S]*?\bhidden\b[\s\S]*?>/.test(html)) fail(`Memory note must start hidden: ${name}`);
 }
 if (!read("css/styles.css").includes(`./map-spots.css?v=${release}`)) fail("Map styles use a different release version");
