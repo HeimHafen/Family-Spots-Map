@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261102-fsm-home-nav-v84";
+const CACHE_VERSION = "20261102-fsm-home-nav-v84-1";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -176,21 +176,21 @@ const RELEASE_HASHES = {
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "da/index.html": "a9c0ffe5a03840c8f3a5558526dcb934d83331cb9b73ddf05e936f4bf4385234",
+  "da/index.html": "11691ceacc76d56d23286a116bd2abf3aae5d2d9338a841bce1e280c1fe10e62",
   "data/i18n/da.json": "ea352b0d313a958ccd04905575575bf8a712e7242cc64852baef0594db2725ae",
   "data/i18n/de.json": "ed6a56c1cd80c3608924e2bbddbc77ead73b01cb92b0e462a213f3e77c1d8fe5",
   "data/i18n/en.json": "cc4d5111cfd35ecdc9598447de714fe6761a7986407759907e6c2f815c3421e0",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
-  "en/index.html": "c0d84a6d8e3c6e065138c9e57c65e02d54d5a048f2ab052f1f08541c55132b7e",
-  "index.html": "72897646eb8d60d507df568f483498ea9ae8586eb3ce2c3ef5b912f43c76884d",
-  "js/app.js": "a6c6ec016f98247148efecc6816675f2ed880bb6b61f1fbb7972d6abaa68abad",
+  "en/index.html": "c81f097cdb82604ac5bbdc1402ce54232c8a3b66571a3c66e2c2f623ba8e6c6d",
+  "index.html": "bf97e88b70d8e14c6e52fa62c6a265004299a5cb9d7b9b4ce40179f7cfc51a14",
+  "js/app.js": "23debc6a48c77b7ebcb0182d9fbeba95e2166ec74a9558a84fde9d54d7b3dd7e",
   "js/config.js": "5d7ebbc76980756b7a096609229ae368739eecda70b82e87cd5472957df8c06c",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "e398f18e7a246b3ff32148d05ccf387752272e6e5cb11bc125fa91ded4968dec",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "cb1a4485643ef16e182847b2b0b1f5b5dcdef5510bf9cf6058ffda4b838d44d7",
-  "js/map.js": "51f285791153bea60379491771c350421ce36ff7c5b185d324097f1104dbe656",
+  "js/map.js": "b41581c1ddefd1f042c7c2606044f866dabfffc0df42f1b0ae3b7ecd1de8944e",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "e6c3af4e33166ad5db667f9be58232cbf02c7fee75da20a1415a2275058b5412",
   "offline.html": "3abeb27b2196a79a73f2bfc84d4137a6519f9ded69e0f7de8e7c11a57cd06177",
@@ -208,7 +208,7 @@ const RELEASE_HASHES = {
   "css/components.css": "54e095203bce3c48f27e4f04a16d66963c9fd32cb74218416da904f5039f7432",
   "css/diary.css": "f929360aff9e35d8d804746a0f7c2eaccc56ee21441d16e015e577378cf8f30d",
   "js/features/diary-view.js": "2b543c94895fbb80180f1948653f98631c008724e495d25009b49f4189183176",
-  "js/router.js": "83fc99bdeacaa904549b54b1ef96c9b9b38e5c165c7490a192fae18a7e4c1ca2",
+  "js/router.js": "1063d84d4a762687b5e41262ad7ba5becce1dcdf4208e32d0defd345c2f67df2",
   "js/ui/filter-select.js": "3710bbcfbd3ca6a6b6095bec6e526df17eb0dac98695211477047fdc1e29e2c1",
   "assets/spots/neerlandiavej/kletterturm-rutsche.jpeg": "099193f4efe8bb7e84dab69524d9b985db7b8556b4b7fc32cd93b0f10e8c9a14",
   "assets/spots/neerlandiavej/spielplatz-ueberblick.jpeg": "c880caa15b73ecaea4225bc691d19f8457fe0fcea691631cb4682c602fe82346",
@@ -224,14 +224,16 @@ const RELEASE_HASHES = {
   "css/badges.css": "93512e7a68293f4cb09eda3ac0c0a59509e8eb1d836e4fa51a4e6c3c14a19923",
   "js/filters/tags.js": "3b8386ba863d390884eee9c6c8c7892959a4b8079155736e6d5f5df3f501af76",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "34358149ae55d3c2ecce2a6b7ad340631459af9972e9398197f386ff8ca4f1ab",
+  "css/styles.css": "1757222d849bfbf49c4a4fcb616302edcb8d6fd284238326ef7bf4cd98689ad0",
   "js/ui/map-fullscreen.js": "5db28946c3ee227a89f85bfda54c08c854837cd9b1dfa9621bc47c52e51d48b3",
   "js/categories.js": "399b984aee4d1508cc905805859c56206a396b6a81b23438983ed9b92b97ede7",
   "js/ui/category-explorer.js": "45a407e69a4204ffc95964e5d761b8b729da7fbb41a39927e7d98e7a713f7af9",
   "css/categories.css": "07ca5cfa691f69421f55668be6969bb7520451867aea2e94aeab5b68894d164e",
   "js/ui/filter-results.js": "c93fa5155dce5dff2d42f73fdb6ba3c6012136549ecd355884ca1d252dddafae",
   "css/interface.css": "c4a6ea58ef8af12716c71af48b1a746351456268cd2d2731aab543214e52a8fa",
-  "css/fsm-ui-finish-71.css": "0af65a5df778b74eb503045dca5765d180a18f80649f5680c29fc2b7a75f922e"
+  "css/fsm-ui-finish-71.css": "0af65a5df778b74eb503045dca5765d180a18f80649f5680c29fc2b7a75f922e",
+  "css/fsm-home-navigation-84.css": "a29ce2cf458716079d7013dfc61a03430e6b45ab48c74a927fba6861794f4173",
+  "js/ui/home-navigation.js": "2ae204b0d600c39529ca2ceec15cf6ccc99b47d9ee615dea88b38b04e564504b"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);

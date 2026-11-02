@@ -1,6 +1,19 @@
 /* V84: Navigation consolidated; original filtering and spot data remain untouched. */
 html.fsm-home-nav-ready #sidebar > #filter-section,
 html.fsm-home-nav-ready #sidebar > .sidebar-section--grow { display: none !important; }
+/* V84.1: show each destination only once. Keep both original controls in the
+   document so the existing Plus access and private diary logic remain intact.
+   When Plus moves into the navigation sheet, it is no longer a direct child
+   of #view-map and becomes visible again without a duplicate implementation. */
+html.fsm-home-nav-ready #view-map > #plus-section,
+html.fsm-home-nav-ready #view-map > #btn-open-diary { display: none !important; }
+/* The sheet supplies the heading; the unchanged native <details> remains open
+   while displayed and its built-in summary need not repeat that heading. */
+html.fsm-home-nav-ready #fsm-home-sheet #plus-section[open] > summary { display:none !important; }
+html.fsm-home-nav-ready #fsm-home-sheet #plus-section { margin: 0 !important; }
+html.fsm-home-nav-ready #fsm-home-sheet #plus-section .plus-code-form,
+html.fsm-home-nav-ready #fsm-home-sheet #plus-section #plus-status-text { max-width: 100%; }
+
 html.fsm-home-nav-ready #view-map { row-gap: 12px; }
 html.fsm-home-nav-ready #view-map > .map-section { margin-top: 0 !important; }
 html.fsm-home-nav-ready #main-content { padding-bottom: 100px !important; }

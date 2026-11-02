@@ -92,7 +92,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261102-fsm-home-nav-v84";
+} from "./map.js?v=20261102-fsm-home-nav-v84-1";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { getInitialTheme, applyTheme } from "./theme.js";
@@ -4168,16 +4168,19 @@ async function init() {
         if (target && !target.hidden && !target.disabled) target.click();
       } else if (action === "filters") openFilterModal();
       else if (action === "spots") showFilteredResults();
-      else if (action === "diary") document.getElementById("btn-open-diary")?.click();
+      else if (action === "diary") appRouter?.switchRoute("diary");
       else if (action === "menu") document.getElementById("menu-toggle")?.click();
       else if (action === "plus" && plusSectionEl) {
         appRouter?.switchRoute("map");
-        plusSectionEl.open = true;
-        requestAnimationFrame(() => {
-          const summary = plusSectionEl.querySelector("summary");
-          summary?.focus({ preventScroll: true });
-          plusSectionEl.scrollIntoView({ block: "start", behavior: "auto" });
-        });
+        if (homeNavigation) homeNavigation.openPanel("plus");
+        else {
+          plusSectionEl.open = true;
+          requestAnimationFrame(() => {
+            const summary = plusSectionEl.querySelector("summary");
+            summary?.focus({ preventScroll: true });
+            plusSectionEl.scrollIntoView({ block: "start", behavior: "auto" });
+          });
+        }
       }
     });
 

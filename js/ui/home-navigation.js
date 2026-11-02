@@ -12,7 +12,8 @@ export function createHomeNavigation({ plusEnabled = true, diaryEnabled = true }
   const mapView = document.getElementById("view-map");
   const filter = document.getElementById("filter-section");
   const spots = document.getElementById("btn-toggle-spots")?.closest(".sidebar-section");
-  if (!mapView || !filter || !spots || typeof HTMLDialogElement === "undefined") return null;
+  const plus = document.getElementById("plus-section");
+  if (!mapView || !filter || !spots || (plusEnabled && !plus) || typeof HTMLDialogElement === "undefined") return null;
 
   const text = () => COPY[document.documentElement.lang] || COPY.de;
   const nav = document.createElement("nav");
@@ -37,7 +38,7 @@ export function createHomeNavigation({ plusEnabled = true, diaryEnabled = true }
   head.append(title, closeButton);
   sheet.append(head, content);
   const placeholder = document.createComment("Original filter or spots position");
-  const sources = { filters: filter, spots };
+  const sources = { filters: filter, spots, ...(plusEnabled ? { plus } : {}) };
   let previousParent = null;
   let nextSibling = null;
 
@@ -61,7 +62,7 @@ export function createHomeNavigation({ plusEnabled = true, diaryEnabled = true }
     Object.entries(sources).forEach(([key, el]) => { if (el) el.dataset.fsmSection = key; });
     for (const [name, item] of buttons) { item.label.textContent = copy[name]; item.button.setAttribute("aria-label", copy[name]); }
     closeButton.setAttribute("aria-label", copy.close);
-    title.textContent = activeSection === "filters" ? copy.sheetFilter : copy.sheetSpots;
+    title.textContent = activeSection === "filters" ? copy.sheetFilter : activeSection === "spots" ? copy.sheetSpots : copy.plus;
   };
   const languageObserver = new MutationObserver(paint);
   languageObserver.observe(document.documentElement, {attributes: true, attributeFilter:["lang"]});
@@ -100,8 +101,14 @@ export function createHomeNavigation({ plusEnabled = true, diaryEnabled = true }
     paint();
     sheet.showModal();
     // Existing controls are the sole source of truth for expanded state.
-    const toggle = document.getElementById(name === "filters" ? "btn-toggle-filters" : "btn-toggle-spots");
-    if (toggle?.getAttribute("aria-expanded") !== "true") toggle.click();
+    if (name === "plus") {
+      // Reuse the original <details>, status output and partner-code input.
+      // Do not synthesize a second Plus implementation or trigger navigation.
+      source.open = true;
+    } else {
+      const toggle = document.getElementById(name === "filters" ? "btn-toggle-filters" : "btn-toggle-spots");
+      if (toggle?.getAttribute("aria-expanded") !== "true") toggle.click();
+    }
     closeButton.focus({preventScroll:true});
   }
   function markMap() {
@@ -111,7 +118,7 @@ export function createHomeNavigation({ plusEnabled = true, diaryEnabled = true }
     }
   }
   function navigate(name) {
-    if (name === "filters" || name === "spots") { openPanel(name); return; }
+    if (name === "filters" || name === "spots" || name === "plus") { openPanel(name); return; }
     closePanel({focus:false});
     if (name === "map") {
       document.getElementById("map")?.scrollIntoView({block:"start", behavior:"smooth"});

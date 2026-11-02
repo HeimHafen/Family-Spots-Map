@@ -33,7 +33,7 @@ export function initRouter({ viewMapEl, viewAboutEl, bottomNavButtons, btnHelpEl
     const returning = showMap && previous === "diary";
     const target = showDiary ? document.getElementById("diary-title")
       : showAbout ? document.querySelector(`#page-about-${l} h2`)
-      : returning ? document.getElementById("btn-open-diary") : document.getElementById("app-title");
+      : returning ? (document.querySelector("#fsm-home-nav [data-fsm-home-action=diary]") || document.getElementById("btn-open-diary")) : document.getElementById("app-title");
     cancelAnimationFrame(focusFrame);
     focusFrame = requestAnimationFrame(() => {
       if (showMap) window.dispatchEvent(new Event("resize"));
