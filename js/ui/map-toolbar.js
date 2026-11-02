@@ -147,9 +147,16 @@ export function createMapToolbar({ dialog, leaveMap, onLayout }) {
       const focusedId = categories.contains(document.activeElement) ? document.activeElement.dataset.world : null;
       const scroll = categories.scrollLeft;
       const order = ["", "play", "nature", "water", "animals"];
-      const catalogue = state.worlds.map(world => world.id === "water"
-        ? { ...world, hidden: false, disabled: false, label: waterLabel, accessible: waterLabel } : world);
-      const worlds = catalogue.sort((a, b) => (order.includes(a.id) ? order.indexOf(a.id) : 100) - (order.includes(b.id) ? order.indexOf(b.id) : 100));
+      // Defensive guard: one visible chip per theme ID, even if a future
+      // producer accidentally includes extra rows with duplicate data-world.
+      const unique = new Map();
+      for (const world of state.worlds) {
+        if (typeof world.id !== "string" || unique.has(world.id)) continue;
+        unique.set(world.id, world.id === "water"
+          ? { ...world, hidden: false, disabled: false, label: waterLabel, accessible: waterLabel }
+          : world);
+      }
+      const worlds = [...unique.values()].sort((a, b) => (order.includes(a.id) ? order.indexOf(a.id) : 100) - (order.includes(b.id) ? order.indexOf(b.id) : 100));
       categories.replaceChildren();
       for (const world of worlds) {
         if (world.hidden) continue;
@@ -177,7 +184,9 @@ export function createMapToolbar({ dialog, leaveMap, onLayout }) {
     }
     for (const b of categories.children) {
       const id = b.dataset.world;
-      const selected = id === "water" ? shortcutIsSelected(state, "water")
+      // The water chip represents either the selected water world or the
+      // equivalent quick-choice water-and-sand combination.
+      const selected = id === "water" ? (state.world === "water" || shortcutIsSelected(state, "water"))
         : id === "" ? !state.world && !(state.types || []).length : id === state.world;
       b.setAttribute("aria-pressed", String(selected));
     }

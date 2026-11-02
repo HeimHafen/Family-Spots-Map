@@ -3054,7 +3054,12 @@ function selectionDescription() {
 // Publish only presentation/filter metadata; the fullscreen map never owns a
 // second spot collection or separate selection. The explorer stays authoritative.
 function syncFullscreenControls() {
-  const worlds = [...document.querySelectorAll("#category-explorer [data-world]")].map(button => ({
+  // Only the actual theme buttons belong in the fullscreen theme strip.
+  // Place-type labels also carry data-world as metadata; including them
+  // duplicates a theme and can make several chips look selected at once.
+  const worlds = [...document.querySelectorAll(
+    "#category-explorer > .category-explorer__worlds > button[data-world]"
+  )].map(button => ({
     id: button.dataset.world,
     label: button.querySelector(".category-explorer__name")?.textContent || button.textContent,
     accessible: button.getAttribute("aria-label"),

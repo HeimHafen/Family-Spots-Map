@@ -1,7 +1,7 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
 const CACHE_VERSION = "20261101-coherent-design-82-tilla-balanced";
 const CACHE_PREFIX = "family-spots-map-";
-const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-compact-map-12-flat-controls-focus-photo-search-cost-3" + "-neutral-focus-20261029-1-plus-border-78-release-fix";
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-compact-map-12-flat-controls-focus-photo-search-cost-3" + "-neutral-focus-20261029-1-plus-border-78-release-fix-theme-unique";
 const ROOT = new URL("./", self.location.href);
 const ASSETS = [
   "js/filter-model.js",
@@ -167,7 +167,7 @@ const RELEASE_HASHES = {
   "css/filter-showcase-78.css": "61bf7a00b912d8b036ade3eafc375fdbeef7f1cbc4024451375268d95167f095",
   "css/fsm-ui-finish-70.css": "e3b5e8220c6a1d1da3e2c76de9edf63f09e912c5003cfd319d1c72c38921781c",
   "js/ui/filter-summary.js": "b7e0155c909fc50a9124ddff2efde40d4ea91f59038d0afd211642053a0699ff",
-  "js/ui/map-toolbar.js": "64434786002b887b9d70cbc93266c3f8ed784c9ed5ce6ccb0391f76f2a172ffb",
+  "js/ui/map-toolbar.js": "167b74926b2998486de5f5381b7b1b70e2b612c526808df6d1e183bc32541bf8",
   "css/theme.css": "489b478c87918fa0178298907b37a41dcde9028902a19691312d58c7bfecb80a",
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
@@ -180,7 +180,7 @@ const RELEASE_HASHES = {
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
   "en/index.html": "aa9fb4292ea55da31cc8bbac0a30061015c6c31616c8326834812d1b9d548951",
   "index.html": "9d95e63741558f8ff4522c53e3d2c527854fd05fc8345dfe7e3f8ec9e89c1e71",
-  "js/app.js": "d8b512cea0f413b1ef9ec61753d12f89a57fa636ba6bcace087b3d91258c1266",
+  "js/app.js": "2f314154a83bdd23f4422edaa9167490ff2313e337cb1c782b8bdb95b9d27b22",
   "js/config.js": "5d7ebbc76980756b7a096609229ae368739eecda70b82e87cd5472957df8c06c",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "e398f18e7a246b3ff32148d05ccf387752272e6e5cb11bc125fa91ded4968dec",
