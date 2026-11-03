@@ -1,0 +1,36 @@
+Family Spots Map V90.4 | Korrektur des sichtbaren Streifens unter dem Leitsatz
+
+VORAUSSETZUNG: V90.3 ist bereits vollstaendig installiert.
+
+1. Aktuellen Stand in Working Copy sichern, am besten neuen lokalen Testbranch
+   aus dem vorhandenen V90.3-Testbranch anlegen.
+2. Die 5 Projektdateien in diesem ZIP an den gleichnamigen Pfaden ersetzen.
+3. In Working Copy die Dateiunterschiede kontrollieren.
+4. Commit auf dem Testbranch erstellen und auf refs/heads/test/main-premium-v904 pushen.
+5. In Cloudflare Preview pruefen, NICHT sofort auf main ausrollen.
+6. Im iPhone-Safari ggf. Cache neu laden/Seite hart aktualisieren.
+
+AENDERUNG: Ausschliesslich der Farb-/Illustrationsuebergang im mobilen,
+hellen Karten-Kopfbereich. Eine WebKit-kompatible Maske blendet die
+Landschaft oben weich ein; damit gibt es keinen abrupten hellen Streifen.
+Der vollstaendige dreizeilige Leitsatz bleibt auf der V90.3-Position.
+
+NICHT GEAENDERT: Tilla, Navigation, Karte, Spotdaten, Marker,
+Darkmode, Filter, gespeicherte Erinnerungen, interaktive Funktionen.
+HTML aendert nur die Cache-Busting-URL einer CSS-Datei. Service Worker
+wurde ausschliesslich fuer den neuen Cache-Release aktualisiert.
+
+Commit-Zusammenfassung:
+V90.4 - Leitsatz und Landschaft ohne harte Trennkante
+
+Detaillierte Informationen:
+CSS-Uebergang zwischen Leitsatz und Landschaft weich eingeblendet.
+V90.3-Textposition, Illustrationen und alle App-Funktionen beibehalten.
+DE/EN/DA aktualisieren ausschliesslich die Stylesheet-Versionskennung;
+Service-Worker-Cache pruefbar aktualisiert.
+
+Vorhandene oder neue Remote-Referenz:
+refs/heads/test/main-premium-v904
+
+Source-Branch: neuer lokaler Testbranch aus V90.3 (unveraendert lassen)
+Force Push: Aus
