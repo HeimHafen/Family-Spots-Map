@@ -1,0 +1,54 @@
+FAMILY SPOTS MAP · V90.3 · NUR KOPFBEREICH / LEITSATZ
+03.11.2026 · FÜR DEN BESTEHENDEN V90.2-TESTSTAND
+
+ZIEL NACH DER LETZTEN BILDVORLAGE
+- Titel "Family Spots Map" mit beiden Flaggen zentriert beibehalten.
+- VOLLSTÄNDIGEN dreizeiligen Leitsatz beibehalten:
+  Orte entdecken.
+  Menschen verbinden.
+  Erinnerungen schaffen.
+- Den gesamten Leitsatz nach UNTEN verschoben, sodass seine dritte Zeile
+  ungefähr auf der früheren Herzposition endet.
+- Herz UND beide waagerechten Linien AUS DER LANDSCHAFT-GRAFIK ENTFERNT.
+- Landschaft, Tilla, Spielideen-Button, Karte und Navigation ansonsten unverändert.
+- Kein Eingriff in JavaScript, Spots, Funktionen, andere Screens, Darkmode oder Daten.
+
+VORAUSSETZUNG
+V90.2 ist bereits vollständig auf deinem aktuellen Testbranch installiert.
+Dieses ZIP ist KEINE komplette App. Vor Einspielen aktuelle Dateien sichern.
+
+AUSTAUSCH – NUR DIESE 6 PROJEKTDATEIEN
+assets/design/main-header-landscape-v903.webp   (neu)
+css/fsm-header-noheart-v903.css                  (neu)
+index.html                                       (geändert)
+en/index.html                                    (geändert)
+da/index.html                                    (geändert)
+service-worker.js                                (geändert)
+
+INSTALLATION
+1. V90.2-Stand in Working Copy per Commit sichern.
+2. Die sechs Dateien an den gleichen Pfaden ins bestehende Repo übernehmen.
+3. Prüfen, dass keine weiteren Dateien geändert werden.
+4. Auf dem aktuellen Testbranch committen. Force Push: AUS.
+5. Nur auf eine neue/geeignete TEST-Remote-Referenz pushen.
+6. Cloudflare-Preview auf dem iPhone in Safari prüfen (auch neu laden / Cache).
+7. Erst nach Sicht- und Funktionstest gezielt mit main zusammenführen.
+
+HINWEIS ZU 1:1
+Die Illustrationsvorlage wurde KI-generiert. Das Paket nähert das echte
+CSS-Layout der Vorlage an. Ein pixelidentisches Ergebnis auf allen iPhones
+ist ohne Browser-Abnahme nicht garantierbar. Die dynamischen Tilla-Sprüche
+und Leaflet-Marker ändern sich abhängig von App-Logik und Standort.
+
+WORKING COPY – ZUSAMMENFASSUNG
+V90.3 – Leitsatz tiefer, Herz und Zierstriche entfernt
+
+WORKING COPY – DETAILLIERTE INFORMATIONEN
+Nur mobilen hellen Kopfbereich der Kartenansicht verfeinert: dreizeiliger
+Leitsatz tiefer gesetzt; Herz und beide Zierstriche aus separater Landschaft
+entfernt. Bestehende V90.2-Karte, Tilla, Navigation, Funktionen und Darkmode
+unverändert. DE/EN/DA HTML-Styling und Offline-Cache aktualisiert.
+
+REMOTE-REFERENZ
+refs/heads/test/main-premium-v903
+Source-Branch unverändert; Force Push: Aus.

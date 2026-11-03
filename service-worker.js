@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261103-premium-polish-v902-1";
+const CACHE_VERSION = "20261103-header-noheart-v903-1";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -60,7 +60,9 @@ const ASSETS = [
   "css/main-header-v90.css",
   "css/fsm-map-dock-v901.css",
   "css/fsm-premium-polish-v902.css",
+  "css/fsm-header-noheart-v903.css",
   "assets/design/main-header-landscape-v90.webp",
+  "assets/design/main-header-landscape-v903.webp",
   "assets/design/main-header-leaves-v90.webp",
   "assets/design/main-header-leaves-bottom-v90.webp",
   "css/community-play.css",
@@ -175,6 +177,8 @@ async function validateImage(response, url) {
   if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
 }
 const RELEASE_HASHES = {
+  "assets/design/main-header-landscape-v903.webp": "2a8577e7b19b63293e522ae99cf5fc8f4f36e48b826721d9b6af2a1ad314e67d",
+  "css/fsm-header-noheart-v903.css": "3e6f0e7d08a3ef83c6a5a96ec71300a81e0b1ec71105a71778188530357a8ce0",
   "css/fsm-premium-polish-v902.css": "29d371dde4feb6b2e604a340c01d228babfdb2f7951fcdb270ea3ac040d0bb9a",
   "css/fsm-map-dock-v901.css": "7d9df668eac5f7d1a81d14c164244e20f56f81c00afa1e5e95b3ee5bd79fc495",
   "css/main-header-v90.css": "55de47df1a0ddd7350d0a692a63b37a6a4484b4ebb8476f57184593a3fb40c4f",
@@ -189,14 +193,14 @@ const RELEASE_HASHES = {
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "da/index.html": "eccecffc12a4c4256ac52271809dc0ca119ecfbcd8c29a2c543cd38f49a688f1",
+  "da/index.html": "113c5d18d82dce50cb50a6cfb83215b0d2d57008465206c76d3bdfd9e7457570",
   "data/i18n/da.json": "28692aca31de0476d3eafba3993be23a55b07442e867c0229ed1b4abc2582dc9",
   "data/i18n/de.json": "cb915fb6dcc64e45d93eac9ff323b90a13685ea1cb5fcc88d75a75c49de8d2aa",
   "data/i18n/en.json": "99dcbeaa9dbd3e18df3ab35664e64f4dcedfe1eab9ed22ba3fc5fc6cf3bfba26",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
-  "en/index.html": "e60c572eac044a3df03b7e69a1287f2527e8c252a4cdc6c1164b2944c1f58335",
-  "index.html": "88fdd3c8ef088843fba90a062451dcf43f95fa769e66c50b0fb7489a22b410c7",
+  "en/index.html": "0c1618ab4fe9296e83e5ac83496f7064184f2db5f58a18d4ac873ceee8c228cf",
+  "index.html": "6caa9767f48b2304c6e55ad9aa22585e4b766523cb239661c1164fb8fa8ea347",
   "js/app.js": "608617273750cf20f07b954737b9499d822988c2737afe6e3f2ab90d4b8a97f3",
   "js/config.js": "6bf8119a67f96baf8634cfd3bbb1ae18a438d1bed26390b9bf9db9bd46397038",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
