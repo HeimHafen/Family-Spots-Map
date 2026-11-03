@@ -1,0 +1,88 @@
+FAMILY SPOTS MAP – V89.1 · IPHONE PREMIUM-NAVIGATION
+==================================================
+Datum: 03.11.2026
+Ausgang: GitHub test/pastell-v89, Commit c18ccbe, Screenshot IMG_0657.jpeg
+WICHTIG: Ausschließlich auf diesem separaten TESTBRANCH anwenden.
+
+WARUM DIE KORREKTUR NOETIG IST
+-----------------------------
+Der echte Safari-Screenshot zeigt sechs Navigationsaktionen in einem Layout,
+das noch auf fünf Spalten ausgelegt ist. 'Mein Tag' rutscht dadurch in eine
+zweite Zeile, und die Navigation verdeckt einen großen Teil der Karte.
+Das ist ein echter Responsiv-Fehler, kein reines Farbproblem.
+
+DATEIEN (EXAKT 2 ZU ERSETZEN)
+---------------------------
+css/fsm-pastel-v89.css
+service-worker.js
+
+NICHT ERSETZEN / NICHT AENDERN
+-----------------------------
+index.html, en/index.html, da/index.html
+js/app.js, js/map.js, js/ui/home-navigation.js
+css/fsm-v89-vision.css und alle V89-Test-Assets
+Daten/Spots, Filter, Spielideen, Profil-/Erinnerungs- oder Plus-Daten
+
+WAS DIE DATEIEN BEWIRKEN
+------------------------
+1. Navigation nutzt eine gleichverteilte, einzeilige Flex-Zeile fuer alle
+   tatsaechlich sichtbaren Punkte (fuenf oder sechs, DE/EN/DA).
+2. Kleinste Menue-Breite im Layouttest bei 320px: 47px je Button.
+3. 'Treffen & Spielen' bleibt als eigener, anklickbarer Punkt erhalten.
+4. Bestehender aktiver Karten-Button bleibt olivgruen.
+5. 'Mein Tag' nutzt das bereits in V89 TEST vorhandene Referenz-Maskenbild
+   assets/ui/fsm-v89-approved-heart-mask.png, kein neu gestaltetes Symbol.
+6. Header-Landschaft und Tilla-Karte werden etwas kompakter. Die Karte ist
+   frueher sichtbar; das echte Leaflet-Material bleibt unveraendert.
+7. Die untere Navigation bleibt im V89-Test-Dialog bedienbar.
+8. Lightmode und Darkmode teilen dieselbe einreihige Navigation.
+9. Neue Service-Worker-Cache-Version; alte V87-SHA-Eintraege fuer zwischen-
+   zeitlich geaenderte V89-Test-Dateien werden nicht mehr als verifizierte
+   Hashes ausgegeben. Die 61 unveraenderten Checksummenteile bleiben bestehen.
+10. Vorhandene V89-Test-Assets werden fuer den Offline-Cache mitgelistet.
+
+ANLEITUNG IN WORKING COPY
+------------------------
+1. Repo Family-Spots-Map oeffnen; aktiven Branch test/pastell-v89 pruefen.
+2. Zur Sicherheit aktuellen Commit c18ccbe notieren/als Backup behalten.
+3. Diese ZIP in Working Copy entpacken.
+4. Nur die zwei genannten Dateien an ihrem jeweiligen Pfad 1:1 ersetzen.
+5. Sichtpruefung der zwei geaenderten Dateien, Commit erstellen.
+6. Push auf denselben Testbranch, OHNE Force Push.
+7. Cloudflare -> All deployments -> neuestes Preview -> Deployment URL oeffnen.
+8. Bei veralteter Ansicht Safari-Tab schliessen/neu oeffnen und ggf. erneut
+   laden. NICHT Safari-Website-Daten loeschen (private Erinnerungen!).
+9. Karte, Filter, Spots, Spots Plus, Treffen & Spielen, Mein Tag und
+   Darkmode im echten Safari einzeln antippen und pruefen.
+
+COMMIT-ZUSAMMENFASSUNG
+---------------------
+V89.1 – iPhone-Navigation korrigiert · Pastell-Feinschliff
+
+DETAILLIERTE INFORMATIONEN
+--------------------------
+V89.1: sechs Navigationspunkte auf einer responsiven Zeile; kein Umbruch
+von Mein Tag; schmalere, einheitliche Tap-Ziele ohne Funktionsverlust;
+Landschaft und Tilla kompakter fuer mehr sichtbare Karte; bereits
+freigegebenes Hand-Herz-Asset wieder verwendet; Cache aktualisiert.
+Ausschliesslich Darstellungs- und Offline-Cache-Anpassungen; keine
+Aenderungen an Spotdaten, Erinnerungen, Filter- oder Kartenlogik.
+
+PUSH
+----
+Source-Branch: test/pastell-v89 (unveraendert)
+Remote-Referenz: refs/heads/test/pastell-v89
+Force Push: AUS
+main: NICHT anfassen
+
+TECHNISCHE PRUEFUNG UND GRENZEN
+------------------------------
+PASS: CSS syntaktisch geprueft (tinycss2), SW JavaScript-Syntax (node --check).
+PASS: Browser-Layouttest fuer 6 Menues in Light/Dark bei 320, 360, 375,
+      390, 430, 768 Pixeln: nur EINE Reihe, Breiten >= 44px, kein Ueberlauf.
+NICHT GETESTET: vollstaendig live ausgefuehrte Cloudflare-App unter Safari,
+      echte Dialog-/Tilla-/Karten-Interaktion, Cache-Aktivierung auf iPhone.
+HINWEIS: Die vollstaendige Projektpruefung der zugrunde liegenden V89-Branch
+      kann nicht aus dem lokal vorhandenen V30-Archiv reproduziert werden,
+      da der Branch zusaetzliche V89-Test-Dateien und geaenderte JS-Module hat.
+Die ZIP ist ein gezielter Hotfix, keine vollstaendige Freigabe aller Screens.
