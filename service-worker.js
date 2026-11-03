@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261103-v88-6-main-behavior";
+const CACHE_VERSION = "20261103-v88-6-1-x-focus";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -201,21 +201,21 @@ const RELEASE_HASHES = {
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "da/index.html": "5bfae6fd13434a182a35d51169794336c97dc53aa3abc9255196256a2d27c466",
+  "da/index.html": "a696e216877f796735f3c90d7b8861f4101cdcf7d95486805f9b7823e08edc74",
   "data/i18n/da.json": "ea352b0d313a958ccd04905575575bf8a712e7242cc64852baef0594db2725ae",
   "data/i18n/de.json": "ed6a56c1cd80c3608924e2bbddbc77ead73b01cb92b0e462a213f3e77c1d8fe5",
   "data/i18n/en.json": "cc4d5111cfd35ecdc9598447de714fe6761a7986407759907e6c2f815c3421e0",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
-  "en/index.html": "7d34ab62acc77ff63426b32b9947e8db62b7c1bdb72084226d2905c624d9a513",
-  "index.html": "e5f77e9adc111d3bf29a8af41569eb8e68d61485ca2ea53e45714d82ad48e84c",
-  "js/app.js": "65135ddaf640511bf93f9a3b812054a77369ef54e738923236e6d86363b9cf54",
+  "en/index.html": "605717cd23b2f414a43a55e29e50d3c765b0d1fde660071ae5b9fd4bdd6dd076",
+  "index.html": "2d7a01109d46c19e902efeba946ec59000c089205f5627a6cc7494f1961f2ec3",
+  "js/app.js": "865ed42bd46ac26b6c7411b327d83e934c05ae4b7d9bbd0bd4b16d77b5ecfb4a",
   "js/config.js": "5d7ebbc76980756b7a096609229ae368739eecda70b82e87cd5472957df8c06c",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "e398f18e7a246b3ff32148d05ccf387752272e6e5cb11bc125fa91ded4968dec",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "cb1a4485643ef16e182847b2b0b1f5b5dcdef5510bf9cf6058ffda4b838d44d7",
-  "js/map.js": "6e8334161bad37682483285c7f3102c9139a08eb0fce0b7f0e7c04c4815d7988",
+  "js/map.js": "05663204737dcac9cabd2d65bbb83c1de8b48a0d445121cfd8c5431a47f5ae0d",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "979a9ef59041f9caacab46de883198004b913b1312abbfe9a71fb17a5c58bdf1",
   "offline.html": "3abeb27b2196a79a73f2bfc84d4137a6519f9ded69e0f7de8e7c11a57cd06177",
@@ -249,7 +249,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "93512e7a68293f4cb09eda3ac0c0a59509e8eb1d836e4fa51a4e6c3c14a19923",
   "js/filters/tags.js": "3b8386ba863d390884eee9c6c8c7892959a4b8079155736e6d5f5df3f501af76",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "445691950d664459ce94f8289039a537b9096b85526066714d0c48ad1ec6b02b",
+  "css/styles.css": "ba137432c5888375487bb1c0d8da87821b450bb45013f0022c699677842ded5d",
   "js/ui/map-fullscreen.js": "58218777034e262f8cee4b3fc9ded0c94516a836140a78199d3d23a7066618ac",
   "js/categories.js": "399b984aee4d1508cc905805859c56206a396b6a81b23438983ed9b92b97ede7",
   "js/ui/category-explorer.js": "45a407e69a4204ffc95964e5d761b8b729da7fbb41a39927e7d98e7a713f7af9",
@@ -264,7 +264,7 @@ const RELEASE_HASHES = {
   "js/features/gemeinsam-erleben-rc.js": "256a4303b3405afbc287aa54170f6e25606b07871dbf47100447dbd42551e2e4",
   "css/fsm-v884-reference.css": "b1eb49d56f26af41db4d8b4c2b24ae8c89025d652da17911ea26b98b432af038",
   "js/ui/fsm-v884-reference-home.js": "830288bf0835e14cf4cd62f723dd8d910ca55d44ff7087992f85e9ad0be02b48",
-  "css/fsm-v88-premium.css": "0def911b29d1ff2012e83fa15df438f91ea3b56bd3c42957a19a653435ba6f95",
+  "css/fsm-v88-premium.css": "583aa3b2f4f7d2264701893b6c2c1bdc1c9908d0fb91acb4452f9b0daa0b8663",
   "assets/ui/fsm-v883-hills-light.svg": "0a088e31d998f7a0dab21f32316e224a9dc3762ee894e74fa1f483ae234e1aa1",
   "assets/ui/fsm-v883-hills-dark.svg": "83c7751f1c6806df9cf459b519c0568edb982d1b6b7ea5ab5777933bb1ec7347"
 };

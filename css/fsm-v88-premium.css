@@ -251,3 +251,36 @@ html.fsm-polished[data-theme="dark"] #fse-overlay .fse-demo-line {background:#37
 /* Contrast mode: calendar only. */
 @media(prefers-reduced-motion:reduce){#fse-overlay .fse-shell{animation:none!important;}}
 @media(forced-colors:active){#fse-overlay .fse-icon-btn::before{border-color:ButtonText!important;background:ButtonFace!important;}}
+
+
+/* V88.6.1 — FIX: kein doppelter Ring beim Öffnen der Dialoge.
+   Die Dialognavigation fokussiert das X programmgesteuert, wodurch
+   :focus-visible bisher AUSSEN einen 2px-Outline um die 44px-Hitbox zeichnete.
+   Innen existiert bereits der gewollte 32px-Kreis als ::before.
+   Nur der OUTER-Outline wird unterdrückt; Tastaturfokus bleibt als
+   stärkerer Rand am bestehenden EINEN Innenkreis sichtbar.
+   Keine DOM-, Klick-, Layout- oder Größenänderungen. */
+html.fsm-polished #fsm-home-sheet .fsm-home-sheet__close:focus-visible,
+html.fsm-polished #filter-modal #filter-modal-close:focus-visible,
+html.fsm-polished #fse-overlay .fse-icon-btn:focus-visible,
+html.fsm-polished #fsm-community-overlay .fsm-community-close:focus-visible,
+html.fsm-polished .fsm-spot-preview__close:focus-visible,
+html.fsm-polished .fsm-onboarding-hint__close:focus-visible,
+html.fsm-polished .fsm-onboarding-hint-close:focus-visible,
+html.fsm-polished #spot-detail [data-role="close-details"]:focus-visible,
+html.fsm-polished .leaflet-popup-close-button:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+}
+html.fsm-polished #fsm-home-sheet .fsm-home-sheet__close:focus-visible::before,
+html.fsm-polished #filter-modal #filter-modal-close:focus-visible::before,
+html.fsm-polished #fse-overlay .fse-icon-btn:focus-visible::before,
+html.fsm-polished #fsm-community-overlay .fsm-community-close:focus-visible::before,
+html.fsm-polished .fsm-spot-preview__close:focus-visible::before,
+html.fsm-polished .fsm-onboarding-hint__close:focus-visible::before,
+html.fsm-polished .fsm-onboarding-hint-close:focus-visible::before,
+html.fsm-polished #spot-detail [data-role="close-details"]:focus-visible::before,
+html.fsm-polished .leaflet-popup-close-button:focus-visible::before {
+  border-color: var(--fsm883-close-focus) !important;
+  border-width: 2px !important;
+}
