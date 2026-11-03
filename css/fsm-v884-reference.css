@@ -1,231 +1,104 @@
-/* FAMILY SPOTS MAP · V88.5 · DARKMODE-FARBWELT-KORREKTUR
-   Grundlage bleibt der V88.3/V88.4-Aufbau. Dieses Stylesheet übernimmt
-   nur die freigegebene Farbrichtung und das einheitliche Close-X —
-   ohne eine alternative Darkmode-Startseitenstruktur zu erzwingen. */
-html.fsm-polished {
-  --fsm884-light:#fff8ed;
-  --fsm884-light-ink:#35291e;
-  --fsm884-light-line:#e3d3bd;
-  --fsm884-olive:#6d884f;
-  --fsm884-orange:#fa911e;
-  --fsm884-night:#211d14;
-  --fsm884-night-panel:#2b2419;
-  --fsm884-night-card:#352e20;
-  --fsm884-night-softcard:#403522;
-  --fsm884-night-line:#66583e;
-  --fsm884-night-ink:#f9eed8;
-  --fsm884-night-soft:#d5c6aa;
-  --fsm884-night-accent:#cad78a;
-  --fsm884-x-color:#65584a;
-  --fsm884-x-paper:#fff8ed;
-  --fsm884-x-line:#ddcbb4;
-}
+/* FAMILY SPOTS MAP · V88.6 · SCHONENDE DARKMODE-FARBPALETTE
+   Design-Ebene ohne Eingriff in Layout, DOM, Display, Position, Grid,
+   Pointer-Events, Z-Index oder JavaScript. Main-Interaktionen bleiben maßgeblich.
+   Farben gelten nur, wenn der vorhandene Designmodus auf dark steht.
+*/
 html.fsm-polished[data-theme="dark"] {
-  --fsm884-x-color:#f2e4c8;
-  --fsm884-x-paper:#433927;
-  --fsm884-x-line:#716046;
-  color-scheme:dark;
+  color-scheme: dark;
+  --surface-0:#211d16; --surface-1:#2d271d; --surface-2:#362e21; --surface-3:#403727;
+  --bg-app:#211d16; --app-bg:#211d16; --page-bg:#211d16;
+  --text-3:#fff3de; --text-1:#f5ead6; --text-2:#d3c4ad;
+  --text-heading:#fff3de; --text-body:#f5ead6; --text-muted:#d3c4ad;
+  --text-color:#f5ead6; --text-soft:#d3c4ad; --text-strong:#fff3de;
+  --on-dark:#fff3de; --on-light:#34291d;
+  --card-bg:#352d20; --card-border:#6b5a40;
+  --chip-bg:#413627; --chip-color:#f2e5d1; --chip-border:#77654c;
+  --input-bg:#403526; --button-bg:#413628; --button-text-color:#f3e5d1;
+  --header-bg-top:#32291d; --header-bg-bottom:#272117;
+  --header-text-color:#fff3df;
+  --header-tagline-bg:transparent; --header-tagline-color:#e7dcc8;
+  --language-pill-bg:#3e3426;
+  --sidebar-bg:#211d16; --sidebar-section-bg:#352d20;
+  --sidebar-section-border:#6c5940; --map-card-bg:#352d20;
+  --map-card-border:#6a5940; --toast-bg:#383022;
+  --fsm83-paper:#352d20; --fsm83-paper-raised:#423729;
+  --fsm83-ink:#fff3df; --fsm83-muted:#d4c6b0;
+  --fsm83-dialog-bg:#2c261c; --fsm83-dialog-raised:#3c3224;
+  --fsm83-dialog-ink:#f8edd9; --fsm83-dialog-muted:#d5c5aa;
+  --fsm-home-panel:#332b1f; --fsm-home-ink:#f8ecd7; --fsm-home-border:#756348;
+  --fsm-nav-bg:#332a1e; --fsm-nav-text:#f8edda;
+  --fsm-nav-line:#756247; --fsm-nav-active:#788e55; --fsm-nav-active-ink:#fff8e9;
 }
-/* Einheitliches ruhiges Kreis-X in der gesamten App. */
-html.fsm-polished :is(
- #filter-modal-close,.fsm-home-sheet__close,.fsm-community-close,
- .fsm-spot-preview__close,.fsm-onboarding-hint__close,
- .fsm-onboarding-hint-close,#fse-overlay .fse-icon-btn,
- #spot-detail [data-role="close-details"],.leaflet-popup-close-button,
- .fsm-map-fullscreen-button[aria-expanded="true"]
-) {
-  box-sizing:border-box!important;position:relative!important;isolation:isolate;
-  display:inline-grid!important;place-items:center!important;
-  width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;
-  flex:0 0 44px!important;padding:0!important;border:0!important;border-radius:50%!important;
-  background:transparent!important;color:var(--fsm884-x-color)!important;
-  box-shadow:none!important;text-decoration:none!important;line-height:1!important;
-  -webkit-tap-highlight-color:transparent;
-}
-html.fsm-polished :is(
- #filter-modal-close,.fsm-home-sheet__close,.fsm-community-close,
- .fsm-spot-preview__close,.fsm-onboarding-hint__close,
- .fsm-onboarding-hint-close,#fse-overlay .fse-icon-btn,
- #spot-detail [data-role="close-details"],.leaflet-popup-close-button,
- .fsm-map-fullscreen-button[aria-expanded="true"]
-)::before {
-  content:""!important;position:absolute!important;inset:5px!important;
-  width:auto!important;height:auto!important;transform:none!important;
-  border:1px solid var(--fsm884-x-line)!important;
-  border-radius:50%!important;background:var(--fsm884-x-paper)!important;
-  box-shadow:0 2px 5px rgba(63,41,22,.04)!important;pointer-events:none!important;z-index:-1!important;
-}
-html.fsm-polished :is(
- #filter-modal-close,.fsm-home-sheet__close,.fsm-community-close,
- .fsm-spot-preview__close,.fsm-onboarding-hint__close,
- .fsm-onboarding-hint-close,#fse-overlay .fse-icon-btn,
- #spot-detail [data-role="close-details"],
- .fsm-map-fullscreen-button[aria-expanded="true"]
-) > svg {
-  position:relative!important;z-index:1!important;
-  width:26px!important;height:26px!important;stroke:currentColor!important;
-  stroke-width:1.5px!important;fill:none!important;
-}
-html.fsm-polished :is(
- #filter-modal-close,.fsm-home-sheet__close,.fsm-community-close,
- .fsm-spot-preview__close,.fsm-onboarding-hint__close,
- .fsm-onboarding-hint-close,#fse-overlay .fse-icon-btn,
- #spot-detail [data-role="close-details"]
-) > svg path {stroke:currentColor!important;stroke-width:1.5px!important;}
-html.fsm-polished .leaflet-popup-close-button {font-size:0!important;top:0!important;right:0!important;}
-html.fsm-polished .leaflet-popup-close-button::after {
-  content:""!important;position:relative!important;z-index:2!important;
-  width:13px!important;height:13px!important;
-  background:linear-gradient(45deg,transparent 44%,currentColor 46%,currentColor 54%,transparent 56%)!important,
-             linear-gradient(-45deg,transparent 44%,currentColor 46%,currentColor 54%,transparent 56%)!important;
-  transform:none!important;
-}
-html.fsm-polished :is(#filter-modal-close,.fsm-home-sheet__close,#fse-overlay .fse-icon-btn,.leaflet-popup-close-button):focus-visible {
-  outline:2px solid #bda075!important;outline-offset:2px!important;
-}
-
-/* Gemeinsam-erleben-Overlay verfeinern, Struktur bleibt identisch. */
-#fse-overlay .fse-header {
-  padding:14px 16px 58px;
-  grid-template-columns:48px minmax(0,1fr) 44px;
-  gap:10px 12px;
-  align-items:start;
-}
-#fse-overlay .fse-header h2 {
-  font:700 clamp(1.88rem,7.7vw,2.32rem)/1.08 Georgia,"Times New Roman",serif;
-  letter-spacing:-.047em;
-  margin-top:6px;
-}
-#fse-overlay .fse-eyebrow {font-weight:800;font-size:clamp(.56rem,2.22vw,.68rem);letter-spacing:.075em;}
-#fse-overlay .fse-tilla {width:48px;height:48px;}
-#fse-overlay .fse-subtitle {font-size:clamp(.78rem,2.85vw,.9rem);line-height:1.37;margin-top:3px;max-width:35ch;}
-#fse-overlay .fse-preview-badge {border-radius:999px;padding:5px 10px;font-size:.62rem;letter-spacing:.065em;margin:6px 0 0;}
-#fse-overlay .fse-header::after {height:67px;background-size:100% 100%;}
-#fse-overlay .fse-body {background:#fff9f0;}
-#fse-overlay .fse-calendar {background:#fffdfa!important;border:1px solid #e9decf!important;box-shadow:0 5px 16px rgba(77,52,23,.065)!important;}
-#fse-overlay .fse-pill--primary,#fse-overlay .fse-cta {background:var(--fsm884-orange)!important;border-color:var(--fsm884-orange)!important;color:#362515!important;}
-#fse-overlay .fse-footer {background:#fff9f0;}
-#fse-overlay .fse-footer .fse-cta {border-radius:13px;}
-@media (max-width:370px) {
-  #fse-overlay .fse-header {grid-template-columns:42px minmax(0,1fr) 44px;padding:13px 14px 53px;}
-  #fse-overlay .fse-header h2{font-size:1.64rem;}
-  #fse-overlay .fse-tilla{width:42px;height:42px;}
-}
-
-/* Lightmode-Feinschliff für den Filtersheet. */
-html.fsm-polished[data-theme="light"] #fsm-home-sheet {
-  --fsm-home-panel:#fff9ef!important;--fsm-home-ink:#362a21!important;
-  background:#fff9ef!important;color:#362a21!important;border:1px solid #e4d4c0!important;
-  box-shadow:0 18px 55px #33231430!important;border-radius:27px 27px 19px 19px!important;
-}
-html.fsm-polished[data-theme="light"] #fsm-home-sheet .fsm-home-sheet__title {
-  font:700 clamp(1.48rem,5.7vw,1.75rem)/1.15 Georgia,"Times New Roman",serif!important;
-  letter-spacing:-.035em;color:#3b2d23!important;
-}
-html.fsm-polished[data-theme="light"] #fsm-home-sheet .fsm-home-sheet__head {padding:7px 6px 14px!important;}
-html.fsm-polished[data-theme="light"] #fsm-home-sheet #filter-section.sidebar-section {padding:4px 10px 14px!important;}
-html.fsm-polished[data-theme="light"] #fsm-home-sheet .mood-chip[aria-pressed="false"] {
-  background:#f6ebdc!important;color:#463b30!important;border:1px solid #deccb8!important;border-radius:14px!important;
-}
-html.fsm-polished[data-theme="light"] #fsm-home-sheet #filter-search {background-color:#f7ebdc!important;border:1px solid #d8c5af!important;color:#46382a!important;}
-html.fsm-polished[data-theme="light"] #fsm-home-sheet .filter-group-label {color:#685c4c!important;font-size:11px!important;font-weight:750!important;letter-spacing:.085em!important;}
-html.fsm-polished[data-theme="light"] #fsm-home-sheet #btn-open-filter-modal {background:#fa911e!important;color:#342515!important;border:1px solid #fa911e!important;border-radius:13px!important;box-shadow:none!important;}
-
-/* Darkmode: gleiche Struktur wie Lightmode, nur neue Farbwelt. */
+/* Originalkarten/Bedienelemente bleiben am selben Ort. Nur unlesbare
+   Bestandteile erhalten eine eindeutige Kontrastfarbe. */
 html.fsm-polished[data-theme="dark"] body,
-html.fsm-polished[data-theme="dark"] .app-main {
-  background:var(--fsm884-night)!important;
-  color:var(--fsm884-night-ink)!important;
-}
+html.fsm-polished[data-theme="dark"] .app-main {background-color:#211d16;color:#f5ead6;}
 html.fsm-polished[data-theme="dark"] .app-header {
-  background:linear-gradient(180deg,#31281b 0%,#2b2419 74%,#262014 100%)!important;
-  border-color:rgba(226,206,163,.14)!important;
-  box-shadow:0 12px 28px rgba(0,0,0,.24)!important;
+  background:linear-gradient(180deg,#332a1e 0%,#292318 100%);
+  color:#fff3df;
 }
-html.fsm-polished[data-theme="dark"] .app-header :is(.app-title,.app-subtitle,.app-header-main,.app-header-top,.app-menu-toggle,.app-menu-button) {
-  color:var(--fsm884-night-ink)!important;
+html.fsm-polished[data-theme="dark"] .header-tagline {
+  background:transparent!important;color:#e8dcc7!important;
+  border-color:transparent!important;box-shadow:none!important;
 }
-html.fsm-polished[data-theme="dark"] .app-header .app-subtitle {color:var(--fsm884-night-soft)!important;}
-html.fsm-polished[data-theme="dark"] :is(.sidebar-section,.spot-card,.spot-details,.diary-composer,.daylog-entry,.app-menu-panel,.fsm-home-sheet,#filter-modal .filter-modal-inner,.page-about,.page-legal) {
-  background:var(--fsm884-night-card)!important;
-  color:var(--fsm884-night-ink)!important;
-  border-color:rgba(230,211,171,.16)!important;
-  box-shadow:0 10px 24px rgba(0,0,0,.20)!important;
+html.fsm-polished[data-theme="dark"] #tilla-section,
+html.fsm-polished[data-theme="dark"] #tilla-section .tilla-sidebar-card {
+  background:#352d20!important;border-color:#66543c!important;color:#f8efdf!important;
 }
-html.fsm-polished[data-theme="dark"] #tilla-section > .tilla-sidebar-card,
-html.fsm-polished[data-theme="dark"] #tilla-section.sidebar-section {
-  background:linear-gradient(180deg,#3b3222 0%,#30281b 100%)!important;
-  color:var(--fsm884-night-ink)!important;
-  border-color:rgba(229,206,158,.18)!important;
+html.fsm-polished[data-theme="dark"] #tilla-section :is(#tilla-title,#tilla-sidebar-text,.tilla-sidebar-text,.tilla-sidebar-text p) {
+  color:#f8efdf!important;text-shadow:none!important;
 }
-html.fsm-polished[data-theme="dark"] :is(.sidebar-section-title,.spot-card-title,.spot-details-title,.page-title,.app-menu-title) {
-  color:var(--fsm884-night-ink)!important;
+html.fsm-polished[data-theme="dark"] #tilla-section #menu-toggle {
+  color:#eddfc9!important;
 }
-html.fsm-polished[data-theme="dark"] :is(.spot-card-subtitle,.spot-card-meta,.filter-group-helper,.app-menu-item-description,.tilla-sidebar-text,.daylog-entry-meta,.spot-details-meta,.page-about p,.page-legal p) {
-  color:var(--fsm884-night-soft)!important;
+html.fsm-polished[data-theme="dark"] :is(.sidebar-section,.spot-card,.spot-details,.diary-composer,.daylog-entry,.app-menu-panel,.fsm-home-sheet) {
+  background-color:#352d20!important;border-color:#68583f!important;color:#f8eedc!important;
 }
-html.fsm-polished[data-theme="dark"] :is(.app-menu-item,.app-menu-lang-chip,.btn-chip,.popup-link,.favorite-toggle,.sidebar-section-close,.spot-details-route-link,.fsm-home-nav__item) {
-  color:var(--fsm884-night-ink)!important;
+html.fsm-polished[data-theme="dark"] :is(.sidebar-section-title,.spot-card-title,.spot-details-title) {color:#fff2dc!important;}
+html.fsm-polished[data-theme="dark"] :is(.spot-card-subtitle,.spot-card-meta,.spot-details-description,.filter-group-helper) {
+  color:#d5c7b1!important;
 }
-html.fsm-polished[data-theme="dark"] :is(.app-menu-item,.app-menu-lang-chip:not([aria-pressed="true"]),.fsm-home-nav) {
-  background:#332b1e!important;
-  border-color:#65543b!important;
-}
+html.fsm-polished[data-theme="dark"] .app-menu-item {color:#f8ebd6!important;}
 html.fsm-polished[data-theme="dark"] .fsm-home-nav {
-  box-shadow:0 18px 36px rgba(0,0,0,.26)!important;
+  --fsm-nav-bg:#332a1e;--fsm-nav-text:#f8edda;
+  --fsm-nav-line:#756247;--fsm-nav-active:#788e55;--fsm-nav-active-ink:#fff8e9;
 }
-html.fsm-polished[data-theme="dark"] .fsm-home-nav__item[aria-current="page"] {
-  background:#7b9657!important;
-  color:#fff7ea!important;
+html.fsm-polished[data-theme="dark"] .fsm-home-sheet {
+  --fsm-home-panel:#332b1f;--fsm-home-ink:#f8ecd7;--fsm-home-border:#756348;
 }
-html.fsm-polished[data-theme="dark"] :is(#filter-search,.filter-search-input,.app-menu-search,input,select,textarea) {
-  background:#403522!important;
-  color:var(--fsm884-night-ink)!important;
-  border-color:#746148!important;
+html.fsm-polished[data-theme="dark"] .fsm-home-sheet__content > .sidebar-section {background:#382f22!important;}
+html.fsm-polished[data-theme="dark"] :is(#filter-search,input[type="search"],input[type="text"],textarea,select) {
+  background-color:#403526;color:#f8edda;border-color:#756247;
 }
-html.fsm-polished[data-theme="dark"] :is(input::placeholder,textarea::placeholder) {color:#c6b798!important;opacity:1!important;}
-html.fsm-polished[data-theme="dark"] .mood-chip[aria-pressed="false"],
-html.fsm-polished[data-theme="dark"] .category-explorer__choice,
-html.fsm-polished[data-theme="dark"] .category-explorer__worlds,
-html.fsm-polished[data-theme="dark"] .filter-group {
-  background:#3a3020!important;
-  border-color:#69573d!important;
-  color:var(--fsm884-night-ink)!important;
-}
-html.fsm-polished[data-theme="dark"] .btn,
-html.fsm-polished[data-theme="dark"] .btn-primary,
-html.fsm-polished[data-theme="dark"] #btn-open-filter-modal,
-html.fsm-polished[data-theme="dark"] .fse-pill--primary,
-html.fsm-polished[data-theme="dark"] .fse-cta {
-  background:var(--fsm884-orange)!important;
-  border-color:var(--fsm884-orange)!important;
-  color:#392818!important;
-}
-html.fsm-polished[data-theme="dark"] .btn-ghost,
-html.fsm-polished[data-theme="dark"] .btn-secondary {
-  background:transparent!important;
-  color:var(--fsm884-night-ink)!important;
-  border-color:#a88d62!important;
-}
-html.fsm-polished[data-theme="dark"] :is(.app-menu-item:hover,.app-menu-item:focus-visible,.fsm-home-nav__item:hover,.spot-card:hover,.daylog-entry:hover) {
-  background:#3e3728!important;
-}
+html.fsm-polished[data-theme="dark"] :is(input,textarea)::placeholder {color:#d0bea3;opacity:1;}
+/* Die Originalkarte bleibt unverändert bedienbar. Kein neues Overlay und
+   keine erzwungene Größenänderung der Leaflet-Werkzeuge. */
 html.fsm-polished[data-theme="dark"] .leaflet-container .leaflet-tile {
-  filter:sepia(.08) saturate(.9) brightness(.94)!important;
+  filter:sepia(.08) saturate(.92) brightness(.96);
 }
 html.fsm-polished[data-theme="dark"] .leaflet-control-zoom a,
 html.fsm-polished[data-theme="dark"] .fsm-map-fullscreen-button {
-  background:#332b1e!important;color:var(--fsm884-night-ink)!important;border-color:#6d5d43!important;
+  color:#f0e4cf;background-color:#3c3224;border-color:#766348;
 }
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-header {
-  background:linear-gradient(155deg,#332917,#252017 82%)!important;
+html.fsm-polished[data-theme="dark"] .leaflet-popup-content-wrapper,
+html.fsm-polished[data-theme="dark"] .leaflet-popup-tip {background:#352e22;color:#f8edd9;}
+/* Real dialogs retain their native show/close semantics. */
+html.fsm-polished[data-theme="dark"] #filter-modal .filter-modal-inner,
+html.fsm-polished[data-theme="dark"] #filter-modal :is(.filter-modal-header,.filter-modal-footer) {
+  background:#2c261c;color:#f8edda;border-color:#67563c;
 }
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-body,
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-footer {
-  background:#28241a!important;color:#f5e8d2!important;
+html.fsm-polished[data-theme="dark"] #filter-modal :is(.category-explorer__choice,.category-explorer__rules,.category-explorer__extras) {
+  background:#3a3124;color:#f8ecda;border-color:#716048;
 }
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-calendar {
-  background:#332d20!important;border-color:#66563e!important;
+html.fsm-polished[data-theme="dark"] #fsm-community-overlay .fsm-community-sheet,
+html.fsm-polished[data-theme="dark"] .memory-photo-dialog {
+  background:#2e281e;color:#f8ecd9;border-color:#6a583d;
 }
-@media(prefers-reduced-motion:reduce){html.fsm-polished .leaflet-popup-close-button::after{transition:none!important;}}
-@media(forced-colors:active){html.fsm-polished .leaflet-popup-close-button::after{background:none!important;font-size:14px!important;}}
+/* X: exakt die kleine vorhandene Referenz, ohne die Hitbox zu verschieben. */
+html.fsm-polished[data-theme="dark"] {
+  --fsm883-close-ink:#f4e8d2;
+  --fsm883-close-line:#756449;
+  --fsm883-close-paper:#453828;
+}
+/* Originale CTA-Farben, Größe und Klickverhalten werden ausdrücklich nicht überschrieben. */
+@media (forced-colors:active){html.fsm-polished[data-theme="dark"] .header-tagline{border:1px solid CanvasText!important;}}

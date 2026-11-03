@@ -93,7 +93,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261103-v88-5-darkmode-palette";
+} from "./map.js?v=20261103-v88-6-main-behavior";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { getInitialTheme, applyTheme } from "./theme.js";

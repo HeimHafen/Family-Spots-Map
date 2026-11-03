@@ -1,3 +1,5 @@
+/* FSM V88.6 · INTERACTION-SAFE: calendar styles and icon X ONLY.
+   No changes to app header, map, navigation or main cards. */
 /* Family Spots Map · V88.3 Premium Finish
    Visual-only layer. Must be loaded LAST after fsm-v88-finish.css.
    Inspired by the approved design-review illustration (not a raster overlay).
@@ -217,171 +219,6 @@ html.fsm-polished .fsm-onboarding-hint-close:not(:has(svg)) {font-size: 18px !im
   #fse-overlay .fse-header {padding-inline:25px; padding-top:22px;}
 }
 
-/* ===== V88.3 Dark Palette: dark throughout the app, not a beige 'evening' skin ===== */
-html.fsm-polished[data-theme="dark"] {
-  color-scheme: dark;
-  --surface-0:#211e17;
-  --surface-1:#2d291f;
-  --surface-2:#3a3427;
-  --surface-3:#49402e;
-  --bg-app:#211e16;
-  --app-bg:#211e16;
-  --app-bg-fallback-dark:#211e16;
-  --page-bg:#211e16;
-  --text-3:#fff3df;
-  --text-1:#f5ead8;
-  --text-2:#c5baa4;
-  --text-heading:#fff1dc;
-  --text-body:#f5ead8;
-  --text-muted:#c5baa4;
-  --text-color:#f5ead8;
-  --text-soft:#c5baa4;
-  --text-strong:#fff1dc;
-  --on-dark:#fff3df;
-  --on-light:#30291e;
-  --on-accent-solid:#38271a;
-  --on-accent:#38271a;
-  --border-1:rgba(224,204,163,.18);
-  --border-2:rgba(224,204,163,.27);
-  --elev-1:0 2px 7px rgba(10,9,6,.22);
-  --elev-2:0 8px 23px rgba(10,9,6,.28);
-  --elev-3:0 18px 42px rgba(10,9,6,.34);
-  --card-bg:#302b20;
-  --card-border:rgba(232,207,164,.17);
-  --card-shadow:var(--elev-2);
-  --chip-bg:#3a3427;
-  --chip-color:#f3e9d7;
-  --chip-border:rgba(221,201,163,.23);
-  --chip-selected-bg:#66794b;
-  --chip-selected-text:#fff7e8;
-  --input-bg:#383124;
-  --button-bg:#3a3427;
-  --button-hover-bg:#4d4331;
-  --button-text-color:#f3e9d7;
-  --accent:#f49328;
-  --accent-light:#ffad47;
-  --accent-dark:#da7817;
-  --accent-solid:#f49328;
-  --accent-solid-light:#ffa239;
-  --accent-solid-dark:#db7719;
-  --accent-soft:#53402a;
-  --accent-soft-hover:#695039;
-  --accent-strong:#ffa239;
-  --header-bg-top:#262218;
-  --header-bg-bottom:#211e16;
-  --header-text-color:#fff2de;
-  --header-tagline-bg:#3d3929;
-  --header-tagline-color:#f2ead8;
-  --header-icon-bg:#3d3528;
-  --header-icon-border:rgba(222,201,162,.18);
-  --language-pill-bg:#3e3729;
-  --sidebar-bg:#211e16;
-  --sidebar-section-bg:#312b20;
-  --sidebar-section-border:rgba(218,194,154,.18);
-  --map-card-bg:#302b20;
-  --map-card-border:rgba(221,198,162,.14);
-  --toast-bg:#373124;
-  --tilla-shell:#f49328;
-  --on-tilla-shell:#302619;
-  --focus-outer:#cfac78;
-  --focus-inner:#211e16;
-  --fsm83-paper:#312b20;
-  --fsm83-paper-raised:#3b3528;
-  --fsm83-line:#655940;
-  --fsm83-ink:#fff1da;
-  --fsm83-muted:#c8bea9;
-  --fsm83-focus:#c5ab7f;
-  --fsm83-dialog-bg:#29251c;
-  --fsm83-dialog-raised:#373124;
-  --fsm83-dialog-low:#302b20;
-  --fsm83-dialog-line:#5e523b;
-  --fsm83-dialog-muted:#c9bda9;
-  --fsm83-dialog-ink:#f8eddc;
-  --fsm83-green-dark:#64784c;
-  --fsm83-green-dark-ink:#fff7e9;
-  --fsm-v88-input-edge:#6d6049;
-  --fsm-v88-input-focused:#b9a27e;
-  --fsm-v88-focus-ink:#e4c69b;
-  --filter-map:sepia(.08) saturate(.93) brightness(.93);
-}
-/* Root app surfaces and navigation */
-html.fsm-polished[data-theme="dark"] body {background:#211e16!important;color:var(--text-body)!important;}
-html.fsm-polished[data-theme="dark"] .app-header {
-  background:radial-gradient(ellipse at 87% 2%,rgba(149,116,47,.17),transparent 55%),linear-gradient(180deg,#2e291d,#211e16)!important;
-  color:var(--text-heading)!important;border-color:transparent!important;
-}
-html.fsm-polished[data-theme="dark"] :is(.app-title,.app-header h1,.app-header h2,.sidebar-section-title,.spot-card-title,#diary-title) {color:var(--text-heading)!important;}
-html.fsm-polished[data-theme="dark"] :is(.header-tagline,.app-header .header-tagline) {
-  background:#3c3527!important;color:#eaddc6!important;border-color:rgba(220,198,159,.1)!important;
-}
-html.fsm-polished[data-theme="dark"] :is(.sidebar,.main,.app-main,#main-content,#view-map,#view-diary) {color:var(--text-body);}
-html.fsm-polished[data-theme="dark"] :is(
- .sidebar-section,.spot-card,.spot-details,.tilla-sidebar-card,
- .daylog-entry,.diary-composer,.diary-card,.favorite-card,
- .map-section,.app-menu-panel,.fsm-home-sheet
-) {
-  background:#302b20!important;color:var(--text-body)!important;
-  border-color:rgba(223,198,158,.18)!important;
-  box-shadow:0 5px 17px rgba(0,0,0,.16);
-}
-/* Map must stay a readable map, not a solid dark rectangle. */
-html.fsm-polished[data-theme="dark"] #view-map > .map-section {background:#302b20!important; border:0!important;}
-html.fsm-polished[data-theme="dark"] :is(
- .spot-card-subtitle,.spot-card-meta,.spot-details-description,.spot-details-meta,
- .sidebar-section p,.filter-group-helper,.plus-note,.diary-entry-meta,.daylog-last-saved
-) {color:var(--text-muted)!important;}
-html.fsm-polished[data-theme="dark"] :is(.app-menu-panel,.fsm-home-sheet,.fsm-home-sheet__content) {color:#f7ecd9!important;}
-html.fsm-polished[data-theme="dark"] .app-menu-panel {background:#302b20!important;}
-html.fsm-polished[data-theme="dark"] :is(.app-menu-item,.app-menu-lang-chip) {color:#f5ead8!important;}
-html.fsm-polished[data-theme="dark"] :is(.app-menu-item:hover,.app-menu-item:focus-visible,.fsm-home-nav__item:hover) {background:#3e3728!important;}
-html.fsm-polished[data-theme="dark"] .app-menu-lang-chip:not([aria-pressed="true"]) {background:#3b3427!important;color:#eaddc6!important;border-color:#6a5c42!important;}
-html.fsm-polished[data-theme="dark"] .app-menu-lang-chip[aria-pressed="true"] {background:#687e51!important;color:#fff7e8!important;border-color:#687e51!important;}
-html.fsm-polished[data-theme="dark"] .fsm-home-nav {
-  --fsm-nav-bg:#302b20!important;--fsm-nav-text:#f5ead8!important;
-  --fsm-nav-line:#65543b!important;
-  --fsm-nav-active:#61774b!important;
-  --fsm-nav-active-ink:#fff7e8!important;
-  box-shadow:0 8px 26px rgba(0,0,0,.25)!important;
-}
-html.fsm-polished[data-theme="dark"] .fsm-home-sheet {
-  --fsm-home-panel:#302b20!important;--fsm-home-ink:#fff1dc!important;--fsm-home-border:#65563e!important;
-}
-html.fsm-polished[data-theme="dark"] .fsm-home-sheet__content > .sidebar-section {background:#373124!important;}
-html.fsm-polished[data-theme="dark"] :is(.btn-ghost,.btn-secondary,.fsm-map-tool,.filter-chip,.mood-chip:not([aria-pressed="true"])) {
-  color:#f0e2cb!important;border-color:#675a43!important;
-}
-html.fsm-polished[data-theme="dark"] :is(input,textarea,select,.input):not([type="checkbox"]):not([type="radio"]) {
-  background-color:#393225!important;color:#fff1db!important;border-color:#6d6049!important;
-}
-html.fsm-polished[data-theme="dark"] :is(input,textarea,select)::placeholder {color:#c4b49c!important;opacity:1;}
-html.fsm-polished[data-theme="dark"] .badge {background:#433626!important;color:#eccc9c!important;border-color:#776348!important;}
-html.fsm-polished[data-theme="dark"] .badge--verified {background:#32402b!important;color:#d9e8bc!important;}
-html.fsm-polished[data-theme="dark"] .badge--time {background:#493422!important;color:#f7be81!important;}
-html.fsm-polished[data-theme="dark"] .badge--plus {background:#49402a!important;color:#f1d48f!important;}
-html.fsm-polished[data-theme="dark"] .toast {background:#3b3327!important;color:#faefdb!important;}
-html.fsm-polished[data-theme="dark"] .leaflet-container .leaflet-tile {filter:var(--filter-map)!important;}
-html.fsm-polished[data-theme="dark"] .leaflet-popup-content-wrapper,
-html.fsm-polished[data-theme="dark"] .fsm-spot-preview {background:#302b20!important;color:#f8eede!important;border-color:#61533d!important;}
-html.fsm-polished[data-theme="dark"] .leaflet-popup-tip {background:#302b20!important;}
-html.fsm-polished[data-theme="dark"] .leaflet-control-zoom a {background:#3c3528!important;color:#f2e7d6!important;border-color:#76664b!important;}
-/* Filter modal & all category worlds: avoid old light paper on charcoal. */
-html.fsm-polished[data-theme="dark"] #filter-modal .filter-modal-inner,
-html.fsm-polished[data-theme="dark"] #filter-modal :is(.filter-modal-header,.filter-modal-footer) {
-  background:#29251c!important;color:#f7ead7!important;border-color:#5b4d38!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal :is(.filter-group-helper,.category-explorer__theme-heading,.category-explorer__type-help,.category-explorer__fieldset legend) {color:#c9baa3!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal :is(.category-explorer__rules,.category-explorer__extras,.category-explorer__types,.category-explorer__worlds > .category-explorer__chip,.category-explorer__choice) {
-  background:#373024!important;color:#f6ead7!important;border-color:#61533e!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds > .category-explorer__chip[aria-pressed="true"],
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice:has(input:checked) {
-  background:#546744!important;color:#fff8e9!important;border-color:#87966b!important;
-}
-/* Other feature dialogs and personal diary */
-html.fsm-polished[data-theme="dark"] #fsm-community-overlay :is(.fsm-community-sheet,.fsm-community-actions) {background:#29251c!important;border-color:#61533e!important;color:#f8edda!important;}
-html.fsm-polished[data-theme="dark"] #fsm-community-overlay :is(.fsm-community-events,.fsm-community-explain,.fsm-community-alert,.fsm-community-events-heading) {background:#373024!important;color:#f7eddd!important;border-color:#65563d!important;}
-html.fsm-polished[data-theme="dark"] .memory-photo-dialog {background:#29251c!important;color:#fff1df!important;border-color:#61533e!important;}
-html.fsm-polished[data-theme="dark"] #view-diary :is(.diary-composer,.memory-card,.daylog-card,.daylog-entry) {background:#332d22!important;color:#f7ecd9!important;border-color:#64543f!important;}
 /* Calendar is one application screen, not the only place in dark mode. */
 html.fsm-polished[data-theme="dark"] #fse-overlay {background:#211e16;color:#f5ead8;}
 html.fsm-polished[data-theme="dark"] #fse-overlay .fse-shell,
@@ -410,9 +247,7 @@ html.fsm-polished[data-theme="dark"] #fse-overlay .fse-day--demo {background:#5a
 html.fsm-polished[data-theme="dark"] #fse-overlay .fse-day--has {background:#46462d!important;}
 html.fsm-polished[data-theme="dark"] #fse-overlay .fse-empty {background:#342f24!important;color:#e5d9c4!important;border-color:#716045!important;}
 html.fsm-polished[data-theme="dark"] #fse-overlay .fse-demo-line {background:#373025!important;color:#dcd0ba!important;}
-/* Focus and accessibility – never replace tap target with a 28px hit area. */
-@media(prefers-reduced-motion:reduce){#fse-overlay .fse-shell {animation:none!important;}}
-@media(forced-colors:active){
- html.fsm-polished :is(#filter-modal-close,.fsm-home-sheet__close,.fsm-community-close,.fsm-spot-preview__close,#fse-overlay .fse-icon-btn)::before {border:1px solid ButtonText!important;background:ButtonFace!important;}
- html.fsm-polished[data-theme="dark"] :is(.sidebar-section,.spot-card,.fse-calendar,.app-menu-panel) {border:1px solid CanvasText!important;}
-}
+
+/* Contrast mode: calendar only. */
+@media(prefers-reduced-motion:reduce){#fse-overlay .fse-shell{animation:none!important;}}
+@media(forced-colors:active){#fse-overlay .fse-icon-btn::before{border-color:ButtonText!important;background:ButtonFace!important;}}
