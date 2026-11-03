@@ -1,7 +1,7 @@
-/* FAMILY SPOTS MAP · V88.4 · APPROVED REFERENCE DESIGN
-   This is a component-driven implementation, not a decorative screenshot.
-   It layers on top of V88.3 and preserves all original spot, map, filter,
-   diary, Plus and privately saved meetup logic. */
+/* FAMILY SPOTS MAP · V88.5 · DARKMODE-FARBWELT-KORREKTUR
+   Grundlage bleibt der V88.3/V88.4-Aufbau. Dieses Stylesheet übernimmt
+   nur die freigegebene Farbrichtung und das einheitliche Close-X —
+   ohne eine alternative Darkmode-Startseitenstruktur zu erzwingen. */
 html.fsm-polished {
   --fsm884-light:#fff8ed;
   --fsm884-light-ink:#35291e;
@@ -9,10 +9,13 @@ html.fsm-polished {
   --fsm884-olive:#6d884f;
   --fsm884-orange:#fa911e;
   --fsm884-night:#211d14;
+  --fsm884-night-panel:#2b2419;
   --fsm884-night-card:#352e20;
+  --fsm884-night-softcard:#403522;
   --fsm884-night-line:#66583e;
   --fsm884-night-ink:#f9eed8;
   --fsm884-night-soft:#d5c6aa;
+  --fsm884-night-accent:#cad78a;
   --fsm884-x-color:#65584a;
   --fsm884-x-paper:#fff8ed;
   --fsm884-x-line:#ddcbb4;
@@ -23,7 +26,7 @@ html.fsm-polished[data-theme="dark"] {
   --fsm884-x-line:#716046;
   color-scheme:dark;
 }
-/* The exact approved quiet circle on EVERY icon-only close control. */
+/* Einheitliches ruhiges Kreis-X in der gesamten App. */
 html.fsm-polished :is(
  #filter-modal-close,.fsm-home-sheet__close,.fsm-community-close,
  .fsm-spot-preview__close,.fsm-onboarding-hint__close,
@@ -69,28 +72,30 @@ html.fsm-polished :is(
  .fsm-onboarding-hint-close,#fse-overlay .fse-icon-btn,
  #spot-detail [data-role="close-details"]
 ) > svg path {stroke:currentColor!important;stroke-width:1.5px!important;}
-/* Leaflet renders × as a font character: hide it and draw the same cross. */
 html.fsm-polished .leaflet-popup-close-button {font-size:0!important;top:0!important;right:0!important;}
 html.fsm-polished .leaflet-popup-close-button::after {
   content:""!important;position:relative!important;z-index:2!important;
   width:13px!important;height:13px!important;
-  background:linear-gradient(45deg,transparent 44%,currentColor 46%,currentColor 54%,transparent 56%),
+  background:linear-gradient(45deg,transparent 44%,currentColor 46%,currentColor 54%,transparent 56%)!important,
              linear-gradient(-45deg,transparent 44%,currentColor 46%,currentColor 54%,transparent 56%)!important;
   transform:none!important;
 }
 html.fsm-polished :is(#filter-modal-close,.fsm-home-sheet__close,#fse-overlay .fse-icon-btn,.leaflet-popup-close-button):focus-visible {
   outline:2px solid #bda075!important;outline-offset:2px!important;
 }
-/* 1. Reference-match calendar hero: clear ivory paper, elegant typography,
-   the artist's landscape only, consistent close and real calendar below. */
+
+/* Gemeinsam-erleben-Overlay verfeinern, Struktur bleibt identisch. */
 #fse-overlay .fse-header {
+  padding:14px 16px 58px;
   grid-template-columns:48px minmax(0,1fr) 44px;
-  grid-template-rows:46px auto auto auto;
-  gap:4px 9px;
-  padding:17px 19px 57px;
-  background:linear-gradient(150deg,#fff0dd 0%,#fffaf0 68%,#fff8ed 100%);
+  gap:10px 12px;
+  align-items:start;
 }
-#fse-overlay .fse-header h2 {font:700 clamp(1.88rem,7.7vw,2.32rem)/1.08 Georgia,"Times New Roman",serif;letter-spacing:-.047em;margin-top:6px;}
+#fse-overlay .fse-header h2 {
+  font:700 clamp(1.88rem,7.7vw,2.32rem)/1.08 Georgia,"Times New Roman",serif;
+  letter-spacing:-.047em;
+  margin-top:6px;
+}
 #fse-overlay .fse-eyebrow {font-weight:800;font-size:clamp(.56rem,2.22vw,.68rem);letter-spacing:.075em;}
 #fse-overlay .fse-tilla {width:48px;height:48px;}
 #fse-overlay .fse-subtitle {font-size:clamp(.78rem,2.85vw,.9rem);line-height:1.37;margin-top:3px;max-width:35ch;}
@@ -101,95 +106,126 @@ html.fsm-polished :is(#filter-modal-close,.fsm-home-sheet__close,#fse-overlay .f
 #fse-overlay .fse-pill--primary,#fse-overlay .fse-cta {background:var(--fsm884-orange)!important;border-color:var(--fsm884-orange)!important;color:#362515!important;}
 #fse-overlay .fse-footer {background:#fff9f0;}
 #fse-overlay .fse-footer .fse-cta {border-radius:13px;}
-@media (max-width:370px) {#fse-overlay .fse-header {grid-template-columns:42px minmax(0,1fr) 44px;padding:13px 14px 53px;}#fse-overlay .fse-header h2{font-size:1.64rem;}#fse-overlay .fse-tilla{width:42px;height:42px;}}
-/* 2. Show an ACTUAL dark-mode discovery surface using existing app actions
-   and the real Leaflet map; unlike the mockup, no dummy locations appear. */
-#fsm-v884-dark-hero {display:none!important;}
-html.fsm-polished[data-theme="dark"] body,
-html.fsm-polished[data-theme="dark"] .app-main {background:var(--fsm884-night)!important;color:var(--fsm884-night-ink)!important;}
-html.fsm-polished[data-theme="dark"] #view-map {background:transparent!important;box-shadow:none!important;border-radius:0!important;}
-html.fsm-polished[data-theme="dark"] :is(.app-header,.app-menu-panel,.fsm-home-sheet,#filter-modal .filter-modal-inner) {
-  background-color:#292418!important;color:var(--fsm884-night-ink)!important;
+@media (max-width:370px) {
+  #fse-overlay .fse-header {grid-template-columns:42px minmax(0,1fr) 44px;padding:13px 14px 53px;}
+  #fse-overlay .fse-header h2{font-size:1.64rem;}
+  #fse-overlay .fse-tilla{width:42px;height:42px;}
 }
-html.fsm-polished[data-theme="dark"] :is(.sidebar-section,.spot-card,.spot-details,.diary-composer,.daylog-entry) {
-  background:#352e22!important;color:var(--fsm884-night-ink)!important;border-color:rgba(224,204,163,.18)!important;
-}
-html.fsm-polished[data-theme="dark"] :is(.app-menu-item,.fsm-home-nav__item,.spot-card-title,.sidebar-section-title) {color:var(--fsm884-night-ink)!important;}
-html.fsm-polished[data-theme="dark"] :is(.spot-card-subtitle,.spot-card-meta,.filter-group-helper,.diary-heading p) {color:var(--fsm884-night-soft)!important;}
-html.fsm-polished[data-theme="dark"] :is(.fsm-home-nav,.app-menu-lang-chip:not([aria-pressed="true"])) {
-  background:#332c1e!important;border-color:#65543b!important;color:var(--fsm884-night-ink)!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal :is(.filter-group,.filter-advanced,.category-explorer__worlds,.category-explorer__choice) {
-  color:var(--fsm884-night-ink)!important;
-}
-html.fsm-polished[data-theme="dark"] .leaflet-container .leaflet-tile {filter:sepia(.08) saturate(.9) brightness(.96)!important;}
-html.fsm-polished[data-theme="dark"] #fsm-v884-dark-hero {
- display:block!important;position:relative;isolation:isolate;
- padding:15px 10px 12px;min-width:0;color:var(--fsm884-night-ink);
- background:linear-gradient(167deg,#302919 0%,#2a2519 40%,#211d14 76%);
- border-radius:0 0 20px 20px;
-}
-.fsm-v884-hero-top {display:grid;grid-template-columns:48px minmax(0,1fr) 44px;align-items:center;gap:9px;min-height:48px;}
-.fsm-v884-hero-top img {width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 2px 3px #0004);}
-.fsm-v884-hero-eyebrow {grid-column:2;margin:0;color:#d6dc9c;font-size:clamp(.59rem,2.3vw,.76rem);font-weight:800;letter-spacing:.075em;line-height:1.4;}
-.fsm-v884-hero-title {font:700 clamp(2.0rem,7.8vw,2.45rem)/1.1 Georgia,"Times New Roman",serif;letter-spacing:-.038em;margin:10px 0 8px;color:#fff2d9!important;text-wrap:balance;}
-.fsm-v884-hero-subtitle {font-size:clamp(.85rem,3vw,.97rem);line-height:1.38;margin:0 0 10px;color:#e8ddc6;max-width:35ch;}
-.fsm-v884-hero-badge {display:inline-block;border-radius:999px;padding:6px 10px;background:#4c502c;color:#edebc5;font-size:10px;letter-spacing:.075em;font-weight:750;}
-.fsm-v884-hero-landscape {height:55px;margin:3px -10px -4px;background:url('../assets/ui/fsm-v883-hills-dark.svg') center bottom/100% 100% no-repeat;pointer-events:none;}
-.fsm-v884-hero-actions {display:flex;gap:12px;align-items:center;padding:14px 0 15px;}
-.fsm-v884-hero-actions button {border-radius:999px;padding:12px 17px;min-height:46px;font-size:.9rem;font-weight:650;line-height:1.18;font-family:inherit;cursor:pointer;white-space:nowrap;}
-.fsm-v884-plan {border:1px solid #fa911e;background:#fa911e;color:#382717;box-shadow:0 3px 8px #0002;}
-.fsm-v884-today {border:1px solid #a18c5b;background:transparent;color:#ffefce;}
-.fsm-v884-hero-shortcuts {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
-.fsm-v884-hero-shortcuts button {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:108px;border-radius:15px;border:1px solid rgba(211,181,122,.22);background:linear-gradient(155deg,#473923,#352e20);color:#fff2d7;box-shadow:0 5px 12px rgba(0,0,0,.16);padding:9px 4px;cursor:pointer;text-align:center;}
-.fsm-v884-hero-shortcuts svg {width:23px;height:23px;color:#f0d296;margin-bottom:2px;}
-.fsm-v884-hero-shortcuts strong {font-size:12px;line-height:1.2;font-weight:700;}
-.fsm-v884-hero-shortcuts small {font-size:10px;color:#e3d2ae;line-height:1.25;}
-.fsm-v884-nearby {display:flex;align-items:center;justify-content:space-between;gap:9px;margin:18px 0 2px;}
-.fsm-v884-nearby h3 {font:700 1.25rem Georgia,"Times New Roman",serif;letter-spacing:-.015em;color:#f6ead1;margin:0;}
-.fsm-v884-nearby button {background:transparent;border:0;color:#c6d886;font-size:.78rem;min-height:44px;padding:4px;cursor:pointer;white-space:nowrap;}
-/* The real map appears directly underneath, matching the reference preview's placement. */
-html.fsm-polished[data-theme="dark"] #view-map>.map-section {box-shadow:0 7px 22px #0006!important;border-radius:17px!important;}
-@media(max-width:899px) {
- html.fsm-polished[data-theme="dark"] .app-header {position:relative;z-index:2;background:#302919!important;padding:0!important;border:0!important;min-height:0!important;}
- html.fsm-polished[data-theme="dark"] .app-header-main {display:none!important;}
- html.fsm-polished[data-theme="dark"] .app-header-top {position:absolute!important;z-index:5!important;right:17px;top:20px;display:flex!important;pointer-events:none;}
- html.fsm-polished[data-theme="dark"] .app-header-top #menu-toggle {pointer-events:auto;color:#f3e4c6!important;border-radius:50%!important;border:1px solid #746549!important;background:#423a29!important;width:44px!important;height:44px!important;}
- html.fsm-polished[data-theme="dark"] .app-main {padding-top:0!important;}
- html.fsm-polished[data-theme="dark"] #view-map {gap:11px;}
- html.fsm-polished[data-theme="dark"] #view-map>.sidebar #tilla-section {display:none!important;}
- html.fsm-polished[data-theme="dark"] #view-map>.map-section {min-height:340px!important;}
- html.fsm-polished[data-theme="dark"] #view-map>.map-section .map-container {height:340px!important;min-height:340px!important;}
-}
-@media(min-width:900px) {
- html.fsm-polished[data-theme="dark"] #fsm-v884-dark-hero {grid-column:1/-1;grid-row:auto;padding:23px 25px 14px;}
- html.fsm-polished[data-theme="dark"] #view-map>.sidebar,#view-map>.map-section {grid-row:auto!important;}
-}
-@media(max-width:360px) {
- .fsm-v884-hero-title{font-size:1.8rem;}
- .fsm-v884-hero-shortcuts button{min-height:100px;}
- .fsm-v884-hero-shortcuts strong{font-size:11px;}
- .fsm-v884-hero-shortcuts small{font-size:9px;}
- .fsm-v884-hero-actions button{padding:12px 13px;}
-}
-/* 3. Filter sheet from the approved iPhone: ivory, precise serif title,
-   calm outlined fields and evenly balanced category tiles. */
+
+/* Lightmode-Feinschliff für den Filtersheet. */
 html.fsm-polished[data-theme="light"] #fsm-home-sheet {
- --fsm-home-panel:#fff9ef!important;--fsm-home-ink:#362a21!important;
- background:#fff9ef!important;color:#362a21!important;border:1px solid #e4d4c0!important;
- box-shadow:0 18px 55px #33231430!important;border-radius:27px 27px 19px 19px!important;
+  --fsm-home-panel:#fff9ef!important;--fsm-home-ink:#362a21!important;
+  background:#fff9ef!important;color:#362a21!important;border:1px solid #e4d4c0!important;
+  box-shadow:0 18px 55px #33231430!important;border-radius:27px 27px 19px 19px!important;
 }
-html.fsm-polished[data-theme="light"] #fsm-home-sheet .fsm-home-sheet__title {font:700 clamp(1.48rem,5.7vw,1.75rem)/1.15 Georgia,"Times New Roman",serif!important;letter-spacing:-.035em;color:#3b2d23!important;}
+html.fsm-polished[data-theme="light"] #fsm-home-sheet .fsm-home-sheet__title {
+  font:700 clamp(1.48rem,5.7vw,1.75rem)/1.15 Georgia,"Times New Roman",serif!important;
+  letter-spacing:-.035em;color:#3b2d23!important;
+}
 html.fsm-polished[data-theme="light"] #fsm-home-sheet .fsm-home-sheet__head {padding:7px 6px 14px!important;}
 html.fsm-polished[data-theme="light"] #fsm-home-sheet #filter-section.sidebar-section {padding:4px 10px 14px!important;}
-html.fsm-polished[data-theme="light"] #fsm-home-sheet .mood-chip[aria-pressed="false"] {background:#f6ebdc!important;color:#463b30!important;border:1px solid #deccb8!important;border-radius:14px!important;}
+html.fsm-polished[data-theme="light"] #fsm-home-sheet .mood-chip[aria-pressed="false"] {
+  background:#f6ebdc!important;color:#463b30!important;border:1px solid #deccb8!important;border-radius:14px!important;
+}
 html.fsm-polished[data-theme="light"] #fsm-home-sheet #filter-search {background-color:#f7ebdc!important;border:1px solid #d8c5af!important;color:#46382a!important;}
 html.fsm-polished[data-theme="light"] #fsm-home-sheet .filter-group-label {color:#685c4c!important;font-size:11px!important;font-weight:750!important;letter-spacing:.085em!important;}
 html.fsm-polished[data-theme="light"] #fsm-home-sheet #btn-open-filter-modal {background:#fa911e!important;color:#342515!important;border:1px solid #fa911e!important;border-radius:13px!important;box-shadow:none!important;}
-/* Harmonize buttons and previews when the reference's dark-mode surface is open. */
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-header {background:linear-gradient(155deg,#332917,#252017 82%)!important;}
+
+/* Darkmode: gleiche Struktur wie Lightmode, nur neue Farbwelt. */
+html.fsm-polished[data-theme="dark"] body,
+html.fsm-polished[data-theme="dark"] .app-main {
+  background:var(--fsm884-night)!important;
+  color:var(--fsm884-night-ink)!important;
+}
+html.fsm-polished[data-theme="dark"] .app-header {
+  background:linear-gradient(180deg,#31281b 0%,#2b2419 74%,#262014 100%)!important;
+  border-color:rgba(226,206,163,.14)!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.24)!important;
+}
+html.fsm-polished[data-theme="dark"] .app-header :is(.app-title,.app-subtitle,.app-header-main,.app-header-top,.app-menu-toggle,.app-menu-button) {
+  color:var(--fsm884-night-ink)!important;
+}
+html.fsm-polished[data-theme="dark"] .app-header .app-subtitle {color:var(--fsm884-night-soft)!important;}
+html.fsm-polished[data-theme="dark"] :is(.sidebar-section,.spot-card,.spot-details,.diary-composer,.daylog-entry,.app-menu-panel,.fsm-home-sheet,#filter-modal .filter-modal-inner,.page-about,.page-legal) {
+  background:var(--fsm884-night-card)!important;
+  color:var(--fsm884-night-ink)!important;
+  border-color:rgba(230,211,171,.16)!important;
+  box-shadow:0 10px 24px rgba(0,0,0,.20)!important;
+}
+html.fsm-polished[data-theme="dark"] #tilla-section > .tilla-sidebar-card,
+html.fsm-polished[data-theme="dark"] #tilla-section.sidebar-section {
+  background:linear-gradient(180deg,#3b3222 0%,#30281b 100%)!important;
+  color:var(--fsm884-night-ink)!important;
+  border-color:rgba(229,206,158,.18)!important;
+}
+html.fsm-polished[data-theme="dark"] :is(.sidebar-section-title,.spot-card-title,.spot-details-title,.page-title,.app-menu-title) {
+  color:var(--fsm884-night-ink)!important;
+}
+html.fsm-polished[data-theme="dark"] :is(.spot-card-subtitle,.spot-card-meta,.filter-group-helper,.app-menu-item-description,.tilla-sidebar-text,.daylog-entry-meta,.spot-details-meta,.page-about p,.page-legal p) {
+  color:var(--fsm884-night-soft)!important;
+}
+html.fsm-polished[data-theme="dark"] :is(.app-menu-item,.app-menu-lang-chip,.btn-chip,.popup-link,.favorite-toggle,.sidebar-section-close,.spot-details-route-link,.fsm-home-nav__item) {
+  color:var(--fsm884-night-ink)!important;
+}
+html.fsm-polished[data-theme="dark"] :is(.app-menu-item,.app-menu-lang-chip:not([aria-pressed="true"]),.fsm-home-nav) {
+  background:#332b1e!important;
+  border-color:#65543b!important;
+}
+html.fsm-polished[data-theme="dark"] .fsm-home-nav {
+  box-shadow:0 18px 36px rgba(0,0,0,.26)!important;
+}
+html.fsm-polished[data-theme="dark"] .fsm-home-nav__item[aria-current="page"] {
+  background:#7b9657!important;
+  color:#fff7ea!important;
+}
+html.fsm-polished[data-theme="dark"] :is(#filter-search,.filter-search-input,.app-menu-search,input,select,textarea) {
+  background:#403522!important;
+  color:var(--fsm884-night-ink)!important;
+  border-color:#746148!important;
+}
+html.fsm-polished[data-theme="dark"] :is(input::placeholder,textarea::placeholder) {color:#c6b798!important;opacity:1!important;}
+html.fsm-polished[data-theme="dark"] .mood-chip[aria-pressed="false"],
+html.fsm-polished[data-theme="dark"] .category-explorer__choice,
+html.fsm-polished[data-theme="dark"] .category-explorer__worlds,
+html.fsm-polished[data-theme="dark"] .filter-group {
+  background:#3a3020!important;
+  border-color:#69573d!important;
+  color:var(--fsm884-night-ink)!important;
+}
+html.fsm-polished[data-theme="dark"] .btn,
+html.fsm-polished[data-theme="dark"] .btn-primary,
+html.fsm-polished[data-theme="dark"] #btn-open-filter-modal,
+html.fsm-polished[data-theme="dark"] .fse-pill--primary,
+html.fsm-polished[data-theme="dark"] .fse-cta {
+  background:var(--fsm884-orange)!important;
+  border-color:var(--fsm884-orange)!important;
+  color:#392818!important;
+}
+html.fsm-polished[data-theme="dark"] .btn-ghost,
+html.fsm-polished[data-theme="dark"] .btn-secondary {
+  background:transparent!important;
+  color:var(--fsm884-night-ink)!important;
+  border-color:#a88d62!important;
+}
+html.fsm-polished[data-theme="dark"] :is(.app-menu-item:hover,.app-menu-item:focus-visible,.fsm-home-nav__item:hover,.spot-card:hover,.daylog-entry:hover) {
+  background:#3e3728!important;
+}
+html.fsm-polished[data-theme="dark"] .leaflet-container .leaflet-tile {
+  filter:sepia(.08) saturate(.9) brightness(.94)!important;
+}
+html.fsm-polished[data-theme="dark"] .leaflet-control-zoom a,
+html.fsm-polished[data-theme="dark"] .fsm-map-fullscreen-button {
+  background:#332b1e!important;color:var(--fsm884-night-ink)!important;border-color:#6d5d43!important;
+}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-header {
+  background:linear-gradient(155deg,#332917,#252017 82%)!important;
+}
 html.fsm-polished[data-theme="dark"] #fse-overlay .fse-body,
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-footer {background:#28241a!important;color:#f5e8d2!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-calendar {background:#332d20!important;border-color:#66563e!important;}
-@media(prefers-reduced-motion:reduce){.fsm-v884-hero-shortcuts button{transition:none!important;}}
-@media(forced-colors:active){html.fsm-polished #fsm-v884-dark-hero *{forced-color-adjust:auto;}html.fsm-polished .leaflet-popup-close-button::after{background:none!important;font-size:14px!important;}}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-footer {
+  background:#28241a!important;color:#f5e8d2!important;
+}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-calendar {
+  background:#332d20!important;border-color:#66563e!important;
+}
+@media(prefers-reduced-motion:reduce){html.fsm-polished .leaflet-popup-close-button::after{transition:none!important;}}
+@media(forced-colors:active){html.fsm-polished .leaflet-popup-close-button::after{background:none!important;font-size:14px!important;}}
