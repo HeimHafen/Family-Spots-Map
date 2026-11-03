@@ -1,0 +1,51 @@
+FAMILY SPOTS MAP – V90.9  |  WELLE UND KOPFBEREICH NACH VORLAGE
+================================================================
+
+BASIS: V90.8 (nicht V90.7, nicht der veroeffentlichte main-Branch).
+Dies ist ein gezieltes Austauschpaket fuer einen Testbranch.
+
+AUSTAUSCHDATEIEN – bestehende Ordnerstruktur beibehalten:
+  css/fsm-header-final-v907.css
+  assets/design/main-header-landscape-reference-v909.webp  [NEU]
+  index.html
+  en/index.html
+  da/index.html
+  service-worker.js
+
+GESTALTUNG:
+- Exakt der bisherige Titel und alle drei Textzeilen bleiben erhalten.
+- Titel + Leitsatz sitzen 4 CSS-Pixel weiter unten als V90.8 (gesamt 20 px
+  gegenueber der V90.7-Basis). Keine nachgelagerte Layoutverschiebung.
+- Die Landschaft wurde aus dem bereitgestellten finalen Referenzbild
+  als REINE DEKOR-GRAFIK extrahiert. Das bestehende Layout zeigt jetzt
+  den richtigen sanften gruenen Wellenverlauf ohne eingebrannte Schrift.
+- Der 48px orange Spielideen-Button mit weissem Play-Pfeil bleibt erhalten.
+- V90.8-Tilla, fuenfteilige Navigation, Karte und Spotdaten unveraendert.
+- Die 3 HTML-Dateien enthalten nur einen neuen CSS-Cache-Buster.
+- Der Service Worker wurde nur fuer Cache-Version, Pfad und SHA256 aktualisiert.
+
+WICHTIG: Ein generiertes Screenshot-Referenzbild kann Safari-Toolbar,
+  tatsaechliche Leaflet-Kartenkacheln und dynamische Inhalte nicht
+  pixelgenau festlegen. Daher erst im Cloudflare-Preview pruefen.
+
+VORGEHEN IN WORKING COPY
+1. Backup-Commit des stabilen V90.8-Teststands anlegen.
+2. Neuen Branch aus V90.8 erstellen, NICHT aus main und NICHT aus V90.7.
+3. Alle 6 Projektdateien an ihrem vorhandenen Pfad ersetzen/hinzufuegen.
+4. Diff pruefen, committen, auf neuen Testbranch pushen ohne Force Push.
+5. Cloudflare-Preview auf iPhone in Safari pruefen. Erst danach Freigabe.
+
+COMMIT-ZUSAMMENFASSUNG
+V90.9 – Kopfbereich exakt an Bildvorlage · Welle und Text feinjustiert
+
+DETAILLIERTE INFORMATIONEN
+Aus der freigegebenen Vorlage eine neue reine Landschaftsgrafik mit der
+sanften Welle erstellt. Titel und drei Leitsatzzeilen 4px tiefer als V90.8
+positioniert. V90.8-Designregeln konsolidiert beibehalten, Spielideen-
+Button weiterhin 48px und weiss/orange. Keine Aenderung an Leaflet,
+Tilla-Interaktion, Spotdaten, Filtern, Navigation, Erinnerungen oder Darkmode.
+CSS-Cache-Buster, Service-Worker-Cache und Datei-Pruefsummen aktualisiert.
+
+WORKING COPY: Vorhandene oder neue Remote-Referenz
+refs/heads/test/main-premium-v909
+Source-Branch unveraendert; Force Push AUS.

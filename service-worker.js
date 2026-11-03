@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261103-v908-header-down-1";
+const CACHE_VERSION = "20261103-v909-final-wave-1";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -65,6 +65,7 @@ const ASSETS = [
   "css/fsm-header-final-v907.css",
   "assets/design/main-header-landscape-v90.webp",
   "assets/design/main-header-landscape-v903.webp",
+  "assets/design/main-header-landscape-reference-v909.webp",
   "assets/design/main-header-leaves-v90.webp",
   "assets/design/main-header-leaves-bottom-v90.webp",
   "css/community-play.css",
@@ -179,10 +180,11 @@ async function validateImage(response, url) {
   if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
 }
 const RELEASE_HASHES = {
-  "css/fsm-header-final-v907.css": "7d987bdd6930a2bdb5f55eb14e7486e9387f8a9998900a012c2ec58f7051095e",
-  "index.html": "c155a1f0ab0085888a23df09f2cff502eb43c22544a6e86da55f9c8c74eb34cc",
-  "en/index.html": "bddd6aa3b8b83fb074763d86c76c241f852fde9911f72f352cba6a468bbf2006",
-  "da/index.html": "da347c2ac28c514122c72619a0b94fb10c84e7bcb8ff70c5d5cbebd45afaddfd",
+  "assets/design/main-header-landscape-reference-v909.webp": "fbbf163b76db5abe6a7a11384af5658d9546c8ae5533cd421d4070b923c0d561",
+  "css/fsm-header-final-v907.css": "e31960b7e778bd28077f0a2d5981058a72b58487f16b8867d0a5e7c7016af640",
+  "index.html": "cf99511cf7113ae1cb1aebe8ca8ae0cf82c9e3e94fc859cee7a540285639d169",
+  "en/index.html": "fbcc766e48395c2242e20219830b130afc364c1e3dde0699a1bd04120709c822",
+  "da/index.html": "cb942fda15a0c59b9dad5c125313c71226ae3798dcc0fd278559c5b2bea40a64",
   "css/fsm-header-target-v905.css": "48d292c5690da3349ec2e0bf323dcd943b68e3a1dea91402a08a5cbf599e6187",
   "assets/design/main-header-landscape-v903.webp": "2a8577e7b19b63293e522ae99cf5fc8f4f36e48b826721d9b6af2a1ad314e67d",
   "css/fsm-header-noheart-v903.css": "7793b3042b953b17c9620208d8e22a1e547819410b5a04754b86610703e3b21a",
