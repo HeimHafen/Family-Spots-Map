@@ -1,0 +1,48 @@
+FAMILY SPOTS MAP – V90.13 · NUR SPIELIDEEN-BUTTON
+==================================================
+BASIS: V90.12 (nicht in aeltere Versionen oder main einspielen).
+
+AENDERUNG NUR AM ORANGEN "SPIELIDEEN FUER UNTERWEGS"-BUTTON:
+- Sichtbare Flaeche UND antippbare Flaeche: exakt 44 CSS-Pixel hoch.
+- Button richtet sich an der rechten Tilla-Textspalte aus.
+- Rechts bleibt ein responsiver Abstand von 24 bis 44 CSS-Pixeln zur dekorativen Pflanze.
+- Orange unveraendert #F58B20; Play-Pfeil und Schrift unveraendert weiss.
+- Keine Aenderungen an Tilla-Bild, Texten, Kopf-Landschaft, Karte,
+  Navigation, Spot-Daten, JavaScript-Funktionen oder Darkmode.
+
+DATEIEN (DIESE 5 PROJEKTDATEIEN MIT IHREN PFADEN ERSETZEN):
+1. css/fsm-header-final-v907.css
+2. index.html
+3. en/index.html
+4. da/index.html
+5. service-worker.js
+
+WARUM HTML UND SERVICE WORKER?
+Lediglich die CSS-Versionskennung und Cache-Version/Hashwerte werden
+aktualisiert, damit Safari nicht die alte CSS-Datei zeigt.
+
+WORKING COPY:
+1. Erst V90.12 sichern/Backup-Commit erstellen.
+2. Neuen Testbranch aus V90.12 anlegen, main NICHT anfassen.
+3. Fuenf Dateien exakt mit ihren Verzeichnissen ersetzen.
+4. Diff kontrollieren: Design-CSS nur Aktionszeile und Buttonhoehe;
+   HTML nur CSS-Version; Service Worker nur Cache-Version und Hashes.
+5. Commit, Push ohne Force-Push. Cloudflare Preview auf iPhone pruefen.
+
+COMMIT-ZUSAMMENFASSUNG:
+V90.13 – Spielideen-Button ausgerichtet und 44 px hoch
+
+DETAILLIERTE INFORMATIONEN:
+Spielideen-Button auf genau 44 CSS-Pixel sichtbare und antippbare Hoehe
+gebracht. Rechts an der Tilla-Textspalte ausgerichtet, responsive
+Pflanzen-Freiflaeche 24–44 CSS-Pixel. Originalorange #F58B20 und weisses
+Play-Symbol sowie Beschriftung unveraendert. Andere Layoutbereiche,
+Spotdaten und Funktionen unveraendert. Offline-Cache aktualisiert.
+
+REMOTE-REFERENZ:
+refs/heads/test/main-premium-v913
+Source-Branch: V90.12 unveraendert. Force Push: Aus.
+
+PRUEFUNG:
+128 Service-Worker-Assetpfade, 77 Dateien mit SHA256-Hash erfolgreich geprueft.
+Die finale Safari-Darstellung ist in Cloudflare Preview zu kontrollieren.
