@@ -1,0 +1,62 @@
+FAMILY SPOTS MAP V90.6 – Referenzbild, korrigierte CSS-Architektur
+Datum: 03.11.2026
+
+WICHTIG: Nur auf den existierenden V90.5-Teststand anwenden.
+Vorher BACKUP-COMMIT erstellen, NICHT direkt auf main ersetzen.
+
+DIE FÜNF ÄNDERUNGSDATEIEN:
+  css/fsm-header-reference-v906.css    Neu: alle Kopf-Feinregeln in einer CSS-Datei
+  index.html                          CSS-Einbindung geändert
+  en/index.html                       CSS-Einbindung geändert
+  da/index.html                       CSS-Einbindung geändert
+  service-worker.js                   neue Cache-Version und Prüfsummen
+
+PRINZIP
+Der frühere CSS-Konflikt aus V90.3 (Leitsatz um +27px / Illustration um -23px)
+und V90.5 (anders gesetzte Margins) wird entschärft: Die zwei älteren
+CSS-Dateien bleiben aus Sicherheitsgründen im Repository, werden aber von
+den drei Startseiten NICHT MEHR geladen. An ihrer Stelle liegt eine einzelne
+konsolidierte V90.6-Datei. So gewinnt die Layoutlogik an Nachvollziehbarkeit.
+
+GEWÜNSCHTE OPTIK
+- Zentrierter Titel mit deutscher/dänischer Flagge.
+- Dreizeiliger Leitsatz unterhalb, ohne Herz und Zierstriche.
+- Weiße und cremefarbene Farbwelt wie deine Live-App.
+- Landschaft ohne harte Kante, sanfter Verlauf in den Tilla-Bereich.
+- Tilla und Text erhalten; Abstände und Gesamthöhe leicht reduziert.
+- 48px Spielideen-Button mit weißem Play-Symbol.
+- Karte und fünfteilige Navigation bleiben vollständig unverändert.
+
+KEINE ÄNDERUNGEN
+JavaScript, Übersetzungstexte, Spotdaten, Leaflet, Filter, Community-Menü,
+Offline-Funktion außer Cache-Aktualisierung, Mein Tag, Darkmode, Fav-Funktion.
+
+SCHRITTE IN WORKING COPY
+1. Von V90.5 Backup erstellen und neuen lokalen Testbranch anlegen.
+2. Die fünf oben genannten Dateien aus der ZIP an den gleichen Pfad kopieren.
+3. Im Diff prüfen, dass die drei HTML-Dateien nur 2 alte CSS-Links durch 1
+   neuen ersetzen. Kein anderes HTML wurde geändert.
+4. Commit erstellen. Auf refs/heads/test/main-premium-v906 pushen.
+5. Force Push AUS. V90.5-Source-Branch unangetastet lassen.
+6. Cloudflare Preview in Safari testen (Cache aktualisieren). Bitte nicht
+   gleich mit main mergen.
+
+WORKING COPY: ZUSAMMENFASSUNG
+V90.6 – Referenzbild · kompakter Kopfbereich ohne CSS-Konflikte
+
+WORKING COPY: DETAILLIERTE INFORMATIONEN
+Die V90.3- und V90.5-Kopfbereichsregeln in einer schlanken V90.6-CSS-Datei
+zusammengeführt. Zentrierten Titel, vollständigen dreizeiligen Leitsatz,
+Landschaft mit weichem Übergang, Tilla, und 48px-Spielideen-Button nach
+Referenzbild feinjustiert. Keine Änderung an Karte, Navigation, App-Logik,
+Spotdaten oder Darkmode. Service-Worker-Cache aktualisiert.
+
+WORKING COPY: VORHANDENE ODER NEUE REMOTE-REFERENZ
+refs/heads/test/main-premium-v906
+Source-Branch: aktueller lokaler V90.5-Testbranch, unverändert
+Force Push: AUS
+
+WICHTIGER HINWEIS ZU 1:1:
+Die Vorlage ist ein generiertes Bild. Technisch wird sie mit responsiven
+Elementen reproduziert; die genaue Pixelwirkung muss im Safari-Preview geprüft
+werden. Keine Screenshots als nicht interaktiven Hintergrund eingebaut.
