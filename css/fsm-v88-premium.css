@@ -1,0 +1,418 @@
+/* Family Spots Map · V88.3 Premium Finish
+   Visual-only layer. Must be loaded LAST after fsm-v88-finish.css.
+   Inspired by the approved design-review illustration (not a raster overlay).
+   All personal data, events, filters, markers and navigation stay live.
+*/
+
+/* ===== Single, shared 44px tap target / 32px circular visual X ===== */
+html.fsm-polished {
+  --fsm883-close-ink: #665a49;
+  --fsm883-close-line: #ded1be;
+  --fsm883-close-paper: #fffaf1;
+  --fsm883-close-focus: #8c7863;
+}
+html.fsm-polished[data-theme="dark"] {
+  --fsm883-close-ink: #f3e5ce;
+  --fsm883-close-line: #756a4c;
+  --fsm883-close-paper: #423c2a;
+  --fsm883-close-focus: #e1c29a;
+}
+/* Only actual icon-X controls, not the full-width text action “Schließen”. */
+html.fsm-polished :is(
+  #filter-modal-close, .fsm-home-sheet__close, .fsm-community-close,
+  .fsm-spot-preview__close, .fsm-onboarding-hint__close,
+  .fsm-onboarding-hint-close, #fse-overlay .fse-icon-btn,
+  #spot-detail [data-role="close-details"], .leaflet-popup-close-button
+) {
+  position: relative !important;
+  isolation: isolate;
+  box-sizing: border-box !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 44px !important; height: 44px !important;
+  min-width: 44px !important; min-height: 44px !important;
+  flex: 0 0 44px !important;
+  padding: 0 !important; border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: var(--fsm883-close-ink) !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  cursor: pointer; touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+html.fsm-polished :is(
+  #filter-modal-close, .fsm-home-sheet__close, .fsm-community-close,
+  .fsm-spot-preview__close, .fsm-onboarding-hint__close,
+  .fsm-onboarding-hint-close, #fse-overlay .fse-icon-btn,
+  #spot-detail [data-role="close-details"], .leaflet-popup-close-button
+)::before {
+  content: "" !important;
+  position: absolute !important;
+  z-index: -1 !important;
+  inset: 6px !important;
+  width: auto !important; height: auto !important;
+  transform: none !important;
+  border: 1px solid var(--fsm883-close-line) !important;
+  border-radius: 50% !important;
+  background: var(--fsm883-close-paper) !important;
+  box-shadow: 0 1px 3px rgba(48,36,20,.035) !important;
+  pointer-events: none;
+}
+html.fsm-polished :is(
+  #filter-modal-close, .fsm-home-sheet__close, .fsm-community-close,
+  .fsm-spot-preview__close, .fsm-onboarding-hint__close,
+  .fsm-onboarding-hint-close, #fse-overlay .fse-icon-btn,
+  #spot-detail [data-role="close-details"]
+) > svg {
+  width: 16px !important; height: 16px !important;
+  max-width: 16px; max-height: 16px;
+  position: relative; z-index: 1;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.55px !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+html.fsm-polished :is(
+  #filter-modal-close, .fsm-home-sheet__close, .fsm-community-close,
+  .fsm-spot-preview__close, .fsm-onboarding-hint__close,
+  .fsm-onboarding-hint-close, #fse-overlay .fse-icon-btn,
+  #spot-detail [data-role="close-details"]
+) > svg path {stroke-width: 1.55px !important; stroke: currentColor !important;}
+html.fsm-polished :is(
+  #filter-modal-close, .fsm-home-sheet__close, .fsm-community-close,
+  .fsm-spot-preview__close, .fsm-onboarding-hint__close,
+  .fsm-onboarding-hint-close, #fse-overlay .fse-icon-btn,
+  #spot-detail [data-role="close-details"], .leaflet-popup-close-button
+):focus-visible {
+  outline: 2px solid var(--fsm883-close-focus) !important;
+  outline-offset: 2px !important;
+}
+@media(hover:hover) {
+  html.fsm-polished :is(#filter-modal-close,.fsm-home-sheet__close,.fsm-community-close,.fsm-spot-preview__close,#fse-overlay .fse-icon-btn):hover::before {
+    background: color-mix(in srgb, var(--fsm883-close-paper), #ad956a 12%) !important;
+  }
+}
+/* Leaflet’s built-in text '×' becomes the exact same visual symbol. */
+html.fsm-polished .leaflet-popup-close-button {
+  font-size: 0 !important; line-height: 0 !important; top: 0 !important; right: 0 !important;
+}
+html.fsm-polished .leaflet-popup-close-button::after {
+  content: ""; width: 14px; height: 14px; position: relative; z-index: 2;
+  background: linear-gradient(to bottom,transparent calc(50% - .8px),currentColor calc(50% - .8px),currentColor calc(50% + .8px),transparent calc(50% + .8px)) center/100% 100% no-repeat;
+  transform: rotate(45deg);
+}
+/* Vollbildkarte: the existing toggle becomes the same X only WHILE closing.
+   The normal open-fullscreen icon and all Leaflet callbacks are untouched. */
+html.fsm-polished .fsm-map-fullscreen-button[aria-expanded="true"] {
+  position:relative!important;isolation:isolate;display:inline-grid!important;
+  place-items:center!important;box-sizing:border-box!important;
+  width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;
+  padding:0!important;border:0!important;border-radius:50%!important;
+  background:transparent!important;color:var(--fsm883-close-ink)!important;
+  box-shadow:none!important;
+}
+html.fsm-polished .fsm-map-fullscreen-button[aria-expanded="true"]::before {
+  content:"";position:absolute;inset:6px;border-radius:50%;
+  background:var(--fsm883-close-paper);border:1px solid var(--fsm883-close-line);
+}
+html.fsm-polished .fsm-map-fullscreen-button[aria-expanded="true"] svg {
+  position:relative;z-index:1;width:16px!important;height:16px!important;
+  stroke:currentColor!important;stroke-width:1.55px!important;
+}
+
+/* Avoid mixing new icon-sized X with pre-existing inline SVG inside an X button. */
+html.fsm-polished .fsm-onboarding-hint__close:not(:has(svg)),
+html.fsm-polished .fsm-onboarding-hint-close:not(:has(svg)) {font-size: 18px !important; line-height: 1 !important;}
+
+/* ===== Family Spots Map signature hero, light and dark ===== */
+#fse-overlay .fse-shell::before { display: none !important; content: none !important; }
+#fse-overlay .fse-header {
+  --fse-hero-title: #372b21;
+  --fse-hero-sub: #6c6154;
+  --fse-hero-label: #6c824f;
+  display: grid;
+  grid-template-columns: 48px minmax(0,1fr) 44px;
+  grid-template-rows: 48px auto auto auto;
+  align-content: start;
+  gap: 5px 10px;
+  padding: 18px 20px 57px;
+  background: linear-gradient(160deg,#ffefdc,#fff9ef 76%);
+  border-bottom: 0;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+}
+#fse-overlay .fse-header::after {
+  content: "";
+  position: absolute; z-index: 0;
+  left: 0; right: 0; bottom: 0;
+  height: 71px;
+  background: url("../assets/ui/fsm-v883-hills-light.svg") bottom center/100% 100% no-repeat;
+  opacity: .96;
+  pointer-events: none;
+}
+#fse-overlay .fse-title-row, #fse-overlay .fse-header-heading {display:contents}
+#fse-overlay .fse-header > :not(.fse-title-row),
+#fse-overlay .fse-header .fse-title-row > * {position:relative;z-index:1}
+#fse-overlay .fse-tilla {
+  grid-column:1;grid-row:1;
+  width:48px;height:48px;
+  align-self:center;
+  filter:drop-shadow(0 2px 2px rgba(51,44,21,.11));
+}
+#fse-overlay .fse-eyebrow {
+  grid-column:2;grid-row:1;
+  margin:0;
+  align-self:center;
+  font:800 clamp(.58rem,2.1vw,.7rem)/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.092em;
+  color:var(--fse-hero-label);
+  text-wrap:balance;
+}
+#fse-overlay .fse-icon-btn {grid-column:3;grid-row:1;justify-self:end;align-self:center;}
+#fse-overlay .fse-header h2 {
+  grid-column:1/-1;grid-row:2;
+  font:700 clamp(1.86rem,6.8vw,2.33rem)/1.10 Georgia,"Times New Roman",serif;
+  letter-spacing:-.035em;
+  color:var(--fse-hero-title);
+  margin:6px 0 0;
+  text-wrap:balance;
+}
+#fse-overlay .fse-subtitle {
+  grid-column:1/-1;grid-row:3;
+  font-size:clamp(.78rem,2.9vw,.92rem);
+  line-height:1.42;
+  max-width:36ch;
+  color:var(--fse-hero-sub);
+  margin:1px 0 0;
+  text-wrap:pretty;
+}
+#fse-overlay .fse-preview-badge {
+  grid-column:1/-1;grid-row:4;
+  margin:6px 0 0;
+  justify-self:start;
+  padding:5px 10px;
+  font-size:.62rem;
+  letter-spacing:.075em;
+  background:#e8edda;
+  color:#657b47;
+  border-radius:999px;
+}
+#fse-overlay .fse-body {background: #fffaf1;}
+#fse-overlay .fse-pillbar {margin-top:14px; margin-bottom:13px;}
+#fse-overlay .fse-pill--primary, #fse-overlay .fse-cta {background:#f89321;color:#37291d;border-color:#f89321;}
+#fse-overlay .fse-pill--primary {box-shadow:0 3px 9px rgba(223,119,15,.10);}
+#fse-overlay .fse-calendar {border-color:#eadfce;box-shadow:0 5px 19px rgba(80,52,23,.07);}
+#fse-overlay .fse-footer {background:#fffaf1;border-top:1px solid #e9decd;}
+#fse-overlay .fse-footer .fse-cta {border-radius:14px;}
+@media(max-width:370px){
+  #fse-overlay .fse-header {grid-template-columns:42px minmax(0,1fr) 44px;gap:4px 8px;padding:12px 15px 51px;}
+  #fse-overlay .fse-tilla {width:42px;height:42px;}
+  #fse-overlay .fse-header h2 {font-size:1.58rem;letter-spacing:-.04em;}
+  #fse-overlay .fse-eyebrow {font-size:.55rem;}
+}
+@media(min-width:640px){
+  #fse-overlay .fse-header {padding-inline:25px; padding-top:22px;}
+}
+
+/* ===== V88.3 Dark Palette: dark throughout the app, not a beige 'evening' skin ===== */
+html.fsm-polished[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0:#211e17;
+  --surface-1:#2d291f;
+  --surface-2:#3a3427;
+  --surface-3:#49402e;
+  --bg-app:#211e16;
+  --app-bg:#211e16;
+  --app-bg-fallback-dark:#211e16;
+  --page-bg:#211e16;
+  --text-3:#fff3df;
+  --text-1:#f5ead8;
+  --text-2:#c5baa4;
+  --text-heading:#fff1dc;
+  --text-body:#f5ead8;
+  --text-muted:#c5baa4;
+  --text-color:#f5ead8;
+  --text-soft:#c5baa4;
+  --text-strong:#fff1dc;
+  --on-dark:#fff3df;
+  --on-light:#30291e;
+  --on-accent-solid:#38271a;
+  --on-accent:#38271a;
+  --border-1:rgba(224,204,163,.18);
+  --border-2:rgba(224,204,163,.27);
+  --elev-1:0 2px 7px rgba(10,9,6,.22);
+  --elev-2:0 8px 23px rgba(10,9,6,.28);
+  --elev-3:0 18px 42px rgba(10,9,6,.34);
+  --card-bg:#302b20;
+  --card-border:rgba(232,207,164,.17);
+  --card-shadow:var(--elev-2);
+  --chip-bg:#3a3427;
+  --chip-color:#f3e9d7;
+  --chip-border:rgba(221,201,163,.23);
+  --chip-selected-bg:#66794b;
+  --chip-selected-text:#fff7e8;
+  --input-bg:#383124;
+  --button-bg:#3a3427;
+  --button-hover-bg:#4d4331;
+  --button-text-color:#f3e9d7;
+  --accent:#f49328;
+  --accent-light:#ffad47;
+  --accent-dark:#da7817;
+  --accent-solid:#f49328;
+  --accent-solid-light:#ffa239;
+  --accent-solid-dark:#db7719;
+  --accent-soft:#53402a;
+  --accent-soft-hover:#695039;
+  --accent-strong:#ffa239;
+  --header-bg-top:#262218;
+  --header-bg-bottom:#211e16;
+  --header-text-color:#fff2de;
+  --header-tagline-bg:#3d3929;
+  --header-tagline-color:#f2ead8;
+  --header-icon-bg:#3d3528;
+  --header-icon-border:rgba(222,201,162,.18);
+  --language-pill-bg:#3e3729;
+  --sidebar-bg:#211e16;
+  --sidebar-section-bg:#312b20;
+  --sidebar-section-border:rgba(218,194,154,.18);
+  --map-card-bg:#302b20;
+  --map-card-border:rgba(221,198,162,.14);
+  --toast-bg:#373124;
+  --tilla-shell:#f49328;
+  --on-tilla-shell:#302619;
+  --focus-outer:#cfac78;
+  --focus-inner:#211e16;
+  --fsm83-paper:#312b20;
+  --fsm83-paper-raised:#3b3528;
+  --fsm83-line:#655940;
+  --fsm83-ink:#fff1da;
+  --fsm83-muted:#c8bea9;
+  --fsm83-focus:#c5ab7f;
+  --fsm83-dialog-bg:#29251c;
+  --fsm83-dialog-raised:#373124;
+  --fsm83-dialog-low:#302b20;
+  --fsm83-dialog-line:#5e523b;
+  --fsm83-dialog-muted:#c9bda9;
+  --fsm83-dialog-ink:#f8eddc;
+  --fsm83-green-dark:#64784c;
+  --fsm83-green-dark-ink:#fff7e9;
+  --fsm-v88-input-edge:#6d6049;
+  --fsm-v88-input-focused:#b9a27e;
+  --fsm-v88-focus-ink:#e4c69b;
+  --filter-map:sepia(.08) saturate(.93) brightness(.93);
+}
+/* Root app surfaces and navigation */
+html.fsm-polished[data-theme="dark"] body {background:#211e16!important;color:var(--text-body)!important;}
+html.fsm-polished[data-theme="dark"] .app-header {
+  background:radial-gradient(ellipse at 87% 2%,rgba(149,116,47,.17),transparent 55%),linear-gradient(180deg,#2e291d,#211e16)!important;
+  color:var(--text-heading)!important;border-color:transparent!important;
+}
+html.fsm-polished[data-theme="dark"] :is(.app-title,.app-header h1,.app-header h2,.sidebar-section-title,.spot-card-title,#diary-title) {color:var(--text-heading)!important;}
+html.fsm-polished[data-theme="dark"] :is(.header-tagline,.app-header .header-tagline) {
+  background:#3c3527!important;color:#eaddc6!important;border-color:rgba(220,198,159,.1)!important;
+}
+html.fsm-polished[data-theme="dark"] :is(.sidebar,.main,.app-main,#main-content,#view-map,#view-diary) {color:var(--text-body);}
+html.fsm-polished[data-theme="dark"] :is(
+ .sidebar-section,.spot-card,.spot-details,.tilla-sidebar-card,
+ .daylog-entry,.diary-composer,.diary-card,.favorite-card,
+ .map-section,.app-menu-panel,.fsm-home-sheet
+) {
+  background:#302b20!important;color:var(--text-body)!important;
+  border-color:rgba(223,198,158,.18)!important;
+  box-shadow:0 5px 17px rgba(0,0,0,.16);
+}
+/* Map must stay a readable map, not a solid dark rectangle. */
+html.fsm-polished[data-theme="dark"] #view-map > .map-section {background:#302b20!important; border:0!important;}
+html.fsm-polished[data-theme="dark"] :is(
+ .spot-card-subtitle,.spot-card-meta,.spot-details-description,.spot-details-meta,
+ .sidebar-section p,.filter-group-helper,.plus-note,.diary-entry-meta,.daylog-last-saved
+) {color:var(--text-muted)!important;}
+html.fsm-polished[data-theme="dark"] :is(.app-menu-panel,.fsm-home-sheet,.fsm-home-sheet__content) {color:#f7ecd9!important;}
+html.fsm-polished[data-theme="dark"] .app-menu-panel {background:#302b20!important;}
+html.fsm-polished[data-theme="dark"] :is(.app-menu-item,.app-menu-lang-chip) {color:#f5ead8!important;}
+html.fsm-polished[data-theme="dark"] :is(.app-menu-item:hover,.app-menu-item:focus-visible,.fsm-home-nav__item:hover) {background:#3e3728!important;}
+html.fsm-polished[data-theme="dark"] .app-menu-lang-chip:not([aria-pressed="true"]) {background:#3b3427!important;color:#eaddc6!important;border-color:#6a5c42!important;}
+html.fsm-polished[data-theme="dark"] .app-menu-lang-chip[aria-pressed="true"] {background:#687e51!important;color:#fff7e8!important;border-color:#687e51!important;}
+html.fsm-polished[data-theme="dark"] .fsm-home-nav {
+  --fsm-nav-bg:#302b20!important;--fsm-nav-text:#f5ead8!important;
+  --fsm-nav-line:#65543b!important;
+  --fsm-nav-active:#61774b!important;
+  --fsm-nav-active-ink:#fff7e8!important;
+  box-shadow:0 8px 26px rgba(0,0,0,.25)!important;
+}
+html.fsm-polished[data-theme="dark"] .fsm-home-sheet {
+  --fsm-home-panel:#302b20!important;--fsm-home-ink:#fff1dc!important;--fsm-home-border:#65563e!important;
+}
+html.fsm-polished[data-theme="dark"] .fsm-home-sheet__content > .sidebar-section {background:#373124!important;}
+html.fsm-polished[data-theme="dark"] :is(.btn-ghost,.btn-secondary,.fsm-map-tool,.filter-chip,.mood-chip:not([aria-pressed="true"])) {
+  color:#f0e2cb!important;border-color:#675a43!important;
+}
+html.fsm-polished[data-theme="dark"] :is(input,textarea,select,.input):not([type="checkbox"]):not([type="radio"]) {
+  background-color:#393225!important;color:#fff1db!important;border-color:#6d6049!important;
+}
+html.fsm-polished[data-theme="dark"] :is(input,textarea,select)::placeholder {color:#c4b49c!important;opacity:1;}
+html.fsm-polished[data-theme="dark"] .badge {background:#433626!important;color:#eccc9c!important;border-color:#776348!important;}
+html.fsm-polished[data-theme="dark"] .badge--verified {background:#32402b!important;color:#d9e8bc!important;}
+html.fsm-polished[data-theme="dark"] .badge--time {background:#493422!important;color:#f7be81!important;}
+html.fsm-polished[data-theme="dark"] .badge--plus {background:#49402a!important;color:#f1d48f!important;}
+html.fsm-polished[data-theme="dark"] .toast {background:#3b3327!important;color:#faefdb!important;}
+html.fsm-polished[data-theme="dark"] .leaflet-container .leaflet-tile {filter:var(--filter-map)!important;}
+html.fsm-polished[data-theme="dark"] .leaflet-popup-content-wrapper,
+html.fsm-polished[data-theme="dark"] .fsm-spot-preview {background:#302b20!important;color:#f8eede!important;border-color:#61533d!important;}
+html.fsm-polished[data-theme="dark"] .leaflet-popup-tip {background:#302b20!important;}
+html.fsm-polished[data-theme="dark"] .leaflet-control-zoom a {background:#3c3528!important;color:#f2e7d6!important;border-color:#76664b!important;}
+/* Filter modal & all category worlds: avoid old light paper on charcoal. */
+html.fsm-polished[data-theme="dark"] #filter-modal .filter-modal-inner,
+html.fsm-polished[data-theme="dark"] #filter-modal :is(.filter-modal-header,.filter-modal-footer) {
+  background:#29251c!important;color:#f7ead7!important;border-color:#5b4d38!important;
+}
+html.fsm-polished[data-theme="dark"] #filter-modal :is(.filter-group-helper,.category-explorer__theme-heading,.category-explorer__type-help,.category-explorer__fieldset legend) {color:#c9baa3!important;}
+html.fsm-polished[data-theme="dark"] #filter-modal :is(.category-explorer__rules,.category-explorer__extras,.category-explorer__types,.category-explorer__worlds > .category-explorer__chip,.category-explorer__choice) {
+  background:#373024!important;color:#f6ead7!important;border-color:#61533e!important;
+}
+html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds > .category-explorer__chip[aria-pressed="true"],
+html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice:has(input:checked) {
+  background:#546744!important;color:#fff8e9!important;border-color:#87966b!important;
+}
+/* Other feature dialogs and personal diary */
+html.fsm-polished[data-theme="dark"] #fsm-community-overlay :is(.fsm-community-sheet,.fsm-community-actions) {background:#29251c!important;border-color:#61533e!important;color:#f8edda!important;}
+html.fsm-polished[data-theme="dark"] #fsm-community-overlay :is(.fsm-community-events,.fsm-community-explain,.fsm-community-alert,.fsm-community-events-heading) {background:#373024!important;color:#f7eddd!important;border-color:#65563d!important;}
+html.fsm-polished[data-theme="dark"] .memory-photo-dialog {background:#29251c!important;color:#fff1df!important;border-color:#61533e!important;}
+html.fsm-polished[data-theme="dark"] #view-diary :is(.diary-composer,.memory-card,.daylog-card,.daylog-entry) {background:#332d22!important;color:#f7ecd9!important;border-color:#64543f!important;}
+/* Calendar is one application screen, not the only place in dark mode. */
+html.fsm-polished[data-theme="dark"] #fse-overlay {background:#211e16;color:#f5ead8;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-shell,
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-body,
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-footer {background:#28241b;color:#f5ead8;border-color:#514531;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-header {
+  --fse-hero-title:#fff1d9;--fse-hero-sub:#e1d5bf;--fse-hero-label:#d2dca7;
+  background:linear-gradient(160deg,#302817,#252117 85%);
+}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-header::after {background-image:url("../assets/ui/fsm-v883-hills-dark.svg");opacity:1;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-header h2 {color:var(--fse-hero-title)!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-eyebrow {color:var(--fse-hero-label)!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-subtitle {color:var(--fse-hero-sub)!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-preview-badge {background:#44472b!important;color:#ebedc2!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay :is(.fse-calendar,.fse-event,.fse-form) {
+  background:#322c20!important;border-color:#66563b!important;color:#f8ebd7!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.16);
+}
+html.fsm-polished[data-theme="dark"] #fse-overlay :is(.fse-calendar-nav h3,.fse-section-heading h3,.fse-form h3,.fse-event h4,.fse-empty strong) {color:#fff0d9!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay :is(.fse-day,.fse-weekdays span,.fse-event p,.fse-form-intro,.fse-field,.fse-footer-note) {color:#e4d9c6!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay :is(.fse-pill:not(.fse-pill--primary),.fse-toggle,.fse-select,.fse-cal-nav-btn,.fse-mini,.fse-cancel) {
+  background:#403729!important;color:#f7ead9!important;border-color:#776448!important;
+}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-day--chosen {background:#738b51!important;color:#fff!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-day--demo {background:#5a4631!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-day--has {background:#46462d!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-empty {background:#342f24!important;color:#e5d9c4!important;border-color:#716045!important;}
+html.fsm-polished[data-theme="dark"] #fse-overlay .fse-demo-line {background:#373025!important;color:#dcd0ba!important;}
+/* Focus and accessibility – never replace tap target with a 28px hit area. */
+@media(prefers-reduced-motion:reduce){#fse-overlay .fse-shell {animation:none!important;}}
+@media(forced-colors:active){
+ html.fsm-polished :is(#filter-modal-close,.fsm-home-sheet__close,.fsm-community-close,.fsm-spot-preview__close,#fse-overlay .fse-icon-btn)::before {border:1px solid ButtonText!important;background:ButtonFace!important;}
+ html.fsm-polished[data-theme="dark"] :is(.sidebar-section,.spot-card,.fse-calendar,.app-menu-panel) {border:1px solid CanvasText!important;}
+}

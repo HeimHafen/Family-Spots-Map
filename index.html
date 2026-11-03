@@ -35,7 +35,7 @@
       document.documentElement.setAttribute("data-theme", theme);
       document.documentElement.style.colorScheme = "light";
       document.querySelector('meta[name="color-scheme"]').content = "light";
-      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#48503d" : "#f7e1d0";
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#211d14" : "#f7e1d0";
       // iOS add-to-Home-Screen fallback for Safari versions with unreliable display-mode media queries.
       if (navigator.standalone === true) document.documentElement.classList.add("fsm-ios-standalone");
     })();
@@ -252,21 +252,23 @@
   />
 
   <!-- App Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=20261103-v88-2-calendar-header" />
+  <link rel="stylesheet" href="css/styles.css?v=20261103-v88-4-reference-ui" />
   <link rel="stylesheet" href="css/badges.css" />
   <link rel="stylesheet" href="css/diary.css?v=20261030-diary-3" />
 <link rel="stylesheet" href="css/interface.css?v=20261030-focus-fields-77">
   <link rel="stylesheet" href="css/fsm-ui-finish-70.css?v=20261030-focus-fields-77" />
   <link rel="stylesheet" href="css/fsm-ui-finish-71.css?v=20261030-focus-fields-77" />
-  <link rel="stylesheet" href="css/filter-showcase-78.css?v=20261103-v88-2-calendar-header" />
-  <link rel="stylesheet" href="css/fsm-ui-consistency.css?v=20261103-v88-2-calendar-header" />
+  <link rel="stylesheet" href="css/filter-showcase-78.css?v=20261103-v88-4-reference-ui" />
+  <link rel="stylesheet" href="css/fsm-ui-consistency.css?v=20261103-v88-4-reference-ui" />
   <link rel="stylesheet" href="css/fsm-design-system-83.css?v=20261102-fsm-refinement-v83-1" />
-  <link rel="stylesheet" href="css/fsm-home-navigation-84.css?v=20261103-v88-2-calendar-header" />
+  <link rel="stylesheet" href="css/fsm-home-navigation-84.css?v=20261103-v88-4-reference-ui" />
   <link rel="stylesheet" href="css/community-play.css?v=20261102-community-v85" />
 <script>document.documentElement.classList.add("fsm-polished");</script>
   <!-- V88 RC: optional, isolated Gemeinsam erleben test module -->
-  <link rel="stylesheet" href="css/gemeinsam-erleben-rc.css?v=20261103-v88-2-calendar-header" />
-  <link rel="stylesheet" href="css/fsm-v88-finish.css?v=20261103-v88-2-calendar-header" />
+  <link rel="stylesheet" href="css/gemeinsam-erleben-rc.css?v=20261103-v88-4-reference-ui" />
+  <link rel="stylesheet" href="css/fsm-v88-finish.css?v=20261103-v88-4-reference-ui" />
+  <link rel="stylesheet" href="css/fsm-v88-premium.css?v=20261103-v88-4-reference-ui" />
+  <link rel="stylesheet" href="css/fsm-v884-reference.css?v=20261103-v88-4-reference-ui" />
 </head>
 
 <body>
@@ -1338,7 +1340,7 @@
             dann gemeinsam mit Partnern und der Community.
           </p>
 
-          <p>App-Version: <strong>20261103-v88-2-calendar-header</strong></p>
+          <p>App-Version: <strong>20261103-v88-4-reference-ui</strong></p>
 
           <p>
             Wenn dir die Karte geholfen hat,<br />
@@ -1567,7 +1569,7 @@
             senere sammen med partnere og fællesskabet.
           </p>
 
-          <p>Appversion: <strong>20261103-v88-2-calendar-header</strong></p>
+          <p>Appversion: <strong>20261103-v88-4-reference-ui</strong></p>
 
           <p>
             Hvis kortet har hjulpet jer<br />
@@ -1770,7 +1772,7 @@
             then together with partners and the community.
           </p>
 
-          <p>App version: <strong>20261103-v88-2-calendar-header</strong></p>
+          <p>App version: <strong>20261103-v88-4-reference-ui</strong></p>
 
           <p>
             If this map helped you spend<br />
@@ -2112,7 +2114,7 @@
   <script src="./js/sw-register.js?v=20261010-unified-4" defer></script>
 
   <!-- App (ES-Modul) -->
-  <script type="module" src="./js/app.js?v=20261103-v88-2-calendar-header"></script>
+  <script type="module" src="./js/app.js?v=20261103-v88-4-reference-ui"></script>
 
   <!-- The spot list starts closed on each page load; no persistent UI preference. -->
   <script type="module">
@@ -2138,6 +2140,7 @@
       });
     }
   </script>
-  <script type="module" src="./js/features/gemeinsam-erleben-rc.js?v=20261103-v88-2-calendar-header"></script>
+  <script type="module" src="./js/features/gemeinsam-erleben-rc.js?v=20261103-v88-4-reference-ui"></script>
+  <script type="module" src="./js/ui/fsm-v884-reference-home.js?v=20261103-v88-4-reference-ui"></script>
 </body>
 </html>
