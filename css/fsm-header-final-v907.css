@@ -231,3 +231,105 @@
     background: radial-gradient(circle at 30% 20%, #a8ce77 0, #78ab46 45%, #598530 100%) !important;
   }
 }
+
+
+/* ================================================================
+   V90.14 – freigegebene V90.13-Oberflaeche gezielt verfeinert.
+   A) Etwas groessere Tilla bei niedrigerem Tilla-Bereich,
+      etwas mehr Platz fuer das Landschaftspanorama darueber.
+   B) Alle bisher orangefarbenen Primaer-Aktionen: Referenz der
+      sichtbaren Schaltflaeche "Spots finden": 44 CSS-px, #F58B20,
+      dunkle Schrift #382E25. Keine Karten-, Daten-, Navigations-
+      oder Darkmode-Aenderungen. Kein Eingriff in sonstige Controls.
+   ================================================================ */
+@media (max-width: 899px) {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header-main::after {
+    /* Platzgewinn ueber Tilla, ohne Titel und Leitsatz umzupositionieren. */
+    height: clamp(89px, calc(21vw + 12px), 102px) !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section {
+    padding-top: 2px !important;
+    padding-bottom: 4px !important;
+    row-gap: 0 !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-avatar {
+    /* Avatar samt eventuellem Erinnerungszettel wird gemeinsam skaliert.
+       Transform laesst das CSS-Grid unveraendert und vermeidet neue Umbrueche. */
+    transform: scale(1.105) !important;
+    transform-origin: 52% 79% !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-actions {
+    margin-top: 0 !important;
+  }
+  /* Spielideen: gleiche sichtbare Aktionshoehe, der rechte Pflanzenabstand
+     und die im V90.13-Screenshot festgelegte Position bleiben erhalten. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea {
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    color: #382e25 !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea::after {
+    background: #f58b20 !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea::before {
+    border-left-color: #382e25 !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea > span:not(.tilla-play-emoji) {
+    color: #382e25 !important;
+  }
+}
+@media (min-width: 360px) and (max-width: 899px) {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section > .sidebar-section-header {
+    height: 36px !important;
+    min-height: 36px !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #menu-toggle {
+    /* Unveraenderte 44px-Touchflaeche; vertikal am Titel ausgerichtet. */
+    transform: translateY(-4px) !important;
+  }
+}
+
+/* Uebergreifende Farbe und 44px-Hoehe der PRIMAEREN orangefarbenen
+   Aktionen. Sekundaer-, Karten- und Filterchips bleiben unberuehrt. */
+html.fsm-polished[data-theme="light"] :is(
+  #filter-section #btn-open-filter-modal.btn,
+  #filter-modal #filter-modal-apply,
+  #plus-section #plus-code-submit,
+  #view-diary #daylog-save,
+  .daylog-entry-actions > .btn:not(.btn-secondary),
+  #fsm-community-overlay .fsm-community-actions .fsm-community-primary,
+  #spot-detail .spot-community-open,
+  .btn-primary
+) {
+  box-sizing: border-box !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  padding-block: 0 !important;
+  background: #f58b20 !important;
+  background-image: none !important;
+  color: #382e25 !important;
+  border-color: #de7f1c !important;
+  text-shadow: none !important;
+}
+html.fsm-polished[data-theme="light"] :is(
+  #filter-section #btn-open-filter-modal.btn,
+  #filter-modal #filter-modal-apply,
+  #plus-section #plus-code-submit,
+  #view-diary #daylog-save,
+  .daylog-entry-actions > .btn:not(.btn-secondary),
+  #fsm-community-overlay .fsm-community-actions .fsm-community-primary,
+  #spot-detail .spot-community-open,
+  .btn-primary
+) :is(span, svg) {
+  color: #382e25 !important;
+}
+/* Bei diesen zwei Buttons stammt das sichtbare Orange teilweise aus
+   Pseudoelementen. Sie bekommen denselben Referenzton. */
+html.fsm-polished[data-theme="light"] #filter-modal #filter-modal-apply::before {
+  background: #f58b20 !important;
+}
+html.fsm-polished[data-theme="light"] #filter-modal #filter-modal-apply::after {
+  color: #382e25 !important;
+}
