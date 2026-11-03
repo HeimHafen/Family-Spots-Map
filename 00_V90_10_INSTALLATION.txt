@@ -1,0 +1,39 @@
+FAMILY SPOTS MAP V90.10 – NUR DER SPIELIDEEN-BUTTON
+=================================================
+BASIS: V90.9 (nicht fruehere Versionen, nicht main)
+
+AENDERUNG:
+- Nur die sichtbare Orangeflaeche von „Spielideen fuer unterwegs“
+  ist von 48 auf 40 CSS-Pixel abgeflacht.
+- Die klick-/tappbare Buttonflaeche bleibt 48 CSS-Pixel hoch.
+- Schrift, Play-Symbol, Orangeton, Position und Breite bleiben unveraendert.
+- Der Tilla-Bereich und alle anderen Seiten-/Kartenmodule bleiben unveraendert.
+- Die Dateien index.html / en/index.html / da/index.html enthalten AUSSCHLIESSLICH
+  einen neuen CSS-Cache-Versionseintrag; der Service Worker nur Aktualisierungen
+  fuer Cache-Version und vier SHA256-Dateipruefsummen.
+
+INSTALLATION IN WORKING COPY:
+1. Den stabilen V90.9-Stand sichern/Commit erstellen.
+2. Neuen Testbranch von V90.9 erstellen.
+3. Nur diese 5 vorhandenen Projektdateien durch die gleichnamigen Dateien
+   dieses Pakets ersetzen (gleiche Unterordner beibehalten):
+   css/fsm-header-final-v907.css
+   index.html
+   en/index.html
+   da/index.html
+   service-worker.js
+4. Diff pruefen, Commit erstellen und auf Testbranch pushen.
+5. In Cloudflare Preview auf iPhone testen. main nicht anfassen.
+
+COMMIT-ZUSAMMENFASSUNG:
+V90.10 – Spielideen-Button optisch flacher, alles andere unveraendert
+
+DETAILS:
+Sichtbare orange Buttonflaeche 40px; Touch-Ziel 48px. Keine Aenderung an
+Tilla, Kopfbereich, Landschaft, Karte, Navigation, Funktionen, Spotdaten,
+Designfarben oder Darkmode. CSS-Cache und Service Worker aktualisiert.
+
+REMOTE-REFERENZ:
+refs/heads/test/main-premium-v910
+
+Source-Branch: V90.9 unveraendert. Force Push: AUS.

@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261103-v909-final-wave-1";
+const CACHE_VERSION = "20261103-v910-only-button-1";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -181,10 +181,10 @@ async function validateImage(response, url) {
 }
 const RELEASE_HASHES = {
   "assets/design/main-header-landscape-reference-v909.webp": "fbbf163b76db5abe6a7a11384af5658d9546c8ae5533cd421d4070b923c0d561",
-  "css/fsm-header-final-v907.css": "e31960b7e778bd28077f0a2d5981058a72b58487f16b8867d0a5e7c7016af640",
-  "index.html": "cf99511cf7113ae1cb1aebe8ca8ae0cf82c9e3e94fc859cee7a540285639d169",
-  "en/index.html": "fbcc766e48395c2242e20219830b130afc364c1e3dde0699a1bd04120709c822",
-  "da/index.html": "cb942fda15a0c59b9dad5c125313c71226ae3798dcc0fd278559c5b2bea40a64",
+  "css/fsm-header-final-v907.css": "84f151b3f254cafb3a1ace48e39223dbcf4ea8caa7ffda381d3d7a8a9ca03d0b",
+  "index.html": "add3530e895031c93068456930ced2cec3fdc044477af742db0482cd985241ca",
+  "en/index.html": "a209d261e97d960c447b96d1bef0a73279826ab071a587d914c52ffc5f11a947",
+  "da/index.html": "527ed033f7cff4f6aee061c06e8a8b394c5c261ac15a624dc2a90ed85d6b3d74",
   "css/fsm-header-target-v905.css": "48d292c5690da3349ec2e0bf323dcd943b68e3a1dea91402a08a5cbf599e6187",
   "assets/design/main-header-landscape-v903.webp": "2a8577e7b19b63293e522ae99cf5fc8f4f36e48b826721d9b6af2a1ad314e67d",
   "css/fsm-header-noheart-v903.css": "7793b3042b953b17c9620208d8e22a1e547819410b5a04754b86610703e3b21a",

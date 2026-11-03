@@ -98,13 +98,31 @@
     padding: 8px 10px !important;
     border: 0 !important;
     border-radius: 24px !important;
-    background: linear-gradient(180deg, #ff8515 0%, #f36d08 100%) !important;
-    box-shadow: 0 3px 8px rgba(114, 65, 22, .14) !important;
+    background: transparent !important;
+    box-shadow: none !important;
     color: #fff !important;
     font-size: clamp(11.5px, 3.25vw, 14px) !important;
     font-weight: 700 !important;
     line-height: 1.2 !important;
     text-shadow: none !important;
+  }
+  /* V90.10: NUR die sichtbare orange Button-Flaeche ist 40px hoch.
+     Der echte Button bleibt 48px hoch und gut mit dem Finger bedienbar.
+     Keine Aenderung an Tilla-Layout, Position, Karte oder Navigation. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea::after {
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    top: 4px !important;
+    bottom: 4px !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 0 !important;
+    border-radius: 999px !important;
+    border: 0 !important;
+    background: linear-gradient(180deg, #ff8515 0%, #f36d08 100%) !important;
+    box-shadow: 0 3px 8px rgba(114, 65, 22, .14) !important;
+    pointer-events: none !important;
   }
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea::before {
     content: "" !important;
@@ -125,6 +143,8 @@
     box-shadow: none !important;
     transform: none !important;
     pointer-events: none !important;
+    position: relative !important;
+    z-index: 1 !important;
   }
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea .tilla-play-emoji {
     display: none !important;
@@ -133,6 +153,8 @@
     color: #fff !important;
     font-weight: 700 !important;
     white-space: nowrap !important;
+    position: relative !important;
+    z-index: 1 !important;
   }
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea:focus-visible {
     outline: 3px solid #507947 !important;
@@ -148,6 +170,24 @@
     font-size: 11px !important;
     gap: 5px !important;
     padding-inline: 4px !important;
+  }
+  /* V90.10: NUR die sichtbare orange Button-Flaeche ist 40px hoch.
+     Der echte Button bleibt 48px hoch und gut mit dem Finger bedienbar.
+     Keine Aenderung an Tilla-Layout, Position, Karte oder Navigation. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea::after {
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    top: 4px !important;
+    bottom: 4px !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 0 !important;
+    border-radius: 999px !important;
+    border: 0 !important;
+    background: linear-gradient(180deg, #ff8515 0%, #f36d08 100%) !important;
+    box-shadow: 0 3px 8px rgba(114, 65, 22, .14) !important;
+    pointer-events: none !important;
   }
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea::before {
     border-left-width: 10px !important;
