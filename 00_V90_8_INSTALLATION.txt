@@ -1,0 +1,54 @@
+FAMILY SPOTS MAP · V90.8 — NUR TITEL + LEITSATZ 16 PX TIEFER
+================================================================
+
+BASIS: Die derzeitige V90.7-Testversion (nicht direkt main!).
+Die 5 Dateien dieses Pakets ersetzen gleichnamige Dateien im Projekt:
+
+- css/fsm-header-final-v907.css
+- index.html
+- en/index.html
+- da/index.html
+- service-worker.js
+
+EINZIGE SICHTBARE AENDERUNG:
+Die beiden Elemente „Family Spots Map“ (mit Flaggen) UND der komplette
+3-zeilige Leitsatz werden auf der hellen mobilen Karten-Startseite
+visuell um 16 CSS-Pixel nach unten gesetzt.
+
+UNVERAENDERT:
+Abstand zwischen Titel und Leitsatz; Landschaftsposition und -groesse;
+Tilla-Bereich; Spielideen-Button; Leaflet-Karte; die 5 Navigationspunkte;
+Spots, Filter, Mein Tag, Sprachen, Darkmode, Funktionslogik und Daten.
+
+TECHNISCH:
+Die Bewegung erfolgt mit transform:translateY(16px). Das AENDERT
+keine Elementhoehe und keine Position nachfolgender App-Bereiche.
+Die drei Startseiten haben einen aktualisierten CSS-Cache-Buster.
+Der Service Worker ist wegen der Offline-SHA256-Pruefsummen und der
+neuen Cache-Version angepasst; sonstige Logik ist identisch.
+
+INSTALLATION:
+1. Aktuellen V90.7-Stand in Working Copy sichern.
+2. Testbranch von V90.7 aus erstellen oder bestehenden Testbranch nutzen.
+3. Genau die 5 Dateien ersetzen und auf Richtigkeit der Diff-Pruefung achten.
+4. Commit, Push ohne Force Push und Cloudflare-Preview in Safari testen.
+5. Erst nach Abnahme auf main uebernehmen.
+
+COMMIT-ZUSAMMENFASSUNG:
+V90.8 – Titel und Leitsatz 16 px tiefer · Rest unverändert
+
+DETAILLIERTE INFORMATIONEN:
+Auf dem hellen mobilen Kartenstart ausschliesslich Titel mit Flaggen und
+den vollstaendigen dreizeiligen Leitsatz visuell um 16 px nach unten
+verschoben. Kein Layout-Shift: Landschaft, Tilla, Spielideen, Karte,
+Navigation und Funktionen unveraendert. CSS-Version und SHA256-Pruefsummen
+im Offline-Cache aktualisiert.
+
+REMOTE-REFERENZ (TESTBRANCH):
+refs/heads/test/main-premium-v908
+Source-Branch unveraendert; Force Push AUS.
+
+HINWEIS:
+Die Verschiebung ist lokal durch CSS definiert und kann im Safari-Layout
+wegen Font-Rendering leicht anders wirken. Keine automatische
+Veroeffentlichung auf GitHub oder Cloudflare erfolgt.
