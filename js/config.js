@@ -1070,9 +1070,9 @@ export const FILTERS = [
 
 /** @type {Record<LangCode, string>} */
 export const HEADER_TAGLINE_TEXT = {
-  de: "Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf.",
-  en: "Today is a good day to turn the everyday into a little family adventure.",
-  da: "I dag er en god dag til et lille familieeventyr midt i hverdagen."
+  de: "Orte entdecken.\nMenschen verbinden.\nErinnerungen schaffen.",
+  en: "Discover places.\nConnect people.\nCreate memories.",
+  da: "Opdag steder.\nSkab forbindelser.\nSkab minder."
 };
 
 // Onboarding-Hint (Spots / Plus / Mein Tag)

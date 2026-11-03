@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261103-pastel-v89-2-unified-home";
+const CACHE_VERSION = "20261103-main-header-v90-1";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -57,12 +57,10 @@ const ASSETS = [
   "css/styles.css",
   "css/map-spots.css",
   "css/fsm-home-navigation-84.css",
-  "css/fsm-pastel-v89.css",
-  "css/fsm-v89-vision.css",
-  "js/features/fsm-v89-vision.js",
-  "assets/ui/fsm-v89-vision-hills.webp",
-  "assets/ui/fsm-v89-approved-heart-mask.png",
-  "assets/design/pastel-landscape-v89.webp",
+  "css/main-header-v90.css",
+  "assets/design/main-header-landscape-v90.webp",
+  "assets/design/main-header-leaves-v90.webp",
+  "assets/design/main-header-leaves-bottom-v90.webp",
   "css/community-play.css",
   "css/evening.css",
   "css/theme.css",
@@ -175,26 +173,33 @@ async function validateImage(response, url) {
   if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
 }
 const RELEASE_HASHES = {
+  "css/main-header-v90.css": "55de47df1a0ddd7350d0a692a63b37a6a4484b4ebb8476f57184593a3fb40c4f",
   "css/fsm-design-system-83.css": "a2d950694642080f4bc6fd6e83831b3dd29e4760b6f18f23db92c1997c32e27d",
   "js/ui/category-icons.js": "ef1e35c9586943111131a7c16aa7c3a0f021b0aa8bee8a8574eaec5ac3c1b6eb",
   "css/fsm-ui-consistency.css": "abdad1434b900537f45705ad9903ef8819935bb74d05d823e9c0bc7c9fa3c96b",
   "css/filter-showcase-78.css": "61bf7a00b912d8b036ade3eafc375fdbeef7f1cbc4024451375268d95167f095",
   "css/fsm-ui-finish-70.css": "e3b5e8220c6a1d1da3e2c76de9edf63f09e912c5003cfd319d1c72c38921781c",
   "js/ui/filter-summary.js": "b7e0155c909fc50a9124ddff2efde40d4ea91f59038d0afd211642053a0699ff",
+  "js/ui/map-toolbar.js": "167b74926b2998486de5f5381b7b1b70e2b612c526808df6d1e183bc32541bf8",
   "css/theme.css": "489b478c87918fa0178298907b37a41dcde9028902a19691312d58c7bfecb80a",
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "data/i18n/da.json": "f027f3f7980e00824cda46b0c915087522fd6c19ab7cd621e4870393389ba305",
+  "da/index.html": "9b8c77f185919a556757e74720e24f71e92035904b2cd2e9b87f599268af2eab",
+  "data/i18n/da.json": "28692aca31de0476d3eafba3993be23a55b07442e867c0229ed1b4abc2582dc9",
   "data/i18n/de.json": "cb915fb6dcc64e45d93eac9ff323b90a13685ea1cb5fcc88d75a75c49de8d2aa",
   "data/i18n/en.json": "99dcbeaa9dbd3e18df3ab35664e64f4dcedfe1eab9ed22ba3fc5fc6cf3bfba26",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
-  "js/config.js": "5d7ebbc76980756b7a096609229ae368739eecda70b82e87cd5472957df8c06c",
+  "en/index.html": "a56f1acb26bff25d2c887cee8fd3383834964361be8c30a0108fac084504733a",
+  "index.html": "70bf1497b08d65dd63d9e7fd5a5db4aed692e3ef563cb9939225c5a0f9bbc789",
+  "js/app.js": "a0decbcaf19173703d94aae7a90e7d2cc79de83ddd3f78805b1e772d8b113914",
+  "js/config.js": "6bf8119a67f96baf8634cfd3bbb1ae18a438d1bed26390b9bf9db9bd46397038",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "e398f18e7a246b3ff32148d05ccf387752272e6e5cb11bc125fa91ded4968dec",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
-  "js/i18n.js": "cb1a4485643ef16e182847b2b0b1f5b5dcdef5510bf9cf6058ffda4b838d44d7",
+  "js/i18n.js": "0a51cb70277242cf49e31ab4133439795773fca25b290d21781abe7548b7319f",
+  "js/map.js": "49ba43ff827a36669edf7b37c7184e1559630bd4efbf05f8b656fef4a0afde5b",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "979a9ef59041f9caacab46de883198004b913b1312abbfe9a71fb17a5c58bdf1",
   "offline.html": "3abeb27b2196a79a73f2bfc84d4137a6519f9ded69e0f7de8e7c11a57cd06177",
@@ -228,6 +233,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "93512e7a68293f4cb09eda3ac0c0a59509e8eb1d836e4fa51a4e6c3c14a19923",
   "js/filters/tags.js": "3b8386ba863d390884eee9c6c8c7892959a4b8079155736e6d5f5df3f501af76",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
+  "css/styles.css": "5e6b297018511ed489236cc60d445eb1315bdc9de7677064d4209b34b274ffff",
   "js/ui/map-fullscreen.js": "58218777034e262f8cee4b3fc9ded0c94516a836140a78199d3d23a7066618ac",
   "js/categories.js": "399b984aee4d1508cc905805859c56206a396b6a81b23438983ed9b92b97ede7",
   "js/ui/category-explorer.js": "45a407e69a4204ffc95964e5d761b8b729da7fbb41a39927e7d98e7a713f7af9",
@@ -236,6 +242,7 @@ const RELEASE_HASHES = {
   "css/interface.css": "c4a6ea58ef8af12716c71af48b1a746351456268cd2d2731aab543214e52a8fa",
   "css/fsm-ui-finish-71.css": "0af65a5df778b74eb503045dca5765d180a18f80649f5680c29fc2b7a75f922e",
   "css/fsm-home-navigation-84.css": "3916cecf58f53593d0b94b24c2a504b86302edbdbfd551c4cded340bf73b91e7",
+  "js/ui/home-navigation.js": "3b6abcf19e6aee41093f10486ecae1b8b975005ac0b03e08de3710b838ec78a5"
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);

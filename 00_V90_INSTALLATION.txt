@@ -1,0 +1,46 @@
+FAMILY SPOTS MAP · V90 · AUSTAUSCHPAKET NUR KOPFBEREICH
+Stand: 03.11.2026
+
+GRUNDLAGE
+Der Originalstand wurde aus der vom Nutzer bereitgestellten Family-Spots-Map-main 30.zip vom 02.11.2026 genommen. Die separate iPhone-Grafik ist eine VISUELLE VORLAGE, kein exakt renderbares Code-Original.
+
+AENDERUNGEN (nur oberer Startbereich im HELLEN MODUS)
+- Titel, dreizeiliger Leitsatz, sanfte Illustration und warmes Creme
+- Tilla und Ueberschrift optisch mit dem Kopf verbunden
+- Weisser Play-Pfeil und weisse Buttonschrift auf dunkelorange
+- Bestehende Tilla und alle ihren Funktionen bleiben erhalten
+- Textinhalte in DE, EN und DA konsistent; auch waehrend Sprachwechsel
+- Cacheversion & noetige Datei-Hashes aktualisiert
+
+NICHT GEÄNDERT
+- Karte, Leaflet, Marker, Cluster, Map CSS, Zoombuttons
+- Hauptnavigation, Spots Plus, Mein Tag, Filter, Treffen & Spielen
+- Spottabelle, Erinnerungen, Medien und Play-Ideen-Logik
+- Alle sonstigen Komponenten, sämtliche Dialoge und der Darkmode
+
+VOR DEM AUSTAUSCH
+1. Zuerst aktuellen main-Commit/Sicherung merken oder einen neuen Testbranch ab main erstellen.
+2. Pruefen, ob dein aktueller main-Stand seit ZIP 30 veraendert wurde. Falls ja, bitte nicht blind die alten index/config/i18n-Dateien ersetzen! Diff kontrollieren und nur die Zeilen dieses Patches uebernehmen.
+3. Auf einem separaten Testbranch arbeiten. NIEMALS Force Push.
+4. Alle hier gelieferten Dateien in identische Repository-Pfade einsetzen.
+5. Commit und danach Push auf den TEST-Branch. Nicht direkt auf main.
+6. Cloudflare-Preview auf iPhone testen: beide Sprachen, Spielideen, Menu, Darkmode, Map, Filter, Service-Worker, Zuruecknavigation.
+7. Erst nach erfolgreicher Abnahme kontrolliert in main integrieren.
+
+HINWEISE ZUR 1:1-DARSTELLUNG
+Die genaue Pixeldarstellung haengt von iPhone, Safari-Massstab, Schrift und Display ab. Decorative Art ist dem Referenzbild angenaehert, aber keine 1:1-Kopie eines echten Live-Builds. Das Paket ersetzt keine Kartendaten.
+
+WORKING COPY COMMIT-ZUSAMMENFASSUNG
+V90 – Nur Premium-Kopfbereich · Main-Design erhalten
+
+WORKING COPY DETAILS
+Nur Startseiten-Kopf: dreizeiliger Leitsatz DE/EN/DA, sanfte Landschaft, einheitlicher Tilla-Bereich, weißes Play-Icon und weiße CTA-Schrift. Leaflet-Karte, Hauptnavigation, Spots, Daten, App-Logik und Darkmode unverändert. Offline-Cache aktualisiert. Vor Freigabe auf separatem Testbranch prüfen.
+
+SOURCE BRANCH
+Lokaler, aus dem aktuellsten main erstellter Testbranch (nicht den vorhandenen V89-Testbranch blind überschreiben)
+
+VORSCHLAG REMOTE-REFERENZ
+refs/heads/test/main-header-v90
+
+FORCE PUSH
+AUS

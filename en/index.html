@@ -16,7 +16,7 @@
   <meta name="format-detection" content="telephone=no" />
   <meta name="robots" content="index,follow" />
   <meta name="color-scheme" content="light" />
-  <meta name="theme-color" content="#f6f5ef" />
+  <meta name="theme-color" content="#f7e1d0" />
 
   <!-- ======================================================
        EARLY THEME INIT
@@ -36,7 +36,7 @@
       document.documentElement.setAttribute("data-theme", theme);
       document.documentElement.style.colorScheme = "light";
       document.querySelector('meta[name="color-scheme"]').content = "light";
-      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#48503d" : "#f6f5ef";
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#48503d" : "#f7e1d0";
       // iOS add-to-Home-Screen fallback for Safari versions with unreliable display-mode media queries.
       if (navigator.standalone === true) document.documentElement.classList.add("fsm-ios-standalone");
     })();
@@ -51,7 +51,7 @@
     body {
       margin: 0;
       min-height: 100%;
-      background: #f6f5ef;
+      background: #f7e1d0;
       color: #111827;
     }
 
@@ -264,8 +264,8 @@
   <link rel="stylesheet" href="css/fsm-design-system-83.css?v=20261102-fsm-refinement-v83-1" />
   <link rel="stylesheet" href="css/fsm-home-navigation-84.css?v=20261102-fsm-v87-restore-v85-1" />
   <link rel="stylesheet" href="css/community-play.css?v=20261102-community-v85" />
-  <link rel="stylesheet" href="css/fsm-pastel-v89.css?v=20261103-pastel-v89-pilot-1" />
 <script>document.documentElement.classList.add("fsm-polished");</script>
+  <link rel="stylesheet" href="css/main-header-v90.css?v=20261103-main-header-v90-1" />
 </head>
 
 <body>
@@ -361,7 +361,11 @@
         <p
           class="header-tagline"
           id="header-tagline"
-        >Today is a good day to turn the everyday into a little family adventure.</p>
+        >
+          Discover places.
+          Connect people.
+          Create memories.
+        </p>
       </div>
     </header>
 
