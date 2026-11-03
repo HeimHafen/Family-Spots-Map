@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261103-pastel-v89-1-mobile-nav-hotfix";
+const CACHE_VERSION = "20261103-pastel-v89-2-unified-home";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -185,9 +185,9 @@ const RELEASE_HASHES = {
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "data/i18n/da.json": "ea352b0d313a958ccd04905575575bf8a712e7242cc64852baef0594db2725ae",
-  "data/i18n/de.json": "ed6a56c1cd80c3608924e2bbddbc77ead73b01cb92b0e462a213f3e77c1d8fe5",
-  "data/i18n/en.json": "cc4d5111cfd35ecdc9598447de714fe6761a7986407759907e6c2f815c3421e0",
+  "data/i18n/da.json": "f027f3f7980e00824cda46b0c915087522fd6c19ab7cd621e4870393389ba305",
+  "data/i18n/de.json": "cb915fb6dcc64e45d93eac9ff323b90a13685ea1cb5fcc88d75a75c49de8d2aa",
+  "data/i18n/en.json": "99dcbeaa9dbd3e18df3ab35664e64f4dcedfe1eab9ed22ba3fc5fc6cf3bfba26",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
   "js/config.js": "5d7ebbc76980756b7a096609229ae368739eecda70b82e87cd5472957df8c06c",
@@ -235,7 +235,7 @@ const RELEASE_HASHES = {
   "js/ui/filter-results.js": "c93fa5155dce5dff2d42f73fdb6ba3c6012136549ecd355884ca1d252dddafae",
   "css/interface.css": "c4a6ea58ef8af12716c71af48b1a746351456268cd2d2731aab543214e52a8fa",
   "css/fsm-ui-finish-71.css": "0af65a5df778b74eb503045dca5765d180a18f80649f5680c29fc2b7a75f922e",
-  "css/fsm-home-navigation-84.css": "3916cecf58f53593d0b94b24c2a504b86302edbdbfd551c4cded340bf73b91e7"
+  "css/fsm-home-navigation-84.css": "3916cecf58f53593d0b94b24c2a504b86302edbdbfd551c4cded340bf73b91e7",
 };
 async function validateMapPresentation(response, url) {
   const relative = new URL(url, ROOT).pathname.slice(ROOT.pathname.length);

@@ -333,7 +333,7 @@ html.fsm-polished.fsm-home-nav-ready #fsm-home-nav > .fsm-home-nav__item {
   padding: 7px 1px 6px !important;
   gap: 3px !important;
   border-radius: 15px !important;
-  font-size: clamp(9.6px, 2.7vw, 11px) !important;
+  font-size: clamp(9px, 2.55vw, 11px) !important;
   font-weight: 650 !important;
   line-height: 1.13 !important;
   letter-spacing: -.025em !important;
@@ -450,7 +450,7 @@ html.fsm-polished body:has(#app-menu:not([hidden])) > #fsm-home-nav {
     gap: 1px !important;
   }
   html.fsm-polished.fsm-home-nav-ready #fsm-home-nav > .fsm-home-nav__item {
-    font-size: 9.6px !important;
+    font-size: 9px !important;
     min-height: 72px !important;
   }
   html.fsm-polished[data-theme="light"] #tilla-section .tilla-sidebar-card {
@@ -460,4 +460,416 @@ html.fsm-polished body:has(#app-menu:not([hidden])) > #fsm-home-nav {
 }
 @media (prefers-reduced-motion: reduce) {
   html.fsm-polished #fsm-home-nav * { transition: none !important; }
+}
+
+
+/* =======================================================================
+   FAMILY SPOTS MAP — V89.2 / FAMILY-FIRST HOME, 2026-11-03
+   Scoped to the existing live components. No new map, duplicate controls,
+   event listeners, fabricated spots, or changes to diary data.
+   The community/meetup preview remains reachable from the existing menu.
+   ======================================================================= */
+
+/* Shared premium panel / the header and original Tilla card read as one hero. */
+@media (max-width: 899px) {
+  html.fsm-polished[data-theme="light"] .app {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: #f7f6ee !important;
+  }
+  html.fsm-polished[data-theme="light"] .app-header {
+    box-sizing: border-box !important;
+    width: calc(100% - 20px) !important;
+    margin: 10px 10px 0 !important;
+    padding: 9px 10px 0 !important;
+    border: 0 !important;
+    border-radius: 24px 24px 0 0 !important;
+    background: linear-gradient(180deg, #fffaf0, #fff6e4) !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    z-index: 2;
+  }
+  html.fsm-polished[data-theme="light"] .app-header-top {
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  html.fsm-polished[data-theme="light"] .app-header-main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  html.fsm-polished[data-theme="light"] #app-title.header-title {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    gap: 5px !important;
+    margin: 0 !important;
+    font-family: inherit !important;
+    font-size: clamp(19px, 5.3vw, 26px) !important;
+    font-weight: 800 !important;
+    letter-spacing: -.035em !important;
+    line-height: 1.19 !important;
+    white-space: nowrap !important;
+    color: #354a25 !important;
+  }
+  html.fsm-polished[data-theme="light"] #app-title .header-flag,
+  html.fsm-polished[data-theme="light"] #app-title .header-flag img {
+    width: clamp(18px, 5vw, 24px) !important;
+    height: clamp(18px, 5vw, 24px) !important;
+    border-radius: 100% !important;
+    flex: 0 0 auto !important;
+  }
+  html.fsm-polished[data-theme="light"] #header-tagline {
+    display: block !important;
+    width: 100% !important;
+    max-width: 430px !important;
+    min-height: 0 !important;
+    margin: 6px auto 0 !important;
+    padding: 0 !important;
+    color: #40582d !important;
+    font-size: clamp(13px, 3.65vw, 16px) !important;
+    font-style: italic !important;
+    font-weight: 650 !important;
+    line-height: 1.29 !important;
+    letter-spacing: -.017em !important;
+    white-space: pre-line !important;
+    text-align: center !important;
+    text-wrap: balance;
+  }
+  html.fsm-polished[data-theme="light"] #header-tagline::after {
+    content: "";
+    display: block;
+    width: min(150px, 46vw);
+    height: 22px;
+    margin: 3px auto 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 24' fill='none' stroke='%235a7e39' stroke-width='1.85' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12 Q29 7 56 12M94 12 Q121 7 145 12M75 21 C67 14 63 10 64 6 C65 1 71 1 75 7 C79 1 85 1 86 6 C87 10 83 14 75 21Z'/%3E%3C/svg%3E") center / contain no-repeat;
+    pointer-events: none;
+  }
+  /* The original user-approved landscape remains a real independent asset. */
+  html.fsm-polished[data-theme="light"] .app-header-main::after {
+    display: block !important;
+    content: "" !important;
+    width: calc(100% + 20px) !important;
+    height: clamp(52px, 15vw, 72px) !important;
+    margin: -1px -10px 0 !important;
+    background: url("../assets/design/pastel-landscape-v89.webp") center bottom / cover no-repeat !important;
+    pointer-events: none;
+  }
+  /* The older vision script may insert another landscape: never stack both. */
+  html.fsm-polished[data-theme="light"] .app-header > .fsm-v89-landscape {
+    display: none !important;
+  }
+  html.fsm-polished[data-theme="light"] #main-content.app-main {
+    box-sizing: border-box !important;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+    padding: 0 0 0 !important;
+    gap: 0 !important;
+    min-height: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    background: #f7f6ee !important;
+  }
+  html.fsm-polished[data-theme="light"] #view-map.view--active {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+    gap: 0 !important;
+    row-gap: 0 !important;
+    margin: 0 !important;
+  }
+  html.fsm-polished[data-theme="light"] #view-map > #sidebar {
+    box-sizing: border-box !important;
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 10px !important;
+    background: transparent !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section.sidebar-section {
+    box-sizing: border-box !important;
+    display: grid !important;
+    grid-template-columns: minmax(74px, 25%) minmax(0, 1fr) !important;
+    column-gap: 9px !important;
+    row-gap: 2px !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: -1px 0 0 !important;
+    padding: 6px 13px 11px !important;
+    border: 0 !important;
+    border-radius: 0 0 23px 23px !important;
+    background: linear-gradient(180deg, #fff6e4 0%, #fff6e7 68%, #fff8e9 100%) !important;
+    box-shadow: 0 4px 13px rgba(68, 77, 39, .105) !important;
+    overflow: hidden !important;
+    color: #35452c !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section > .sidebar-section-header {
+    display: flex !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    min-height: 30px !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-title {
+    font-size: clamp(12.5px, 3.72vw, 16px) !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -.023em !important;
+    color: #344a27 !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section #menu-toggle {
+    flex: 0 0 35px !important;
+    display: grid !important;
+    place-items: center !important;
+    width: 35px !important;
+    height: 35px !important;
+    min-width: 35px !important;
+    min-height: 35px !important;
+    margin: 0 -4px 0 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: #36502d !important;
+  }
+  /* Make the existing semantic heading/avatar/text act as ONE integrated card. */
+  html.fsm-polished[data-theme="light"] #tilla-section .tilla-sidebar-card {
+    display: contents !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section .tilla-sidebar-avatar {
+    position: relative !important;
+    display: block !important;
+    grid-column: 1 !important;
+    grid-row: 1 / span 2 !important;
+    align-self: center !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    animation: none !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section .tilla-watercolor-canvas {
+    width: 125% !important;
+    max-width: none !important;
+    margin: 0 0 0 -12.5% !important;
+    transform: none !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section .tilla-sidebar-text {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    gap: 7px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-sidebar-text {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    font-size: clamp(12px, 3.4vw, 14.5px) !important;
+    font-weight: 500 !important;
+    line-height: 1.39 !important;
+    letter-spacing: -.017em !important;
+    color: #384632 !important;
+    overflow-wrap: break-word !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section .tilla-sidebar-actions {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section #btn-play-idea {
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    height: auto !important;
+    padding: 9px 8px !important;
+    border: 1px solid #dd690b !important;
+    border-radius: 15px !important;
+    background: linear-gradient(180deg, #f58d20 0%, #ed7006 100%) !important;
+    box-shadow: 0 3px 7px rgba(151, 83, 18, .2) !important;
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    font-size: clamp(11.5px, 3.0vw, 14px) !important;
+    line-height: 1.22 !important;
+    font-weight: 800 !important;
+    text-shadow: none !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section #btn-play-idea > span {
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    font-weight: 800 !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section .tilla-play-emoji {
+    display: none !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-section #btn-play-idea::before {
+    content: "" !important;
+    display: block !important;
+    flex: 0 0 13px !important;
+    width: 13px !important;
+    height: 15px !important;
+    background: #fff;
+    -webkit-clip-path: polygon(4% 0, 100% 50%, 4% 100%);
+    clip-path: polygon(4% 0, 100% 50%, 4% 100%);
+    color: #fff !important;
+  }
+  /* The original map fills the viewport and continues BEHIND the fixed nav. */
+  html.fsm-polished[data-theme="light"] #view-map > .map-section {
+    box-sizing: border-box !important;
+    position: relative !important;
+    display: block !important;
+    flex: 1 1 auto !important;
+    width: calc(100% - 20px) !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: max(310px, 42svh) !important;
+    height: auto !important;
+    margin: 8px 10px 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: 0 !important;
+    border-radius: 23px 23px 0 0 !important;
+    box-shadow: none !important;
+    background: #e7eeda !important;
+  }
+  html.fsm-polished[data-theme="light"] #view-map > .map-section > #map {
+    box-sizing: border-box !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 23px 23px 0 0 !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Five genuine navigation buttons, no duplicate or changes to click logic.
+   'Treffen & Spielen' stays available through the original application menu. */
+html.fsm-polished #fsm-home-nav > .fsm-home-nav__item[data-fsm-home-action="community"] {
+  display: none !important;
+}
+html.fsm-polished.fsm-home-nav-ready #fsm-home-nav.fsm-home-nav {
+  box-sizing: border-box !important;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  flex-flow: initial !important;
+  gap: 2px !important;
+  max-width: min(620px, calc(100vw - 20px)) !important;
+  padding: 4px !important;
+  border-radius: 21px !important;
+}
+html.fsm-polished.fsm-home-nav-ready #fsm-home-nav > .fsm-home-nav__item:not([hidden]) {
+  box-sizing: border-box !important;
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 65px !important;
+  height: auto !important;
+  padding: 6px 1px !important;
+  gap: 3px !important;
+  border-radius: 17px !important;
+  font-size: clamp(10px, 2.65vw, 12px) !important;
+  line-height: 1.14 !important;
+  text-align: center !important;
+  font-weight: 750 !important;
+}
+html.fsm-polished.fsm-home-nav-ready #fsm-home-nav > .fsm-home-nav__item > svg {
+  width: 23px !important;
+  height: 23px !important;
+  flex: 0 0 23px !important;
+}
+html.fsm-polished[data-theme="light"] #fsm-home-nav.fsm-home-nav {
+  --fsm-nav-bg: #fffaf0;
+  --fsm-nav-text: #344727;
+  --fsm-nav-line: #e1e4d5;
+  --fsm-nav-active: #567632;
+  --fsm-nav-active-ink: #fffdf8;
+  border-color: #e1e4d5 !important;
+  background: rgba(255, 251, 244, .97) !important;
+  box-shadow: 0 5px 17px rgba(45, 58, 37, .16) !important;
+}
+html.fsm-polished[data-theme="light"] #fsm-home-nav .fsm-home-nav__item[aria-current="page"] {
+  background: #567632 !important;
+  color: #fffdf6 !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 0 0 1px #ffffff24 !important;
+}
+html.fsm-polished[data-theme="light"] #fsm-home-nav .fsm-home-nav__item[data-fsm-home-action="plus"] > svg {
+  color: #d99a14 !important;
+}
+@media (max-width: 899px) {
+  html.fsm-polished.fsm-home-nav-ready body > #fsm-home-nav.fsm-home-nav {
+    position: fixed !important;
+    bottom: max(12px, env(safe-area-inset-bottom, 0px)) !important;
+    left: max(10px, env(safe-area-inset-left, 0px)) !important;
+    right: max(10px, env(safe-area-inset-right, 0px)) !important;
+    width: auto !important;
+    margin-inline: auto !important;
+    z-index: 950 !important;
+  }
+}
+/* Retain the original top-layer sheet navigation and its dialog behavior. */
+html.fsm-polished.fsm-home-sheet-open #fsm-home-sheet[open] > #fsm-home-nav.fsm-home-nav {
+  display: grid !important;
+  grid-template-columns: repeat(5,minmax(0,1fr)) !important;
+}
+@media (max-width: 359px) {
+  html.fsm-polished[data-theme="light"] #tilla-section.sidebar-section {
+    grid-template-columns: minmax(62px, 23%) minmax(0, 1fr) !important;
+    column-gap: 6px !important;
+    padding-inline: 8px !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-title {
+    font-size: 12px !important;
+  }
+  html.fsm-polished[data-theme="light"] #tilla-sidebar-text {
+    font-size: 11.7px !important;
+  }
+  html.fsm-polished.fsm-home-nav-ready #fsm-home-nav > .fsm-home-nav__item:not([hidden]) {
+    min-height: 63px !important;
+    font-size: 9.6px !important;
+  }
+}
+@media (min-width: 900px) {
+  /* Wider layouts retain their established desktop grid and map ergonomics. */
+  html.fsm-polished.fsm-home-nav-ready #fsm-home-nav.fsm-home-nav {max-width: 620px !important;}
+}
+@media (forced-colors: active) {
+  html.fsm-polished[data-theme="light"] #tilla-section #btn-play-idea {
+    border: 2px solid ButtonText !important;
+  }
+}
+
+/* Keep the original modal, fullscreen and About visibility rules intact. */
+html.fsm-polished.fsm-home-nav-ready.fsm-map-fullscreen-open #fsm-home-nav.fsm-home-nav,
+html.fsm-polished.fsm-home-nav-ready body[data-app-view="about"] > #fsm-home-nav.fsm-home-nav,
+html.fsm-polished.fsm-home-nav-ready body[data-filter-modal-open="1"] > #fsm-home-nav.fsm-home-nav,
+html.fsm-polished.fsm-home-nav-ready body:has(#app-menu:not([hidden])) > #fsm-home-nav.fsm-home-nav {
+  display: none !important;
 }
