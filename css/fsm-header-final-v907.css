@@ -1,0 +1,151 @@
+/* Family Spots Map V90.7 — finale mobile Kopfbereich-Abstimmung
+   Grundlage: V90.6 (main 30 + V90 bis V90.6), Referenz 03.11.2026.
+   Ersetzt beim Laden V90.6, ist KEINE weitere CSS-Schicht ueber V90.6.
+   Nur helle Kartenansicht bis 899px. Originale Tilla, Karte, Navigation,
+   Routen, Spotdaten, Erinnerungen, Uebersetzungen und Darkmode unveraendert.
+*/
+@media (max-width: 899px) {
+  /* Ruhiger cremefarbener Kopf, beide Flaggen bleiben beim Titel. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header {
+    padding-top: 8px !important;
+    background: #fff6e9 !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #app-title.header-title {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-weight: 750 !important;
+    font-size: clamp(20px, 5.95vw, 25px) !important;
+    line-height: 1.20 !important;
+    letter-spacing: -0.50px !important;
+    gap: clamp(5px, 1.6vw, 9px) !important;
+    color: #493527 !important;
+    margin: 0 !important;
+  }
+  /* Exakte drei Zeilen; kein Herz und keine dekorativen Linien. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #header-tagline {
+    display: block !important;
+    position: relative !important;
+    z-index: 2 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 10px auto 0 !important;
+    padding: 0 3px !important;
+    color: #493527 !important;
+    font-size: clamp(12.5px, 3.55vw, 14.2px) !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    line-height: 1.27 !important;
+    text-align: center !important;
+    white-space: pre-line !important;
+    text-shadow: none !important;
+  }
+  /* Die vorhandene V90.3-Landschaft ist eine eigene Bilddatei ohne Herz;
+     kein Screenshot-Hintergrund, keine unsichtbare harte Ueberlappung. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header-main::after {
+    position: relative !important;
+    z-index: 1 !important;
+    height: clamp(77px, 21.6vw, 93px) !important;
+    margin-top: -2px !important;
+    background-image: url("../assets/design/main-header-landscape-v903.webp") !important;
+    background-position: center bottom !important;
+    background-size: 100% 100% !important;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0px, rgba(0,0,0,.60) 10px, #000 24px) !important;
+    mask-image: linear-gradient(to bottom, transparent 0px, rgba(0,0,0,.60) 10px, #000 24px) !important;
+    filter: saturate(1.28) contrast(1.065) !important;
+  }
+  /* Die Karten- und Navigationsmodule werden bewusst nicht angefasst. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section {
+    background: #fff6e9 !important;
+    padding-top: 4px !important;
+    padding-bottom: 8px !important;
+    row-gap: 1px !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section > .sidebar-section-header {
+    min-height: 29px !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-title {
+    color: #493527 !important;
+    font-weight: 750 !important;
+    line-height: 1.23 !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-sidebar-text {
+    color: #46372c !important;
+    font-weight: 400 !important;
+    line-height: 1.32 !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-actions {
+    margin-top: 2px !important;
+  }
+  /* Exakt 48 CSS-Pixel, mit echtem sichtbarem Play-Pfeil.
+     Alte :before-Touch-Overlays aus frueheren Styles werden neutralisiert. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    min-height: 48px !important;
+    height: 48px !important;
+    max-height: 48px !important;
+    box-sizing: border-box !important;
+    gap: 9px !important;
+    padding: 8px 10px !important;
+    border: 0 !important;
+    border-radius: 24px !important;
+    background: linear-gradient(180deg, #ff8515 0%, #f36d08 100%) !important;
+    box-shadow: 0 3px 8px rgba(114, 65, 22, .14) !important;
+    color: #fff !important;
+    font-size: clamp(11.5px, 3.25vw, 14px) !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    text-shadow: none !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea::before {
+    content: "" !important;
+    position: static !important;
+    display: block !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    flex: 0 0 auto !important;
+    inset: auto !important;
+    border: 0 !important;
+    border-left: 13px solid #fff !important;
+    border-top: 8px solid transparent !important;
+    border-bottom: 8px solid transparent !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    pointer-events: none !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea .tilla-play-emoji {
+    display: none !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea > span:not(.tilla-play-emoji) {
+    color: #fff !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea:focus-visible {
+    outline: 3px solid #507947 !important;
+    outline-offset: 2px !important;
+  }
+}
+@media (max-width: 359px) {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #app-title.header-title {
+    font-size: 19px !important;
+    gap: 4px !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea {
+    font-size: 11px !important;
+    gap: 5px !important;
+    padding-inline: 4px !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea.btn-play-idea::before {
+    border-left-width: 10px !important;
+    border-top-width: 6px !important;
+    border-bottom-width: 6px !important;
+  }
+}

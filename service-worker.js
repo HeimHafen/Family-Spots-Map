@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261103-v906-reference-2";
+const CACHE_VERSION = "20261103-v907-final-1";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -62,7 +62,7 @@ const ASSETS = [
   "css/fsm-premium-polish-v902.css",
   "css/fsm-header-noheart-v903.css",
   "css/fsm-header-target-v905.css",
-  "css/fsm-header-reference-v906.css",
+  "css/fsm-header-final-v907.css",
   "assets/design/main-header-landscape-v90.webp",
   "assets/design/main-header-landscape-v903.webp",
   "assets/design/main-header-leaves-v90.webp",
@@ -179,10 +179,10 @@ async function validateImage(response, url) {
   if (view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== size || view.getUint32(20) !== size) throw new Error(`Invalid app icon dimensions: ${relative}`);
 }
 const RELEASE_HASHES = {
-  "index.html": "3c8abd2c9105ee68e0b8f8972c291d445a58ad33848ab042188c9898bb9ed040",
-  "en/index.html": "cc2667885a1b91fd24c901d971a52e7c2824a07ef333d0c7c98764f0f07657be",
-  "da/index.html": "d884f2519460848701802cb3395a03b038c27ae8c299950f314835f769ff990c",
-  "css/fsm-header-reference-v906.css": "4bd2b802d488a8f6d27cfa5bd0783f74b6243b44db9c0d25754ca6f73cac1ef5",
+  "css/fsm-header-final-v907.css": "ee7fba0132185a3d253ef308bd132e0a48afb3c4350599409aeed70d4a70085f",
+  "index.html": "e2d0e8bf92f11913060ae0f232b645eacf915b173ac477a3e6d90479509dc2a6",
+  "en/index.html": "03617feaac90f27b9886d28367a1fff28019180edb9d487ad5553deeef54684c",
+  "da/index.html": "c12268e812c1cf88366e2f0200e549d7e41841eb6c00de7b50b4e3a2cb89933e",
   "css/fsm-header-target-v905.css": "48d292c5690da3349ec2e0bf323dcd943b68e3a1dea91402a08a5cbf599e6187",
   "assets/design/main-header-landscape-v903.webp": "2a8577e7b19b63293e522ae99cf5fc8f4f36e48b826721d9b6af2a1ad314e67d",
   "css/fsm-header-noheart-v903.css": "7793b3042b953b17c9620208d8e22a1e547819410b5a04754b86610703e3b21a",
