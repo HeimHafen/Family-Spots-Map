@@ -1,0 +1,37 @@
+FAMILY SPOTS MAP – V90.17 TESTBRANCH (NICHT LIVE-FREIGEGEBEN)
+=========================================================
+Quelle: Family-Spots-Map-main 31.zip
+Ziel-Branch: refs/heads/test/main31-layout-v917
+Source-Branch: main / Ursprungsbranch unveraendert lassen
+Force Push: AUS
+
+VOR DEM AUSTAUSCH:
+- Die Originalversion in Working Copy sichern.
+- Einen NEUEN Branch auf dem Stand von Family-Spots-Map-main 31 anlegen:
+  test/main31-layout-v917
+- Ausschliesslich die Dateien aus diesem ZIP mit genau ihren Pfaden austauschen.
+- Nichts in main committen oder pushen.
+
+Danach in Working Copy:
+Zusammenfassung:
+V90.17 TEST – Main31 Premium-Proportionen, gesonderter Preview-Branch
+
+Detaillierte Informationen:
+21 gezielte Aenderungen; unveraenderte Spotdaten und Kartenlogik. Premium-Kopfbereich mit
+Tilla-Layout als isolierter Test, DE/EN/DA-Leitsatz, Originalfarben, 5er-Navigation,
+versionierter Cache. Projektpruefung bestanden, iPhone-Safari-Livetest steht aus.
+
+Vorhandene oder neue Remote-Referenz:
+refs/heads/test/main31-layout-v917
+
+Cloudflare Pages erzeugt bei einem neuen Nicht-Production-Branch je nach
+Projektkonfiguration einen Preview-Deploy. In Cloudflare unter "All deployments"
+auf den Eintrag mit Branch test/main31-layout-v917 achten.
+Erst nach Status SUCCESS Preview-URL oeffnen. Die Production-Domain
+familyspotsmapv88test.pages.dev prueft einen ANDEREN Branch und ist kein Nachweis.
+
+PRUEFERGEBNIS:
+node tools/check-project.mjs: 0 Fehler; 164 Spots, 234 i18n Keys/Sprache,
+126 Offline-Dateipfade, SHA256-Pruefung durchgelaufen.
+Lokaler echter App-Start/Safari wurde durch Netzwerk-Richtlinie blockiert.
+Das Paket ist daher AUSSCHLIESSLICH zur Preview-Pruefung, nicht zum Live-Rollout.

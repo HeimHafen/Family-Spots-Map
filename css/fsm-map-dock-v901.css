@@ -11,7 +11,7 @@
 }
 
 @media (max-width: 899px) {
-  html.fsm-home-nav-ready #fsm-home-nav.fsm-home-nav {
+  html[data-theme="light"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav {
     box-sizing: border-box !important;
     position: fixed !important;
     z-index: 950 !important;
@@ -31,7 +31,7 @@
     border: 1px solid rgba(141, 126, 103, .20) !important;
     box-shadow: 0 4px 14px rgba(65, 53, 35, .15) !important;
   }
-  html.fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item {
+  html[data-theme="light"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item {
     box-sizing: border-box !important;
     min-width: 0 !important;
     min-height: 58px !important;
@@ -42,37 +42,37 @@
     line-height: 1.1 !important;
     white-space: normal !important;
   }
-  html.fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item > svg {
+  html[data-theme="light"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item > svg {
     width: 21px !important;
     height: 21px !important;
     flex-shrink: 0 !important;
   }
-  html.fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item[aria-current="page"] {
+  html[data-theme="light"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item[aria-current="page"] {
     background: #78934f !important;
     color: #fffaf2 !important;
   }
-  html.fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item[data-fsm-home-action="community"] {
+  html[data-theme="light"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item[data-fsm-home-action="community"] {
     display: none !important;
   }
 
   /* Map extends behind the fixed bar, rather than stopping above it.
      Only on the map screen; filters, spots, diary, fullscreen and dialogs
      retain their existing handlers and visibility controls. */
-  html.fsm-polished body[data-app-view="map"] #view-map.view--active > .map-section {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active > .map-section {
     position: relative !important;
     min-height: max(440px, 100svh) !important;
     margin-bottom: 0 !important;
     border-radius: 20px 20px 0 0 !important;
     overflow: hidden !important;
   }
-  html.fsm-polished body[data-app-view="map"] #view-map.view--active > .map-section > #map.map-container {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active > .map-section > #map.map-container {
     min-height: max(440px, 100svh) !important;
     height: max(440px, 100svh) !important;
   }
-  html.fsm-polished body[data-app-view="map"] #main-content.app-main {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #main-content.app-main {
     padding-bottom: 0 !important;
   }
-  html.fsm-polished body[data-app-view="map"] #view-map.view--active {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active {
     padding-bottom: 0 !important;
   }
 }
@@ -80,10 +80,10 @@
 /* The reference uses a fine outline location pin for "Spots". Replacing the
    visual only; its original button, aria-label and click handler stay intact. */
 @media (max-width: 899px) {
-  #fsm-home-nav > .fsm-home-nav__item[data-fsm-home-action="spots"] > svg {
+  html[data-theme="light"] #fsm-home-nav > .fsm-home-nav__item[data-fsm-home-action="spots"] > svg {
     display: none !important;
   }
-  #fsm-home-nav > .fsm-home-nav__item[data-fsm-home-action="spots"]::before {
+  html[data-theme="light"] #fsm-home-nav > .fsm-home-nav__item[data-fsm-home-action="spots"]::before {
     content: "";
     display: block;
     flex: 0 0 21px;
@@ -105,28 +105,14 @@ body:has(#app-menu:not([hidden])) #fsm-home-nav {
   display: none !important;
 }
 
-/* Darkmode uses the ORIGINAL palette and interaction states; only its width and
-   vertical dimensions are shared with the updated navigation. */
-@media (max-width: 899px) {
-  html[data-theme="dark"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav {
-    background: #303b33 !important;
-    border-color: #71806e !important;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, .32) !important;
-  }
-  html[data-theme="dark"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item[aria-current="page"] {
-    background: #b8d2a1 !important;
-    color: #2c372b !important;
-  }
-}
-
 @media (max-width: 359px) {
-  html.fsm-home-nav-ready #fsm-home-nav.fsm-home-nav {
+  html[data-theme="light"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav {
     left: 6px !important;
     right: 6px !important;
     padding: 3px !important;
     gap: 0 !important;
   }
-  html.fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item {
+  html[data-theme="light"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item {
     font-size: 10px !important;
     min-height: 58px !important;
   }
