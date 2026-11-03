@@ -1,0 +1,45 @@
+FAMILY SPOTS MAP – V90.12 · ORIGINALFARBEN VERBINDLICH
+====================================================
+AUSGANGSBASIS: V90.11. Bitte NICHT in eine aeltere V90-Version mischen.
+
+FARBREFERENZ AUS DEINER MAIN-VERSION
+  Olivgruen / aktive Karte-Navigation: #78934F
+  Herzgruen / Mein Tag:              #7FA825
+  Hellgruen / Karten-Cluster:        #8FBF5A
+  Marker-Verlauf: #A8CE77 -> #78AB46 -> #598530
+  Orange / Spielideen-Button:        #F58B20
+
+WAS V90.12 MACHT
+- Speichert diese vier Referenzfarben als CSS-Palette fuer den hellen mobilen Kartenstart.
+- Sicherung der bereits vorhandenen Originalfarben in Karte, Herz und Cluster.
+- Der Spielideen-Button bleibt im Originalorange #F58B20.
+- KEINE Text- oder Symbolfarben geaendert. Falls deine aktuelle Version
+  schwarzen Text/Play-Pfeil nutzt, wird er NICHT ueberschrieben.
+- KEINE Aenderungen an Layout, Abstaenden, Tilla, Landschaft, Navigation,
+  JavaScript-Funktionen, Daten, Darkmode und Karten-Geografie.
+
+INSTALLATION – WORKING COPY
+1. Backup/Commit von deinem V90.11-Teststand erstellen.
+2. Einen NEUEN Testbranch von V90.11 erstellen.
+3. Die 5 Projektdateien in genau den vorhandenen Pfaden ersetzen.
+4. Den Diff pruefen: 1 CSS-Datei, 3 HTML-CSS-Versionen, 1 Service Worker.
+5. Commit anlegen, Push auf Testbranch; Force Push AUS.
+6. Cloudflare Preview auf dem iPhone kontrollieren. main bleibt unveraendert.
+
+ZUSAMMENFASSUNG
+V90.12 – Originale Gruen- und Orangentoene festgeschrieben
+
+DETAILLIERTE INFORMATIONEN
+Originale Main-Farbwelt fest als Designreferenz fuer den hellen Startbildschirm
+hinterlegt: Olivgruen #78934F, Herzgruen #7FA825, Clustergruen #8FBF5A,
+Marker-Verlauf #A8CE77/#78AB46/#598530 und Spielideen-Orange #F58B20.
+Bestehende Darstellungen, Geometrie und Logik unveraendert.
+CSS-Cacheversion und vier Datei-Pruefsummen aktualisiert.
+
+VORHANDENE ODER NEUE REMOTE-REFERENZ
+refs/heads/test/main-premium-v912
+Source-Branch: V90.11 unveraendert; Force Push: AUS.
+
+ACHTUNG
+Bildvorlagen sind keine echten Screenshots des Browser-Layouts. In Safari
+muss die Darstellung kontrolliert werden, bevor in main uebernommen wird.

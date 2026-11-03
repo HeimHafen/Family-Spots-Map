@@ -120,7 +120,7 @@
     z-index: 0 !important;
     border-radius: 999px !important;
     border: 0 !important;
-    background: linear-gradient(180deg, #ff8515 0%, #f36d08 100%) !important;
+    background: var(--fsm-palette-orange, #f58b20) !important;
     box-shadow: 0 3px 8px rgba(114, 65, 22, .14) !important;
     pointer-events: none !important;
   }
@@ -185,7 +185,7 @@
     z-index: 0 !important;
     border-radius: 999px !important;
     border: 0 !important;
-    background: linear-gradient(180deg, #ff8515 0%, #f36d08 100%) !important;
+    background: var(--fsm-palette-orange, #f58b20) !important;
     box-shadow: 0 3px 8px rgba(114, 65, 22, .14) !important;
     pointer-events: none !important;
   }
@@ -193,5 +193,35 @@
     border-left-width: 10px !important;
     border-top-width: 6px !important;
     border-bottom-width: 6px !important;
+  }
+}
+
+
+/* V90.12 – Referenzfarben aus der originalen Main-Version.
+ * Nur Farbwerte; keine Geometrie, Abstaende, Typografie oder Funktionen.
+ * Auf den hellen Mobil-Kartenstart beschraenkt; Darkmode unveraendert.
+ * HEX: Oliv #78934F, Herz #7FA825, Cluster #8FBF5A, Orange #F58B20. */
+@media (max-width: 899px) {
+  html.fsm-polished[data-theme="light"] {
+    --fsm-palette-olive: #78934f;
+    --fsm-palette-heart: #7fa825;
+    --fsm-palette-cluster: #8fbf5a;
+    --fsm-palette-orange: #f58b20;
+  }
+  /* Green selection is an intentional app identity; not a new shade. */
+  html.fsm-polished[data-theme="light"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav
+    > .fsm-home-nav__item[aria-current="page"] {
+    background: var(--fsm-palette-olive) !important;
+  }
+  html.fsm-polished[data-theme="light"] #fsm-home-nav .fsm-home-nav__item > .fsm-daylog-heart {
+    fill: var(--fsm-palette-heart) !important;
+  }
+  /* The cluster fill is unchanged; we simply keep its original reference value. */
+  html.fsm-polished[data-theme="light"] :is(.marker-cluster-small,.marker-cluster-medium,.marker-cluster-large) > div {
+    background-color: var(--fsm-palette-cluster) !important;
+  }
+  /* Original spot-pin gradient (lighter to darker). */
+  html.fsm-polished[data-theme="light"] .fsm-spot-pin__dot {
+    background: radial-gradient(circle at 30% 20%, #a8ce77 0, #78ab46 45%, #598530 100%) !important;
   }
 }
