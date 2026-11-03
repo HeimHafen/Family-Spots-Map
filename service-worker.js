@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261103-v88-2-calendar-header";
+const CACHE_VERSION = "20261103-v88-2-1-safari-redirect-fix";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -131,6 +131,19 @@ function cacheKey(value) {
   url.search = "";
   url.hash = "";
   return url.href;
+}
+// Cloudflare Pages canonicalizes /index.html to /.
+// Safari rejects redirected Response objects returned by a Service Worker,
+// including responses retrieved later from CacheStorage.
+// Rebuild only redirected, successful responses to remove redirect metadata.
+// Keep the status, headers and response stream unchanged.
+function withoutRedirectMetadata(response) {
+  if (!response || !response.redirected || !response.ok) return response;
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers
+  });
 }
 async function fetchFresh(request, timeout = 6000) {
   const controller = new AbortController();
@@ -266,7 +279,7 @@ self.addEventListener("install", event => {
           if (new URL(url).pathname.endsWith(".json")) await validateData(response, url);
           if (new URL(url).pathname.endsWith(".png")) await validateImage(response, url);
           await validateMapPresentation(response, url);
-          await cache.put(url, response);
+          await cache.put(url, withoutRedirectMetadata(response));
         }));
       }
     } catch (error) { await caches.delete(CACHE_NAME); throw error; }
@@ -299,11 +312,11 @@ self.addEventListener("fetch", event => {
       const cache = await caches.open(CACHE_NAME);
       if (isApp) {
         const shell = await cache.match(new URL(entry, ROOT).href);
-        if (shell) return shell;
+        if (shell) return withoutRedirectMetadata(shell);
       }
-      try { const response = await fetchFresh(request); if (response.ok) return response; }
+      try { const response = await fetchFresh(request); if (response.ok) return withoutRedirectMetadata(response); }
       catch { /* use offline page below */ }
-      return await cache.match(new URL("offline.html", ROOT).href) || new Response("Offline", {status:503});
+      return withoutRedirectMetadata(await cache.match(new URL("offline.html", ROOT).href)) || new Response("Offline", {status:503});
     })());
     return;
   }
@@ -318,13 +331,13 @@ self.addEventListener("fetch", event => {
           // Hashed release data must match the installed scripts and categories.
           // Dynamic, unhashed partner data can still refresh independently.
           await validateMapPresentation(response, key);
-          await cache.put(key, response.clone());
+          await cache.put(key, withoutRedirectMetadata(response.clone()));
           return response;
         }
         const cached = await cache.match(key);
-        return cached || response;
+        return withoutRedirectMetadata(cached) || withoutRedirectMetadata(response);
       } catch {
-        return await cache.match(key) || new Response(JSON.stringify({error:"offline_not_cached"}), {status:503,headers:{"Content-Type":"application/json"}});
+        return withoutRedirectMetadata(await cache.match(key)) || new Response(JSON.stringify({error:"offline_not_cached"}), {status:503,headers:{"Content-Type":"application/json"}});
       }
     })());
     return;
@@ -333,6 +346,6 @@ self.addEventListener("fetch", event => {
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
     // Scripts and styles remain consistent for the entire installed release.
-    return await cache.match(key) || fetch(request);
+    return withoutRedirectMetadata(await cache.match(key)) || fetch(request);
   })());
 });
