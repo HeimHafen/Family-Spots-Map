@@ -24,7 +24,8 @@ const PATHS = {
   pause: "M4 3v7q0 3 3 3t3-3V3M7 3v18M18 21V3q-4 3-3 10h3",
   travel: "M2 20 12 4l10 16ZM8 20l4-7 4 7",
   services: "M12 3v18M3 12h18",
-  events: "M4 5h16v16H4ZM8 2v6M16 2v6M4 10h16"
+  events: "M4 5h16v16H4ZM8 2v6M16 2v6M4 10h16",
+  community: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
 };
 export function createMapToolIcon(name) {
   if (name === "diary") return createHeartIcon("fsm-daylog-heart");

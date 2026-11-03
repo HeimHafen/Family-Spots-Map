@@ -1,4 +1,5 @@
-// V88 RC structural release guard; use in addition to check-project.mjs.
+// Release-compatible RC structural guard; use with check-project.mjs.
+// V89 preserves the independent private-calendar RC and all its assertions.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -18,7 +19,7 @@ check(js.includes('event.target')||js.includes('e.target'),'Interaction delegate
 check(css.includes('#fse-overlay'),'Scoped CSS');
 const sw=read('service-worker.js');
 const version = sw.match(/const CACHE_VERSION = "([^"]+)"/)?.[1];
-check(!!version && version.startsWith("20261103-v88"),"New cache version");
+check(!!version && /^20261103-v(?:88|89)-/.test(version),"New cache version");
 for(const p of ['index.html','en/index.html','da/index.html']){
  const html=read(p);
  check(html.includes(`css/gemeinsam-erleben-rc.css?v=${version}`),`${p}: RC CSS loaded`);
