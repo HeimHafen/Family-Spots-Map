@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261103-v88-1-finish-rc2");
+@import url("./categories.css?v=20261103-v88-2-calendar-header");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -24,7 +24,7 @@
 @import url("./evening.css?v=20261030-focus-fields-77");
 
 
-@import url("./map-spots.css?v=20261103-v88-1-finish-rc2");
+@import url("./map-spots.css?v=20261103-v88-2-calendar-header");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES

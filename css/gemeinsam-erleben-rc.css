@@ -99,3 +99,154 @@ html[data-theme="dark"] .fse-empty strong{color:#fff5e1}
 
 .fse-preview-badge{display:inline-block;margin-top:7px;border-radius:999px;padding:3px 8px;background:#edf1de;color:#617849;font-weight:850;font-size:.62rem;letter-spacing:.08em}
 html[data-theme="dark"] .fse-preview-badge{background:#60714c;color:#f0eadb}
+
+
+/* ===============================================================
+   FSM V88.2 · Gemeinsam erleben: ruhiger, vollflächiger Dialog
+   Mobile: kein durchscheinender Abstand zum Safari-Browser und
+   kein dekorativer Balken. Nur die Dialog-Oberfläche wird geändert.
+   =============================================================== */
+#fse-overlay .fse-shell::before {
+  content: none;
+  display: none;
+}
+#fse-overlay .fse-header {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  column-gap: 12px;
+  row-gap: 7px;
+  padding: 20px 22px 16px;
+  background: linear-gradient(165deg, #fcf0df 0%, #fffaf2 100%);
+  border-bottom: 1px solid #eee2d2;
+}
+#fse-overlay .fse-title-row,
+#fse-overlay .fse-header-heading {
+  display: contents;
+}
+#fse-overlay .fse-tilla {
+  grid-column: 1;
+  grid-row: 1;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  align-self: center;
+  filter: drop-shadow(0 2px 3px rgba(66, 58, 35, .12));
+}
+#fse-overlay .fse-eyebrow {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  align-self: center;
+  color: #708855;
+  font-size: .65rem;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: .105em;
+}
+#fse-overlay .fse-icon-btn {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-self: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #e5d9c8;
+  border-radius: 14px;
+  background: rgba(255, 253, 247, .92);
+  box-shadow: 0 2px 8px rgba(81, 62, 35, .04);
+  color: #6b5b49;
+  font-size: 1.42rem;
+  font-weight: 400;
+  line-height: 1;
+}
+#fse-overlay .fse-header h2 {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin: 3px 0 0;
+  color: #3b3026;
+  font: 600 clamp(1.7rem, 6.8vw, 2rem) / 1.1 Georgia, "Times New Roman", serif;
+  letter-spacing: -.03em;
+  overflow-wrap: normal;
+}
+#fse-overlay .fse-subtitle {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  margin: 0;
+  max-width: 48ch;
+  color: #75685a;
+  font-size: .83rem;
+  line-height: 1.43;
+}
+#fse-overlay .fse-preview-badge {
+  grid-column: 1 / -1;
+  grid-row: 4;
+  justify-self: start;
+  margin: 3px 0 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #edf1e2;
+  color: #657b4d;
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .075em;
+  line-height: 1.2;
+}
+html[data-theme="dark"] #fse-overlay .fse-header {
+  background: linear-gradient(165deg, #394332 0%, #31382e 100%);
+  border-bottom-color: #53604d;
+}
+html[data-theme="dark"] #fse-overlay .fse-header h2 { color: #fff5e1; }
+html[data-theme="dark"] #fse-overlay .fse-eyebrow { color: #b8c99b; }
+html[data-theme="dark"] #fse-overlay .fse-icon-btn {
+  background: #414d3d;
+  border-color: #64725a;
+  color: #f0e8d8;
+  box-shadow: none;
+}
+html[data-theme="dark"] #fse-overlay .fse-subtitle { color: #d6cfbf; }
+html[data-theme="dark"] #fse-overlay .fse-preview-badge {
+  background: #485b3f;
+  color: #e4efd5;
+}
+@media (max-width: 639px) {
+  #fse-overlay {
+    align-items: stretch;
+    padding: 0;
+    background: #fffaf2;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  #fse-overlay .fse-shell {
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  #fse-overlay .fse-header {
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 20px 15px;
+  }
+  #fse-overlay .fse-body { padding: 0 16px 24px; }
+  html[data-theme="dark"] #fse-overlay { background: #31382e; }
+}
+@media (max-width: 370px) {
+  #fse-overlay .fse-header {
+    grid-template-columns: 40px minmax(0, 1fr) 42px;
+    gap: 6px 9px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+  #fse-overlay .fse-tilla { width: 40px; height: 40px; }
+  #fse-overlay .fse-icon-btn { width: 42px; height: 42px; }
+  #fse-overlay .fse-eyebrow { font-size: .59rem; letter-spacing: .075em; }
+  #fse-overlay .fse-header h2 { font-size: 1.63rem; }
+  #fse-overlay .fse-subtitle { font-size: .8rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #fse-overlay .fse-shell { animation: none; }
+}
