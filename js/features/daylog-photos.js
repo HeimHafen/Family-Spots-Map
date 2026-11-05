@@ -1,5 +1,5 @@
-import { readPhoto, readPhotoDraft, writePhotoDraft } from "./personal-storage.js";
-import { preparePhoto, MAX_PHOTOS } from "./memory-images.js?v=20261105-photo-v927";
+import { readPhoto, readPhotoDraft, writePhotoDraft } from "./personal-storage.js?v=20261105-storage-v928";
+import { preparePhoto, MAX_PHOTOS } from "./memory-images.js?v=20261105-photo-v928";
 
 const words = {
   de: {

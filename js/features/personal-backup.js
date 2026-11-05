@@ -1,4 +1,4 @@
-import { photoIds, personalSnapshot } from "./personal-storage.js";
+import { photoIds, personalSnapshot } from "./personal-storage.js?v=20261105-storage-v928";
 
 import { writeZip, readZip, MAX_ARCHIVE_BYTES, MAX_MANIFEST_BYTES } from "./backup-zip.js";
 import { validatePhoto } from "./memory-images.js";
