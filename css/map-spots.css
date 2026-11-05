@@ -443,3 +443,8 @@ html[data-fsm-focus-modality="keyboard"] #fsm-map-fullscreen .fsm-map-tool:focus
 /* Reclaim room when a software keyboard covers the lower visual viewport. */
 #fsm-map-fullscreen.fsm-map-keyboard-open .fsm-map-nav,
 #fsm-map-fullscreen.fsm-map-keyboard-open .leaflet-control-zoom { display: none; }
+
+/* Keep the mobile start map clear while retaining zoom in fullscreen. */
+@media (max-width: 899px) {
+  #view-map #map .leaflet-control-zoom { display: none; }
+}

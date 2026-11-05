@@ -91,7 +91,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261105-test-main31-v923-1";
+} from "./map.js?v=20261105-test-main31-v924-1";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { initToast, showToast } from "./toast.js";
