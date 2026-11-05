@@ -35,6 +35,12 @@
     padding-block: 2px !important;
   }
 
+  /* Feather the illustration before its lower edge meets the map. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section::after {
+    -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 9px), transparent);
+    mask-image: linear-gradient(to bottom, black calc(100% - 9px), transparent);
+  }
+
   /* Continue Tilla's cream surface around the upper map corners. */
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #main-content.app-main,
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active {
@@ -42,7 +48,7 @@
   }
 
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #header-tagline {
-    transform: translateY(2px) !important;
+    transform: translateY(3px) !important;
   }
 
   /* Let the map frame alone define the two matching upper corners. */
@@ -50,7 +56,7 @@
     margin-inline: 0 !important;
     border-top-left-radius: 22px !important;
     border-top-right-radius: 22px !important;
-    border: 1px solid rgba(176, 148, 112, .18) !important;
+    border: 1px solid rgba(176, 148, 112, .10) !important;
     box-shadow: none;
   }
 }

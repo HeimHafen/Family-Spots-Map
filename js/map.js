@@ -8,7 +8,7 @@
 import { initMapFullscreen } from "./ui/map-fullscreen.js";
 
 import { getSpotName } from "./filters/tags.js?v=20261010-unified-4";
-import { createSpotPin, createSpotPreview, attachSpotLabels, setSpotLabelMarkers, scheduleSpotLabels, spotPinId } from "./ui/map-spots.js?v=20261105-test-main31-v931-1";
+import { createSpotPin, createSpotPreview, attachSpotLabels, setSpotLabelMarkers, scheduleSpotLabels, spotPinId } from "./ui/map-spots.js?v=20261105-test-main31-v932-1";
 
 // Keep existing marker DOM nodes when only distances or the viewport changed.
 const markerRenderSignatures = new WeakMap();
