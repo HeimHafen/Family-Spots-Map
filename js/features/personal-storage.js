@@ -113,7 +113,25 @@ export function changeFavorite(id, selected) {
   });
 }
 function conflict() { const error = new Error("personal_conflict"); error.code = "personal_conflict"; return error; }
-export function changeDaylog(operation) {
+const isPhotoBlob = blob => blob instanceof Blob && blob.type === "image/jpeg" &&
+  blob.size > 0 && blob.size <= 1024 * 1024;
+
+function storedPhotoBlob(value) {
+  if (isPhotoBlob(value)) return value;
+  if (value instanceof ArrayBuffer && value.byteLength > 0 && value.byteLength <= 1024 * 1024) {
+    return new Blob([value], { type: "image/jpeg" });
+  }
+  return null;
+}
+
+export async function changeDaylog(operation) {
+  // Read bytes before opening the transaction so Safari can commit photo data
+  // without depending on IndexedDB's Blob storage implementation.
+  const mediaBytes = new Map();
+  for (const { id, blob } of operation.media || []) {
+    if (!isPhotoBlob(blob)) throw new Error("missing_memory_photo");
+    mediaBytes.set(id, await blob.arrayBuffer());
+  }
   return transaction(DAYLOG_STORAGE_KEY, (value, store) => {
     if (!["add", "edit", "delete"].includes(operation.type) || typeof operation.id !== "string" || !operation.id.trim()) throw new Error("invalid_daylog_operation");
     if (operation.type === "add" && (!operation.entry || operation.entry.id !== operation.id || typeof operation.entry.text !== "string" || (!operation.entry.text.trim() && !photoIds(operation.entry).length) || !Number.isFinite(operation.entry.ts) || !Number.isFinite(new Date(operation.entry.ts).getTime()))) throw new Error("invalid_daylog_entry");
@@ -134,9 +152,9 @@ export function changeDaylog(operation) {
     }
     const selected = operation.type === "delete" ? [] : photoIds(entries.find(entry => entry.id === operation.id));
     for (const id of selected) {
-      const media = operation.media?.find(item => item.id === id);
-      if (!media || !(media.blob instanceof Blob) || media.blob.type !== "image/jpeg" || media.blob.size > 1024 * 1024 || !media.blob.size) throw new Error("missing_memory_photo");
-      store.put(media.blob, `photo:${id}`);
+      const bytes = mediaBytes.get(id);
+      if (!bytes) throw new Error("missing_memory_photo");
+      store.put(bytes, `photo:${id}`);
     }
     const retained = new Set(entries.flatMap(photoIds));
     for (const id of oldPhotos) if (!retained.has(id)) store.delete(`photo:${id}`);
@@ -214,8 +232,9 @@ export async function personalSnapshot(imported = null) {
           for (const id of used) {
             const request = store.get(`photo:${id}`);
             request.onsuccess = () => {
-              if (!(request.result instanceof Blob)) { error = new Error("missing_memory_photo"); tx.abort(); }
-              else photos[id] = request.result;
+              const blob = storedPhotoBlob(request.result);
+              if (!blob) { error = new Error("missing_memory_photo"); tx.abort(); }
+              else photos[id] = blob;
             };
           }
         } catch (caught) { error = caught; tx.abort(); }
@@ -240,7 +259,7 @@ export async function personalSnapshot(imported = null) {
 // Only compact photo IDs enter the localStorage mirror, never image bytes.
 export async function readPhoto(id) {
   if (!/^[a-f0-9]{64}$/.test(id)) throw new Error("invalid_memory_photo");
-  const blob = await transaction(`photo:${id}`);
+  const blob = storedPhotoBlob(await transaction(`photo:${id}`));
   if (!(blob instanceof Blob)) throw new Error("missing_memory_photo");
   return blob;
 }
