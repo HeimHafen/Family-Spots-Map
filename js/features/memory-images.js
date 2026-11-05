@@ -36,16 +36,28 @@ async function imageFrom(blob) {
 export async function preparePhoto(file) {
   if (!(file instanceof Blob) || !file.size || file.size > MAX_ORIGINAL_BYTES) throw photoError("photo_size");
   // Accept raster files only and store a static JPEG copy.
-  const bytes = new Uint8Array(await file.slice(0, 24).arrayBuffer());
+  const bytes = new Uint8Array(await file.slice(0, 128).arrayBuffer());
   const jpeg = bytes[0] === 255 && bytes[1] === 216;
   const png = [137,80,78,71,13,10,26,10].every((n,i) => bytes[i] === n);
   const webp = String.fromCharCode(...bytes.slice(0,4)) === "RIFF" && String.fromCharCode(...bytes.slice(8,12)) === "WEBP";
-  if (!jpeg && !png && !webp) throw photoError("photo_format");
+  const signature = String.fromCharCode(...bytes);
+  const boxLength = bytes.length >= 16 ? new DataView(bytes.buffer).getUint32(0) : 0;
+  const heicBrands = new Set(["heic", "heix", "hevc", "hevx"]);
+  const heic = signature.slice(4, 8) === "ftyp" && boxLength >= 16 &&
+    (heicBrands.has(signature.slice(8, 12)) ||
+      Array.from({ length: Math.floor((Math.min(boxLength, bytes.length) - 16) / 4) },
+        (_, i) => signature.slice(16 + i * 4, 20 + i * 4)).some(brand => heicBrands.has(brand)));
+  if (!jpeg && !png && !webp && !heic) throw photoError("photo_format");
+  if (png && bytes.length < 24) throw photoError("invalid_photo");
   if (jpeg || png) {
     const size = jpeg ? jpegSize(new Uint8Array(await file.arrayBuffer())) : (() => { const v = new DataView(bytes.buffer); return { width: v.getUint32(16), height: v.getUint32(20) }; })();
     if (!size.width || !size.height || size.width * size.height > 60000000) throw photoError("photo_size");
   }
-  const img = await imageFrom(new Blob([file], { type: jpeg ? "image/jpeg" : png ? "image/png" : "image/webp" }));
+  const type = jpeg ? "image/jpeg" : png ? "image/png" : webp ? "image/webp" : "image/heic";
+  const img = await imageFrom(new Blob([file], { type })).catch(error => {
+    if (heic) throw photoError("photo_format");
+    throw error;
+  });
   if (img.naturalWidth * img.naturalHeight > 60000000) throw photoError("photo_size");
   const scale = Math.min(1, MAX_EDGE / Math.max(img.naturalWidth, img.naturalHeight));
   const canvas = document.createElement("canvas");

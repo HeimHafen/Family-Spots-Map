@@ -234,7 +234,7 @@ html.fsm-polished #filter-modal #filter-modal-apply::after {
 }
 html.fsm-polished #filter-modal #filter-modal-apply:disabled {opacity:.55;}
 html.fsm-polished #filter-modal :is(button,summary,input):focus-visible {
-  outline:3px solid #38744a!important;outline-offset:2px!important;
+  outline:3px solid #685c51!important;outline-offset:2px!important;
 }
 @media(max-width:375px) {
   html.fsm-polished #filter-modal .filter-modal-header {padding-inline:15px!important;}
@@ -309,7 +309,7 @@ html.fsm-polished #filter-modal .category-explorer__choice input[type="checkbox"
 }
 /* Color-independent keyboard focus remains visible, never orange. */
 html.fsm-polished #filter-modal .category-explorer__choice input[type="checkbox"]:focus-visible {
-  outline:2px solid #416e43!important;
+  outline:2px solid #685c51!important;
   outline-offset:3px!important;
   box-shadow:none!important;
 }

@@ -35,7 +35,7 @@ import { initFilterSelects } from "./ui/filter-select.js";
 
 import { initDiaryView } from "./features/diary-view.js";
 
-import { initDaylogPhotos } from "./features/daylog-photos.js?v=20261030-diary-3";
+import { initDaylogPhotos } from "./features/daylog-photos.js?v=20261105-photo-v927";
 
 import { initPersonalBackup } from "./features/personal-backup.js";
 
@@ -91,7 +91,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261105-test-main31-v925-1";
+} from "./map.js?v=20261105-test-main31-v927-1";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { initToast, showToast } from "./toast.js";
