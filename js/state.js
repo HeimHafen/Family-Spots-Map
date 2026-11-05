@@ -5,7 +5,7 @@
 
 "use strict";
 
-import { LANG_DE, THEME_LIGHT } from "./config.js";
+import { LANG_DE } from "./config.js";
 
 /**
  * Globaler, aber in einem Modul gekapselter State.
@@ -14,7 +14,6 @@ import { LANG_DE, THEME_LIGHT } from "./config.js";
 export const state = {
   // Sprache & Theme
   currentLang: LANG_DE,
-  currentTheme: THEME_LIGHT,
 
   // Map & Marker
   map: null,

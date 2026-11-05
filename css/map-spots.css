@@ -17,11 +17,8 @@
 .fsm-map-fullscreen-button:focus,
 .fsm-map-fullscreen-button:focus-visible { outline: none; box-shadow: none; }
 .fsm-map-fullscreen-button[data-keyboard-focus="true"]:focus::before { outline: 2px solid #6a853e; outline-offset: 2px; }
-html[data-theme="dark"] .fsm-map-fullscreen-button { color: #30291f; }
-html[data-theme="dark"] .fsm-map-fullscreen-button::before { background: #d0cbbcf2; border-color: #a9a593; }
 @media (hover: hover) {
   .fsm-map-fullscreen-button:hover::before { background: #f5e9d5; }
-  html[data-theme="dark"] .fsm-map-fullscreen-button:hover::before { background: #ded9cb; }
 }
 html.fsm-map-fullscreen-open,
 html.fsm-map-fullscreen-open body { overflow: hidden; overscroll-behavior: none; }
@@ -54,9 +51,6 @@ html.fsm-map-fullscreen-open body { overflow: hidden; overscroll-behavior: none;
   background: radial-gradient(circle at 30% 20%, #a8ce77 0, #78ab46 45%, #598530 100%);
   box-shadow: 0 0 0 2px #fff9ed, 0 3px 8px #30291f45;
 }
-html[data-theme="dark"] .fsm-spot-pin__dot {
-  background: radial-gradient(circle at 30% 20%, #c4e29e 0, #98c963 45%, #78a548 100%);
-}
 .fsm-map-marker[aria-expanded="true"] .fsm-spot-pin__dot {
   box-shadow: 0 0 0 2px #fff9ed, 0 0 0 5px #8fbf5a66, 0 4px 10px #30291f40;
 }
@@ -81,7 +75,6 @@ html[data-theme="dark"] .fsm-spot-pin__dot {
 }
 .fsm-label-visible .fsm-spot-pin__name { visibility: visible; }
 .fsm-label-left .fsm-spot-pin__name { left: auto; right: 48px; }
-html[data-theme="dark"] .fsm-spot-pin__name { background: #d0cbbc; border-color: #a9a593; color: #30291f; }
 
 .fsm-map-popup .leaflet-popup-content-wrapper,
 .fsm-map-popup .leaflet-popup-tip { background: #fff9ed; color: #30291f; }
@@ -99,9 +92,6 @@ html[data-theme="dark"] .fsm-spot-pin__name { background: #d0cbbc; border-color:
 .fsm-spot-preview__open { width: 100%; min-height: 44px; margin-top: 8px; padding: 9px 14px; border: 0; border-radius: 23px; background: #ff8417; color: #30291f; font-weight: 750!important; }
 .fsm-spot-preview__open span { font-size: 20px; line-height: 1; }
 .fsm-spot-preview button:focus-visible { outline: 3px solid #48503d; outline-offset: 2px; }
-html[data-theme="dark"] .fsm-map-popup .leaflet-popup-content-wrapper,
-html[data-theme="dark"] .fsm-map-popup .leaflet-popup-tip { background: #d0cbbc; color: #30291f; }
-html[data-theme="dark"] .fsm-map-popup .leaflet-popup-content-wrapper { box-shadow: 0 5px 20px #0006; }
 
 /* Transparent watercolor asset; note remains a separate memory-state element. */
 #tilla-section .tilla-sidebar-avatar { position: relative; aspect-ratio: auto; animation: none; transform: none; }
@@ -139,7 +129,6 @@ html[data-theme="dark"] .fsm-map-popup .leaflet-popup-content-wrapper { box-shad
 .fsm-map-popup .leaflet-popup-scrolled { border: 0; overflow-y: auto; overscroll-behavior: contain; }
 .fsm-map-marker[aria-expanded="true"] .fsm-spot-pin__name { font-weight: 750; }
 .leaflet-control-scale-line { border-color: #48503d; background: #fff9edcc; color: #30291f; text-shadow: none; border-radius: 0 0 3px 3px; }
-html[data-theme="dark"] .leaflet-control-scale-line { background: #d0cbbccc; }
 
 /* Enlarge the painted figure by cropping the asset's transparent side margins.
    Image and conditional note remain in one coordinate system. */
@@ -267,14 +256,6 @@ html[data-theme="dark"] .leaflet-control-scale-line { background: #d0cbbccc; }
   --fsm-viewport-bottom: 0px;
   --fsm-top-space: calc(max(8px, env(safe-area-inset-top, 0px)) + var(--fsm-viewport-top));
   --fsm-bottom-space: calc(max(6px, env(safe-area-inset-bottom, 0px)) + var(--fsm-viewport-bottom));
-}
-html[data-theme="dark"] #fsm-map-fullscreen {
-  --fsm-toolbar-bg: #30382b;
-  --fsm-toolbar-text: #f6ead7;
-  --fsm-toolbar-border: #69705e;
-  --fsm-toolbar-selected: #b7cf90;
-  --fsm-toolbar-on-selected: #243219;
-  --fsm-toolbar-shadow: 0 3px 14px #0005;
 }
 #fsm-map-fullscreen .fsm-map-tools,
 #fsm-map-fullscreen .fsm-map-search,

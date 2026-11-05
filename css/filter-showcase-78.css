@@ -245,27 +245,6 @@ html.fsm-polished #filter-modal :is(button,summary,input):focus-visible {
   html.fsm-polished #filter-modal .filter-modal-footer {padding-inline:11px!important;}
   html.fsm-polished #filter-modal #filter-modal-reset,html.fsm-polished #filter-modal #filter-modal-apply {font-size:12px!important;}
 }
-/* Keep the inherited theme behaviour. The rest of the app remains untouched. */
-html.fsm-polished[data-theme="dark"] #filter-modal {
-  --fs78-ink:#f5f3eb;--fs78-green:#c6dfb7;--fs78-muted:#c8c9be;
-  --fs78-surface:#303b32;--fs78-line:#667267;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .filter-modal-inner {border-color:#647160!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-close {background:#465148!important;color:#f5f3eb!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__rules,
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__extras {background:#3c493d!important;border-color:#697665!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__rules summary,
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice {color:#f5f3eb!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds > .category-explorer__chip {
-  --fs78-chip-bg:#3c483e;--fs78-chip-line:#71806c;
-  color:#f2f3ec!important;background:var(--fs78-chip-bg)!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds > .category-explorer__chip[aria-pressed="true"] {
-  background:#4b6248!important;color:#fff!important;border-color:#b1d3a3!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice:has(input:checked) {background:#415641!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice .category-explorer__count {background:#4c594c;color:#f2f1e9!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-reset {background:#435041!important;border-color:#8a977f!important;color:#f5f3eb!important;}
 @media(forced-colors:active) {
   html.fsm-polished #filter-modal .category-explorer__worlds>.category-explorer__chip,
   html.fsm-polished #filter-modal .category-explorer__choice {forced-color-adjust:auto;}
@@ -281,21 +260,6 @@ html.fsm-polished #filter-modal #filter-modal-apply {gap:6px!important;padding:8
 html.fsm-polished #filter-modal .filter-modal__action-icon {display:inline-flex;flex:0 0 20px;width:20px;height:20px;}
 html.fsm-polished #filter-modal .filter-modal__action-icon svg {display:block;width:100%;height:100%;stroke-width:2.1;}
 html.fsm-polished #filter-modal .filter-modal__action-label {flex:0 1 auto;min-width:0;text-align:center;}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds > [data-world=""][aria-pressed="true"] {
-  background:#3c483e!important;border-color:#71806c!important;color:#f2f3ec!important;
-}
-/* Dark mode: the header must have the same dark surface as its scroll area. */
-html.fsm-polished[data-theme="dark"] #filter-modal .filter-modal-header {
-  background:#303b32!important;color:#f5f3eb!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .filter-modal-header::before {background:#7b8678!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-title {color:#f5f3eb!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__theme-heading,
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__fieldset legend {color:#c9cec3!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__selected-count {color:#b9e4ad!important;}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice input[type="checkbox"]:not(:checked) {
-  background:#445048!important;border-color:#aeb9aa!important;
-}
 
 /* Individual subcategory accents echo the illustration without relying on emoji. */
 html.fsm-polished #filter-modal [data-category-icon="park"] .category-explorer__icon {color:#db609b!important;}
@@ -363,9 +327,6 @@ html.fsm-polished .btn:not(.btn-secondary):not(.btn-ghost):not(.btn-icon):not(.b
 html.fsm-polished #view-diary:has(#diary-composer:not([hidden])) #diary-new-memory {
   color:var(--p-muted)!important;
 }
-html.fsm-polished[data-theme="dark"] #view-diary:has(#diary-composer:not([hidden])) #diary-new-memory {
-  color:#f3eddc!important;
-}
 /* The original Spielideen button establishes the shared orange/ink pairing.
    Other existing button backgrounds are not changed by this rule. */
 html.fsm-polished :is(
@@ -415,27 +376,6 @@ html.fsm-polished #filter-modal #filter-modal-apply:not(:disabled):hover {
 html.fsm-polished #filter-modal #filter-modal-apply:not(:disabled):active {
   background:#df7510!important;
 }
-/* Preserve contrast and the gentler green in evening mode. */
-html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-close {
-  background:#3b483e!important;color:#d8dfd3!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds > .category-explorer__chip[aria-pressed="true"]:not([data-world=""]) {
-  background:#597454!important;border-color:#aac99d!important;
-  color:#f9fbf4!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice:has(input:checked) {
-  background:#597453!important;
-  color:#f5f3eb!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice input[type="checkbox"]:checked {
-  background:#c8e0bf!important;
-  border-color:#9abf8f!important;
-  color:#244b32!important;
-  box-shadow:none!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice input[type="checkbox"]:focus-visible {
-  outline-color:#d5e8cc!important;
-}
 @media(forced-colors:active) {
   html.fsm-polished #filter-modal .category-explorer__choice input[type="checkbox"]:checked {
     background:Highlight!important;
@@ -443,9 +383,6 @@ html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice in
     color:HighlightText!important;
     forced-color-adjust:auto;
   }
-}
-html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-reset {
-  background:#435041!important;border-color:#82927c!important;color:#f1f1e9!important;
 }
 
 
@@ -582,19 +519,6 @@ html.fsm-polished[data-theme="light"] #filter-section .mood-row > .mood-chip[ari
   box-shadow:inset 0 0 0 1px rgba(64,100,55,.09)!important;
   font-weight:600!important;
 }
-html.fsm-polished[data-theme="dark"] #filter-section .mood-row > .mood-chip:not([aria-pressed="true"]) {
-  background:#3d473a!important;
-  border:1px solid #737f6e!important;
-  color:#f0f1e8!important;
-  box-shadow:none!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-section .mood-row > .mood-chip[aria-pressed="true"] {
-  background:#526b4b!important;
-  border:1px solid #9bb38b!important;
-  color:#f8f8f0!important;
-  box-shadow:inset 0 0 0 1px rgba(208,225,195,.10)!important;
-  font-weight:600!important;
-}
 html.fsm-polished #filter-section .mood-row > .mood-chip[aria-pressed="true"] .mood-chip-emoji {color:inherit!important;}
 
 /* Gleiches Auswahlprinzip im großen Themen-Dialog: satter, nicht ausgewaschen. */
@@ -605,12 +529,6 @@ html.fsm-polished[data-theme="light"] #filter-modal .category-explorer__worlds >
   border-color:#839e77!important;
   color:#29462d!important;
   box-shadow:inset 0 0 0 1px rgba(64,100,55,.09)!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds > .category-explorer__chip[aria-pressed="true"]:not([data-world=""]) {
-  background:#526b4b!important;
-  border-color:#9bb38b!important;
-  color:#f8f8f0!important;
-  box-shadow:inset 0 0 0 1px rgba(208,225,195,.10)!important;
 }
 
 /* Die horizontale Vollbild-Kartenleiste darf neben dem gewählten Thema nicht
@@ -627,25 +545,9 @@ html.fsm-polished[data-theme="light"] #fsm-map-fullscreen .fsm-map-themes > .fsm
   color:#fffdf4!important;
   box-shadow:none!important;
 }
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme[aria-pressed="false"] {
-  background:#354134!important;
-  border-color:#737f6d!important;
-  color:#f3f2e9!important;
-  box-shadow:0 1px 4px rgba(0,0,0,.13)!important;
-}
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme[aria-pressed="true"] {
-  background:#526b4b!important;
-  border-color:#9bb58f!important;
-  color:#fefdf5!important;
-  box-shadow:none!important;
-}
 /* Sichtbarer Tastaturfokus, unabhängig vom ausgewählten Zustand. */
 html.fsm-polished #filter-section .mood-row > .mood-chip:focus-visible,
 html.fsm-polished #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme:focus-visible {
   outline:2px solid #376a45!important;
   outline-offset:3px!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-section .mood-row > .mood-chip:focus-visible,
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme:focus-visible {
-  outline-color:#d5e7c9!important;
 }

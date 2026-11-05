@@ -15,7 +15,6 @@
     },
     "aria": {
       "help": "Hilfe und Infos anzeigen",
-      "themeToggle": "Designmodus wechseln",
       "locate": "Standort zentrieren"
     },
     "labels": {
@@ -25,7 +24,7 @@
       "tillaImage": "Tilla die Schildkröte – eure Familienbegleiterin"
     },
     "header": {
-      "tagline": "Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf."
+      "tagline": "Orte entdecken.\nMenschen verbinden.\nErinnerungen schaffen."
     },
     "buttons": {
       "showFilters": "Filter aufklappen",
@@ -150,10 +149,9 @@
   "meta_description": "Handverlesene Orte für Familien: Spielplätze, Tiere, Wasser & Wege mit Erinnerungswert.",
   "error_data_load": "Ups – das hat gerade nicht geklappt. Bitte versuch es gleich noch einmal.",
   "btn_help_aria": "Hilfe und Infos anzeigen",
-  "btn_theme_toggle_aria": "Designmodus wechseln",
   "btn_locate_aria": "Standort zentrieren",
   "alt_tilla_image": "Tilla die Schildkröte – eure Familienbegleiterin",
-  "header_tagline": "Heute ist ein guter Tag, an dem aus Alltag ein kleines Familienabenteuer werden darf.",
+  "header_tagline": "Orte entdecken.\nMenschen verbinden.\nErinnerungen schaffen.",
   "btn_show_filters": "Filter aufklappen",
   "btn_hide_filters": "Filter zuklappen",
   "btn_only_map": "Nur Karte",

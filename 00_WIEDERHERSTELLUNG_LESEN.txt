@@ -1,0 +1,30 @@
+Family Spots Map – SICHERE WIEDERHERSTELLUNG auf Design-Basis V90.13
+
+ANLASS
+Die zuletzt hochgeladene V90.14 zeigt in Safari deutliche Regressionen: altes Header-Layout, 6 Navigationseintraege, fehlendes Herzsymbol, beschaedigter Spielideen-Button. Eine Ursache in iOS-Safari oder Cloudflare ist noch nicht sicher bestaetigt.
+
+WAS DIESES PAKET TUT
+1. Stellt die fuenf urspruenglichen V90.13-Austauschdateien wieder her.
+2. Aktualisiert ausschliesslich die Versionskennung des Stylesheets und die Service-Worker-Cache-Version, damit Safari nicht weiter V90.14-Assets aus dem Cache verwenden soll.
+3. Die Original-CSS von V90.13 ist UNVERAENDERT. HTML unterscheidet sich von V90.13 nur durch die CSS-Version im Link. Service Worker unterscheidet sich nur durch die Cache-Version und die HTML-Pruefsummen.
+4. KEINE Tilla-Vergroesserung und KEINE globale Aenderung an orangefarbenen Buttons. Zuerst den stabilen Stand wiederherstellen.
+
+WICHTIG ZUR VORAUSSETZUNG
+Dieses Paket ist eine gezielte Ruecknahme der fuenf Dateien auf einem Projektbranch, der bereits ALLE restlichen Dateien und Assets der V90.13-App enthaelt. Das ZIP ist KEIN komplettes Repository. Nicht auf main anwenden.
+
+SO GEHT'S IN WORKING COPY
+1. Aktuellen Branch erst sichern (Backup-Commit / Branch).
+2. Auf einem neuen Testbranch die fuenf Dateien unter unveraenderten Pfaden ersetzen:
+   css/fsm-header-final-v907.css
+   index.html
+   en/index.html
+   da/index.html
+   service-worker.js
+3. Commit: "Wiederherstellung – stabiles V90.13-Design nach V90.14-Regression"
+4. Push mit Remote-Referenz: refs/heads/test/restore-stable-v913
+   Source-Branch: aktueller lokaler Testbranch unveraendert / Force Push: AUS.
+5. Nach dem Cloudflare-Preview-Deployment die spezifische Preview-URL und Safari pruefen. Bei altem Cache Safari-Tab schliessen und die Preview frisch oeffnen. Keine manuelle Loeschung persoenlicher Daten vornehmen.
+6. Nur wenn Design, fuenf Navigationseintraege und Funktionen stimmen, weitere Aenderungen PLANEN. Nicht direkt main veraendern.
+
+BEGRENZUNG
+Diese Dateien korrigieren nur die Versionen des vorherigen Pakets. Falls Safari weiter eine alte Seite zeigt, ist die Preview-URL / Branch-Zuordnung oder ein Cache-/Deploymentproblem zu untersuchen; die zugrunde liegende Ursache wird mit diesem ZIP nicht behauptet.

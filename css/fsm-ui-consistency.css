@@ -13,13 +13,6 @@ html.fsm-polished {
   --fsm-ui-focus: #376a45;
   --fsm-ui-btn-radius: 11px;
 }
-html.fsm-polished[data-theme="dark"] {
-  --fsm-ui-selected: #526b4b;
-  --fsm-ui-selected-border: #9bb38b;
-  --fsm-ui-selected-ink: #f8f8f0;
-  --fsm-ui-muted-ring: #758473;
-  --fsm-ui-focus: #d5e7c9;
-}
 
 /* One primary-action treatment, regardless of the surrounding panel. */
 html.fsm-polished #tilla-section #btn-play-idea,
@@ -102,10 +95,6 @@ html.fsm-polished #filter-modal .category-explorer__choice:has(input:checked) {
   background:#f0f7e9!important;
   color:#283e2b!important;
 }
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice:has(input:checked) {
-  background:#526b4b!important;
-  color:#fafbf5!important;
-}
 html.fsm-polished #filter-modal .category-explorer__choice input[type="checkbox"]:checked {
   accent-color:#567c4b!important;
   background:#d6e8c8!important;
@@ -113,10 +102,6 @@ html.fsm-polished #filter-modal .category-explorer__choice input[type="checkbox"
   color:#244b32!important;
   box-shadow:none!important;
   outline:0;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice input[type="checkbox"]:checked {
-  background:#c8e0bf!important;
-  border-color:#a3c599!important;
 }
 /* A soft close affordance with a full 44px touch hit target. */
 html.fsm-polished #filter-modal #filter-modal-close {
@@ -127,10 +112,6 @@ html.fsm-polished #filter-modal #filter-modal-close {
   background:#f8f5ef!important;
   color:#626a62!important;
   box-shadow:none!important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-close {
-  background:#3b483e!important;
-  color:#e7eee2!important;
 }
 /* Focus feedback is consistent, never an orange ring on green selections. */
 html.fsm-polished :is(

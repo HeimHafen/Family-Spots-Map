@@ -1,0 +1,31 @@
+Family Spots Map – V90.14 | Tilla etwas groesser, Bereich kompakter, orange Buttons vereinheitlicht
+
+VORAUSSETZUNG
+Version V90.13 aus dem aktuellen Cloudflare-Testbranch. Nicht als Gesamt-Replacement von main verwenden.
+
+AENDERUNGEN
+1. Tilla im hellen mobilen Kartenstart optisch um 10,5 % vergroessert; Schrift und Erinnerungszettel bleiben unberuehrt.
+2. Tilla-Sektion: weniger Innenabstand, geringere Hoehe der Titelzeile ab 360px; Menuesymbol hat weiterhin 44px Touchflaeche.
+3. Landschaftsflaeche oberhalb um etwa 12px vergroessert; Leitsatz, Welle und Bildmotiv unveraendert.
+4. Spielideen-Button: unveraenderte V90.13-Position, 44px Hoehe, exakt #F58B20 und dunkle Schrift/Play-Pfeil #382E25 (wie Spots finden).
+5. Andere orangefarbene Hauptaktionen (Filter, Spots finden, Plus, Mein Tag, Treffen & Spielen, Spotdetail) ebenfalls 44px und dieselben Farbwerte.
+6. Keine Aenderung an Map, Spotdaten, JavaScript, Navigation, Illustrationen, Darkmode oder Uebersetzungen.
+
+AUSTAUSCH IN WORKING COPY
+1. Bestehenden V90.13-Testbranch sichern / Backup-Commit erstellen.
+2. ZIP auspacken, nur die fuenf darin vorhandenen Projektdateien pfadgenau im Repository ersetzen.
+3. Commit mit den Texten unten erstellen und auf den neuen Testbranch pushen.
+4. Cloudflare Preview auf Safari testen (DE / EN / DA; Karte, Buttons und Menue).
+5. Erst nach Freigabe in main uebernehmen. Force Push: AUS.
+
+ZUSAMMENFASSUNG
+V90.14 – Tilla groesser, Kopf kompakter, Orange-Buttons einheitlich
+
+DETAILLIERTE INFORMATIONEN
+Bestehende V90.13-Oberflaeche als Grundlage: Tilla um 10,5 % optisch vergroessert, ihren Bereich durch reduzierte Abstaende verkleinert, Landschaft ueber Tilla um etwa 12px erweitert. Orangefarbene Aktionsbuttons auf 44px, #F58B20 und dunkle Beschriftung #382E25 vereinheitlicht. Bestehende Position des Spielideen-Buttons und Abstand zur Pflanze beibehalten. Keine Aenderungen an App-Logik, Spotdaten, Navigation, Karte oder Darkmode. Offline-Cache aktualisiert.
+
+REMOTE-REFERENZ
+refs/heads/test/main-premium-v914
+
+SOURCE-BRANCH: V90.13 beibehalten
+FORCE PUSH: AUS

@@ -14,7 +14,7 @@ const PATHS = {
   close: "m6 6 12 12M18 6 6 18",
   map: "m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5m6-2v16m6-14v16",
   filters: "M3 4h18l-7 8v8l-4-2v-6Z",
-  spots: "M8 5h13M8 12h13M8 19h13M3 5h.1M3 12h.1M3 19h.1",
+  spots: "M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0ZM12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z",
   play: "M5 21V3h14v18M3 3h18M7 7l5 7 5-7M8 16h8",
   nature: "M20 3C8 2 2 7 5 15s14 4 15-12ZM5 20 16 8",
   water: "M2 6q3-4 6 0t6 0 6 0M2 12q3-4 6 0t6 0 6 0M2 18q3-4 6 0t6 0 6 0",
@@ -24,7 +24,8 @@ const PATHS = {
   pause: "M4 3v7q0 3 3 3t3-3V3M7 3v18M18 21V3q-4 3-3 10h3",
   travel: "M2 20 12 4l10 16ZM8 20l4-7 4 7",
   services: "M12 3v18M3 12h18",
-  events: "M4 5h16v16H4ZM8 2v6M16 2v6M4 10h16"
+  events: "M4 5h16v16H4ZM8 2v6M16 2v6M4 10h16",
+  community: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
 };
 export function createMapToolIcon(name) {
   if (name === "diary") return createHeartIcon("fsm-daylog-heart");

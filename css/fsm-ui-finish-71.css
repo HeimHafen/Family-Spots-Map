@@ -75,13 +75,6 @@ html.fsm-polished #btn-open-diary.diary-launcher > span:last-child {
   text-align: right !important;
 }
 
-/* Keine verschlechterte Lesbarkeit im Abendmodus mit hellen Kartenflächen. */
-html.fsm-polished[data-theme="dark"] :is(#plus-section > summary #btn-toggle-plus,
-  #plus-section > summary #btn-toggle-plus > span,
-  #btn-open-diary.diary-launcher > span:last-child) {
-  color: #574e40 !important;
-}
-
 /* Bei ganz kleinen Displays bleibt die Typografie gleich; keine Überlappung. */
 @media (max-width: 360px) {
   html.fsm-polished #sidebar > :is(#filter-section.sidebar-section, .sidebar-section.sidebar-section--grow) {
@@ -482,8 +475,4 @@ html.fsm-polished :is(#filter-search, #daylog-text):is(:focus, :focus-visible) {
 html.fsm-polished #plus-section #plus-status-text {
   border-left-width: 1px !important;
   border-left-color: var(--fsm-f69-border) !important;
-}
-/* Im Abendmodus die Farbe der uebrigen Rahmenkanten uebernehmen. */
-html.fsm-polished[data-theme="dark"] #plus-section #plus-status-text {
-  border-left-color: #6b8064 !important;
 }

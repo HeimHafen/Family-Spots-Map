@@ -1,6 +1,5 @@
 /* Family Spots Map: coordinated visual refinements, quality66. */
 .fsm-polished { --p-canvas:#f5e9d9; --p-surface:#fff8ed; --p-soft:#f6eddf; --p-text:#3d3025; --p-muted:#746658; --p-line:#ded2bf; --p-green:#526b3c; --p-shadow:0 2px 10px #51412708; }
-html.fsm-polished[data-theme="dark"] { --p-canvas:#48503d; --p-surface:#d4d0c5; --p-soft:#c9c5b8; --p-text:#352b22; --p-muted:#574e40; --p-line:#b4b19f; --p-green:#4d6338; --p-shadow:none; }
 .fsm-polished body { background:var(--p-canvas)!important; color:var(--p-text); font-family:Arial,Helvetica,sans-serif; }
 .fsm-polished .app-header { position:relative; padding:18px 20px 16px; background:#f7e3c8!important; box-shadow:none!important; border-radius:0 0 20px 20px; border-bottom:1px solid #e4cfaf; }
 .fsm-polished .app-header-top { min-height:0; }
@@ -74,10 +73,6 @@ html.fsm-polished[data-theme="dark"] { --p-canvas:#48503d; --p-surface:#d4d0c5; 
 .fsm-polished #view-diary #diary-composer #diary-composer-close { font-weight:400; }
 .fsm-polished #view-diary #personal-backup { border:0; border-top:1px solid var(--p-line); border-radius:0; background:transparent; padding:0; }
 .fsm-polished .diary-empty { padding:16px; font-size:12px; line-height:1.6; }
-html.fsm-polished[data-theme="dark"] .app-header { background:#39432f!important; border-color:#68725a; }
-html.fsm-polished[data-theme="dark"] #header-tagline { color:#e1ddcb; }
-html.fsm-polished[data-theme="dark"] .header-title { color:#fff4df; }
-html.fsm-polished[data-theme="dark"] .diary-heading { color:#f3eddc; }
 @media(min-width:900px) { .fsm-polished .app-main { padding:24px!important; gap:18px; } .fsm-polished .header-title { font-size:28px!important; } }
 .fsm-polished #tilla-section #btn-play-idea { width:100%; max-width:100%; font-size:11px!important; padding:8px!important; overflow-wrap:anywhere; }
 .fsm-polished #tilla-section .tilla-sidebar-actions { min-width:0; justify-content:stretch; }
@@ -88,8 +83,6 @@ html.fsm-polished[data-theme="dark"] .diary-heading { color:#f3eddc; }
 .fsm-polished #fsm-map-fullscreen .fsm-map-tool--destination { font-size:10px; }
 .fsm-polished #view-diary:has(#diary-composer:not([hidden])) #diary-new-memory { background:transparent!important; border:1px solid var(--p-line); color:var(--p-muted); }
 .fsm-polished #personal-backup summary { font-weight:500!important; font-size:14px; }
-html.fsm-polished[data-theme="dark"] body, html.fsm-polished[data-theme="dark"] .app-main { background:#48503d!important; }
-html.fsm-polished[data-theme="dark"] .diary-back, html.fsm-polished[data-theme="dark"] #personal-backup, html.fsm-polished[data-theme="dark"] .diary-heading, html.fsm-polished[data-theme="dark"] #diary-new-memory { color:#f3eddc!important; }
 .fsm-polished #tilla-section .tilla-sidebar-card { overflow:visible!important; }
 /* Final detail pass: restrained menu, inviting orange play action. */
 .fsm-polished #tilla-section #menu-toggle { flex:0 0 44px; width:44px!important; height:44px!important; min-height:44px; color:var(--p-muted); border:0!important; background:transparent!important; box-shadow:none!important; display:grid; place-items:center; }

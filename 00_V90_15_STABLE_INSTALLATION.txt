@@ -1,0 +1,55 @@
+FAMILY SPOTS MAP – V90.15 STABLE (1:1 V90.13-DESIGN)
+
+ZIEL
+Ein sauberer, NEUER Testbranch mit exakt dem freigegebenen V90.13-Design
+(Screenshot 15:39). KEINE Tilla-Vergroesserung, KEINE 6er-Navigation,
+KEINE neue Farb-/Button-Geometrie aus V90.14.
+
+WAS TECHNISCH GEÄNDERT WURDE
+Nur die Versionskennung am V90.13-CSS-Link in index.html,
+en/index.html und da/index.html; dieselbe Version im service-worker.js
+und die drei betreffenden HTML-Datei-Pruefsummen. Das CSS selbst
+und alle Grafiken, Spotdaten, JS-Funktionen bleiben BYTEGENAU wie V90.13.
+
+VARIANTE A – KLEINES AUSTAUSCHPAKET (empfohlen auf V90.14-Basis)
+Ersetze exakt diese 5 Dateien unter denselben Pfaden:
+  css/fsm-header-final-v907.css
+  index.html
+  en/index.html
+  da/index.html
+  service-worker.js
+Diese ZIP ist KEIN komplettes Repository. Der Rest der bestehenden
+Dateien muss weiterhin vollständig vorhanden sein.
+
+VARIANTE B – VOLLSTAENDIGE PROJEKTKOPIE (wenn der Branch unklar ist)
+Das grosse ZIP enthaelt saemtliche lokal vorhandenen Projektdateien
+auf V90.13-Basis und den neuen Cache-Stand. Importiere/ersetze NICHT
+blind alle Dateien im Main-Branch. Erstelle zuerst einen Testbranch
+und pruefe dort das vollstaendige Ergebnis.
+
+SAFE WORKFLOW / WORKING COPY
+1. Aktuellen Zustand per Backup-Branch/Commit sichern.
+2. Neuen lokalen Testbranch anlegen; main NICHT veraendern.
+3. Dateien einspielen, Commit:
+   V90.15 – Stabile V90.13-Oberflaeche wiederhergestellt
+4. Remote-Referenz:
+   refs/heads/test/stable-v915-v913
+   Source-Branch unveraendert; Force Push AUS.
+5. Auf Cloudflare unter All deployments den NEUEN Preview-Eintrag
+   zu test/stable-v915-v913 oeffnen. Nicht nur die Production-Domain.
+6. Erst wenn der Preview-Status SUCCESS meldet, die Preview-URL
+   auf dem iPhone testen. Ggf. alte Safari-Tabs schliessen. Vorher
+   ungespeicherte Erinnerungen sichern, keine pauschale Datenloeschung.
+
+WICHTIG ZUM CLOUDFLARE-STATUS
+Der vorherige Cloudflare-Vorgang blieb bereits beim Schritt INITIALIZE
+stehen, also BEVOR GitHub geklont und die App gebaut wurde. Das kann
+durch keine CSS-, HTML- oder Service-Worker-Datei garantiert geloest
+werden. Falls wieder INITIALIZE lange haengt, zuerst den Status des
+Cloudflare-Deployments pruefen, statt neue Designpakete einzuspielen.
+
+TECHNISCHE PRUEFUNG
+V90.13 CSS und alle App-Skripte/Design-Assets/Spots sind unveraendert;
+HTML/SW-Version und Checksum-Verknuepfungen wurden geprueft.
+Ein erfolgreicher Cloudflare-Preview-Build und das echte iPhone-Safari-
+Ergebnis muessen separat verifiziert werden.

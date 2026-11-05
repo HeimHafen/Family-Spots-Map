@@ -1,0 +1,61 @@
+FAMILY SPOTS MAP · V90.1 – PREMIUM-KOPF UND TIEFE 5ER-NAVIGATION
+03.11.2026 · TESTPAKET, NICHT DIREKT AUF MAIN PUSHEN
+
+DIESE DATEIEN SIND VOLLE AUSTAUSCHDATEIEN, KEINE BRUCHSTUECKE.
+Basis: Family-Spots-Map-main 30.zip + V90-Nur-Kopfbereich-Main.
+
+AENDERUNGEN
+- Bewährter V90-Kopf aus dem vorherigen Austauschpaket, einschließlich
+  Pastell-Landschaft, Leitsatz, Tilla und weißem Play-Symbol
+- Fünf gleichmäßig verteilte Navigationspunkte auf einer Reihe
+- "Treffen & Spielen" nicht mehr als unterer Tab, aber weiterhin im Menü
+- Navigationsleiste kompakter und tiefer im sichtbaren App-Fenster
+- Leaflet-Karte verlängert und hinter der festen Navigation sichtbar
+- Keine Änderungen an Spotdaten, Karte/Router-Logik, Filter, Erinnerungen
+- DE/EN/DA und geprüfte Offline-Cache-Hashes
+
+WICHTIG ZUM SCREENSHOT
+Das beigefügte Referenzbild ist eine KI-Designvisualisierung.
+Browser-Safari zeigt seine Adressleiste weiterhin an; nur bei der
+zum Home-Bildschirm hinzugefügten PWA ist eine browserlose Darstellung
+mit Karte bis zur Home-Indicator-Zone grundsätzlich möglich.
+Die dynamische Karte hat echte Spotcluster: deren Zahlen und Positionen
+sind nicht fix auf die KI-Screenshot-Zahlen 9 / 2 festgelegt.
+V90-Illustrationen sind responsive Reproduktionen, nicht pixelgenaue
+Einzelausschnitte des generierten Bildes.
+
+AUSTAUSCH IN WORKING COPY
+1. Repository sichern und Testbranch vom aktuellen main erstellen.
+2. Aktuellen Stand mit dieser Paketbasis vergleichen. Wenn seit main 30
+   Updates vorliegen, nicht blind die kompletten HTML/JS/JSON austauschen!
+3. Alle Projektdateien aus diesem ZIP an exakt die gleiche Stelle kopieren.
+   00_README ist Anleitung und darf im Repository verbleiben oder nicht.
+4. Committen, Push zu refs/heads/test/main-premium-v901.
+5. Force Push AUS; Source-Branch den neu angelegten lokalen Testbranch belassen.
+6. Cloudflare Preview auf iPhone testen: Seite laden, Menü, Karte bewegen,
+   zoom, Spots, Filter, Spielideen, Mein Tag, Darkmode, DE/EN/DA, offline.
+7. Auf main nur nach bestandenem Test und Versionsabgleich übernehmen.
+
+KURZ ZUR KOMPATIBILITAET
+Wenn in Working Copy bereits V90 installiert ist, benötigst du
+nur css/fsm-map-dock-v901.css, die DREI index.html und service-worker.js.
+Die anderen beigepackten Dateien sind die V90-Basis für ein Repository,
+das noch auf main 30 steht. Nicht andere Projektdateien ersetzen.
+
+WORKING COPY: COMMIT-ZUSAMMENFASSUNG
+V90.1 – 5er-Navigation tiefer · Karte bis zum unteren Rand
+
+WORKING COPY: DETAILS
+V90-Kopf beibehalten, fuenfteilige Navigation auf einer Zeile,
+Treffen & Spielen nur noch im Menü, die Leiste kompakt und tiefer,
+Karte bis hinter die Navigation verlängert, DE/EN/DA und Offline-Cache
+aktualisiert. Keine Änderung an Spots, Karte/Filter/Diary-Logik.
+
+REMOTE-REFERENZ
+refs/heads/test/main-premium-v901
+
+SOURCE-BRANCH
+Neuer lokaler Testbranch aus dem aktuellsten main
+
+FORCE PUSH
+AUS

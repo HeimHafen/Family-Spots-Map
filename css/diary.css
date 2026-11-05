@@ -77,9 +77,6 @@ body[data-app-view="diary"] #main-content { padding-bottom: max(24px, env(safe-a
   .diary-back::before, #diary-new-memory::before { content: ""; position: absolute; inset: -3px 0; border-radius: inherit; }
 }
 
-html[data-theme="dark"] #diary-title,
-html[data-theme="dark"] .diary-heading p { color: #f3eddc; }
-
 /* Mein Tag / Fotoeingabe. Ausschließlich innerhalb des Tagebuch-Editors. */
 .diary-view .diary-composer > .memory-photo-editor {
   min-width: 0;
@@ -306,8 +303,6 @@ html[data-theme="dark"] .diary-heading p { color: #f3eddc; }
   margin: 3px auto 0; padding: 6px 10px;
   min-height: 44px; font-size: .76rem; font-weight: 400;
 }
-html[data-theme="dark"] #view-diary #diary-composer .memory-help-icon circle { fill: #37472b; stroke: #bdd88b; }
-html[data-theme="dark"] #view-diary #diary-composer .memory-help-icon path { stroke: #bdd88b; }
 @media (forced-colors: active) {
  #view-diary #diary-composer .memory-help-icon circle { fill: Canvas; stroke: CanvasText; }
  #view-diary #diary-composer .memory-help-icon path { stroke: CanvasText; }

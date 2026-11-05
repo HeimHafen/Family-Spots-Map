@@ -1,0 +1,85 @@
+FAMILY SPOTS MAP – PASTELL & NATUR · V89 PILOT
+=================================================
+Basis: Family-Spots-Map-main 30.zip (vom 03.11.2026)
+Umfang: erste Designphase / Startseite + Karte / Lightmode
+KEINE Komplettumstellung aller Ansichten.
+
+WICHTIG
+--------
+1. Bestehenden Projektstand in Working Copy sichern.
+2. Dieses Paket ist ein Austausch-Paket, KEIN vollständiges Repository.
+   Die übrigen Dateien bleiben exakt wie in deiner hochgeladenen ZIP.
+3. NUR auf einer separaten TEST-Branch anwenden.
+4. Die sechs Projektdateien dieses Pakets an exakt denselben relativen
+   Pfaden in dein aktuelles Projekt kopieren (s. unten).
+5. Änderungen committen, auf die Test-Branch pushen und zuerst auf
+   deinem iPhone unter Safari / als PWA testen. Keinen Force Push ausführen.
+
+ZU KOPIERENDE PROJEKTDATEIEN
+---------------------------
+index.html
+en/index.html
+da/index.html
+service-worker.js
+css/fsm-pastel-v89.css
+assets/design/pastel-landscape-v89.webp
+
+WAS BEABSICHTIGT GEÄNDERT IST
+-----------------------------
+• Neue, ruhigere Creme-/Salbeipalette im Lightmode
+• Illustrierter Landschaftshorizont aus der zuvor akzeptierten
+  Designvorlage, als komprimiertes WebP (nur ca. 19 KB)
+• Ruhigere Tilla-Karte, vertraute Tilla unverändert
+• Etwas kompaktere Kopfgestaltung, Karte bleibt echte Leaflet-Karte
+• Sanftere Kartentöne; Pins und Marker liegen über den Tiles
+• Zurückhaltende fünfteilige Navigation, kontrastreiche aktive Taste
+• Offline-Cache-Version erhöht und neue Design-Dateien aufgenommen
+• DE / EN / DA erhalten dieselbe Darstellung
+
+NICHT GEÄNDERT
+--------------
+• data/spots.json: 164 Spots, unverändert
+• JS-Anwendungslogik, Filter, Karte, Tilla, Erinnerungen, Sprachen
+• Favorite-/Plus-Status, persönliche Daten oder Service-Backend
+• Darkmode-Regeln / bisherige Farbstimmung
+
+WORKING COPY / GIT
+------------------
+Empfohlene neue Test-Remote-Referenz (direkt kopierbar):
+refs/heads/test/pastell-v89
+
+Source-/Ausgangsbranch nicht verändern oder überschreiben.
+Force Push: AUS.
+Empfohlener Commit: design: V89 pastell pilot auf der Startseite
+
+Wichtig: Der bisherige V88-Testbranch kann Änderungen enthalten,
+die nicht Teil dieser hochgeladenen ZIP sind. Bitte NICHT die drei
+HTML-Dateien oder den Service Worker blind über einen neueren,
+abweichenden Branch legen. Dann erst die Unterschiede vergleichen.
+Falls deine Cloudflare-Testseite nur einer bestimmten Branch folgt,
+kann für die neue Testbranch eine eigene Preview nötig sein.
+
+TESTEN VOR EINER FREIGABE
+------------------------
+[ ] Lightmode: Landschaft, Kopfbereich und Tilla auf dem iPhone
+[ ] Darkmode: keine Farb- oder Layoutverschlechterung
+[ ] Karte: alle Marker, Cluster, Zoom und Vollbildfunktion
+[ ] Navigation: Karte, Filter, Spots, Spots Plus, Mein Tag
+[ ] Tilla-Spielideen und sichtbarer Erinnerungszettel
+[ ] Filtersuche und Spot-Details
+[ ] Sprachen DE, EN und DA
+[ ] Safari-Browsermodus und installierte PWA
+[ ] Offline-Betrieb und Service-Worker-Aktualisierung
+[ ] Kleinere Geräte, Querformat und iPad
+[ ] Daten und Erinnerungen nach App-Neustart
+[ ] Erst danach über eine Übernahme nach main entscheiden
+
+PRÜFGRENZE
+----------
+CSS, HTML, Service Worker, Dateiverweise und ausgewählte Layoutmaße
+wurden statisch überprüft. Eine echte, vollständig geladene lokale
+App-Session war in dieser Arbeitsumgebung browserseitig blockiert.
+Daher können wir die Browser-/iPhone-Funktionsprüfung erst nach dem
+Einspielen auf der Testseite abschließen.
+
+Es handelt sich um einen realen Code-Stand und nicht nur um ein Bild.

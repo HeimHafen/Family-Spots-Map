@@ -1,0 +1,23 @@
+Relative Dateipfade und SHA-256-Pruefsummen
+=========================================
+fbbf163b76db5abe6a7a11384af5658d9546c8ae5533cd421d4070b923c0d561  assets/design/main-header-landscape-reference-v909.webp
+005ea07d4960c6d02af287ae33e5ce3adecc61fd2f07bd66127c0a322a8f2a6e  assets/design/main-header-landscape-v90.webp
+03fc3b10f71d83ae49bc9f9d0f690117d8b51d7d49f80d363ab452f82746f097  assets/design/main-header-leaves-bottom-v90.webp
+fe0eb90577732eb6049673816dfdf6c76d6f1290b5f6f247cf916a3fb00c7f36  assets/design/main-header-leaves-v90.webp
+ed501f98547656a3515170daa73e873be48c6b9e67161ff70920775332f5f52e  css/fsm-header-final-v907.css
+8ff732e2a99f9cb9137d3a82351bf1a48baafaa0f5ed5a7cb2dc9538fdea6385  css/fsm-map-dock-v901.css
+29d371dde4feb6b2e604a340c01d228babfdb2f7951fcdb270ea3ac040d0bb9a  css/fsm-premium-polish-v902.css
+27be709373439c80440694ddc6becc1cbf15846b0007294ee10e122e38bb9593  css/fsm-proportion-target-v917.css
+55de47df1a0ddd7350d0a692a63b37a6a4484b4ebb8476f57184593a3fb40c4f  css/main-header-v90.css
+cf279af5a843a887a9a2959fbce0ab2795417980c6ce425518472db86776e871  css/styles.css
+a16f4b31990e2706b952c57d7538791c4af8d0455357a6e782b3154013913651  da/index.html
+25b9b8679e15931d4296ae6e09bd3f6f5f288bf30cd3b16f3cfa4b156ed53c4c  data/i18n/da.json
+66ef957fde23defb718f448c9cb4d608bcabbdedb4e90101215b419014229add  data/i18n/de.json
+80397d8943adfa772df6ba7299b872a5d70e726f16df6f5a253c07561328c9e3  data/i18n/en.json
+10539421effc4fd9c8902e50bc8a203e1c17bc87ae14477c13bada309441ae0c  en/index.html
+95228084d70e238f8a2bbdf2408ba7e407783906f0addd7b4655b6bb1940d2e4  index.html
+6296a4136a30a0d9e67ccb722b89cd5ba40c1de41e3d1c321748b077f361b140  js/app.js
+6bf8119a67f96baf8634cfd3bbb1ae18a438d1bed26390b9bf9db9bd46397038  js/config.js
+5e399e51b52046f7babb7dccac73675de26d7557b553c838160630d6bf798584  js/i18n.js
+e523f50069a598db64b49ee6f7494ae115dd3cf2056ac43c15b45dcacb5711c3  js/map.js
+189dc8d8256efb7cdae7c15ec184b2a2a88054794a233441b80055750b4448c6  service-worker.js

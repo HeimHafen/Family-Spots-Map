@@ -337,29 +337,6 @@ html.fsm-polished #plus-section .plus-code-form {
   margin-top: 6px;
 }
 html.fsm-polished #plus-section .plus-note { line-height: 1.5; }
-/* Der Abendmodus behält seine eigene, bewusste Palette. */
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-nav {
-  background: #333b2e !important;
-  border-color: #727b65 !important;
-}
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-nav .fsm-map-tool--destination {
-  color: #efe8d8 !important;
-}
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-nav .fsm-map-tool--destination[aria-current="page"] {
-  background: #b6cc91 !important;
-  color: #29351e !important;
-}
-html.fsm-polished[data-theme="dark"] :is(.header-tagline,
-  .sidebar-section-header .btn-ghost,.spot-card-subtitle,.spot-card-meta,
-  .filter-group-helper,.filter-summary,.plus-note,#tilla-title) {
-  color: #d5d0c1 !important;
-}
-html.fsm-polished[data-theme="dark"] #plus-section #plus-status-text {
-  background: #333c2f;
-  border-color: #5e7156;
-  border-left-color: #b6cc91;
-  color: #f1ebdb;
-}
 @media (max-width: 390px) {
   html.fsm-polished #tilla-section .tilla-sidebar-card {
     grid-template-columns: minmax(76px, 26%) minmax(0, 1fr) !important;
@@ -558,36 +535,6 @@ html.fsm-polished #fsm-map-fullscreen .fsm-map-nav .fsm-map-tool--destination[ar
 html.fsm-polished #fsm-map-fullscreen .fsm-map-themes { scroll-padding-inline:12px!important; }
 /* Fine focus treatment for all major interactive items. */
 html.fsm-polished :is(button,a,summary,[role="button"],input,textarea,select):focus-visible { outline:2px solid var(--fsm70-olive)!important; outline-offset:2px!important; }
-/* Evening mode: no light-text-on-light-panel regression. */
-html.fsm-polished[data-theme="dark"] {
-  --fsm70-panel:#333b30;
-  --fsm70-canvas:#252c26;
-  --fsm70-ink:#f3eddf;
-  --fsm70-muted:#d2cabe;
-  --fsm70-line:#68715f;
-  --fsm70-olive:#b7c998;
-  --fsm70-olive-active:#3e4d38;
-  --fsm70-shadow:none;
-}
-/* The evening design intentionally uses LIGHT linen cards on a DARK olive canvas.
-   Therefore secondary text ON CARDS must remain dark (previous styling used pale
-   secondary text on pale panels and reduced readability). */
-html.fsm-polished[data-theme="dark"] #header-tagline { color:#eee6d5!important; }
-html.fsm-polished[data-theme="dark"] :is(#tilla-title,.filter-group-helper,.filter-summary,
-  .spot-card-meta,.spot-card-subtitle,.plus-note,#btn-toggle-filters,#btn-toggle-spots) {
-  color:#514739!important;
-}
-html.fsm-polished[data-theme="dark"] :is(#tilla-section,.sidebar-section,
-  .spot-card,.filter-modal-inner) { color:#352b22!important; }
-html.fsm-polished[data-theme="dark"] #plus-section #plus-status-text {
-  background:#354030!important; color:#f4eddd!important; border-color:#6b8064!important;
-}
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-nav {
-  background:#333b30!important; border-color:#6d7762!important;
-}
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-nav .fsm-map-tool--destination[aria-current="page"] { background:#b7c998!important; color:#263220!important; }
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__chip[aria-pressed="true"] { background:#3e4d38!important; color:#f3eddf!important; }
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__chip[aria-pressed="true"] .category-explorer__count { color:#f3eddf!important; }
 /* 320-375px: keep all five nav items in one row and equal header height. */
 @media(max-width:375px) {
   html.fsm-polished #tilla-section .tilla-sidebar-card { grid-template-columns:minmax(80px,25%) minmax(0,1fr)!important; column-gap:9px!important; }

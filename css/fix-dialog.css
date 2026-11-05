@@ -59,15 +59,6 @@ dialog {
   }
 }
 
-/* [5] Dark Mode Variante */
-html[data-theme="dark"] dialog {
-  background: rgba(15, 23, 42, 0.98);
-  color: #f9fafb;
-  box-shadow:
-    0 14px 32px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(148, 163, 184, 0.45);
-}
-
 /* [6] Fokus-Styling: Barrierefrei & CI-freundlich */
 dialog:focus {
   outline: none;
@@ -87,12 +78,6 @@ dialog h3 {
   margin-bottom: 0.75rem;
   font-weight: 700;
   color: var(--text-strong, #2f160b);
-}
-
-html[data-theme="dark"] dialog h1,
-html[data-theme="dark"] dialog h2,
-html[data-theme="dark"] dialog h3 {
-  color: #f9fafb;
 }
 
 dialog p {
@@ -115,10 +100,6 @@ dialog::-webkit-scrollbar-track {
 dialog::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.65);
   border-radius: 999px;
-}
-
-html[data-theme="dark"] dialog::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.8);
 }
 
 /* [9] Responsiveness – kleinere Viewports / Landscape */

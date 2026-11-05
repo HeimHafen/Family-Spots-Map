@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261102-fsm-v87-restore-v85-1");
+@import url("./categories.css?v=20261105-test-main31-v923-1");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -21,10 +21,9 @@
 @import url("./components.css?v=20261029-focus-photo-2");
 
 /* Abendpalette: ausschließlich der gespeicherte Dark-Modus. */
-@import url("./evening.css?v=20261030-focus-fields-77");
 
 
-@import url("./map-spots.css?v=20261102-fsm-v87-restore-v85-1");
+@import url("./map-spots.css?v=20261105-test-main31-v923-1");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
@@ -257,11 +256,6 @@ html[data-theme] #menu-toggle { width: 44px; height: 44px; min-height: 44px; }
   --fsm-field-border: #bfc2bc;
   --fsm-field-focus: #90978d;
   --fsm-keyboard-focus: #767e71;
-}
-html[data-theme="dark"] {
-  --fsm-field-border: #747b70;
-  --fsm-field-focus: #a0a899;
-  --fsm-keyboard-focus: #b0b8a8;
 }
 html body :is(input.input, textarea.input, select.input,
   input:not([type]), input[type="text"], input[type="search"],

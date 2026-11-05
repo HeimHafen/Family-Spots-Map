@@ -64,8 +64,6 @@ import {
   LANG_DE,
   LANG_EN,
   LANG_DA,
-  THEME_LIGHT,
-  THEME_DARK,
   RADIUS_STEPS_KM,
   MAX_MARKERS_RENDER,
   FEATURES,
@@ -93,10 +91,9 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261102-fsm-v87-restore-v85-1";
+} from "./map.js?v=20261105-test-main31-v923-1";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
-import { getInitialTheme, applyTheme } from "./theme.js";
 import { initToast, showToast } from "./toast.js";
 import { loadData } from "./data.js?v=20261010-unified-4";
 
@@ -278,7 +275,6 @@ function safeTillaCall(method, ...args) {
 // ------------------------------------------------------
 
 let currentLang = LANG_DE;
-let currentTheme = THEME_LIGHT;
 
 /** @type {any} */
 let map = null;
@@ -610,7 +606,6 @@ function getRouteUrlsForSpotFromUserLocation(spot) {
 
 let languageSwitcherEl;
 let languageSwitcherFlagEl;
-let themeToggleEl;
 let btnLocateEl;
 let btnHelpEl;
 let viewMapEl;
@@ -769,15 +764,6 @@ function updateMetaAndA11yFromI18n() {
     metaDescEl.setAttribute(
       "content",
       I18N.t("meta_description", currentDesc)
-    );
-  }
-
-  if (themeToggleEl) {
-    const fallback = themeToggleEl.getAttribute("aria-label") || "";
-
-    themeToggleEl.setAttribute(
-      "aria-label",
-      I18N.t("btn_theme_toggle_aria", fallback)
     );
   }
 
@@ -1036,10 +1022,6 @@ function setLanguage(lang, { initial = false } = {}) {
   if (tilla?.state === "play-idea") safeTillaCall("showPlayIdea", getCurrentPlayIdea());
   else safeTillaCall("onLanguageChanged");
   updateMapLanguage();
-  const menuLabel = document.getElementById("menu-toggle-view-label");
-  if (menuLabel) menuLabel.textContent = viewMapEl && getComputedStyle(viewMapEl).display === "none"
-    ? locationText("Zur Karte", "Back to map", "Tilbage til kortet")
-    : t(sidebarEl?.classList.contains("hidden") ? "btn_show_list" : "btn_only_map");
 
   if (!initial && document.getElementById("app-menu")?.hidden) {
     const headerTitle = document.querySelector(".header-title");
@@ -3645,8 +3627,6 @@ function handleToggleView() {
     isHidden ? "true" : "false"
   );
 
-  const menuLabel = document.getElementById("menu-toggle-view-label");
-  if (menuLabel) menuLabel.textContent = t(isHidden ? "btn_show_list" : "btn_only_map");
   if (map) {
     window.setTimeout(() => map.invalidateSize(), 300);
   }
@@ -3683,7 +3663,6 @@ async function init() {
       "language-switcher-flag"
     );
 
-    themeToggleEl = document.getElementById("theme-toggle");
     btnLocateEl = document.getElementById("btn-locate");
     btnHelpEl = document.getElementById("btn-help");
 
@@ -3837,10 +3816,6 @@ async function init() {
 
     setLanguage(initialLang, { initial: true });
 
-    const initialTheme = getInitialTheme();
-
-    currentTheme = applyTheme(initialTheme);
-
     initToast({
       element: toastEl,
       t
@@ -3894,17 +3869,6 @@ async function init() {
       });
 
       updateLanguageSwitcherVisual();
-    }
-
-    if (themeToggleEl) {
-      themeToggleEl.addEventListener("click", () => {
-        const nextTheme =
-          currentTheme === THEME_LIGHT
-            ? THEME_DARK
-            : THEME_LIGHT;
-
-        currentTheme = applyTheme(nextTheme);
-      });
     }
 
     btnLocateEl?.addEventListener(

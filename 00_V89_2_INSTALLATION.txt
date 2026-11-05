@@ -1,0 +1,64 @@
+FAMILY SPOTS MAP · V89.2 — PREMIUM-STARTSEITE / TESTBRANCH
+Stand: 03.11.2026
+
+WICHTIG
+Dies ist ein Austauschpaket fuer den bestehenden V89-Testbranch.
+NICHT auf 'main' hochladen und NICHT die ganze Website neu importieren.
+Vorher den aktuellen Commit/Branch in Working Copy pruefen und sichern.
+
+BASIS
+Lokale V89.1-Quelldateien aus der bisherigen ZIP und Abgleich der
+Struktur mit dem sichtbaren GitHub-Testbranch 'test/pastell-v89'.
+Die Screenshots sind Designreferenzen; die Vorschau aus KI ist kein
+pixelgetreuer Safari-Laufzeittest. Auf dem echten iPhone nachpruefen.
+
+EXAKT 5 DATEIEN 1:1 AUSTAUSCHEN
+  css/fsm-pastel-v89.css
+  data/i18n/de.json
+  data/i18n/en.json
+  data/i18n/da.json
+  service-worker.js
+
+1) In Working Copy Repository 'Family-Spots-Map' oeffnen.
+2) Lokalen Branch 'test/pastell-v89' auswaehlen.
+3) ZIP entpacken und nur die FÜNF oben genannten Dateien an
+   exakt denselben Pfaden einfuegen/ersetzen.
+4) Git-Diff kontrollieren: Keine Loeschungen von fremden Dateien.
+5) Commit mit Zusammenfassung:
+   V89.2 – Premium-Kopfbereich, 5er-Navigation und randlose Karte
+6) Detaillierte Informationen:
+   Harmonischer Kopfbereich mit Tilla, dreizeiliger mehrsprachiger
+   Leitsatz, weisses Play-Symbol und weisse CTA-Schrift, Meetups nur
+   noch im Menue, fuenf echte Navigationstasten, interaktive Leaflet-
+   Karte bis zum unteren Rand und hinter der schwebenden Navigation.
+   Offline-Uebersetzungspruefsummen und Cache-Version aktualisiert.
+7) Push-Remote-Referenz in Working Copy:
+   refs/heads/test/pastell-v89
+   Source-Branch: unveraendert. Force Push: AUS.
+8) Cloudflare Preview oeffnen (nicht Production umstellen).
+9) In Safari iPhone testen:
+   Startseite iPhone Hochformat, Karte zoomen/verschieben,
+   Filter, Spots, Spots Plus, Mein Tag, Menue > Treffen & Spielen,
+   Darkmode, Englisch, Daenisch, Offline und PWA.
+
+EINSCHRAENKUNGEN / TECHNIK
+- Die Leaflet-Karte ist echt; Kartenkacheln benoetigen Internet,
+  wenn sie nicht bereits zwischengespeichert sind.
+- Geaendert werden nur CSS fuer das mobile Layout und drei
+  vorhandene header_tagline-Uebersetzungen sowie Service Worker.
+- Der Treffen-Tab bleibt als DOM-Element und in der Funktionslogik
+  erhalten, ist nur in der unteren Navigation verborgen; das Menue
+  bleibt der Zugang.
+- Die vorhandenen Spotdaten (164 im lokalen Basisarchiv), Tilla,
+  Filter- und Erinnerungslogik werden nicht bearbeitet.
+- Exakter Gleichstand mit einer spaeteren GitHub-Dateiversion muss
+  VOR dem Ersetzen durch Diff geprueft werden: der urspruengliche
+  ZIP-Ausgangspunkt ist V89.1, nicht ein frischer GitHub-Export.
+- Die Live-Darstellung wurde nicht auf deinem iPhone verifiziert.
+- Safari-Adressleiste wird vom Browser gesteuert; die App kann sie
+  nicht unsichtbar machen. Eine installierte PWA hat mehr Platz.
+
+ZURUECKSETZEN
+Vorherigen Testbranch-Commit via Working Copy wiederherstellen,
+falls dir der aktuelle Stand nicht gefaellt. Niemals Force Push
+oder ungeprueft auf main uebernehmen.
