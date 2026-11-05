@@ -62,8 +62,4 @@
     border-color: transparent !important;
     box-shadow: none !important;
   }
-  /* Match the approved light start view while retaining the full-screen controls. */
-  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map #map .leaflet-control-zoom {
-    display: block;
-  }
 }
