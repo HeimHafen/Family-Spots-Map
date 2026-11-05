@@ -253,16 +253,16 @@
   />
 
   <!-- App Styles -->
-  <link rel="stylesheet" href="css/styles.css?v=20261105-test-main31-v920-1" />
+  <link rel="stylesheet" href="css/styles.css?v=20261105-test-main31-v921-1" />
   <link rel="stylesheet" href="css/badges.css" />
   <link rel="stylesheet" href="css/diary.css?v=20261030-diary-3" />
 <link rel="stylesheet" href="css/interface.css?v=20261030-focus-fields-77">
   <link rel="stylesheet" href="css/fsm-ui-finish-70.css?v=20261030-focus-fields-77" />
   <link rel="stylesheet" href="css/fsm-ui-finish-71.css?v=20261030-focus-fields-77" />
-  <link rel="stylesheet" href="css/filter-showcase-78.css?v=20261105-test-main31-v920-1" />
-  <link rel="stylesheet" href="css/fsm-ui-consistency.css?v=20261105-test-main31-v920-1" />
+  <link rel="stylesheet" href="css/filter-showcase-78.css?v=20261105-test-main31-v921-1" />
+  <link rel="stylesheet" href="css/fsm-ui-consistency.css?v=20261105-test-main31-v921-1" />
   <link rel="stylesheet" href="css/fsm-design-system-83.css?v=20261102-fsm-refinement-v83-1" />
-  <link rel="stylesheet" href="css/fsm-home-navigation-84.css?v=20261105-test-main31-v920-1" />
+  <link rel="stylesheet" href="css/fsm-home-navigation-84.css?v=20261105-test-main31-v921-1" />
   <link rel="stylesheet" href="css/community-play.css?v=20261102-community-v85" />
 <script>document.documentElement.classList.add("fsm-polished");</script>
   <link rel="stylesheet" href="css/main-header-v90.css?v=20261103-layout-v917" />
@@ -270,7 +270,7 @@
   <link rel="stylesheet" href="css/fsm-premium-polish-v902.css?v=20261103-layout-v917" />
   <link rel="stylesheet" href="css/fsm-header-final-v907.css?v=20261103-layout-v917" />
   <link rel="stylesheet" href="css/fsm-proportion-target-v917.css?v=20261103-layout-v917" />
-  <link rel="stylesheet" href="css/fsm-landscape-space-v918.css?v=20261105-layout-v920" />
+  <link rel="stylesheet" href="css/fsm-landscape-space-v918.css?v=20261105-layout-v921" />
 </head>
 
 <body>
@@ -431,38 +431,6 @@
               data-i18n-en="About Family Spots Map"
               data-i18n-da="Om Family Spots Map"
             >About Family Spots Map</span>
-          </button>
-
-          <!-- Nur Karte -->
-          <button
-            id="btn-toggle-view-menu"
-            class="app-menu-item"
-            type="button"
-            data-menu-close="1"
-          >
-            <span class="app-menu-item-icon" aria-hidden="true">
-              <svg
-                viewBox="0 0 24 24"
-                width="22"
-                height="22"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="8" y1="6" x2="21" y2="6"></line>
-                <line x1="8" y1="12" x2="21" y2="12"></line>
-                <line x1="8" y1="18" x2="21" y2="18"></line>
-                <circle cx="4" cy="6" r="1"></circle>
-                <circle cx="4" cy="12" r="1"></circle>
-                <circle cx="4" cy="18" r="1"></circle>
-              </svg>
-            </span>
-            <span
-              class="app-menu-item-label"
-              id="menu-toggle-view-label"
-            >Map only</span>
           </button>
 
           <!-- Designmodus wechseln -->
@@ -1303,7 +1271,7 @@
             dann gemeinsam mit Partnern und der Community.
           </p>
 
-          <p>App-Version: <strong>20261105-test-main31-v920-1</strong></p>
+          <p>App-Version: <strong>20261105-test-main31-v921-1</strong></p>
 
           <p>
             Wenn dir die Karte geholfen hat,<br />
@@ -1532,7 +1500,7 @@
             senere sammen med partnere og fællesskabet.
           </p>
 
-          <p>Appversion: <strong>20261105-test-main31-v920-1</strong></p>
+          <p>Appversion: <strong>20261105-test-main31-v921-1</strong></p>
 
           <p>
             Hvis kortet har hjulpet jer<br />
@@ -1735,7 +1703,7 @@
             then together with partners and the community.
           </p>
 
-          <p>App version: <strong>20261105-test-main31-v920-1</strong></p>
+          <p>App version: <strong>20261105-test-main31-v921-1</strong></p>
 
           <p>
             If this map helped you spend<br />
@@ -2045,17 +2013,7 @@
   <script src="./js/sw-register.js?v=20261010-unified-4" defer></script>
 
   <!-- App (ES-Modul) -->
-  <script type="module" src="./js/app.js?v=20261105-test-main31-v920-1"></script>
-
-  <!-- Bridge: Menüpunkt "Nur Karte" nutzt die bestehende Toggle-Logik -->
-  <script type="module">
-    const menuToggle = document.getElementById("btn-toggle-view-menu");
-    const sidebarToggle = document.getElementById("btn-toggle-view");
-
-    if (menuToggle && sidebarToggle) {
-      menuToggle.addEventListener("click", () => sidebarToggle.click());
-    }
-  </script>
+  <script type="module" src="./js/app.js?v=20261105-test-main31-v921-1"></script>
 
   <!-- The spot list starts closed on each page load; no persistent UI preference. -->
   <script type="module">

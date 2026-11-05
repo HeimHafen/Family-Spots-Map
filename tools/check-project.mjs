@@ -43,7 +43,7 @@ for (const name of ["index.html", "en/index.html", "da/index.html", "offline.htm
         if (!label?.includes(`data-i18n-${lang}=`)) fail(`Missing list-toggle translation: ${name}: ${state}/${lang}`);
       }
     }
-    for (const id of ["filter-radius-max-label", "filter-radius-description", "filter-summary", "plus-status-text", "menu-toggle-view-label", "tilla-sidebar-text", "header-tagline"]) {
+    for (const id of ["filter-radius-max-label", "filter-radius-description", "filter-summary", "plus-status-text", "tilla-sidebar-text", "header-tagline"]) {
       const tag = [...html.matchAll(/<[^>]+>/g)].map(match => match[0]).find(tag => tag.includes(`id="${id}"`));
       if (!tag) fail(`Missing dynamic element: ${name}: ${id}`);
       else if (/\bdata-i18n(?:-(?:de|en|da))?\s*=/.test(tag)) fail(`Static translation overwrites dynamic text: ${name}: ${id}`);

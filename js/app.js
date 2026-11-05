@@ -93,7 +93,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261105-test-main31-v920-1";
+} from "./map.js?v=20261105-test-main31-v921-1";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { getInitialTheme, applyTheme } from "./theme.js";
@@ -1036,10 +1036,6 @@ function setLanguage(lang, { initial = false } = {}) {
   if (tilla?.state === "play-idea") safeTillaCall("showPlayIdea", getCurrentPlayIdea());
   else safeTillaCall("onLanguageChanged");
   updateMapLanguage();
-  const menuLabel = document.getElementById("menu-toggle-view-label");
-  if (menuLabel) menuLabel.textContent = viewMapEl && getComputedStyle(viewMapEl).display === "none"
-    ? locationText("Zur Karte", "Back to map", "Tilbage til kortet")
-    : t(sidebarEl?.classList.contains("hidden") ? "btn_show_list" : "btn_only_map");
 
   if (!initial && document.getElementById("app-menu")?.hidden) {
     const headerTitle = document.querySelector(".header-title");
@@ -3645,8 +3641,6 @@ function handleToggleView() {
     isHidden ? "true" : "false"
   );
 
-  const menuLabel = document.getElementById("menu-toggle-view-label");
-  if (menuLabel) menuLabel.textContent = t(isHidden ? "btn_show_list" : "btn_only_map");
   if (map) {
     window.setTimeout(() => map.invalidateSize(), 300);
   }

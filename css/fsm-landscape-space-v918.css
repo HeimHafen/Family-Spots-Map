@@ -5,15 +5,20 @@
   }
 
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header-main::after {
-    height: clamp(73px, 19.9vw, 86px) !important;
+    height: clamp(83px, calc(19.9vw + 10px), 96px) !important;
   }
 
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section {
-    padding-bottom: clamp(16px, 5.5vw, 24px) !important;
+    --fsm-tilla-panel-inset: clamp(4px, calc(2.75vw - 4px), 8px);
+    padding-block: var(--fsm-tilla-panel-inset) !important;
+  }
+
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-avatar {
+    align-self: center !important;
   }
 
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #menu-toggle {
-    top: -8px !important;
+    top: calc(var(--fsm-tilla-panel-inset) - 9.5px) !important;
   }
 
   html.fsm-polished[data-theme="light"].fsm-home-nav-ready body[data-app-view="map"] #fsm-home-nav.fsm-home-nav {

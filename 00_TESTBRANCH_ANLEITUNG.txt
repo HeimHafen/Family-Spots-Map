@@ -1,25 +1,16 @@
-Family Spots Map – V90.20 TEST
-Ersatzpaket für V90.19 auf Basis des Main-31-Teststands V90.17 bis V90.19.
-
-1. Den aktuellen lokalen Teststand in Working Copy sichern.
-2. Die acht Dateien aus dem ZIP gemeinsam in den Teststand übernehmen.
-   Die Pfade im ZIP entsprechen den Zielpfaden. Keine Endung umbenennen.
-3. Gemeinsam committen und auf den vorgesehenen Testbranch pushen.
+Family Spots Map V90.21 TEST
+Basis: Main-31-Teststand V90.20. Aktuellen Teststand vor dem Austausch sichern.
+Alle neun Dateien mit Originalnamen und Ordnerstruktur gemeinsam ersetzen.
 
 Zusammenfassung
-V90.20 TEST – V90.19 ersetzen und mobile Kartenansicht übernehmen
+V90.21 TEST – Tilla-Bereich zentrieren und Menü vereinfachen
 
 Detaillierte Informationen
-Acht direkt einsetzbare Dateien für DE, EN und DA. Neue Cache-Version
-und aktualisierte Prüfsummen. Mehr Platz unter Spielideen, direkter
-Kartenanschluss, Menü höher und flachere Navigationsleiste.
+Mehr Raum für die Landschaft, gleichmäßige Innenabstände im Tilla-Bereich.
+Menüeintrag „Nur Karte“ in DE, EN und DA entfernt. Vollbildtaste auf der
+Karte bleibt verfügbar. Offline-Cache und Prüfsummen aktualisiert.
 
-Vorhandene oder neue Remote-Referenz für die V90.18-Testumgebung
+Vorhandene oder neue Remote-Referenz
 refs/heads/test/main31-layout-v918
-Wenn die betreffende Cloudflare-Vorschau bereits einem anderen Testbranch
-zugeordnet ist, den dort angezeigten Branch verwenden.
-Source-Branch: unverändert. Force Push: aus.
-
-Nach erfolgreichem Cloudflare-Deployment die zu diesem Branch gehörende
-Vorschau öffnen. Version und Darstellung in Safari und Chrome prüfen.
-Bei alter Ansicht zuerst die Vorschau in einem privaten Tab öffnen.
+Verwende den Branch der aktuellen Cloudflare-Testvorschau, falls abweichend.
+Source-Branch unverändert, Force Push aus.
