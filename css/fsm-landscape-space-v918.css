@@ -11,9 +11,9 @@
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section {
     --fsm-tilla-panel-inset: clamp(4px, calc(2.75vw - 4px), 8px);
     --fsm-tilla-panel-lift: 4px;
+    background: transparent !important;
     box-shadow: none !important;
-    border-end-start-radius: 0 !important;
-    border-end-end-radius: 0 !important;
+    border-radius: 0 !important;
     padding-block: calc(var(--fsm-tilla-panel-inset) - var(--fsm-tilla-panel-lift))
       calc(var(--fsm-tilla-panel-inset) + var(--fsm-tilla-panel-lift)) !important;
   }
@@ -45,6 +45,7 @@
 
   /* Continue Tilla's cream surface around the upper map corners. */
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #main-content.app-main,
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #sidebar,
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active {
     background: #fff6e9 !important;
   }
@@ -58,7 +59,11 @@
     margin-inline: 0 !important;
     border-top-left-radius: 22px !important;
     border-top-right-radius: 22px !important;
-    border: 1px solid rgba(176, 148, 112, .10) !important;
-    box-shadow: none;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+  /* Match the approved light start view while retaining the full-screen controls. */
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map #map .leaflet-control-zoom {
+    display: block;
   }
 }

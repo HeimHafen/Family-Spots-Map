@@ -91,7 +91,7 @@ html.fsm-map-fullscreen-open body { overflow: hidden; overscroll-behavior: none;
 .fsm-spot-preview__close { position: absolute; right: 3px; top: 3px; width: 44px; height: 44px; min-height: 44px; border: 0; background: none; color: #30291f; font-size: 27px!important; line-height: 1; border-radius: 50%; }
 .fsm-spot-preview__open { width: 100%; min-height: 44px; margin-top: 8px; padding: 9px 14px; border: 0; border-radius: 23px; background: #ff8417; color: #30291f; font-weight: 750!important; }
 .fsm-spot-preview__open span { font-size: 20px; line-height: 1; }
-.fsm-spot-preview button:focus-visible { outline: 3px solid #48503d; outline-offset: 2px; }
+.fsm-spot-preview button:focus-visible { outline: 3px solid var(--fsm-keyboard-focus, #685c51); outline-offset: 2px; }
 
 /* Transparent watercolor asset; note remains a separate memory-state element. */
 #tilla-section .tilla-sidebar-avatar { position: relative; aspect-ratio: auto; animation: none; transform: none; }

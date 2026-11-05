@@ -490,7 +490,7 @@ html.fsm-polished #tilla-section #btn-play-idea {
 html.fsm-polished :is(#filter-search,#plus-code-input,#daylog-text,
   .filter-modal input:not([type="checkbox"]),.filter-modal select,
   #view-diary input,#view-diary textarea,#view-diary select) { font-size:16px!important; }
-html.fsm-polished :is(.input,textarea,select):focus-visible { outline:2px solid var(--fsm70-olive)!important; outline-offset:2px!important; }
+html.fsm-polished :is(.input,textarea,select):focus-visible { outline:2px solid var(--fsm-keyboard-focus, #685c51)!important; outline-offset:2px!important; }
 /* Search/filters: readable labels, calm selection, aligned result counts. */
 html.fsm-polished #filter-modal .filter-modal-inner { border-radius:20px 20px 17px 17px!important; }
 html.fsm-polished #filter-modal .category-explorer__chip { box-sizing:border-box; min-height:51px; }
@@ -534,7 +534,7 @@ html.fsm-polished #fsm-map-fullscreen .fsm-map-nav .fsm-map-tool--destination {
 html.fsm-polished #fsm-map-fullscreen .fsm-map-nav .fsm-map-tool--destination[aria-current="page"] { background:var(--fsm70-olive)!important; color:#fff!important; }
 html.fsm-polished #fsm-map-fullscreen .fsm-map-themes { scroll-padding-inline:12px!important; }
 /* Fine focus treatment for all major interactive items. */
-html.fsm-polished :is(button,a,summary,[role="button"],input,textarea,select):focus-visible { outline:2px solid var(--fsm70-olive)!important; outline-offset:2px!important; }
+html.fsm-polished :is(button,a,summary,[role="button"],input,textarea,select):focus-visible { outline:2px solid var(--fsm-keyboard-focus, #685c51)!important; outline-offset:2px!important; }
 /* 320-375px: keep all five nav items in one row and equal header height. */
 @media(max-width:375px) {
   html.fsm-polished #tilla-section .tilla-sidebar-card { grid-template-columns:minmax(80px,25%) minmax(0,1fr)!important; column-gap:9px!important; }
