@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261105-test-main31-v923-1");
+@import url("./categories.css?v=20261105-test-main31-v935-1");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -23,7 +23,7 @@
 /* Abendpalette: ausschließlich der gespeicherte Dark-Modus. */
 
 
-@import url("./map-spots.css?v=20261105-test-main31-v923-1");
+@import url("./map-spots.css?v=20261105-test-main31-v935-1");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
@@ -254,8 +254,8 @@ html[data-theme] #menu-toggle { width: 44px; height: 44px; min-height: 44px; }
    Layout, palette, selected states and photo storage are unchanged. */
 :root {
   --fsm-field-border: #bfc2bc;
-  --fsm-field-focus: #90978d;
-  --fsm-keyboard-focus: #767e71;
+  --fsm-field-focus: #a09485;
+  --fsm-keyboard-focus: #685c51;
 }
 html body :is(input.input, textarea.input, select.input,
   input:not([type]), input[type="text"], input[type="search"],
@@ -308,4 +308,27 @@ html[data-fsm-focus-modality="keyboard"] body
     padding-block-end: max(180px, calc(100svh - 160px)) !important;
   }
   #spot-detail:not(.spot-details--hidden) { scroll-margin-block-start: 12px; }
+}
+
+
+/* Keep a single neutral field border on touch and a visible keyboard cue. */
+@media (forced-colors: none) {
+  html.fsm-polished body :is(input, textarea, select):focus-visible {
+    outline-color: var(--fsm-keyboard-focus) !important;
+  }
+
+  html.fsm-polished body :is(#filter-modal, #view-diary, #filter-section, #fsm-map-fullscreen, #plus-section, #fse-overlay)
+    :is(input, textarea, select):focus-visible {
+    outline-color: var(--fsm-keyboard-focus) !important;
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    html.fsm-polished body :is(input, textarea, select):focus,
+    html.fsm-polished body :is(#filter-modal, #view-diary, #filter-section, #fsm-map-fullscreen, #plus-section, #fse-overlay)
+      :is(input:not([type="checkbox"], [type="radio"]), textarea, select, #daylog-text, #filter-search):focus {
+      outline: none !important;
+      box-shadow: none !important;
+      border-color: var(--fsm-field-focus) !important;
+    }
+  }
 }

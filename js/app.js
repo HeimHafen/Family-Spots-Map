@@ -35,13 +35,13 @@ import { initFilterSelects } from "./ui/filter-select.js";
 
 import { initDiaryView } from "./features/diary-view.js";
 
-import { initDaylogPhotos } from "./features/daylog-photos.js?v=20261030-diary-3";
+import { initDaylogPhotos } from "./features/daylog-photos.js?v=20261105-photo-v928";
 
 import { initPersonalBackup } from "./features/personal-backup.js";
 
 import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js";
 
-import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js";
+import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261105-storage-v928";
 
 import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261010-unified-4";
 
@@ -91,7 +91,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261105-test-main31-v923-1";
+} from "./map.js?v=20261105-test-main31-v935-1";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { initToast, showToast } from "./toast.js";
