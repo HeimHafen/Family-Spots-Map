@@ -11,6 +11,7 @@
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section {
     --fsm-tilla-panel-inset: clamp(4px, calc(2.75vw - 4px), 8px);
     --fsm-tilla-panel-lift: 4px;
+    box-shadow: none !important;
     padding-block: calc(var(--fsm-tilla-panel-inset) - var(--fsm-tilla-panel-lift))
       calc(var(--fsm-tilla-panel-inset) + var(--fsm-tilla-panel-lift)) !important;
   }

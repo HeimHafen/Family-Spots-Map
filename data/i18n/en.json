@@ -15,7 +15,6 @@
     },
     "aria": {
       "help": "Show help and information",
-      "themeToggle": "Switch theme",
       "locate": "Centre on your location"
     },
     "labels": {
@@ -150,7 +149,6 @@
   "meta_description": "Handpicked places for families: playgrounds, animals, water play, and short routes that turn into memories.",
   "error_data_load": "Oops – we couldn’t load the data just now. Please try again in a moment.",
   "btn_help_aria": "Show help and information",
-  "btn_theme_toggle_aria": "Switch theme",
   "btn_locate_aria": "Centre on your location",
   "alt_tilla_image": "Tilla the turtle – your family companion",
   "header_tagline": "Discover places.\nConnect people.\nCreate memories.",

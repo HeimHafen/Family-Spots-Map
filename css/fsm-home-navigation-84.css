@@ -42,12 +42,6 @@ html.fsm-home-nav-ready #main-content { padding-bottom: 100px !important; }
 .fsm-home-nav__item[hidden] {display:none !important;}
 .fsm-home-nav__item:focus-visible, .fsm-home-sheet__close:focus-visible {outline:2px solid #65844f; outline-offset:2px;}
 .fsm-home-nav__label {overflow-wrap:anywhere;}
-html[data-theme="dark"] .fsm-home-nav {
-  --fsm-nav-bg:#303b33; --fsm-nav-text:#f7f3e9; --fsm-nav-line:#71806e;
-  --fsm-nav-active:#b8d2a1; --fsm-nav-active-ink:#2c372b;
-  box-shadow:0 5px 18px #0005;
-}
-html[data-theme="dark"] .fsm-home-nav__item > .fsm-daylog-heart {fill:#87ad31;}
 /* Native modal gives keyboard focus containment and iOS-safe top-layer semantics. */
 .fsm-home-sheet {
   box-sizing:border-box; width:min(570px, calc(100vw - 24px));
@@ -69,7 +63,6 @@ html[data-theme="dark"] .fsm-home-nav__item > .fsm-daylog-heart {fill:#87ad31;}
 .fsm-home-sheet__content > .sidebar-section {margin:0!important;max-width:100%;width:100%;}
 .fsm-home-sheet #spot-list {max-height:none!important;overflow:visible!important;}
 .fsm-home-sheet .sidebar-section--grow > .sidebar-section-header {position:sticky;top:0;z-index:1;background:var(--fsm-home-panel,#fff8ef);}
-html[data-theme="dark"] .fsm-home-sheet {--fsm-home-panel:#d4d0c5;--fsm-home-ink:#352e23;--fsm-home-border:#aaa795;}
 html[data-theme="light"] .fsm-home-sheet {--fsm-home-panel:#fff8ef;--fsm-home-ink:#3b3329;--fsm-home-border:#d9cdbc;}
 /* No second nav over the map's dedicated fullscreen nav or other routes. */
 html.fsm-map-fullscreen-open .fsm-home-nav,
@@ -144,13 +137,6 @@ html.fsm-polished #filter-modal #filter-modal-close > svg {
 html.fsm-polished #filter-modal #filter-modal-close > svg path {
   stroke-width: 1.45 !important;
   stroke-linecap: round !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-close {
-  color: #e6e9e1 !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-close::before {
-  background: rgba(255, 255, 255, .045);
-  border-color: rgba(226, 237, 221, .19);
 }
 @media (hover: hover) {
   .fsm-home-sheet .fsm-home-sheet__close:hover::before,

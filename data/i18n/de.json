@@ -15,7 +15,6 @@
     },
     "aria": {
       "help": "Hilfe und Infos anzeigen",
-      "themeToggle": "Designmodus wechseln",
       "locate": "Standort zentrieren"
     },
     "labels": {
@@ -150,7 +149,6 @@
   "meta_description": "Handverlesene Orte für Familien: Spielplätze, Tiere, Wasser & Wege mit Erinnerungswert.",
   "error_data_load": "Ups – das hat gerade nicht geklappt. Bitte versuch es gleich noch einmal.",
   "btn_help_aria": "Hilfe und Infos anzeigen",
-  "btn_theme_toggle_aria": "Designmodus wechseln",
   "btn_locate_aria": "Standort zentrieren",
   "alt_tilla_image": "Tilla die Schildkröte – eure Familienbegleiterin",
   "header_tagline": "Orte entdecken.\nMenschen verbinden.\nErinnerungen schaffen.",

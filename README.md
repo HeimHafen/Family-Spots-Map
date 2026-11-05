@@ -61,7 +61,6 @@ Birkensee: aktueller Betreiber AZUR, Seezugang laut Betreiber nur für Camping- 
 - **Mein Tag:** Erinnerungen schreiben, bearbeiten und löschen; auch offline, sobald die App vollständig geladen wurde.
 - **Bildergalerien:** passende Ortsbilder mit Bildunterschriften und Alternativtexten in allen drei Sprachen.
 - **Besuchsplanung:** strukturierte Informationen zu Eignung, Zeitbedarf, Anreise, Kosten, Öffnungszeiten, Familienkomfort, Essen, Zugänglichkeit und praktischen Tipps.
-- **Zwei Designmodi:** warme helle Gestaltung und ein Abendmodus mit olivfarbenem Hintergrund, hellen Karten und optisch abgedunkelten Kartenkacheln.
 
 Favoriten, Erinnerungen, Entwürfe und Freischaltungen werden lokal im jeweiligen Browser gespeichert. Eine geräteübergreifende Kontosynchronisation ist derzeit nicht implementiert.
 
@@ -79,7 +78,7 @@ Die Oberfläche unterstützt **Deutsch, Englisch und Dänisch**. Zu den Sprachve
 
 Sprachdateien liegen unter `data/i18n/`. `js/i18n.js` enthält zusätzlich lokale Fallback-Texte und Spielideen, damit der Start nicht von erfolgreichen Nachladeanfragen abhängt. Änderungen an den Sprachdateien und den eingebauten Fallbacks müssen zusammenpassen.
 
-Das Design verwendet gemeinsame Abstände, abgerundete Bedienelemente und kompakte Detailaktionen. `css/evening.css` ergänzt ausschließlich den dunklen Modus. Kartenfilter wirken auf die Rasterkacheln; Marker, Beschriftungen und Kartenbedienelemente werden nicht mitgefiltert.
+Das Design verwendet gemeinsame Abstände, abgerundete Bedienelemente und kompakte Detailaktionen. Kartenfilter wirken auf die Rasterkacheln; Marker, Beschriftungen und Kartenbedienelemente werden nicht mitgefiltert.
 
 ## Spot-Qualität und Verifizierung
 
@@ -167,7 +166,7 @@ Die Anwendung besteht aus statischen HTML-, CSS- und JavaScript-Dateien mit ES-M
 | Pfad | Aufgabe |
 | --- | --- |
 | `index.html`, `en/index.html`, `da/index.html` | Einstieg in die drei Sprachversionen |
-| `css/styles.css`, `css/components.css`, `css/theme.css`, `css/evening.css` | Layout, Komponenten, Farbvariablen und Abendmodus |
+| `css/styles.css`, `css/components.css`, `css/theme.css` | Layout, Komponenten, Farbvariablen |
 | `js/app.js` | Initialisierung und Zusammenspiel der Anwendung |
 | `js/ui/spot-details.js` | Spot-Detailansicht, Bildergalerie, Besuchsinfos, Quellen und Kartenbuttons |
 | `js/map.js`, `js/filters/` | Karte, Marker und Filterlogik |

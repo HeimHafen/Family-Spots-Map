@@ -15,7 +15,6 @@
     },
     "aria": {
       "help": "Vis hjælp og info",
-      "themeToggle": "Skift tema",
       "locate": "Centrér på jeres position"
     },
     "labels": {
@@ -150,7 +149,6 @@
   "meta_description": "Håndplukkede steder for familier: legepladser, dyr, vand og små ture, der bliver til minder.",
   "error_data_load": "Ups – vi kunne ikke indlæse dataene lige nu. Prøv igen om lidt.",
   "btn_help_aria": "Vis hjælp og info",
-  "btn_theme_toggle_aria": "Skift tema",
   "btn_locate_aria": "Centrér på jeres position",
   "alt_tilla_image": "Tilla skildpadden – jeres familieledsager",
   "header_tagline": "Opdag steder.\nSkab forbindelser.\nSkab minder.",

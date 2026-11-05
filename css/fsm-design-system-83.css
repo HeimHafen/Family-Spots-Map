@@ -32,22 +32,6 @@ html.fsm-polished {
   --fsm83-shadow-small: 0 2px 7px rgba(50, 42, 29, .06);
   --fsm83-shadow-modal: 0 20px 52px rgba(20, 28, 19, .21);
 }
-html.fsm-polished[data-theme="dark"] {
-  --fsm83-paper: #d4d0c5;
-  --fsm83-paper-raised: #dcd8cf;
-  --fsm83-line: #a8a89a;
-  --fsm83-ink: #352f27;
-  --fsm83-muted: #574e43;
-  --fsm83-focus: #c6dda9;
-  --fsm83-dialog-bg: #303d33;
-  --fsm83-dialog-raised: #3b4a3f;
-  --fsm83-dialog-low: #354338;
-  --fsm83-dialog-line: #68776b;
-  --fsm83-dialog-muted: #cbd5c7;
-  --fsm83-dialog-ink: #f7f5ec;
-  --fsm83-green-dark: #607b57;
-  --fsm83-green-dark-ink: #fafcf6;
-}
 
 /* Typography: preserve the project's original font and text hierarchy.
    Do not impose a new font on Leaflet or on the platform's controls. */
@@ -119,17 +103,6 @@ html.fsm-polished #filter-section .mood-row > .mood-chip[aria-pressed="true"] {
   box-shadow: inset 0 0 0 1px rgba(49, 91, 53, .09) !important;
   font-weight: 600 !important;
 }
-html.fsm-polished[data-theme="dark"] #filter-section .mood-row > .mood-chip[aria-pressed="false"] {
-  background: #485046 !important;
-  border-color: #8c9787 !important;
-  color: #f3ede3 !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-section .mood-row > .mood-chip[aria-pressed="true"] {
-  background: #607b57 !important;
-  border-color: #b7d0a6 !important;
-  color: #fbfff5 !important;
-  box-shadow: inset 0 0 0 1px rgba(230, 244, 215, .1) !important;
-}
 html.fsm-polished #fsm-map-fullscreen .fsm-map-themes >
   .fsm-map-tool--theme[aria-pressed="false"] {
   background: #fff9ee !important;
@@ -141,18 +114,6 @@ html.fsm-polished #fsm-map-fullscreen .fsm-map-themes >
   background: #587348 !important;
   border-color: #587348 !important;
   color: #fffdf4 !important;
-}
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-themes >
-  .fsm-map-tool--theme[aria-pressed="false"] {
-  background: #354037 !important;
-  border-color: #81907d !important;
-  color: #f7f4e9 !important;
-}
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-themes >
-  .fsm-map-tool--theme[aria-pressed="true"] {
-  background: #607d54 !important;
-  border-color: #c0d9ac !important;
-  color: #fffefa !important;
 }
 
 /* Filter dialog: intentional hierarchy, consistent neutral count pills.
@@ -194,62 +155,6 @@ html.fsm-polished #filter-modal #filter-modal-close {
   min-height: 44px !important;
   box-shadow: none !important;
 }
-html.fsm-polished[data-theme="dark"] #filter-modal {
-  --fs78-ink: var(--fsm83-dialog-ink);
-  --fs78-muted: var(--fsm83-dialog-muted);
-  --fs78-line: var(--fsm83-dialog-line);
-  --fs78-surface: var(--fsm83-dialog-bg);
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .filter-modal-inner {
-  background: var(--fsm83-dialog-bg) !important;
-  color: var(--fsm83-dialog-ink) !important;
-  border-color: var(--fsm83-dialog-line) !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal :is(.filter-modal-header, .filter-modal-footer) {
-  background: var(--fsm83-dialog-bg) !important;
-  border-color: var(--fsm83-dialog-line) !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds >
-  .category-explorer__chip[aria-pressed="false"] {
-  background: var(--fsm83-dialog-raised) !important;
-  border-color: var(--fsm83-dialog-line) !important;
-  color: var(--fsm83-dialog-ink) !important;
-  box-shadow: none !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds >
-  .category-explorer__chip[aria-pressed="true"] {
-  background: var(--fsm83-green-dark) !important;
-  border-color: #a6c49a !important;
-  color: var(--fsm83-green-dark-ink) !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08) !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__types {
-  background: var(--fsm83-dialog-low) !important;
-  border-color: var(--fsm83-dialog-line) !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice {
-  color: var(--fsm83-dialog-ink) !important;
-  border-bottom-color: #647265 !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__choice:has(input:checked) {
-  background: #536c4f !important;
-  color: #fffdf6 !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__rules,
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__extras {
-  background: var(--fsm83-dialog-raised) !important;
-  border-color: var(--fsm83-dialog-line) !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__rules summary,
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__rules p,
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__type-help {
-  color: var(--fsm83-dialog-ink) !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal #filter-modal-reset {
-  background: var(--fsm83-dialog-raised) !important;
-  border-color: #829581 !important;
-  color: var(--fsm83-dialog-ink) !important;
-}
 
 /* Menu = warm paper in both themes. Preserve its reassuring contrast. */
 html.fsm-polished .app-menu-item {min-height: 44px !important;}
@@ -262,19 +167,11 @@ html.fsm-polished .app-menu-lang-chip {
   color: #382f27 !important;
   box-shadow: none !important;
 }
-/* Language choice is selection, not an orange primary action. The menu
-   itself stays warm paper in both color modes. */
-html.fsm-polished .app-menu-lang-chip--active[aria-pressed="true"],
-html.fsm-polished[data-theme="dark"] .app-menu-lang-chip--active[aria-pressed="true"] {
+html.fsm-polished .app-menu-lang-chip--active[aria-pressed="true"] {
   background: var(--fsm83-green-light) !important;
   border-color: var(--fsm83-green-light-stroke) !important;
   color: var(--fsm83-green-light-ink) !important;
   box-shadow: inset 0 0 0 1px rgba(41, 70, 45, .07) !important;
-}
-html.fsm-polished[data-theme="dark"] .app-menu-lang-chip:not([aria-pressed="true"]) {
-  background: #c9c5b9 !important;
-  border-color: #b4b1a3 !important;
-  color: #382f27 !important;
 }
 html.fsm-polished .app-menu-panel {overscroll-behavior: contain;}
 
@@ -314,26 +211,6 @@ html.fsm-polished :is(
     transition: none !important;
   }
 }
-
-
-/* ================================================================
-   V83.1 · ACCESSIBILITY & INTERACTION REFINEMENT
-   2026-11-02: No change to spot data, filters, persistence or Tilla.
-   A world is not a type; a quick water preset is not the water world.
-   ================================================================ */
-
-/* In an active theme, recognizable shapes matter more than retaining
-   low-contrast icon pigment. Inactive symbols keep their category hues. */
-html.fsm-polished[data-theme="dark"] #filter-modal
-  .category-explorer__worlds > .category-explorer__chip[aria-pressed="true"]
-  > .category-explorer__icon {
-  color: #fffefa !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal
-  .category-explorer__choice:has(input[type="checkbox"]:checked)
-  .category-explorer__icon {
-  color: #f4f9ed !important;
-}
 html.fsm-polished[data-theme="light"] #filter-modal
   .category-explorer__worlds > .category-explorer__chip[aria-pressed="true"]
   > .category-explorer__icon,
@@ -357,42 +234,6 @@ html.fsm-polished #filter-modal .category-explorer__worlds >
 html.fsm-polished #filter-modal .category-explorer__worlds >
   .category-explorer__chip[data-world=""][data-refined="true"][aria-pressed="true"]
   > .category-explorer__icon {color: #416b4f !important;}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds >
-  .category-explorer__chip[data-world=""][data-refined="true"][aria-pressed="true"] {
-  background: var(--fsm83-dialog-raised) !important;
-  border-color: #90a18a !important;
-  color: var(--fsm83-dialog-ink) !important;
-  box-shadow: inset 3px 0 0 #b1d19d !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal .category-explorer__worlds >
-  .category-explorer__chip[data-world=""][data-refined="true"][aria-pressed="true"]
-  > .category-explorer__icon {color: #e9f4df !important;}
-
-/* Readable subdued count badges. Current match count is a neutral
-   statistic, never an alternative active-selection indication. */
-html.fsm-polished[data-theme="dark"] #filter-modal
-  .category-explorer__choice .category-explorer__count {
-  background: #48584b !important;
-  color: #f4f5ec !important;
-}
-html.fsm-polished[data-theme="dark"] #filter-modal
-  .category-explorer__choice:has(input[type="checkbox"]:checked)
-  .category-explorer__count {
-  background: #405a41 !important;
-  color: #f7f7ed !important;
-}
-
-/* A warm, raised writing surface on the dusk-paper diary card. */
-html.fsm-polished[data-theme="dark"] #view-diary #diary-composer > #daylog-text {
-  background: #e7e3d9 !important;
-  border-color: #aaa898 !important;
-  color: #342f27 !important;
-  box-shadow: inset 0 1px 2px rgba(35, 40, 29, .035) !important;
-}
-html.fsm-polished[data-theme="dark"] #view-diary #diary-composer > #daylog-text::placeholder {
-  color: #625b50 !important;
-  opacity: 1;
-}
 
 /* Mobile Safari's floating bars can cover the final memory image.
    Extra document scroll room is intentional and only for browser mode. */

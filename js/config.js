@@ -132,8 +132,6 @@ export const LANG_EN = "en";
 /** @type {LangCode} */
 export const LANG_DA = "da";
 
-export const THEME_LIGHT = "light";
-export const THEME_DARK = "dark";
 
 // ------------------------------------------------------
 // Radius / Marker-Limit

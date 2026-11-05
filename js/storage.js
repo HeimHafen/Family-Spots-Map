@@ -14,7 +14,6 @@ import {
 } from "./config.js";
 
 const LANG_STORAGE_KEY = "fs_lang";
-const THEME_STORAGE_KEY = "fs_theme";
 const FAVORITES_STORAGE_KEY = "fs_favorites";
 
 // Legacy-Flags für das alte Plus-Format
@@ -97,27 +96,6 @@ export function loadStoredLang() {
 export function saveStoredLang(lang) {
   if (!lang) return;
   safeSet(LANG_STORAGE_KEY, lang);
-}
-
-// ------------------------------------------------------
-// Theme
-// ------------------------------------------------------
-
-/**
- * Gespeichertes Theme laden ("light" | "dark" | null).
- * @returns {string|null}
- */
-export function loadStoredTheme() {
-  return safeGet(THEME_STORAGE_KEY);
-}
-
-/**
- * Theme persistieren.
- * @param {string} theme
- */
-export function saveStoredTheme(theme) {
-  if (!theme) return;
-  safeSet(THEME_STORAGE_KEY, theme);
 }
 
 // ------------------------------------------------------
