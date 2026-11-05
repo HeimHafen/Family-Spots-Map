@@ -41,12 +41,16 @@
     background: #fff6e9 !important;
   }
 
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #header-tagline {
+    transform: translateY(2px) !important;
+  }
+
   /* Let the map frame alone define the two matching upper corners. */
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active > .map-section {
     margin-inline: 0 !important;
     border-top-left-radius: 22px !important;
     border-top-right-radius: 22px !important;
-    border: 1px solid #e3d6c3 !important;
+    border: 1px solid rgba(176, 148, 112, .18) !important;
     box-shadow: none;
   }
 }
