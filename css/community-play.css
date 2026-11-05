@@ -36,13 +36,13 @@
 #fsm-community-overlay .fsm-community-actions{flex:none;padding:10px 18px calc(13px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:1fr 1fr;gap:9px;border-top:1px solid #e6dac9;background:#fff8ef}
 #fsm-community-overlay .fsm-community-actions button{border-radius:14px;min-height:44px;font-size:15px;font-weight:750;border:1px solid #bda98c;color:#382b1c;background:transparent}
 #fsm-community-overlay .fsm-community-actions .fsm-community-primary{background:#fb8c18;border-color:#e27808;color:#302719}
-#fsm-community-overlay button:focus-visible{outline:3px solid #547d32;outline-offset:3px}
+#fsm-community-overlay button:focus-visible{outline:3px solid var(--fsm-keyboard-focus, #685c51);outline-offset:3px}
 @media(max-width:390px){#fsm-community-overlay .fsm-community-header{padding-inline:12px;gap:7px}#fsm-community-overlay .fsm-community-body{padding-inline:12px}#fsm-community-overlay .fsm-community-actions{padding-inline:12px}#fsm-community-overlay .fsm-community-title{font-size:19px}#fsm-community-overlay .fsm-community-intro{font-size:14px}}
 @media(max-height:630px){#fsm-community-overlay .fsm-community-header{padding-block:8px}#fsm-community-overlay .fsm-community-body{padding-bottom:7px}#fsm-community-overlay .fsm-community-photo{max-height:170px}}
 @media(prefers-reduced-motion:no-preference){#fsm-community-overlay .fsm-community-sheet{animation:fsm-community-rise .18s ease-out}@keyframes fsm-community-rise{from{transform:translateY(14px);opacity:.87}to{transform:translateY(0);opacity:1}}}
 @media(forced-colors:active){#fsm-community-overlay .fsm-community-sheet{border:2px solid CanvasText}#fsm-community-overlay .fsm-community-actions button{border:1px solid ButtonText}}
 
-#spot-detail .spot-community-open{display:block;width:100%;min-height:44px;margin:14px 0 6px;border-radius:14px;border:1px solid #df7c12;background:#fb8c18;color:#302719;font-family:inherit;font-size:15px;font-weight:700;line-height:1.3;cursor:pointer;padding:10px 14px}#spot-detail .spot-community-open:focus-visible{outline:3px solid #527a32;outline-offset:3px}
+#spot-detail .spot-community-open{display:block;width:100%;min-height:44px;margin:14px 0 6px;border-radius:14px;border:1px solid #df7c12;background:#fb8c18;color:#302719;font-family:inherit;font-size:15px;font-weight:700;line-height:1.3;cursor:pointer;padding:10px 14px}#spot-detail .spot-community-open:focus-visible{outline:3px solid var(--fsm-keyboard-focus, #685c51);outline-offset:3px}
 
 /* The EXISTING home navigation is docked under the concept card, never cloned. */
 #fsm-community-overlay #fsm-home-nav{position:static!important;display:grid!important;flex:none!important;box-sizing:border-box;width:auto!important;max-width:none!important;left:auto!important;right:auto!important;bottom:auto!important;z-index:1!important;margin:0 9px 9px!important;box-shadow:none!important}

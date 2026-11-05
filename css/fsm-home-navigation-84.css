@@ -40,7 +40,7 @@ html.fsm-home-nav-ready #main-content { padding-bottom: 100px !important; }
 .fsm-home-nav__item > .fsm-daylog-heart {width:21px;height:21px;fill:#7fa825;stroke:#36551c;}
 .fsm-home-nav__item[aria-current="page"] {background:var(--fsm-nav-active);color:var(--fsm-nav-active-ink);}
 .fsm-home-nav__item[hidden] {display:none !important;}
-.fsm-home-nav__item:focus-visible, .fsm-home-sheet__close:focus-visible {outline:2px solid #65844f; outline-offset:2px;}
+.fsm-home-nav__item:focus-visible, .fsm-home-sheet__close:focus-visible {outline:2px solid var(--fsm-keyboard-focus, #685c51); outline-offset:2px;}
 .fsm-home-nav__label {overflow-wrap:anywhere;}
 /* Native modal gives keyboard focus containment and iOS-safe top-layer semantics. */
 .fsm-home-sheet {

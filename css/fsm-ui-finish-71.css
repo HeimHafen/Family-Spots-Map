@@ -272,7 +272,7 @@ html.fsm-polished #filter-modal #filter-modal-apply {
   background:#ff8819!important;border:1px solid #ef8013!important;color:#21170f!important;
 }
 html.fsm-polished #filter-modal #filter-modal-apply::before {content:none!important;display:none!important;}
-html.fsm-polished #filter-modal :is(button,summary,input):focus-visible {outline:2px solid #436d37!important;outline-offset:2px!important;}
+html.fsm-polished #filter-modal :is(button,summary,input):focus-visible {outline:2px solid var(--fsm-keyboard-focus, #685c51)!important;outline-offset:2px!important;}
 @media (max-width:360px) {
  html.fsm-polished #filter-modal {padding-inline:8px!important;}
  html.fsm-polished #filter-modal .filter-modal-header {padding-inline:13px!important;}

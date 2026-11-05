@@ -89,10 +89,10 @@
 .fsm-polished #tilla-section #menu-toggle::after { content:none; }
 .fsm-polished #tilla-section #menu-toggle .btn-menu-icon { width:20px; height:20px; display:block; }
 .fsm-polished #tilla-section #menu-toggle:hover { color:var(--p-text); }
-.fsm-polished #tilla-section #menu-toggle:focus-visible { outline:2px solid var(--p-green); outline-offset:2px; border-radius:9px; }
+.fsm-polished #tilla-section #menu-toggle:focus-visible { outline:2px solid var(--fsm-keyboard-focus, #685c51); outline-offset:2px; border-radius:9px; }
 .fsm-polished #tilla-section #btn-play-idea { min-height:44px; border:1px solid #e77b12!important; background:#f98b18!important; color:#3c2817!important; border-radius:10px!important; box-shadow:none!important; font-weight:500!important; }
 .fsm-polished #tilla-section #btn-play-idea:hover { background:#ef8010!important; }
-.fsm-polished #tilla-section #btn-play-idea:focus-visible { outline:2px solid var(--p-green); outline-offset:3px; }
+.fsm-polished #tilla-section #btn-play-idea:focus-visible { outline:2px solid var(--fsm-keyboard-focus, #685c51); outline-offset:3px; }
 .fsm-polished #tilla-section #btn-play-idea:active { transform:translateY(1px); }
 @media(prefers-reduced-motion:reduce) { .fsm-polished #tilla-section #btn-play-idea { transition:none!important; } }
 /* Shared visual roles: the same palette and typeface in nested panels. */
@@ -122,7 +122,7 @@ html.fsm-polished {
 .fsm-polished .spot-details-description { font-size:13px; line-height:1.6; }
 .fsm-polished .spot-details-meta { font-size:12px; color:var(--p-muted); }
 .fsm-polished .spot-card-actions>button { min-height:44px; }
-.fsm-polished :is(button,input,select,textarea,summary):focus-visible { outline:2px solid var(--p-green); outline-offset:3px; }
+.fsm-polished :is(button,input,select,textarea,summary):focus-visible { outline:2px solid var(--fsm-keyboard-focus, #685c51); outline-offset:3px; }
 
 .fsm-polished input::placeholder, .fsm-polished textarea::placeholder { color:var(--p-muted)!important; opacity:1; }
 .fsm-polished #filter-modal .category-explorer legend { font-size:16px; font-weight:500; line-height:1.4; margin-bottom:8px; }
