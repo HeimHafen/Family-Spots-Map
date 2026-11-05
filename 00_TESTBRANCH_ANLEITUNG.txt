@@ -1,36 +1,25 @@
-FAMILY SPOTS MAP – V90.18 – NUR TESTBRANCH
-=========================================
-Voraussetzung: Diese 8 Dateien sind ein PATCH AUF V90.17, nicht auf main 31.
-Unveraenderter Stand: Testbranch test/main31-layout-v917. Bitte Backup sichern.
-Nicht auf main pushen. Force Push: AUS.
+Family Spots Map – V90.20 TEST
+Ersatzpaket für V90.19 auf Basis des Main-31-Teststands V90.17 bis V90.19.
 
-NEUE AENDERUNG
-- Landschaft oberhalb von Tilla + ca. 14 CSS-px bei 390px Breite
-- Abstand nach Tilla bis Karte + ca. 11 CSS-px
-- Karte beginnt damit ca. 25 CSS-px tiefer
-- Tilla, Orange-Button, Farben, 5 Nav-Punkte, Daten, JS, Darkmode unveraendert
-- Neue CSS-Datei nur im mobilen hellen Kartenstart eingebunden
-- SW/HTML-Pruefsummen und Cache-Version aktualisiert
+1. Den aktuellen lokalen Teststand in Working Copy sichern.
+2. Die acht Dateien aus dem ZIP gemeinsam in den Teststand übernehmen.
+   Die Pfade im ZIP entsprechen den Zielpfaden. Keine Endung umbenennen.
+3. Gemeinsam committen und auf den vorgesehenen Testbranch pushen.
 
-Commit-Zusammenfassung:
-V90.18 TEST – Landschaft mehr Raum, Karte weiter unten; Design sonst unveraendert
+Zusammenfassung
+V90.20 TEST – V90.19 ersetzen und mobile Kartenansicht übernehmen
 
-Detaillierte Informationen:
-Additive CSS-Anpassung von Landschaftshoehe und Kartenabstand.
-Sonst keine Aenderungen an Design oder Funktionen. DE/EN/DA Einbindung synchron.
-SW-Cache und SHA256 aktualisiert.
+Detaillierte Informationen
+Acht direkt einsetzbare Dateien für DE, EN und DA. Neue Cache-Version
+und aktualisierte Prüfsummen. Mehr Platz unter Spielideen, direkter
+Kartenanschluss, Menü höher und flachere Navigationsleiste.
 
-Working Copy > Vorhandene oder neue Remote-Referenz:
+Vorhandene oder neue Remote-Referenz für die V90.18-Testumgebung
 refs/heads/test/main31-layout-v918
-Source-Branch: unveraendert. Force Push: AUS.
+Wenn die betreffende Cloudflare-Vorschau bereits einem anderen Testbranch
+zugeordnet ist, den dort angezeigten Branch verwenden.
+Source-Branch: unverändert. Force Push: aus.
 
-WICHTIG:
-Dies ist ein TESTPAKET. Die optische Vergleichsprobe nutzt eine offline
-nachgestellte Startseite ohne Leaflet-Tiles. Ein 1:1 Live-Ergebnis in
-Safari / Cloudflare kann aus dieser Umgebung nicht garantiert werden.
-Erst Preview auf iPhone pruefen, niemals ungesehen nach main uebernehmen.
-
-PRUEFUNG 03.11.2026:
-node tools/check-project.mjs: 0 Fehler, 164 Spots, 234 Uebersetzungs-Keys
-pro Sprache, 127 Offline-Assets. Browser-Layout-Check 320/360/375/390/430px.
-Kein echter iPhone-Safari- oder Cloudflare-Livetest.
+Nach erfolgreichem Cloudflare-Deployment die zu diesem Branch gehörende
+Vorschau öffnen. Version und Darstellung in Safari und Chrome prüfen.
+Bei alter Ansicht zuerst die Vorschau in einem privaten Tab öffnen.
