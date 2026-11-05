@@ -1,0 +1,27 @@
+/* Mobile light map start: approved header spacing and compact navigation. */
+@media (max-width: 899px) {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active {
+    row-gap: 0 !important;
+  }
+
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header-main::after {
+    height: clamp(73px, 19.9vw, 86px) !important;
+  }
+
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section {
+    padding-bottom: clamp(16px, 5.5vw, 24px) !important;
+  }
+
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #menu-toggle {
+    top: -8px !important;
+  }
+
+  html.fsm-polished[data-theme="light"].fsm-home-nav-ready body[data-app-view="map"] #fsm-home-nav.fsm-home-nav {
+    padding-block: 3px !important;
+  }
+
+  html.fsm-polished[data-theme="light"].fsm-home-nav-ready body[data-app-view="map"] #fsm-home-nav.fsm-home-nav > .fsm-home-nav__item {
+    min-height: 44px !important;
+    padding-block: 2px !important;
+  }
+}

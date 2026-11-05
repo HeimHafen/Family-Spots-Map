@@ -1,0 +1,25 @@
+Family Spots Map V90.19 | Nur Testbranch
+
+Voraussetzung: vollständig eingespielter Teststand V90.18.
+Vor dem Austausch in Working Copy die acht Originaldateien sichern.
+Die Dateien in Austauschdateien_TXT entsprechend ihrer Ordnerstruktur
+einsetzen und beim Einsetzen nur die letzte Endung .txt entfernen.
+Alle acht Dateien zusammen committen, damit der Offline-Cache sie akzeptiert.
+
+Zusammenfassung
+Mobile Kartenansicht im Hellmodus an die freigegebene Vorlage anpassen
+
+Detaillierte Informationen
+Mehr Platz unter Spielideen, Karte direkt am Tilla-Bereich,
+Menübutton 8 CSS-Pixel höher und kompakte Leiste mit 44-Pixel-Touchflächen.
+Cache-Version und Prüfsummen für alle drei Sprachfassungen aktualisiert.
+
+Working Copy – Vorhandene oder neue Remote-Referenz
+refs/heads/test/gemeinsam-v88-finish
+
+Source-Branch: unverändert
+Force Push: Aus
+
+Nach dem Push in Safari und Chrome die Testseite neu laden und Menü,
+Spielideen, Kartenzoom und alle fünf Tabs prüfen. Ein visueller
+Browserabgleich mit der Bildvorlage steht noch aus.
