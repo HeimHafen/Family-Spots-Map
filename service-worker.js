@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261105-test-main31-v921-1";
+const CACHE_VERSION = "20261105-test-main31-v922-1";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -190,21 +190,21 @@ const RELEASE_HASHES = {
   "css/evening.css": "c5e55b9d887f8296fc02cb2d55c4739543e3ee642b3bffb656b077afa9c09d8c",
   "js/filter-model.js": "bf7b48e984aa50a1cb7717ab8bb0c87bff3daad8b4026b1b75238109d608a8dc",
   "css/map-spots.css": "9b2382e1ff161ec3f19044861841dd54b8939e08c0eb52a7a88a75cf4a2de352",
-  "da/index.html": "3606829f8aeba803dc6fe5220a7151a622190690cb4ebf691c2dba32e3adef07",
+  "da/index.html": "61fc498c97b9c82f9012b1741f03c762709b4dc870b079e6bf7d60affe964e1d",
   "data/i18n/da.json": "25b9b8679e15931d4296ae6e09bd3f6f5f288bf30cd3b16f3cfa4b156ed53c4c",
   "data/i18n/de.json": "66ef957fde23defb718f448c9cb4d608bcabbdedb4e90101215b419014229add",
   "data/i18n/en.json": "80397d8943adfa772df6ba7299b872a5d70e726f16df6f5a253c07561328c9e3",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "b1ba4012af759e431a9d27c6e7c5a022c822858c2a481619a492710da326d56f",
-  "en/index.html": "342f3eb73e2b75b6a1ec6ed3af861343e9c2c93751b451ccc684926d5612b9b7",
-  "index.html": "d0a7a73d7e9f4dc01336bf8ae08ad2e3335db88e54f1c029c588779a3506a89c",
-  "js/app.js": "8c81477c5f3f96613296d495a059c34c350e649508752371a9a732763f4ea242",
+  "en/index.html": "d7015a54b04436473baf08383a388b4e698efad885eec9304b35ec86b8f8eea0",
+  "index.html": "e8d1168cadeb1de43e9fc5c74cef6a471152ac47174b3e0a1a2c77b4f0fbf2c5",
+  "js/app.js": "6d67ccc7f71aeaf8d30aad46dfddfed05956c8f48c7c7f98f27c6fb560793d2d",
   "js/config.js": "6bf8119a67f96baf8634cfd3bbb1ae18a438d1bed26390b9bf9db9bd46397038",
   "js/features/personal-backup.js": "637f3d1387ad2ede0c716ab44b2f9994b5d2db0d700acd656718b1ce22a179cb",
   "js/features/personal-storage.js": "e398f18e7a246b3ff32148d05ccf387752272e6e5cb11bc125fa91ded4968dec",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "5e399e51b52046f7babb7dccac73675de26d7557b553c838160630d6bf798584",
-  "js/map.js": "34f823e03bb80cb48a227efc002f7f567532cfa649894d1f6f9f836c3a8937b8",
+  "js/map.js": "cffcd21dae5bb429edac774c4a664b1950fe144e7011fbb3bb31385e3e5cdf49",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "979a9ef59041f9caacab46de883198004b913b1312abbfe9a71fb17a5c58bdf1",
   "offline.html": "3abeb27b2196a79a73f2bfc84d4137a6519f9ded69e0f7de8e7c11a57cd06177",
@@ -238,7 +238,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "93512e7a68293f4cb09eda3ac0c0a59509e8eb1d836e4fa51a4e6c3c14a19923",
   "js/filters/tags.js": "3b8386ba863d390884eee9c6c8c7892959a4b8079155736e6d5f5df3f501af76",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "9f8e102f5f06b4b2d08d7661e0f9532ad2d7e805affe7c904207469ef90c4c63",
+  "css/styles.css": "706f05972d1a76e60d5ad9474bdc95cf625fb9d7ef7174d719ead97bd185711e",
   "js/ui/map-fullscreen.js": "58218777034e262f8cee4b3fc9ded0c94516a836140a78199d3d23a7066618ac",
   "js/categories.js": "399b984aee4d1508cc905805859c56206a396b6a81b23438983ed9b92b97ede7",
   "js/ui/category-explorer.js": "45a407e69a4204ffc95964e5d761b8b729da7fbb41a39927e7d98e7a713f7af9",
@@ -253,7 +253,7 @@ const RELEASE_HASHES = {
   "css/fsm-premium-polish-v902.css": "29d371dde4feb6b2e604a340c01d228babfdb2f7951fcdb270ea3ac040d0bb9a",
   "css/fsm-header-final-v907.css": "ed501f98547656a3515170daa73e873be48c6b9e67161ff70920775332f5f52e",
   "css/fsm-proportion-target-v917.css": "27be709373439c80440694ddc6becc1cbf15846b0007294ee10e122e38bb9593",
-  "css/fsm-landscape-space-v918.css": "c5b4ef1bcbcc702f32de35300d72bcab7f7b4d6a43d98b2f98462f8909583815",
+  "css/fsm-landscape-space-v918.css": "0b393cea56320e1146da06e83c41f23acf3fc1f4e40e30b8c24dca91e0cd81f6",
   "assets/design/main-header-leaves-v90.webp": "fe0eb90577732eb6049673816dfdf6c76d6f1290b5f6f247cf916a3fb00c7f36",
   "assets/design/main-header-leaves-bottom-v90.webp": "03fc3b10f71d83ae49bc9f9d0f690117d8b51d7d49f80d363ab452f82746f097",
   "assets/design/main-header-landscape-v90.webp": "005ea07d4960c6d02af287ae33e5ce3adecc61fd2f07bd66127c0a322a8f2a6e",

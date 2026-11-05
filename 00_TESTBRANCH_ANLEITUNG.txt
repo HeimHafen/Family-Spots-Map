@@ -1,16 +1,4 @@
-Family Spots Map V90.21 TEST
-Basis: Main-31-Teststand V90.20. Aktuellen Teststand vor dem Austausch sichern.
-Alle neun Dateien mit Originalnamen und Ordnerstruktur gemeinsam ersetzen.
-
-Zusammenfassung
-V90.21 TEST – Tilla-Bereich zentrieren und Menü vereinfachen
-
-Detaillierte Informationen
-Mehr Raum für die Landschaft, gleichmäßige Innenabstände im Tilla-Bereich.
-Menüeintrag „Nur Karte“ in DE, EN und DA entfernt. Vollbildtaste auf der
-Karte bleibt verfügbar. Offline-Cache und Prüfsummen aktualisiert.
-
-Vorhandene oder neue Remote-Referenz
-refs/heads/test/main31-layout-v918
-Verwende den Branch der aktuellen Cloudflare-Testvorschau, falls abweichend.
+V90.22 TEST – Tilla-Inhalt 4 CSS-Pixel höher
+Teststand sichern und alle acht Dateien mit ihren Originalpfaden ersetzen.
+Testbranch: refs/heads/test/main31-layout-v918
 Source-Branch unverändert, Force Push aus.
