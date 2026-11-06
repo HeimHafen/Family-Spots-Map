@@ -1,19 +1,12 @@
-Family Spots Map V16 · Austauschdateien für den V15-Teststand
-
-V15 zuerst sichern. Jede Datei unter demselben Pfad ersetzen.
-Die zusätzliche Endung .txt entfernen. Alle Dateien gemeinsam committen,
-damit der Service Worker und seine Prüfsummen zum Update passen.
+V17 setzt V16 voraus. V16 sichern und alle Dateien gemeinsam unter ihren Originalpfaden einspielen. Zusätzliche .txt-Endung entfernen.
 
 Zusammenfassung
-V16: Spot-Merkmale bündeln und Bolzplatz-Aktion klarer gestalten
+V17: Spotkarten, Anreise und Kategoriefarben verfeinern
 
-Detaillierte Informationen
-„Auf einen Blick“ bündelt vorhandene Merkmale in DE, EN und DA.
-Bolzplatz nutzt das olivgrüne Fußballsymbol im Filter und im Spotdetail.
-Der Treffen-Button übernimmt das App-Orange und erhält ein Gruppensymbol.
+Details
+Anreise bündelt Kartenlinks und Parkhinweise. Nachbarorte als flache Liste. Acht Themenfarben und kompakter Treffen-Dialog.
 
 Working Copy
-Vorhandene oder neue Remote-Referenz
-refs/heads/test/gemeinsam-v88-finish
-Source-Referenz: aktueller lokaler Branch mit dem V16-Commit
+Remote-Referenz: refs/heads/test/app-feinschliff-laatzen (wenn dort V16 liegt)
+Source-Referenz: refs/heads/test/v90-35-zoom-fix (mit V17-Commit)
 Force Push: Aus

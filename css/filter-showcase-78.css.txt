@@ -174,21 +174,21 @@ html.fsm-polished #filter-modal .category-explorer__choice .category-explorer__i
   flex-basis:22px;width:22px;height:22px;color:var(--fs78-icon,#4c8260);
 }
 html.fsm-polished #filter-modal .category-explorer__choice[data-world="play"],
-html.fsm-polished #spot-detail .spot-meta-type[data-world="play"] {--fs78-icon:#547045;}
+html.fsm-polished #spot-detail .spot-meta-type[data-world="play"] {--fs78-icon:#465638;--spot-type-tint:#e7eddf;}
 html.fsm-polished #filter-modal .category-explorer__choice[data-world="animals"],
-html.fsm-polished #spot-detail .spot-meta-type[data-world="animals"] {--fs78-icon:#9e6539;}
+html.fsm-polished #spot-detail .spot-meta-type[data-world="animals"] {--fs78-icon:#805232;--spot-type-tint:#f5e9dd;}
 html.fsm-polished #filter-modal .category-explorer__choice[data-world="nature"],
-html.fsm-polished #spot-detail .spot-meta-type[data-world="nature"] {--fs78-icon:#41885b;}
+html.fsm-polished #spot-detail .spot-meta-type[data-world="nature"] {--fs78-icon:#386447;--spot-type-tint:#e6efe5;}
 html.fsm-polished #filter-modal .category-explorer__choice[data-world="water"],
-html.fsm-polished #spot-detail .spot-meta-type[data-world="water"] {--fs78-icon:#159bc4;}
+html.fsm-polished #spot-detail .spot-meta-type[data-world="water"] {--fs78-icon:#246887;--spot-type-tint:#e4f1f7;}
 html.fsm-polished #filter-modal .category-explorer__choice[data-world="adventure"],
-html.fsm-polished #spot-detail .spot-meta-type[data-world="adventure"] {--fs78-icon:#c17e2b;}
+html.fsm-polished #spot-detail .spot-meta-type[data-world="adventure"] {--fs78-icon:#865323;--spot-type-tint:#f7ecda;}
 html.fsm-polished #filter-modal .category-explorer__choice[data-world="culture"],
-html.fsm-polished #spot-detail .spot-meta-type[data-world="culture"] {--fs78-icon:#854eac;}
+html.fsm-polished #spot-detail .spot-meta-type[data-world="culture"] {--fs78-icon:#74478b;--spot-type-tint:#f1e8f5;}
 html.fsm-polished #filter-modal .category-explorer__choice[data-world="pause"],
-html.fsm-polished #spot-detail .spot-meta-type[data-world="pause"] {--fs78-icon:#ea793a;}
+html.fsm-polished #spot-detail .spot-meta-type[data-world="pause"] {--fs78-icon:#92472d;--spot-type-tint:#faece3;}
 html.fsm-polished #filter-modal .category-explorer__choice[data-world="travel"],
-html.fsm-polished #spot-detail .spot-meta-type[data-world="travel"] {--fs78-icon:#088d81;}
+html.fsm-polished #spot-detail .spot-meta-type[data-world="travel"] {--fs78-icon:#316961;--spot-type-tint:#e5f0ed;}
 html.fsm-polished #filter-modal .category-explorer__choice .category-explorer__name {
   flex:1;min-width:0;white-space:normal;overflow-wrap:normal!important;
 }
@@ -279,7 +279,7 @@ html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="walk"] .
 html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="adventure-farm"] .category-explorer__icon {color:#87552f!important;}
 html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="swingolf"] .category-explorer__icon {color:#925c23!important;}
 html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="playground"] .category-explorer__icon {color:#547045!important;}
-html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="adventure-playground"] .category-explorer__icon {color:#a25923!important;}
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="adventure-playground"] .category-explorer__icon {--fs78-icon:#92501f;--spot-type-tint:#f8eadb;color:#92501f!important;}
 html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="indoor-playground"] .category-explorer__icon {color:#447455!important;}
 
 

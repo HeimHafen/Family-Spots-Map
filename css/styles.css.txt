@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261106-app-feinschliff-16");
+@import url("./categories.css?v=20261107-spotkarten-17");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -23,7 +23,7 @@
 /* Abendpalette: ausschließlich der gespeicherte Dark-Modus. */
 
 
-@import url("./map-spots.css?v=20261106-app-feinschliff-16");
+@import url("./map-spots.css?v=20261107-spotkarten-17");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES

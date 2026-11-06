@@ -650,6 +650,11 @@ export function createSpotDetailsController({
       spotDetailEl.appendChild(detailBadgesContainer);
     }
 
+    const arrival = document.createElement("section");
+    arrival.className = "spot-arrival";
+    const arrivalTitle = document.createElement("h3");
+    arrivalTitle.textContent = { de: "Anreise", en: "Getting there", da: "Sådan kommer I frem" }[currentLang];
+    arrival.append(arrivalTitle);
     const routeUrls = getRouteUrlsForSpotFromUserLocation(spot);
 
     if (routeUrls) {
@@ -673,10 +678,11 @@ export function createSpotDetailsController({
       routesEl.appendChild(appleLink);
       routesEl.appendChild(googleLink);
 
-      spotDetailEl.appendChild(routesEl);
+      arrival.append(routesEl);
     }
 
-    appendParkingInformation(spotDetailEl, spot);
+    appendParkingInformation(arrival, spot);
+    spotDetailEl.append(arrival);
 
     if (typeof spotDetailEl.scrollTop === "number") {
       spotDetailEl.scrollTop = !focus && sameSpot ? previousScroll : 0;
@@ -736,8 +742,8 @@ export function createSpotDetailsController({
       if (!scores) {
         scores = document.createElement("div");
         scores.className = "spot-details-scores";
-        const routes = spotDetailEl.querySelector(".spot-details-routes");
-        if (routes) routes.before(scores);
+        const arrival = spotDetailEl.querySelector(".spot-arrival");
+        if (arrival) arrival.before(scores);
         else spotDetailEl.appendChild(scores);
       }
       element = document.createElement("span");
