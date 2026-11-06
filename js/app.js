@@ -23,8 +23,8 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-app-feinschliff-3";
-import { initCommunityPlay } from "./features/community-play.js?v=20261106-app-feinschliff-3";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-app-feinschliff-6";
+import { initCommunityPlay } from "./features/community-play.js?v=20261106-app-feinschliff-6";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
@@ -43,14 +43,14 @@ import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js
 
 import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261105-storage-v928";
 
-import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261106-app-feinschliff-3";
+import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261106-app-feinschliff-6";
 
-import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261106-app-feinschliff-3";
-import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261106-app-feinschliff-3";
+import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261106-app-feinschliff-6";
+import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261106-app-feinschliff-6";
 
 import { createModalController } from "./ui/modal.js";
 import { createSpotDetailsController } from "./ui/spot-details.js";
-import { initMenu } from "./ui/menu.js?v=20261106-app-feinschliff-3";
+import { initMenu } from "./ui/menu.js?v=20261106-app-feinschliff-6";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
@@ -84,25 +84,25 @@ import {
   getSpotName,
   getSpotSubtitle,
   getSpotId
-} from "./filters.js?v=20261106-app-feinschliff-3";
+} from "./filters.js?v=20261106-app-feinschliff-6";
 
 import {
   initMap,
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261106-app-feinschliff-3";
+} from "./map.js?v=20261106-app-feinschliff-6";
 
-import { initRouter } from "./router.js?v=20261106-app-feinschliff-3";
+import { initRouter } from "./router.js?v=20261106-app-feinschliff-6";
 import { initToast, showToast } from "./toast.js";
-import { loadData } from "./data.js?v=20261106-app-feinschliff-3";
+import { loadData } from "./data.js?v=20261106-app-feinschliff-6";
 
 import {
   getPlusStatus,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
-} from "./features/plus.js?v=20261106-app-feinschliff-3";
+} from "./features/plus.js?v=20261106-app-feinschliff-6";
 
 // ------------------------------------------------------
 // Debug

@@ -2,7 +2,7 @@ import { PLACE_TYPES, WORLDS, getPlaceTypes, getWorlds, FACETS, facetValue } fro
 // js/filters/tags.js
 "use strict";
 
-import { getLanguage } from "../i18n.js?v=20261106-app-feinschliff-3";
+import { getLanguage } from "../i18n.js?v=20261106-app-feinschliff-6";
 
 import { CATEGORY_TAGS, CATEGORY_LABELS_DE, CATEGORY_LABELS_EN, CATEGORY_LABELS_DA } from "../config.js";
 

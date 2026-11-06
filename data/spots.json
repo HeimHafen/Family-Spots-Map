@@ -35334,6 +35334,7 @@
   },
   {
     "id": "bolzplatz_festplatz_rethen",
+    "community": { "enabled": true, "type": "bolzplatz", "events": [] },
     "title": "Bolzplatz · Festplatz Rethen",
     "lat": 52.2801,
     "lon": 9.82543,
@@ -35411,6 +35412,7 @@
   },
   {
     "id": "bolzplatz_uithuizermeedenweg_rethen",
+    "community": { "enabled": true, "type": "bolzplatz", "events": [] },
     "title": "Bolzplatz · Uithuizermeedenweg",
     "lat": 52.28945,
     "lon": 9.83416,
@@ -35488,6 +35490,7 @@
   },
   {
     "id": "bolzplatz_heidfeld_laatzen",
+    "community": { "enabled": true, "type": "bolzplatz", "events": [] },
     "title": "Bolzplatz · Heidfeld",
     "lat": 52.30023,
     "lon": 9.81332,
@@ -35565,6 +35568,7 @@
   },
   {
     "id": "spiel_und_bolzplatz_harkenblecker_strasse_rethen",
+    "community": { "enabled": true, "type": "bolzplatz", "events": [] },
     "title": "Spiel- und Bolzplatz Harkenblecker Straße",
     "lat": 52.291154667554494,
     "lon": 9.82391985184066,

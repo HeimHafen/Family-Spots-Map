@@ -3,8 +3,8 @@
  * Loaded last to resolve the previous release's intentionally flat filter rules.
  */
 html.fsm-polished #filter-modal {
-  --fs78-ink:#252923; --fs78-green:#315f3d; --fs78-muted:#717982;
-  --fs78-surface:#fffdf8; --fs78-line:#e8e2d8;
+  --fs78-ink:var(--p-text); --fs78-green:#315f3d; --fs78-muted:var(--p-muted);
+  --fs78-surface:var(--p-surface); --fs78-line:var(--p-line);
   --fs78-blue:#1199ce; --fs78-orange:#ff782a;
   background:rgba(24,31,24,.42)!important;
   backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
@@ -279,7 +279,7 @@ html.fsm-polished #filter-modal [data-category-icon="indoor-playground"] .catego
    Presentation-only; no changes to the categories, filter logic or spot data.
    Orange uses Tilla's original #f58b20 and the approved warm dark ink. */
 html.fsm-polished {
-  --fsm80-button-orange: var(--fsm70-orange, #f58b20);
+  --fsm80-button-orange: var(--p-action);
   --fsm80-button-ink: #382e25;
 }
 /* Keep the round close action easy to tap while reducing its visible weight. */
