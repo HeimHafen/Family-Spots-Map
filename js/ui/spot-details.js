@@ -169,7 +169,7 @@ export function createSpotDetailsController({
     arrow.setAttribute("focusable", "false");
     arrow.classList.add("spot-parking__arrow");
     const path = document.createElementNS(arrow.namespaceURI, "path");
-    path.setAttribute("d", "M4 7h4l2-3h4l2 3h4v13H4z M16 13a4 4 0 1 1-8 0 4 4 0 0 1 8 0");
+    path.setAttribute("d", "M9 5l7 7-7 7");
     arrow.appendChild(path);
     const label = document.createElement("span");
     label.textContent = labels.title;
