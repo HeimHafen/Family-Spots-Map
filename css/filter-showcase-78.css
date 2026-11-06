@@ -47,17 +47,20 @@ html.fsm-polished #filter-modal .category-explorer > .filter-group-helper {
   color:var(--fs78-muted)!important;margin:0 0 12px!important;
   font:400 clamp(12px,3.5vw,14px)/1.48 system-ui,-apple-system,sans-serif!important;
 }
-html.fsm-polished #filter-modal .category-explorer__rules {
+html.fsm-polished #filter-modal .category-explorer__rules,
+html.fsm-polished #fsm-community-overlay .category-explorer__rules{
   margin:10px 0 15px!important;border:1px solid #e4dac9!important;
   background:linear-gradient(130deg,#fffaf2,#faf4ec)!important;
   border-radius:14px!important;box-shadow:0 1px 3px rgba(58,41,20,.035);
 }
-html.fsm-polished #filter-modal .category-explorer__rules summary {
+html.fsm-polished #filter-modal .category-explorer__rules summary,
+html.fsm-polished #fsm-community-overlay .category-explorer__rules summary{
   min-height:48px;padding:10px 14px!important;
   color:var(--fs78-ink)!important;
   font:650 13.5px/1.35 system-ui,-apple-system,sans-serif!important;
 }
-html.fsm-polished #filter-modal .category-explorer__rules summary::before {
+html.fsm-polished #filter-modal .category-explorer__rules summary::before,
+html.fsm-polished #fsm-community-overlay .category-explorer__rules summary::before{
   flex-basis:26px!important;width:26px!important;height:26px!important;
 }
 html.fsm-polished #filter-modal .category-explorer__theme-heading,
