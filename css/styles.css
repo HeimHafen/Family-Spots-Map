@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261106-windheim-v936-3");
+@import url("./categories.css?v=20261106-zinnober-magnet");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -23,7 +23,7 @@
 /* Abendpalette: ausschließlich der gespeicherte Dark-Modus. */
 
 
-@import url("./map-spots.css?v=20261106-windheim-v936-3");
+@import url("./map-spots.css?v=20261106-zinnober-magnet");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES

@@ -27212,6 +27212,73 @@
   },
   {
     "id": "kindermuseum_zinnober_hannover",
+    "photos": [
+      {
+        "src": "assets/spots/zinnober/IMG_0750.jpeg",
+        "alt": {
+          "de": "Bunte Außenwand mit Zinnober-Schriftzug",
+          "en": "Colourful exterior wall with the Zinnober name",
+          "da": "Farverig ydermur med Zinnobers navn"
+        },
+        "caption": {
+          "de": "Bunte geometrische Flächen führen zum Schriftzug des Kindermuseums.",
+          "en": "Bright geometric shapes lead to the museum’s name on the wall.",
+          "da": "Farverige geometriske felter leder blikket hen til museets navn."
+        }
+      },
+      {
+        "src": "assets/spots/zinnober/IMG_0717.jpeg",
+        "alt": {
+          "de": "Ausstellungsraum mit großen Fenstern",
+          "en": "Exhibition room with large windows",
+          "da": "Udstillingsrum med store vinduer"
+        },
+        "caption": {
+          "de": "Im großen Ausstellungsraum stehen die Mitmachstationen an niedrigen Tischen.",
+          "en": "Hands-on stations sit on low tables in the main exhibition room.",
+          "da": "I det store udstillingsrum står aktiviteterne på lave borde."
+        }
+      },
+      {
+        "src": "assets/spots/zinnober/IMG_0727.jpeg",
+        "alt": {
+          "de": "Basteltisch vor einem bunten Regal",
+          "en": "Craft table in front of colourful shelving",
+          "da": "Kreabord foran en farverig reol"
+        },
+        "caption": {
+          "de": "Am Ateliertisch liegen Stifte, Scheren und Papier zum Gestalten bereit.",
+          "en": "Pencils, scissors and paper are laid out on the studio table.",
+          "da": "På værkstedsbordet ligger blyanter, sakse og papir klar."
+        }
+      },
+      {
+        "src": "assets/spots/zinnober/IMG_0721.jpeg",
+        "alt": {
+          "de": "Experimentiertisch mit Holzkästen",
+          "en": "Experiment table with wooden boxes",
+          "da": "Forsøgsbord med trækasser"
+        },
+        "caption": {
+          "de": "Mit einem Magneten unter der Holzkiste lassen sich die feinen Partikel bewegen und zu immer neuen Mustern formen.",
+          "en": "Move a magnet underneath the wooden box to guide the fine particles into new patterns.",
+          "da": "Med en magnet under trækassen kan man flytte de fine partikler og forme nye mønstre."
+        }
+      },
+      {
+        "src": "assets/spots/zinnober/IMG_0716.jpeg",
+        "alt": {
+          "de": "Museumsmodell aus Bausteinen",
+          "en": "Museum model made of building bricks",
+          "da": "Museumsmodel af byggeklodser"
+        },
+        "caption": {
+          "de": "Auf den Balkonen und Treppen des Bausteinmuseums verstecken sich kleine Figuren.",
+          "en": "Tiny figures dot the balconies and stairs of the brick-built museum.",
+          "da": "Små figurer gemmer sig på balkonerne og trapperne på museet af byggeklodser."
+        }
+      }
+    ],
     "title": "Kindermuseum Zinnober · Hannover",
     "lat": 52.36494469579634,
     "lon": 9.706313610076904,
@@ -27455,9 +27522,9 @@
       ]
     },
     "verification_label": {
-      "de": "Teilweise geprüft",
-      "en": "Partly checked",
-      "da": "Delvist tjekket"
+      "de": "Vor Ort geprüft",
+      "en": "Checked on site",
+      "da": "Tjekket på stedet"
     },
     "content_review": {
       "reviewed_at": "2026-10-27",
