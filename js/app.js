@@ -91,7 +91,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261105-test-main31-v935-1";
+} from "./map.js?v=20261106-windheim-v936-2";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { initToast, showToast } from "./toast.js";
@@ -666,6 +666,8 @@ const spotDetails = createSpotDetailsController({
   getElement: () => spotDetailEl,
   getListElement: () => spotListEl,
   getLastTrigger: () => lastSpotTriggerEl,
+  getRelatedSpot: id => spots.find(spot => getSpotId(spot) === id),
+  openRelatedSpot: spot => showSpotDetails(spot, { focus: true }),
   getLanguage: () => currentLang,
   getSpotId,
   getSpotName,

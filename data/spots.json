@@ -34853,5 +34853,313 @@
       "play area",
       "spielplatz"
     ]
+  },
+  {
+    "id": "bolzplaetze_windheimstrasse_hannover",
+    "title": "Bolzplätze an der Windheimstraße",
+    "lat": 52.37344,
+    "lon": 9.70016,
+    "country": "DE",
+    "city": "Hannover",
+    "categories": [
+      "bolzplatz"
+    ],
+    "verified": false,
+    "related_spot_ids": [
+      "skatepark_windheimstrasse_hannover",
+      "pagalino_linden_nord"
+    ],
+    "parking_information": {
+      "schema_version": 1,
+      "status": "location_unconfirmed"
+    },
+    "quality_review_status": "location_assignment_unconfirmed",
+    "community": {
+      "enabled": true,
+      "type": "bolzplatz",
+      "events": []
+    },
+    "visitor_information": {
+      "confirmed_topics": [],
+      "unconfirmed_topics": [
+        "suitability",
+        "duration",
+        "arrival",
+        "admission",
+        "hours",
+        "comfort",
+        "food",
+        "accessibility",
+        "tips"
+      ]
+    },
+    "visit_details": {
+      "schema_version": 1,
+      "sections": {
+        "suitability": {
+          "items": []
+        },
+        "duration": {
+          "items": []
+        },
+        "arrival": {
+          "items": []
+        },
+        "admission": {
+          "items": []
+        },
+        "hours": {
+          "items": []
+        },
+        "comfort": {
+          "items": []
+        },
+        "food": {
+          "items": []
+        },
+        "accessibility": {
+          "items": []
+        },
+        "tips": {
+          "items": []
+        }
+      }
+    },
+    "title_de": "Bolzplätze an der Windheimstraße",
+    "summary_de": "Zwei Bolzplätze in Hannover-Linden. Der Skatepark liegt direkt daneben. Der Kartenpunkt dient der Orientierung.",
+    "tags_de": [],
+    "visit_label_de": "Je nach Lust und Zeit",
+    "title_en": "Windheimstraße football pitches",
+    "summary_en": "Two football pitches in Hannover-Linden. The skatepark is right next door. The map pin is for orientation.",
+    "tags_en": [],
+    "visit_label_en": "Stay as long as you like",
+    "title_da": "Boldbanerne ved Windheimstraße",
+    "summary_da": "To boldbaner i Hannover-Linden. Skateparken ligger lige ved siden af. Kortnålen viser det omtrentlige område.",
+    "tags_da": [],
+    "visit_label_da": "Bliv så længe I har lyst",
+    "photos": [
+      {
+        "src": "assets/spots/windheimstrasse/0777.webp",
+        "alt": {
+          "de": "Blick auf einen Bolzplatz",
+          "en": "View of a football pitch",
+          "da": "Udsigt over en boldbane"
+        },
+        "caption": {
+          "de": "Blick auf einen Bolzplatz",
+          "en": "View of a football pitch",
+          "da": "Udsigt over en boldbane"
+        }
+      },
+      {
+        "src": "assets/spots/windheimstrasse/0776.webp",
+        "alt": {
+          "de": "Blick auf einen Bolzplatz",
+          "en": "View of a football pitch",
+          "da": "Udsigt over en boldbane"
+        },
+        "caption": {
+          "de": "Blick auf einen Bolzplatz",
+          "en": "View of a football pitch",
+          "da": "Udsigt over en boldbane"
+        }
+      }
+    ]
+  },
+  {
+    "id": "skatepark_windheimstrasse_hannover",
+    "title": "Skatepark an der Windheimstraße",
+    "lat": 52.37353,
+    "lon": 9.70052,
+    "country": "DE",
+    "city": "Hannover",
+    "categories": [
+      "skatepark"
+    ],
+    "verified": false,
+    "related_spot_ids": [
+      "bolzplaetze_windheimstrasse_hannover",
+      "pagalino_linden_nord"
+    ],
+    "parking_information": {
+      "schema_version": 1,
+      "status": "unknown"
+    },
+    "address": "Windheimstraße 4, 30451 Hannover",
+    "source_urls": [
+      "https://www.hannover.de/Service/Presse-Medien/Landeshauptstadt-Hannover/Meldungsarchiv-f%C3%BCr-das-Jahr-2025/Skaterpark-an-der-Bethlehemkirche-runderneuert"
+    ],
+    "source_checked_at": "2026-11-06",
+    "visitor_information": {
+      "confirmed_topics": [],
+      "unconfirmed_topics": [
+        "suitability",
+        "duration",
+        "arrival",
+        "admission",
+        "hours",
+        "comfort",
+        "food",
+        "accessibility",
+        "tips"
+      ]
+    },
+    "visit_details": {
+      "schema_version": 1,
+      "sections": {
+        "suitability": {
+          "items": []
+        },
+        "duration": {
+          "items": []
+        },
+        "arrival": {
+          "items": []
+        },
+        "admission": {
+          "items": []
+        },
+        "hours": {
+          "items": []
+        },
+        "comfort": {
+          "items": []
+        },
+        "food": {
+          "items": []
+        },
+        "accessibility": {
+          "items": []
+        },
+        "tips": {
+          "items": []
+        }
+      }
+    },
+    "title_de": "Skatepark an der Windheimstraße",
+    "summary_de": "Skatefläche mit Rampen und Rails in Hannover-Linden. Direkt daneben liegen zwei Bolzplätze.",
+    "tags_de": [],
+    "visit_label_de": "Je nach Lust und Zeit",
+    "title_en": "Windheimstraße skatepark",
+    "summary_en": "Skate area with ramps and rails in Hannover-Linden. Two football pitches are right next door.",
+    "tags_en": [],
+    "visit_label_en": "Stay as long as you like",
+    "title_da": "Skatepark ved Windheimstraße",
+    "summary_da": "Skateområde med ramper og rails i Hannover-Linden. Lige ved siden af ligger to boldbaner.",
+    "tags_da": [],
+    "visit_label_da": "Bliv så længe I har lyst",
+    "photos": [
+      {
+        "src": "assets/spots/windheimstrasse/0769.webp",
+        "alt": {
+          "de": "Rampen und Rails im Skatepark",
+          "en": "Ramps and rails at the skatepark",
+          "da": "Ramper og rails i skateparken"
+        },
+        "caption": {
+          "de": "Rampen und Rails im Skatepark",
+          "en": "Ramps and rails at the skatepark",
+          "da": "Ramper og rails i skateparken"
+        }
+      }
+    ]
+  },
+  {
+    "id": "pagalino_linden_nord",
+    "title": "Pagalino – Palettengarten Linden-Nord",
+    "lat": 52.37415,
+    "lon": 9.69992,
+    "country": "DE",
+    "city": "Hannover",
+    "categories": [
+      "mitmachgarten"
+    ],
+    "verified": false,
+    "related_spot_ids": [
+      "bolzplaetze_windheimstrasse_hannover",
+      "skatepark_windheimstrasse_hannover"
+    ],
+    "address": "Windheimstraße, hinter dem Freizeitheim Linden, 30451 Hannover",
+    "source_urls": [
+      "https://www.tthannover.de/projekte/pagalino/"
+    ],
+    "source_checked_at": "2026-11-06",
+    "parking_information": {
+      "schema_version": 1,
+      "status": "unknown"
+    },
+    "visitor_information": {
+      "confirmed_topics": [],
+      "unconfirmed_topics": [
+        "suitability",
+        "duration",
+        "arrival",
+        "admission",
+        "hours",
+        "comfort",
+        "food",
+        "accessibility",
+        "tips"
+      ]
+    },
+    "visit_details": {
+      "schema_version": 1,
+      "sections": {
+        "suitability": {
+          "items": []
+        },
+        "duration": {
+          "items": []
+        },
+        "arrival": {
+          "items": []
+        },
+        "admission": {
+          "items": []
+        },
+        "hours": {
+          "items": []
+        },
+        "comfort": {
+          "items": []
+        },
+        "food": {
+          "items": []
+        },
+        "accessibility": {
+          "items": []
+        },
+        "tips": {
+          "items": []
+        }
+      }
+    },
+    "title_de": "Pagalino – Palettengarten Linden-Nord",
+    "summary_de": "Gemeinschaftsgarten hinter dem Freizeitheim Linden. Besuch und Mitmachen beim Gartenprojekt erfragen. Vor Ort erklärt eine Milpa-Tafel, wie Mais, Bohnen und Kürbis zusammen wachsen.",
+    "visit_label_de": "Besuch mit dem Projekt abstimmen.",
+    "tags_de": [],
+    "title_en": "Pagalino – Linden-Nord community garden",
+    "summary_en": "Community garden behind Freizeitheim Linden. Ask the project about visiting and taking part. A sign explains how maize, beans and squash are grown together.",
+    "visit_label_en": "Arrange your visit with the project.",
+    "tags_en": [],
+    "title_da": "Pagalino – fælleshaven i Linden-Nord",
+    "summary_da": "Fælleshave bag Freizeitheim Linden. Spørg projektet om besøg og deltagelse. Et skilt forklarer, hvordan majs, bønner og squash dyrkes sammen.",
+    "visit_label_da": "Aftal besøget med projektet.",
+    "tags_da": [],
+    "photos": [
+      {
+        "src": "assets/spots/windheimstrasse/pagalino-milpa.webp",
+        "alt": {
+          "de": "Milpa-Infotafel zwischen den Hochbeeten im Pagalino",
+          "en": "Milpa information board among the raised beds at Pagalino",
+          "da": "Milpa-informationstavle mellem højbedene i Pagalino"
+        },
+        "caption": {
+          "de": "Milpa-Infotafel zwischen den Hochbeeten im Pagalino",
+          "en": "Milpa information board among the raised beds at Pagalino",
+          "da": "Milpa-informationstavle mellem højbedene i Pagalino"
+        }
+      }
+    ]
   }
 ]

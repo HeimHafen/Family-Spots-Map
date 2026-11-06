@@ -36,6 +36,7 @@ const PICTOGRAMS = Object.freeze({
   'wildpark': '<path d="m12 21-5-6-1-5L3 6m3 4 1-7m5 18 5-6 1-5 3-4m-3 4-1-7M9 14q3-2 6 0"/>',
   'farm': '<path d="M2 11 12 4l10 7M4 10v11h16V10M8 21v-8h8v8M8 8h8M10 16h4"/>',
   'aquarium': '<rect x="2" y="5" width="20" height="15" rx="2"/><path d="M3 15q4-2 7 0t7 0t5 0M7 11q4-4 8 0l-2 2c-2 1-4 1-6-2Zm9-1 3-3v6l-3-3"/>',
+  'community-garden': '<path d="M12 21v-8M12 15C5 15 3 11 3 6c6 0 9 3 9 9Zm0 0c0-6 3-9 9-9 0 5-2 9-9 9Z"/>',
   'nature-trail': '<path d="m5 20 4-8H7l4-8 4 8h-2l4 8H5ZM11 20v2m7-4 3-6h-6l3 6M3 22h18"/>',
   'cave': '<path d="M2 21 5 9 9 4h6l4 5 3 12H2ZM8 21q0-9 4-9t4 9M9 7l3 3 3-3"/>',
   'rock-trail': '<path d="m2 20 5-10 4 3 4-9 7 16H2ZM9 16l4 1m5-4-3 2"/>',

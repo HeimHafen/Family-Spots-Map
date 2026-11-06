@@ -6,7 +6,7 @@ const root=new URL('../',import.meta.url);
 const spots=JSON.parse(fs.readFileSync(new URL('data/spots.json',root)));
 const labels=JSON.parse(fs.readFileSync(new URL('data/i18n/de.json',root))).domain.categories;
 assert.equal(WORLDS.filter(x=>!x.auxiliary).length,8);
-assert.equal(PLACE_TYPES.filter(x=>!['services','events'].includes(x.world)).length,53);
+assert.equal(PLACE_TYPES.filter(x=>!['services','events'].includes(x.world)).length,54);
 assert.equal(new Set(PLACE_TYPES.map(x=>x.id)).size,PLACE_TYPES.length);
 for(const item of [...WORLDS,...PLACE_TYPES,...FACETS])for(const lang of ['de','en','da'])assert.ok(item.label[lang]?.trim(),`${item.id}: ${lang}`);
 const aliases=new Set();for(const type of PLACE_TYPES){assert.ok(WORLDS.some(x=>x.id===type.world));for(const alias of type.aliases){assert.ok(!aliases.has(alias),'Duplicate alias: '+alias);aliases.add(alias);}}
@@ -28,7 +28,7 @@ assert.equal(matchesCategoryProfile(waterPlay,{world:'animals'}),false);
 assert.deepEqual(waterPlay.categories,['wasserspielplatz']);
 const waterSpots=spots.filter(s=>getWorlds(s).includes('water'));
 assert.equal(waterSpots.length,7,'The current catalog contains 3 bathing places and 4 water-playground spots');
-assert.equal(spots.filter(s=>getWorlds(s).includes('play')).length,94,'Play membership must not shrink');
+assert.equal(spots.filter(s=>getWorlds(s).includes('play')).length,96,'Play membership includes both Windheimstraße sports spots');
 
 assert.equal(facetValue({tags:['free','toilet'],summary_de:'kostenlos mit Toilette'},'free'),'unknown');
 assert.equal(facetValue({categories:['stellplatz-spielplatz-naehe-kostenlos'],tags:['free']},'free'),'unknown','Free parking must not imply free admission');
@@ -46,7 +46,7 @@ assert.equal(getPlaceTypes({categories:['toddler_barfuss_motorik'],category_prof
 assert.equal(isExpiredEvent({categories:['familien_event'],event:{end_at:'2020-01-01T12:00:00Z'}}),true);
 assert.equal(isExpiredEvent({categories:['familien_event'],event:{end_at:'2020-01-01'}}),false,'Ambiguous dates must not hide an event');
 assert.equal(JSON.stringify(sample),snapshot,'Resolver must not mutate source');
-console.log(`Categories: 8 worlds, 53 place types, 4 facility/rest types, events; ${Object.keys(labels).length} saved labels mapped, ${spots.length} spots covered. OR/AND, evidence, legacy, expiry and immutability checks passed.`);
+console.log(`Categories: 8 worlds, 54 place types, 4 facility/rest types, events; ${Object.keys(labels).length} saved labels mapped, ${spots.length} spots covered. OR/AND, evidence, legacy, expiry and immutability checks passed.`);
 // Strict evidence/time parsing: invalid records must never enable a facility or hide an event.
 assert.equal(facetValue({family_facilities:{toilet:{value:'yes',checked_at:'2026-02-31',source_urls:['https://example.org']}}},'toilet'),'unknown');
 assert.equal(facetValue({family_facilities:{toilet:{value:'yes',checked_at:'2026-10-20',source_urls:['https:// ']}}},'toilet'),'unknown');

@@ -13,6 +13,8 @@ export function createSpotDetailsController({
   getElement,
   getListElement,
   getLastTrigger,
+  getRelatedSpot,
+  openRelatedSpot,
   getLanguage,
   getSpotId,
   getSpotName,
@@ -561,6 +563,23 @@ export function createSpotDetailsController({
     }
 
     appendSpotGallery(spotDetailEl, spot);
+    const neighbors = (spot.related_spot_ids || []).map(getRelatedSpot).filter(Boolean);
+    if (neighbors.length) {
+      const section = document.createElement("div");
+      section.className = "spot-details-routes";
+      const heading = document.createElement("strong");
+      heading.textContent = { de: "Direkt daneben", en: "Right next door", da: "Lige ved siden af" }[currentLang];
+      section.append(heading);
+      for (const neighbor of neighbors) {
+        const action = document.createElement("button");
+        action.type = "button";
+        action.className = "spot-details-route-link";
+        action.textContent = getSpotName(neighbor);
+        action.addEventListener("click", () => openRelatedSpot(neighbor));
+        section.append(action);
+      }
+      spotDetailEl.append(section);
+    }
     const hasStructuredVisitDetails = appendVisitDetails(spotDetailEl, spot);
 
     if (addressText && !hasStructuredVisitDetails) {

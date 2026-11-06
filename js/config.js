@@ -239,6 +239,7 @@ export const CATEGORY_GROUPS = {
   "Entspannung & Naturorte": [
     "natur-aussichtspunkt",
     "park-garten",
+    "mitmachgarten",
     "picknickwiese"
     // "waldbaden-ort" als Tag-Feintyp
   ]
@@ -381,6 +382,7 @@ export const CATEGORY_LABELS_DE = {
 
   // Entspannung & Naturorte
   "park-garten": "Park / Garten",
+  mitmachgarten: "Mitmachgarten",
   picknickwiese: "Picknickwiese"
 };
 
@@ -477,6 +479,7 @@ export const CATEGORY_LABELS_EN = {
 
   // Relax & nature
   "park-garten": "Park / garden",
+  mitmachgarten: "Community garden",
   picknickwiese: "Picnic meadow"
 };
 
@@ -573,6 +576,7 @@ export const CATEGORY_LABELS_DA = {
 
   // Afslapning & natursteder
   "park-garten": "Park / have",
+  mitmachgarten: "Fælleshave",
   picknickwiese: "Picniceng"
 };
 
