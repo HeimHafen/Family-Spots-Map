@@ -82,9 +82,9 @@ export function createSpotDetailsController({
     arrow.setAttribute("viewBox", "0 0 24 24");
     arrow.setAttribute("aria-hidden", "true");
     arrow.setAttribute("focusable", "false");
-    arrow.classList.add("spot-gallery__arrow");
+    arrow.classList.add("spot-gallery__camera");
     const arrowPath = document.createElementNS(arrow.namespaceURI, "path");
-    arrowPath.setAttribute("d", "M9 5l7 7-7 7");
+    arrowPath.setAttribute("d", "M4 7h4l2-3h4l2 3h4v13H4z M16 13a4 4 0 1 1-8 0 4 4 0 0 1 8 0");
     arrow.appendChild(arrowPath);
     const summaryLabel = document.createElement("span");
     summary.append(arrow, summaryLabel);
@@ -169,7 +169,7 @@ export function createSpotDetailsController({
     arrow.setAttribute("focusable", "false");
     arrow.classList.add("spot-parking__arrow");
     const path = document.createElementNS(arrow.namespaceURI, "path");
-    path.setAttribute("d", "M9 5l7 7-7 7");
+    path.setAttribute("d", "M4 7h4l2-3h4l2 3h4v13H4z M16 13a4 4 0 1 1-8 0 4 4 0 0 1 8 0");
     arrow.appendChild(path);
     const label = document.createElement("span");
     label.textContent = labels.title;
@@ -511,12 +511,13 @@ export function createSpotDetailsController({
     closeBtn.type = "button";
     closeBtn.className = "btn-ghost btn-small spot-details-close";
 
-    closeBtn.textContent =
+    closeBtn.textContent = "×";
+    closeBtn.setAttribute("aria-label",
       currentLang === LANG_EN
         ? "Close"
         : currentLang === LANG_DA
           ? "Luk"
-          : "Schließen";
+          : "Schließen");
 
     closeBtn.addEventListener("click", () => {
       closeSpotDetails({ returnFocus: true });
@@ -533,9 +534,10 @@ export function createSpotDetailsController({
       const metaEl = document.createElement("div");
       metaEl.className = "spot-details-meta";
 
-      metaParts.forEach((part) => {
+      metaParts.forEach((part, index) => {
         const span = document.createElement("span");
         span.textContent = part;
+        if (index === 0 && spot.categories?.includes("bolzplatz")) span.classList.add("spot-meta-football");
 
         metaEl.appendChild(span);
       });
@@ -566,14 +568,14 @@ export function createSpotDetailsController({
     const neighbors = (spot.related_spot_ids || []).map(getRelatedSpot).filter(Boolean);
     if (neighbors.length) {
       const section = document.createElement("div");
-      section.className = "spot-details-routes";
+      section.className = "spot-nearby";
       const heading = document.createElement("strong");
       heading.textContent = { de: "Direkt daneben", en: "Right next door", da: "Lige ved siden af" }[currentLang];
       section.append(heading);
       for (const neighbor of neighbors) {
         const action = document.createElement("button");
         action.type = "button";
-        action.className = "spot-details-route-link";
+        action.className = "spot-nearby-link";
         action.textContent = getSpotName(neighbor);
         action.addEventListener("click", () => openRelatedSpot(neighbor));
         section.append(action);

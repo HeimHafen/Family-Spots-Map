@@ -448,3 +448,46 @@ html[data-fsm-focus-modality="keyboard"] #fsm-map-fullscreen .fsm-map-tool:focus
 @media (max-width: 899px) {
   #view-map #map .leaflet-control-zoom { display: none; }
 }
+
+#spot-detail .spot-details-actions > .spot-details-close {
+  flex: 0 0 44px;
+  min-height: 44px;
+  font-size: 22px;
+  font-weight: 400;
+}
+#spot-detail .spot-details-meta > .spot-meta-football,
+#spot-detail .spot-nearby {
+  background: var(--p-selection, #edf0e4);
+  color: var(--p-selection-text, #465936);
+}
+#spot-detail .spot-meta-football::before { content: "⚽︎"; margin-inline-end: 5px; }
+#spot-detail .spot-gallery__camera {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #a65720;
+  stroke-width: 1.6;
+}
+#spot-detail .spot-gallery__summary { min-height: 44px; }
+#spot-detail .spot-nearby {
+  display: grid;
+  margin-block: 6px 8px;
+  padding: 8px 12px;
+  border-radius: 14px;
+}
+#spot-detail .spot-nearby-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  color: var(--p-text, #302719);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+#spot-detail .spot-nearby-link + .spot-nearby-link { border-top: 1px solid var(--p-line, #dbcfbc); }
+#spot-detail .spot-nearby-link::after { content: "›"; flex: none; color: var(--p-muted, #746658); }
