@@ -1,6 +1,6 @@
 const LOCAL_IMAGE = /^assets\/spots\/[a-z0-9/_-]+\.(?:webp|png|jpe?g)$/i;
 const L = {
- de:{ intro:'Treffpunkt für Bewegung, spontane Spiele und neue Begegnungen.',mission:'Menschen bewegen & verbinden', heading:'Treffen & Spiele', tags:['Bewegung','Begegnung','Fußball','Draußen'],details:'Details',information:'So funktioniert es',info:'Hier können künftig geprüfte, begleitete Spieltreffen erscheinen. Termine und Zusagen werden erst angezeigt, wenn ein verantwortlicher Veranstalter sie bestätigt hat. Es gibt keine öffentlichen Kinderprofile oder direkten Nachrichten zwischen Minderjährigen.',close:'Schließen',},
+ de:{ intro:'Treffpunkt für Bewegung, spontane Spiele und neue Begegnungen.',mission:'Menschen bewegen & verbinden', heading:'Treffen & Spiele', tags:['Bewegung','Begegnung','Fußball','Draußen'],details:'Details',information:'So funktioniert’s',info:'Hier können künftig geprüfte, begleitete Spieltreffen erscheinen. Termine und Zusagen werden erst angezeigt, wenn ein verantwortlicher Veranstalter sie bestätigt hat. Es gibt keine öffentlichen Kinderprofile oder direkten Nachrichten zwischen Minderjährigen.',close:'Schließen',},
  en:{intro:'A place for movement, spontaneous games and new connections.',mission:'Move & connect people',heading:'Meetups & games',tags:['Activity','Connection','Football','Outdoors'],details:'Details',information:'How it works',info:'Verified, supervised meetups can appear here in the future. Dates and attendance figures are shown only once a responsible organiser has confirmed them. No public profiles for children or direct messaging between minors.',close:'Close',},
  da:{intro:'Et sted for bevægelse, spontane spil og nye bekendtskaber.',mission:'Få mennesker i bevægelse & sammen',heading:'Møder og spil',tags:['Bevægelse','Fællesskab','Fodbold','Udendørs'],details:'Detaljer',information:'Sådan fungerer det',info:'Godkendte, ledsagede arrangementer kan vises her fremover. Datoer og tilmeldinger vises først, når en ansvarlig arrangør har bekræftet dem. Ingen offentlige børneprofiler eller direkte beskeder mellem mindreårige.',close:'Luk',}
 };
@@ -72,11 +72,9 @@ export function initCommunityPlay({getLanguage, closeMenu}={}) {
   }
   body.append(events);
   const tags=el('div','fsm-community-tags');for(const tag of tr.tags)tags.append(el('span','',tag));body.append(tags);
-  const detailsPanel=el('div','fsm-community-explain');detailsPanel.hidden=true;detailsPanel.append(el('strong','',tr.information),el('p','',tr.info));
+  const detailsPanel=el('details','category-explorer__rules');
+  detailsPanel.append(el('summary','',tr.information),el('p','',tr.info));
   body.append(detailsPanel);sheet.append(body);
-  const foot=el('footer','fsm-community-actions');
-  foot.append(makeAction(tr.details,'fsm-community-secondary',()=>{detailsPanel.hidden=!detailsPanel.hidden;detailsPanel.scrollIntoView({block:'nearest'});}));
-  sheet.append(foot);
   // Reuse the ORIGINAL five-button navigation inside the dialog. No copy,
   // duplicate handlers or state: it returns to its original place on close.
   const originalNav=document.getElementById('fsm-home-nav');
@@ -86,7 +84,7 @@ export function initCommunityPlay({getLanguage, closeMenu}={}) {
     sheet.append(originalNav);
   }
   overlay.append(sheet);document.body.append(overlay);
-  escapeListener=e=>{if(!overlay)return;if(e.key==='Escape'){e.preventDefault();close();}else if(e.key==='Tab'){const focusable=[...sheet.querySelectorAll('button:not([disabled])')];const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}};
+  escapeListener=e=>{if(!overlay)return;if(e.key==='Escape'){e.preventDefault();close();}else if(e.key==='Tab'){const focusable=[...sheet.querySelectorAll('button:not([disabled]), summary')];const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}};
   document.addEventListener('keydown',escapeListener,true);
   x.focus({preventScroll:true});
  }
