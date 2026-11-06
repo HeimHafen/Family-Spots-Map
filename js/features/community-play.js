@@ -45,32 +45,40 @@ export function initCommunityPlay({getLanguage, closeMenu}={}) {
   const sheet=el('section','fsm-community-sheet');sheet.setAttribute('role','dialog');sheet.setAttribute('aria-modal','true');sheet.setAttribute('aria-labelledby','fsm-community-heading');
   sheet.append(el('div','fsm-community-handle'));
   const header=el('header','fsm-community-header');
-  const badge=el('span','fsm-community-emblem');badge.append(icon('football'));
   const titles=el('div','fsm-community-titles');
-  const h=el('h2','fsm-community-title',spot.title||spot.name||tr.heading);h.id='fsm-community-heading';
-  const area=el('p','fsm-community-location');area.append(icon('location'),document.createTextNode(spot.city||''));
+  const h=el('h2','fsm-community-title',tr.heading);h.id='fsm-community-heading';
+  const area=el('p','fsm-community-location');area.textContent=spot['title_'+lang()]||spot.title||spot.name||'';
   titles.append(h,area);
   const x=makeAction('', 'fsm-community-close',close);x.append(icon('close'));x.setAttribute('aria-label',tr.close);
-  header.append(badge,titles,x);sheet.append(header);
+  header.append(titles,x);sheet.append(header);
   const body=el('div','fsm-community-body');
   const imgPath=safePath(spot.community.image);
   if(imgPath){const hero=el('img','fsm-community-photo');hero.alt=h.textContent;hero.src=imgPath;hero.loading='eager';hero.width=1400;hero.height=760;body.append(hero);}
-  body.append(el('p','fsm-community-intro',tr.intro));
-  const mission=el('p','fsm-community-mission');mission.append(icon('people'),document.createTextNode(tr.mission));body.append(mission);
-  const events=el('section','fsm-community-events');const eh=el('h3','fsm-community-events-heading');eh.append(icon('calendar'),document.createTextNode(tr.heading));events.append(eh);
+  const events=el('div','fsm-community-events');
   const real=Array.isArray(spot?.community?.events)?spot.community.events.filter(e=>e?.status==='published'&&e?.approved===true&&e?.organiser_verified===true&&typeof e?.title==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(e?.date||'')):[];
   if(real.length){
+   const eh=el('h3','fsm-community-events-heading');eh.append(icon('calendar'),document.createTextNode(tr.heading));events.append(eh);
    for(const event of real.slice(0,4)) {
     const row=el('div','fsm-community-event');const ico=el('span','fsm-community-event-icon');ico.append(icon('calendar'));
     const content=el('div','fsm-community-event-copy');content.append(el('strong','',event.title));
     const d=el('span','',event.date+(event.time?' · '+event.time:''));content.append(d);row.append(ico,content);events.append(row);
    }
   }else{
-   events.append(el('p','fsm-community-demo-note',{
+   const status=el('div','fsm-community-empty');
+   const copy=el('div','fsm-community-empty-copy');
+   copy.append(el('p','fsm-community-demo-note',{
     de:'Aktuell kein Termin geplant',en:'No upcoming meetup',da:'Ingen kommende aftaler'
+   }[lang()]),el('p','fsm-community-empty-hint',{
+    de:'Hier erscheinen bestätigte Treffen und Spieltermine.',
+    en:'Confirmed meetups and games appear here.',
+    da:'Bekræftede møder og legeaftaler vises her.'
    }[lang()]));
+   status.append(icon('calendar'),copy);events.append(status);
   }
   body.append(events);
+  body.append(el('h3','fsm-community-topic-title',{
+   de:'Themen zum Treffpunkt',en:'About this meeting place',da:'Temaer for mødestedet'
+  }[lang()]));
   const tags=el('div','fsm-community-tags');for(const tag of tr.tags)tags.append(el('span','',tag));body.append(tags);
   const detailsPanel=el('details','category-explorer__rules');
   detailsPanel.append(el('summary','',tr.information),el('p','',tr.info));

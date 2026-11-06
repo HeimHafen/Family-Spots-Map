@@ -1,6 +1,6 @@
 import { createCrownIcon } from "../utils/dom.js?v=20261010-unified-4";
 import { $ } from "../utils/utils.js";
-import { getLanguage, t } from "../i18n.js?v=20261106-app-feinschliff-6";
+import { getLanguage, t } from "../i18n.js?v=20261106-app-feinschliff-7";
 // Compatibility for the historical renderer; the current UI lives in app.js.
 import { showToast as showTillaMessage } from "../toast.js";
 
