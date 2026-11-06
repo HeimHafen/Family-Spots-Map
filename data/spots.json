@@ -27212,6 +27212,73 @@
   },
   {
     "id": "kindermuseum_zinnober_hannover",
+    "photos": [
+      {
+        "src": "assets/spots/zinnober/IMG_0750.jpeg",
+        "alt": {
+          "de": "Bunte Außenwand mit Zinnober-Schriftzug",
+          "en": "Colourful exterior wall with the Zinnober name",
+          "da": "Farverig ydermur med Zinnobers navn"
+        },
+        "caption": {
+          "de": "Bunte Außenwand mit Zinnober-Schriftzug",
+          "en": "Colourful exterior wall with the Zinnober name",
+          "da": "Farverig ydermur med Zinnobers navn"
+        }
+      },
+      {
+        "src": "assets/spots/zinnober/IMG_0717.jpeg",
+        "alt": {
+          "de": "Ausstellungsraum mit großen Fenstern",
+          "en": "Exhibition room with large windows",
+          "da": "Udstillingsrum med store vinduer"
+        },
+        "caption": {
+          "de": "Ausstellungsraum mit großen Fenstern",
+          "en": "Exhibition room with large windows",
+          "da": "Udstillingsrum med store vinduer"
+        }
+      },
+      {
+        "src": "assets/spots/zinnober/IMG_0727.jpeg",
+        "alt": {
+          "de": "Basteltisch vor einem bunten Regal",
+          "en": "Craft table in front of colourful shelving",
+          "da": "Kreabord foran en farverig reol"
+        },
+        "caption": {
+          "de": "Basteltisch vor einem bunten Regal",
+          "en": "Craft table in front of colourful shelving",
+          "da": "Kreabord foran en farverig reol"
+        }
+      },
+      {
+        "src": "assets/spots/zinnober/IMG_0721.jpeg",
+        "alt": {
+          "de": "Experimentiertisch mit Holzkästen",
+          "en": "Experiment table with wooden boxes",
+          "da": "Forsøgsbord med trækasser"
+        },
+        "caption": {
+          "de": "Experimentiertisch mit Holzkästen",
+          "en": "Experiment table with wooden boxes",
+          "da": "Forsøgsbord med trækasser"
+        }
+      },
+      {
+        "src": "assets/spots/zinnober/IMG_0716.jpeg",
+        "alt": {
+          "de": "Museumsmodell aus Bausteinen",
+          "en": "Museum model made of building bricks",
+          "da": "Museumsmodel af byggeklodser"
+        },
+        "caption": {
+          "de": "Museumsmodell aus Bausteinen",
+          "en": "Museum model made of building bricks",
+          "da": "Museumsmodel af byggeklodser"
+        }
+      }
+    ],
     "title": "Kindermuseum Zinnober · Hannover",
     "lat": 52.36494469579634,
     "lon": 9.706313610076904,
