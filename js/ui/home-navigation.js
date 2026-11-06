@@ -3,9 +3,9 @@
 import { createMapToolIcon } from "./map-toolbar.js";
 
 const COPY = {
-  de: {nav:"Hauptnavigation",map:"Karte",filters:"Filter",spots:"Spots",plus:"Spots Plus",diary:"Mein Tag",community:"Treffen & Spielen",close:"Schließen",sheetFilter:"Filter einstellen",sheetSpots:"Spots ansehen"},
-  en: {nav:"Main navigation",map:"Map",filters:"Filters",spots:"Spots",plus:"Spots Plus",diary:"My day",community:"Meet & play",close:"Close",sheetFilter:"Adjust filters",sheetSpots:"View spots"},
-  da: {nav:"Hovednavigation",map:"Kort",filters:"Filtre",spots:"Spots",plus:"Spots Plus",diary:"Min dag",community:"Mødes & lege",close:"Luk",sheetFilter:"Tilpas filtre",sheetSpots:"Vis spots"}
+  de: {nav:"Hauptnavigation",map:"Karte",filters:"Filter",spots:"Spots",plus:"Spots Plus",diary:"Mein Tag",close:"Schließen",sheetFilter:"Filter einstellen",sheetSpots:"Spots ansehen"},
+  en: {nav:"Main navigation",map:"Map",filters:"Filters",spots:"Spots",plus:"Spots Plus",diary:"My day",close:"Close",sheetFilter:"Adjust filters",sheetSpots:"View spots"},
+  da: {nav:"Hovednavigation",map:"Kort",filters:"Filtre",spots:"Spots",plus:"Spots Plus",diary:"Min dag",close:"Luk",sheetFilter:"Tilpas filtre",sheetSpots:"Vis spots"}
 };
 
 export function createHomeNavigation({ plusEnabled = true, diaryEnabled = true } = {}) {
@@ -42,7 +42,7 @@ export function createHomeNavigation({ plusEnabled = true, diaryEnabled = true }
   let previousParent = null;
   let nextSibling = null;
 
-  for (const name of ["map", "filters", "spots", "plus", "community", "diary"]) {
+  for (const name of ["map", "filters", "spots", "plus", "diary"]) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "fsm-home-nav__item";
@@ -128,12 +128,6 @@ export function createHomeNavigation({ plusEnabled = true, diaryEnabled = true }
   }
   function navigate(name) {
     if (name === "filters" || name === "spots" || name === "plus") { openPanel(name); return; }
-    if (name === "community") {
-      closePanel({focus:false});
-      // Reuse the existing safety-first meetup preview, not a second user/event database.
-      document.getElementById("btn-community-preview")?.click();
-      return;
-    }
     closePanel({focus:false});
     if (name === "map") {
       document.getElementById("map")?.scrollIntoView({block:"start", behavior:"smooth"});
