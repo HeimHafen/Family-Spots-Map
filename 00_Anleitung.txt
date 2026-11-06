@@ -1,0 +1,19 @@
+Family Spots Map V16 · Austauschdateien für den V15-Teststand
+
+V15 zuerst sichern. Jede Datei unter demselben Pfad ersetzen.
+Die zusätzliche Endung .txt entfernen. Alle Dateien gemeinsam committen,
+damit der Service Worker und seine Prüfsummen zum Update passen.
+
+Zusammenfassung
+V16: Spot-Merkmale bündeln und Bolzplatz-Aktion klarer gestalten
+
+Detaillierte Informationen
+„Auf einen Blick“ bündelt vorhandene Merkmale in DE, EN und DA.
+Bolzplatz nutzt das olivgrüne Fußballsymbol im Filter und im Spotdetail.
+Der Treffen-Button übernimmt das App-Orange und erhält ein Gruppensymbol.
+
+Working Copy
+Vorhandene oder neue Remote-Referenz
+refs/heads/test/gemeinsam-v88-finish
+Source-Referenz: aktueller lokaler Branch mit dem V16-Commit
+Force Push: Aus
