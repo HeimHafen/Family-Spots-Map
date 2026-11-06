@@ -27221,9 +27221,9 @@
           "da": "Farverig ydermur med Zinnobers navn"
         },
         "caption": {
-          "de": "Bunte Außenwand mit Zinnober-Schriftzug",
-          "en": "Colourful exterior wall with the Zinnober name",
-          "da": "Farverig ydermur med Zinnobers navn"
+          "de": "Bunte geometrische Flächen führen zum Schriftzug des Kindermuseums.",
+          "en": "Bright geometric shapes lead to the museum’s name on the wall.",
+          "da": "Farverige geometriske felter leder blikket hen til museets navn."
         }
       },
       {
@@ -27234,9 +27234,9 @@
           "da": "Udstillingsrum med store vinduer"
         },
         "caption": {
-          "de": "Ausstellungsraum mit großen Fenstern",
-          "en": "Exhibition room with large windows",
-          "da": "Udstillingsrum med store vinduer"
+          "de": "Im großen Ausstellungsraum stehen die Mitmachstationen an niedrigen Tischen.",
+          "en": "Hands-on stations sit on low tables in the main exhibition room.",
+          "da": "I det store udstillingsrum står aktiviteterne på lave borde."
         }
       },
       {
@@ -27247,9 +27247,9 @@
           "da": "Kreabord foran en farverig reol"
         },
         "caption": {
-          "de": "Basteltisch vor einem bunten Regal",
-          "en": "Craft table in front of colourful shelving",
-          "da": "Kreabord foran en farverig reol"
+          "de": "Am Ateliertisch liegen Stifte, Scheren und Papier zum Gestalten bereit.",
+          "en": "Pencils, scissors and paper are laid out on the studio table.",
+          "da": "På værkstedsbordet ligger blyanter, sakse og papir klar."
         }
       },
       {
@@ -27260,9 +27260,9 @@
           "da": "Forsøgsbord med trækasser"
         },
         "caption": {
-          "de": "Experimentiertisch mit Holzkästen",
-          "en": "Experiment table with wooden boxes",
-          "da": "Forsøgsbord med trækasser"
+          "de": "Feine dunkle Partikel bilden in vier Holzfächern unterschiedliche Muster.",
+          "en": "Fine dark particles form different patterns in four wooden compartments.",
+          "da": "Fine mørke partikler danner forskellige mønstre i fire trærum."
         }
       },
       {
@@ -27273,9 +27273,9 @@
           "da": "Museumsmodel af byggeklodser"
         },
         "caption": {
-          "de": "Museumsmodell aus Bausteinen",
-          "en": "Museum model made of building bricks",
-          "da": "Museumsmodel af byggeklodser"
+          "de": "Auf den Balkonen und Treppen des Bausteinmuseums verstecken sich kleine Figuren.",
+          "en": "Tiny figures dot the balconies and stairs of the brick-built museum.",
+          "da": "Små figurer gemmer sig på balkonerne og trapperne på museet af byggeklodser."
         }
       }
     ],
@@ -27522,9 +27522,9 @@
       ]
     },
     "verification_label": {
-      "de": "Teilweise geprüft",
-      "en": "Partly checked",
-      "da": "Delvist tjekket"
+      "de": "Vor Ort geprüft",
+      "en": "Checked on site",
+      "da": "Tjekket på stedet"
     },
     "content_review": {
       "reviewed_at": "2026-10-27",

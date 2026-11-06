@@ -23,7 +23,7 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-zinnober-fotos";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-zinnober-bildtexte";
 import { initCommunityPlay } from "./features/community-play.js?v=20261106-community-real-spots";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
@@ -91,7 +91,7 @@ import {
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261106-zinnober-fotos";
+} from "./map.js?v=20261106-zinnober-bildtexte";
 
 import { initRouter } from "./router.js?v=20261010-unified-4";
 import { initToast, showToast } from "./toast.js";
