@@ -81,6 +81,10 @@ export function initCommunityPlay({getLanguage, closeMenu}={}) {
     const content=el('div','fsm-community-event-copy');content.append(el('strong','',event.title));
     const d=el('span','',event.date+(event.time?' · '+event.time:''));content.append(d);row.append(ico,content);events.append(row);
    }
+  }else if(spot){
+   events.append(el('p','fsm-community-demo-note',{
+    de:'Aktuell kein Termin geplant',en:'No upcoming meetup',da:'Ingen kommende aftaler'
+   }[lang()]));
   }else{
    events.append(el('p','fsm-community-demo-note',tr.preview));
    for(const [title,description] of tr.examples){const row=el('div','fsm-community-event fsm-community-event--demo');const ico=el('span','fsm-community-event-icon');ico.append(icon('calendar'));const content=el('div','fsm-community-event-copy');content.append(el('strong','',title),el('span','',description));row.append(ico,content);events.append(row);}
@@ -91,7 +95,8 @@ export function initCommunityPlay({getLanguage, closeMenu}={}) {
   const msg=el('p','fsm-community-alert',tr.cta);msg.hidden=true;msg.setAttribute('role','status');
   body.append(detailsPanel,msg);sheet.append(body);
   const foot=el('footer','fsm-community-actions');
-  foot.append(makeAction(tr.details,'fsm-community-secondary',()=>{detailsPanel.hidden=!detailsPanel.hidden;detailsPanel.scrollIntoView({block:'nearest'});}),makeAction(tr.join,'fsm-community-primary',()=>{msg.hidden=false;msg.scrollIntoView({block:'nearest'});}));
+  foot.append(makeAction(tr.details,'fsm-community-secondary',()=>{detailsPanel.hidden=!detailsPanel.hidden;detailsPanel.scrollIntoView({block:'nearest'});}));
+  if(!spot)foot.append(makeAction(tr.join,'fsm-community-primary',()=>{msg.hidden=false;msg.scrollIntoView({block:'nearest'});}));
   sheet.append(foot);
   // Reuse the ORIGINAL five-button navigation inside the preview. No copy,
   // duplicate handlers or state: it returns to its original place on close.

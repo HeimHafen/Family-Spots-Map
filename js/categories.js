@@ -330,6 +330,12 @@ export const PLACE_TYPES = [
     ]
   },
   {
+    "id": "community-garden",
+    "world": "nature",
+    "label": {"de": "Mitmachgärten", "en": "Community gardens", "da": "Fælleshaver"},
+    "aliases": ["mitmachgarten"]
+  },
+  {
     "id": "nature-trail",
     "world": "nature",
     "label": {
