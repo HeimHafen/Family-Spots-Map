@@ -163,17 +163,7 @@ export function createSpotDetailsController({
       if (details.open) expandedParkingSpots.add(id); else expandedParkingSpots.delete(id);
     });
     const summary = document.createElement("summary");
-    const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    arrow.setAttribute("viewBox", "0 0 24 24");
-    arrow.setAttribute("aria-hidden", "true");
-    arrow.setAttribute("focusable", "false");
-    arrow.classList.add("spot-parking__arrow");
-    const path = document.createElementNS(arrow.namespaceURI, "path");
-    path.setAttribute("d", "M9 5l7 7-7 7");
-    arrow.appendChild(path);
-    const label = document.createElement("span");
-    label.textContent = labels.title;
-    summary.append(arrow, label);
+    summary.textContent = labels.title;
     details.appendChild(summary);
     const body = document.createElement("div");
     body.className = "spot-parking__body";

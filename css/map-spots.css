@@ -473,6 +473,7 @@ html[data-fsm-focus-modality="keyboard"] #fsm-map-fullscreen .fsm-map-tool:focus
   display: grid;
   margin-block: 6px 8px;
   padding: 8px 12px;
+  gap: 6px;
   border-radius: 14px;
 }
 #spot-detail .spot-nearby-link {
@@ -481,13 +482,15 @@ html[data-fsm-focus-modality="keyboard"] #fsm-map-fullscreen .fsm-map-tool:focus
   justify-content: space-between;
   gap: 8px;
   min-height: 44px;
-  padding: 6px 0;
-  border: 0;
-  background: transparent;
+  padding: 6px 10px;
+  border: 1px solid #bdc7ae;
+  border-radius: 10px;
+  background: var(--p-surface, #fcf7ed);
   color: var(--p-text, #302719);
   font: inherit;
   text-align: start;
   cursor: pointer;
 }
-#spot-detail .spot-nearby-link + .spot-nearby-link { border-top: 1px solid var(--p-line, #dbcfbc); }
+#spot-detail .spot-nearby-link:focus-visible { outline: 2px solid #465936; outline-offset: 2px; }
 #spot-detail .spot-nearby-link::after { content: "›"; flex: none; color: var(--p-muted, #746658); }
+
