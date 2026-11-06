@@ -104,10 +104,10 @@ export async function readDaylogEntries() {
   catch { value = legacyPayload(DAYLOG_STORAGE_KEY); }
   return daylogFrom(value);
 }
-export function changeFavorite(id, selected) {
+export function changeFavorite(id, selected, normalize = ids => ids) {
   return transaction(FAVORITES_KEY, value => {
     if (typeof selected !== "boolean" || !((typeof id === "string" && id.trim()) || (typeof id === "number" && Number.isFinite(id)))) throw new Error("invalid_favorite_operation");
-    const next = favoritesFrom(value);
+    const next = normalize(favoritesFrom(value));
     if (selected) next.add(String(id)); else next.delete(String(id));
     return { value: [...next], result: next };
   });

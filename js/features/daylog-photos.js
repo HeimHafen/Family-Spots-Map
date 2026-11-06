@@ -1,4 +1,4 @@
-import { readPhoto, readPhotoDraft, writePhotoDraft } from "./personal-storage.js?v=20261105-storage-v928";
+import { readPhoto, readPhotoDraft, writePhotoDraft } from "./personal-storage.js?v=20261106-app-feinschliff-15";
 import { preparePhoto, MAX_PHOTOS } from "./memory-images.js?v=20261105-photo-v928";
 
 const words = {

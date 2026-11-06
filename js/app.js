@@ -23,12 +23,12 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-app-feinschliff-11";
-import { initCommunityPlay } from "./features/community-play.js?v=20261106-app-feinschliff-11";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-app-feinschliff-15";
+import { initCommunityPlay } from "./features/community-play.js?v=20261106-app-feinschliff-15";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
-import { createCategoryExplorer } from "./ui/category-explorer.js";
+import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261106-app-feinschliff-15";
 import { hasCategorySelection, isExpiredEvent, FACETS, labelOf, facetValue, hasReviewedCategoryProfile, placeTypeLabels } from "./categories.js";
 
 import { initFilterSelects } from "./ui/filter-select.js";
@@ -41,16 +41,16 @@ import { initPersonalBackup } from "./features/personal-backup.js";
 
 import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js";
 
-import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261105-storage-v928";
+import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261106-app-feinschliff-15";
 
-import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261106-app-feinschliff-11";
+import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261106-app-feinschliff-15";
 
-import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261106-app-feinschliff-11";
-import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261106-app-feinschliff-11";
+import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261106-app-feinschliff-15";
+import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261106-app-feinschliff-15";
 
 import { createModalController } from "./ui/modal.js";
-import { createSpotDetailsController } from "./ui/spot-details.js?v=20261106-app-feinschliff-11";
-import { initMenu } from "./ui/menu.js?v=20261106-app-feinschliff-11";
+import { createSpotDetailsController } from "./ui/spot-details.js?v=20261106-app-feinschliff-15";
+import { initMenu } from "./ui/menu.js?v=20261106-app-feinschliff-15";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
@@ -84,25 +84,25 @@ import {
   getSpotName,
   getSpotSubtitle,
   getSpotId
-} from "./filters.js?v=20261106-app-feinschliff-11";
+} from "./filters.js?v=20261106-app-feinschliff-15";
 
 import {
   initMap,
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261106-app-feinschliff-11";
+} from "./map.js?v=20261106-app-feinschliff-15";
 
-import { initRouter } from "./router.js?v=20261106-app-feinschliff-11";
+import { initRouter } from "./router.js?v=20261106-app-feinschliff-15";
 import { initToast, showToast } from "./toast.js";
-import { loadData } from "./data.js?v=20261106-app-feinschliff-11";
+import { loadData } from "./data.js?v=20261106-app-feinschliff-15";
 
 import {
   getPlusStatus,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
-} from "./features/plus.js?v=20261106-app-feinschliff-11";
+} from "./features/plus.js?v=20261106-app-feinschliff-15";
 
 // ------------------------------------------------------
 // Debug
@@ -284,6 +284,9 @@ let markersLayer = null;
 
 /** @type {Spot[]} */
 let spots = [];
+let spotAliases = new Map();
+const canonicalSpotId = id => spotAliases.get(id) ?? id;
+const canonicalFavorites = ids => new Set([...ids].map(canonicalSpotId));
 
 /** @type {Spot[]} */
 let filteredSpots = [];
@@ -666,7 +669,7 @@ const spotDetails = createSpotDetailsController({
   getElement: () => spotDetailEl,
   getListElement: () => spotListEl,
   getLastTrigger: () => lastSpotTriggerEl,
-  getRelatedSpot: id => spots.find(spot => getSpotId(spot) === id),
+  getRelatedSpot: id => spots.find(spot => getSpotId(spot) === canonicalSpotId(id)),
   openRelatedSpot: spot => showSpotDetails(spot, { focus: true }),
   getLanguage: () => currentLang,
   getSpotId,
@@ -1707,7 +1710,7 @@ function openFavoritesFromMenu() {
 async function loadFavoritesFromStorage() {
   if (!FEATURES.favorites) return;
   const generation = ++favoriteReadGeneration;
-  try { const next = await readFavorites(); if (generation === favoriteReadGeneration) { favorites = next; syncFavoritesShortcut(); } }
+  try { const next = await readFavorites(); if (generation === favoriteReadGeneration) { favorites = canonicalFavorites(next); syncFavoritesShortcut(); } }
   catch (error) { warn("[Family Spots] Favorites unavailable:", error); }
 }
 
@@ -1746,7 +1749,7 @@ async function toggleFavorite(spot) {
   const wasFavorite = favorites.has(spotId);
   favoritePendingIds.add(spotId);
   document.querySelectorAll("button.fsm-favorite").forEach(button => { if (button.dataset.favoriteSpotId === spotId) button.setAttribute("aria-busy", "true"); });
-  try { favorites = await changeFavorite(spotId, !wasFavorite); ++favoriteReadGeneration; syncFavoritesShortcut(); }
+  try { favorites = await changeFavorite(spotId, !wasFavorite, canonicalFavorites); ++favoriteReadGeneration; syncFavoritesShortcut(); }
   catch (error) {
     warn("[Family Spots] Favorite save failed:", error);
     showToast(locationText("Favorit konnte nicht gespeichert werden.", "Could not save this favourite.", "Favoritten kunne ikke gemmes."));
@@ -2012,7 +2015,7 @@ async function refreshPersonalData({ daylog = false, favorite = false } = {}) {
     try {
       const next = await readFavorites();
       if (generation === favoriteReadGeneration) {
-        favorites = next;
+        favorites = canonicalFavorites(next);
         syncFavoritesShortcut();
         if (onlyFavorites) applyFiltersAndRender();
         document.querySelectorAll("button.fsm-favorite").forEach(button => syncFavButtonState(button, button.dataset.favoriteSpotId));
@@ -2554,7 +2557,19 @@ async function loadSpots() {
       ? result.spots
       : [];
 
-    spots = rawSpots.map(normalizeSpot);
+    const normalized = rawSpots.map(normalizeSpot);
+    const byId = new Map(normalized.map(spot => [getSpotId(spot), spot]));
+    spotAliases = new Map();
+    for (const spot of normalized) {
+      const target = byId.get(spot.same_place_as);
+      if (!target || target === spot || target.same_place_as) continue;
+      spotAliases.set(getSpotId(spot), getSpotId(target));
+      delete target._searchText;
+      target.search_aliases = [...new Set([
+        ...(target.search_aliases || []), spot.title, spot.title_de, spot.title_en, spot.title_da
+      ].filter(Boolean))];
+    }
+    spots = normalized.filter(spot => !spotAliases.has(getSpotId(spot)));
     syncAgeFilterAvailability();
     spotsLoadState = "ready";
     spotsLoadHasFailed = false;
@@ -2880,12 +2895,12 @@ function formatKmBadgeLabel(km) {
   return `≈ ${formatter.format(km)} km · ${locationText("Luftlinie", "straight-line", "fugleflugtslinje")}`;
 }
 
-function getSpotMetaParts(spot) {
+function getSpotMetaParts(spot, { includeCategory = true } = {}) {
   const parts = [];
 
-  if (hasReviewedCategoryProfile(spot)) {
+  if (includeCategory && hasReviewedCategoryProfile(spot)) {
     parts.push(placeTypeLabels(spot, currentLang).join(" · "));
-  } else if (spot.category) {
+  } else if (includeCategory && spot.category) {
     parts.push(getCategoryLabel(spot.category));
   }
 

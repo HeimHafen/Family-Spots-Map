@@ -1,3 +1,5 @@
+import { getPlaceTypes, getPlaceTypeWorlds, placeTypeLabels } from "../categories.js";
+import { categoryIcon } from "./category-icons.js";
 // Spot detail view: rendering, gallery, visitor information and route links.
 // Personal data and map/location calculations remain in their existing owners.
 import { FEATURES, LANG_EN, LANG_DA } from "../config.js";
@@ -420,7 +422,9 @@ export function createSpotDetailsController({
     const spotId = getSpotId(spot);
     const name = getSpotName(spot);
     const subtitle = getSpotSubtitle(spot);
-    const metaParts = getSpotMetaParts(spot);
+    const metaParts = getSpotMetaParts(spot, { includeCategory: false });
+    const types = getPlaceTypes(spot);
+    const typeLabels = placeTypeLabels(spot, currentLang);
 
     const tags = getSpotDisplayTags(spot);
 
@@ -520,14 +524,22 @@ export function createSpotDetailsController({
 
     spotDetailEl.appendChild(headerEl);
 
-    if (metaParts.length) {
+    if (types.length || metaParts.length) {
       const metaEl = document.createElement("div");
       metaEl.className = "spot-details-meta";
 
-      metaParts.forEach((part, index) => {
+      types.forEach((id, index) => {
+        const chip = document.createElement("span");
+        chip.className = "spot-meta-type";
+        chip.dataset.categoryIcon = id;
+        chip.dataset.world = getPlaceTypeWorlds(id)[0];
+        chip.append(categoryIcon(id), document.createTextNode(typeLabels[index]));
+        metaEl.append(chip);
+      });
+
+      metaParts.forEach((part) => {
         const span = document.createElement("span");
         span.textContent = part;
-        if (index === 0 && spot.categories?.includes("bolzplatz")) span.classList.add("spot-meta-football");
 
         metaEl.appendChild(span);
       });

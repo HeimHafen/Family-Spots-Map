@@ -173,14 +173,22 @@ html.fsm-polished #filter-modal .category-explorer__choice > .category-explorer_
 html.fsm-polished #filter-modal .category-explorer__choice .category-explorer__icon {
   flex-basis:22px;width:22px;height:22px;color:var(--fs78-icon,#4c8260);
 }
-html.fsm-polished #filter-modal .category-explorer__choice[data-world="play"] {--fs78-icon:#1296bb;}
-html.fsm-polished #filter-modal .category-explorer__choice[data-world="animals"] {--fs78-icon:#9e6539;}
-html.fsm-polished #filter-modal .category-explorer__choice[data-world="nature"] {--fs78-icon:#41885b;}
-html.fsm-polished #filter-modal .category-explorer__choice[data-world="water"] {--fs78-icon:#159bc4;}
-html.fsm-polished #filter-modal .category-explorer__choice[data-world="adventure"] {--fs78-icon:#c17e2b;}
-html.fsm-polished #filter-modal .category-explorer__choice[data-world="culture"] {--fs78-icon:#854eac;}
-html.fsm-polished #filter-modal .category-explorer__choice[data-world="pause"] {--fs78-icon:#ea793a;}
-html.fsm-polished #filter-modal .category-explorer__choice[data-world="travel"] {--fs78-icon:#088d81;}
+html.fsm-polished #filter-modal .category-explorer__choice[data-world="play"],
+html.fsm-polished #spot-detail .spot-meta-type[data-world="play"] {--fs78-icon:#547045;}
+html.fsm-polished #filter-modal .category-explorer__choice[data-world="animals"],
+html.fsm-polished #spot-detail .spot-meta-type[data-world="animals"] {--fs78-icon:#9e6539;}
+html.fsm-polished #filter-modal .category-explorer__choice[data-world="nature"],
+html.fsm-polished #spot-detail .spot-meta-type[data-world="nature"] {--fs78-icon:#41885b;}
+html.fsm-polished #filter-modal .category-explorer__choice[data-world="water"],
+html.fsm-polished #spot-detail .spot-meta-type[data-world="water"] {--fs78-icon:#159bc4;}
+html.fsm-polished #filter-modal .category-explorer__choice[data-world="adventure"],
+html.fsm-polished #spot-detail .spot-meta-type[data-world="adventure"] {--fs78-icon:#c17e2b;}
+html.fsm-polished #filter-modal .category-explorer__choice[data-world="culture"],
+html.fsm-polished #spot-detail .spot-meta-type[data-world="culture"] {--fs78-icon:#854eac;}
+html.fsm-polished #filter-modal .category-explorer__choice[data-world="pause"],
+html.fsm-polished #spot-detail .spot-meta-type[data-world="pause"] {--fs78-icon:#ea793a;}
+html.fsm-polished #filter-modal .category-explorer__choice[data-world="travel"],
+html.fsm-polished #spot-detail .spot-meta-type[data-world="travel"] {--fs78-icon:#088d81;}
 html.fsm-polished #filter-modal .category-explorer__choice .category-explorer__name {
   flex:1;min-width:0;white-space:normal;overflow-wrap:normal!important;
 }
@@ -265,14 +273,14 @@ html.fsm-polished #filter-modal .filter-modal__action-icon svg {display:block;wi
 html.fsm-polished #filter-modal .filter-modal__action-label {flex:0 1 auto;min-width:0;text-align:center;}
 
 /* Individual subcategory accents echo the illustration without relying on emoji. */
-html.fsm-polished #filter-modal [data-category-icon="park"] .category-explorer__icon {color:#db609b!important;}
-html.fsm-polished #filter-modal [data-category-icon="viewpoint"] .category-explorer__icon {color:#a96e40!important;}
-html.fsm-polished #filter-modal [data-category-icon="walk"] .category-explorer__icon {color:#698c35!important;}
-html.fsm-polished #filter-modal [data-category-icon="adventure-farm"] .category-explorer__icon {color:#9c592f!important;}
-html.fsm-polished #filter-modal [data-category-icon="swingolf"] .category-explorer__icon {color:#d28a33!important;}
-html.fsm-polished #filter-modal [data-category-icon="playground"] .category-explorer__icon {color:#159dc3!important;}
-html.fsm-polished #filter-modal [data-category-icon="adventure-playground"] .category-explorer__icon {color:#ec8921!important;}
-html.fsm-polished #filter-modal [data-category-icon="indoor-playground"] .category-explorer__icon {color:#4c9d71!important;}
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="park"] .category-explorer__icon {color:#547045!important;}
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="viewpoint"] .category-explorer__icon {color:#87552f!important;}
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="walk"] .category-explorer__icon {color:#547045!important;}
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="adventure-farm"] .category-explorer__icon {color:#87552f!important;}
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="swingolf"] .category-explorer__icon {color:#925c23!important;}
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="playground"] .category-explorer__icon {color:#547045!important;}
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="adventure-playground"] .category-explorer__icon {color:#a25923!important;}
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="indoor-playground"] .category-explorer__icon {color:#447455!important;}
 
 
 /* Family Spots Map 80 – quiet buttons & consistent dark lettering on orange.
@@ -554,3 +562,5 @@ html.fsm-polished #fsm-map-fullscreen .fsm-map-themes > .fsm-map-tool--theme:foc
   outline:2px solid #376a45!important;
   outline-offset:3px!important;
 }
+
+html.fsm-polished :is(#filter-modal, #spot-detail) [data-category-icon="water-playground"] .category-explorer__icon {color:#246e91!important;}

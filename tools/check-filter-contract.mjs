@@ -41,7 +41,11 @@ for(let i=0;i<120;i++){
  const ids=spots=>spots.map(x=>x.id).sort();
  equal(ids(model.spots),ids(data.filter(s=>matchesCategoryProfile(s,state))),'Evaluated results match category predicate');
  for(const world of ['',...WORLDS.map(x=>x.id)])equal(model.worlds.get(world),data.filter(s=>matchesCategoryProfile(s,{...state,world,types:new Set()})).length,'World counts predict actual replacement');
- for(const id of ['playground','forest-playground','lake'])equal(model.types.get(id),data.filter(s=>matchesCategoryProfile(s,{...state,types:new Set([...state.types,id])})).length,'OR-type counts predict actual addition');
+ for(const id of ['playground','forest-playground','lake']){
+  const types=new Set(state.types);
+  if(!types.delete(id))types.add(id);
+  equal(model.types.get(id),data.filter(s=>matchesCategoryProfile(s,{...state,types})).length,'OR-type counts predict adding and removing types');
+ }
  for(const id of ['free','indoor','outdoor','toilet'])equal(model.facets.get(id),data.filter(s=>matchesCategoryProfile(s,{...state,facets:new Set([...state.facets,id])})).length,'Facet counts predict actual addition');
  equal(JSON.stringify({world:state.world,types:[...state.types],facets:[...state.facets]}),before,'Evaluation must not change selection');
 }

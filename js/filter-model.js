@@ -26,7 +26,8 @@ export function evaluateSelection(spots, state={}, now=Date.now()) {
  for(const id of new Set([...WORLDS.map(x=>x.id),...rawWorlds.keys(),current.world].filter(Boolean)))worlds.set(id,matching({...current,world:id,types:new Set()}).length);
  worlds.set('',matching({...current,world:'',types:new Set()}).length);
  for(const id of new Set([...PLACE_TYPES.map(x=>x.id),...rawTypes.keys(),...current.types])){
-  const next=new Set(current.types);next.add(id);
+  const next=new Set(current.types);
+  if (!next.delete(id)) next.add(id);
   types.set(id,matching({...current,types:next}).length);
  }
  for(const {id} of FACETS){const next=new Set(current.facets);next.add(id);facets.set(id,matching({...current,facets:next}).length);}

@@ -455,12 +455,10 @@ html[data-fsm-focus-modality="keyboard"] #fsm-map-fullscreen .fsm-map-tool:focus
   font-size: 22px;
   font-weight: 400;
 }
-#spot-detail .spot-details-meta > .spot-meta-football,
 #spot-detail .spot-nearby {
   background: var(--p-selection, #edf0e4);
   color: var(--p-selection-text, #465936);
 }
-#spot-detail .spot-meta-football::before { content: "⚽︎"; margin-inline-end: 5px; }
 #spot-detail .spot-gallery__camera {
   width: 18px;
   height: 18px;
@@ -494,3 +492,34 @@ html[data-fsm-focus-modality="keyboard"] #fsm-map-fullscreen .fsm-map-tool:focus
 #spot-detail .spot-nearby-link:focus-visible { outline: 2px solid #465936; outline-offset: 2px; }
 #spot-detail .spot-nearby-link::after { content: "›"; flex: none; color: var(--p-muted, #746658); }
 
+
+#spot-detail .spot-details-meta > .spot-meta-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #edf0e4;
+  color: var(--p-text, #302719);
+}
+#spot-detail .spot-meta-type[data-world="water"],
+#spot-detail .spot-meta-type[data-category-icon="water-playground"] { background: #eaf4f8; }
+#spot-detail .spot-meta-type[data-world="culture"] { background: #f5edf6; }
+#spot-detail .spot-meta-type[data-world="travel"] { background: #eaf4f0; }
+#spot-detail .spot-meta-type[data-world="animals"],
+#spot-detail .spot-meta-type[data-world="adventure"],
+#spot-detail .spot-meta-type[data-world="pause"] { background: #f6eee1; }
+#spot-detail .spot-meta-type > .category-explorer__icon {
+  display: inline-flex;
+  width: 15px;
+  height: 15px;
+  flex: none;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--fs78-icon, #547045);
+}
+#spot-detail .spot-meta-type svg { width: 100%; height: 100%; }
+#spot-detail .spot-details-tags > .badge--soft {
+  background: var(--p-surface, #fcf7ed);
+  border-color: var(--p-line, #dbcfbc);
+  color: var(--p-text, #302719);
+}
