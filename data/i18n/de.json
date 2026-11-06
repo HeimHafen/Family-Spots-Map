@@ -48,7 +48,7 @@
           "step1": "Kurz raus – schnell da, schnell wieder zurück.",
           "step2": "Kleine Tour – ein halber Tag voller Entdeckungen.",
           "step3": "Großes Ziel – ein ganzer Tag für magische Momente.",
-          "all": "Alle Spots – ohne Radius. Die Karte gehört euch."
+          "all": "Ohne Entfernungsgrenze."
         }
       }
     },
@@ -158,7 +158,7 @@
   "btn_show_list": "Liste zeigen",
   "filter_category_all": "Alle Kategorien",
   "filter_radius_max_label": "Alle Spots",
-  "filter_radius_description_all": "Alle Spots – ohne Radius. Die Karte gehört euch.",
+  "filter_radius_description_all": "Ohne Entfernungsgrenze.",
   "plus_code_empty": "Bitte zuerst euren Test- oder Partnercode eingeben.",
   "plus_code_unknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
   "plus_code_activated": "Family Spots Plus ist aktiv – viel Freude auf euren Touren!",

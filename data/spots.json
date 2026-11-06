@@ -35228,5 +35228,418 @@
         }
       }
     ]
+  },
+  {
+    "id": "spielbereich_grundschule_rethen",
+    "title": "Spielbereich an der Grundschule Rethen",
+    "lat": 52.28585,
+    "lon": 9.82452,
+    "country": "DE",
+    "city": "Laatzen",
+    "categories": [
+      "spielplatz"
+    ],
+    "verified": false,
+    "parking_information": {
+      "schema_version": 1,
+      "status": "unknown"
+    },
+    "visitor_information": {
+      "confirmed_topics": [],
+      "unconfirmed_topics": [
+        "suitability",
+        "duration",
+        "arrival",
+        "admission",
+        "hours",
+        "comfort",
+        "food",
+        "accessibility",
+        "tips"
+      ]
+    },
+    "visit_details": {
+      "schema_version": 1,
+      "sections": {
+        "suitability": {
+          "items": []
+        },
+        "duration": {
+          "items": []
+        },
+        "arrival": {
+          "items": []
+        },
+        "admission": {
+          "items": []
+        },
+        "hours": {
+          "items": []
+        },
+        "comfort": {
+          "items": []
+        },
+        "food": {
+          "items": []
+        },
+        "accessibility": {
+          "items": []
+        },
+        "tips": {
+          "items": []
+        }
+      }
+    },
+    "title_de": "Spielbereich an der Grundschule Rethen",
+    "summary_de": "Auf dem Schulhof verbinden Brücken mehrere Klettertürme. Dazu kommen eine Rutsche, eine Seilschaukel und ein separates Klettergerät. Außerhalb der Schulzeit öffentlich zugänglich.",
+    "tags_de": [],
+    "title_en": "Play area at Rethen Primary School",
+    "summary_en": "Bridges connect several climbing towers in the schoolyard, which also has a slide, a rope swing and a separate climbing frame. Open to the public outside school hours.",
+    "tags_en": [],
+    "title_da": "Legeområde ved grundskolen i Rethen",
+    "summary_da": "Broer forbinder flere klatretårne i skolegården, hvor der også er en rutsjebane, en rebgynge og et separat klatrestativ. Offentligt tilgængelig uden for skoletiden.",
+    "tags_da": [],
+    "address": "Steinweg 18, 30880 Laatzen",
+    "photos": [
+      {
+        "src": "assets/spots/grundschule-rethen/IMG_0412.jpeg",
+        "alt": {
+          "de": "Klettertürme mit Hängebrücke, Rampe und Rutsche",
+          "en": "Climbing towers with a suspension bridge, ramp and slide",
+          "da": "Klatretårne med hængebro, rampe og rutsjebane"
+        },
+        "caption": {
+          "de": "Klettertürme mit Hängebrücke, Rampe und Rutsche",
+          "en": "Climbing towers with a suspension bridge, ramp and slide",
+          "da": "Klatretårne med hængebro, rampe og rutsjebane"
+        }
+      },
+      {
+        "src": "assets/spots/grundschule-rethen/IMG_0414.jpeg",
+        "alt": {
+          "de": "Seilschaukel unter grünen Bögen",
+          "en": "Rope swing beneath green arches",
+          "da": "Rebgynge under grønne buer"
+        },
+        "caption": {
+          "de": "Seilschaukel unter grünen Bögen",
+          "en": "Rope swing beneath green arches",
+          "da": "Rebgynge under grønne buer"
+        }
+      }
+    ],
+    "visit_label_de": "Je nach Lust und Zeit",
+    "visit_label_en": "Stay as long as you like",
+    "visit_label_da": "Bliv så længe I har lyst"
+  },
+  {
+    "id": "bolzplatz_festplatz_rethen",
+    "title": "Bolzplatz · Festplatz Rethen",
+    "lat": 52.2801,
+    "lon": 9.82543,
+    "country": "DE",
+    "city": "Laatzen",
+    "categories": [
+      "bolzplatz"
+    ],
+    "verified": false,
+    "parking_information": {
+      "schema_version": 1,
+      "status": "unknown"
+    },
+    "visitor_information": {
+      "confirmed_topics": [],
+      "unconfirmed_topics": [
+        "suitability",
+        "duration",
+        "arrival",
+        "admission",
+        "hours",
+        "comfort",
+        "food",
+        "accessibility",
+        "tips"
+      ]
+    },
+    "visit_details": {
+      "schema_version": 1,
+      "sections": {
+        "suitability": {
+          "items": []
+        },
+        "duration": {
+          "items": []
+        },
+        "arrival": {
+          "items": []
+        },
+        "admission": {
+          "items": []
+        },
+        "hours": {
+          "items": []
+        },
+        "comfort": {
+          "items": []
+        },
+        "food": {
+          "items": []
+        },
+        "accessibility": {
+          "items": []
+        },
+        "tips": {
+          "items": []
+        }
+      }
+    },
+    "title_de": "Bolzplatz · Festplatz Rethen",
+    "summary_de": "Bolzplatz im Bereich Festplatz Rethen in Rethen. Der Kartenpunkt markiert die Spielfläche.",
+    "tags_de": [],
+    "title_en": "Football pitch · Festplatz Rethen",
+    "summary_en": "Football pitch near Festplatz Rethen in Rethen. The map pin marks the playing area.",
+    "tags_en": [],
+    "title_da": "Boldbane · Festplatz Rethen",
+    "summary_da": "Boldbane ved Festplatz Rethen i Rethen. Kortnålen viser spilleområdet.",
+    "tags_da": [],
+    "source_urls": [
+      "https://cms.laatzen.de/bi/getfile.asp?id=31962&type=do"
+    ],
+    "visit_label_de": "Je nach Lust und Zeit",
+    "visit_label_en": "Stay as long as you like",
+    "visit_label_da": "Bliv så længe I har lyst"
+  },
+  {
+    "id": "bolzplatz_uithuizermeedenweg_rethen",
+    "title": "Bolzplatz · Uithuizermeedenweg",
+    "lat": 52.28945,
+    "lon": 9.83416,
+    "country": "DE",
+    "city": "Laatzen",
+    "categories": [
+      "bolzplatz"
+    ],
+    "verified": false,
+    "parking_information": {
+      "schema_version": 1,
+      "status": "unknown"
+    },
+    "visitor_information": {
+      "confirmed_topics": [],
+      "unconfirmed_topics": [
+        "suitability",
+        "duration",
+        "arrival",
+        "admission",
+        "hours",
+        "comfort",
+        "food",
+        "accessibility",
+        "tips"
+      ]
+    },
+    "visit_details": {
+      "schema_version": 1,
+      "sections": {
+        "suitability": {
+          "items": []
+        },
+        "duration": {
+          "items": []
+        },
+        "arrival": {
+          "items": []
+        },
+        "admission": {
+          "items": []
+        },
+        "hours": {
+          "items": []
+        },
+        "comfort": {
+          "items": []
+        },
+        "food": {
+          "items": []
+        },
+        "accessibility": {
+          "items": []
+        },
+        "tips": {
+          "items": []
+        }
+      }
+    },
+    "title_de": "Bolzplatz · Uithuizermeedenweg",
+    "summary_de": "Bolzplatz im Bereich Uithuizermeedenweg in Rethen. Der Kartenpunkt markiert die Spielfläche.",
+    "tags_de": [],
+    "title_en": "Football pitch · Uithuizermeedenweg",
+    "summary_en": "Football pitch near Uithuizermeedenweg in Rethen. The map pin marks the playing area.",
+    "tags_en": [],
+    "title_da": "Boldbane · Uithuizermeedenweg",
+    "summary_da": "Boldbane ved Uithuizermeedenweg i Rethen. Kortnålen viser spilleområdet.",
+    "tags_da": [],
+    "source_urls": [
+      "https://kinderspielplatz-deutschland.de/stadt/laatzen/"
+    ],
+    "visit_label_de": "Je nach Lust und Zeit",
+    "visit_label_en": "Stay as long as you like",
+    "visit_label_da": "Bliv så længe I har lyst"
+  },
+  {
+    "id": "bolzplatz_heidfeld_laatzen",
+    "title": "Bolzplatz · Heidfeld",
+    "lat": 52.30023,
+    "lon": 9.81332,
+    "country": "DE",
+    "city": "Laatzen",
+    "categories": [
+      "bolzplatz"
+    ],
+    "verified": false,
+    "parking_information": {
+      "schema_version": 1,
+      "status": "unknown"
+    },
+    "visitor_information": {
+      "confirmed_topics": [],
+      "unconfirmed_topics": [
+        "suitability",
+        "duration",
+        "arrival",
+        "admission",
+        "hours",
+        "comfort",
+        "food",
+        "accessibility",
+        "tips"
+      ]
+    },
+    "visit_details": {
+      "schema_version": 1,
+      "sections": {
+        "suitability": {
+          "items": []
+        },
+        "duration": {
+          "items": []
+        },
+        "arrival": {
+          "items": []
+        },
+        "admission": {
+          "items": []
+        },
+        "hours": {
+          "items": []
+        },
+        "comfort": {
+          "items": []
+        },
+        "food": {
+          "items": []
+        },
+        "accessibility": {
+          "items": []
+        },
+        "tips": {
+          "items": []
+        }
+      }
+    },
+    "title_de": "Bolzplatz · Heidfeld",
+    "summary_de": "Bolzplatz im Bereich Heidfeld in Laatzen-Mitte. Der Kartenpunkt markiert die Spielfläche.",
+    "tags_de": [],
+    "title_en": "Football pitch · Heidfeld",
+    "summary_en": "Football pitch near Heidfeld in Laatzen-Mitte. The map pin marks the playing area.",
+    "tags_en": [],
+    "title_da": "Boldbane · Heidfeld",
+    "summary_da": "Boldbane ved Heidfeld i Laatzen-Mitte. Kortnålen viser spilleområdet.",
+    "tags_da": [],
+    "source_urls": [
+      "https://niedersachsen.app/stadt-laatzen/ort/spielplaetze"
+    ],
+    "visit_label_de": "Je nach Lust und Zeit",
+    "visit_label_en": "Stay as long as you like",
+    "visit_label_da": "Bliv så længe I har lyst"
+  },
+  {
+    "id": "spiel_und_bolzplatz_harkenblecker_strasse_rethen",
+    "title": "Spiel- und Bolzplatz Harkenblecker Straße",
+    "lat": 52.291154667554494,
+    "lon": 9.82391985184066,
+    "country": "DE",
+    "city": "Laatzen",
+    "categories": [
+      "spielplatz",
+      "bolzplatz"
+    ],
+    "verified": false,
+    "parking_information": {
+      "schema_version": 1,
+      "status": "unknown"
+    },
+    "visitor_information": {
+      "confirmed_topics": [],
+      "unconfirmed_topics": [
+        "suitability",
+        "duration",
+        "arrival",
+        "admission",
+        "hours",
+        "comfort",
+        "food",
+        "accessibility",
+        "tips"
+      ]
+    },
+    "visit_details": {
+      "schema_version": 1,
+      "sections": {
+        "suitability": {
+          "items": []
+        },
+        "duration": {
+          "items": []
+        },
+        "arrival": {
+          "items": []
+        },
+        "admission": {
+          "items": []
+        },
+        "hours": {
+          "items": []
+        },
+        "comfort": {
+          "items": []
+        },
+        "food": {
+          "items": []
+        },
+        "accessibility": {
+          "items": []
+        },
+        "tips": {
+          "items": []
+        }
+      }
+    },
+    "title_de": "Spiel- und Bolzplatz Harkenblecker Straße",
+    "summary_de": "Spiel- und Bolzplatz in Rethen mit Platz zum Fußball- und Basketballspielen.",
+    "tags_de": [],
+    "title_en": "Playground and football pitch on Harkenblecker Straße",
+    "summary_en": "A playground and football pitch in Rethen with space to play football and basketball.",
+    "tags_en": [],
+    "title_da": "Legeplads og boldbane ved Harkenblecker Straße",
+    "summary_da": "Legeplads og boldbane i Rethen med plads til fodbold og basketball.",
+    "tags_da": [],
+    "source_urls": [
+      "https://www.spielplatztreff.de/spielplatz/harkenblecker-strasse-in-laatzen_16091"
+    ],
+    "address": "Harkenblecker Straße 3, 30880 Laatzen",
+    "visit_label_de": "Je nach Lust und Zeit",
+    "visit_label_en": "Stay as long as you like",
+    "visit_label_da": "Bliv så længe I har lyst"
   }
 ]

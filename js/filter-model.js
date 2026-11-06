@@ -37,7 +37,7 @@ export function evaluateSelection(spots, state={}, now=Date.now()) {
 }
 
 // Shared names avoid a shortcut saying one thing and its selection summary another.
-const WATER_LABEL = { de: 'Wasser & Sand', en: 'Water & sand', da: 'Vand & sand' };
+const WATER_LABEL = { de: 'Baden & Wasserspiel', en: 'Swimming & water play', da: 'Badning og vandleg' };
 export function shortcutLabel(id, lang='de') {
  const preset=SHORTCUTS[id];
  if(!preset)return '';

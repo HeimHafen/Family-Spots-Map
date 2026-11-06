@@ -23,8 +23,8 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-treffen-feinschliff";
-import { initCommunityPlay } from "./features/community-play.js?v=20261106-treffen-feinschliff";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-app-feinschliff-3";
+import { initCommunityPlay } from "./features/community-play.js?v=20261106-app-feinschliff-3";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
@@ -43,14 +43,14 @@ import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js
 
 import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261105-storage-v928";
 
-import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261010-unified-4";
+import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261106-app-feinschliff-3";
 
-import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261010-unified-4";
-import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261010-unified-4";
+import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261106-app-feinschliff-3";
+import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261106-app-feinschliff-3";
 
 import { createModalController } from "./ui/modal.js";
 import { createSpotDetailsController } from "./ui/spot-details.js";
-import { initMenu } from "./ui/menu.js?v=20261010-unified-4";
+import { initMenu } from "./ui/menu.js?v=20261106-app-feinschliff-3";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
@@ -84,25 +84,25 @@ import {
   getSpotName,
   getSpotSubtitle,
   getSpotId
-} from "./filters.js?v=20261010-unified-4";
+} from "./filters.js?v=20261106-app-feinschliff-3";
 
 import {
   initMap,
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261106-treffen-feinschliff";
+} from "./map.js?v=20261106-app-feinschliff-3";
 
-import { initRouter } from "./router.js?v=20261010-unified-4";
+import { initRouter } from "./router.js?v=20261106-app-feinschliff-3";
 import { initToast, showToast } from "./toast.js";
-import { loadData } from "./data.js?v=20261010-unified-4";
+import { loadData } from "./data.js?v=20261106-app-feinschliff-3";
 
 import {
   getPlusStatus,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
-} from "./features/plus.js?v=20261010-unified-4";
+} from "./features/plus.js?v=20261106-app-feinschliff-3";
 
 // ------------------------------------------------------
 // Debug
@@ -1250,7 +1250,7 @@ function updateRadiusTexts() {
 
     filterRadiusDescriptionEl.textContent = t(
       "filter_radius_description_all",
-      "Alle Spots – ohne Radiusbegrenzung."
+      "Ohne Entfernungsgrenze."
     );
   } else {
     const km = RADIUS_STEPS_KM[radiusStep];
@@ -1449,17 +1449,17 @@ function getMoodLabel(moodKey) {
   if (currentLang === LANG_EN) {
     if (moodKey === "relaxed") return "Relaxed";
     if (moodKey === "action") return "Active";
-    if (moodKey === "water") return "Water & sand";
+    if (moodKey === "water") return "Swimming & water play";
     if (moodKey === "animals") return "Animal day";
   } else if (currentLang === LANG_DA) {
     if (moodKey === "relaxed") return "Afslappet";
     if (moodKey === "action") return "Aktiv";
-    if (moodKey === "water") return "Vand & sand";
+    if (moodKey === "water") return "Badning og vandleg";
     if (moodKey === "animals") return "Dyredag";
   } else {
     if (moodKey === "relaxed") return "Entspannt";
     if (moodKey === "action") return "Bewegung";
-    if (moodKey === "water") return "Wasser & Sand";
+    if (moodKey === "water") return "Baden & Wasserspiel";
     if (moodKey === "animals") return "Tier-Tag";
   }
 
@@ -3083,7 +3083,10 @@ function syncResultsControls() {
   }
   filterModalCloseEl?.setAttribute("aria-label", locationText("Filter schließen", "Close filters", "Luk filtre"));
   const status = document.getElementById("filter-results-status");
-  if (status && status.textContent !== copy.summary) status.textContent = copy.summary;
+  if (status) {
+    status.classList.toggle("sr-only", spotsLoadState !== "error");
+    if (status.textContent !== copy.summary) status.textContent = copy.summary;
+  }
   const context = document.getElementById("spot-results-context");
   if (context) {
     context.hidden = spotListEl?.hidden !== false;

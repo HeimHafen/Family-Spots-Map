@@ -55,7 +55,7 @@ html.fsm-polished #fsm-community-overlay .category-explorer__rules{
 }
 html.fsm-polished #filter-modal .category-explorer__rules summary,
 html.fsm-polished #fsm-community-overlay .category-explorer__rules summary{
-  min-height:48px;padding:10px 14px!important;
+  min-height:44px;padding:10px 14px!important;overflow-wrap:anywhere;
   color:var(--fs78-ink)!important;
   font:650 13.5px/1.35 system-ui,-apple-system,sans-serif!important;
 }
@@ -127,7 +127,7 @@ html.fsm-polished #filter-modal .category-explorer__extras {
 html.fsm-polished #filter-modal .category-explorer__extras > summary {font-size:12px;font-weight:600;color:var(--fs78-green);}
 html.fsm-polished #filter-modal .category-explorer__extras .category-explorer__worlds {margin:0 0 10px!important;}
 html.fsm-polished #filter-modal .category-explorer__fieldset {
-  margin:12px 0!important;padding:11px 0 0!important;border-top:1px solid var(--fs78-line)!important;
+  margin:12px 0!important;padding:5px 0 0!important;border-top:1px solid var(--fs78-line)!important;
 }
 html.fsm-polished #filter-modal .category-explorer__fieldset legend {
   width:100%!important;float:none!important;
@@ -138,7 +138,7 @@ html.fsm-polished #filter-modal .category-explorer__selected-count {
   letter-spacing:normal;text-transform:none;
 }
 html.fsm-polished #filter-modal .category-explorer__type-help {
-  margin:8px 0 9px!important;color:var(--fs78-muted)!important;
+  margin:5px 0 9px!important;color:var(--fs78-muted)!important;
   font:400 12px/1.45 system-ui,-apple-system,sans-serif!important;
 }
 html.fsm-polished #filter-modal .category-explorer__types {
