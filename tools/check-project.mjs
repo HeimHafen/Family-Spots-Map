@@ -12,6 +12,15 @@ const read = name => fs.readFileSync(path.join(root, name), "utf8");
 function files(dir) {
   return fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? files(path.join(dir, entry.name)) : [path.join(dir, entry.name)]);
 }
+const appPages = ["index.html", "en/index.html", "da/index.html", "offline.html", "experimente/55-grad/index.html"];
+for (const name of appPages) {
+  if (!/<meta name="color-scheme" content="light"/.test(read(name)))
+    fail(`Light color scheme required: ${name}`);
+}
+const alternateScheme = /prefers-color-scheme|color-scheme\s*:\s*(?:only\s+)?dark|data-theme\s*=\s*["']?dark|initEveningMode|(?:css\/evening\.css|evening-mode\.js)|DARK_STYLE|(?:fsm-evening|theme-toggle)/i;
+for (const name of [...appPages, ...files("css"), ...files("js"), ...files("src"), ...files("experimente"), "init.js", "service-worker.js"]) {
+  if (/\.(?:css|js|html)$/.test(name) && alternateScheme.test(read(name))) fail(`Alternate color scheme found: ${name}`);
+}
 for (const name of [...files("js"), ...files("src"), ...files("tools"), ...files("utils"), "init.js", "service-worker.js"]) {
   if (!/\.(?:m?js)$/.test(name)) continue;
   const result = spawnSync(process.execPath, ["--input-type=module", "--check"], { input: read(name), encoding: "utf8" });
@@ -176,10 +185,10 @@ for (const idea of JSON.parse(read("data/play-ideas.json"))) for (const lang of 
 // V34 integration contract: a private planner, never accidental public registration.
 for (const entry of ["index.html", "en/index.html", "da/index.html"]) {
   const html = read(entry);
-  for (const asset of ["css/gemeinsam-erleben-rc.css", "css/evening.css", "css/fsm-cohesion-v34.css"])
+  for (const asset of ["css/gemeinsam-erleben-rc.css", "css/fsm-cohesion-v34.css"])
     if (!html.includes(asset)) fail(`${entry}: missing coordinated style ${asset}`);
 }
-for (const module of ["js/features/gemeinsam-erleben-rc.js", "js/ui/evening-mode.js", "css/gemeinsam-erleben-rc.css", "css/evening.css", "css/fsm-cohesion-v34.css"])
+for (const module of ["js/features/gemeinsam-erleben-rc.js", "css/gemeinsam-erleben-rc.css", "css/fsm-cohesion-v34.css"])
   if (!assets.includes(module)) fail(`Offline missing V34 module: ${module}`);
 if (!/initPrivateCalendar\(\{\s*closeMenu\b/.test(read("js/app.js"))) fail("Broken private planning integration: js/app.js");
 for (const file of ["js/ui/spot-details.js", "js/features/community-play.js", "js/features/gemeinsam-erleben-rc.js"]) {

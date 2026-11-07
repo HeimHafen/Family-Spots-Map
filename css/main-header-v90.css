@@ -4,7 +4,7 @@
  * Gemeinsames Layout für den mobilen Startbildschirm.
  */
 @media (max-width: 899px) {
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] .app-header {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header {
     box-sizing:border-box !important;
     position:relative !important;
     overflow:hidden;
@@ -16,7 +16,7 @@
     box-shadow:none !important;
     color:#483728 !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] .app-header::before {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header::before {
     content:"";
     position:absolute;
     left:0; top:0;
@@ -26,17 +26,17 @@
     pointer-events:none;
     z-index:0;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] .app-header-top {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header-top {
     min-height:0 !important; height:0 !important; margin:0 !important; padding:0 !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] .app-header-main {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header-main {
     position:relative;
     z-index:1;
     margin:0 !important;
     padding:0 !important;
     text-align:center;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #app-title.header-title {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #app-title.header-title {
     display:flex !important; align-items:center !important; justify-content:center !important;
     gap:clamp(7px,2vw,10px) !important;
     font-family:Arial,Helvetica,sans-serif !important;
@@ -48,7 +48,7 @@
     margin:0 !important;
     text-shadow:none !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #header-tagline {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #header-tagline {
     display:block !important;
     background:transparent !important;
     border:0 !important;
@@ -67,7 +67,7 @@
     letter-spacing:-.1px !important;
     text-shadow:none !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] .app-header-main::after {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header-main::after {
     content:"";
     display:block;
     width:calc(100% + 20px);
@@ -78,10 +78,10 @@
   }
 
   /* Optisch EIN zusammenhaengender Kopf. Die DOM-Elemente und alle IDs bleiben. */
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #main-content.app-main {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #main-content.app-main {
     padding-top:0 !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section.sidebar-section {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section {
     position:relative;
     isolation:isolate;
     box-sizing:border-box !important;
@@ -100,21 +100,21 @@
     box-shadow:0 3px 8px rgba(79,55,30,.07) !important;
     overflow:hidden;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section.sidebar-section::after {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section::after {
     content:""; position:absolute; pointer-events:none; z-index:-1;
     right:0; bottom:0;
     width:clamp(55px,18vw,85px); height:clamp(75px,25vw,108px);
     background:url("../assets/design/main-header-leaves-bottom-v90.webp") bottom right / contain no-repeat;
     opacity:.72;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section > .sidebar-section-header {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section > .sidebar-section-header {
     display:flex !important; grid-column:2; grid-row:1;
     align-items:center !important; justify-content:space-between !important;
     width:100%; min-width:0; min-height:32px !important;
     margin:0 !important; padding:0 !important;
     background:transparent !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-title {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-title {
     min-width:0;
     font-size:clamp(13px,3.56vw,16px) !important;
     line-height:1.23 !important;
@@ -123,17 +123,17 @@
     color:#4b382a !important;
     white-space:normal !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section #menu-toggle {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #menu-toggle {
     width:44px !important; height:44px !important; min-height:44px !important;
     flex:0 0 44px !important; margin-right:-7px !important;
     color:#746356 !important;
     background:transparent !important; border:0 !important; box-shadow:none !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section .tilla-sidebar-card,
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section .tilla-sidebar-text {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-card,
+html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-text {
     display:contents !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section .tilla-sidebar-avatar {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-avatar {
     display:block !important;
     grid-column:1 !important; grid-row:1 / 4 !important;
     align-self:center !important;
@@ -143,14 +143,14 @@
     transform:none !important;
     animation:none !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section .tilla-watercolor-canvas {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-watercolor-canvas {
     width:130% !important; max-width:none !important;
     margin:0 0 0 -17% !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section .tilla-watercolor-canvas img {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-watercolor-canvas img {
     display:block; width:100% !important; height:auto !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-sidebar-text {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-sidebar-text {
     grid-column:2 !important; grid-row:2 !important;
     margin:0 !important; padding:0 !important;
     min-width:0 !important; min-height:0 !important; min-block-size:0 !important;
@@ -161,14 +161,14 @@
     font-weight:400 !important;
     overflow-wrap:break-word !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section .tilla-sidebar-actions {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-actions {
     display:flex !important;
     grid-column:2 !important; grid-row:3 !important;
     align-items:center !important; justify-content:stretch !important;
     min-width:0 !important; width:100% !important;
     margin:5px 0 0 !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section #btn-play-idea {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea {
     box-sizing:border-box !important;
     display:flex !important; align-items:center !important; justify-content:center !important;
     gap:9px !important;
@@ -184,30 +184,30 @@
     white-space:normal !important;
     box-shadow:0 3px 7px rgba(143,70,8,.16) !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section #btn-play-idea::before {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea::before {
     content:""; flex:0 0 auto;
     width:0; height:0;
     border-left:13px solid white;
     border-top:8px solid transparent;
     border-bottom:8px solid transparent;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section #btn-play-idea .tilla-play-emoji {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea .tilla-play-emoji {
     display:none !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section #btn-play-idea > span:not(.tilla-play-emoji) {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea > span:not(.tilla-play-emoji) {
     color:#fff !important; font-weight:700 !important;
     white-space:normal !important;
   }
-  html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section #btn-play-idea:focus-visible {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea:focus-visible {
     outline:3px solid #345b30 !important; outline-offset:3px !important;
   }
   @media (max-width:359px) {
-    html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section.sidebar-section {
+    html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section.sidebar-section {
       grid-template-columns:minmax(78px,27%) minmax(0,1fr) !important;
       column-gap:5px !important; padding-inline:10px !important;
     }
-    html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-title { font-size:12.8px !important; }
-    html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-sidebar-text { font-size:11.8px !important; }
-    html.fsm-polished:is([data-theme="light"],[data-theme="dark"]) body[data-app-view="map"] #tilla-section #btn-play-idea { font-size:11.2px !important; gap:6px !important; }
+    html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-title { font-size:12.8px !important; }
+    html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-sidebar-text { font-size:11.8px !important; }
+    html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section #btn-play-idea { font-size:11.2px !important; gap:6px !important; }
   }
 }

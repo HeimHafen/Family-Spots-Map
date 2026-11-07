@@ -60,11 +60,6 @@
   display: grid; place-items: center; min-height: 44px; margin-top: 12px;
   border-radius: 10px; background: var(--cycle-orange); color: #26190d; font-weight: 700;
 }
-html[data-theme="dark"] .fsm-cycle-tours {
-  --cycle-paper: #302d22; --cycle-card: #3a3426; --cycle-ink: #fff3df;
-  --cycle-muted: #ddd0b5; --cycle-line: #665b45; --cycle-sage: #454c34; --cycle-olive: #677d46;
-}
-html[data-theme="dark"] .fsm-cycle-tours .cycle-back { color: #c9d8a5; }
 
 .fsm-cycle-tours .cycle-icon {
   width: 1.2em;
@@ -118,9 +113,6 @@ html[data-theme="dark"] .fsm-cycle-tours .cycle-back { color: #c9d8a5; }
 .fsm-cycle-tours :is(button, a):focus-visible {
   outline: 2px solid var(--cycle-olive);
   outline-offset: 2px;
-}
-html[data-theme="dark"] .fsm-cycle-tours :is(h2, h3) .cycle-icon {
-  color: #c9d8a5;
 }
 
 .fsm-cycle-tours .cycle-nearby {

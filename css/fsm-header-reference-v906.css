@@ -1,9 +1,3 @@
-/* Family Spots Map — V90.6 | Referenzabgleich, 03.11.2026
- * Ersetzt die beiden V90.3/V90.5-Zusatz-CSS beim Laden, damit sich ihre
- * gegenläufigen negativen Ränder nicht länger überlagern.
- * Grundlage: V90.5, aber kein Eingriff in HTML-Elemente oder JS-Funktionen.
- * Exakt NUR heller mobiler Kartenstart, nicht Darkmode oder andere Ansichten.
- */
 @media (max-width:899px) {
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header {
     padding-top:5px !important;

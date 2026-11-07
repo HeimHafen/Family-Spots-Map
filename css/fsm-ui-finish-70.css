@@ -1,12 +1,6 @@
 /* Konsolidierter UI-Stil: unveraenderte Regeln aus 68, 69 und 70 in Original-Reihenfolge.
    Die Dateien 68 und 69 werden nicht mehr geladen oder benoetigt. */
 
-/* Family Spots Map | UI-Feinschliff 68
-   Stand 26 (quality-66) • nur Darstellung, keine neue Karten-Engine.
-   Absichtlich hinter interface.css geladen; bestehende Funktionen bleiben unverändert.
-   Helle Ansicht präzise veredelt; Abendmodus bleibt bei seinen eigenen Farbwerten.
-*/
-
 /* Einheitliche Oberflächen-Geometrie und ruhige visuelle Hierarchie */
 html.fsm-polished {
   --fsm-f68-gap: 12px;

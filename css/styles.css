@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261107-kohaerenz-v34");
+@import url("./categories.css?v=20261107-hell-v34");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -8,8 +8,8 @@
      -> erhöhe einfach die Zahl in ?v=... (einmalig) und committe erneut.
    --------------------------------------------------------- */
 
-/* 1. Design-Variablen (Light/Dark Theme) */
-@import url("./theme.css?v=20251223");
+/* 1. Design-Variablen */
+@import url("./theme.css?v=20261107-hell-v34");
 
 /* 2. Reset, Body, Typografie, Grundlayout */
 @import url("./base.css?v=20251223");
@@ -18,12 +18,9 @@
 @import url("./utilities.css?v=20251223");
 
 /* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
-@import url("./components.css?v=20261029-focus-photo-2");
+@import url("./components.css?v=20261107-hell-v34");
 
-/* Abendpalette: ausschließlich der gespeicherte Dark-Modus. */
-
-
-@import url("./map-spots.css?v=20261107-kohaerenz-v34");
+@import url("./map-spots.css?v=20261107-hell-v34");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
@@ -45,7 +42,6 @@
 
 /* =========================================
    Override: Header im Light-Theme wärmer
-   (nur Light – Dark bleibt aus tokens)
    ========================================= */
 html[data-theme="light"] .app-header {
   background:

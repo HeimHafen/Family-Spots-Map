@@ -13,12 +13,6 @@ html.fsm-polished {
   --fsm883-close-paper: #fffaf1;
   --fsm883-close-focus: #8c7863;
 }
-html.fsm-polished[data-theme="dark"] {
-  --fsm883-close-ink: #f3e5ce;
-  --fsm883-close-line: #756a4c;
-  --fsm883-close-paper: #423c2a;
-  --fsm883-close-focus: #e1c29a;
-}
 /* Only actual icon-X controls, not the full-width text action “Schließen”. */
 html.fsm-polished :is(
   #filter-modal-close, .fsm-home-sheet__close, .fsm-community-close,
@@ -128,7 +122,7 @@ html.fsm-polished .fsm-map-fullscreen-button[aria-expanded="true"] svg {
 html.fsm-polished .fsm-onboarding-hint__close:not(:has(svg)),
 html.fsm-polished .fsm-onboarding-hint-close:not(:has(svg)) {font-size: 18px !important; line-height: 1 !important;}
 
-/* ===== Family Spots Map signature hero, light and dark ===== */
+/* ===== Family Spots Map signature hero ===== */
 #fse-overlay .fse-shell::before { display: none !important; content: none !important; }
 #fse-overlay .fse-header {
   --fse-hero-title: #372b21;
@@ -218,35 +212,6 @@ html.fsm-polished .fsm-onboarding-hint-close:not(:has(svg)) {font-size: 18px !im
 @media(min-width:640px){
   #fse-overlay .fse-header {padding-inline:25px; padding-top:22px;}
 }
-
-/* Calendar is one application screen, not the only place in dark mode. */
-html.fsm-polished[data-theme="dark"] #fse-overlay {background:#211e16;color:#f5ead8;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-shell,
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-body,
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-footer {background:#28241b;color:#f5ead8;border-color:#514531;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-header {
-  --fse-hero-title:#fff1d9;--fse-hero-sub:#e1d5bf;--fse-hero-label:#d2dca7;
-  background:linear-gradient(160deg,#302817,#252117 85%);
-}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-header::after {background-image:url("../assets/ui/fsm-v883-hills-dark.svg");opacity:1;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-header h2 {color:var(--fse-hero-title)!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-eyebrow {color:var(--fse-hero-label)!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-subtitle {color:var(--fse-hero-sub)!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-preview-badge {background:#44472b!important;color:#ebedc2!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay :is(.fse-calendar,.fse-event,.fse-form) {
-  background:#322c20!important;border-color:#66563b!important;color:#f8ebd7!important;
-  box-shadow:0 8px 20px rgba(0,0,0,.16);
-}
-html.fsm-polished[data-theme="dark"] #fse-overlay :is(.fse-calendar-nav h3,.fse-section-heading h3,.fse-form h3,.fse-event h4,.fse-empty strong) {color:#fff0d9!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay :is(.fse-day,.fse-weekdays span,.fse-event p,.fse-form-intro,.fse-field,.fse-footer-note) {color:#e4d9c6!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay :is(.fse-pill:not(.fse-pill--primary),.fse-toggle,.fse-select,.fse-cal-nav-btn,.fse-mini,.fse-cancel) {
-  background:#403729!important;color:#f7ead9!important;border-color:#776448!important;
-}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-day--chosen {background:#738b51!important;color:#fff!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-day--demo {background:#5a4631!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-day--has {background:#46462d!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-empty {background:#342f24!important;color:#e5d9c4!important;border-color:#716045!important;}
-html.fsm-polished[data-theme="dark"] #fse-overlay .fse-demo-line {background:#373025!important;color:#dcd0ba!important;}
 
 /* Contrast mode: calendar only. */
 @media(prefers-reduced-motion:reduce){#fse-overlay .fse-shell{animation:none!important;}}

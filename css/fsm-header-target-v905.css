@@ -1,8 +1,3 @@
-/* Family Spots Map V90.5 – die freigegebene Kopfbereich-Vorlage.
-   Stand: V90.4 | Ausschliesslich heller, mobiler Karten-Startbildschirm.
-   Keine Aenderung von Leaflet, Navigation, Tilla-Logik, i18n, Daten oder Darkmode.
-   Die vorhandene V90.3-Grafik ohne Herz bleibt erhalten.
-*/
 @media (max-width:899px) {
   /* Die Titelzeile bleibt mitsamt beider Flaggen optisch mittig und beruehrt
      auch auf schmalen iPhones die linke Blattgrafik moeglichst wenig. */

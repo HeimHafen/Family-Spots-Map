@@ -137,7 +137,7 @@ Nach erfolgreicher Erstinstallation sind die App-Oberfläche, Spotdaten, Spracht
 
 **Kartenkacheln benötigen Internet.** Der Service Worker lädt keine externen OpenStreetMap-Kacheln als Offline-Kartenpaket herunter. Auch externe Navigation und Quellenwebseiten sind keine Offline-Funktionen dieser App.
 
-Der aktuelle Offline-Umfang beträgt 146 Einträge einschließlich des Stammseiten-Eintrags `./`. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
+Der aktuelle Offline-Umfang beträgt 143 Einträge einschließlich des Stammseiten-Eintrags `./`. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
 
 ### Ein Update sicher veröffentlichen
 
@@ -151,13 +151,13 @@ Eine neue Version wird nur installiert, wenn alle erforderlichen Dateien erreich
 
 **Browserdaten nicht zum Erzwingen eines Updates löschen:** Dabei können lokale Erinnerungen, Favoriten, Entwürfe und Freischaltungen verloren gehen. Während einer Online-Nutzung können gültige JSON-Daten im Cache aktualisiert werden; eine reine Bildtextkorrektur benötigt daher nicht zwingend eine neue Service-Worker-Version.
 
-## V34 · Private Ausflüge und Abendmodus (Release-Kandidat)
+## V34 · Private Ausflüge und feste helle Darstellung
 
 - **173 Spots** bleiben unverändert. Die Inhalte und die Originalfotos werden nicht erfunden oder ersetzt.
 - Der private Kalender wird als eigener, lokaler Planungsbereich in DE/EN/DA geöffnet. Er ist vom Bereich **Treffen & Spiele** klar getrennt: Dieser zeigt ausschließlich bestätigte öffentliche Termine, sofern welche vorliegen. Private Pläne werden nie veröffentlicht.
 - Jeder Spot bietet eine Schaltfläche **Ausflug privat planen**; dieselbe Aktion ist beim geöffneten Spieltreffpunkt möglich. In **Mein Tag** gibt es einen direkten Zugang zu geplanten Ausflügen, ohne die Speicherformate der Erinnerungen zu verändern. Private Termine werden nur auf diesem Gerät im Browserspeicher abgelegt, zusätzlich ist ein ICS-Kalenderexport möglich.
 - **Wichtig:** Die bestehende Sicherung für Erinnerungen/Favoriten enthält die privaten Kalendereinträge noch nicht. Diese bei Bedarf einzeln als ICS exportieren und den lokalen Speicher nicht ungeprüft löschen.
-- Vollbild-Zoomtasten besitzen mindestens 44 × 44 px Tippfläche. Ein ausdrücklich einschaltbarer warmer Abendmodus wird angeboten; der Hellmodus bleibt der Standard.
+- Vollbild-Zoomtasten besitzen mindestens 44 × 44 px Tippfläche. Die App verwendet auf allen Geräten die helle Farbpalette.
 - Der Installationscache enthält alle **40** lokal hinterlegten Spot-Fotos, sofern die Installation vollständig gelingt. OpenStreetMap-Hintergrundkacheln und externe Webseiten sind weiterhin nicht offline verfügbar. Der größere Installationsdownload braucht entsprechend Speicher und Verbindung.
 - Plus-Freischaltung, Krone, Herz, Erinnerungsformat, Tourenlogik und Spot-Daten bleiben unverändert. Ab dem Tag eines geplanten Ausflugs lässt sich daraus eine Erinnerung beginnen. Ein vorhandener Erinnerungsentwurf bleibt erhalten.
 
@@ -231,11 +231,11 @@ Hinweise und Korrekturen können über die [GitHub-Issues des Projekts](https://
 
 ## Feinschliff in Release 39
 
-Der Kopfbereich nutzt weniger Leerraum bei unveränderter Titelgröße und iPhone-Sicherheitsabstand. Grüne Einzelmarker erhalten kräftigere Farbtöne und einen weicheren Schatten; ihre 44 × 44 Pixel großen Bedienflächen und Koordinaten bleiben erhalten. Im Abendmodus sind ausschließlich die Kartenkacheln heller abgestimmt. Tilla, Vorschau, Speicherfunktionen und Daten bleiben erhalten.
+Der Kopfbereich nutzt weniger Leerraum bei unveränderter Titelgröße und iPhone-Sicherheitsabstand. Grüne Einzelmarker erhalten kräftigere Farbtöne und einen weicheren Schatten; ihre 44 × 44 Pixel großen Bedienflächen und Koordinaten bleiben erhalten. Tilla, Vorschau, Speicherfunktionen und Daten bleiben erhalten.
 
 ## Gesamtprüfung in Release 40
 
-Die Kategorie für Kleinkinder, Barfußspiel und Motorik ist in den Sprachkatalogen vollständig übersetzt. Die deutsche Kategorieliste verwendet „Kleinkind“. Die Offline-Einstiegsseite nutzt im Abendmodus dieselbe Olive-/Leinenpalette wie die Haupt-App; ihre Hinweise auf die Offline-Vorbereitung sind sprachlich präzisiert. Preise, Plus-Regeln, geografische Daten und persönliche Speicherformate bleiben unverändert.
+Die Kategorie für Kleinkinder, Barfußspiel und Motorik ist in den Sprachkatalogen vollständig übersetzt. Die deutsche Kategorieliste verwendet „Kleinkind“. Die Hinweise der Offline-Einstiegsseite sind sprachlich präzisiert. Preise, Plus-Regeln, geografische Daten und persönliche Speicherformate bleiben unverändert.
 
 
 ## Parken und öffentliche Wasserspielplätze – 21.10.2026
@@ -366,4 +366,4 @@ Elf Ziele gemeinsam ausgearbeitet: Hof Löbke ergänzt statt dupliziert; zehn ne
 
 ## Release 61: kompakter Filter im bestehenden Farbsystem
 
-Gesamtpaket mit unverändert 164 Spots aus Release 60. Trefferzahlen als separate rechte Spalte bei Themen, Ortsarten und Ausstattung. Flachere Bedienelemente mit weichen Rundungen, ruhige Ausstattungszeilen und 44px-Mindesthöhe des Ergebnisbuttons. Vorhandene Farbvariablen einschließlich Abendmodus werden verwendet. Bei schmalen Displays einspaltige Themenliste; lange Namen dürfen umbrechen. Filterlogik, Berechtigungen und persönliche Speicherformate bleiben unverändert. Ersetzt die noch nicht übernommenen Pakete 58–60.
+Gesamtpaket mit unverändert 164 Spots aus Release 60. Trefferzahlen als separate rechte Spalte bei Themen, Ortsarten und Ausstattung. Flachere Bedienelemente mit weichen Rundungen, ruhige Ausstattungszeilen und 44px-Mindesthöhe des Ergebnisbuttons. Vorhandene Farbvariablen werden verwendet. Bei schmalen Displays einspaltige Themenliste; lange Namen dürfen umbrechen. Filterlogik, Berechtigungen und persönliche Speicherformate bleiben unverändert. Ersetzt die noch nicht übernommenen Pakete 58–60.

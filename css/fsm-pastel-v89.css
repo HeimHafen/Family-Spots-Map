@@ -1,17 +1,3 @@
-/* ================================================================
-   FAMILY SPOTS MAP / V89 · Pastell & Natur · Pilot auf der Startseite
-   Basis: vom Nutzer hochgeladene Family-Spots-Map-main 30.zip (V87).
-   Stand: 2026-11-03.
-
-   Absichtlich eine NEUE, zuletzt geladene CSS-Ebene:
-   - keine bestehenden JS-Listener oder Element-IDs ändern
-   - Karte bleibt Leaflet, keine künstliche Karten-Grafik
-   - bestehende Tilla-Illustration inkl. Erinnerungszettel bleibt bestehen
-   - alle drei Sprachen nutzen dieselbe Gestaltung
-   - Darkmode / Dialoglogik / Filterkategorien bleiben unangetastet
-   - erst nach iPhone-Abnahme auf alle Ansichten ausrollen
-   ================================================================ */
-
 html.fsm-polished[data-theme="light"] {
   --fsm89-canvas: #f6f5ef;
   --fsm89-panel: #fdfbf6;

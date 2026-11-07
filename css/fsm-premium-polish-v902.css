@@ -1,9 +1,3 @@
-/* Family Spots Map V90.2 | Finaler Feinschliff fuer die Startseite.
-   NUR der helle Kopfbereich in der Kartenansicht wird geaendert.
-   Grundlage: V90.1. Originale Leaflet-Karte, Navigation, Tilla-Dateien,
-   Routen, Datensaetze, i18n- und Spielideen-Logik bleiben bestehen.
-   Keine Veraenderung an Darkmode oder anderen Screens.
-*/
 @media (max-width: 899px) {
   /* Weniger Hoehe, ohne Text oder Grafiken abzuschneiden. */
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header {
