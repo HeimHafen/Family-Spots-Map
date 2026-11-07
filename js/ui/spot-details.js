@@ -630,7 +630,7 @@ export function createSpotDetailsController({
       section.append(heading);
       for (const stop of Object.values(schachplatzNearbyStops)) {
         const link = document.createElement("a");
-        link.className = "spot-nearby-link";
+        link.className = "spot-nearby-link schachplatz-nearby-link";
         link.href = stop.url;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
@@ -639,7 +639,7 @@ export function createSpotDetailsController({
         title.textContent = stop.title;
         const reason = document.createElement("small");
         reason.textContent = stop.text[currentLang] || stop.text.de;
-        reason.style.display = "block";
+        reason.className = "schachplatz-nearby-reason";
         text.append(title, reason);
         link.append(text);
         section.append(link);

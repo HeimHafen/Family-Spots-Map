@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261107-radtouren-25";
+const CACHE_VERSION = "20261107-radtouren-26";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -179,8 +179,8 @@ async function validateImage(response, url) {
 }
 const RELEASE_HASHES = {
   "js/ui/stroebeck-track.js": "dce4576a592b4f0dec6392b953934f347ef7f7570e3a452a3a5f0b9bd2ee6fa6",
-  "js/ui/cycle-tours.js": "3e02efcfddf2e72840877c35cad7ea0926000d8fedb44ee1c6be2db28470ea9a",
-  "css/cycle-tours.css": "cc1d047a5e17906890c9da26b34bef9c244a7d76c97686b682a8adc4ac824bff",
+  "js/ui/cycle-tours.js": "e64ce53d47f3dd55e9f3ff88ce89640b0caed8a2c52bfeea10d2a320611ed9fb",
+  "css/cycle-tours.css": "c4c5cc3606bee55fc27744745be408422fdf62a9d4d508ac359126bc6f290e5c",
   "css/fsm-design-system-83.css": "7d7c21c75a85ee14990749fdcf7428b9f52fe0b81a5651acb13f6045a0192b71",
   "js/ui/category-icons.js": "0349ce3a8f0350afaef0102b428ea05b5b5d8dfa1e0cf3617e713e89f7866c7d",
   "css/fsm-ui-consistency.css": "d61d241858bb534acb07a5b17c9225eed32a79f37b98740dff963a3779a42b1d",
@@ -191,23 +191,23 @@ const RELEASE_HASHES = {
   "css/theme.css": "a159a063aab5d84600a4991ab56bcbb6a81585abf2c2bba32736231c40d35389",
   "js/filter-model.js": "14e8339fcdfee92c86277572d6256a7770157025f2f904d3ecab165ef6ee4053",
   "css/map-spots.css": "34456a21cab3535031cead7f8d7acdd3891a250a6069de7a409a9f47bf0a0d94",
-  "da/index.html": "968d26229104eae346d8d8e6a745d0092db606d5da2be0dd40943ce0e7e221ad",
+  "da/index.html": "844e4cecf08528be18bb34e0ee11becfd1d8cd9923f4f57e26651eb06415fb01",
   "data/i18n/da.json": "e004e9d9f4810b00e64b8e5a6ddeed1c52d9028c3585a89338722221d7a39c63",
   "data/i18n/de.json": "09e6451868bd1b95e2fdb623ea1fdd46509e8c8f595d2c83254e8c5d03ffa413",
   "data/i18n/en.json": "a05e8a3b33c3082cc357d4b77bee69b7708e21e662626fc4feb4641d1a17ab87",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "ee5a2f7c3003bd1dba5007a09553efcaa18a82eb5d2e7d68598f904b7d68d369",
-  "en/index.html": "b92a74c7b760f473bc1c65c4990b0667ae0a2546aeaef469fc5cca6afc60e58a",
-  "index.html": "2dfea2f4ef6924e824bfe2f0a1369207f76534f077a8b220ea3f04f0fbe04051",
-  "js/app.js": "19367e8277fe0341443d576cd92855b168049c00e1c7bb6287f0a0744a43eab0",
+  "en/index.html": "325abeea6e1ffda7e2d97ecb60eb5a1404fb48667d3f6e53226d638b02c4aef9",
+  "index.html": "551f10e3e9dfae3b759dced0862d3daa314dea8bad5811159dc282261f3558b2",
+  "js/app.js": "d25dc03f3485168776e4fc6732510851666c71423cad058e48f688b2d81c4881",
   "js/config.js": "57183afe5d20929a53b0336308bf91f15002dad8c410d527510cec2760f49b3b",
   "js/features/personal-backup.js": "e71292d506be6b2642ba1fc2c907c27bb58e7b77aede61301bc4bcd304eacf36",
   "js/features/personal-storage.js": "ee17691463c8d6c8fa25060c1f0441d342e7900877f3376d9ddc7c5f093da18d",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "d45b9a843735c91be3c6cc375c8aac0b99c268fa57018c4e51d731014af629eb",
-  "js/map.js": "f9d545f59abfd9573968e068414abe4ef56cce2cc7863bd2534a01a5d831d707",
+  "js/map.js": "937f25bade65052cb3066488736469033afd4cd019196c33d16b7bfdcc728336",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
-  "js/ui/spot-details.js": "8f1fda141f897c21d68f912327a49111db4e65d26967d6dd44b72637527ed0a8",
+  "js/ui/spot-details.js": "7e582f19d6dbebefdbcfb936032cd1f876d56badfdea39695c914e15927a3f87",
   "offline.html": "e3b8b124835d55406742d8fcf922f5e76d4ee2d6dac9577430fa716b83c08b6f",
   "assets/spots/bovbjerg-fyr/leuchtturm-pony.jpeg": "dedd90020fb6c6d61fbf7106f5fc5fbe0841b0e8e5fe48492dbc7261010b84aa",
   "assets/spots/bovbjerg-fyr/strandtreppe.jpeg": "1996690336f41ac45960ed55918c8df95984912a839acbe0a289d80ec3626390",
@@ -239,7 +239,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "368e7f67b004d7ee8a5f030312260aba6aad2a1e93d8c4235bc0cacca808f15b",
   "js/filters/tags.js": "fbea5599ad6503ccb8a2bb1da9a7d46a3d1bf5ce27afe46c8f1f280ac2ada923",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "8083cb7fb3bdc38a1edd871e5fa7c78222ac9a54c87048046328af79f999cee2",
+  "css/styles.css": "34468c328378bc372914d2ab21dbe97be0331ff608b2f500099376bfd1c63b8a",
   "js/ui/map-fullscreen.js": "58218777034e262f8cee4b3fc9ded0c94516a836140a78199d3d23a7066618ac",
   "js/categories.js": "04f41a946d27d2a49b84465e91c96c427f7e18a503a731adb332d1cc24602e64",
   "js/ui/category-explorer.js": "bd30833878af0ee06336a5a154d2b0668ddd55ceaf18850b0ba121ce55b82e8d",
