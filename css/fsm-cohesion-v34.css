@@ -177,6 +177,14 @@
 #fse-overlay .fse-footer-note { display: flex; align-items: flex-start; gap: 8px; color: var(--planner-muted); }
 #fse-overlay .fse-footer-note svg { flex: none; margin-top: 1px; }
 #fse-overlay .fse-status:empty { display: none; }
-@media (max-width: 375px) {
+/* Native date and time controls need a wider column in mobile WebKit. */
+#fse-overlay .fse-form-row input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+#fse-overlay .fse-form-row input::-webkit-date-and-time-value { text-align: start; }
+@media (max-width: 479px) {
   #fse-overlay .fse-form-row { grid-template-columns: minmax(0,1fr); }
 }

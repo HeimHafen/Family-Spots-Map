@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261107-warmweiss-v34");
+@import url("./categories.css?v=20261107-kalender-feldbreite-v34");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -9,7 +9,7 @@
    --------------------------------------------------------- */
 
 /* 1. Design-Variablen */
-@import url("./theme.css?v=20261107-warmweiss-v34");
+@import url("./theme.css?v=20261107-kalender-feldbreite-v34");
 
 /* 2. Reset, Body, Typografie, Grundlayout */
 @import url("./base.css?v=20251223");
@@ -18,9 +18,9 @@
 @import url("./utilities.css?v=20251223");
 
 /* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
-@import url("./components.css?v=20261107-warmweiss-v34");
+@import url("./components.css?v=20261107-kalender-feldbreite-v34");
 
-@import url("./map-spots.css?v=20261107-warmweiss-v34");
+@import url("./map-spots.css?v=20261107-kalender-feldbreite-v34");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
