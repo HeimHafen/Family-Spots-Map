@@ -241,3 +241,31 @@ html[data-theme="dark"] .fsm-cycle-tours :is(h2, h3) .cycle-icon {
   top: calc(50% + 14px);
   transform: none;
 }
+
+.fsm-cycle-tours .cycle-filsoe-water { fill: #b7d8dd; }
+.fsm-cycle-tours .cycle-filsoe-sketch text {
+  fill: #2b2b1c;
+  font: 700 16px system-ui, sans-serif;
+  paint-order: stroke;
+  stroke: #f6f2d9;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.fsm-cycle-tours .cycle-filsoe-sketch circle {
+  fill: #4b6021;
+  stroke: #fffdf4;
+  stroke-width: 2px;
+}
+.fsm-cycle-tours .cycle-filsoe-sketch .cycle-filsoe-number {
+  fill: #fffdf4;
+  font-size: 12px;
+  text-anchor: middle;
+  dominant-baseline: central;
+  stroke: none;
+}
+.fsm-cycle-tours .cycle-terrain {
+  margin: 8px 0 0;
+  color: var(--cycle-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}

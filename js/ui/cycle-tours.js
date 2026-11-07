@@ -1,3 +1,4 @@
+import { filsoe, filsoeSketch } from "./filsoe-tour.js";
 import { trackPoints } from "./stroebeck-track.js";
 
 const photo = "assets/spots/schachplatz-stroebeck/schachplatz.webp";
@@ -90,8 +91,26 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
       ${Object.values(schachplatzNearbyStops).map(stop => `<a class="cycle-stop cycle-nearby" href="${stop.url}" target="_blank" rel="noopener noreferrer">${icon(stop.icon)}<span><strong>${stop.title}</strong><small>${stop.text[getLanguage()] || stop.text.de}</small></span>${icon("external")}</a>`).join("")}
       <a class="cycle-action" href="${source}" target="_blank" rel="noopener noreferrer">${icon("route")}${original}${icon("external")}</a>
       <p class="cycle-credit">${provenance} · OpenStreetMap contributors</p>`;
-    dialog.innerHTML = `<header><span>Family Spots Map</span><button type="button" aria-label="${close}" data-close>×</button></header><div class="cycle-content">${detail ? route :
-      `<h2 id="cycle-tours-heading" tabindex="-1">${icon("bike")}<span>${title}</span></h2><p>${intro}</p>${filters}${type === "family" && country === "DE" ? row : `<p class="cycle-empty">${empty}</p>`}`}</div>`;
+    const isDenmark = country === "DK";
+    const language = getLanguage();
+    const [filsoeName, filsoeMetrics, filsoeDescription, difficulty, terrain, download, viewRoute] = filsoe.copy[language] || filsoe.copy.de;
+    const photoCredit = `<a href="${filsoe.photoSource}" target="_blank" rel="noopener noreferrer">Mipani / Wikimedia Commons · CC0</a>`;
+    const filsoeRow = `<button type="button" class="cycle-card" data-detail>
+      <img src="${filsoe.photo}" alt="" width="960" height="540">
+      <span><strong>${filsoeName}</strong><small>${filsoeMetrics}</small><span>${filsoeDescription}</span><em>${family}</em></span>
+      <span aria-hidden="true">›</span>
+    </button><p class="cycle-credit">${photoCredit}</p>`;
+    const filsoeRoute = `<button class="cycle-back" type="button" data-back>‹ ${back}</button>
+      <h2 id="cycle-tours-heading" tabindex="-1">${icon("bike")}<span>${filsoeName}</span></h2>
+      <div class="cycle-meta"><span>${icon("route")}${filsoeMetrics}</span><span>${icon("hills")}${difficulty}</span></div>
+      ${filsoeSketch(outline)}
+      <p class="cycle-terrain">${terrain}</p>
+      <h3>${icon("pin")}${discover}</h3>
+      ${filsoe.stops.map(stop => `<a class="cycle-stop cycle-nearby" href="${stop.url}" target="_blank" rel="noopener noreferrer">${icon(stop.icon)}<span><strong>${stop.title}</strong><small>${stop.text[language] || stop.text.de}</small></span>${icon("external")}</a>`).join("")}
+      <a class="cycle-action" href="${filsoe.source}" target="_blank" rel="noopener noreferrer">${icon("route")}${viewRoute}${icon("external")}</a>
+      <p class="cycle-credit"><a href="${filsoe.gpx}">${download}</a> · Varde Kommune / <a href="https://www.geodanmark.dk/home/vejledninger/vilkaar-for-data-anvendelse/">GeoDanmark, GeoFA · CC BY 4.0</a></p>`;
+    dialog.innerHTML = `<header><span>Family Spots Map</span><button type="button" aria-label="${close}" data-close>×</button></header><div class="cycle-content">${detail ? (isDenmark ? filsoeRoute : route) :
+      `<h2 id="cycle-tours-heading" tabindex="-1">${icon("bike")}<span>${title}</span></h2><p>${intro}</p>${filters}${type === "family" ? (isDenmark ? filsoeRow : row) : `<p class="cycle-empty">${empty}</p>`}`}</div>`;
     dialog.querySelector(".cycle-content").scrollTop = 0;
     if (focusTarget) dialog.querySelector(focusTarget)?.focus({ preventScroll: true });
   }

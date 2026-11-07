@@ -24,12 +24,12 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-radtouren-31";
-import { initCommunityPlay } from "./features/community-play.js?v=20261107-radtouren-31";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-radtouren-32";
+import { initCommunityPlay } from "./features/community-play.js?v=20261107-radtouren-32";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
-import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-radtouren-31";
+import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-radtouren-32";
 import { hasCategorySelection, isExpiredEvent, FACETS, labelOf, facetValue, placeTypeLabels } from "./categories.js";
 
 import { initFilterSelects } from "./ui/filter-select.js";
@@ -42,16 +42,16 @@ import { initPersonalBackup } from "./features/personal-backup.js";
 
 import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js";
 
-import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-radtouren-31";
+import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-radtouren-32";
 
-import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-radtouren-31";
+import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-radtouren-32";
 
-import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-radtouren-31";
-import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-radtouren-31";
+import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-radtouren-32";
+import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-radtouren-32";
 
 import { createModalController } from "./ui/modal.js";
-import { createSpotDetailsController, createSpotTypeChips, getSpotHighlights } from "./ui/spot-details.js?v=20261107-radtouren-31";
-import { initMenu } from "./ui/menu.js?v=20261107-radtouren-31";
+import { createSpotDetailsController, createSpotTypeChips, getSpotHighlights } from "./ui/spot-details.js?v=20261107-radtouren-32";
+import { initMenu } from "./ui/menu.js?v=20261107-radtouren-32";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
@@ -85,25 +85,25 @@ import {
   getSpotName,
   getSpotSubtitle,
   getSpotId
-} from "./filters.js?v=20261107-radtouren-31";
+} from "./filters.js?v=20261107-radtouren-32";
 
 import {
   initMap,
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261107-radtouren-31";
+} from "./map.js?v=20261107-radtouren-32";
 
-import { initRouter } from "./router.js?v=20261107-radtouren-31";
+import { initRouter } from "./router.js?v=20261107-radtouren-32";
 import { initToast, showToast } from "./toast.js";
-import { loadData } from "./data.js?v=20261107-radtouren-31";
+import { loadData } from "./data.js?v=20261107-radtouren-32";
 
 import {
   getPlusStatus,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
-} from "./features/plus.js?v=20261107-radtouren-31";
+} from "./features/plus.js?v=20261107-radtouren-32";
 
 // ------------------------------------------------------
 // Debug
