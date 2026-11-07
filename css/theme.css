@@ -1,5 +1,5 @@
 /* =========================================
-   theme.css — Light & Dark Design Tokens
+   theme.css — Light Design Tokens
    Playful Warm v2.3 (Design-System Level)
    - deterministische Token-Struktur via Cascade Layers
    - CTA-Kontrast sauber: --accent-solid + --on-accent-solid
@@ -204,17 +204,7 @@
     --cta-bg-hover: var(--accent-solid-dark);
   }
 }
-
-/* =========================================================
-   OS Preference Fallback (only if no manual theme set)
-   ========================================================= */
 @layer overrides {
-
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme]) {
-      color-scheme: light;
-    }
-  }
 
   /* Prefer more contrast: strengthen borders slightly */
   @media (prefers-contrast: more) {

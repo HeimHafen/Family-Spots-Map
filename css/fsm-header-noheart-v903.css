@@ -1,8 +1,3 @@
-/* Family Spots Map · V90.3 · NUR der Leitsatz und das Landschaftsornament.
- * Voraussetzung: V90.2. Ziel: vollstaendiger Dreizeiler, dessen letzte Zeile
- * die Hoehe des ehemaligen Herzens erreicht. Kein Herz, keine beiden Striche.
- * Keine Aenderung an Tilla, Karte, Navigation, Menue, Darkmode oder anderen Screens.
- */
 @media (max-width: 899px) {
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #header-tagline {
     position: relative !important;

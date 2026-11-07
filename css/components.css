@@ -54,7 +54,6 @@
     --fsm-divider-warm: hsla(28, 24%, 40%, 0.22);
 
     --app-bg-fallback-light: var(--fsm-warm-0);
-    --app-bg-fallback-dark: rgba(2, 6, 23, 0.94);
 
     --chip-surface: var(--chip-bg, var(--fsm-chip-warm, #f1dfcf));
     --chip-border: rgba(148, 163, 184, 0.45);

@@ -105,26 +105,10 @@ html.fsm-v89-ready #fsm-community-overlay #fsm-home-nav{position:static!importan
 html.fsm-v89-ready :is(#fsm-home-nav,.fsm-v89-diary-tabs,.fsm-v89-community-tabs) button:focus-visible {outline:3px solid #e9a430!important;outline-offset:2px!important;}
 @media(max-width:375px){html.fsm-v89-ready #tilla-section{padding-inline:12px!important;}html.fsm-v89-ready #tilla-title{font-size:16px!important;}html.fsm-v89-ready #tilla-section #tilla-sidebar-text{font-size:12px!important;}html.fsm-v89-ready #fsm-home-nav .fsm-home-nav__item{font-size:9px!important;}html.fsm-v89-ready #fsm-home-nav .fsm-home-nav__item>svg{width:21px!important;height:21px!important;}}
 @media(min-width:700px){html.fsm-v89-ready #view-map>.sidebar,html.fsm-v89-ready #view-map>.map-section{max-width:700px!important;margin:auto!important;}html.fsm-v89-ready #tilla-section{margin:0!important;border-radius:0!important;}html.fsm-v89-ready #view-map>.map-section{width:100%!important;}}
-/* Warm olive-brown dark mode: distinct visual system, no lost contrast. */
-html.fsm-v89-ready[data-theme="dark"] body,html.fsm-v89-ready[data-theme="dark"] .app,html.fsm-v89-ready[data-theme="dark"] .app-main,html.fsm-v89-ready[data-theme="dark"] #view-diary{background:#221e17!important;color:#f6ead6!important;}
-html.fsm-v89-ready[data-theme="dark"] .app-header{background:linear-gradient(#3a3022,#29241b)!important;}
-html.fsm-v89-ready[data-theme="dark"] :is(#app-title.header-title,#header-tagline){color:#fff0dc!important;}
-html.fsm-v89-ready[data-theme="dark"] :is(#tilla-section,#view-diary .fsm-v89-diary-hero){background:linear-gradient(#3a3022,#2c281f)!important;color:#f8eddc!important;}
-html.fsm-v89-ready[data-theme="dark"] #tilla-section :is(#tilla-title,#tilla-sidebar-text,#menu-toggle){color:#f9edd7!important;}
-html.fsm-v89-ready[data-theme="dark"] #fsm-home-sheet{background:#2b281f!important;color:#fff1df!important;}
-html.fsm-v89-ready[data-theme="dark"] #fsm-home-sheet .fsm-home-sheet__head{background:#2b281f!important;}
-html.fsm-v89-ready[data-theme="dark"] #fsm-home-sheet :is(.spot-card,.fsm-v89-sheet-hero,.fsm-v89-benefit,.plus-code-form),html.fsm-v89-ready[data-theme="dark"] #view-diary :is(.diary-heading,.daylog-entry,.fsm-v89-memory-prompt,.fsm-v89-diary-tabs button){background:#393428!important;border-color:#6c6049!important;color:#f6e8d1!important;}
-html.fsm-v89-ready[data-theme="dark"] #view-diary :is(.fsm-v89-diary-hero h2,.fsm-v89-diary-hero p,.fsm-v89-memory-prompt p){color:#f2e7d5!important;}
-html.fsm-v89-ready[data-theme="dark"] #fsm-home-nav{background:#332e23!important;border-color:#6d604a!important;}
-html.fsm-v89-ready[data-theme="dark"] #fsm-home-nav .fsm-home-nav__item{color:#fbefd8!important;}
-html.fsm-v89-ready[data-theme="dark"] #fsm-community-overlay .fsm-community-sheet,html.fsm-v89-ready[data-theme="dark"] #fsm-community-overlay .fsm-v89-community-intro{background:#2c2c22!important;color:#fff1d9!important;}
-html.fsm-v89-ready[data-theme="dark"] #fsm-community-overlay .fsm-v89-community-hero :is(h2,p){color:#ffebd4!important;}
 @media(prefers-reduced-motion:reduce){html.fsm-v89-ready *,html.fsm-v89-ready *::before,html.fsm-v89-ready *::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 
 /* Persist the same six-tab navigation in the private diary screen. */
 html.fsm-v89-ready body[data-app-view="diary"] #fsm-home-nav {display:grid!important;}
-/* Preserve clear reading contrast for the primary diary action in dark mode. */
-html.fsm-v89-ready[data-theme="dark"] #view-diary .fsm-v89-diary-tabs button[aria-current="true"]{background:linear-gradient(#799b23,#4e7a14)!important;color:#fff!important;}
 
 /* The real navigation lives inside the open native dialog, above its dimmed backdrop. */
 html.fsm-v89-ready.fsm-home-sheet-open #fsm-home-sheet #fsm-home-nav{display:grid!important;position:fixed!important;bottom:max(10px,env(safe-area-inset-bottom))!important;left:10px!important;right:10px!important;width:auto!important;margin-inline:auto!important;z-index:7!important;}

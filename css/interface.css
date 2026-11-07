@@ -26,7 +26,7 @@
 .fsm-polished #menu-toggle { width:40px!important; height:40px!important; min-height:40px; box-shadow:none; border:0; background:transparent; }
 .fsm-polished .filter-group-helper { font-size:12px; font-weight:400; line-height:1.55; color:var(--p-muted); }
 .fsm-polished .filter-group-label { font-size:10px; font-weight:600; letter-spacing:1px; color:var(--p-muted); }
-.fsm-polished .input, .fsm-polished select, .fsm-polished textarea { border:1px solid var(--p-line)!important; border-radius:11px!important; background:var(--p-soft)!important; box-shadow:none!important; font-size:14px; color:var(--p-text); }
+.fsm-polished .input, .fsm-polished select, .fsm-polished textarea { border:1px solid var(--p-line)!important; border-radius:11px!important; background:var(--fsm-field-surface)!important; box-shadow:none!important; font-size:14px; color:var(--fsm-field-ink); }
 .fsm-polished #filter-search { min-height:44px; }
 .fsm-polished .btn { border-radius:11px!important; box-shadow:none!important; font-weight:500!important; }
 .fsm-polished .btn > span { font-weight:500!important; }
@@ -124,7 +124,7 @@ html.fsm-polished {
 .fsm-polished .spot-card-actions>button { min-height:44px; }
 .fsm-polished :is(button,input,select,textarea,summary):focus-visible { outline:2px solid var(--fsm-keyboard-focus, #685c51); outline-offset:3px; }
 
-.fsm-polished input::placeholder, .fsm-polished textarea::placeholder { color:var(--p-muted)!important; opacity:1; }
+.fsm-polished input::placeholder, .fsm-polished textarea::placeholder { color:var(--fsm-field-hint)!important; opacity:1; }
 .fsm-polished #filter-modal .category-explorer legend { font-size:16px; font-weight:500; line-height:1.4; margin-bottom:8px; }
 .fsm-polished #filter-modal .category-explorer__count { color:var(--p-muted); opacity:1; font-weight:400!important; }
 .fsm-polished #filter-modal .category-explorer__chip { background:var(--p-soft); border-color:var(--p-line); border-radius:11px; font-weight:400!important; }

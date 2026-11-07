@@ -1,7 +1,7 @@
 /* Family Spots Map · V90 · NUR oberer Startseitenbereich.
  * Vorlage: abgestimmtes Bild 03.11.2026; Basis: Family-Spots-Map-main 30.zip
  * Kein Eingriff in Karte, Navigation, Dialoge, Daten oder Funktionen.
- * Nur heller Startbildschirm auf Mobilgeraeten; Darkmode und andere Ansichten unveraendert.
+ * Gemeinsames Layout für den mobilen Startbildschirm.
  */
 @media (max-width: 899px) {
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header {
@@ -130,7 +130,7 @@
     background:transparent !important; border:0 !important; box-shadow:none !important;
   }
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-card,
-  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-text {
+html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-text {
     display:contents !important;
   }
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #tilla-section .tilla-sidebar-avatar {

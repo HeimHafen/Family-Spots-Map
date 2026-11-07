@@ -19,13 +19,11 @@ const LOCATIONS = Object.freeze({
 });
 
 const FREE_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
-const DARK_STYLE = 'https://tiles.openfreemap.org/styles/dark';
 const DEM_URL = 'https://tiles.mapterhorn.com/tilejson.json';
 let pitch = 55;
 let map;
 let spotFeatures = [];
 let styleReady = false;
-let isDark = false;
 
 function message(text, hideAfterMs = 0) {
   status.textContent = text;
@@ -237,14 +235,6 @@ $('#location-select').addEventListener('change',event => {
   if (map && location) map.flyTo({...location,pitch,bearing:0,essential:false,duration:900});
 });
 $('#north').addEventListener('click',()=>map?.easeTo({bearing:0,duration:450}));
-$('#theme-toggle').addEventListener('click',()=>{
-  isDark=!isDark;
-  document.documentElement.dataset.theme=isDark?'dark':'light';
-  $('#theme-toggle').setAttribute('aria-label',`Zum ${isDark?'Hell':'Dunkel'}modus wechseln`);
-  if (!map) return;
-  styleReady=false;
-  map.setStyle(isDark?DARK_STYLE:FREE_STYLE, {diff:false});
-});
 search.addEventListener('input',renderSuggestions);
 search.addEventListener('keydown',event => {if(event.key==='Escape'){suggestions.hidden=true;search.blur();}});
 document.addEventListener('pointerdown',event=>{if(!$('#search-box').contains(event.target)) suggestions.hidden=true;});

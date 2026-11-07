@@ -25,6 +25,20 @@ export function initDiaryView({ router, hasNewDraft }) {
     create.setAttribute("aria-expanded", "false");
     create.focus({ preventScroll: true });
   };
+  // Planning is a separate private calendar, not part of the memory format.
+  const plan = document.createElement("button");
+  plan.id = "diary-private-planning";
+  plan.type = "button";
+  plan.className = "diary-private-planning";
+  plan.innerHTML = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><span></span>';
+  view.querySelector(".diary-heading")?.after(plan);
+  const translatePlan = () => {
+    const lang = document.documentElement.lang.slice(0,2);
+    plan.querySelector("span").textContent = ({de:"Geplante Ausflüge ansehen",en:"View planned outings",da:"Se planlagte ture"})[lang] || "Geplante Ausflüge ansehen";
+  };
+  translatePlan();
+  new MutationObserver(translatePlan).observe(document.documentElement, {attributes:true,attributeFilter:["lang"]});
+  plan.addEventListener("click", () => document.dispatchEvent(new CustomEvent("fsm:plan-spot")));
   create.addEventListener("click", () => composer.hidden ? openComposer() : input.focus());
   document.getElementById("diary-composer-close")?.addEventListener("click", closeComposer);
   return {

@@ -1,8 +1,8 @@
 const LOCAL_IMAGE = /^assets\/spots\/[a-z0-9/_-]+\.(?:webp|png|jpe?g)$/i;
 const L = {
- de:{ intro:'Treffpunkt für Bewegung, spontane Spiele und neue Begegnungen.',mission:'Menschen bewegen & verbinden', heading:'Treffen & Spiele',details:'Details',information:'So funktioniert’s',info:'Hier können künftig geprüfte, begleitete Spieltreffen erscheinen. Termine und Zusagen werden erst angezeigt, wenn ein verantwortlicher Veranstalter sie bestätigt hat. Es gibt keine öffentlichen Kinderprofile oder direkten Nachrichten zwischen Minderjährigen.',close:'Schließen',},
- en:{intro:'A place for movement, spontaneous games and new connections.',mission:'Move & connect people',heading:'Meetups & games',details:'Details',information:'How it works',info:'Verified, supervised meetups can appear here in the future. Dates and attendance figures are shown only once a responsible organiser has confirmed them. No public profiles for children or direct messaging between minors.',close:'Close',},
- da:{intro:'Et sted for bevægelse, spontane spil og nye bekendtskaber.',mission:'Få mennesker i bevægelse & sammen',heading:'Møder og spil',details:'Detaljer',information:'Sådan fungerer det',info:'Godkendte, ledsagede arrangementer kan vises her fremover. Datoer og tilmeldinger vises først, når en ansvarlig arrangør har bekræftet dem. Ingen offentlige børneprofiler eller direkte beskeder mellem mindreårige.',close:'Luk',}
+ de:{ intro:'Treffpunkt für Bewegung, spontane Spiele und neue Begegnungen.',mission:'Menschen bewegen & verbinden', heading:'Treffen & Spiele',details:'Details',information:'So funktioniert’s',info:'Hier können künftig geprüfte, begleitete Spieltreffen erscheinen. Termine und Zusagen werden erst angezeigt, wenn ein verantwortlicher Veranstalter sie bestätigt hat. Es gibt keine öffentlichen Kinderprofile oder direkten Nachrichten zwischen Minderjährigen.',close:'Schließen',plan:'Diesen Ort privat planen',},
+ en:{intro:'A place for movement, spontaneous games and new connections.',mission:'Move & connect people',heading:'Meetups & games',details:'Details',information:'How it works',info:'Verified, supervised meetups can appear here in the future. Dates and attendance figures are shown only once a responsible organiser has confirmed them. No public profiles for children or direct messaging between minors.',close:'Close',plan:'Plan a private outing here',},
+ da:{intro:'Et sted for bevægelse, spontane spil og nye bekendtskaber.',mission:'Få mennesker i bevægelse & sammen',heading:'Møder og spil',details:'Detaljer',information:'Sådan fungerer det',info:'Godkendte, ledsagede arrangementer kan vises her fremover. Datoer og tilmeldinger vises først, når en ansvarlig arrangør har bekræftet dem. Ingen offentlige børneprofiler eller direkte beskeder mellem mindreårige.',close:'Luk',plan:'Planlæg en privat tur her',}
 };
 function el(name, cls, content) {
  const node = document.createElement(name);
@@ -72,6 +72,13 @@ export function initCommunityPlay({getLanguage, closeMenu}={}) {
    status.append(icon('calendar'),copy);events.append(status);
   }
   body.append(events);
+  const plan=makeAction(tr.plan,'fsm-community-plan',()=>{
+    const spotId=String(spot.id || '');
+    close();
+    document.dispatchEvent(new CustomEvent('fsm:plan-spot',{detail:{spotId}}));
+  });
+  plan.prepend(icon('calendar'));
+  body.append(plan);
   const detailsPanel=el('details','category-explorer__rules');
   detailsPanel.append(el('summary','',tr.information),el('p','',tr.info));
   body.append(detailsPanel);sheet.append(body);

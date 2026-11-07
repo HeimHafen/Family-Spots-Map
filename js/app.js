@@ -24,12 +24,13 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-menue-zoom-33";
-import { initCommunityPlay } from "./features/community-play.js?v=20261107-menue-zoom-33";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-kalender-rahmen-v34";
+import { initCommunityPlay } from "./features/community-play.js?v=20261107-kalender-rahmen-v34";
+import { initPrivateCalendar } from "./features/gemeinsam-erleben-rc.js";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
-import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-menue-zoom-33";
+import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-kalender-rahmen-v34";
 import { hasCategorySelection, isExpiredEvent, FACETS, labelOf, facetValue, placeTypeLabels } from "./categories.js";
 
 import { initFilterSelects } from "./ui/filter-select.js";
@@ -42,16 +43,16 @@ import { initPersonalBackup } from "./features/personal-backup.js";
 
 import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js";
 
-import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-menue-zoom-33";
+import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-kalender-rahmen-v34";
 
-import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-menue-zoom-33";
+import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-kalender-rahmen-v34";
 
-import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-menue-zoom-33";
-import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-menue-zoom-33";
+import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-kalender-rahmen-v34";
+import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-kalender-rahmen-v34";
 
 import { createModalController } from "./ui/modal.js";
-import { createSpotDetailsController, createSpotTypeChips, getSpotHighlights } from "./ui/spot-details.js?v=20261107-menue-zoom-33";
-import { initMenu } from "./ui/menu.js?v=20261107-menue-zoom-33";
+import { createSpotDetailsController, createSpotTypeChips, getSpotHighlights } from "./ui/spot-details.js?v=20261107-kalender-rahmen-v34";
+import { initMenu } from "./ui/menu.js?v=20261107-kalender-rahmen-v34";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
@@ -85,25 +86,25 @@ import {
   getSpotName,
   getSpotSubtitle,
   getSpotId
-} from "./filters.js?v=20261107-menue-zoom-33";
+} from "./filters.js?v=20261107-kalender-rahmen-v34";
 
 import {
   initMap,
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261107-menue-zoom-33";
+} from "./map.js?v=20261107-kalender-rahmen-v34";
 
-import { initRouter } from "./router.js?v=20261107-menue-zoom-33";
+import { initRouter } from "./router.js?v=20261107-kalender-rahmen-v34";
 import { initToast, showToast } from "./toast.js";
-import { loadData } from "./data.js?v=20261107-menue-zoom-33";
+import { loadData } from "./data.js?v=20261107-kalender-rahmen-v34";
 
 import {
   getPlusStatus,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
-} from "./features/plus.js?v=20261107-menue-zoom-33";
+} from "./features/plus.js?v=20261107-kalender-rahmen-v34";
 
 // ------------------------------------------------------
 // Debug
@@ -125,6 +126,17 @@ const warn = (...args) => {
 
 const { closeMenu } = initMenu();
 initCommunityPlay({ getLanguage: () => currentLang, closeMenu });
+initPrivateCalendar({
+  closeMenu,
+  captureMemory(title) {
+    appRouter?.switchRoute("diary");
+    document.getElementById("diary-new-memory")?.click();
+    if (daylogTextEl && !daylogTextEl.value.trim() && !daylogPhotos?.hasDraft()) {
+      daylogTextEl.value = title;
+      daylogTextEl.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  }
+});
 
 initLanguageSwitcher();
 initSkipToSpots(closeMenu);

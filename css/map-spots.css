@@ -629,15 +629,6 @@ html.fsm-polished[data-theme] #fsm-map-fullscreen .fsm-map-tools .fsm-map-themes
   color: var(--fsm-toolbar-text) !important;
   box-shadow: none !important;
 }
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-tools {
-  --fsm-toolbar-bg: #352d20;
-  --fsm-toolbar-border: #6b5a40;
-  --fsm-toolbar-text: #fff3df;
-}
-html.fsm-polished[data-theme="dark"] #fsm-map-fullscreen .fsm-map-tools .fsm-map-themes > .fsm-map-tool--theme[aria-pressed] {
-  --theme-icon: color-mix(in srgb, var(--fs78-icon, #63784b) 55%, #fff4dc);
-  --theme-selection: color-mix(in srgb, var(--fsm-toolbar-bg) 81%, var(--theme-icon));
-}
 html.fsm-polished[data-theme] #fsm-map-fullscreen .fsm-map-tools .fsm-map-themes > .fsm-map-tool--theme[aria-pressed] > svg:first-child {
   color: var(--theme-icon);
 }

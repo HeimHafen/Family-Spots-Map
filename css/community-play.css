@@ -1,4 +1,4 @@
-/* Family Spots Map – Gemeinsam aktiv, V85: scoped overlay, light/dark, iOS/Android */
+/* Family Spots Map – Gemeinsam aktiv, V85: scoped overlay, iOS/Android */
 #fsm-community-overlay{position:fixed;inset:0;z-index:2147483000;display:flex;justify-content:center;align-items:flex-end;font-family:inherit;color:#36291d;isolation:isolate}
 #fsm-community-overlay *{box-sizing:border-box}
 #fsm-community-overlay .fsm-community-shade{position:absolute;inset:0;background:rgba(49,43,34,.36);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
@@ -50,30 +50,6 @@
 /* The EXISTING home navigation is docked under the concept card, never cloned. */
 #fsm-community-overlay #fsm-home-nav{position:static!important;display:grid!important;flex:none!important;box-sizing:border-box;width:auto!important;max-width:none!important;left:auto!important;right:auto!important;bottom:auto!important;z-index:1!important;margin:0 9px 9px!important;box-shadow:none!important}
 #fsm-community-overlay #fsm-home-nav .fsm-home-nav__item{min-height:58px}
-
-
-html[data-theme="dark"] #fsm-community-overlay .fsm-community-events {
-  background:#342b20;
-  border-color:#716048;
-}
-html[data-theme="dark"] #fsm-community-overlay .fsm-community-events-heading {
-  background:color-mix(in srgb,var(--fsm89-orange,#f38d2e) 20%,#342b20);
-}
-html[data-theme="dark"] #fsm-community-overlay .fsm-community-events-heading svg {
-  color:var(--fsm89-orange,#f38d2e);
-}
-html[data-theme="dark"] #fsm-community-overlay .fsm-community-demo-note,
-html[data-theme="dark"] #fsm-community-overlay .fsm-community-location,
-html[data-theme="dark"] #fsm-community-overlay .fsm-community-event-copy span {
-  color:#e2ceb0;
-}
-html.fsm-polished[data-theme="dark"] #fsm-community-overlay .category-explorer__rules {
-  background:#3a3124!important;
-  border-color:#716048!important;
-}
-html.fsm-polished[data-theme="dark"] #fsm-community-overlay .category-explorer__rules summary {
-  color:#f8ecda!important;
-}
 #fsm-community-overlay summary:focus-visible {
   outline:2px solid currentColor;
   outline-offset:-3px;

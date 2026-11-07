@@ -1,9 +1,3 @@
-/* Family Spots Map V90.9 — freigegebene Kopfbereich-Referenz / V90.8 als Basis
-   Grundlage: V90.6 (main 30 + V90 bis V90.6), Referenz 03.11.2026.
-   Ersetzt beim Laden V90.6, ist KEINE weitere CSS-Schicht ueber V90.6.
-   Nur helle Kartenansicht bis 899px. Originale Tilla, Karte, Navigation,
-   Routen, Spotdaten, Erinnerungen, Uebersetzungen und Darkmode unveraendert.
-*/
 @media (max-width: 899px) {
   /* Ruhiger cremefarbener Kopf, beide Flaggen bleiben beim Titel. */
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header {
@@ -201,12 +195,6 @@
     border-bottom-width: 6px !important;
   }
 }
-
-
-/* V90.12 – Referenzfarben aus der originalen Main-Version.
- * Nur Farbwerte; keine Geometrie, Abstaende, Typografie oder Funktionen.
- * Auf den hellen Mobil-Kartenstart beschraenkt; Darkmode unveraendert.
- * HEX: Oliv #78934F, Herz #7FA825, Cluster #8FBF5A, Orange #F58B20. */
 @media (max-width: 899px) {
   html.fsm-polished[data-theme="light"] {
     --fsm-palette-olive: #78934f;

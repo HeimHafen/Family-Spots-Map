@@ -1,0 +1,85 @@
+/* Family Spots Map: additive consistency rules. Never override the approved heart. */
+#fsm-map-fullscreen .leaflet-control-zoom a {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 22px;
+}
+#fsm-map-fullscreen .leaflet-control-zoom a:focus-visible,
+#fse-overlay button:focus-visible,
+#fse-overlay :is(input,select,textarea):focus-visible,
+.spot-private-plan:focus-visible,
+.fsm-community-plan:focus-visible {
+  outline: 2px solid #718953;
+  outline-offset: 2px;
+}
+.spot-private-plan,
+.fsm-community-plan {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  margin: 12px 0;
+  padding: 10px 14px;
+  border: 1px solid #9baf7a;
+  border-radius: 12px;
+  background: #edf1df;
+  color: #35482c;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 600;
+  line-height: 1.35;
+  cursor: pointer;
+}
+.spot-private-plan svg,.fsm-community-plan svg {flex:none;width:20px;height:20px;}
+.spot-private-plan:hover,.fsm-community-plan:hover {background:#e5ecd2;}
+#fse-overlay .fse-shell {border-radius: 22px 22px 0 0;}
+#fse-overlay .fse-day {min-height: 44px;}
+#fse-overlay :is(.fse-pill,.fse-cal-nav-btn,.fse-mini,.fse-cta,.fse-save,.fse-cancel,.fse-toggle) {min-height:44px;}
+#fse-overlay .fse-icon-btn {width:44px;height:44px;}
+#fse-overlay .fse-header h2 {font-weight:600;letter-spacing:-.025em;}
+#fse-overlay .fse-preview-badge {letter-spacing:.05em;font-weight:650;}
+html[data-theme="dark"] :is(.spot-private-plan,.fsm-community-plan){background:#4a583b;color:#f3ead8;border-color:#7d9364;}
+html[data-theme="dark"] :is(.spot-private-plan,.fsm-community-plan):hover{background:#536346;}
+@media (prefers-reduced-motion:reduce) {#fse-overlay *,#fse-overlay *::before,#fse-overlay *::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+
+.diary-private-planning {
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;min-height:44px;margin:0 0 16px;padding:9px 14px;
+  border:1px solid var(--border-color,#d7cab5);border-radius:13px;
+  background:var(--card-bg,#fff7e7);color:inherit;
+  font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;
+}
+.diary-private-planning svg{flex:none;}
+.diary-private-planning:focus-visible{outline:2px solid #718953;outline-offset:2px;}
+/* Small, legible and consistent circular close button; no empty icon. */
+#fse-overlay .fse-icon-btn {
+  position:relative;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  box-shadow:none;
+  color:#504a3e;
+}
+#fse-overlay .fse-icon-btn svg {
+  display:block;
+  width:19px;
+  height:19px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+#fse-overlay .fse-icon-btn::before {
+  content:"";
+  position:absolute;
+  inset:7px;
+  border:1px solid currentColor;
+  border-radius:50%;
+  opacity:.55;
+}
+html[data-theme="dark"] #fse-overlay .fse-icon-btn {color:#f5ecd9;}

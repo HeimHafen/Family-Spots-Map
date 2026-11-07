@@ -12,6 +12,15 @@ const read = name => fs.readFileSync(path.join(root, name), "utf8");
 function files(dir) {
   return fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? files(path.join(dir, entry.name)) : [path.join(dir, entry.name)]);
 }
+const appPages = ["index.html", "en/index.html", "da/index.html", "offline.html", "experimente/55-grad/index.html"];
+for (const name of appPages) {
+  if (!/<meta name="color-scheme" content="light"/.test(read(name)))
+    fail(`Light color scheme required: ${name}`);
+}
+const alternateScheme = /prefers-color-scheme|color-scheme\s*:\s*(?:only\s+)?dark|data-theme\s*=\s*["']?dark|initEveningMode|(?:css\/evening\.css|evening-mode\.js)|DARK_STYLE|(?:fsm-evening|theme-toggle)/i;
+for (const name of [...appPages, ...files("css"), ...files("js"), ...files("src"), ...files("experimente"), "init.js", "service-worker.js"]) {
+  if (/\.(?:css|js|html)$/.test(name) && alternateScheme.test(read(name))) fail(`Alternate color scheme found: ${name}`);
+}
 for (const name of [...files("js"), ...files("src"), ...files("tools"), ...files("utils"), "init.js", "service-worker.js"]) {
   if (!/\.(?:m?js)$/.test(name)) continue;
   const result = spawnSync(process.execPath, ["--input-type=module", "--check"], { input: read(name), encoding: "utf8" });
@@ -173,6 +182,22 @@ for (const spot of spots) {
   for (const lang of ["de", "en", "da"]) if (!spot[`summary_${lang}`]?.trim()) fail(`Missing summary ${lang}: ${spot.id}`);
 }
 for (const idea of JSON.parse(read("data/play-ideas.json"))) for (const lang of ["de", "en", "da"]) if (!(idea.texts?.[lang] || idea[lang])?.trim()) fail(`Missing play idea ${lang}: ${idea.id}`);
+// V34 integration contract: a private planner, never accidental public registration.
+for (const entry of ["index.html", "en/index.html", "da/index.html"]) {
+  const html = read(entry);
+  for (const asset of ["css/gemeinsam-erleben-rc.css", "css/fsm-cohesion-v34.css"])
+    if (!html.includes(asset)) fail(`${entry}: missing coordinated style ${asset}`);
+}
+for (const module of ["js/features/gemeinsam-erleben-rc.js", "css/gemeinsam-erleben-rc.css", "css/fsm-cohesion-v34.css"])
+  if (!assets.includes(module)) fail(`Offline missing V34 module: ${module}`);
+if (!/initPrivateCalendar\(\{\s*closeMenu\b/.test(read("js/app.js"))) fail("Broken private planning integration: js/app.js");
+for (const file of ["js/ui/spot-details.js", "js/features/community-play.js", "js/features/gemeinsam-erleben-rc.js"]) {
+  if (!read(file).includes("fsm:plan-spot"))
+    fail(`Broken private planning integration: ${file}`);
+}
+const uniqueSpotImages = [...new Set(spots.flatMap(spot => [...JSON.stringify(spot).matchAll(/assets\/spots\/[\w./-]+\.(?:webp|png|jpe?g)/g)].map(match => match[0])))];
+for (const image of uniqueSpotImages) if (!assets.includes(image)) fail(`Spot image missing offline: ${image}`);
+
 console.log(`${spots.length} spots, ${allKeys.size} translation keys per language, ${assets.length} offline assets. ${failures} errors.`);
 process.exitCode = failures ? 1 : 0;
 

@@ -1,4 +1,4 @@
-/* Mobile light map start: approved header spacing and compact navigation. */
+/* Mobile map start: approved header spacing and compact navigation. */
 @media (max-width: 899px) {
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active {
     row-gap: 0 !important;
@@ -45,8 +45,8 @@
 
   /* Continue Tilla's cream surface around the upper map corners. */
   html.fsm-polished[data-theme="light"] body[data-app-view="map"] #main-content.app-main,
-  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #sidebar,
-  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active {
+html.fsm-polished[data-theme="light"] body[data-app-view="map"] #sidebar,
+html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active {
     background: #fff6e9 !important;
   }
 
