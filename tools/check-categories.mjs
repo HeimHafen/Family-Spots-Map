@@ -28,7 +28,7 @@ assert.equal(matchesCategoryProfile(waterPlay,{world:'animals'}),false);
 assert.deepEqual(waterPlay.categories,['wasserspielplatz']);
 const waterSpots=spots.filter(s=>getWorlds(s).includes('water'));
 assert.equal(waterSpots.length,7,'The current catalog contains 3 bathing places and 4 water-playground spots');
-assert.equal(spots.filter(s=>getWorlds(s).includes('play')).length,101,'Play membership includes the five new Laatzen spots');
+assert.equal(spots.filter(s=>getWorlds(s).includes('play')).length,101,'The current catalog contains 101 spots in Play');
 
 assert.equal(facetValue({tags:['free','toilet'],summary_de:'kostenlos mit Toilette'},'free'),'unknown');
 assert.equal(facetValue({categories:['stellplatz-spielplatz-naehe-kostenlos'],tags:['free']},'free'),'unknown','Free parking must not imply free admission');
