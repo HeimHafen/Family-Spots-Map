@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261107-radtouren-28";
+const CACHE_VERSION = "20261107-radtouren-31";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -179,8 +179,8 @@ async function validateImage(response, url) {
 }
 const RELEASE_HASHES = {
   "js/ui/stroebeck-track.js": "1745660b3a7bc8c09fdb711ba0f0d3b015cf4d03094cc82f06ba5e84c0888a30",
-  "js/ui/cycle-tours.js": "8f8f3b5b7686ffdb15d700f5e48e29d32fd6df30d172279d41376d0728666ffc",
-  "css/cycle-tours.css": "0e8b5e5321a5290283101b42ad5c109b3d329a1f1e72a21dea3dbd6a10a21adf",
+  "js/ui/cycle-tours.js": "f0eec1ad5dcc93429c87a3b4cab0c38d5bfc2aff587aac31f371ac839445325f",
+  "css/cycle-tours.css": "42386184542b5102f0a3bd3668197ba097f9f0154ab317d3d92792486ecd7d57",
   "css/fsm-design-system-83.css": "7d7c21c75a85ee14990749fdcf7428b9f52fe0b81a5651acb13f6045a0192b71",
   "js/ui/category-icons.js": "0349ce3a8f0350afaef0102b428ea05b5b5d8dfa1e0cf3617e713e89f7866c7d",
   "css/fsm-ui-consistency.css": "d61d241858bb534acb07a5b17c9225eed32a79f37b98740dff963a3779a42b1d",
@@ -191,21 +191,21 @@ const RELEASE_HASHES = {
   "css/theme.css": "a159a063aab5d84600a4991ab56bcbb6a81585abf2c2bba32736231c40d35389",
   "js/filter-model.js": "14e8339fcdfee92c86277572d6256a7770157025f2f904d3ecab165ef6ee4053",
   "css/map-spots.css": "34456a21cab3535031cead7f8d7acdd3891a250a6069de7a409a9f47bf0a0d94",
-  "da/index.html": "d2c0fc7d41680b29053642fa3e6aaece6bb0680b31014f5340d51cd5181a29b9",
+  "da/index.html": "f8a4e4738fabfe9fce465c627fe865a9db0548a1a80752931758b17e77d8c836",
   "data/i18n/da.json": "e004e9d9f4810b00e64b8e5a6ddeed1c52d9028c3585a89338722221d7a39c63",
   "data/i18n/de.json": "09e6451868bd1b95e2fdb623ea1fdd46509e8c8f595d2c83254e8c5d03ffa413",
   "data/i18n/en.json": "a05e8a3b33c3082cc357d4b77bee69b7708e21e662626fc4feb4641d1a17ab87",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "ee5a2f7c3003bd1dba5007a09553efcaa18a82eb5d2e7d68598f904b7d68d369",
-  "en/index.html": "c54f7038dc4762d413c0d0837ece5d35d79bd24dd19f9773361d02a93003b0c5",
-  "index.html": "566e9b9ee49c4b479816d62249a00a8050485cabf3c3f35634351f7cf5cb471d",
-  "js/app.js": "351e7e2d752735b7979f69cb2e5f7da9db8a80ef46dd823433a0b415c27a1866",
+  "en/index.html": "28972c0f2bdb47733c345f46bc27838e3c9cb2846cb59063f4a4fd3ffaf5d370",
+  "index.html": "bba7cc2f3428e78faf2bcf9ed8ed635ddf046da6c21ca8c7149d655088410ed8",
+  "js/app.js": "8adbe42d5f868e286a7dfe987fed2bb1f168150a1a30c41477406973f38636de",
   "js/config.js": "57183afe5d20929a53b0336308bf91f15002dad8c410d527510cec2760f49b3b",
   "js/features/personal-backup.js": "e71292d506be6b2642ba1fc2c907c27bb58e7b77aede61301bc4bcd304eacf36",
   "js/features/personal-storage.js": "ee17691463c8d6c8fa25060c1f0441d342e7900877f3376d9ddc7c5f093da18d",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "d45b9a843735c91be3c6cc375c8aac0b99c268fa57018c4e51d731014af629eb",
-  "js/map.js": "6d3472c82cffdbcb4b1548a01843ef0a450e71c4b88ecbaf21db247efcb926be",
+  "js/map.js": "6c2d0565106ebce8adda88136fb5fca1c569901d5d7364194d29a9d396600063",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "7e582f19d6dbebefdbcfb936032cd1f876d56badfdea39695c914e15927a3f87",
   "offline.html": "e3b8b124835d55406742d8fcf922f5e76d4ee2d6dac9577430fa716b83c08b6f",
@@ -239,7 +239,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "368e7f67b004d7ee8a5f030312260aba6aad2a1e93d8c4235bc0cacca808f15b",
   "js/filters/tags.js": "fbea5599ad6503ccb8a2bb1da9a7d46a3d1bf5ce27afe46c8f1f280ac2ada923",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "e9ea9cb2186e15acf301805e21931cf0478f00f24a657aaaffaf593bdf15f98c",
+  "css/styles.css": "6fe03779d73f0e3023641ce5fc6698145ff090b2c73a5bb30b0d7ebbb4297e73",
   "js/ui/map-fullscreen.js": "58218777034e262f8cee4b3fc9ded0c94516a836140a78199d3d23a7066618ac",
   "js/categories.js": "04f41a946d27d2a49b84465e91c96c427f7e18a503a731adb332d1cc24602e64",
   "js/ui/category-explorer.js": "bd30833878af0ee06336a5a154d2b0668ddd55ceaf18850b0ba121ce55b82e8d",

@@ -1,4 +1,4 @@
-import { trackPoints, trackCoordinates } from "./stroebeck-track.js";
+import { trackPoints } from "./stroebeck-track.js";
 
 const photo = "assets/spots/schachplatz-stroebeck/schachplatz.webp";
 const source = "https://www.strava.com/routes/3247495945863738730";
@@ -39,9 +39,9 @@ export const schachplatzNearbyStops = {
   },
 };
 const copy = {
-  de: ["Radtouren & Bikepacking", "Entdeckt Ausflugsziele entlang eurer nächsten Radtour.", "Familienradtouren", "Bikepacking", "Deutschland", "Dänemark", "Mit dem Rad ins Schachdorf", "Ca. 23 km · Rundtour", "Von Halberstadt nach Ströbeck und zurück.", "Hier sind noch keine Touren eingetragen.", "Zur Übersicht", "Streckenverlauf", "Unterwegs entdecken", "Optionaler Stopp in Ströbeck", "Originalroute ansehen", "Veranstaltungsstrecke von 2025 · ProSport Harz", "Schließen", "Bildzuschnitt"],
+  de: ["Radtouren & Bikepacking", "Entdeckt Ausflugsziele entlang eurer nächsten Radtour.", "Familienradtouren", "Bikepacking", "Deutschland", "Dänemark", "Mit dem Rad ins Schachdorf", "Ca. 23 km · Rundtour", "Von Halberstadt nach Ströbeck und zurück.", "Hier sind noch keine Touren eingetragen.", "Zur Übersicht", "Streckenskizze", "Unterwegs entdecken", "Optionaler Stopp in Ströbeck", "Originalroute ansehen", "Veranstaltungsstrecke von 2025 · ProSport Harz", "Schließen", "Bildzuschnitt"],
   en: ["Cycle tours & bikepacking", "Discover places to visit along your next ride.", "Family rides", "Bikepacking", "Germany", "Denmark", "Ride to the chess village", "Approx. 23 km · Loop", "From Halberstadt to Ströbeck and back.", "There are no rides listed here yet.", "Back to tours", "Route outline", "Discover along the way", "Optional stop in Ströbeck", "View original route", "2025 event route · ProSport Harz", "Close", "Cropped photo"],
-  da: ["Cykelture og bikepacking", "Find steder at besøge på jeres næste cykeltur.", "Familiecykelture", "Bikepacking", "Tyskland", "Danmark", "På cykel til skaklandsbyen", "Ca. 23 km · Rundtur", "Fra Halberstadt til Ströbeck og tilbage.", "Der er endnu ingen ture her.", "Tilbage til oversigten", "Ruteforløb", "Oplev undervejs", "Valgfrit stop i Ströbeck", "Se den originale rute", "Eventrute fra 2025 · ProSport Harz", "Luk", "Beskåret foto"],
+  da: ["Cykelture og bikepacking", "Find steder at besøge på jeres næste cykeltur.", "Familiecykelture", "Bikepacking", "Tyskland", "Danmark", "På cykel til skaklandsbyen", "Ca. 23 km · Rundtur", "Fra Halberstadt til Ströbeck og tilbage.", "Der er endnu ingen ture her.", "Tilbage til oversigten", "Ruteskitse", "Oplev undervejs", "Valgfrit stop i Ströbeck", "Se den originale rute", "Eventrute fra 2025 · ProSport Harz", "Luk", "Beskåret foto"],
 };
 
 export function initCycleTours({ getLanguage, closeMenu, openStop }) {
@@ -54,56 +54,7 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
   let type = "family";
   let country = "DE";
   let detail = false;
-  let routeMap = null;
-  let mapObserver = null;
-
-  function removeRouteMap() {
-    mapObserver?.disconnect();
-    mapObserver = null;
-    routeMap?.remove();
-    routeMap = null;
-  }
-
-  function showRouteMap() {
-    const host = dialog.querySelector(".cycle-geographic-map");
-    if (!host || !window.L || !dialog.open) return;
-    const L = window.L;
-    routeMap = L.map(host, {
-      scrollWheelZoom: false,
-      dragging: false,
-      touchZoom: false,
-      doubleClickZoom: false,
-      boxZoom: false,
-      keyboard: false,
-      zoomControl: false,
-    });
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(routeMap);
-    const line = L.polyline(trackCoordinates, {
-      color: "#4b5f33", weight: 4, opacity: 1,
-    }).addTo(routeMap);
-    for (const point of [trackCoordinates[0], [51.91629, 10.94273]]) {
-      L.circleMarker(point, {
-        radius: 5, color: "#fffaf0", weight: 2, fillColor: "#4b5f33", fillOpacity: 1,
-      }).addTo(routeMap);
-    }
-    const fit = () => {
-      if (!routeMap || !host.isConnected) return;
-      routeMap.invalidateSize({ animate: false });
-      routeMap.fitBounds(line.getBounds(), { padding: [20, 20], animate: false });
-    };
-    host.hidden = false;
-    dialog.querySelector(".cycle-map").setAttribute("hidden", "");
-    mapObserver = new ResizeObserver(fit);
-    mapObserver.observe(host);
-    fit();
-  }
-
-
   function render(focusTarget) {
-    removeRouteMap();
     const [title, intro, family, bikepacking, germany, denmark, name, metrics, description, empty, back, outline, discover, stopHint, original, provenance, close, crop] = copy[getLanguage()] || copy.de;
     const filters = '<div class="cycle-filters">' +
       [["family", family], ["bike", bikepacking]].map(([value, label]) =>
@@ -119,12 +70,21 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
     const route = `<button class="cycle-back" type="button" data-back>‹ ${back}</button>
       <h2 id="cycle-tours-heading" tabindex="-1">${icon("bike")}<span>${name}</span></h2>
       <div class="cycle-meta"><span>${icon("route")}${metrics}</span><span>${icon("hills")}${elevation[getLanguage()] || elevation.de}</span></div>
-      <figure class="cycle-map-frame"><figcaption>${outline}</figcaption><svg class="cycle-map" viewBox="0 0 375 320" role="img" aria-label="${outline}">
-        <path d="M0 40 55 19 108 26 119 66 82 97 0 114Z M375 75 320 59 285 89 310 131 375 122Z M5 235 75 222 105 267 78 320H0Z M375 259 311 230 256 267 269 320H375Z" fill="#dce8c7"/>
-        <polyline points="${trackPoints.map(point => point.join(",")).join(" ")}" />
-        <circle cx="${trackPoints[0][0]}" cy="${trackPoints[0][1]}" r="9"/><text class="cycle-map-number" x="${trackPoints[0][0]}" y="${trackPoints[0][1]}">1</text>
-        <circle cx="29.7" cy="139.3" r="9"/><text class="cycle-map-number" x="29.7" y="139.3">2</text><text x="244" y="231">Halberstadt</text><text x="16" y="170">Ströbeck</text>
-      </svg><div class="cycle-geographic-map" hidden></div></figure>
+      <figure class="cycle-map-frame">
+        <figcaption>${outline}</figcaption>
+        <svg class="cycle-map" viewBox="0 0 480 240" role="img" aria-label="${outline} · Halberstadt · Ströbeck">
+          <path class="cycle-sketch-green" d="M0 48Q22 28 43 41T87 36Q110 26 126 45T172 63Q189 75 165 86T115 95Q96 105 77 86T30 92Q11 99 0 89ZM315 0H425Q433 11 411 23T376 38Q355 45 347 29T315 20ZM480 65V130Q462 139 447 126T440 95Q445 76 480 65ZM0 177Q23 159 41 178T77 183Q98 191 82 205T54 216Q32 225 39 240H0ZM150 240Q140 219 155 205T187 212Q202 214 209 240ZM335 240Q331 221 348 215T366 199Q373 182 397 191T425 211Q441 220 459 204T480 196V240ZM223 131Q228 111 246 119T267 113Q279 103 290 119T283 145Q270 154 273 170T245 175Q229 166 214 161T223 131Z"/>
+          <path class="cycle-sketch-road" d="M-10 62Q32 58 63 114T149 178Q179 186 183 246M473 12Q403 44 367 82T317 147Q295 173 292 246"/>
+          <path class="cycle-sketch-water" d="M284 -5Q248 24 229 53T177 89Q150 101 128 143T79 198Q61 219 54 246M470 79Q441 87 410 107T351 144Q323 161 300 186T263 246"/>
+          <polyline points="${trackPoints.map(([x, y]) => `${x + 47},${y * 0.64 + 25}`).join(" ")}" />
+        </svg>
+        <span class="cycle-sketch-start" style="left:${(trackPoints[0][0] + 47) / 4.8}%;top:${(trackPoints[0][1] * 0.64 + 25) / 2.4}%">
+          <span class="cycle-map-number-badge">1</span><span class="cycle-map-place">Halberstadt</span>
+        </span>
+        <button class="cycle-map-stop-button" type="button" data-stop aria-label="Platz am Schachspiel · Ströbeck">
+          <span class="cycle-map-number-badge">2</span><span class="cycle-map-place">Ströbeck</span>
+        </button>
+      </figure>
       <h3>${icon("pin")}${discover}</h3>
       <button type="button" class="cycle-stop" data-stop><img src="${photo}" alt="" width="470" height="470"><span><strong>Platz am Schachspiel</strong><small>${stopHint}</small></span><span aria-hidden="true">›</span></button>
       ${Object.values(schachplatzNearbyStops).map(stop => `<a class="cycle-stop cycle-nearby" href="${stop.url}" target="_blank" rel="noopener noreferrer">${icon(stop.icon)}<span><strong>${stop.title}</strong><small>${stop.text[getLanguage()] || stop.text.de}</small></span>${icon("external")}</a>`).join("")}
@@ -134,7 +94,6 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
       `<h2 id="cycle-tours-heading" tabindex="-1">${icon("bike")}<span>${title}</span></h2><p>${intro}</p>${filters}${type === "family" && country === "DE" ? row : `<p class="cycle-empty">${empty}</p>`}`}</div>`;
     dialog.querySelector(".cycle-content").scrollTop = 0;
     if (focusTarget) dialog.querySelector(focusTarget)?.focus({ preventScroll: true });
-    if (detail) showRouteMap();
   }
 
   trigger.addEventListener("click", () => {
@@ -145,7 +104,6 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
     dialog.querySelector("#cycle-tours-heading").focus();
   });
   dialog.addEventListener("close", () => {
-    removeRouteMap();
     if (!document.activeElement || document.activeElement === document.body) document.getElementById("menu-toggle")?.focus({preventScroll: true});
   });
   dialog.addEventListener("click", event => {
