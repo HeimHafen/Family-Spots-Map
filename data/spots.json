@@ -35645,5 +35645,105 @@
     "visit_label_de": "Je nach Lust und Zeit",
     "visit_label_en": "Stay as long as you like",
     "visit_label_da": "Bliv så længe I har lyst"
+  },
+  {
+    "id": "platz_am_schachspiel_stroebeck",
+    "visit_label_de": "Für einen kurzen Zwischenstopp",
+    "visit_label_en": "For a short stop",
+    "visit_label_da": "Til et kort stop",
+    "title": "Platz am Schachspiel",
+    "lat": 51.91629,
+    "lon": 10.94273,
+    "country": "DE",
+    "city": "Halberstadt",
+    "categories": [
+      "historischer-ort"
+    ],
+    "verified": false,
+    "address": "Platz am Schachspiel, 38822 Halberstadt OT Schachdorf Ströbeck",
+    "source_urls": [
+      "https://www.halberstadt.de/de/Sehenswertes-stroebeck/platz-und-gasthaus-zum-schachspiel.html",
+      "https://adresse.dastelefonbuch.de/Halberstadt/3-Tischlereien-Adams-GmbH-Co-KG-Schachdorf-Str%C3%B6beck-Platz-am-Schachspiel.html",
+      "https://commons.wikimedia.org/wiki/File:Schachplatz_(Str%C3%B6beck)_P1130227.jpg",
+      "https://creativecommons.org/licenses/by-sa/4.0/"
+    ],
+    "source_checked_at": "2026-11-07",
+    "parking_information": {
+      "schema_version": 1,
+      "status": "unknown"
+    },
+    "title_de": "Platz am Schachspiel",
+    "summary_de": "Auf dem Platz im Schachdorf Ströbeck liegt ein großes Schachbrett im Pflaster. Rundherum stehen Fachwerkhäuser. Der Kartenpunkt dient der Orientierung am Platz.",
+    "tags_de": [],
+    "title_en": "Platz am Schachspiel",
+    "summary_en": "A large chessboard is set into the paving in the chess village of Ströbeck. Half-timbered houses line the square. The map pin indicates the general location.",
+    "tags_en": [],
+    "title_da": "Platz am Schachspiel",
+    "summary_da": "På pladsen i skaklandsbyen Ströbeck ligger et stort skakbræt i belægningen. Rundt om pladsen står bindingsværkshuse. Kortmarkøren viser pladsens omtrentlige placering.",
+    "tags_da": [],
+    "photos": [
+      {
+        "src": "assets/spots/schachplatz-stroebeck/schachplatz.webp",
+        "kind": "photo",
+        "width": 470,
+        "height": 470,
+        "caption": {
+          "de": "Schachplatz (Ströbeck) · Goldmull / Wikimedia Commons · CC BY-SA 4.0 · zugeschnitten",
+          "en": "Schachplatz (Ströbeck) · Goldmull / Wikimedia Commons · CC BY-SA 4.0 · cropped",
+          "da": "Schachplatz (Ströbeck) · Goldmull / Wikimedia Commons · CC BY-SA 4.0 · beskåret"
+        },
+        "alt": {
+          "de": "Gepflasterter Schachplatz mit Fachwerkhäusern.",
+          "en": "Paved chess square with half-timbered houses.",
+          "da": "Brolagt skakplads med bindingsværkshuse."
+        }
+      }
+    ],
+    "visitor_information": {
+      "confirmed_topics": [],
+      "unconfirmed_topics": [
+        "suitability",
+        "duration",
+        "arrival",
+        "admission",
+        "hours",
+        "comfort",
+        "food",
+        "accessibility",
+        "tips"
+      ]
+    },
+    "visit_details": {
+      "schema_version": 1,
+      "sections": {
+        "suitability": {
+          "items": []
+        },
+        "duration": {
+          "items": []
+        },
+        "arrival": {
+          "items": []
+        },
+        "admission": {
+          "items": []
+        },
+        "hours": {
+          "items": []
+        },
+        "comfort": {
+          "items": []
+        },
+        "food": {
+          "items": []
+        },
+        "accessibility": {
+          "items": []
+        },
+        "tips": {
+          "items": []
+        }
+      }
+    }
   }
 ]

@@ -1,3 +1,4 @@
+import { schachplatzNearbyStops } from "./cycle-tours.js";
 import { getPlaceTypes, getPlaceTypeWorlds, placeTypeLabels } from "../categories.js";
 import { categoryIcon } from "./category-icons.js";
 // Spot detail view: rendering, gallery, visitor information and route links.
@@ -618,6 +619,30 @@ export function createSpotDetailsController({
         action.textContent = getSpotName(neighbor);
         action.addEventListener("click", () => openRelatedSpot(neighbor));
         section.append(action);
+      }
+      spotDetailEl.append(section);
+    }
+    if (getSpotId(spot) === "platz_am_schachspiel_stroebeck") {
+      const section = document.createElement("div");
+      section.className = "spot-nearby";
+      const heading = document.createElement("strong");
+      heading.textContent = { de: "In der Nähe entdecken", en: "Discover nearby", da: "Oplev i nærheden" }[currentLang];
+      section.append(heading);
+      for (const stop of Object.values(schachplatzNearbyStops)) {
+        const link = document.createElement("a");
+        link.className = "spot-nearby-link";
+        link.href = stop.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        const text = document.createElement("span");
+        const title = document.createElement("span");
+        title.textContent = stop.title;
+        const reason = document.createElement("small");
+        reason.textContent = stop.text[currentLang] || stop.text.de;
+        reason.style.display = "block";
+        text.append(title, reason);
+        link.append(text);
+        section.append(link);
       }
       spotDetailEl.append(section);
     }
