@@ -176,6 +176,21 @@ for (const idea of JSON.parse(read("data/play-ideas.json"))) for (const lang of 
 console.log(`${spots.length} spots, ${allKeys.size} translation keys per language, ${assets.length} offline assets. ${failures} errors.`);
 process.exitCode = failures ? 1 : 0;
 
+// V34 integration contract: a private planner, never accidental public registration.
+for (const entry of ["index.html", "en/index.html", "da/index.html"]) {
+  const html = read(entry);
+  for (const asset of ["css/gemeinsam-erleben-rc.css", "css/evening.css", "css/fsm-cohesion-v34.css"])
+    if (!html.includes(asset)) fail(`${entry}: missing coordinated style ${asset}`);
+}
+for (const module of ["js/features/gemeinsam-erleben-rc.js", "js/ui/evening-mode.js", "css/gemeinsam-erleben-rc.css", "css/evening.css", "css/fsm-cohesion-v34.css"])
+  if (!assets.includes(module)) fail(`Offline missing V34 module: ${module}`);
+for (const file of ["js/app.js", "js/ui/spot-details.js", "js/features/community-play.js", "js/features/gemeinsam-erleben-rc.js"]) {
+  if (!read(file).includes(file === "js/app.js" ? "initPrivateCalendar({ closeMenu })" : "fsm:plan-spot"))
+    fail(`Broken private planning integration: ${file}`);
+}
+const uniqueSpotImages = [...new Set(spots.flatMap(spot => [...JSON.stringify(spot).matchAll(/assets\/spots\/[\w./-]+\.(?:webp|png|jpe?g)/g)].map(match => match[0])))];
+for (const image of uniqueSpotImages) if (!assets.includes(image)) fail(`Spot image missing offline: ${image}`);
+
 // Keep backup compatibility and corruption guards in the publication gate.
 await import('./check-backups.mjs');
 

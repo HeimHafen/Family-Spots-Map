@@ -18,7 +18,7 @@
     laterButton.textContent = texts[2];
   }
   function hasDraft() {
-    return document.documentElement.dataset.memoryDraft === "true" || document.documentElement.dataset.personalBackupBusy === "true" || !!document.querySelector(".daylog-entry-input") || [...document.querySelectorAll("#daylog-text, .daylog-entry-input")].some(el => el.value.trim());
+    return document.documentElement.dataset.memoryDraft === "true" || document.documentElement.dataset.personalBackupBusy === "true" || !!document.querySelector(".daylog-entry-input") || !!document.querySelector("#fse-draft-form") || [...document.querySelectorAll("#daylog-text, .daylog-entry-input")].some(el => el.value.trim());
   }
   function showUpdate(worker) {
     waitingWorker = worker;
