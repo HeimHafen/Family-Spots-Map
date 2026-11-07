@@ -760,6 +760,7 @@ export class TillaCompanion {
       }
     }
 
-    setTextWithHearts(this.textEl, text);
+    // Tilla already has an illustration. Keep status copy independent of emoji fonts.
+    setTextWithHearts(this.textEl, text.replace(/ +[🐢🌿🚐⭐✨]/gu, ""));
   }
 }

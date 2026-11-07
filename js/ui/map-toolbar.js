@@ -12,6 +12,7 @@ const PATHS = {
   search: "m21 21-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0",
   menu: "M4 6h16M4 12h16M4 18h16",
   close: "m6 6 12 12M18 6 6 18",
+  clock: "M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM12 7v5l3 2",
   check: "m5 12 4 4L19 6",
   map: "m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5m6-2v16m6-14v16",
   filters: "M3 4h18l-7 8v8l-4-2v-6Z",
