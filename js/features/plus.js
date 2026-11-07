@@ -9,7 +9,7 @@ import {
   getPlusStatus as getPlusStatusFromStorage,
   savePlusStatus as savePlusStatusToStorage
 } from "../storage.js";
-import { t, getLanguage } from "../i18n.js?v=20261106-app-feinschliff-15";
+import { t, getLanguage } from "../i18n.js?v=20261106-app-feinschliff-16";
 import {
   SUBSCRIPTIONS,
   ADDONS,

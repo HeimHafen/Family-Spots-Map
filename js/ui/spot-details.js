@@ -555,13 +555,38 @@ export function createSpotDetailsController({
       spotDetailEl.appendChild(descEl);
     }
 
+    const normalizedTypeLabels = new Set(typeLabels.map(label => label.trim().toLowerCase()));
+    const highlights = [...new Set(tags.map(tag => String(tag).trim()))]
+      .filter(tag => tag && !normalizedTypeLabels.has(tag.toLowerCase()));
+
+    if (highlights.length) {
+      const section = document.createElement("div");
+      section.className = "spot-highlights";
+      const heading = document.createElement("strong");
+      heading.textContent = { de: "Auf einen Blick", en: "At a glance", da: "Kort fortalt" }[currentLang];
+      const list = document.createElement("ul");
+      list.className = "spot-details-tags";
+      for (const highlight of highlights) {
+        const item = document.createElement("li");
+        item.className = "badge badge--soft";
+        item.textContent = highlight;
+        list.append(item);
+      }
+      section.append(heading, list);
+      spotDetailEl.append(section);
+    }
+
     // Opt-in for verified public play spaces; no event data is fabricated here.
     if (spot?.community?.enabled === true && spot?.community?.type === "bolzplatz") {
       const labels = {de:"Treffen & Spiele ansehen", en:"View meetups & games", da:"Se møder og spil"};
       const action = document.createElement("button");
       action.type = "button";
       action.className = "spot-community-open";
-      action.textContent = labels[currentLang] || labels.de;
+      const icon = document.createElement("span");
+      icon.className = "spot-community-open__icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3Zm14-16a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v2h-3"/></svg>';
+      action.append(icon, document.createTextNode(labels[currentLang] || labels.de));
       action.addEventListener("click", () => document.dispatchEvent(new CustomEvent("fsm:community-open", {detail: {spot}})));
       spotDetailEl.appendChild(action);
     }
@@ -625,6 +650,11 @@ export function createSpotDetailsController({
       spotDetailEl.appendChild(detailBadgesContainer);
     }
 
+    const arrival = document.createElement("section");
+    arrival.className = "spot-arrival";
+    const arrivalTitle = document.createElement("h3");
+    arrivalTitle.textContent = { de: "Anreise", en: "Getting there", da: "Sådan kommer I frem" }[currentLang];
+    arrival.append(arrivalTitle);
     const routeUrls = getRouteUrlsForSpotFromUserLocation(spot);
 
     if (routeUrls) {
@@ -648,25 +678,11 @@ export function createSpotDetailsController({
       routesEl.appendChild(appleLink);
       routesEl.appendChild(googleLink);
 
-      spotDetailEl.appendChild(routesEl);
+      arrival.append(routesEl);
     }
 
-    appendParkingInformation(spotDetailEl, spot);
-
-    if (tags.length) {
-      const tagsEl = document.createElement("div");
-      tagsEl.className = "spot-details-tags";
-
-      tags.forEach((tag) => {
-        const span = document.createElement("span");
-        span.className = "badge badge--soft";
-        span.textContent = tag;
-
-        tagsEl.appendChild(span);
-      });
-
-      spotDetailEl.appendChild(tagsEl);
-    }
+    appendParkingInformation(arrival, spot);
+    spotDetailEl.append(arrival);
 
     if (typeof spotDetailEl.scrollTop === "number") {
       spotDetailEl.scrollTop = !focus && sameSpot ? previousScroll : 0;
@@ -726,8 +742,8 @@ export function createSpotDetailsController({
       if (!scores) {
         scores = document.createElement("div");
         scores.className = "spot-details-scores";
-        const routes = spotDetailEl.querySelector(".spot-details-routes");
-        if (routes) routes.before(scores);
+        const arrival = spotDetailEl.querySelector(".spot-arrival");
+        if (arrival) arrival.before(scores);
         else spotDetailEl.appendChild(scores);
       }
       element = document.createElement("span");

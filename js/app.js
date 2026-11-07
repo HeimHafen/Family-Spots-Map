@@ -23,12 +23,12 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-app-feinschliff-15";
-import { initCommunityPlay } from "./features/community-play.js?v=20261106-app-feinschliff-15";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-spotkarten-18";
+import { initCommunityPlay } from "./features/community-play.js?v=20261107-spotkarten-18";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
-import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261106-app-feinschliff-15";
+import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-spotkarten-18";
 import { hasCategorySelection, isExpiredEvent, FACETS, labelOf, facetValue, hasReviewedCategoryProfile, placeTypeLabels } from "./categories.js";
 
 import { initFilterSelects } from "./ui/filter-select.js";
@@ -41,16 +41,16 @@ import { initPersonalBackup } from "./features/personal-backup.js";
 
 import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js";
 
-import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261106-app-feinschliff-15";
+import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-spotkarten-18";
 
-import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261106-app-feinschliff-15";
+import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-spotkarten-18";
 
-import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261106-app-feinschliff-15";
-import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261106-app-feinschliff-15";
+import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-spotkarten-18";
+import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-spotkarten-18";
 
 import { createModalController } from "./ui/modal.js";
-import { createSpotDetailsController } from "./ui/spot-details.js?v=20261106-app-feinschliff-15";
-import { initMenu } from "./ui/menu.js?v=20261106-app-feinschliff-15";
+import { createSpotDetailsController } from "./ui/spot-details.js?v=20261107-spotkarten-18";
+import { initMenu } from "./ui/menu.js?v=20261107-spotkarten-18";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
@@ -84,25 +84,25 @@ import {
   getSpotName,
   getSpotSubtitle,
   getSpotId
-} from "./filters.js?v=20261106-app-feinschliff-15";
+} from "./filters.js?v=20261107-spotkarten-18";
 
 import {
   initMap,
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261106-app-feinschliff-15";
+} from "./map.js?v=20261107-spotkarten-18";
 
-import { initRouter } from "./router.js?v=20261106-app-feinschliff-15";
+import { initRouter } from "./router.js?v=20261107-spotkarten-18";
 import { initToast, showToast } from "./toast.js";
-import { loadData } from "./data.js?v=20261106-app-feinschliff-15";
+import { loadData } from "./data.js?v=20261107-spotkarten-18";
 
 import {
   getPlusStatus,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
-} from "./features/plus.js?v=20261106-app-feinschliff-15";
+} from "./features/plus.js?v=20261107-spotkarten-18";
 
 // ------------------------------------------------------
 // Debug
@@ -2895,7 +2895,7 @@ function formatKmBadgeLabel(km) {
   return `≈ ${formatter.format(km)} km · ${locationText("Luftlinie", "straight-line", "fugleflugtslinje")}`;
 }
 
-function getSpotMetaParts(spot, { includeCategory = true } = {}) {
+function getSpotMetaParts(spot, { includeCategory = true, includeVisitTime = true } = {}) {
   const parts = [];
 
   if (includeCategory && hasReviewedCategoryProfile(spot)) {
@@ -2910,7 +2910,7 @@ function getSpotMetaParts(spot, { includeCategory = true } = {}) {
 
   const timeLabel = getSpotVisitTimeLabel(spot);
 
-  if (timeLabel) {
+  if (includeVisitTime && timeLabel) {
     parts.push(timeLabel);
   }
 
@@ -3386,7 +3386,7 @@ function renderSpotListContent() {
       card.appendChild(subtitleEl);
     }
 
-    const metaParts = getSpotMetaParts(spot).filter(part => part !== spot.city);
+    const metaParts = getSpotMetaParts(spot, { includeVisitTime: false }).filter(part => part !== spot.city);
 
     if (metaParts.length) {
       const metaEl = document.createElement("p");
@@ -3400,7 +3400,15 @@ function renderSpotListContent() {
     if (description) {
       const excerpt = document.createElement("p");
       excerpt.className = "spot-card-description";
-      excerpt.textContent = description.length > 180 ? description.slice(0,177).trimEnd() + "…" : description;
+      const sentences = typeof Intl.Segmenter === "function"
+        ? [...new Intl.Segmenter(currentLang, { granularity: "sentence" }).segment(description)]
+        : [];
+      const completeExcerpt = sentences.filter(({ index, segment }) => index + segment.length <= 180)
+        .map(({ segment }) => segment).join("").trim();
+      const wordExcerpt = description.slice(0, 179).replace(/\s+\S*$/u, "");
+      excerpt.textContent = description.length <= 180
+        ? description
+        : completeExcerpt || (wordExcerpt === description.slice(0, 179) ? description : wordExcerpt + "…");
       card.appendChild(excerpt);
     }
     const requirements = [...(categoryExplorer?.state.facets || [])];

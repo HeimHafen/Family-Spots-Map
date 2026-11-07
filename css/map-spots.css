@@ -523,3 +523,58 @@ html[data-fsm-focus-modality="keyboard"] #fsm-map-fullscreen .fsm-map-tool:focus
   border-color: var(--p-line, #dbcfbc);
   color: var(--p-text, #302719);
 }
+
+#spot-detail .spot-meta-type[data-category-icon="football"] {
+  background: #e7eddf;
+  border-color: #b5c2a7;
+  color: #465638;
+}
+#spot-detail .spot-highlights {
+  display: grid;
+  gap: 7px;
+  padding-block-start: 10px;
+  margin-block: 8px;
+  border-block-start: 1px solid var(--p-line, #dbcfbc);
+  color: var(--p-muted, #685c51);
+}
+#spot-detail .spot-highlights > .spot-details-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html.fsm-polished #spot-detail .spot-details-meta > .spot-meta-type {
+  background: var(--spot-type-tint, #edf0e4);
+}
+html.fsm-polished #spot-detail .spot-meta-type[data-category-icon="water-playground"] {
+  --spot-type-tint: #e4f1f7;
+}
+#spot-detail .spot-nearby { gap: 0; }
+#spot-detail .spot-nearby-link {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding-inline: 0;
+  overflow-wrap: anywhere;
+}
+#spot-detail .spot-nearby-link + .spot-nearby-link {
+  border-block-start: 1px solid #cbd3c1;
+}
+#spot-detail .spot-arrival {
+  display: grid;
+  gap: 8px;
+  margin-block-start: 12px;
+  padding-block-start: 10px;
+  border-block-start: 1px solid var(--p-line, #dbcfbc);
+}
+#spot-detail .spot-arrival > h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+#spot-detail .spot-arrival > :is(.spot-details-routes, .spot-parking) {
+  margin: 0;
+  justify-self: start;
+}
