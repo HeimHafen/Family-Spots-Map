@@ -604,6 +604,18 @@ export function createSpotDetailsController({
       spotDetailEl.appendChild(action);
     }
 
+    // Private planning complements public, verified meetups; never publishes an event.
+    const planLabels = {
+      de: "Ausflug privat planen", en: "Plan a private outing", da: "Planlæg en privat tur"
+    };
+    const planAction = document.createElement("button");
+    planAction.type = "button";
+    planAction.className = "spot-private-plan";
+    planAction.innerHTML = '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4M17 3v4M3 10h18M8 15l2.5 2.5L16 13"/></svg>';
+    planAction.append(document.createTextNode(planLabels[currentLang] || planLabels.de));
+    planAction.addEventListener("click", () => document.dispatchEvent(new CustomEvent("fsm:plan-spot", { detail: { spotId: String(getSpotId(spot)) } })));
+    spotDetailEl.appendChild(planAction);
+
     appendSpotGallery(spotDetailEl, spot);
     const neighbors = (spot.related_spot_ids || []).map(getRelatedSpot).filter(Boolean);
     if (neighbors.length) {
