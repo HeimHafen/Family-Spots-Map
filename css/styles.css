@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261107-hell-v34");
+@import url("./categories.css?v=20261107-warmweiss-v34");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -9,7 +9,7 @@
    --------------------------------------------------------- */
 
 /* 1. Design-Variablen */
-@import url("./theme.css?v=20261107-hell-v34");
+@import url("./theme.css?v=20261107-warmweiss-v34");
 
 /* 2. Reset, Body, Typografie, Grundlayout */
 @import url("./base.css?v=20251223");
@@ -18,9 +18,9 @@
 @import url("./utilities.css?v=20251223");
 
 /* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
-@import url("./components.css?v=20261107-hell-v34");
+@import url("./components.css?v=20261107-warmweiss-v34");
 
-@import url("./map-spots.css?v=20261107-hell-v34");
+@import url("./map-spots.css?v=20261107-warmweiss-v34");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
@@ -246,23 +246,25 @@ html[data-theme] #menu-toggle { width: 44px; height: 44px; min-height: 44px; }
 #spot-detail > .spot-gallery { margin-block-end: 0; }
 #spot-detail:has(> .spot-gallery:not([open])):not(:has(> .spot-visit-info:not([hidden]))) > .spot-details-scores { margin-block-start: 8px; }
 
-/* Agreed focus correction: neutral field borders, no tap rings.
-   Layout, palette, selected states and photo storage are unchanged. */
+/* Shared colors for editable fields. */
 :root {
-  --fsm-field-border: #bfc2bc;
-  --fsm-field-focus: #a09485;
+  --fsm-field-surface: #ffffff;
+  --fsm-field-border: #979285;
+  --fsm-field-ink: #302c25;
+  --fsm-field-hint: #68665e;
+  --fsm-field-focus: #465a34;
   --fsm-keyboard-focus: #685c51;
 }
 html body :is(input.input, textarea.input, select.input,
   input:not([type]), input[type="text"], input[type="search"],
   input[type="email"], input[type="password"], input[type="number"],
-  input[type="url"], input[type="tel"], textarea, select) {
+  input[type="url"], input[type="tel"], input[type="date"], input[type="time"], textarea, select) {
   border-color: var(--fsm-field-border) !important;
 }
 html body :is(input.input, textarea.input, select.input,
   input:not([type]), input[type="text"], input[type="search"],
   input[type="email"], input[type="password"], input[type="number"],
-  input[type="url"], input[type="tel"], textarea, select):is(:focus, :focus-visible) {
+  input[type="url"], input[type="tel"], input[type="date"], input[type="time"], textarea, select):is(:focus, :focus-visible) {
   border-width: 1px !important;
   border-color: var(--fsm-field-focus) !important;
   outline: none !important;
@@ -279,7 +281,7 @@ html[data-fsm-focus-modality="keyboard"] body
   outline-offset: 3px !important;
   box-shadow: none !important;
 }
-/* Text fields keep a quiet grey keyboard marker as well. */
+/* Text fields keep a distinct keyboard marker as well. */
 html[data-fsm-focus-modality="keyboard"] body
   :is(input.input, textarea.input, select.input, textarea, select):focus-visible {
   outline: 2px solid var(--fsm-keyboard-focus) !important;

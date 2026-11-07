@@ -53,7 +53,8 @@ h1 { font-size: clamp(16px, 4.1vw, 20px); letter-spacing: -.03em; margin:0; line
 .mode-chip span {color:#668b50;}
 .north-button {pointer-events:auto;width:42px;height:42px;display:grid;place-items:center;}
 .north-button svg {width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;}
-.search-box {position:absolute;z-index:4;top:65px;left:11px;right:66px;max-width:365px;display:flex;align-items:center;gap:7px;background:var(--chip);border:1px solid #d5cfb6;border-radius:13px;padding:0 12px;min-height:44px;color:#4c6749;}
+.search-box {position:absolute;z-index:4;top:65px;left:11px;right:66px;max-width:365px;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #979285;border-radius:13px;padding:0 12px;min-height:44px;color:#4c6749;}
+.search-box:focus-within {border-color:#465a34;outline:2px solid #465a34;outline-offset:2px;}
 .search-box > svg {stroke:currentColor;fill:none;stroke-width:2;flex:none;}
 .search-box input {background:transparent;border:0;outline:0;min-width:0;flex:1;color:#24311f;font-size:14px;height:42px;}
 .search-box input::placeholder {color:#66685f;opacity:1;}
