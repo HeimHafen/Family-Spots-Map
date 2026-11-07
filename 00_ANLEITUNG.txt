@@ -1,25 +1,38 @@
-Family Spots Map V90.19 | Nur Testbranch
+Family Spots Map · Menü und Themenleiste · Teststand V33
+Basis: Radtouren V32 mit beiden bestehenden Touren
+Version: 20261107-menue-themen-33
 
-Voraussetzung: vollständig eingespielter Teststand V90.18.
-Vor dem Austausch in Working Copy die acht Originaldateien sichern.
-Die Dateien in Austauschdateien_TXT entsprechend ihrer Ordnerstruktur
-einsetzen und beim Einsetzen nur die letzte Endung .txt entfernen.
-Alle acht Dateien zusammen committen, damit der Offline-Cache sie akzeptiert.
+1. Den aktuellen Stand im Testbranch sichern.
+2. Die 12 Dateien aus Austauschdateien/ gemeinsam in das Repository übernehmen.
+   Die Unterordner beibehalten. Die ZIP-Ordner selbst gehören nicht ins Repository.
+   TXT/ enthält dieselben Dateien mit zusätzlich angehängtem .txt als Kopiervorlage.
+3. In Working Copy committen und auf den vorhandenen Testbranch pushen.
+4. Nach Laden des Teststands in der App unter „Über Family Spots Map“ die Version
+   kontrollieren. Menü öffnen, mit × schließen und auf der Vollbildkarte durch
+   die Themen wischen. „Baden & Wasserspiel“ wählen und mit „Alle“ zurücksetzen.
 
 Zusammenfassung
-Mobile Kartenansicht im Hellmodus an die freigegebene Vorlage anpassen
+Menü im App-Kopf und Themenfarben auf der Vollbildkarte verfeinern
 
 Detaillierte Informationen
-Mehr Platz unter Spielideen, Karte direkt am Tilla-Bereich,
-Menübutton 8 CSS-Pixel höher und kompakte Leiste mit 44-Pixel-Touchflächen.
-Cache-Version und Prüfsummen für alle drei Sprachfassungen aktualisiert.
+Sichtbarer Menütitel mit Schließen-Button, einheitliche Themenfarben mit
+Auswahlhäkchen und seitlicher Ausblendung beim Scrollen. V32-Kategorietest
+an den vorhandenen Datenstand angepasst. Offline-Version aktualisiert.
 
-Working Copy – Vorhandene oder neue Remote-Referenz
+Working Copy · Vorhandene oder neue Remote-Referenz
 refs/heads/test/gemeinsam-v88-finish
+Source-Branch unverändert · Force Push: Aus
 
-Source-Branch: unverändert
-Force Push: Aus
-
-Nach dem Push in Safari und Chrome die Testseite neu laden und Menü,
-Spielideen, Kartenzoom und alle fünf Tabs prüfen. Ein visueller
-Browserabgleich mit der Bildvorlage steht noch aus.
+Dateien
+css/filter-showcase-78.css
+css/map-spots.css
+css/styles.css
+da/index.html
+en/index.html
+index.html
+js/app.js
+js/map.js
+js/ui/map-toolbar.js
+js/ui/menu.js
+service-worker.js
+tools/check-categories.mjs
