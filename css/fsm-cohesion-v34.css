@@ -72,13 +72,35 @@
   stroke-linecap:round;
   stroke-linejoin:round;
 }
-#fse-overlay .fse-icon-btn::before {
+#app-menu .app-menu-close,
+#spot-detail .spot-details-actions > .spot-details-close {
+  position: relative;
+}
+#app-menu .app-menu-close > svg,
+#spot-detail .spot-details-actions > .spot-details-close > svg {
+  width: 18px;
+  height: 18px;
+}
+#fse-overlay .fse-icon-btn::before,
+#app-menu .app-menu-close::before,
+#spot-detail .spot-details-actions > .spot-details-close::before {
   content:"";
   position:absolute;
   inset:7px;
   border:1px solid currentColor;
   border-radius:50%;
   opacity:.55;
+  pointer-events: none;
+}
+#spot-detail .spot-details-actions > .spot-details-favorite {
+  flex-basis: 44px;
+  width: 44px;
+  min-width: 44px;
+}
+.badge--time .badge__icon > svg {
+  display: block;
+  width: 1em;
+  height: 1em;
 }
 
 /* The calendar and the spot cards share the app's paper and olive palette. */

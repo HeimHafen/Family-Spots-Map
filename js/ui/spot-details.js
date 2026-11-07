@@ -1,6 +1,7 @@
 import { schachplatzNearbyStops } from "./cycle-tours.js";
 import { getPlaceTypes, getPlaceTypeWorlds, placeTypeLabels } from "../categories.js";
 import { categoryIcon } from "./category-icons.js";
+import { createMapToolIcon } from "./map-toolbar.js";
 // Spot detail view: rendering, gallery, visitor information and route links.
 // Personal data and map/location calculations remain in their existing owners.
 import { FEATURES, LANG_EN, LANG_DA } from "../config.js";
@@ -527,7 +528,7 @@ export function createSpotDetailsController({
     closeBtn.type = "button";
     closeBtn.className = "btn-ghost btn-small spot-details-close";
 
-    closeBtn.textContent = "×";
+    closeBtn.append(createMapToolIcon("close"));
     closeBtn.setAttribute("aria-label",
       currentLang === LANG_EN
         ? "Close"
