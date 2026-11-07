@@ -48,7 +48,7 @@
           "step1": "En kort tur – hurtigt af sted og hjemme igen.",
           "step2": "En lille udflugt – en halv dag fuld af oplevelser.",
           "step3": "Et stort udflugtsmål – en hel dag med magiske øjeblikke.",
-          "all": "Alle spots – uden afstandsgrænse. Kortet er jeres."
+          "all": "Ingen afstandsgrænse."
         }
       }
     },
@@ -158,7 +158,7 @@
   "btn_show_list": "Vis liste",
   "filter_category_all": "Alle kategorier",
   "filter_radius_max_label": "Alle spots",
-  "filter_radius_description_all": "Alle spots – uden afstandsgrænse. Kortet er jeres.",
+  "filter_radius_description_all": "Ingen afstandsgrænse.",
   "plus_code_empty": "Indtast først jeres test- eller partnerkode.",
   "plus_code_unknown": "Koden er ukendt eller ikke længere gyldig.",
   "plus_code_activated": "Family Spots Plus er aktiveret – god tur!",

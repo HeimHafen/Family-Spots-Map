@@ -37,7 +37,7 @@ assert.equal(matchesCategoryProfile(fixture[1],{facets:['indoor','outdoor','toil
 const state={world:'play',types:new Set(['indoor-playground']),facets:new Set()};
 const evaluation=evaluateSelection(fixture,state);
 assert.equal(evaluation.types.get('forest-playground'),2,'Adding an OR type predicts the union, without duplicates');
-assert.equal(evaluation.types.get('indoor-playground'),1,'Selected option shows the current result');
+assert.equal(evaluation.types.get('indoor-playground'),3,'Removing the last type restores all places in the theme');
 assert.equal(evaluation.facets.get('toilet'),1);
 assert.equal(evaluation.facets.get('shade'),0);
 const failed=evaluateSelection(fixture,{world:'play',facets:['toilet','shade']});

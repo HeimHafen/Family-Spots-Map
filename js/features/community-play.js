@@ -1,8 +1,8 @@
 const LOCAL_IMAGE = /^assets\/spots\/[a-z0-9/_-]+\.(?:webp|png|jpe?g)$/i;
 const L = {
- de:{ intro:'Treffpunkt für Bewegung, spontane Spiele und neue Begegnungen.',mission:'Menschen bewegen & verbinden', heading:'Treffen & Spiele', tags:['Bewegung','Begegnung','Fußball','Draußen'],details:'Details',information:'So funktioniert’s',info:'Hier können künftig geprüfte, begleitete Spieltreffen erscheinen. Termine und Zusagen werden erst angezeigt, wenn ein verantwortlicher Veranstalter sie bestätigt hat. Es gibt keine öffentlichen Kinderprofile oder direkten Nachrichten zwischen Minderjährigen.',close:'Schließen',},
- en:{intro:'A place for movement, spontaneous games and new connections.',mission:'Move & connect people',heading:'Meetups & games',tags:['Activity','Connection','Football','Outdoors'],details:'Details',information:'How it works',info:'Verified, supervised meetups can appear here in the future. Dates and attendance figures are shown only once a responsible organiser has confirmed them. No public profiles for children or direct messaging between minors.',close:'Close',},
- da:{intro:'Et sted for bevægelse, spontane spil og nye bekendtskaber.',mission:'Få mennesker i bevægelse & sammen',heading:'Møder og spil',tags:['Bevægelse','Fællesskab','Fodbold','Udendørs'],details:'Detaljer',information:'Sådan fungerer det',info:'Godkendte, ledsagede arrangementer kan vises her fremover. Datoer og tilmeldinger vises først, når en ansvarlig arrangør har bekræftet dem. Ingen offentlige børneprofiler eller direkte beskeder mellem mindreårige.',close:'Luk',}
+ de:{ intro:'Treffpunkt für Bewegung, spontane Spiele und neue Begegnungen.',mission:'Menschen bewegen & verbinden', heading:'Treffen & Spiele',details:'Details',information:'So funktioniert’s',info:'Hier können künftig geprüfte, begleitete Spieltreffen erscheinen. Termine und Zusagen werden erst angezeigt, wenn ein verantwortlicher Veranstalter sie bestätigt hat. Es gibt keine öffentlichen Kinderprofile oder direkten Nachrichten zwischen Minderjährigen.',close:'Schließen',},
+ en:{intro:'A place for movement, spontaneous games and new connections.',mission:'Move & connect people',heading:'Meetups & games',details:'Details',information:'How it works',info:'Verified, supervised meetups can appear here in the future. Dates and attendance figures are shown only once a responsible organiser has confirmed them. No public profiles for children or direct messaging between minors.',close:'Close',},
+ da:{intro:'Et sted for bevægelse, spontane spil og nye bekendtskaber.',mission:'Få mennesker i bevægelse & sammen',heading:'Møder og spil',details:'Detaljer',information:'Sådan fungerer det',info:'Godkendte, ledsagede arrangementer kan vises her fremover. Datoer og tilmeldinger vises først, når en ansvarlig arrangør har bekræftet dem. Ingen offentlige børneprofiler eller direkte beskeder mellem mindreårige.',close:'Luk',}
 };
 function el(name, cls, content) {
  const node = document.createElement(name);
@@ -45,33 +45,33 @@ export function initCommunityPlay({getLanguage, closeMenu}={}) {
   const sheet=el('section','fsm-community-sheet');sheet.setAttribute('role','dialog');sheet.setAttribute('aria-modal','true');sheet.setAttribute('aria-labelledby','fsm-community-heading');
   sheet.append(el('div','fsm-community-handle'));
   const header=el('header','fsm-community-header');
-  const badge=el('span','fsm-community-emblem');badge.append(icon('football'));
   const titles=el('div','fsm-community-titles');
-  const h=el('h2','fsm-community-title',spot.title||spot.name||tr.heading);h.id='fsm-community-heading';
-  const area=el('p','fsm-community-location');area.append(icon('location'),document.createTextNode(spot.city||''));
+  const h=el('h2','fsm-community-title',tr.heading);h.id='fsm-community-heading';
+  const area=el('p','fsm-community-location');area.textContent=spot['title_'+lang()]||spot.title||spot.name||'';
   titles.append(h,area);
   const x=makeAction('', 'fsm-community-close',close);x.append(icon('close'));x.setAttribute('aria-label',tr.close);
-  header.append(badge,titles,x);sheet.append(header);
+  header.append(titles,x);sheet.append(header);
   const body=el('div','fsm-community-body');
   const imgPath=safePath(spot.community.image);
   if(imgPath){const hero=el('img','fsm-community-photo');hero.alt=h.textContent;hero.src=imgPath;hero.loading='eager';hero.width=1400;hero.height=760;body.append(hero);}
-  body.append(el('p','fsm-community-intro',tr.intro));
-  const mission=el('p','fsm-community-mission');mission.append(icon('people'),document.createTextNode(tr.mission));body.append(mission);
-  const events=el('section','fsm-community-events');const eh=el('h3','fsm-community-events-heading');eh.append(icon('calendar'),document.createTextNode(tr.heading));events.append(eh);
+  const events=el('div','fsm-community-events');
   const real=Array.isArray(spot?.community?.events)?spot.community.events.filter(e=>e?.status==='published'&&e?.approved===true&&e?.organiser_verified===true&&typeof e?.title==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(e?.date||'')):[];
   if(real.length){
+   const eh=el('h3','fsm-community-events-heading');eh.append(icon('calendar'),document.createTextNode(tr.heading));events.append(eh);
    for(const event of real.slice(0,4)) {
     const row=el('div','fsm-community-event');const ico=el('span','fsm-community-event-icon');ico.append(icon('calendar'));
     const content=el('div','fsm-community-event-copy');content.append(el('strong','',event.title));
     const d=el('span','',event.date+(event.time?' · '+event.time:''));content.append(d);row.append(ico,content);events.append(row);
    }
   }else{
-   events.append(el('p','fsm-community-demo-note',{
-    de:'Aktuell kein Termin geplant',en:'No upcoming meetup',da:'Ingen kommende aftaler'
+   const status=el('div','fsm-community-empty');
+   const copy=el('div','fsm-community-empty-copy');
+   copy.append(el('p','fsm-community-demo-note',{
+    de:'Derzeit keine bestätigten Termine',en:'No confirmed upcoming meetups',da:'Ingen bekræftede kommende aftaler'
    }[lang()]));
+   status.append(icon('calendar'),copy);events.append(status);
   }
   body.append(events);
-  const tags=el('div','fsm-community-tags');for(const tag of tr.tags)tags.append(el('span','',tag));body.append(tags);
   const detailsPanel=el('details','category-explorer__rules');
   detailsPanel.append(el('summary','',tr.information),el('p','',tr.info));
   body.append(detailsPanel);sheet.append(body);

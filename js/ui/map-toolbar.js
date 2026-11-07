@@ -12,6 +12,7 @@ const PATHS = {
   search: "m21 21-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0",
   menu: "M4 6h16M4 12h16M4 18h16",
   close: "m6 6 12 12M18 6 6 18",
+  check: "m5 12 4 4L19 6",
   map: "m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5m6-2v16m6-14v16",
   filters: "M3 4h18l-7 8v8l-4-2v-6Z",
   spots: "M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0ZM12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z",
@@ -71,6 +72,14 @@ export function createMapToolbar({ dialog, leaveMap, onLayout }) {
   const categories = document.createElement("div");
   categories.className = "fsm-map-themes";
   categories.setAttribute("role", "group");
+  function updateThemeEdges() {
+    const start = Math.max(0, categories.scrollLeft);
+    categories.toggleAttribute("data-more-left", start > 1);
+    categories.toggleAttribute("data-more-right", start + categories.clientWidth < categories.scrollWidth - 1);
+  }
+  categories.addEventListener("scroll", updateThemeEdges, { ...options, passive: true });
+  const themeResize = new ResizeObserver(updateThemeEdges);
+  themeResize.observe(categories);
   const menu = button("menu", () => navigate("menu"), "fsm-map-tool--round");
   top.append(searchButton, categories, menu);
   const searchRow = document.createElement("form");
@@ -172,6 +181,11 @@ export function createMapToolbar({ dialog, leaveMap, onLayout }) {
         const span = document.createElement("span");
         span.textContent = world.id === "water" ? waterLabel : world.id ? copy[world.id] || world.label : copy.all;
         b.append(span);
+        if (world.id) {
+          const check = createMapToolIcon("check");
+          check.classList.add("fsm-map-theme-check");
+          b.append(check);
+        }
         // Nodes are replaced as the catalogue/counts change; do not keep abort
         // listeners referencing discarded nodes for the lifetime of the map.
         b.addEventListener("click", () => world.id === "water" ? request("shortcut", "water") : request("world", world.id));
@@ -191,6 +205,7 @@ export function createMapToolbar({ dialog, leaveMap, onLayout }) {
         : id === "" ? !state.world && !(state.types || []).length : id === state.world;
       b.setAttribute("aria-pressed", String(selected));
     }
+    updateThemeEdges();
   }
   document.addEventListener("fsm:fullscreen-state", event => { state = event.detail; paint(); }, options);
   const observer = new MutationObserver(paint);
@@ -200,6 +215,6 @@ export function createMapToolbar({ dialog, leaveMap, onLayout }) {
     open() { request("sync"); setSearch(!!state.search, false); paint(); },
     close() { setSearch(false, false); },
     escapeSearch() { if (searchRow.hidden) return false; setSearch(false); return true; },
-    destroy() { abort.abort(); observer.disconnect(); top.remove(); searchRow.remove(); status.remove(); nav.remove(); }
+    destroy() { abort.abort(); observer.disconnect(); themeResize.disconnect(); top.remove(); searchRow.remove(); status.remove(); nav.remove(); }
   };
 }

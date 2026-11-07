@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261106-treffen-feinschliff");
+@import url("./categories.css?v=20261107-menue-zoom-33");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -23,7 +23,7 @@
 /* Abendpalette: ausschließlich der gespeicherte Dark-Modus. */
 
 
-@import url("./map-spots.css?v=20261106-treffen-feinschliff");
+@import url("./map-spots.css?v=20261107-menue-zoom-33");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
@@ -331,4 +331,65 @@ html[data-fsm-focus-modality="keyboard"] body
       border-color: var(--fsm-field-focus) !important;
     }
   }
+}
+
+/* One app-wide menu trigger in the header. */
+html.fsm-polished .app-header .app-header-top #menu-toggle {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 4px;
+  inset-inline-end: max(8px, env(safe-area-inset-right, 0px));
+  display: grid;
+  place-items: center;
+  width: 44px !important;
+  height: 44px !important;
+  color: inherit;
+}
+@media (max-width: 380px) {
+  html.fsm-polished[data-theme] body .app-header .app-header-main #app-title.header-title {
+    padding-inline: 37px;
+    font-size: clamp(16px, 5vw, 19px) !important;
+    gap: 5px !important;
+  }
+  html.fsm-polished[data-theme] body .app-header .app-header-main #app-title .header-flag img {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+#app-menu.app-menu:not([hidden]) {
+  padding-top: calc(54px + env(safe-area-inset-top, 0px));
+}
+#app-menu.app-menu:not([hidden]) .app-menu-panel {
+  max-height: calc(100dvh - 68px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+}
+.app-menu-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline-start: 14px;
+}
+.app-menu-heading #app-menu-title {
+  margin: 0;
+  color: inherit;
+  font-size: 1.15rem;
+  line-height: 1.25;
+  outline: none;
+  box-shadow: none;
+}
+#app-menu .app-menu-close {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+#app-menu .app-menu-close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -4px;
+  border-radius: 10px;
 }

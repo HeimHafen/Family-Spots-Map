@@ -1,5 +1,5 @@
 /* Family Spots Map: coordinated visual refinements, quality66. */
-.fsm-polished { --p-canvas:#f5e9d9; --p-surface:#fff8ed; --p-soft:#f6eddf; --p-text:#3d3025; --p-muted:#746658; --p-line:#ded2bf; --p-green:#526b3c; --p-shadow:0 2px 10px #51412708; }
+.fsm-polished { --p-canvas:#f5e9d9; --p-surface:#fcf7ed; --p-soft:#f6eddf; --p-text:#302719; --p-muted:#746658; --p-line:#dbcfbc; --p-green:#526b3c; --p-shadow:0 2px 10px #51412708; }
 .fsm-polished body { background:var(--p-canvas)!important; color:var(--p-text); font-family:Arial,Helvetica,sans-serif; }
 .fsm-polished .app-header { position:relative; padding:18px 20px 16px; background:#f7e3c8!important; box-shadow:none!important; border-radius:0 0 20px 20px; border-bottom:1px solid #e4cfaf; }
 .fsm-polished .app-header-top { min-height:0; }
@@ -90,7 +90,7 @@
 .fsm-polished #tilla-section #menu-toggle .btn-menu-icon { width:20px; height:20px; display:block; }
 .fsm-polished #tilla-section #menu-toggle:hover { color:var(--p-text); }
 .fsm-polished #tilla-section #menu-toggle:focus-visible { outline:2px solid var(--fsm-keyboard-focus, #685c51); outline-offset:2px; border-radius:9px; }
-.fsm-polished #tilla-section #btn-play-idea { min-height:44px; border:1px solid #e77b12!important; background:#f98b18!important; color:#3c2817!important; border-radius:10px!important; box-shadow:none!important; font-weight:500!important; }
+.fsm-polished #tilla-section #btn-play-idea { min-height:44px; border:1px solid var(--p-action-line)!important; background:var(--p-action)!important; color:var(--p-action-text)!important; border-radius:10px!important; box-shadow:none!important; font-weight:500!important; }
 .fsm-polished #tilla-section #btn-play-idea:hover { background:#ef8010!important; }
 .fsm-polished #tilla-section #btn-play-idea:focus-visible { outline:2px solid var(--fsm-keyboard-focus, #685c51); outline-offset:3px; }
 .fsm-polished #tilla-section #btn-play-idea:active { transform:translateY(1px); }
@@ -103,7 +103,7 @@ html.fsm-polished {
  --text-1:var(--p-text); --text-2:var(--p-muted); --text-3:var(--p-text);
  --card-bg:var(--p-surface); --card-border:var(--p-line); --border-color:var(--p-line);
  --sidebar-section-bg:var(--p-surface); --input-bg:var(--p-soft);
- --p-action:#f98b18; --p-action-text:#3c2817;
+ --p-action:#f38d2e; --p-action-text:#302719; --p-action-line:#df7c12; --p-selection:#edf0e4; --p-selection-text:#465936;
 }
 .fsm-polished button, .fsm-polished input, .fsm-polished select, .fsm-polished textarea, .fsm-polished .leaflet-container { font-family:var(--font-stack)!important; }
 .fsm-polished .app-menu-panel, .fsm-polished .filter-modal-inner, .fsm-polished .spot-details { background:var(--p-surface)!important; color:var(--p-text)!important; border:1px solid var(--p-line)!important; border-radius:16px!important; box-shadow:0 8px 24px #30251518!important; }

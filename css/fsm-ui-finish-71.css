@@ -174,7 +174,7 @@ html.fsm-polished #fsm-community-overlay .category-explorer__rules summary::befo
 }
 html.fsm-polished #filter-modal .category-explorer__rules summary::after,
 html.fsm-polished #fsm-community-overlay .category-explorer__rules summary::after{
-  content:"";margin-left:auto;width:9px;height:9px;
+  content:"";margin-inline-start:auto;flex:0 0 9px;width:9px;height:9px;
   border-right:2px solid currentColor;border-bottom:2px solid currentColor;
   transform:translateY(-2px) rotate(45deg);
 }
