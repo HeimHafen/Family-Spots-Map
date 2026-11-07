@@ -137,7 +137,7 @@ Nach erfolgreicher Erstinstallation sind die App-Oberfläche, Spotdaten, Spracht
 
 **Kartenkacheln benötigen Internet.** Der Service Worker lädt keine externen OpenStreetMap-Kacheln als Offline-Kartenpaket herunter. Auch externe Navigation und Quellenwebseiten sind keine Offline-Funktionen dieser App.
 
-Der aktuelle Offline-Umfang beträgt 102 Einträge einschließlich des Stammseiten-Eintrags `./`. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
+Der aktuelle Offline-Umfang beträgt 146 Einträge einschließlich des Stammseiten-Eintrags `./`. Die maßgebliche Liste steht in `ASSETS` innerhalb des Service Workers.
 
 ### Ein Update sicher veröffentlichen
 
@@ -151,7 +151,7 @@ Eine neue Version wird nur installiert, wenn alle erforderlichen Dateien erreich
 
 **Browserdaten nicht zum Erzwingen eines Updates löschen:** Dabei können lokale Erinnerungen, Favoriten, Entwürfe und Freischaltungen verloren gehen. Während einer Online-Nutzung können gültige JSON-Daten im Cache aktualisiert werden; eine reine Bildtextkorrektur benötigt daher nicht zwingend eine neue Service-Worker-Version.
 
-## V34 · Kohärenz und private Planung (Testbranch)
+## V34 · Private Ausflüge und Abendmodus (Release-Kandidat)
 
 - **173 Spots** bleiben unverändert. Die Inhalte und die Originalfotos werden nicht erfunden oder ersetzt.
 - Der private Kalender wird als eigener, lokaler Planungsbereich in DE/EN/DA geöffnet. Er ist vom Bereich **Treffen & Spiele** klar getrennt: Dieser zeigt ausschließlich bestätigte öffentliche Termine, sofern welche vorliegen. Private Pläne werden nie veröffentlicht.
@@ -159,7 +159,7 @@ Eine neue Version wird nur installiert, wenn alle erforderlichen Dateien erreich
 - **Wichtig:** Die bestehende Sicherung für Erinnerungen/Favoriten enthält die privaten Kalendereinträge noch nicht. Diese bei Bedarf einzeln als ICS exportieren und den lokalen Speicher nicht ungeprüft löschen.
 - Vollbild-Zoomtasten besitzen mindestens 44 × 44 px Tippfläche. Ein ausdrücklich einschaltbarer warmer Abendmodus wird angeboten; der Hellmodus bleibt der Standard.
 - Der Installationscache enthält alle **40** lokal hinterlegten Spot-Fotos, sofern die Installation vollständig gelingt. OpenStreetMap-Hintergrundkacheln und externe Webseiten sind weiterhin nicht offline verfügbar. Der größere Installationsdownload braucht entsprechend Speicher und Verbindung.
-- Plus-Freischaltung, Krone, Herz, Erinnerungsformat, Tourenlogik und Spot-Daten bleiben unverändert. V34 gehört zuerst in einen isolierten Testbranch.
+- Plus-Freischaltung, Krone, Herz, Erinnerungsformat, Tourenlogik und Spot-Daten bleiben unverändert. Ab dem Tag eines geplanten Ausflugs lässt sich daraus eine Erinnerung beginnen. Ein vorhandener Erinnerungsentwurf bleibt erhalten.
 
 ## Family Spots Plus
 

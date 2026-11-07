@@ -83,3 +83,88 @@ html[data-theme="dark"] :is(.spot-private-plan,.fsm-community-plan):hover{backgr
   opacity:.55;
 }
 html[data-theme="dark"] #fse-overlay .fse-icon-btn {color:#f5ecd9;}
+
+/* The calendar and the spot cards share the app's paper and olive palette. */
+#fse-overlay .fse-shell {
+  background: #fcf7ed;
+  border-color: #e1d6c3;
+}
+#fse-overlay .fse-header {
+  background: #fcf7ed;
+  border-block-end: 1px solid #e1d6c3;
+}
+#fse-overlay .fse-shell::before { content: none; }
+#fse-overlay .fse-calendar { box-shadow: none; }
+#fse-overlay .fse-storage-status:empty { display: none; }
+#fse-overlay :is(input,select,textarea) { font-size: 16px; }
+#fse-overlay .fse-mini { white-space: normal; }
+@media (max-width: 380px) {
+  #fse-overlay .fse-form-row { grid-template-columns: minmax(0, 1fr); }
+}
+html.fsm-polished[data-theme="dark"] {
+  --p-canvas: #26251d;
+  --p-surface: #362e22;
+  --p-soft: #413728;
+  --p-text: #faeed9;
+  --p-muted: #d3c3aa;
+  --p-line: #78674e;
+  --p-green: #a7bc80;
+  --fsm-keyboard-focus: #b4c695;
+}
+html.fsm-polished[data-theme="dark"] .app-header {
+  background: #302b20 !important;
+  color: var(--p-text);
+}
+html.fsm-polished[data-theme="dark"] .header-tagline {
+  color: var(--p-muted) !important;
+  background: transparent;
+}
+html.fsm-polished[data-theme="dark"] :is(.fsm-home-nav,.fsm-home-sheet) {
+  --fsm-nav-bg: #362e22;
+  --fsm-nav-text: #faeed9;
+  --fsm-nav-line: #78674e;
+  --fsm-home-panel: #362e22;
+  --fsm-home-ink: #faeed9;
+  --fsm-home-border: #78674e;
+}
+html.fsm-polished[data-theme="dark"] .leaflet-control-zoom a {
+  background: var(--p-surface);
+  color: var(--p-text);
+  border-color: var(--p-line);
+}
+html.fsm-polished[data-theme="dark"] #fse-overlay :is(.fse-shell,.fse-header) {
+  background: var(--p-surface);
+  border-color: var(--p-line);
+}
+
+/* Keep the same compact illustrated start in both color modes. */
+html.fsm-polished[data-theme="dark"] .app-header,
+html.fsm-polished[data-theme="dark"] #tilla-title {
+  color: var(--p-text) !important;
+}
+html.fsm-polished[data-theme="dark"] #header-tagline { color: var(--p-muted) !important; }
+
+@media (max-width: 899px) {
+  html.fsm-polished[data-theme="dark"] body[data-app-view="map"]
+    :is(.app-header,#main-content.app-main,#sidebar,#view-map.view--active) {
+    background: var(--p-canvas) !important;
+  }
+  html.fsm-polished[data-theme="dark"] body[data-app-view="map"]
+    :is(#app-title.header-title,#tilla-title,#tilla-sidebar-text) {
+    color: var(--p-text) !important;
+  }
+  html.fsm-polished[data-theme="dark"] body[data-app-view="map"] #header-tagline,
+  html.fsm-polished[data-theme="dark"] body[data-app-view="map"] #menu-toggle {
+    color: var(--p-muted) !important;
+  }
+  html.fsm-polished[data-theme="dark"] body[data-app-view="map"] .app-header-main::after {
+    filter: brightness(.56) saturate(.78) !important;
+    mask-image: linear-gradient(transparent, black 30%, black 77%, transparent);
+  }
+  html.fsm-polished[data-theme="dark"] body[data-app-view="map"] .app-header::before,
+  html.fsm-polished[data-theme="dark"] body[data-app-view="map"] #tilla-section.sidebar-section::after {
+    filter: brightness(.7) saturate(.82);
+    mix-blend-mode: luminosity;
+    opacity: .45;
+  }
+}

@@ -5,7 +5,8 @@
 
 "use strict";
 
-import { THEME_LIGHT, THEME_DARK } from "./config.js";
+const THEME_LIGHT = "light";
+const THEME_DARK = "dark";
 
 /**
  * Liefert das initiale Theme:
@@ -53,9 +54,9 @@ export function applyTheme(theme) {
 
   if (typeof document !== "undefined") {
     document.documentElement.setAttribute("data-theme", next);
-    document.documentElement.style.colorScheme = "light";
+    document.documentElement.style.colorScheme = next;
     const scheme = document.querySelector('meta[name="color-scheme"]');
-    if (scheme) scheme.content = "light";
+    if (scheme) scheme.content = next;
     const metas = [...document.querySelectorAll('meta[name="theme-color"]')];
     const colorMeta = metas[0] || document.createElement("meta");
     colorMeta.name = "theme-color";

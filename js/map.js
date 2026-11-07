@@ -8,7 +8,7 @@
 import { initMapFullscreen } from "./ui/map-fullscreen.js";
 
 import { getSpotName } from "./filters/tags.js?v=20261010-unified-4";
-import { createSpotPin, createSpotPreview, attachSpotLabels, setSpotLabelMarkers, scheduleSpotLabels, spotPinId } from "./ui/map-spots.js?v=20261107-cohesion-v34d";
+import { createSpotPin, createSpotPreview, attachSpotLabels, setSpotLabelMarkers, scheduleSpotLabels, spotPinId } from "./ui/map-spots.js?v=20261107-kohaerenz-v34";
 
 // Keep existing marker DOM nodes when only distances or the viewport changed.
 const markerRenderSignatures = new WeakMap();
@@ -21,7 +21,7 @@ export function updateMapStatusLanguage() {
   const lang = document.documentElement.lang;
   const texts = mapUnavailable
     ? {de: "Die Karte ist gerade nicht verfügbar. Spotinfos, Filter und Erinnerungen könnt ihr weiter nutzen.", en: "The map is currently unavailable. You can still use spot information, filters and memories.", da: "Kortet er ikke tilgængeligt lige nu. I kan stadig bruge spotoplysninger, filtre og minder."}
-    : {de: "Offline · Neue Kartenbilder benötigen Internet. Eure gespeicherten Spotinfos bleiben verfügbar.", en: "Offline · New map images need an internet connection. Your saved spot information is still available.", da: "Offline · Nye kortbilleder kræver internet. Jeres gemte spotoplysninger er stadig tilgængelige."};
+    : {de: "Offline · Die Hintergrundkarte braucht Internet. Spotinfos und lokal vorbereitete Bilder bleiben verfügbar.", en: "Offline · The background map needs internet. Spot information and prepared photos are still available.", da: "Offline · Baggrundskortet kræver internet. Stedoplysninger og klargjorte billeder er stadig tilgængelige."};
   mapStatus.textContent = texts[lang] || texts.de;
   mapStatus.hidden = !mapUnavailable && navigator.onLine;
 }
