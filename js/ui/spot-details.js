@@ -5,6 +5,28 @@ import { categoryIcon } from "./category-icons.js";
 import { FEATURES, LANG_EN, LANG_DA } from "../config.js";
 import { createCrownIcon } from "../utils/dom.js?v=20261010-unified-4";
 
+export function createSpotTypeChips(spot, lang) {
+  const labels = placeTypeLabels(spot, lang);
+  return getPlaceTypes(spot).map((id, index) => {
+    const chip = document.createElement("span");
+    chip.className = "spot-meta-type";
+    chip.dataset.categoryIcon = id;
+    chip.dataset.world = getPlaceTypeWorlds(id)[0];
+    chip.append(categoryIcon(id), document.createTextNode(labels[index]));
+    return chip;
+  });
+}
+
+export function getSpotHighlights(spot, lang, tags) {
+  const seen = new Set(placeTypeLabels(spot, lang).map(label => label.trim().toLowerCase()));
+  return tags.map(tag => String(tag).trim()).filter(tag => {
+    const key = tag.toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 /**
  * Create one detail-view controller for the application lifetime.
  * Element/language getters read the current app state when needed.
@@ -423,8 +445,7 @@ export function createSpotDetailsController({
     const name = getSpotName(spot);
     const subtitle = getSpotSubtitle(spot);
     const metaParts = getSpotMetaParts(spot, { includeCategory: false });
-    const types = getPlaceTypes(spot);
-    const typeLabels = placeTypeLabels(spot, currentLang);
+    const typeChips = createSpotTypeChips(spot, currentLang);
 
     const tags = getSpotDisplayTags(spot);
 
@@ -524,18 +545,11 @@ export function createSpotDetailsController({
 
     spotDetailEl.appendChild(headerEl);
 
-    if (types.length || metaParts.length) {
+    if (typeChips.length || metaParts.length) {
       const metaEl = document.createElement("div");
       metaEl.className = "spot-details-meta";
 
-      types.forEach((id, index) => {
-        const chip = document.createElement("span");
-        chip.className = "spot-meta-type";
-        chip.dataset.categoryIcon = id;
-        chip.dataset.world = getPlaceTypeWorlds(id)[0];
-        chip.append(categoryIcon(id), document.createTextNode(typeLabels[index]));
-        metaEl.append(chip);
-      });
+      metaEl.append(...typeChips);
 
       metaParts.forEach((part) => {
         const span = document.createElement("span");
@@ -555,9 +569,7 @@ export function createSpotDetailsController({
       spotDetailEl.appendChild(descEl);
     }
 
-    const normalizedTypeLabels = new Set(typeLabels.map(label => label.trim().toLowerCase()));
-    const highlights = [...new Set(tags.map(tag => String(tag).trim()))]
-      .filter(tag => tag && !normalizedTypeLabels.has(tag.toLowerCase()));
+    const highlights = getSpotHighlights(spot, currentLang, tags);
 
     if (highlights.length) {
       const section = document.createElement("div");

@@ -578,3 +578,26 @@ html.fsm-polished #spot-detail .spot-meta-type[data-category-icon="water-playgro
   margin: 0;
   justify-self: start;
 }
+
+.spot-card-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.spot-card-types .spot-meta-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--spot-type-tint, #edf0e4);
+  color: var(--p-text, #302719);
+}
+.spot-card-types .category-explorer__icon {
+  display: inline-flex;
+  width: 15px;
+  height: 15px;
+  color: var(--fs78-icon, #465638);
+}
+.spot-card-types .category-explorer__icon svg { width: 100%; height: 100%; }
+.spot-card-types .spot-meta-type[data-category-icon="water-playground"] { --spot-type-tint: #e4f1f7; }

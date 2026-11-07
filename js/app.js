@@ -23,12 +23,12 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-spotkarten-18";
-import { initCommunityPlay } from "./features/community-play.js?v=20261107-spotkarten-18";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-spotkarten-19";
+import { initCommunityPlay } from "./features/community-play.js?v=20261107-spotkarten-19";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
-import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-spotkarten-18";
+import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-spotkarten-19";
 import { hasCategorySelection, isExpiredEvent, FACETS, labelOf, facetValue, hasReviewedCategoryProfile, placeTypeLabels } from "./categories.js";
 
 import { initFilterSelects } from "./ui/filter-select.js";
@@ -41,16 +41,16 @@ import { initPersonalBackup } from "./features/personal-backup.js";
 
 import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js";
 
-import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-spotkarten-18";
+import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-spotkarten-19";
 
-import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-spotkarten-18";
+import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-spotkarten-19";
 
-import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-spotkarten-18";
-import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-spotkarten-18";
+import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-spotkarten-19";
+import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-spotkarten-19";
 
 import { createModalController } from "./ui/modal.js";
-import { createSpotDetailsController } from "./ui/spot-details.js?v=20261107-spotkarten-18";
-import { initMenu } from "./ui/menu.js?v=20261107-spotkarten-18";
+import { createSpotDetailsController, createSpotTypeChips, getSpotHighlights } from "./ui/spot-details.js?v=20261107-spotkarten-19";
+import { initMenu } from "./ui/menu.js?v=20261107-spotkarten-19";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
@@ -84,25 +84,25 @@ import {
   getSpotName,
   getSpotSubtitle,
   getSpotId
-} from "./filters.js?v=20261107-spotkarten-18";
+} from "./filters.js?v=20261107-spotkarten-19";
 
 import {
   initMap,
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261107-spotkarten-18";
+} from "./map.js?v=20261107-spotkarten-19";
 
-import { initRouter } from "./router.js?v=20261107-spotkarten-18";
+import { initRouter } from "./router.js?v=20261107-spotkarten-19";
 import { initToast, showToast } from "./toast.js";
-import { loadData } from "./data.js?v=20261107-spotkarten-18";
+import { loadData } from "./data.js?v=20261107-spotkarten-19";
 
 import {
   getPlusStatus,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
-} from "./features/plus.js?v=20261107-spotkarten-18";
+} from "./features/plus.js?v=20261107-spotkarten-19";
 
 // ------------------------------------------------------
 // Debug
@@ -2821,18 +2821,20 @@ function getSpotAgeLabel(spot) {
 }
 
 function getSpotVisitTimeLabel(spot) {
+  const onSite = currentLang === LANG_EN ? "on site" : currentLang === LANG_DA ? "på stedet" : "vor Ort";
+  const approx = currentLang === LANG_EN ? "About" : "Ca.";
   const range = spot.visit_range_minutes;
   if (Array.isArray(range) && range.length === 2 && range.every(value => Number.isFinite(value) && value > 0) && range[1] >= range[0]) {
-    return `${range[0]}–${range[1]} ${currentLang === LANG_DE ? "Min." : "min"}`;
+    return `${range[0]}–${range[1]} ${currentLang === LANG_DE ? "Min." : "min"} ${onSite}`;
   }
   const minutes = spot.visit_minutes;
 
-  if (!minutes || !Number.isFinite(minutes)) return "";
+  if (!Number.isFinite(minutes) || minutes <= 0) return "";
 
   if (minutes < 60) {
     return currentLang === LANG_DE
-      ? `~${minutes} Min.`
-      : `~${minutes} min`;
+      ? `${approx} ${minutes} Min. ${onSite}`
+      : `${approx} ${minutes} min ${onSite}`;
   }
 
   const hours = minutes / 60;
@@ -2849,10 +2851,10 @@ function getSpotVisitTimeLabel(spot) {
 
   const hoursLabel = formatter.format(rounded);
 
-  if (currentLang === LANG_EN) return `~${hoursLabel} h`;
-  if (currentLang === LANG_DA) return `~${hoursLabel} t`;
+  if (currentLang === LANG_EN) return `${approx} ${hoursLabel} h ${onSite}`;
+  if (currentLang === LANG_DA) return `${approx} ${hoursLabel} t ${onSite}`;
 
-  return `~${hoursLabel} Std.`;
+  return `${approx} ${hoursLabel} Std. ${onSite}`;
 }
 
 function getSpotDistanceKm(spot) {
@@ -2895,7 +2897,7 @@ function formatKmBadgeLabel(km) {
   return `≈ ${formatter.format(km)} km · ${locationText("Luftlinie", "straight-line", "fugleflugtslinje")}`;
 }
 
-function getSpotMetaParts(spot, { includeCategory = true, includeVisitTime = true } = {}) {
+function getSpotMetaParts(spot, { includeCategory = true } = {}) {
   const parts = [];
 
   if (includeCategory && hasReviewedCategoryProfile(spot)) {
@@ -2910,7 +2912,7 @@ function getSpotMetaParts(spot, { includeCategory = true, includeVisitTime = tru
 
   const timeLabel = getSpotVisitTimeLabel(spot);
 
-  if (includeVisitTime && timeLabel) {
+  if (timeLabel) {
     parts.push(timeLabel);
   }
 
@@ -3386,13 +3388,11 @@ function renderSpotListContent() {
       card.appendChild(subtitleEl);
     }
 
-    const metaParts = getSpotMetaParts(spot, { includeVisitTime: false }).filter(part => part !== spot.city);
-
-    if (metaParts.length) {
-      const metaEl = document.createElement("p");
-      metaEl.className = "spot-card-meta";
-      metaEl.textContent = metaParts.join(" · ");
-
+    const typeChips = createSpotTypeChips(spot, currentLang);
+    if (typeChips.length) {
+      const metaEl = document.createElement("div");
+      metaEl.className = "spot-card-meta spot-card-types";
+      metaEl.append(...typeChips);
       card.appendChild(metaEl);
     }
 
@@ -3445,20 +3445,22 @@ function renderSpotListContent() {
       badgesRow.appendChild(badgeEl);
     });
 
-    const displayTags = getSpotDisplayTags(spot);
+    if (badgesRow.children.length) card.appendChild(badgesRow);
+
+    const displayTags = getSpotHighlights(spot, currentLang, getSpotDisplayTags(spot));
     if (displayTags.length) {
+      const highlightsRow = document.createElement("div");
+      highlightsRow.className = "spot-card-badges spot-card-highlights";
       displayTags.slice(0,3).forEach((tag) => {
         const tagEl = document.createElement("span");
         tagEl.className = "badge badge--soft";
         tagEl.textContent = tag;
 
-        badgesRow.appendChild(tagEl);
+        highlightsRow.appendChild(tagEl);
       });
+      card.appendChild(highlightsRow);
     }
 
-    if (badgesRow.children.length) {
-      card.appendChild(badgesRow);
-    }
 
     const open = () => {
       lastSpotTriggerEl = openButton;
