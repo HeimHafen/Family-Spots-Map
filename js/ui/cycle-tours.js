@@ -1,4 +1,4 @@
-import { trackPoints } from "./stroebeck-track.js";
+import { trackPoints, trackCoordinates } from "./stroebeck-track.js";
 
 const photo = "assets/spots/schachplatz-stroebeck/schachplatz.webp";
 const source = "https://www.strava.com/routes/3247495945863738730";
@@ -54,8 +54,56 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
   let type = "family";
   let country = "DE";
   let detail = false;
+  let routeMap = null;
+  let mapObserver = null;
+
+  function removeRouteMap() {
+    mapObserver?.disconnect();
+    mapObserver = null;
+    routeMap?.remove();
+    routeMap = null;
+  }
+
+  function showRouteMap() {
+    const host = dialog.querySelector(".cycle-geographic-map");
+    if (!host || !window.L || !dialog.open) return;
+    const L = window.L;
+    routeMap = L.map(host, {
+      scrollWheelZoom: false,
+      dragging: false,
+      touchZoom: false,
+      doubleClickZoom: false,
+      boxZoom: false,
+      keyboard: false,
+      zoomControl: false,
+    });
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(routeMap);
+    const line = L.polyline(trackCoordinates, {
+      color: "#4b5f33", weight: 4, opacity: 1,
+    }).addTo(routeMap);
+    for (const point of [trackCoordinates[0], [51.91629, 10.94273]]) {
+      L.circleMarker(point, {
+        radius: 5, color: "#fffaf0", weight: 2, fillColor: "#4b5f33", fillOpacity: 1,
+      }).addTo(routeMap);
+    }
+    const fit = () => {
+      if (!routeMap || !host.isConnected) return;
+      routeMap.invalidateSize({ animate: false });
+      routeMap.fitBounds(line.getBounds(), { padding: [20, 20], animate: false });
+    };
+    host.hidden = false;
+    dialog.querySelector(".cycle-map").hidden = true;
+    mapObserver = new ResizeObserver(fit);
+    mapObserver.observe(host);
+    fit();
+  }
+
 
   function render(focusTarget) {
+    removeRouteMap();
     const [title, intro, family, bikepacking, germany, denmark, name, metrics, description, empty, back, outline, discover, stopHint, original, provenance, close, crop] = copy[getLanguage()] || copy.de;
     const filters = '<div class="cycle-filters">' +
       [["family", family], ["bike", bikepacking]].map(([value, label]) =>
@@ -76,7 +124,7 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
         <polyline points="${trackPoints.map(point => point.join(",")).join(" ")}" />
         <circle cx="${trackPoints[0][0]}" cy="${trackPoints[0][1]}" r="9"/><text class="cycle-map-number" x="${trackPoints[0][0]}" y="${trackPoints[0][1]}">1</text>
         <circle cx="29.7" cy="139.3" r="9"/><text class="cycle-map-number" x="29.7" y="139.3">2</text><text x="244" y="231">Halberstadt</text><text x="16" y="170">Ströbeck</text>
-      </svg></figure>
+      </svg><div class="cycle-geographic-map" hidden></div></figure>
       <h3>${icon("pin")}${discover}</h3>
       <button type="button" class="cycle-stop" data-stop><img src="${photo}" alt="" width="470" height="470"><span><strong>Platz am Schachspiel</strong><small>${stopHint}</small></span><span aria-hidden="true">›</span></button>
       ${Object.values(schachplatzNearbyStops).map(stop => `<a class="cycle-stop cycle-nearby" href="${stop.url}" target="_blank" rel="noopener noreferrer">${icon(stop.icon)}<span><strong>${stop.title}</strong><small>${stop.text[getLanguage()] || stop.text.de}</small></span>${icon("external")}</a>`).join("")}
@@ -86,6 +134,7 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
       `<h2 id="cycle-tours-heading" tabindex="-1">${icon("bike")}<span>${title}</span></h2><p>${intro}</p>${filters}${type === "family" && country === "DE" ? row : `<p class="cycle-empty">${empty}</p>`}`}</div>`;
     dialog.querySelector(".cycle-content").scrollTop = 0;
     if (focusTarget) dialog.querySelector(focusTarget)?.focus({ preventScroll: true });
+    if (detail) showRouteMap();
   }
 
   trigger.addEventListener("click", () => {
@@ -96,6 +145,7 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
     dialog.querySelector("#cycle-tours-heading").focus();
   });
   dialog.addEventListener("close", () => {
+    removeRouteMap();
     if (!document.activeElement || document.activeElement === document.body) document.getElementById("menu-toggle")?.focus({preventScroll: true});
   });
   dialog.addEventListener("click", event => {
