@@ -1,4 +1,4 @@
-// Release-compatible RC structural guard; use with check-project.mjs.
+// Historischer Test für Kalender-RC. Für aktuelle Releases gilt tools/check-project.mjs.
 // V89 preserves the independent private-calendar RC and all its assertions.
 import fs from 'node:fs';
 import path from 'node:path';

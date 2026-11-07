@@ -196,6 +196,10 @@ Persönliche Daten werden über IndexedDB und lokale Speichermechanismen verarbe
 
 Die Spot-Detailansicht besitzt einen eigenen Controller. Er erhält aktuelle Sprache, DOM-Elemente und Aktionen über klar benannte Schnittstellen. Geöffnete Info- und Bilderbereiche bleiben bei erneutem Rendern erhalten; Speicherung und Standortberechnung bleiben in ihren bisherigen Modulen.
 
+Für GitHub Pages wird ein separates Verzeichnis mit den öffentlichen App-Dateien erstellt. Austauschpakete, Sicherungskopien und Prüfskripte bleiben im Repository.
+
+Die Prüfskripte `check-gemeinsam-rc.mjs`, `check-v88-finish.mjs` und `check-v89-vision.mjs` dokumentieren frühere Teststände und erwarten deren Versionsmerkmale.
+
 ## Lokal starten und prüfen
 
 Im Projektordner einen statischen HTTP-Server starten, beispielsweise mit Python:

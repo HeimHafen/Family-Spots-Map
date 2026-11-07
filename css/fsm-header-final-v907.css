@@ -197,15 +197,13 @@
 }
 @media (max-width: 899px) {
   html.fsm-polished[data-theme="light"] {
-    --fsm-palette-olive: #78934f;
     --fsm-palette-heart: #7fa825;
     --fsm-palette-cluster: #8fbf5a;
     --fsm-palette-orange: #f58b20;
   }
-  /* Green selection is an intentional app identity; not a new shade. */
   html.fsm-polished[data-theme="light"].fsm-home-nav-ready #fsm-home-nav.fsm-home-nav
     > .fsm-home-nav__item[aria-current="page"] {
-    background: var(--fsm-palette-olive) !important;
+    background: var(--fsm-nav-active) !important;
   }
   html.fsm-polished[data-theme="light"] #fsm-home-nav .fsm-home-nav__item > .fsm-daylog-heart {
     fill: var(--fsm-palette-heart) !important;
