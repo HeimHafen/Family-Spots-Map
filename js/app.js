@@ -23,13 +23,13 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-spotkarten-19";
-import { initCommunityPlay } from "./features/community-play.js?v=20261107-spotkarten-19";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-spotkarten-20";
+import { initCommunityPlay } from "./features/community-play.js?v=20261107-spotkarten-20";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
-import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-spotkarten-19";
-import { hasCategorySelection, isExpiredEvent, FACETS, labelOf, facetValue, hasReviewedCategoryProfile, placeTypeLabels } from "./categories.js";
+import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-spotkarten-20";
+import { hasCategorySelection, isExpiredEvent, FACETS, labelOf, facetValue, placeTypeLabels } from "./categories.js";
 
 import { initFilterSelects } from "./ui/filter-select.js";
 
@@ -41,16 +41,16 @@ import { initPersonalBackup } from "./features/personal-backup.js";
 
 import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js";
 
-import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-spotkarten-19";
+import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-spotkarten-20";
 
-import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-spotkarten-19";
+import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-spotkarten-20";
 
-import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-spotkarten-19";
-import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-spotkarten-19";
+import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-spotkarten-20";
+import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-spotkarten-20";
 
 import { createModalController } from "./ui/modal.js";
-import { createSpotDetailsController, createSpotTypeChips, getSpotHighlights } from "./ui/spot-details.js?v=20261107-spotkarten-19";
-import { initMenu } from "./ui/menu.js?v=20261107-spotkarten-19";
+import { createSpotDetailsController, createSpotTypeChips, getSpotHighlights } from "./ui/spot-details.js?v=20261107-spotkarten-20";
+import { initMenu } from "./ui/menu.js?v=20261107-spotkarten-20";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
@@ -84,25 +84,25 @@ import {
   getSpotName,
   getSpotSubtitle,
   getSpotId
-} from "./filters.js?v=20261107-spotkarten-19";
+} from "./filters.js?v=20261107-spotkarten-20";
 
 import {
   initMap,
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261107-spotkarten-19";
+} from "./map.js?v=20261107-spotkarten-20";
 
-import { initRouter } from "./router.js?v=20261107-spotkarten-19";
+import { initRouter } from "./router.js?v=20261107-spotkarten-20";
 import { initToast, showToast } from "./toast.js";
-import { loadData } from "./data.js?v=20261107-spotkarten-19";
+import { loadData } from "./data.js?v=20261107-spotkarten-20";
 
 import {
   getPlusStatus,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
-} from "./features/plus.js?v=20261107-spotkarten-19";
+} from "./features/plus.js?v=20261107-spotkarten-20";
 
 // ------------------------------------------------------
 // Debug
@@ -2900,10 +2900,9 @@ function formatKmBadgeLabel(km) {
 function getSpotMetaParts(spot, { includeCategory = true } = {}) {
   const parts = [];
 
-  if (includeCategory && hasReviewedCategoryProfile(spot)) {
-    parts.push(placeTypeLabels(spot, currentLang).join(" · "));
-  } else if (includeCategory && spot.category) {
-    parts.push(getCategoryLabel(spot.category));
+  if (includeCategory) {
+    const categoryLabels = placeTypeLabels(spot, currentLang);
+    if (categoryLabels.length) parts.push(categoryLabels.join(" · "));
   }
 
   if (spot.city) {

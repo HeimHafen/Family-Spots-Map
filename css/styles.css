@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261107-spotkarten-19");
+@import url("./categories.css?v=20261107-spotkarten-20");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -23,7 +23,7 @@
 /* Abendpalette: ausschließlich der gespeicherte Dark-Modus. */
 
 
-@import url("./map-spots.css?v=20261107-spotkarten-19");
+@import url("./map-spots.css?v=20261107-spotkarten-20");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES

@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261107-spotkarten-19";
+const CACHE_VERSION = "20261107-spotkarten-20";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-164-spots-v82-1-unique-themes-v84-home-navigation";
 const ROOT = new URL("./", self.location.href);
@@ -184,22 +184,22 @@ const RELEASE_HASHES = {
   "js/ui/map-toolbar.js": "73884ffd576b3ed44cffd1379109a20b9382124b36a969a4710faa7204f7b969",
   "css/theme.css": "a159a063aab5d84600a4991ab56bcbb6a81585abf2c2bba32736231c40d35389",
   "js/filter-model.js": "14e8339fcdfee92c86277572d6256a7770157025f2f904d3ecab165ef6ee4053",
-  "css/map-spots.css": "2840e9b09ed1d90deffbc6ee0ee6214976f1b5993fa1390ff8ab80fe46d5125f",
-  "da/index.html": "ffc17d5c0a0187ad3e153a47cb3300006c169a7bc3a2761bf7d0238e6022ea69",
+  "css/map-spots.css": "34456a21cab3535031cead7f8d7acdd3891a250a6069de7a409a9f47bf0a0d94",
+  "da/index.html": "f7a30cbf82d1f8b93a315ff996582845f096c8f02d881300c053e53ead1b12cb",
   "data/i18n/da.json": "e004e9d9f4810b00e64b8e5a6ddeed1c52d9028c3585a89338722221d7a39c63",
   "data/i18n/de.json": "09e6451868bd1b95e2fdb623ea1fdd46509e8c8f595d2c83254e8c5d03ffa413",
   "data/i18n/en.json": "a05e8a3b33c3082cc357d4b77bee69b7708e21e662626fc4feb4641d1a17ab87",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "000bcfc47e15f96b89d792f2ef349dd992bc8cdc625cca678fd721b12dd71641",
-  "en/index.html": "a6c44b8438684bf1f2c1341e6f29d4b1ae8c7ec402eb0ccc7a54b095f741c26b",
-  "index.html": "2ffc226c6e0b3bc608b0f65cc2f13eefca499b4c052185b08b88315f9d5fddaa",
-  "js/app.js": "c95ecf4d148235ea23572a1558b0f3fba929d782d70e8077916bddbf32794b6d",
+  "en/index.html": "a669b871a978c31ff45aa5480878ed5678fa3756635439458c6abc01c72ebad5",
+  "index.html": "d2ddd292a1d0d62714610a62f9986a7593199f061fb2b3f9abb7e130966fbffb",
+  "js/app.js": "863018b11f49885edbe4a616e70940752dc7cf0276852d9e46e9ab5a00b79869",
   "js/config.js": "57183afe5d20929a53b0336308bf91f15002dad8c410d527510cec2760f49b3b",
   "js/features/personal-backup.js": "e71292d506be6b2642ba1fc2c907c27bb58e7b77aede61301bc4bcd304eacf36",
   "js/features/personal-storage.js": "ee17691463c8d6c8fa25060c1f0441d342e7900877f3376d9ddc7c5f093da18d",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "d45b9a843735c91be3c6cc375c8aac0b99c268fa57018c4e51d731014af629eb",
-  "js/map.js": "72b3662940b822ecbe2274bcd7cda20cde6a4b6c194085efd830ee049163b0c5",
+  "js/map.js": "1bde661a8f0fa52daa0bdce0c4ffa5f5a77a0f227238c25ed123f844ca6613ab",
   "js/ui/menu.js": "78cd724aa5f446bb9e62ccc9293af9b18e5a53974c1b7edeef847caeb9a35370",
   "js/ui/spot-details.js": "7629ff51a7e942851781f7931b2af7f1abee87ae75a6320be4faabdb441f81af",
   "offline.html": "e3b8b124835d55406742d8fcf922f5e76d4ee2d6dac9577430fa716b83c08b6f",
@@ -233,7 +233,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "368e7f67b004d7ee8a5f030312260aba6aad2a1e93d8c4235bc0cacca808f15b",
   "js/filters/tags.js": "fbea5599ad6503ccb8a2bb1da9a7d46a3d1bf5ce27afe46c8f1f280ac2ada923",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "452811d4ad988b6359796082f7607d88ff4f55e8b164bc3ae6fe1990c6d50f68",
+  "css/styles.css": "26a3ba06d615984b58dcd3baa695c6feb3eee3c4aad618b529909d6fda7a0c70",
   "js/ui/map-fullscreen.js": "58218777034e262f8cee4b3fc9ded0c94516a836140a78199d3d23a7066618ac",
   "js/categories.js": "04f41a946d27d2a49b84465e91c96c427f7e18a503a731adb332d1cc24602e64",
   "js/ui/category-explorer.js": "bd30833878af0ee06336a5a154d2b0668ddd55ceaf18850b0ba121ce55b82e8d",
