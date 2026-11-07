@@ -177,12 +177,40 @@
 #fse-overlay .fse-footer-note { display: flex; align-items: flex-start; gap: 8px; color: var(--planner-muted); }
 #fse-overlay .fse-footer-note svg { flex: none; margin-top: 1px; }
 #fse-overlay .fse-status:empty { display: none; }
-/* Native date and time controls need a wider column in mobile WebKit. */
-#fse-overlay .fse-form-row input {
+/* Let the form own the visible border and spacing of native pickers. */
+#fse-overlay .fse-native-field {
+  display: block;
+  margin-top: 4px;
+  padding-inline: 10px;
+  border: 1px solid var(--fsm-field-border);
+  border-radius: 10px;
+  background: var(--fsm-field-surface);
+}
+#fse-overlay .fse-native-field:focus-within {
+  border-color: var(--fsm-field-focus);
+}
+#fse-overlay .fse-native-field:has(input:focus-visible) {
+  outline: 2px solid var(--fsm-field-focus);
+  outline-offset: 2px;
+}
+#fse-overlay #fse-draft-form .fse-native-field input {
+  display: block;
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
   max-width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+@media (forced-colors: active) {
+  #fse-overlay .fse-native-field { border-color: CanvasText; }
+  #fse-overlay .fse-native-field:focus-within { border-color: Highlight; }
+  #fse-overlay .fse-native-field:has(input:focus-visible) { outline-color: Highlight; }
 }
 #fse-overlay .fse-form-row input::-webkit-date-and-time-value { text-align: start; }
 @media (max-width: 479px) {
