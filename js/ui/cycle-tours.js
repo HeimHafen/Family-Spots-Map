@@ -95,7 +95,7 @@ export function initCycleTours({ getLanguage, closeMenu, openStop }) {
       routeMap.fitBounds(line.getBounds(), { padding: [20, 20], animate: false });
     };
     host.hidden = false;
-    dialog.querySelector(".cycle-map").hidden = true;
+    dialog.querySelector(".cycle-map").setAttribute("hidden", "");
     mapObserver = new ResizeObserver(fit);
     mapObserver.observe(host);
     fit();
