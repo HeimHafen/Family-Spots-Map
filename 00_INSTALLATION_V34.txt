@@ -1,0 +1,52 @@
+FAMILY SPOTS MAP – V34, V33-ABGLEICH / TESTBRANCH
+Stand: 07.11.2026 | Grundlage: Family-Spots-Map-main 34.zip
+Status: TESTVERSION – NICHT in main veröffentlicht oder auf dem iPhone bestätigt.
+
+BITTE ZUERST BACKUP
+1. In Working Copy/GitHub den bisherigen Main-Stand sichern und niemals überschreiben, ohne Sicherung.
+2. Neuen Testbranch aus dem unveränderten Main erstellen: refs/heads/test/fsm-v34-cohesion
+3. Im Verzeichnis Austauschdateien_TXT liegen exakt 17 Dateien als .txt.
+   Die Pfadnamen entsprechen den Projektdateien mit nachgestelltem .txt:
+   z.B. Austauschdateien_TXT/js/app.js.txt => js/app.js
+   Die INHALTE der .txt-Dateien in die zugehörigen Dateien kopieren; das finale .txt ist kein Teil des Projektnamens.
+4. Bei neuen Dateien die Unterordner anlegen, sofern sie fehlen. Alle 17 Dateiänderungen gemeinsam einspielen;
+   ein Teilpaket kann Service-Worker-Version, HTML-Einbindung und Checksummen inkonsistent machen.
+5. In Working Copy NICHT den Quellbranch überarbeiten; nur den neuen Testbranch pushen.
+   Feld 'Vorhandene oder neue Remote-Referenz': refs/heads/test/fsm-v34-cohesion
+   Force Push: AUS
+6. Auf dem Testbranch zuerst Projektprüfung ausführen: node tools/check-project.mjs
+   Testbranch ist NICHT die aktive GitHub-Pages-Main-URL. Für eine Browser-Vorschau
+   ist ein gesondertes Test-Hosting nötig. Die existierende Live-URL bleibt bei Main.
+7. iPhone-Safari und Chrome nach Testbereitstellung sorgfältig prüfen:
+   Karte, Filter, Zoom/Vollbild, 3 Sprachen, Abendmodus, Spot->Privatplanung,
+   Treffen-&-Spiele->Privatplanung, Mein Tag, Speicher-Import/Export, Offline-Start.
+   Auch die Service-Worker-Cache-Aktualisierung sowie bestehende lokale Erinnerungen testen.
+8. Erst nach erfolgreicher Prüfung gezielt auf Main übernehmen und deployen.
+
+WICHTIGE FESTLEGUNGEN
+- Spots Plus inklusive seiner bisherigen Zugangsdaten und -logik: UNVERÄNDERT.
+  Weiterhin nur browserseitige Freischaltung; für ein späteres Zahlungsmodell nicht ausreichend gesichert.
+- Grünes, fein konturiertes 'Mein Tag'-Herz: UNVERÄNDERT.
+- 173 Spots und ihre vorhandenen Quellen/Fotos: nicht verändert.
+- Kalenderpläne bleiben PRIVATE lokale Pläne (lokaler Browser-Speicher).
+  Sie werden NICHT zusammen mit 'Mein Tag'-Erinnerungs-Backups gesichert.
+  Termine bei Bedarf einzeln als ICS exportieren und separat sichern.
+- 40 lokale Spot-Bilder für den Cache vorgesehen; OSM-Kartenkacheln benötigen weiterhin Netz.
+  Offline-Cache nach vollständiger Installation ~8 MB größer; Speicher kann begrenzt sein.
+
+COPY-AND-PASTE FÜR WORKING COPY
+Zusammenfassung:
+V34 Test – privater Ausflugskalender, harmonisierte Bedienflächen und Offline-Bilder
+
+Detaillierte Informationen:
+Testbranch auf Basis V33 (main 34.zip). Privaten Kalender über Menü, Spots,
+Treffen & Spiele sowie Mein Tag erreichbar gemacht; vorhandene Erinnerungs-/Plus-Logik
+und das akzeptierte Herz unberührt. Zoom-Bedienung auf 44px, optionaler Abendmodus,
+Service-Worker-Cache mit allen 40 vorhandenen Spot-Fotos, Release-Checks und Doku ergänzt.
+Keine Veröffentlichung auf Main. iPhone/Safari-/VoiceOver- und echte Komplettbrowser-Tests offen.
+
+Vorhandene oder neue Remote-Referenz:
+refs/heads/test/fsm-v34-cohesion
+
+Source-Branch: UNVERÄNDERT
+Force Push: AUS
