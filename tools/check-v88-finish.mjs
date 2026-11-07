@@ -1,3 +1,4 @@
+// Historischer Test für V88.6. Für aktuelle Releases gilt tools/check-project.mjs.
 // Family Spots Map V88.6 – safe-calendar regression gate.
 // Only the new calendar and small shared close-icon may be redesigned;
 // no V88 dark-mode hero, navigation hiding or map resize is allowed.

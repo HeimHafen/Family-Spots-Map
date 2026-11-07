@@ -19,7 +19,7 @@ html.fsm-home-nav-ready #view-map > .map-section { margin-top: 0 !important; }
 html.fsm-home-nav-ready #main-content { padding-bottom: 100px !important; }
 .fsm-home-nav {
   --fsm-nav-bg: #fff8ef; --fsm-nav-text: #3b3329; --fsm-nav-line: #d9cdbc;
-  --fsm-nav-active: #78934f; --fsm-nav-active-ink: #fff9ef;
+  --fsm-nav-active: #5e753d; --fsm-nav-active-ink: #fff9ef;
   position: fixed; z-index: 950; bottom: max(12px, env(safe-area-inset-bottom, 0px));
   left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
   max-width: 620px; margin-inline: auto;

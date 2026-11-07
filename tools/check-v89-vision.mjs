@@ -1,3 +1,4 @@
+// Historischer Test für V89. Für aktuelle Releases gilt tools/check-project.mjs.
 // Family Spots Map V89 – test branch design/feature handoff contract.
 import fs from 'node:fs';
 import path from 'node:path';

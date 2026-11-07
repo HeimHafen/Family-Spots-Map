@@ -31,7 +31,7 @@
 .fse-calendar-nav h3{font-size:1.45rem;line-height:1.25;margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:-.02em;color:#392f28}
 .fse-cal-nav-btn{border:1px solid #e6ddcf;background:#fbf8f1;border-radius:50%;width:37px;height:37px;display:grid;place-items:center;font-size:1.65rem;color:#675849}
 .fse-weekdays,.fse-dates{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
-.fse-weekdays{margin-bottom:8px}.fse-weekdays span{text-align:center;color:#84796e;font-size:.75rem;font-weight:650}
+.fse-weekdays{margin-bottom:8px}.fse-weekdays span{text-align:center;color:#72675c;font-size:.75rem;font-weight:650}
 .fse-day{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;height:40px;border:1px solid transparent;background:transparent;border-radius:13px;color:#4a4034;font-weight:600;font-size:.94rem}
 .fse-day:disabled{cursor:default;opacity:.22}
 .fse-day--today:not(.fse-day--chosen){border-color:#a3b584;color:#506938}
@@ -55,7 +55,8 @@
 .fse-event-content{min-width:0;flex:1}.fse-event h4{margin:0 0 4px;font-size:.91rem;color:#463829;font-weight:800;line-height:1.35}.fse-event p{margin:2px 0;font-size:.78rem;color:#7c7164;line-height:1.45}
 .fse-event-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.fse-tag{font-size:.64rem;letter-spacing:.02em;font-weight:750;border-radius:999px;padding:3px 8px;background:#e7eddc;color:#4f683a}
 .fse-tag--demo{background:#fcddbd;color:#8f501c}.fse-tag--private{background:#f0e8dc;color:#705b43}
-.fse-event-actions{display:flex;gap:8px;margin-top:9px}.fse-mini{border:1px solid #d2c6b1;color:#554637;background:#fbf7ef;border-radius:9px;padding:5px 9px;font-size:.76rem;font-weight:720}
+.fse-event-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.fse-mini{min-width:44px;max-width:100%;overflow-wrap:anywhere;border:1px solid #d2c6b1;color:#554637;background:#fbf7ef;border-radius:9px;padding:5px 9px;font-size:.76rem;font-weight:720}
 .fse-empty{padding:23px 14px;text-align:center;background:#f7f3e9;border:1px dashed #d7c9b5;border-radius:15px;color:#746757;font-size:.85rem;line-height:1.5}
 .fse-empty strong{display:block;font-size:.97rem;margin-bottom:5px;color:#4d473a}
 .fse-demo-line{display:flex;gap:8px;align-items:start;background:#f8f3e8;border-radius:11px;padding:10px 12px;margin:8px 0 14px;font-size:.77rem;color:#716353;line-height:1.35}

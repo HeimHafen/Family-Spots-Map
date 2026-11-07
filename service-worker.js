@@ -1,5 +1,5 @@
   // Family Spots Map: vollständige Offline-Grundfunktion, ohne Kartenkachel-Downloads.
-const CACHE_VERSION = "20261107-kalender-rahmen-v34";
+const CACHE_VERSION = "20261107-feinschliff-v34";
 const CACHE_PREFIX = "family-spots-map-";
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION + "-173-spots-v34-cohesion";
 const ROOT = new URL("./", self.location.href);
@@ -208,21 +208,21 @@ const RELEASE_HASHES = {
   "css/theme.css": "1623d0ad94b1d92ba65f2777356dfab47f75d78004e82bc080cd40450fa59a2d",
   "js/filter-model.js": "14e8339fcdfee92c86277572d6256a7770157025f2f904d3ecab165ef6ee4053",
   "css/map-spots.css": "0f79e62f4512a2ae9a7dc56a42dc0439d13ae20f361e76d82305b57cbb60a46c",
-  "da/index.html": "4ead826b7e7e8d182dbde606e6698aa291878210e1e31f3fc16d1e1f6fd3ce0f",
+  "da/index.html": "c12583961fa87a3be99e512d3eb81e75799ecc8615b25912badbfc8290a478ee",
   "data/i18n/da.json": "e004e9d9f4810b00e64b8e5a6ddeed1c52d9028c3585a89338722221d7a39c63",
   "data/i18n/de.json": "09e6451868bd1b95e2fdb623ea1fdd46509e8c8f595d2c83254e8c5d03ffa413",
   "data/i18n/en.json": "a05e8a3b33c3082cc357d4b77bee69b7708e21e662626fc4feb4641d1a17ab87",
   "data/play-ideas.json": "c18f791a6f9bc6490e5414f7ea4ba3e5735ef597d70235e93530f0ee1ba7dc07",
   "data/spots.json": "ee5a2f7c3003bd1dba5007a09553efcaa18a82eb5d2e7d68598f904b7d68d369",
-  "en/index.html": "508dd64bc7a42aa6e53f1b3f6dc0cc75fbb26911eb088a6eaa78c08a0c3a19a6",
-  "index.html": "f810b76775609b55e5e6e62379809ae326c08602376740765016de123d125c05",
-  "js/app.js": "ab5278f85db0f7fdba0f816efbd2d5be4603667d185985e5425b85cf015f67d9",
+  "en/index.html": "3fa3154b0f646d6fdd295b72d80882e3138aece2a2c089687cef9cd5b9238b9e",
+  "index.html": "e36c0dfb0b303a6d52049096ad8ae304eb029aa52b70c4d99f25e5ee27cf5096",
+  "js/app.js": "9ce14c5ccd8c98dfac3429ec0267a0914a9f8e985931acc99e9cfa7fa202242d",
   "js/config.js": "57183afe5d20929a53b0336308bf91f15002dad8c410d527510cec2760f49b3b",
   "js/features/personal-backup.js": "e71292d506be6b2642ba1fc2c907c27bb58e7b77aede61301bc4bcd304eacf36",
   "js/features/personal-storage.js": "ee17691463c8d6c8fa25060c1f0441d342e7900877f3376d9ddc7c5f093da18d",
   "js/features/tilla.js": "3e1e5271a7a51aec56016a81043509790d31161f7ebd882e6252d69849282820",
   "js/i18n.js": "d45b9a843735c91be3c6cc375c8aac0b99c268fa57018c4e51d731014af629eb",
-  "js/map.js": "d1e33e52c5582dbc1e74487c39df9ed0fe6d800227bf7d4700b6fb968ec9b0b8",
+  "js/map.js": "8a1a0c03dfbb5f1df850c42dcb60229dfe665e335a12510f1948877caa9bb960",
   "js/ui/menu.js": "87a9bd34bd2cd9a2e4510629c69932541e911522df89c322544aae0bb46e7311",
   "js/ui/spot-details.js": "ba4da327d5f769b64a66f34b566581e66fca7a98a3816ba8ede00b0be9ac4af8",
   "offline.html": "e3b8b124835d55406742d8fcf922f5e76d4ee2d6dac9577430fa716b83c08b6f",
@@ -256,7 +256,7 @@ const RELEASE_HASHES = {
   "css/badges.css": "368e7f67b004d7ee8a5f030312260aba6aad2a1e93d8c4235bc0cacca808f15b",
   "js/filters/tags.js": "fbea5599ad6503ccb8a2bb1da9a7d46a3d1bf5ce27afe46c8f1f280ac2ada923",
   "js/filters/logic.js": "775816b277bf8e393bc942f5782e335f038ccbaa5f01514f6e9410db085fc50f",
-  "css/styles.css": "0df0c582f072cb7b36ff615a086d65baf47b943e6aecc17f22b829698a1c5025",
+  "css/styles.css": "5a28c2368837f5b880da463191e5f85bfb62e8b3c6474a34432a312e85734e21",
   "js/ui/map-fullscreen.js": "58218777034e262f8cee4b3fc9ded0c94516a836140a78199d3d23a7066618ac",
   "js/categories.js": "04f41a946d27d2a49b84465e91c96c427f7e18a503a731adb332d1cc24602e64",
   "js/ui/category-explorer.js": "bd30833878af0ee06336a5a154d2b0668ddd55ceaf18850b0ba121ce55b82e8d",
@@ -264,12 +264,12 @@ const RELEASE_HASHES = {
   "js/ui/filter-results.js": "c93fa5155dce5dff2d42f73fdb6ba3c6012136549ecd355884ca1d252dddafae",
   "css/interface.css": "a91ccdc16e91afe89b528dfaf3efb31f85a2bf42aa1bddc6e1b8260c637594ed",
   "css/fsm-ui-finish-71.css": "5f786de619f9719981fcad413dcb5f405799491a58c8bf445a57d9b9202ecb8a",
-  "css/fsm-home-navigation-84.css": "eef73ed91f779493c40e789dec62ad8f6a78c48a335e949541ef8cccbcb356f6",
+  "css/fsm-home-navigation-84.css": "0cffdfb82e20b3e5a871fe6c726ff87ee9a382b1ee41cb7b115a96711dc92966",
   "js/ui/home-navigation.js": "35ef01f92692b62f6f24d3b7a9b9e170d48d9259b8613ea60769aa83ff479856",
   "css/main-header-v90.css": "ad40002b9402a8da8423be8352dbb9baf145eb3df9cae8523133b18023f56d8f",
-  "css/fsm-map-dock-v901.css": "8ff732e2a99f9cb9137d3a82351bf1a48baafaa0f5ed5a7cb2dc9538fdea6385",
+  "css/fsm-map-dock-v901.css": "107d31bb3c4c297f2ba0a559afbacedaadddf2a44ba0848672c315d1b4ef5490",
   "css/fsm-premium-polish-v902.css": "cd52545ffd22c3d0bf1116a7ce1af2d350a17fa4daf8a9051ae6aec092809f91",
-  "css/fsm-header-final-v907.css": "e011c2112ad4b7af3da11380bad2870ac25fc2b00f370f7f0a7cfe0259931ce5",
+  "css/fsm-header-final-v907.css": "619308a7c77da096cfcf62b718d274823fce1b85fc11d25a386c66289b8f6402",
   "css/fsm-proportion-target-v917.css": "27be709373439c80440694ddc6becc1cbf15846b0007294ee10e122e38bb9593",
   "css/fsm-landscape-space-v918.css": "fd5369b6f4e8bb828c4fb66ccc7473ae753b18151806950057f54b6911f2a368",
   "assets/design/main-header-leaves-v90.webp": "fe0eb90577732eb6049673816dfdf6c76d6f1290b5f6f247cf916a3fb00c7f36",
@@ -281,7 +281,7 @@ const RELEASE_HASHES = {
   "assets/spots/filsoe/ellipse.webp": "5c362b84cd83558748f5417a71b91aac39935a028a85d57470f890d1d179ea46",
   "js/features/gemeinsam-erleben-rc.js": "761977b0d3090640e5cb593a67332c26a5eea6fd65347892ea37523f3e0cf0d0",
   "js/features/community-play.js": "594880fde127b94ad781b63fc08d234776a0eb63d1b9f1f5e2d5835b14b16a2e",
-  "css/gemeinsam-erleben-rc.css": "070e97b4090140980c0834366346f52456ae9638f08b9da546f091f481919e1b",
+  "css/gemeinsam-erleben-rc.css": "3ec6eb930af2dccdd01befea9935c973e1f7e2f39b90c438197f7d53db11e9b8",
   "css/fsm-cohesion-v34.css": "57a10bee739941c92f96e9914937cabe1d107581e8e6e2f816652e6163408665"
 };
 async function validateMapPresentation(response, url) {
