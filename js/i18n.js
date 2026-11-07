@@ -7,9 +7,9 @@
 
 "use strict";
 
-import { setTextWithHearts } from "./utils/dom.js?v=20261010-unified-4";
+import { setTextWithHearts } from "./utils/dom.js?v=20261106-app-feinschliff";
 
-import { fetchJsonWithTimeout } from "./data/dataLoader.js?v=20261010-unified-4";
+import { fetchJsonWithTimeout } from "./data/dataLoader.js?v=20261106-app-feinschliff";
 
 /**
  * Unterstützte Sprachen & Defaults
@@ -61,7 +61,7 @@ const FALLBACK_MESSAGES = {
     "ui.filters.radius.description.step1": "Kurz raus – schnell da, schnell wieder zurück.",
     "ui.filters.radius.description.step2": "Kleine Tour – ein halber Tag voller Entdeckungen.",
     "ui.filters.radius.description.step3": "Großes Ziel – ein ganzer Tag für magische Momente.",
-    "ui.filters.radius.description.all": "Alle Spots – ohne Radius. Die Karte gehört euch.",
+    "ui.filters.radius.description.all": "Ohne Entfernungsgrenze.",
     "ui.plus.codeEmpty": "Bitte zuerst euren Partner-Code eingeben.",
     "ui.plus.codeUnknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
     "ui.plus.activated": "Family Spots Plus ist aktiv – viel Freude auf euren Touren!",
@@ -153,7 +153,7 @@ const FALLBACK_MESSAGES = {
     "btn_show_list": "Liste zeigen",
     "filter_category_all": "Alle Kategorien",
     "filter_radius_max_label": "Alle Spots",
-    "filter_radius_description_all": "Alle Spots – ohne Radius. Die Karte gehört euch.",
+    "filter_radius_description_all": "Ohne Entfernungsgrenze.",
     "plus_code_empty": "Bitte zuerst euren Test- oder Partnercode eingeben.",
     "plus_code_unknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
     "plus_code_activated": "Family Spots Plus ist aktiv – viel Freude auf euren Touren!",
@@ -295,7 +295,7 @@ const FALLBACK_MESSAGES = {
     "ui.filters.radius.description.step1": "Quick outing – out and back in no time.",
     "ui.filters.radius.description.step2": "Half-day outing – lots to discover.",
     "ui.filters.radius.description.step3": "A big day out – full of magical moments.",
-    "ui.filters.radius.description.all": "All spots – no radius limit. The map is yours.",
+    "ui.filters.radius.description.all": "No distance limit.",
     "ui.plus.codeEmpty": "Please enter your partner code.",
     "ui.plus.codeUnknown": "This code is unknown or no longer valid.",
     "ui.plus.activated": "Family Spots Plus is active – happy travels!",
@@ -306,7 +306,7 @@ const FALLBACK_MESSAGES = {
     "ui.tilla.afterFavAdded": "This place now has a heart on your map. 💚",
     "ui.tilla.afterFavRemoved": "No worries – we’ll find new memories. 🐢",
     "ui.tilla.tripMode": "You’re on the move – I’m watching for heartwarming moments. 🚐",
-    "ui.tilla.everydayMode": "Everyday life can glow. Let’s find small wonders nearby. 🌿",
+    "ui.tilla.everydayMode": "Little adventures are closer than you think. 🌿",
     "ui.tilla.plusActivated": "Plus is active – more paths, more places, more adventures. ✨",
     "ui.daylog.saved": "Saved 💾 – a little memory to smile about later.",
     "ui.nav.map": "Map",
@@ -387,7 +387,7 @@ const FALLBACK_MESSAGES = {
     "btn_show_list": "Show list",
     "filter_category_all": "All categories",
     "filter_radius_max_label": "All spots",
-    "filter_radius_description_all": "All spots – no radius limit. The map is yours.",
+    "filter_radius_description_all": "No distance limit.",
     "plus_code_empty": "Please enter your test or partner code first.",
     "plus_code_unknown": "This code is unknown or no longer valid.",
     "plus_code_activated": "Family Spots Plus is active – happy travels!",
@@ -403,7 +403,7 @@ const FALLBACK_MESSAGES = {
     "turtle_after_fav_added": "This place now has a heart on your map. 💚",
     "turtle_after_fav_removed": "No worries – we’ll find new memories. 🐢",
     "turtle_trip_mode": "You’re on the move – I’m watching for heartwarming moments. 🚐",
-    "turtle_everyday_mode": "Everyday life can glow. Let’s find small wonders nearby. 🌿",
+    "turtle_everyday_mode": "Little adventures are closer than you think. 🌿",
     "turtle_plus_activated": "Plus is active – more paths, more places, more adventures. ✨",
     "toast_location_ok": "Location found – your next little adventure awaits. 🌍",
     "toast_location_error": "We can’t access your location right now. You can still browse the map.",
@@ -529,7 +529,7 @@ const FALLBACK_MESSAGES = {
     "ui.filters.radius.description.step1": "En kort tur – hurtigt af sted og hjemme igen.",
     "ui.filters.radius.description.step2": "En lille udflugt – en halv dag fuld af oplevelser.",
     "ui.filters.radius.description.step3": "Et stort udflugtsmål – en hel dag med magiske øjeblikke.",
-    "ui.filters.radius.description.all": "Alle spots – uden afstandsgrænse. Kortet er jeres.",
+    "ui.filters.radius.description.all": "Ingen afstandsgrænse.",
     "ui.plus.codeEmpty": "Indtast først jeres partnerkode.",
     "ui.plus.codeUnknown": "Koden er ukendt eller ikke længere gyldig.",
     "ui.plus.activated": "Family Spots Plus er aktiveret – god tur!",
@@ -621,7 +621,7 @@ const FALLBACK_MESSAGES = {
     "btn_show_list": "Vis liste",
     "filter_category_all": "Alle kategorier",
     "filter_radius_max_label": "Alle spots",
-    "filter_radius_description_all": "Alle spots – uden afstandsgrænse. Kortet er jeres.",
+    "filter_radius_description_all": "Ingen afstandsgrænse.",
     "plus_code_empty": "Indtast først jeres test- eller partnerkode.",
     "plus_code_unknown": "Koden er ukendt eller ikke længere gyldig.",
     "plus_code_activated": "Family Spots Plus er aktiveret – god tur!",
@@ -1294,7 +1294,7 @@ async function loadMessagesForLang(lang) {
   if (loadedLanguages.has(target)) return;
 
   try {
-    const json = await fetchJsonWithTimeout(`data/i18n/${target}.json?v=20261010-unified-4`, 8000);
+    const json = await fetchJsonWithTimeout(`data/i18n/${target}.json?v=20261106-app-feinschliff`, 8000);
     if (json && typeof json === "object" && !Array.isArray(json)) {
       const flat = {};
       const flatten = (value, prefix = "") => {

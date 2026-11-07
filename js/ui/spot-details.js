@@ -1,7 +1,32 @@
+import { schachplatzNearbyStops } from "./cycle-tours.js";
+import { getPlaceTypes, getPlaceTypeWorlds, placeTypeLabels } from "../categories.js";
+import { categoryIcon } from "./category-icons.js";
 // Spot detail view: rendering, gallery, visitor information and route links.
 // Personal data and map/location calculations remain in their existing owners.
 import { FEATURES, LANG_EN, LANG_DA } from "../config.js";
 import { createCrownIcon } from "../utils/dom.js?v=20261010-unified-4";
+
+export function createSpotTypeChips(spot, lang) {
+  const labels = placeTypeLabels(spot, lang);
+  return getPlaceTypes(spot).map((id, index) => {
+    const chip = document.createElement("span");
+    chip.className = "spot-meta-type";
+    chip.dataset.categoryIcon = id;
+    chip.dataset.world = getPlaceTypeWorlds(id)[0];
+    chip.append(categoryIcon(id), document.createTextNode(labels[index]));
+    return chip;
+  });
+}
+
+export function getSpotHighlights(spot, lang, tags) {
+  const seen = new Set(placeTypeLabels(spot, lang).map(label => label.trim().toLowerCase()));
+  return tags.map(tag => String(tag).trim()).filter(tag => {
+    const key = tag.toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
 
 /**
  * Create one detail-view controller for the application lifetime.
@@ -82,9 +107,9 @@ export function createSpotDetailsController({
     arrow.setAttribute("viewBox", "0 0 24 24");
     arrow.setAttribute("aria-hidden", "true");
     arrow.setAttribute("focusable", "false");
-    arrow.classList.add("spot-gallery__arrow");
+    arrow.classList.add("spot-gallery__camera");
     const arrowPath = document.createElementNS(arrow.namespaceURI, "path");
-    arrowPath.setAttribute("d", "M9 5l7 7-7 7");
+    arrowPath.setAttribute("d", "M4 7h4l2-3h4l2 3h4v13H4z M16 13a4 4 0 1 1-8 0 4 4 0 0 1 8 0");
     arrow.appendChild(arrowPath);
     const summaryLabel = document.createElement("span");
     summary.append(arrow, summaryLabel);
@@ -163,17 +188,7 @@ export function createSpotDetailsController({
       if (details.open) expandedParkingSpots.add(id); else expandedParkingSpots.delete(id);
     });
     const summary = document.createElement("summary");
-    const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    arrow.setAttribute("viewBox", "0 0 24 24");
-    arrow.setAttribute("aria-hidden", "true");
-    arrow.setAttribute("focusable", "false");
-    arrow.classList.add("spot-parking__arrow");
-    const path = document.createElementNS(arrow.namespaceURI, "path");
-    path.setAttribute("d", "M9 5l7 7-7 7");
-    arrow.appendChild(path);
-    const label = document.createElement("span");
-    label.textContent = labels.title;
-    summary.append(arrow, label);
+    summary.textContent = labels.title;
     details.appendChild(summary);
     const body = document.createElement("div");
     body.className = "spot-parking__body";
@@ -430,7 +445,8 @@ export function createSpotDetailsController({
     const spotId = getSpotId(spot);
     const name = getSpotName(spot);
     const subtitle = getSpotSubtitle(spot);
-    const metaParts = getSpotMetaParts(spot);
+    const metaParts = getSpotMetaParts(spot, { includeCategory: false });
+    const typeChips = createSpotTypeChips(spot, currentLang);
 
     const tags = getSpotDisplayTags(spot);
 
@@ -511,12 +527,13 @@ export function createSpotDetailsController({
     closeBtn.type = "button";
     closeBtn.className = "btn-ghost btn-small spot-details-close";
 
-    closeBtn.textContent =
+    closeBtn.textContent = "×";
+    closeBtn.setAttribute("aria-label",
       currentLang === LANG_EN
         ? "Close"
         : currentLang === LANG_DA
           ? "Luk"
-          : "Schließen";
+          : "Schließen");
 
     closeBtn.addEventListener("click", () => {
       closeSpotDetails({ returnFocus: true });
@@ -529,9 +546,11 @@ export function createSpotDetailsController({
 
     spotDetailEl.appendChild(headerEl);
 
-    if (metaParts.length) {
+    if (typeChips.length || metaParts.length) {
       const metaEl = document.createElement("div");
       metaEl.className = "spot-details-meta";
+
+      metaEl.append(...typeChips);
 
       metaParts.forEach((part) => {
         const span = document.createElement("span");
@@ -551,13 +570,36 @@ export function createSpotDetailsController({
       spotDetailEl.appendChild(descEl);
     }
 
+    const highlights = getSpotHighlights(spot, currentLang, tags);
+
+    if (highlights.length) {
+      const section = document.createElement("div");
+      section.className = "spot-highlights";
+      const heading = document.createElement("strong");
+      heading.textContent = { de: "Auf einen Blick", en: "At a glance", da: "Kort fortalt" }[currentLang];
+      const list = document.createElement("ul");
+      list.className = "spot-details-tags";
+      for (const highlight of highlights) {
+        const item = document.createElement("li");
+        item.className = "badge badge--soft";
+        item.textContent = highlight;
+        list.append(item);
+      }
+      section.append(heading, list);
+      spotDetailEl.append(section);
+    }
+
     // Opt-in for verified public play spaces; no event data is fabricated here.
     if (spot?.community?.enabled === true && spot?.community?.type === "bolzplatz") {
       const labels = {de:"Treffen & Spiele ansehen", en:"View meetups & games", da:"Se møder og spil"};
       const action = document.createElement("button");
       action.type = "button";
       action.className = "spot-community-open";
-      action.textContent = labels[currentLang] || labels.de;
+      const icon = document.createElement("span");
+      icon.className = "spot-community-open__icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3Zm14-16a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v2h-3"/></svg>';
+      action.append(icon, document.createTextNode(labels[currentLang] || labels.de));
       action.addEventListener("click", () => document.dispatchEvent(new CustomEvent("fsm:community-open", {detail: {spot}})));
       spotDetailEl.appendChild(action);
     }
@@ -566,17 +608,41 @@ export function createSpotDetailsController({
     const neighbors = (spot.related_spot_ids || []).map(getRelatedSpot).filter(Boolean);
     if (neighbors.length) {
       const section = document.createElement("div");
-      section.className = "spot-details-routes";
+      section.className = "spot-nearby";
       const heading = document.createElement("strong");
       heading.textContent = { de: "Direkt daneben", en: "Right next door", da: "Lige ved siden af" }[currentLang];
       section.append(heading);
       for (const neighbor of neighbors) {
         const action = document.createElement("button");
         action.type = "button";
-        action.className = "spot-details-route-link";
+        action.className = "spot-nearby-link";
         action.textContent = getSpotName(neighbor);
         action.addEventListener("click", () => openRelatedSpot(neighbor));
         section.append(action);
+      }
+      spotDetailEl.append(section);
+    }
+    if (getSpotId(spot) === "platz_am_schachspiel_stroebeck") {
+      const section = document.createElement("div");
+      section.className = "spot-nearby";
+      const heading = document.createElement("strong");
+      heading.textContent = { de: "In der Nähe entdecken", en: "Discover nearby", da: "Oplev i nærheden" }[currentLang];
+      section.append(heading);
+      for (const stop of Object.values(schachplatzNearbyStops)) {
+        const link = document.createElement("a");
+        link.className = "spot-nearby-link schachplatz-nearby-link";
+        link.href = stop.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        const text = document.createElement("span");
+        const title = document.createElement("span");
+        title.textContent = stop.title;
+        const reason = document.createElement("small");
+        reason.textContent = stop.text[currentLang] || stop.text.de;
+        reason.className = "schachplatz-nearby-reason";
+        text.append(title, reason);
+        link.append(text);
+        section.append(link);
       }
       spotDetailEl.append(section);
     }
@@ -621,6 +687,11 @@ export function createSpotDetailsController({
       spotDetailEl.appendChild(detailBadgesContainer);
     }
 
+    const arrival = document.createElement("section");
+    arrival.className = "spot-arrival";
+    const arrivalTitle = document.createElement("h3");
+    arrivalTitle.textContent = { de: "Anreise", en: "Getting there", da: "Sådan kommer I frem" }[currentLang];
+    arrival.append(arrivalTitle);
     const routeUrls = getRouteUrlsForSpotFromUserLocation(spot);
 
     if (routeUrls) {
@@ -644,25 +715,11 @@ export function createSpotDetailsController({
       routesEl.appendChild(appleLink);
       routesEl.appendChild(googleLink);
 
-      spotDetailEl.appendChild(routesEl);
+      arrival.append(routesEl);
     }
 
-    appendParkingInformation(spotDetailEl, spot);
-
-    if (tags.length) {
-      const tagsEl = document.createElement("div");
-      tagsEl.className = "spot-details-tags";
-
-      tags.forEach((tag) => {
-        const span = document.createElement("span");
-        span.className = "badge badge--soft";
-        span.textContent = tag;
-
-        tagsEl.appendChild(span);
-      });
-
-      spotDetailEl.appendChild(tagsEl);
-    }
+    appendParkingInformation(arrival, spot);
+    spotDetailEl.append(arrival);
 
     if (typeof spotDetailEl.scrollTop === "number") {
       spotDetailEl.scrollTop = !focus && sameSpot ? previousScroll : 0;
@@ -722,8 +779,8 @@ export function createSpotDetailsController({
       if (!scores) {
         scores = document.createElement("div");
         scores.className = "spot-details-scores";
-        const routes = spotDetailEl.querySelector(".spot-details-routes");
-        if (routes) routes.before(scores);
+        const arrival = spotDetailEl.querySelector(".spot-arrival");
+        if (arrival) arrival.before(scores);
         else spotDetailEl.appendChild(scores);
       }
       element = document.createElement("span");

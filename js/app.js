@@ -1,3 +1,4 @@
+import { initCycleTours } from "./ui/cycle-tours.js";
 // js/app.js
 // ======================================================
 // Family Spots Map – Hauptlogik
@@ -23,13 +24,13 @@ document.addEventListener("keydown", event => {
 
 import { evaluateSelection, selectShortcut, shortcutIsSelected, shortcutLabel } from "./filter-model.js";
 import { createMapToolIcon } from "./ui/map-toolbar.js";
-import { createHomeNavigation } from "./ui/home-navigation.js?v=20261106-treffen-feinschliff";
-import { initCommunityPlay } from "./features/community-play.js?v=20261106-treffen-feinschliff";
+import { createHomeNavigation } from "./ui/home-navigation.js?v=20261107-menue-zoom-33";
+import { initCommunityPlay } from "./features/community-play.js?v=20261107-menue-zoom-33";
 import { describeFilters } from "./ui/filter-summary.js";
 import { resultsCopy } from "./ui/filter-results.js";
 import { categoryIcon } from "./ui/category-icons.js";
-import { createCategoryExplorer } from "./ui/category-explorer.js";
-import { hasCategorySelection, isExpiredEvent, FACETS, labelOf, facetValue, hasReviewedCategoryProfile, placeTypeLabels } from "./categories.js";
+import { createCategoryExplorer } from "./ui/category-explorer.js?v=20261107-menue-zoom-33";
+import { hasCategorySelection, isExpiredEvent, FACETS, labelOf, facetValue, placeTypeLabels } from "./categories.js";
 
 import { initFilterSelects } from "./ui/filter-select.js";
 
@@ -41,16 +42,16 @@ import { initPersonalBackup } from "./features/personal-backup.js";
 
 import { readDaylogDrafts, writeDaylogDrafts } from "./features/daylog-drafts.js";
 
-import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261105-storage-v928";
+import { readFavorites, readDaylogEntries, changeFavorite, changeDaylog } from "./features/personal-storage.js?v=20261107-menue-zoom-33";
 
-import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261010-unified-4";
+import { createHeartIcon, createCrownIcon, setTextWithHearts } from "./utils/dom.js?v=20261107-menue-zoom-33";
 
-import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261010-unified-4";
-import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261010-unified-4";
+import { I18N, getCurrentPlayIdea } from "./i18n.js?v=20261107-menue-zoom-33";
+import { getSpotDisplayTags, getSpotTags } from "./filters/tags.js?v=20261107-menue-zoom-33";
 
 import { createModalController } from "./ui/modal.js";
-import { createSpotDetailsController } from "./ui/spot-details.js";
-import { initMenu } from "./ui/menu.js?v=20261010-unified-4";
+import { createSpotDetailsController, createSpotTypeChips, getSpotHighlights } from "./ui/spot-details.js?v=20261107-menue-zoom-33";
+import { initMenu } from "./ui/menu.js?v=20261107-menue-zoom-33";
 import { initLanguageSwitcher } from "./ui/language.js";
 import { initSkipToSpots } from "./ui/skip-to-spots.js";
 
@@ -84,25 +85,25 @@ import {
   getSpotName,
   getSpotSubtitle,
   getSpotId
-} from "./filters.js?v=20261010-unified-4";
+} from "./filters.js?v=20261107-menue-zoom-33";
 
 import {
   initMap,
   updateMapStatusLanguage,
   renderMarkers,
   hasValidLatLng
-} from "./map.js?v=20261106-treffen-feinschliff";
+} from "./map.js?v=20261107-menue-zoom-33";
 
-import { initRouter } from "./router.js?v=20261010-unified-4";
+import { initRouter } from "./router.js?v=20261107-menue-zoom-33";
 import { initToast, showToast } from "./toast.js";
-import { loadData } from "./data.js?v=20261010-unified-4";
+import { loadData } from "./data.js?v=20261107-menue-zoom-33";
 
 import {
   getPlusStatus,
   formatPlusStatus,
   redeemPartnerCode,
   isPlusCategory
-} from "./features/plus.js?v=20261010-unified-4";
+} from "./features/plus.js?v=20261107-menue-zoom-33";
 
 // ------------------------------------------------------
 // Debug
@@ -127,6 +128,18 @@ initCommunityPlay({ getLanguage: () => currentLang, closeMenu });
 
 initLanguageSwitcher();
 initSkipToSpots(closeMenu);
+initCycleTours({
+  getLanguage: () => currentLang,
+  closeMenu,
+  openStop: closeTours => {
+    const stop = spots.find(spot => getSpotId(spot) === "platz_am_schachspiel_stroebeck");
+    if (!stop) return false;
+    closeTours();
+    appRouter?.switchRoute("map");
+    focusSpotOnMap(stop);
+    return true;
+  },
+});
 
 // ------------------------------------------------------
 // Typdefinitionen
@@ -284,6 +297,9 @@ let markersLayer = null;
 
 /** @type {Spot[]} */
 let spots = [];
+let spotAliases = new Map();
+const canonicalSpotId = id => spotAliases.get(id) ?? id;
+const canonicalFavorites = ids => new Set([...ids].map(canonicalSpotId));
 
 /** @type {Spot[]} */
 let filteredSpots = [];
@@ -666,7 +682,7 @@ const spotDetails = createSpotDetailsController({
   getElement: () => spotDetailEl,
   getListElement: () => spotListEl,
   getLastTrigger: () => lastSpotTriggerEl,
-  getRelatedSpot: id => spots.find(spot => getSpotId(spot) === id),
+  getRelatedSpot: id => spots.find(spot => getSpotId(spot) === canonicalSpotId(id)),
   openRelatedSpot: spot => showSpotDetails(spot, { focus: true }),
   getLanguage: () => currentLang,
   getSpotId,
@@ -1250,7 +1266,7 @@ function updateRadiusTexts() {
 
     filterRadiusDescriptionEl.textContent = t(
       "filter_radius_description_all",
-      "Alle Spots – ohne Radiusbegrenzung."
+      "Ohne Entfernungsgrenze."
     );
   } else {
     const km = RADIUS_STEPS_KM[radiusStep];
@@ -1449,17 +1465,17 @@ function getMoodLabel(moodKey) {
   if (currentLang === LANG_EN) {
     if (moodKey === "relaxed") return "Relaxed";
     if (moodKey === "action") return "Active";
-    if (moodKey === "water") return "Water & sand";
+    if (moodKey === "water") return "Swimming & water play";
     if (moodKey === "animals") return "Animal day";
   } else if (currentLang === LANG_DA) {
     if (moodKey === "relaxed") return "Afslappet";
     if (moodKey === "action") return "Aktiv";
-    if (moodKey === "water") return "Vand & sand";
+    if (moodKey === "water") return "Badning og vandleg";
     if (moodKey === "animals") return "Dyredag";
   } else {
     if (moodKey === "relaxed") return "Entspannt";
     if (moodKey === "action") return "Bewegung";
-    if (moodKey === "water") return "Wasser & Sand";
+    if (moodKey === "water") return "Baden & Wasserspiel";
     if (moodKey === "animals") return "Tier-Tag";
   }
 
@@ -1707,7 +1723,7 @@ function openFavoritesFromMenu() {
 async function loadFavoritesFromStorage() {
   if (!FEATURES.favorites) return;
   const generation = ++favoriteReadGeneration;
-  try { const next = await readFavorites(); if (generation === favoriteReadGeneration) { favorites = next; syncFavoritesShortcut(); } }
+  try { const next = await readFavorites(); if (generation === favoriteReadGeneration) { favorites = canonicalFavorites(next); syncFavoritesShortcut(); } }
   catch (error) { warn("[Family Spots] Favorites unavailable:", error); }
 }
 
@@ -1746,7 +1762,7 @@ async function toggleFavorite(spot) {
   const wasFavorite = favorites.has(spotId);
   favoritePendingIds.add(spotId);
   document.querySelectorAll("button.fsm-favorite").forEach(button => { if (button.dataset.favoriteSpotId === spotId) button.setAttribute("aria-busy", "true"); });
-  try { favorites = await changeFavorite(spotId, !wasFavorite); ++favoriteReadGeneration; syncFavoritesShortcut(); }
+  try { favorites = await changeFavorite(spotId, !wasFavorite, canonicalFavorites); ++favoriteReadGeneration; syncFavoritesShortcut(); }
   catch (error) {
     warn("[Family Spots] Favorite save failed:", error);
     showToast(locationText("Favorit konnte nicht gespeichert werden.", "Could not save this favourite.", "Favoritten kunne ikke gemmes."));
@@ -2012,7 +2028,7 @@ async function refreshPersonalData({ daylog = false, favorite = false } = {}) {
     try {
       const next = await readFavorites();
       if (generation === favoriteReadGeneration) {
-        favorites = next;
+        favorites = canonicalFavorites(next);
         syncFavoritesShortcut();
         if (onlyFavorites) applyFiltersAndRender();
         document.querySelectorAll("button.fsm-favorite").forEach(button => syncFavButtonState(button, button.dataset.favoriteSpotId));
@@ -2554,7 +2570,19 @@ async function loadSpots() {
       ? result.spots
       : [];
 
-    spots = rawSpots.map(normalizeSpot);
+    const normalized = rawSpots.map(normalizeSpot);
+    const byId = new Map(normalized.map(spot => [getSpotId(spot), spot]));
+    spotAliases = new Map();
+    for (const spot of normalized) {
+      const target = byId.get(spot.same_place_as);
+      if (!target || target === spot || target.same_place_as) continue;
+      spotAliases.set(getSpotId(spot), getSpotId(target));
+      delete target._searchText;
+      target.search_aliases = [...new Set([
+        ...(target.search_aliases || []), spot.title, spot.title_de, spot.title_en, spot.title_da
+      ].filter(Boolean))];
+    }
+    spots = normalized.filter(spot => !spotAliases.has(getSpotId(spot)));
     syncAgeFilterAvailability();
     spotsLoadState = "ready";
     spotsLoadHasFailed = false;
@@ -2806,18 +2834,20 @@ function getSpotAgeLabel(spot) {
 }
 
 function getSpotVisitTimeLabel(spot) {
+  const onSite = currentLang === LANG_EN ? "on site" : currentLang === LANG_DA ? "på stedet" : "vor Ort";
+  const approx = currentLang === LANG_EN ? "About" : "Ca.";
   const range = spot.visit_range_minutes;
   if (Array.isArray(range) && range.length === 2 && range.every(value => Number.isFinite(value) && value > 0) && range[1] >= range[0]) {
-    return `${range[0]}–${range[1]} ${currentLang === LANG_DE ? "Min." : "min"}`;
+    return `${range[0]}–${range[1]} ${currentLang === LANG_DE ? "Min." : "min"} ${onSite}`;
   }
   const minutes = spot.visit_minutes;
 
-  if (!minutes || !Number.isFinite(minutes)) return "";
+  if (!Number.isFinite(minutes) || minutes <= 0) return "";
 
   if (minutes < 60) {
     return currentLang === LANG_DE
-      ? `~${minutes} Min.`
-      : `~${minutes} min`;
+      ? `${approx} ${minutes} Min. ${onSite}`
+      : `${approx} ${minutes} min ${onSite}`;
   }
 
   const hours = minutes / 60;
@@ -2834,10 +2864,10 @@ function getSpotVisitTimeLabel(spot) {
 
   const hoursLabel = formatter.format(rounded);
 
-  if (currentLang === LANG_EN) return `~${hoursLabel} h`;
-  if (currentLang === LANG_DA) return `~${hoursLabel} t`;
+  if (currentLang === LANG_EN) return `${approx} ${hoursLabel} h ${onSite}`;
+  if (currentLang === LANG_DA) return `${approx} ${hoursLabel} t ${onSite}`;
 
-  return `~${hoursLabel} Std.`;
+  return `${approx} ${hoursLabel} Std. ${onSite}`;
 }
 
 function getSpotDistanceKm(spot) {
@@ -2880,13 +2910,12 @@ function formatKmBadgeLabel(km) {
   return `≈ ${formatter.format(km)} km · ${locationText("Luftlinie", "straight-line", "fugleflugtslinje")}`;
 }
 
-function getSpotMetaParts(spot) {
+function getSpotMetaParts(spot, { includeCategory = true } = {}) {
   const parts = [];
 
-  if (hasReviewedCategoryProfile(spot)) {
-    parts.push(placeTypeLabels(spot, currentLang).join(" · "));
-  } else if (spot.category) {
-    parts.push(getCategoryLabel(spot.category));
+  if (includeCategory) {
+    const categoryLabels = placeTypeLabels(spot, currentLang);
+    if (categoryLabels.length) parts.push(categoryLabels.join(" · "));
   }
 
   if (spot.city) {
@@ -3083,7 +3112,10 @@ function syncResultsControls() {
   }
   filterModalCloseEl?.setAttribute("aria-label", locationText("Filter schließen", "Close filters", "Luk filtre"));
   const status = document.getElementById("filter-results-status");
-  if (status && status.textContent !== copy.summary) status.textContent = copy.summary;
+  if (status) {
+    status.classList.toggle("sr-only", spotsLoadState !== "error");
+    if (status.textContent !== copy.summary) status.textContent = copy.summary;
+  }
   const context = document.getElementById("spot-results-context");
   if (context) {
     context.hidden = spotListEl?.hidden !== false;
@@ -3368,13 +3400,11 @@ function renderSpotListContent() {
       card.appendChild(subtitleEl);
     }
 
-    const metaParts = getSpotMetaParts(spot).filter(part => part !== spot.city);
-
-    if (metaParts.length) {
-      const metaEl = document.createElement("p");
-      metaEl.className = "spot-card-meta";
-      metaEl.textContent = metaParts.join(" · ");
-
+    const typeChips = createSpotTypeChips(spot, currentLang);
+    if (typeChips.length) {
+      const metaEl = document.createElement("div");
+      metaEl.className = "spot-card-meta spot-card-types";
+      metaEl.append(...typeChips);
       card.appendChild(metaEl);
     }
 
@@ -3382,7 +3412,15 @@ function renderSpotListContent() {
     if (description) {
       const excerpt = document.createElement("p");
       excerpt.className = "spot-card-description";
-      excerpt.textContent = description.length > 180 ? description.slice(0,177).trimEnd() + "…" : description;
+      const sentences = typeof Intl.Segmenter === "function"
+        ? [...new Intl.Segmenter(currentLang, { granularity: "sentence" }).segment(description)]
+        : [];
+      const completeExcerpt = sentences.filter(({ index, segment }) => index + segment.length <= 180)
+        .map(({ segment }) => segment).join("").trim();
+      const wordExcerpt = description.slice(0, 179).replace(/\s+\S*$/u, "");
+      excerpt.textContent = description.length <= 180
+        ? description
+        : completeExcerpt || (wordExcerpt === description.slice(0, 179) ? description : wordExcerpt + "…");
       card.appendChild(excerpt);
     }
     const requirements = [...(categoryExplorer?.state.facets || [])];
@@ -3419,20 +3457,22 @@ function renderSpotListContent() {
       badgesRow.appendChild(badgeEl);
     });
 
-    const displayTags = getSpotDisplayTags(spot);
+    if (badgesRow.children.length) card.appendChild(badgesRow);
+
+    const displayTags = getSpotHighlights(spot, currentLang, getSpotDisplayTags(spot));
     if (displayTags.length) {
+      const highlightsRow = document.createElement("div");
+      highlightsRow.className = "spot-card-badges spot-card-highlights";
       displayTags.slice(0,3).forEach((tag) => {
         const tagEl = document.createElement("span");
         tagEl.className = "badge badge--soft";
         tagEl.textContent = tag;
 
-        badgesRow.appendChild(tagEl);
+        highlightsRow.appendChild(tagEl);
       });
+      card.appendChild(highlightsRow);
     }
 
-    if (badgesRow.children.length) {
-      card.appendChild(badgesRow);
-    }
 
     const open = () => {
       lastSpotTriggerEl = openButton;
