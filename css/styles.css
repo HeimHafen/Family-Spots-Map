@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261107-menue-themen-33");
+@import url("./categories.css?v=20261107-menue-zoom-33");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -23,7 +23,7 @@
 /* Abendpalette: ausschließlich der gespeicherte Dark-Modus. */
 
 
-@import url("./map-spots.css?v=20261107-menue-themen-33");
+@import url("./map-spots.css?v=20261107-menue-zoom-33");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
