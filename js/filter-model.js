@@ -3,7 +3,7 @@ import { WORLDS, PLACE_TYPES, FACETS, getPlaceTypes, getWorlds, matchesCategoryP
 export const SHORTCUTS = {
  relaxed: {world:'nature', types:[]}, action:{world:'play', types:[]},
  animals:{world:'animals', types:[]},
- water:{world:'', types:['water-playground','pool','lake','beach']}
+ water:{world:'water', types:[]}
 };
 export function selectShortcut(state, id) {
  const preset=SHORTCUTS[id];if(!preset)return;
@@ -38,11 +38,9 @@ export function evaluateSelection(spots, state={}, now=Date.now()) {
 }
 
 // Shared names avoid a shortcut saying one thing and its selection summary another.
-const WATER_LABEL = { de: 'Baden & Wasserspiel', en: 'Swimming & water play', da: 'Badning og vandleg' };
 export function shortcutLabel(id, lang='de') {
  const preset=SHORTCUTS[id];
  if(!preset)return '';
- if(id==='water')return WATER_LABEL[lang] || WATER_LABEL.de;
  const item=WORLDS.find(world=>world.id===preset.world);
  return item?.label?.[lang] || item?.label?.de || '';
 }

@@ -9732,9 +9732,18 @@
     "visit_label_en": "Allow about an hour and a half, at a pace that suits your family.",
     "visit_label_da": "Regn med cirka halvanden time i et tempo, der passer til familien.",
     "address": null,
-    "source_urls": [],
-    "source_checked_at": null,
-    "content_verification": "user_provided_unconfirmed",
+    "source_urls": [
+      "https://www.naturzentrum-eifel.de/aktiv-draussen/spielplaetze.html"
+    ],
+    "source_checked_at": "2026-11-08",
+    "content_verification": "public_web_sources_identity_only_partial",
+    "source_labels": {
+      "https://www.naturzentrum-eifel.de/aktiv-draussen/spielplaetze.html": {
+        "de": "Naturzentrum Eifel: Spielplatz am Naturzentrum",
+        "en": "Nature centre: nearby playground",
+        "da": "Naturcenter: legeplads ved centret"
+      }
+    },
     "title_de": "Spielplatz Urftstraße",
     "title_en": "Playground Urftstraße",
     "title_da": "Legeplads Urftstraße",
@@ -11601,9 +11610,24 @@
     "visit_label_en": "Allow about an hour and a half, at a pace that suits your family.",
     "visit_label_da": "Regn med cirka halvanden time i et tempo, der passer til familien.",
     "address": null,
-    "source_urls": [],
-    "source_checked_at": null,
-    "content_verification": "user_provided_unconfirmed",
+    "source_urls": [
+      "https://www.kaenguru-online.de/themen/ausflug/spielplaetze-fuer-jedes-wetter",
+      "https://spielplatznet.de/spielplatz/9377/K%C3%B6ln/Ritterspielplatz"
+    ],
+    "source_checked_at": "2026-11-08",
+    "content_verification": "public_web_sources_identity_only_partial",
+    "source_labels": {
+      "https://www.kaenguru-online.de/themen/ausflug/spielplaetze-fuer-jedes-wetter": {
+        "de": "KÄNGURU: Ritterspielplatz Dünnwald",
+        "en": "KÄNGURU: Dünnwald knights playground",
+        "da": "KÄNGURU: Ridderlegepladsen i Dünnwald"
+      },
+      "https://spielplatznet.de/spielplatz/9377/K%C3%B6ln/Ritterspielplatz": {
+        "de": "Spielplatz-Eintrag Ritterspielplatz",
+        "en": "Knights playground listing",
+        "da": "Oplysninger om ridderlegepladsen"
+      }
+    },
     "title_de": "Ritterspielplatz Dünnwald",
     "title_en": "Dünnwald Knights Playground",
     "title_da": "Ridderlegepladsen i Dünnwald",
@@ -13199,9 +13223,24 @@
     "visit_label_en": "Allow about an hour and a half, at a pace that suits your family.",
     "visit_label_da": "Regn med cirka halvanden time i et tempo, der passer til familien.",
     "address": null,
-    "source_urls": [],
-    "source_checked_at": null,
-    "content_verification": "user_provided_unconfirmed",
+    "source_urls": [
+      "https://bauer-lipp.de/",
+      "https://spielplatznet.de/spielplatz/18565/Weiterstadt/Bauer%20Lipp"
+    ],
+    "source_checked_at": "2026-11-08",
+    "content_verification": "public_web_sources_identity_only_partial",
+    "source_labels": {
+      "https://bauer-lipp.de/": {
+        "de": "Bauer Lipp – Betreiber",
+        "en": "Bauer Lipp – operator",
+        "da": "Bauer Lipp – arrangør"
+      },
+      "https://spielplatznet.de/spielplatz/18565/Weiterstadt/Bauer%20Lipp": {
+        "de": "Spielplatz-Eintrag Bauer Lipp",
+        "en": "Bauer Lipp playground listing",
+        "da": "Legepladsoplysninger Bauer Lipp"
+      }
+    },
     "title_de": "Bauer Lipp Spielplatz",
     "title_en": "Bauer Lipp Playground",
     "title_da": "Bauer Lipp Legeplads",
@@ -17632,9 +17671,24 @@
     "visit_label_en": "Allow about an hour and a half, at a pace that suits your family.",
     "visit_label_da": "Regn med cirka halvanden time i et tempo, der passer til familien.",
     "address": null,
-    "source_urls": [],
-    "source_checked_at": null,
-    "content_verification": "user_provided_unconfirmed",
+    "source_urls": [
+      "https://www.zentrum-bergedorf.de/projekte/neugestaltung-spielplatz-moellers-kamp/",
+      "https://www.hamburg.de/politik-und-verwaltung/bezirke/bergedorf/aktuelles/pressemitteilungen/sanierungsarbeiten-rathauspark-957718"
+    ],
+    "source_checked_at": "2026-11-08",
+    "content_verification": "public_web_sources_identity_only_partial",
+    "source_labels": {
+      "https://www.zentrum-bergedorf.de/projekte/neugestaltung-spielplatz-moellers-kamp/": {
+        "de": "Spielplatz Möllers Kamp: Umgestaltung",
+        "en": "Möllers Kamp playground redevelopment",
+        "da": "Omlægning af legepladsen Möllers Kamp"
+      },
+      "https://www.hamburg.de/politik-und-verwaltung/bezirke/bergedorf/aktuelles/pressemitteilungen/sanierungsarbeiten-rathauspark-957718": {
+        "de": "Rathauspark: Hinweis zur Sanierung (2024)",
+        "en": "Town hall park: 2024 construction notice",
+        "da": "Rådhusparken: byggeinfo fra 2024"
+      }
+    },
     "title_de": "Spielplatz Rathaus Bergedorf",
     "title_en": "Bergedorf Town Hall Playground",
     "title_da": "Legepladsen ved Bergedorf rådhus",
