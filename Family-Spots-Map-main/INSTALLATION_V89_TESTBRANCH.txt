@@ -1,0 +1,97 @@
+FAMILY SPOTS MAP · V89 DESIGN-VISION – TESTBRANCH-PAKET
+Erstellt am 03.11.2026
+
+STATUS
+Dies ist ein vollständiges AUSTAUSCHPAKET GEÄNDERTER DATEIEN auf Basis der
+V88.6-Testprojekt-Dateien, auf denen V88.6.1 (Schließen-X-Fix) eingespielt wurde.
+KEIN direkter GitHub-Push; der Live-Stand des Remote-Testbranches wurde nicht
+abgerufen und die Oberfläche nicht auf einem echten iPhone Ende-zu-Ende getestet.
+Die Mockups sind gestalterische Referenzen, keine gemessenen Browser-Screens.
+Eine pixelgenaue 1:1-Gleichheit kann daher nicht bestätigt werden.
+
+BRANCH – BITTE UNBEDINGT PRÜFEN
+Repository: HeimHafen/Family-Spots-Map
+Arbeitsbranch: test/gemeinsam-v88-finish
+Quell-Referenz Working Copy: refs/heads/test/gemeinsam-v88-finish
+Push-Remote-Referenz: refs/heads/test/gemeinsam-v88-finish
+Force Push: AUS
+main: NICHT ANRÜHREN
+
+VORAUSSETZUNG
+Der Testbranch sollte die V88.6.1-Basis enthalten. Bei abweichendem
+Arbeitsstand die Änderungen VORHER in einem separaten Backup-Branch sichern
+und Dateien vergleichen. Keinesfalls vorhandene neuere Änderungen blind
+überschreiben. Auf unverändertem main dieses Paket NICHT installieren.
+
+AUF DEM IPHONE MIT WORKING COPY
+1. Repository öffnen und den AKTIVEN BRANCH auf test/gemeinsam-v88-finish stellen.
+2. Branch sichern (zusätzlichen Backup-Branch/Commit erstellen).
+3. Die Datei Family_Spots_Map_V89_Testbranch_Austauschdateien.zip entpacken.
+4. Dateien samt Unterordnern in das Repo an die bestehenden Pfade kopieren,
+   dabei nur die gleichnamigen Zieldateien ersetzen und neue Assets ergänzen.
+5. Working Copy: die geänderten Dateien prüfen, einen Commit erstellen.
+6. Commit-Nachricht: V89 TEST – Familien-Design, sechs Tabs und Tilla-Wellenkopf
+7. Push SOURCE: refs/heads/test/gemeinsam-v88-finish
+   Push TARGET: refs/heads/test/gemeinsam-v88-finish
+   FORCE PUSH: AUS
+8. Testseite nach erfolgreichem Cloudflare-Deployment öffnen:
+   https://familyspotsmapv88test.pages.dev/
+   Im Zweifel die tatsächlich dem Branch zugeordnete Pages-Deployment-URL nutzen.
+9. Hell-/Dunkelmodus, Karte und Pins, Spots, Filter, Suchfelder, Radius,
+   Favoriten, Tagebuch, Foto-Anhänge, private Kalenderdaten, Plus,
+   Treffen-Vorschau, Vollbild, DE/EN/DA und Offline-Nutzung prüfen.
+10. WICHTIG: NICHT einfach Safari-Website-Daten löschen; dort können private
+    lokale Erinnerungen gespeichert sein. Bei Problemen zum Sicherungs-Commit
+    zurückgehen und nicht auf main übernehmen.
+
+WAS WIRKLICH NEU IST
+- Ein einheitliches warmes Design über vorhandene Karte, Spot-/Filter-/Plus-
+  Dialoge, Tagebuch und die sichere Community-Vorschau.
+- Neues Landschaftsbild und sanfter Wellenausschnitt aus der abgestimmten Vorlage.
+- Echtes Hand-Herz-Symbol aus der vom Nutzer bestätigten Referenz IMG_0633.
+- 6 echte Navigationseinträge: Karte, Filter, Spots, Spots Plus,
+  Treffen & Spielen, Mein Tag. Navigation im Originaldialog sichtbar.
+- Neue visuelle Bereiche für Mein Tag (Heute/Geplant/Erlebt/Favoriten).
+  Verlinkung zur bestehenden privaten Tagebuch-/Kalenderlogik.
+- Treffen & Spielen bleibt eine sichere KONZEPTVORSCHAU: Es wurden keine
+  öffentlich nutzbaren Treffen, Teilnehmerzahlen, Profile oder Chats erfunden.
+- Bestehende Spotdaten, DE/EN/DA, PWA/Offline-Architektur und persönliche
+  Datenspeicher bleiben bestehen.
+- Spots Plus bekommt eine Designvorschau, KEINE erfundene aktive Zahlung.
+
+BEKANNTE GRENZEN
+Die Bilder sind KI-Mockups. Bereits vorhandene reale Inhalte werden nicht durch
+frei erfundene Ausflugsziele ersetzt. Abstände, Schriftmetriken, Karten-/Pin-
+Positionen und iOS-Safari-Browser-Chrome können im echten Browser abweichen.
+Keine reale Mehrfamilien-Backend-Buchung, kein Live-Posting und kein bewerteter
+Datenschutz- oder Sicherheits-Audit. Ein echter iPhone-Livetest bleibt notwendig.
+
+GETESTET (LOKAL, OHNE LIVE-BROWSER)
+node tools/check-project.mjs          – OK: 164 Spots, 234 i18n-Keys je
+                                        Sprache, 129 Offline-Assets,
+                                        2458 Filter-Assertions
+node tools/check-gemeinsam-rc.mjs     – OK: 0 Fehler
+node tools/check-v88-finish.mjs       – OK: 0 Fehler
+node tools/check-v89-vision.mjs       – OK: 0 Fehler
+node --check (betroffene JS-Dateien) – OK
+
+GEÄNDERTE PROJEKTDATEIEN IM ZIP (15)
+assets/ui/fsm-v89-vision-hills.webp
+assets/ui/fsm-v89-approved-heart-mask.png
+css/fsm-v89-vision.css
+css/styles.css
+js/features/fsm-v89-vision.js
+js/ui/home-navigation.js
+js/ui/map-toolbar.js
+js/app.js
+js/map.js
+index.html
+en/index.html
+da/index.html
+service-worker.js
+tools/check-gemeinsam-rc.mjs
+tools/check-v89-vision.mjs
+
+Die Versionsänderungen an app.js, map.js, HTML und service-worker.js dienen
+auch der synchronisierten Offline-Invalidierung.
+Das Paket enthält keine Schriften und keine privaten Nutzerdaten.

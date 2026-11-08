@@ -1,0 +1,15 @@
+Family Spots Map - koordinierte Austauschkopien
+Version: 20261108-qualitaet-plus-2 (TEST, nicht Live)
+
+Alle *.txt Dateien in diesem Ordner sind Textkopien der gleichnamigen aktiven
+Quelldatei aus dem Testrelease. Bei Austausch in Working Copy jeweils das
+abschliessende .txt entfernen, aber Pfad und Dateiname beibehalten.
+
+Vor jedem Austausch: Original-ZIP/Branch sichern. Nie eine isolierte Datei
+aus einem älteren Testpaket in dieses Release kopieren. Alle Änderungen
+einschliesslich service-worker.js und Daten-Dateien gemeinsam übertragen.
+
+Kein Force Push. Quellbranch main unverändert lassen. Zuerst den
+Testbranch refs/heads/test/gemeinsam-v88-finish verwenden.
+
+Vollständige Dateiliste/Abweichungen: separat im Releasebericht.

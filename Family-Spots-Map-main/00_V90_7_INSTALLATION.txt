@@ -1,0 +1,58 @@
+FAMILY SPOTS MAP – V90.7 · FINALER DESIGNABGLEICH (TESTPAKET)
+=================================================================
+
+BASIS: V90.6 auf dem vorgesehenen TESTBRANCH. NICHT direkt auf main.
+Diese ZIP enthaelt nur die 5 Projektdateien, die auf V90.6 geaendert bzw.
+neu eingefuegt werden. Sie ist KEIN vollstaendiges Repository.
+
+VOR DEM AUSTAUSCH
+1. In Working Copy den aktuellen Stand sichern und einen Testbranch
+   von deiner funktionierenden V90.6-Version erstellen.
+2. Pruefen, dass deine Ausgangsversion V90.6 ist. Andernfalls zuerst
+   mit V90.6 vergleichen – nicht blind ueberschreiben!
+
+DATEIEN AN DENSELBEN PFADEN EINFUEGEN/ERSETZEN
+- css/fsm-header-final-v907.css   (NEU)
+- index.html                     (ERSETZEN)
+- en/index.html                  (ERSETZEN)
+- da/index.html                  (ERSETZEN)
+- service-worker.js              (ERSETZEN)
+
+Was sich aendert:
+- Heller mobiler Karten-Kopfbereich: Titel/Flaggen und kompletter
+  dreizeiliger Leitsatz, ohne Herz oder Zierstriche
+- V90.3-Landschaft und Tilla-Grafik beibehalten; sanftere Farbabstimmung
+- Tilla-Bereich etwas kompakter, Button 48 px hoch mit weissem Play-Pfeil
+- Gleichbleibende Karte und fuenfteilige Navigation
+- Die bisherigen V90.3/V90.5-Styles werden NICHT erneut eingebunden.
+
+Nicht geaendert:
+- js/*, Spotdaten, i18n, Kartenlogik, Filter, Favoriten, Mein Tag,
+  Community-Menue, PWA-Logik und Darkmode
+- Safari-Toolbar (wird vom Browser selbst gesteuert, nicht von der App)
+
+TESTEN
+1. Auf separaten Branch committen und pushen (kein Force Push).
+2. Cloudflare Preview des neuen Commits oeffnen.
+3. In Safari auf iPhone pruefen, besonders den korrekten Leitsatz,
+   Tilla-Text, Play-Button, Navigation, Karte und Darkmode.
+4. Erst nach Freigabe den Teststand kontrolliert in main uebernehmen.
+
+Commit-Zusammenfassung:
+V90.7 – Finaler Referenzabgleich von Kopfbereich und Spielideen-Button
+
+Detaillierte Informationen:
+Hellen mobilen Kartenstart an die freigegebene Vorlage angepasst.
+Dreizeiliger Leitsatz, weichere Landschaft, kompakter Tilla-Bereich
+und 48-px-Button mit weissem Play-Symbol. Die V90.6-Kopf-CSS wurde
+durch eine konsolidierte V90.7-CSS ersetzt. Keine Aenderung an
+Karte, Spots, Navigation oder Anwendungslogik. Cache aktualisiert.
+
+Vorhandene oder neue Remote-Referenz:
+refs/heads/test/main-premium-v907
+Source-Branch: neuer lokaler Testbranch aus V90.6.
+Force Push: AUS
+
+HINWEIS: Eine KI-Bildvorlage ist kein echter Safari-Screenshot.
+Die Optik wird CSS-basiert angenaehert; Safari-Browserleisten, reale
+Spot-Cluster und dynamische Texte sind nicht pixelgenau kontrollierbar.

@@ -1,0 +1,19 @@
+Family Spots Map V90.23 TEST
+Basis: V90.22. Sichere den aktuellen Teststand vor dem Austausch.
+Alle Austauschdateien im ZIP mit ihren Originalpfaden übernehmen.
+
+Diese zwei alten Dateien in Working Copy zusätzlich löschen:
+js/theme.js
+css/evening.css
+
+Zusammenfassung
+V90.23 TEST – Dark Mode entfernen und Kartenübergang glätten
+
+Detaillierte Informationen
+DE, EN und DA starten immer im bisherigen hellen Design. Designumschalter,
+Systemerkennung, Speicherung und dunkle Stilregeln sind entfernt. Auch die
+Offline-Seite ist hell. Die Schattenkante am Tilla-Bereich wurde entfernt.
+
+Vorhandene oder neue Remote-Referenz
+refs/heads/test/main31-layout-v918
+Source-Branch unverändert. Force Push aus.

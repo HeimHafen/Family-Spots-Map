@@ -215,29 +215,3 @@
 @media (prefers-reduced-motion: reduce) {
   #fse-overlay .fse-shell { animation: none; }
 }
-
-
-/* FSM Kalender-Feinschliff · 08.11.2026
-   Das Ereignis-Symbol nutzt das originale, gefüllte App-Herz.
-   Orange Aktionsflächen führen Text und Symbole konsequent in Schwarz. */
-#fse-overlay .fse-event-symbol--brand {
-  background: #eef0d7;
-  color: #7fa825;
-}
-#fse-overlay .fse-event-heart {
-  display: block;
-  width: 31px;
-  height: 31px;
-  fill: #7fa825;
-  stroke: #36551c;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-#fse-overlay :is(.fse-cta, .fse-save, .fse-pill--primary) {
-  color: #000 !important;
-}
-#fse-overlay :is(.fse-cta, .fse-save, .fse-pill--primary) svg {
-  color: #000 !important;
-  stroke: #000;
-}

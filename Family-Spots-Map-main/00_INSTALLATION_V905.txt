@@ -1,0 +1,46 @@
+Family Spots Map – V90.5 | GEZIELTER ABGLEICH MIT DER LETZTEN BILDVORLAGE
+
+VORAUSSETZUNG: V90.4 ist bereits installiert. Dieses Paket ist KEINE
+komplette App, sondern die exakten Differenzdateien fuer V90.4 -> V90.5.
+
+AENDERUNGEN (nur mobiler HELLER Karten-Startbildschirm):
+1. Titel "Family Spots Map" bleibt mittig, mit beiden Flaggen; harmonischere
+   Groesse und Abstaende zum dreizeiligen Leitsatz.
+2. Vollstaendiger Leitsatz bleibt erhalten, ohne Herz und Zierstriche.
+3. Landschaft beginnt weich ohne harte Kante; vorhandene V90.3-Landschaft
+   und Tilla bleiben unangetastet (keine neue Figur/Asset).
+4. Spielideen-Button exakt 48px hoch, weisser Play-Pfeil und weisse Schrift,
+   leicht leuchtender Orange-Farbton wie die aktuelle Referenz.
+
+ABSOLUT UNVERAENDERT:
+Karte/Leaflet/Marker, 5er-Navigation, Spots, Filter, Erinnerungen,
+Tilla-JavaScript, alle Sprachtexte, Daten, Darkmode sowie Desktop-Layouts.
+Ausser diesen CSS-Anpassungen aendert der Service Worker nur die Cache-Version,
+und die drei Einstiegsseiten laden die neue CSS-Datei.
+
+VORGEHEN:
+1. Working Copy: V90.4-Stand sichern. Einen NEUEN Testbranch aus dem aktuellen
+   V90.4-Branch anlegen, nicht direkt auf main arbeiten.
+2. Genau diese 5 Dateien an ihren relativen Pfaden ersetzen/hinzufuegen.
+3. Dateiunterschiede kontrollieren, dann Commit erstellen.
+4. Push auf Testbranch, Cloudflare Preview auf iPhone testen (auch Safari-Cache
+   neu laden). Erst bei sichtbarer Uebereinstimmung ueber main entscheiden.
+
+Zusammenfassung:
+V90.5 – Kopfbereich an finale Vorlage angepasst
+
+Detaillierte Informationen:
+Titel und dreizeiligen Leitsatz im hellen mobilen Kartenstart feinjustiert;
+Landschaft weich an Textbereich angeschlossen, keine Herz-/Liniengrafik.
+Spielideen-Button 48px mit weissem Play-Symbol und weisser Beschriftung.
+Karte, Navigation, Spotdaten, Funktionen und Darkmode unveraendert.
+DE/EN/DA laden ausschliesslich neue Design-CSS. Cache-Version aktualisiert.
+
+Vorhandene oder neue Remote-Referenz:
+refs/heads/test/main-premium-v905
+Source-Branch: lokaler V90.4-Testbranch unveraendert
+Force Push: Aus
+
+WICHTIG: Ein generiertes Referenzbild ist kein echtes App-Rendering.
+Dies ist eine technisch nachvollziehbare Annaeherung. Die tatsaechliche
+Pixelwirkung wird erst im iPhone-Preview sichtbar und muss abgenommen werden.

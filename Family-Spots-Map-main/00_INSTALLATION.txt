@@ -1,0 +1,10 @@
+Family Spots Map V84 – Navigation (Testkandidat)
+Basis: V83.1. Bitte V83.1 zuerst in Working Copy kontrollieren.
+
+1. ZIP als "In Repository entpacken" in Family-Spots-Map importieren.
+2. Nur die aufgelisteten Dateien vergleichen. Keine neuen Unterordner auf oberster Ebene.
+3. Vor Commit und Push lokal prüfen: Filtern, Suche, Radius, Spots-Liste, Spot öffnen, Favoriten, Plus, Mein Tag, Light/Dark, EN/DA und Vollbildkarte.
+4. Erzeuge zunächst nur einen lokalen Commit; NICHT Force Push verwenden.
+5. Erst nach Prüfung und Sicherung hochladen.
+
+Wichtig: Es wurde kein direkter iPhone-Safari-/Android-Chrome-Endtest ausgeführt.

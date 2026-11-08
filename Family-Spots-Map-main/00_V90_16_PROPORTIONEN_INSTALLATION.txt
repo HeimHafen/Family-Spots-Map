@@ -1,0 +1,43 @@
+FAMILY SPOTS MAP – V90.16 PROPORTIONEN-TEST (V90.15-BASIS)
+
+BEABSICHTIGTE AENDERUNG
+Nur Groessenverhaeltnisse der freigegebenen Map-Startseite, wie in
+IMG_0698.jpeg. NICHT die farbige Fantasielandschaft, Kartengrafik,
+Tilla-Figur oder die Icons aus jenem Beispiel uebernehmen.
+Originale Gruen- und Orangetoene bleiben erhalten.
+
+AENDERUNGEN IN EINER CSS-DATEI
+- Landschaftsteil oben geometrisch um circa 10 CSS-Pixel gekuerzt.
+- Tilla-Illustration im Kartenstart groesser dargestellt (nur CSS).
+- Tilla-Block ueber Innenabstaende/Zeilenhoehe insgesamt kompakter.
+- Der bestehende 44-Pixel-Spielideen-Button bleibt an seiner Position.
+- Karte beginnt bei 390 CSS-Pixel Breite nach dem Layouttest
+  circa 20 Pixel frueher, ohne an Leaflet-Code zu drehen.
+- Keine Farb-, Schriftart-, Spotdaten-, Icon-, Darkmode- oder JS-Aenderung.
+- Fuenf originale Navigationspunkte beibehalten.
+
+WICHTIG: Grundlage muss V90.15 Stable (auf Basis des freigegebenen
+V90.13-Designs) sein. Nicht auf einen beliebigen V90.14-Branch
+spielen. Wenn der Branch-Zustand unklar ist, das getrennte vollstaendige
+V90.16-Projekt-ZIP verwenden und NICHT Main ueberschreiben.
+
+WORKING COPY
+1. Aktuellen funktionierenden Stand als Backup sichern.
+2. Auf einem TEST-Branch aus V90.15 alle 5 Pfade wie hier ersetzen:
+  css/fsm-header-final-v907.css
+  index.html
+  en/index.html
+  da/index.html
+  service-worker.js
+3. Commit-Zusammenfassung:
+  V90.16 – Nur Proportionen angepasst, V90.15-Design unveraendert
+4. Remote-Referenz: refs/heads/test/main-premium-v916
+5. Source-Branch unveraendert; Force Push AUS.
+6. Erst Cloudflare Preview und dann den tatsaechlichen Safari-Screen
+   pruefen. Bei Cloudflare-INITIALIZE-Haenger ist nicht CSS die Ursache.
+
+TECHNISCHE PRUEFUNG
+Statische Browser-Layoutpruefung bei 320/360/375/390/430 Pixeln:
+kein horizontaler Ueberlauf; 44px-Button; 5er-Navigation unveraendert.
+Alle SW-Integritaetshashes und Offline-Dateipfade vorhanden.
+Echte Safari- und interaktive App-Tests sind nicht abgeschlossen.

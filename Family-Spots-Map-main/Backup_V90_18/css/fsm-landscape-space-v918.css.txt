@@ -1,0 +1,15 @@
+/* Family Spots Map V90.18 – precisely scoped extension of V90.17.
+   Change requested 2026-11-03: give landscape above Tilla more vertical room
+   by taking that space from the top portion of the map.
+   Only applies to the light mobile map start. All controls, texts, colors,
+   images, map JS, and navigation remain from V90.17.
+   Note: the source reference is a STATIC image, not a real browser capture.
+*/
+@media (max-width: 899px) {
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] #view-map.view--active {
+    row-gap: clamp(16px, 4.8vw, 22px) !important;
+  }
+  html.fsm-polished[data-theme="light"] body[data-app-view="map"] .app-header-main::after {
+    height: clamp(73px, 19.9vw, 86px) !important;
+  }
+}
