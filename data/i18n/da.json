@@ -53,7 +53,7 @@
       }
     },
     "plus": {
-      "codeEmpty": "Indtast først jeres partnerkode.",
+      "codeEmpty": "Indtast først en adgangskode.",
       "codeUnknown": "Koden er ukendt eller ikke længere gyldig.",
       "activated": "Family Spots Plus er aktiveret – god tur!",
       "failed": "Koden kunne ikke tjekkes nu. Prøv igen senere."
@@ -159,7 +159,7 @@
   "filter_category_all": "Alle kategorier",
   "filter_radius_max_label": "Alle spots",
   "filter_radius_description_all": "Ingen afstandsgrænse.",
-  "plus_code_empty": "Indtast først jeres test- eller partnerkode.",
+  "plus_code_empty": "Indtast først en adgangskode.",
   "plus_code_unknown": "Koden er ukendt eller ikke længere gyldig.",
   "plus_code_activated": "Family Spots Plus er aktiveret – god tur!",
   "plus_code_failed": "Koden kunne ikke tjekkes nu. Prøv igen senere.",
@@ -187,7 +187,7 @@
   "filter_radius_description_step3": "Et stort udflugtsmål – en hel dag med magiske øjeblikke.",
   "btn_show": "Vis",
   "btn_hide": "Skjul",
-  "plus_status_inactive": "Ingen test- eller partnerkode aktiveret endnu.",
+  "plus_status_inactive": "Spots Plus er ikke aktiveret.",
   "plus_status_active": "Family Spots Plus er aktiveret.",
   "plus_status_active_until": "Family Spots Plus er aktiveret indtil {date}.",
   "plus_status_expired": "Family Spots Plus udløb den {date}.",

@@ -53,7 +53,7 @@
       }
     },
     "plus": {
-      "codeEmpty": "Please enter your partner code.",
+      "codeEmpty": "Please enter an access code.",
       "codeUnknown": "This code is unknown or no longer valid.",
       "activated": "Family Spots Plus is active – happy travels!",
       "failed": "The code couldn’t be checked right now. Please try again later."
@@ -159,7 +159,7 @@
   "filter_category_all": "All categories",
   "filter_radius_max_label": "All spots",
   "filter_radius_description_all": "No distance limit.",
-  "plus_code_empty": "Please enter your test or partner code first.",
+  "plus_code_empty": "Please enter an access code first.",
   "plus_code_unknown": "This code is unknown or no longer valid.",
   "plus_code_activated": "Family Spots Plus is active – happy travels!",
   "plus_code_failed": "The code couldn’t be checked right now. Please try again later.",
@@ -187,7 +187,7 @@
   "filter_radius_description_step3": "A big day out – full of magical moments.",
   "btn_show": "Show",
   "btn_hide": "Hide",
-  "plus_status_inactive": "No test or partner code activated yet.",
+  "plus_status_inactive": "Spots Plus is not currently unlocked.",
   "plus_status_active": "Family Spots Plus is active.",
   "plus_status_active_until": "Family Spots Plus is active until {date}.",
   "plus_status_expired": "Family Spots Plus expired on {date}.",

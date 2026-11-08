@@ -311,18 +311,15 @@ export function savePlusStatus(status) {
  * @returns {boolean}
  */
 export function loadPlusActive() {
+  // Keep legacy readers aligned with the owner-only prototype. Ordinary
+  // partner/trial flags from old versions cannot reactivate Plus.
   const status = getPlusStatus();
-  if (!status || !status.active) return false;
-
-  if (status.grantVersion === 1 && Array.isArray(status.grants)) return !!status.active;
-
-  const expires = status.expiresAt || status.validUntil;
-  if (!expires) return true;
-
-  const ts = Date.parse(expires);
-  if (Number.isNaN(ts)) return true;
-
-  return ts >= Date.now();
+  if (!status?.active) return false;
+  if (status.grantVersion === 1 && Array.isArray(status.grants)) {
+    return status.grants.some(grant => grant && grant.active !== false &&
+      grant.source === "development_owner" && grant.expiresAt === null);
+  }
+  return status.source === "development_owner" && !status.expiresAt && !status.validUntil;
 }
 
 /**

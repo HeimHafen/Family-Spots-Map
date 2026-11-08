@@ -204,6 +204,9 @@ process.exitCode = failures ? 1 : 0;
 // Keep backup compatibility and corruption guards in the publication gate.
 await import('./check-backups.mjs');
 
+// Prevent accidental re-publication of partner/test codes or dev-force mode.
+await import('./check-plus-owner.mjs');
+
 // Keep the multilingual content and evidence contract in the publication gate.
 await import('./check-content.mjs');
 
@@ -215,3 +218,9 @@ await import('./check-results.mjs');
 
 // Keep names, filter descriptions and predictive counts in the publication gate.
 await import('./check-filter-contract.mjs');
+
+// The same build must work both on Cloudflare previews and GitHub Pages.
+await import('./check-hosting.mjs');
+
+// All public Plus explanations must match the actual test-only entitlement.
+await import("./check-ui-copy.mjs");

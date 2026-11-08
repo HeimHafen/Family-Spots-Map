@@ -2,6 +2,7 @@
 // Existing localStorage data is imported on first write and mirrored after
 // changes, retaining the previous data format for export and rollback.
 import { DAYLOG_STORAGE_KEY } from "../config.js";
+import { PRIVATE_CALENDAR_KEY, validatedPrivateCalendar, mergePrivateCalendars } from "./calendar-backup.js";
 const FAVORITES_KEY = "fs_favorites";
 let databasePromise = null;
 
@@ -183,18 +184,23 @@ export async function personalSnapshot(imported = null) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction("gate", imported ? "readwrite" : "readonly");
     const store = tx.objectStore("gate");
-    const keys = [FAVORITES_KEY, DAYLOG_STORAGE_KEY];
+    const keys = [FAVORITES_KEY, DAYLOG_STORAGE_KEY, PRIVATE_CALENDAR_KEY];
     const values = [], mirrors = [];
     let remaining = keys.length, result, error;
     keys.forEach((key, index) => {
       const request = store.get(key);
       request.onsuccess = () => {
         try {
-          values[index] = request.result === undefined ? legacyPayload(key) : request.result;
+          // Calendar is still written directly by the existing planner, so its
+          // localStorage value must take precedence over an older DB mirror.
+          values[index] = key === PRIVATE_CALENDAR_KEY ? legacyPayload(key) :
+            request.result === undefined ? legacyPayload(key) : request.result;
           if (--remaining) return;
           const favorites = favoritesFrom(values[0]);
           const entries = daylogFrom(values[1]);
-          const counts = { favorites: 0, entries: 0, conflicts: 0 };
+          const calendar = validatedPrivateCalendar(values[2]);
+          let effectiveCalendar = calendar;
+          const counts = { favorites: 0, entries: 0, conflicts: 0, calendar: 0, calendarConflicts: 0 };
           if (imported) {
             for (const id of imported.favorites) if (!favorites.has(id)) { favorites.add(id); counts.favorites++; }
             const ids = new Set(entries.map(entry => entry.id));
@@ -210,9 +216,17 @@ export async function personalSnapshot(imported = null) {
               entries.push({ ...entry, id }); ids.add(id); seen.add(signature(entry)); counts.entries++;
             }
             const next = [[...favorites], { entries }];
+            if (Array.isArray(imported.calendar)) {
+              const merged = mergePrivateCalendars(calendar, imported.calendar);
+              next[2] = merged.plans;
+              effectiveCalendar = merged.plans;
+              counts.calendar = merged.added;
+              counts.calendarConflicts = merged.conflicts;
+            }
             // All writes are synchronous inside the transaction callback. No
             // other gate writer can change either dataset until commit/abort.
             keys.forEach((key, i) => {
+              if (next[i] === undefined) return; // Old backups must not touch the calendar.
               const previous = localStorage.getItem(key), written = JSON.stringify(next[i]);
               localStorage.setItem(key, written);
               mirrors.push({ key, previous, written });
@@ -228,7 +242,7 @@ export async function personalSnapshot(imported = null) {
               store.put(blob, `photo:${id}`);
             }
           }
-          result = { favorites: [...favorites], entries, counts, photos };
+          result = { favorites: [...favorites], entries, calendar: effectiveCalendar, counts, photos };
           for (const id of used) {
             const request = store.get(`photo:${id}`);
             request.onsuccess = () => {

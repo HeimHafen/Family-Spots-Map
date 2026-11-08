@@ -43,7 +43,7 @@ jobs:
         run: |
           mkdir -p _site
           cp -R assets css da data en experimente js src utils vendor _site/
-          cp .nojekyll Lizenz index.html init.js manifest.webmanifest offline.html robots.txt service-worker.js sitemap.xml fredoka-variable.ttf _site/
+          cp .nojekyll Lizenz index.html init.js manifest.webmanifest offline.html robots.txt service-worker.js sitemap.xml _site/
 
       - name: Upload Static Files
         uses: actions/upload-pages-artifact@v4

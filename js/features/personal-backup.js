@@ -2,6 +2,7 @@ import { photoIds, personalSnapshot } from "./personal-storage.js?v=20261106-app
 
 import { writeZip, readZip, MAX_ARCHIVE_BYTES, MAX_MANIFEST_BYTES } from "./backup-zip.js";
 import { validatePhoto } from "./memory-images.js";
+import { validatedPrivateCalendar } from "./calendar-backup.js";
 
 const FORMAT = "family-spots-personal-backup";
 export const MAX_BACKUP_BYTES = MAX_MANIFEST_BYTES;
@@ -9,7 +10,7 @@ const stamp = n => Number.isSafeInteger(n) && n >= 0 && Number.isFinite(new Date
 const invalid = () => { const e = new Error("invalid_backup"); e.code = "invalid_backup"; return e; };
 
 export function parseBackup(text, version = 1) {
-  if (![1, 2].includes(version) || typeof text !== "string" || new Blob([text]).size > MAX_BACKUP_BYTES) throw invalid();
+  if (![1, 2, 3].includes(version) || typeof text !== "string" || new Blob([text]).size > MAX_BACKUP_BYTES) throw invalid();
   let data;
   try { data = JSON.parse(text); } catch { throw invalid(); }
   if (!data || data.format !== FORMAT || data.version !== version ||
@@ -19,13 +20,15 @@ export function parseBackup(text, version = 1) {
   const entries = data.entries.map(entry => {
     if (version === 1 && entry?.photos?.length) throw invalid();
     if (!entry || typeof entry.id !== "string" || !entry.id.trim() || entry.id.length > 512 ||
-        typeof entry.text !== "string" || (!entry.text.trim() && !(version === 2 && safePhotos(entry).length)) ||
+        typeof entry.text !== "string" || (!entry.text.trim() && !(version >= 2 && safePhotos(entry).length)) ||
         !stamp(entry.ts) || (entry.updatedTs !== undefined && !stamp(entry.updatedTs))) throw invalid();
     return { id: entry.id, text: entry.text.trim(), ts: entry.ts,
-      ...(version === 2 && safePhotos(entry).length ? { photos: safePhotos(entry).slice() } : {}),
+      ...(version >= 2 && safePhotos(entry).length ? { photos: safePhotos(entry).slice() } : {}),
       ...(entry.updatedTs !== undefined ? { updatedTs: entry.updatedTs } : {}) };
   });
-  return { favorites: [...new Set(data.favorites)], entries };
+  if (version === 3 && !Array.isArray(data.calendar)) throw invalid();
+  const calendar = version === 3 ? validatedPrivateCalendar(data.calendar) : undefined;
+  return { favorites: [...new Set(data.favorites)], entries, ...(calendar ? { calendar } : {}) };
 }
 
 export async function exportPersonalBackup() {
@@ -45,12 +48,12 @@ export async function importPersonalBackup(text) {
 // A complete snapshot is split only at memory boundaries. Every part carries
 // the selected memories with their complete photos, never partial photo data.
 export async function exportPersonalArchives() {
-  const { favorites, entries, photos } = await personalSnapshot();
+  const { favorites, entries, photos, calendar } = await personalSnapshot();
   const exportedAt = new Date().toISOString(), id = crypto.randomUUID();
   for (const [photoId, blob] of Object.entries(photos)) await validatePhoto(blob, photoId);
   const groups = [];
-  let group = { favorites, entries: [], ids: new Set(), bytes: 4096 + new Blob([JSON.stringify(favorites)]).size, manifestBytes: 4096 + new Blob([JSON.stringify(favorites)]).size };
-  const flush = () => { groups.push(group); group = { favorites: [], entries: [], ids: new Set(), bytes: 4096, manifestBytes: 4096 }; };
+  let group = { favorites, calendar, entries: [], ids: new Set(), bytes: 4096 + new Blob([JSON.stringify([favorites, calendar])]).size, manifestBytes: 4096 + new Blob([JSON.stringify([favorites, calendar])]).size };
+  const flush = () => { groups.push(group); group = { favorites: [], calendar: [], entries: [], ids: new Set(), bytes: 4096, manifestBytes: 4096 }; };
   for (const entry of entries) {
     const textBytes = new Blob([JSON.stringify(entry)]).size + 1;
     const cost = () => photoIds(entry).filter(photoId => !group.ids.has(photoId)).reduce((sum, photoId) => sum + photos[photoId].size + 256, textBytes);
@@ -62,10 +65,10 @@ export async function exportPersonalArchives() {
   flush();
   const archives = [];
   for (const [index, part] of groups.entries()) {
-    const metadata = { format: FORMAT, version: 2, exportedAt, favorites: part.favorites, entries: part.entries,
+    const metadata = { format: FORMAT, version: 3, exportedAt, favorites: part.favorites, entries: part.entries, calendar: part.calendar,
       ...(groups.length > 1 ? { bundle: { id, index: index + 1, total: groups.length } } : {}) };
     const manifest = JSON.stringify(metadata);
-    parseBackup(manifest, 2);
+    parseBackup(manifest, 3);
     const files = [{ name: "manifest.json", blob: new Blob([manifest], { type: "application/json" }) }];
     for (const photoId of [...part.ids].sort()) files.push({ name: `photos/${photoId}.jpg`, blob: photos[photoId] });
     archives.push(await writeZip(files));
@@ -85,8 +88,8 @@ async function readPersonalFile(file) {
   if (signature[0] === 80 && signature[1] === 75) {
     const files = await readZip(file);
     const text = await files.get("manifest.json").text();
-    data = parseBackup(text, 2);
     const raw = JSON.parse(text);
+    data = parseBackup(text, raw.version);
     if (raw.bundle !== undefined) {
       bundle = raw.bundle;
       if (!bundle || typeof bundle.id !== "string" || !/^[a-f0-9-]{36}$/i.test(bundle.id) || !Number.isSafeInteger(bundle.index) || !Number.isSafeInteger(bundle.total) || bundle.total < 2 || bundle.index < 1 || bundle.index > bundle.total) throw invalid();
@@ -119,11 +122,17 @@ export async function importPersonalFiles(files, mayImport = () => true) {
     parts.sort((a, b) => a.bundle.index - b.bundle.index);
   }
   const data = { favorites: [], entries: [], photos: Object.create(null) };
+  let includesCalendar = false;
   for (const part of parts) {
     for (const favorite of part.data.favorites) data.favorites.push(favorite);
     // Avoid argument-count limits with large imported diaries.
     for (const entry of part.data.entries) data.entries.push(entry);
     Object.assign(data.photos, part.data.photos);
+    if (part.data.calendar) {
+      if (!includesCalendar) data.calendar = [];
+      includesCalendar = true;
+      data.calendar.push(...part.data.calendar);
+    }
   }
   if (!mayImport()) { const error = new Error("draft"); error.code = "draft"; throw error; }
   return personalSnapshot(data);
@@ -134,8 +143,8 @@ export async function importPersonalFile(file, mayImport = () => true) {
 
 const copy = {
   de: {
-    title: "Erinnerungen & Favoriten sichern", brief: "Erinnerungen, Fotos und Favoriten gemeinsam als Datei sichern.", info: "Hinweise zur Sicherung", export: "Daten exportieren", import: "Daten importieren",
-    hint: "Beim Import bleiben vorhandene Daten erhalten. ZIP-Sicherungen enthalten auch gespeicherte Fotos. Große Sicherungen werden in nummerierte Teile aufgeteilt. Speichere alle Teile zusammen und wähle sie beim Import gemeinsam aus. Bisherige JSON-Sicherungen lassen sich weiterhin importieren. Entwürfe und Plus-Zugänge sind nicht enthalten. Bewahre die Datei privat auf.",
+    title: "Erinnerungen & Favoriten sichern", brief: "Erinnerungen, Fotos, Favoriten und private Ausflugspläne gemeinsam sichern.", info: "Hinweise zur Sicherung", export: "Daten exportieren", import: "Daten importieren",
+    hint: "Beim Import bleiben vorhandene Daten erhalten. ZIP-Sicherungen enthalten auch gespeicherte Fotos und private Kalenderpläne. Große Sicherungen werden in nummerierte Teile aufgeteilt. Speichere alle Teile zusammen und wähle sie beim Import gemeinsam aus. Bisherige JSON-Sicherungen lassen sich weiterhin importieren. Entwürfe und Plus-Zugänge sind nicht enthalten. Bewahre die Datei privat auf.",
     incomplete: "Bitte wähle alle nummerierten Teile derselben Sicherung gemeinsam aus. Es wurde nichts importiert.",
     parts: n => `Deine Sicherung besteht aus ${n} Teilen. Lade jeden Teil einzeln herunter und bewahre alle Dateien zusammen auf.`,
     download: (n, total) => total === 1 ? "Sicherung herunterladen" : `Teil ${n} von ${total} herunterladen`,
@@ -144,11 +153,11 @@ const copy = {
     invalid: "Diese Datei ist keine unterstützte Sicherung oder zu groß (je ZIP-Datei höchstens 100 MB, JSON: 16 MB). Es wurde nichts importiert.",
     failed: "Die Sicherung konnte nicht verarbeitet werden. Bitte prüfe den verfügbaren Speicher und versuche es erneut.",
     draft: "Bitte speichere deine offenen Erinnerungen samt Fotos vor dem Import oder brich die Bearbeitung ab.",
-    imported: (e, f, c) => e === 0 && f === 0 ? "Die Sicherung ist bereits vollständig vorhanden. Es wurden keine doppelten Einträge hinzugefügt." : `Import abgeschlossen: ${e} ${e === 1 ? "Erinnerung" : "Erinnerungen"} und ${f} ${f === 1 ? "Favorit" : "Favoriten"} hinzugefügt.${c ? " Abweichende Versionen wurden als zusätzliche Erinnerungen erhalten." : ""}`
+    imported: (e, f, c, p) => e === 0 && f === 0 && p === 0 ? "Die Sicherung ist bereits vollständig vorhanden. Es wurden keine doppelten Einträge hinzugefügt." : `Import abgeschlossen: ${e} ${e === 1 ? "Erinnerung" : "Erinnerungen"} und ${f} ${f === 1 ? "Favorit" : "Favoriten"} hinzugefügt.${p ? ` ${p} private ${p === 1 ? "Ausflugsplanung" : "Ausflugsplanungen"} ergänzt.` : ""}${c ? " Abweichende Versionen wurden als zusätzliche Erinnerungen erhalten." : ""}`
   },
   en: {
-    title: "Back up memories & favourites", brief: "Back up memories, photos and favourites together in one file.", info: "Backup information", export: "Export data", import: "Import data",
-    hint: "Importing keeps existing data. ZIP backups include saved photos. Large backups are split into numbered parts. Keep all parts together and select them together when importing. Previous JSON backups can still be imported. Drafts and Plus access are not included. Keep the file private.",
+    title: "Back up memories & favourites", brief: "Back up memories, photos, favourites and private outing plans together.", info: "Backup information", export: "Export data", import: "Import data",
+    hint: "Importing keeps existing data. ZIP backups include saved photos and private calendar plans. Large backups are split into numbered parts. Keep all parts together and select them together when importing. Previous JSON backups can still be imported. Drafts and Plus access are not included. Keep the file private.",
     incomplete: "Please select all numbered parts of the same backup together. Nothing was imported.",
     parts: n => `Your backup has ${n} parts. Download each part separately and keep all files together.`,
     download: (n, total) => total === 1 ? "Download backup" : `Download part ${n} of ${total}`,
@@ -157,11 +166,11 @@ const copy = {
     invalid: "This file is not a supported backup or is too large (up to 100 MB per ZIP file, JSON: 16 MB). Nothing was imported.",
     failed: "The backup could not be processed. Please check available storage and try again.",
     draft: "Please save unfinished memories, including selected photos, or cancel editing before importing.",
-    imported: (e, f, c) => e === 0 && f === 0 ? "Everything in this backup is already present. No duplicate entries were added." : `Import complete: ${e} ${e === 1 ? "memory" : "memories"} and ${f} ${f === 1 ? "favourite" : "favourites"} added.${c ? " Different versions were kept as additional memories." : ""}`
+    imported: (e, f, c, p) => e === 0 && f === 0 && p === 0 ? "Everything in this backup is already present. No duplicate entries were added." : `Import complete: ${e} ${e === 1 ? "memory" : "memories"} and ${f} ${f === 1 ? "favourite" : "favourites"} added.${p ? ` ${p} private outing ${p === 1 ? "plan" : "plans"} added.` : ""}${c ? " Different versions were kept as additional memories." : ""}`
   },
   da: {
-    title: "Sikkerhedskopi af minder og favoritter", brief: "Gem minder, billeder og favoritter sammen i én fil.", info: "Om sikkerhedskopiering", export: "Eksportér data", import: "Importér data",
-    hint: "Eksisterende data bevares ved import. ZIP-sikkerhedskopier indeholder også gemte billeder. Store sikkerhedskopier opdeles i nummererede dele. Gem alle delene sammen, og vælg dem samlet ved import. Tidligere JSON-sikkerhedskopier kan stadig importeres. Kladder og Plus-adgang er ikke med. Opbevar filen privat.",
+    title: "Sikkerhedskopi af minder og favoritter", brief: "Gem minder, billeder, favoritter og private planer sammen i én fil.", info: "Om sikkerhedskopiering", export: "Eksportér data", import: "Importér data",
+    hint: "Eksisterende data bevares ved import. ZIP-sikkerhedskopier indeholder også gemte billeder og private kalenderplaner. Store sikkerhedskopier opdeles i nummererede dele. Gem alle delene sammen, og vælg dem samlet ved import. Tidligere JSON-sikkerhedskopier kan stadig importeres. Kladder og Plus-adgang er ikke med. Opbevar filen privat.",
     incomplete: "Vælg alle nummererede dele af den samme sikkerhedskopi samlet. Intet blev importeret.",
     parts: n => `Din sikkerhedskopi består af ${n} dele. Download hver del for sig, og opbevar alle filerne sammen.`,
     download: (n, total) => total === 1 ? "Download sikkerhedskopi" : `Download del ${n} af ${total}`,
@@ -170,7 +179,7 @@ const copy = {
     invalid: "Filen er ikke en understøttet sikkerhedskopi eller er for stor (højst 100 MB pr. ZIP-fil, JSON: 16 MB). Intet blev importeret.",
     failed: "Sikkerhedskopien kunne ikke behandles. Kontrollér den ledige lagerplads, og prøv igen.",
     draft: "Gem ufærdige minder med de valgte billeder, eller annuller redigeringen før import.",
-    imported: (e, f, c) => e === 0 && f === 0 ? "Alt i sikkerhedskopien findes allerede. Ingen dubletter blev tilføjet." : `Import afsluttet: ${e} ${e === 1 ? "minde" : "minder"} og ${f} ${f === 1 ? "favorit" : "favoritter"} tilføjet.${c ? " Forskellige versioner blev bevaret som ekstra minder." : ""}`
+    imported: (e, f, c, p) => e === 0 && f === 0 && p === 0 ? "Alt i sikkerhedskopien findes allerede. Ingen dubletter blev tilføjet." : `Import afsluttet: ${e} ${e === 1 ? "minde" : "minder"} og ${f} ${f === 1 ? "favorit" : "favoritter"} tilføjet.${p ? ` ${p} private ${p === 1 ? "turplan" : "turplaner"} tilføjet.` : ""}${c ? " Forskellige versioner blev bevaret som ekstra minder." : ""}`
   }
 };
 
@@ -207,7 +216,7 @@ export function initPersonalBackup({ afterImport, hasDraft, setBusy = () => {} }
     const t = language(); heading.textContent = t.title; brief.textContent = t.brief; hint.textContent = t.hint; helpTitle.textContent = t.info;
     exportButton.textContent = t.export; importButton.textContent = t.import;
     downloadLinks.forEach((link, index) => { link.textContent = t.download(index + 1, downloadLinks.length); });
-    if (statusKey) status.textContent = statusKey === "imported" ? t.imported(counts.entries, counts.favorites, counts.conflicts) : statusKey === "parts" ? t.parts(downloadLinks.length) : t[statusKey];
+    if (statusKey) status.textContent = statusKey === "imported" ? t.imported(counts.entries, counts.favorites, counts.conflicts, counts.calendar || 0) : statusKey === "parts" ? t.parts(downloadLinks.length) : t[statusKey];
   };
   const announce = key => { section.open = true; statusKey = key; status.hidden = false; translate(); };
   const busy = value => { setBusy(value); exportButton.disabled = importButton.disabled = value; section.setAttribute("aria-busy", String(value)); };

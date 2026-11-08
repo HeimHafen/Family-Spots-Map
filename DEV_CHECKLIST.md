@@ -1,76 +1,52 @@
-# Family Spots Map – Freigabeprüfung
+# Family Spots Map – Freigabecheck Testrelease
 
-Stand: 21. Oktober 2026 · 130 Spots · Release 20261021-parking-43 · Fassung 6
+**Stand:** 08.11.2026 · 173 Spots · `20261108-qualitaet-plus-3` · *Testbranch, nicht automatisch live*
 
-Diese Liste beschreibt den überprüften aktuellen Stand. Sie ersetzt die historische
-Checkliste von Dezember 2025, deren offene Punkte teilweise bereits umgesetzt waren.
+## Automatische Prüfungen (im Testpaket)
 
-## Automatische Prüfung vor Veröffentlichung
+- [x] JSON, Syntax und Modulpfade
+- [x] DE/EN/DA mit 232 Sprachschlüsseln
+- [x] 2.458 Filter-Vertragsprüfungen
+- [x] 173 eindeutige Spots / 40 Bilddateien
+- [x] V1/V2/V3-Sicherungen, beschädigte Archive, Kalenderdaten, Importkonflikte
+- [x] Plus-Regeln: normale frühere Partnercodes inaktiv, bisheriger Entwicklerzugang bleibt nutzbar
+- [x] Service-Worker-Versionskennung, Offline-Liste und Release-Hashes
 
-- [x] JavaScript und Inline-Skripte auf Syntax geprüft.
-- [x] JSON, Sprachschlüssel und gebündelte Sprach-Fallbacks abgeglichen.
-- [x] Eindeutige Spot-IDs, gültige Koordinaten und dreisprachige Zusammenfassungen geprüft.
-- [x] Modulverweise, Einstiegspunkte, lokale Bilder und Offline-Abhängigkeiten geprüft.
-- [x] Bestehende Backup-Regressionen einschließlich beschädigter Archive geprüft.
-- [x] Release-Prüfsummen mit den Austauschdateien abgeglichen.
+- [x] Hosting-Pfadprüfung: Manifest, App-Ressourcen und Service Worker auf Cloudflare + GitHub Pages
+- [x] CI-Prüfung auch bei Push auf `test/**` (statt nur `main`/PR)
 
-Befehl: `node tools/check-project.mjs`
+## Echte Gerätetests (NICHT vorgetäuscht)
 
-## Browserprüfung dieser Ausgabe
+- [ ] iPhone-Safari: Header, Tilla, grünes Herz, Navigation, Filter und Spot-Detailansichten
+- [ ] Chrome/Android: entsprechende Klick- und Scrollabläufe
+- [ ] Alle fünf Bolzplätze: „Treffen & Spiele“ und „Ausflug planen“ öffnen/schließen
+- [ ] Neuer Nutzer ohne Code: Plus-Filter/Plus-Spots bleiben gesperrt
+- [ ] Entwicklergerät: Entwicklercode eingeben, Plus öffnen, Browser neustarten
+- [ ] Frühere normale Test-/Partnercodes aktiv: nach Upgrade Plus nicht mehr aktiv
+- [ ] Mein Tag/Favoriten/private Termine sichern und auf einem **separaten Testprofil** wiederherstellen
+- [ ] Ältere ZIP-V2- und JSON-V1-Sicherung importieren, bestehende Kalenderpläne beibehalten
+- [ ] Flugmodus nach vollständiger Offline-Installation: Hauptseite DE/EN/DA, Spots und Bilder
+- [ ] Schlechtes Netz: vollständige Erstinstallation/Update und Fehlermeldungen testen
+- [ ] Kein Verlust offener Erinnerungsentwürfe bei SW-Update
 
-- [x] Deutsche, englische und dänische Einstiegsseiten und neue Spot-Details bedient.
-- [x] Neue Kategorien über die sichtbare mobile Kategorieauswahl ausgewählt.
-- [x] Vier Stimmungsfilter mit vorhandenen Kategorie- und Merkmalsdaten bedient.
-- [x] Altersauswahl bis zum Vorliegen gepflegter Altersprofile inaktiv und erklärt.
-- [x] Plus-Krone mit einheitlicher Form und Goldton in beiden Designmodi geprüft.
-- [x] Favoriten im Menü, Favoritenansicht und Rückkehr zu allen Spots geprüft.
-- [x] Kompakte Tagebuch-Buttons geprüft.
-- [x] Update von der vorherigen Version einschließlich Schutz offener Eingaben geprüft.
-- [x] Gespeicherte Test-Favoriten und Test-Erinnerung nach dem Update erhalten.
-- [x] Offline-Neuladen und vorhandene Galerie-Dateien geprüft.
+## Daten und Offenpunkte
 
-Prüfumgebung: Chromium mit mobilen Ansichten. Tatsächliches iOS Safari und die
-Installation auf einem physischen iPhone sind separat in der Praxis zu prüfen.
+- 4 Spots ohne belastbare allgemeine Quellenlinks und 5 ohne Quellenprüfdatum: **nicht erfinden**.
+- Rethener Schulhof ist durch die Schulwebsite belegt; **öffentlicher Zugang** nicht unabhängig bestätigt.
+- Windheimstraße: städtische Quelle belegt angrenzenden Skatepark, **nicht** die zwei Bolzplätze selbst.
+- Barendsvej: historische Vereinsquelle (2021), **keine** aktuelle Geräte-/Sicherheitsbestätigung.
+- Heidfeld: historische Quelle (2011); Harkenblecker Straße: 2026 aktualisierter Eintrag.
+- Plus: Lokal/Browser nur als Entwickler-Testmodus, keine harte Zugriffskontrolle auf öffentlich verteilte Daten.
+- 144 Offline-Pflichtressourcen (ca. 25 MiB), kein Offline-OSM-Kartenkachelversprechen.
 
-## Inhaltliche Regeln
+## Veröffentlichung
 
-- Kategorien und Filter dürfen keine unbestätigte Übernachtungserlaubnis versprechen.
-- Eigene Erlebnisse bleiben von aktuellen Betreiberangaben getrennt.
-- Zeitplanung als redaktionelle Empfehlung kennzeichnen, sofern keine belastbare
-  Tourenangabe vorliegt.
-- Fehlende Angaben zu Ausstattung und Zugänglichkeit transparent benennen.
-- Karten-Screenshots und fremde Vorschaufotos nicht als eigene Galerie-Fotos verwenden.
-- Keine KI-Testmotive in aktiven Ortsgalerien veröffentlichen.
+1. Original-ZIP und den aktuellen Working-Copy-Stand sichern. Bei 71 uncommitteten lokalen Änderungen **noch keine weitere ZIP über dieselbe Arbeitskopie importieren**.
+2. Eine saubere Arbeitskopie von `refs/heads/test/fsm-v34-details` verwenden und die **Inhalte** der bereinigten ZIP auf Repository-Wurzelebene importieren. Kein zusätzlicher `Family-Spots-Map-main`-Ordner.
+3. Den Git-Diff prüfen; Änderungen **einschließlich Service Worker** als einen Commit übertragen. Historische Dateien in einer bestehenden Arbeitskopie nur nach Sicherung gezielt entfernen.
+4. Nach Deploy auf dem Testbranch unbedingt echte mobile Bedienung verifizieren.
+5. Erst danach Pull Request nach `main`; keine stillen Änderungen an Originaldaten oder Speicherformaten.
 
-## Bestehende Grenzen
+**Leitidee:** Orte entdecken. Menschen verbinden. Erinnerungen schaffen.
 
-- Datenrecherche und Familienerfahrungen ersetzen keine aktuelle Kontrolle vor Ort.
-- Nicht alle 130 Spots haben denselben Umfang an ergänzten Informationen und Fotos.
-- Persönliche Daten liegen im Browser; keine geräteübergreifende Kontosynchronisation.
-- Plus-Freischaltungen werden lokal verarbeitet; keine serverseitige Zahlungsprüfung.
-- Kartenkacheln werden über das Internet geladen und nicht offline vorgehalten.
-
-
-## Parken und öffentliche Wasserspielplätze – 21.10.2026
-
-Öffentliche Wasserspielplätze sind frei sichtbar und nicht Teil des Wasser-Add-ons.
-Alle 130 Einträge haben einen eigenen Parkhinweis-Status. Konkrete Angaben und
-offene Punkte werden getrennt dargestellt. Parkplatzziele werden nur aus
-zugeordneten Parkhinweisen oder übermittelten Parkplatzpunkten erzeugt; eine
-Zielkoordinate des Ausflugs ist nicht automatisch eine Parkzufahrt.
-Parkhinweise haben eigene Quellen und Prüfdaten. Bestehende ungeprüfte Hinweise
-und eigene Besuchserfahrungen werden nicht als frisch geprüft gekennzeichnet.
-Für neue Beiträge: Zufahrt, Beschilderung, Gebühren/Parkscheibe, Fußweg und
-Fahrzeuggrenzen einzeln dokumentieren. Kein Schluss von Tagesparken auf Übernachten.
-
-
-## Abschließende Nachprüfung – Fassung 6
-
-- Historische Pins mit ungeklärter Standortzuordnung erzeugen keine Routenlinks.
-- Widersprüchliche Standort-Metadaten bei Berliner Seilfabrik bereinigt.
-- Drei KI-Testbilder aus aktiver Wildgatter-Galerie und Offline-Liste entfernt;
-  alle 20 bereitgestellten Ortsfotos erhalten und als Bilddateien dekodiert.
-- Inhaltliche Freigabeprüfung weist aktive KI-Testbilder und widersprüchliche
-  Standortkennzeichnungen künftig ab.
-- Paketprüfung und Bedienabläufe einschließlich Foto-Erinnerung erneut geprüft;
-  genaue Ergebnisse und verbleibende Grenzen stehen im begleitenden Prüfbericht.
+- [ ] Apple-/Google-Store-Vorbereitung: `APP_STORE_ROADMAP_2027.md` abarbeiten (kein App-Store-Build in diesem Release).

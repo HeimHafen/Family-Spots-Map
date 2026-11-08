@@ -53,7 +53,7 @@
       }
     },
     "plus": {
-      "codeEmpty": "Bitte zuerst euren Partner-Code eingeben.",
+      "codeEmpty": "Bitte zuerst einen Zugangscode eingeben.",
       "codeUnknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
       "activated": "Family Spots Plus ist aktiv – viel Freude auf euren Touren!",
       "failed": "Code gerade nicht prüfbar. Bitte später noch einmal versuchen."
@@ -159,7 +159,7 @@
   "filter_category_all": "Alle Kategorien",
   "filter_radius_max_label": "Alle Spots",
   "filter_radius_description_all": "Ohne Entfernungsgrenze.",
-  "plus_code_empty": "Bitte zuerst euren Test- oder Partnercode eingeben.",
+  "plus_code_empty": "Bitte zuerst einen Zugangscode eingeben.",
   "plus_code_unknown": "Dieser Code ist unbekannt oder nicht mehr gültig.",
   "plus_code_activated": "Family Spots Plus ist aktiv – viel Freude auf euren Touren!",
   "plus_code_failed": "Code gerade nicht prüfbar. Bitte später noch einmal versuchen.",
@@ -187,7 +187,7 @@
   "filter_radius_description_step3": "Großes Ziel – ein ganzer Tag für magische Momente.",
   "btn_show": "Anzeigen",
   "btn_hide": "Ausblenden",
-  "plus_status_inactive": "Noch kein Test- oder Partnercode aktiviert.",
+  "plus_status_inactive": "Spots Plus ist derzeit nicht freigeschaltet.",
   "plus_status_active": "Family Spots Plus ist aktiv.",
   "plus_status_active_until": "Family Spots Plus ist aktiv bis {date}.",
   "plus_status_expired": "Family Spots Plus ist am {date} abgelaufen.",

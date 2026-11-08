@@ -41,7 +41,8 @@ void SUBSCRIPTIONS;
 
 /**
  * @typedef {Object} PartnerCodeEntry
- * @property {string} code
+ * @property {string} [codeSha256]  - Only the public SHA-256 verifier of the owner code
+ * @property {string} [code]          - Legacy partner-code format (disabled in owner-only mode)
  * @property {number} [days]          - Laufzeit in Tagen (Alternative zu validUntil)
  * @property {string} [plan]          - z. B. "family_plus" – falls leer, wird auf Standard gesetzt
  * @property {string} [partner]
@@ -176,6 +177,7 @@ function storedGrants(stored) {
       (grant.expiresAt === null || (typeof grant.expiresAt === "string" && Number.isFinite(Date.parse(grant.expiresAt))))
     ).map(grant => ({
       code: typeof grant.code === "string" ? grant.code.trim().toUpperCase() : null,
+      codeSha256: typeof grant.codeSha256 === "string" ? grant.codeSha256 : null,
       active: grant.active !== false && stored.active !== false,
       plan: typeof grant.plan === "string" && grant.plan ? grant.plan : "family_plus",
       expiresAt: grant.expiresAt,
@@ -191,11 +193,15 @@ function storedGrants(stored) {
   const validExpiry = expiry === null || (typeof expiry === "string" && Number.isFinite(Date.parse(expiry)));
   const code = typeof stored.code === "string" ? stored.code.trim().toUpperCase() : null;
   if (!stored.active && !code) return [];
-  return [{code, active: !!stored.active && validExpiry, plan: stored.plan || "family_plus",
+  return [{code, codeSha256: null, active: !!stored.active && validExpiry, plan: stored.plan || "family_plus",
     expiresAt: validExpiry ? expiry : "1970-01-01T00:00:00.000Z",
     activatedAt: stored.activatedAt || null, partner: stored.partner || null,
     source: stored.source || "legacy", addons: normalizeAndFilterAddons(stored.addons, stored.addonId) || []}];
 }
+// Prototype rule: access is only granted to the locally redeemed owner code.
+// This is *not* security against someone modifying their own browser or the public JS.
+const isOwnerGrant = grant => grant.source === "development_owner" && grant.expiresAt === null && grant.active;
+
 function grantSummary(grants, now = Date.now()) {
   const alive = grants.filter(grant => grant.active && (grant.expiresAt === null || Date.parse(grant.expiresAt) > now));
   const rank = grant => grant.expiresAt === null ? Infinity : Date.parse(grant.expiresAt);
@@ -315,47 +321,18 @@ export function getPlusStatus() {
   }
 
   if (stored.grantVersion === 1 && Array.isArray(stored.grants)) {
-    const status = grantSummary(storedGrants(stored));
+    const status = grantSummary(storedGrants(stored).filter(isOwnerGrant));
     return DEV_FORCE_PLUS ? { ...status, active: true, source: "dev" } : status;
   }
 
-  const validUntilIso = stored.expiresAt || stored.validUntil || null;
-  let active = !!stored.active;
-
-  // Add-ons optional unterstützen (alter + neuer Storage-Stil)
-  const addons = normalizeAndFilterAddons(stored.addons, stored.addonId);
-
-  // Ablauf prüfen – ein abgelaufener Code soll nicht mehr als aktiv gelten
-  if (validUntilIso) {
-    const d = new Date(validUntilIso);
-    if (isValidDate(d) && Date.now() > d.getTime()) {
-      active = false;
-    }
-  }
-
-  /** @type {NormalizedPlusStatus} */
-  const normalized = {
-    active,
-    // Fallback-Plan auf das neue Abo in config.js
-    plan: stored.plan || "family_plus",
-    validUntil: validUntilIso,
-    addons,
-    partner: stored.partner || null,
-    source: stored.source || null
-  };
-
-  // Dev-Override: aktiven Status für Demos erzwingen
-  if (DEV_FORCE_PLUS) {
-    return {
-      ...normalized,
-      active: true,
-      // falls kein Plan gesetzt wurde, auf "family_plus" fallen
-      plan: normalized.plan || "family_plus",
-      source: normalized.source || "dev"
-    };
-  }
-
-  return normalized;
+  // Do not honour legacy partner, campaign or trial statuses from earlier versions.
+  // Preserve an existing owner grant on the same device for backward compatibility.
+  const owner = stored.active === true && stored.source === "development_owner" &&
+    !stored.expiresAt && !stored.validUntil;
+  const normalized = owner
+    ? { active: true, plan: "family_plus", validUntil: null, addons: Object.keys(ADDONS), partner: stored.partner || null, source: "development_owner" }
+    : { active: false, plan: null, validUntil: null, addons: null, partner: null, source: null };
+  return DEV_FORCE_PLUS ? { ...normalized, active: true, plan: "family_plus", source: "dev" } : normalized;
 }
 
 /**
@@ -545,11 +522,14 @@ export async function redeemPartnerCode(rawCode) {
     return { ok: false, reason: "not_found" };
   }
 
-  // passenden Code-Eintrag finden (case-insensitive)
-  const entry = codes.find((c) => {
-    if (!c || !c.code) return false;
-    return String(c.code).trim().toUpperCase() === code && c.enabled !== false;
-  });
+  // Never distribute the plaintext owner code in a static public repository.
+  // A digest only avoids casual disclosure; local UI entitlements are not secure
+  // and must be replaced by server-side authorization before paid launch.
+  if (!globalThis.crypto?.subtle) return { ok: false, reason: "unavailable" };
+  const digestBytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(code));
+  const codeSha256 = Array.from(new Uint8Array(digestBytes), byte => byte.toString(16).padStart(2, "0")).join("");
+  const entry = codes.find(c => c?.source === "development_owner" && c.permanent === true &&
+    c.enabled !== false && c.codeSha256 === codeSha256);
 
   if (!entry) {
     return { ok: false, reason: "not_found" };
@@ -559,7 +539,7 @@ export async function redeemPartnerCode(rawCode) {
     return await redeemUnderLock(() => {
       const stored = getPlusStatusFromStorage();
       const grants = storedGrants(stored);
-      if (grants.some(grant => grant.code === code)) {
+      if (grants.some(grant => grant.codeSha256 === codeSha256 || (grant.source === "development_owner" && grant.code === code))) {
         return { ok: false, reason: "already_redeemed" };
       }
       const now = Date.now();
@@ -578,11 +558,11 @@ export async function redeemPartnerCode(rawCode) {
       }
       if (!permanentOwner && (!Number.isFinite(expiry) || !Number.isFinite(new Date(expiry).getTime()))) return { ok: false, reason: "invalid_days" };
       if (!permanentOwner && expiry <= now) return { ok: false, reason: "not_found" };
-      grants.push({code, active: true, plan: entry.plan || "family_plus", expiresAt: permanentOwner ? null : new Date(expiry).toISOString(),
+      grants.push({code: null, codeSha256, active: true, plan: entry.plan || "family_plus", expiresAt: permanentOwner ? null : new Date(expiry).toISOString(),
         activatedAt: new Date(now).toISOString(), partner: entry.partner || null,
         source: entry.source || "partner", addons: normalizeAndFilterAddons(entry.addons, entry.addonId) || []});
-      const status = grantSummary(grants, now);
-      const storedStatus = {code, ...status, expiresAt: status.validUntil,
+      const status = grantSummary(grants.filter(isOwnerGrant), now);
+      const storedStatus = {...status, expiresAt: status.validUntil,
         activatedAt: new Date(now).toISOString(), grantVersion: 1, grants};
       if (!savePlusStatusToStorage(storedStatus)) return { ok: false, reason: "storage" };
       return { ok: true, status, entry };

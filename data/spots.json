@@ -667,8 +667,10 @@
     "visit_label_en": "Allow about an hour, depending on how long you would like to stay.",
     "visit_label_da": "Regn med cirka en time, alt efter hvor længe I har lyst til at blive.",
     "address": null,
-    "source_urls": [],
-    "source_checked_at": null,
+    "source_urls": [
+      "https://www.vejlbystrand.dk/image/catalog/generalforsamling/2021/formandens_beretning_-_generalforsamling_9-10-2021.pdf"
+    ],
+    "source_checked_at": "2026-11-08",
     "content_verification": "user_provided_unconfirmed",
     "title_de": "Spielplatz Barendsvej",
     "title_en": "Playground Barendsvej",
@@ -690,7 +692,7 @@
       "source_urls": []
     },
     "location_verification": "user_reports_coordinates_correct_preserved",
-    "verification_scope": "section_level_partial_check_not_all_facilities",
+    "verification_scope": "historical_2021_association_report_confirms_playground_not_current_conditions",
     "visit_details": {
       "schema_version": 1,
       "sections": {
@@ -35085,7 +35087,12 @@
           "da": "Udsigt over en boldbane"
         }
       }
-    ]
+    ],
+    "source_urls": [
+      "https://www.hannover.de/Service/Presse-Medien/Landeshauptstadt-Hannover/Meldungsarchiv-f%C3%BCr-das-Jahr-2025/Skaterpark-an-der-Bethlehemkirche-runderneuert"
+    ],
+    "source_checked_at": "2026-11-08",
+    "verification_scope": "city_source_confirms_adjacent_skatepark_only_not_football_pitches"
   },
   {
     "id": "skatepark_windheimstrasse_hannover",
@@ -35345,13 +35352,13 @@
       }
     },
     "title_de": "Spielbereich an der Grundschule Rethen",
-    "summary_de": "Auf dem Schulhof verbinden Brücken mehrere Klettertürme. Dazu kommen eine Rutsche, eine Seilschaukel und ein separates Klettergerät. Außerhalb der Schulzeit öffentlich zugänglich.",
+    "summary_de": "Auf dem Schulhof verbinden Brücken mehrere Klettertürme. Dazu kommen eine Rutsche, eine Seilschaukel und ein separates Klettergerät. Ob der Schulhof außerhalb der Schulzeit öffentlich betreten werden darf, bitte vor Ort bzw. bei der Schule erfragen.",
     "tags_de": [],
     "title_en": "Play area at Rethen Primary School",
-    "summary_en": "Bridges connect several climbing towers in the schoolyard, which also has a slide, a rope swing and a separate climbing frame. Open to the public outside school hours.",
+    "summary_en": "Bridges connect several climbing towers in the schoolyard, with a slide, rope swing and a separate climbing frame. Public access outside school hours has not been independently confirmed; please check with the school.",
     "tags_en": [],
     "title_da": "Legeområde ved grundskolen i Rethen",
-    "summary_da": "Broer forbinder flere klatretårne i skolegården, hvor der også er en rutsjebane, en rebgynge og et separat klatrestativ. Offentligt tilgængelig uden for skoletiden.",
+    "summary_da": "Broer forbinder flere klatretårne i skolegården, som også har en rutsjebane, en rebgynge og et separat klatrestativ. Offentlig adgang uden for skoletiden er ikke uafhængigt bekræftet; spørg skolen først.",
     "tags_da": [],
     "address": "Steinweg 18, 30880 Laatzen",
     "photos": [
@@ -35384,11 +35391,20 @@
     ],
     "visit_label_de": "Je nach Lust und Zeit",
     "visit_label_en": "Stay as long as you like",
-    "visit_label_da": "Bliv så længe I har lyst"
+    "visit_label_da": "Bliv så længe I har lyst",
+    "source_urls": [
+      "https://www.grundschule-rethen.de/"
+    ],
+    "source_checked_at": "2026-11-08",
+    "verification_scope": "school_site_confirms_school_only_public_access_outside_hours_unverified"
   },
   {
     "id": "bolzplatz_festplatz_rethen",
-    "community": { "enabled": true, "type": "bolzplatz", "events": [] },
+    "community": {
+      "enabled": true,
+      "type": "bolzplatz",
+      "events": []
+    },
     "title": "Bolzplatz · Festplatz Rethen",
     "lat": 52.2801,
     "lon": 9.82543,
@@ -35466,7 +35482,11 @@
   },
   {
     "id": "bolzplatz_uithuizermeedenweg_rethen",
-    "community": { "enabled": true, "type": "bolzplatz", "events": [] },
+    "community": {
+      "enabled": true,
+      "type": "bolzplatz",
+      "events": []
+    },
     "title": "Bolzplatz · Uithuizermeedenweg",
     "lat": 52.28945,
     "lon": 9.83416,
@@ -35544,7 +35564,11 @@
   },
   {
     "id": "bolzplatz_heidfeld_laatzen",
-    "community": { "enabled": true, "type": "bolzplatz", "events": [] },
+    "community": {
+      "enabled": true,
+      "type": "bolzplatz",
+      "events": []
+    },
     "title": "Bolzplatz · Heidfeld",
     "lat": 52.30023,
     "lon": 9.81332,
@@ -35614,15 +35638,22 @@
     "summary_da": "Boldbane ved Heidfeld i Laatzen-Mitte. Kortnålen viser spilleområdet.",
     "tags_da": [],
     "source_urls": [
-      "https://niedersachsen.app/stadt-laatzen/ort/spielplaetze"
+      "https://niedersachsen.app/stadt-laatzen/ort/spielplaetze",
+      "https://www.spielplatztreff.de/spielplatz/heidfeld-in-laatzen_987"
     ],
     "visit_label_de": "Je nach Lust und Zeit",
     "visit_label_en": "Stay as long as you like",
-    "visit_label_da": "Bliv så længe I har lyst"
+    "visit_label_da": "Bliv så længe I har lyst",
+    "source_checked_at": "2026-11-08",
+    "verification_scope": "historic_2011_listing_mentions_football_pitch_not_current_facilities"
   },
   {
     "id": "spiel_und_bolzplatz_harkenblecker_strasse_rethen",
-    "community": { "enabled": true, "type": "bolzplatz", "events": [] },
+    "community": {
+      "enabled": true,
+      "type": "bolzplatz",
+      "events": []
+    },
     "title": "Spiel- und Bolzplatz Harkenblecker Straße",
     "lat": 52.291154667554494,
     "lon": 9.82391985184066,
@@ -35698,7 +35729,9 @@
     "address": "Harkenblecker Straße 3, 30880 Laatzen",
     "visit_label_de": "Je nach Lust und Zeit",
     "visit_label_en": "Stay as long as you like",
-    "visit_label_da": "Bliv så længe I har lyst"
+    "visit_label_da": "Bliv så længe I har lyst",
+    "source_checked_at": "2026-11-08",
+    "verification_scope": "online_listing_updated_2026_05_area_not_onsite_checked"
   },
   {
     "id": "platz_am_schachspiel_stroebeck",

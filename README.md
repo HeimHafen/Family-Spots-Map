@@ -9,37 +9,46 @@ Family Spots Map ist eine dreisprachige, kartenbasierte Web-App für gemeinsame 
 **Produktivseite:** https://heimhafen.github.io/Family-Spots-Map/  
 **Projekt:** https://github.com/HeimHafen/Family-Spots-Map
 
-## Projektstand – 8. November 2026
+## Teststand – 8. November 2026
 
-**Ausgangsversion in `main`: V34, Appkennung `20261107-gestaltung-v34-details`.** V34 ist auf GitHub Pages veröffentlicht und kein nur lokaler Teststand mehr. Die vorliegende README begleitet einen **vorbereiteten, noch nicht veröffentlichten Feinschliff** für Wasserfilter-Bezeichnungen, Quellentransparenz und Dokumentation. Erst nach Test, Commit und erfolgreichem Deployment ist dieser Feinschliff produktiv. Die verbindliche Live-App darf nicht durch einen ungetesteten Branch überschrieben werden.
+**Basis:** hochgeladene Live-ZIP `Family-Spots-Map-main 3.zip` mit 291 Dateien; technische Verbesserungsvorlage `20261108-qualitaet-plus-3`.
+**Dieses Archiv:** bereinigtes Testrelease `20261108-fusion-v4-ready` (nicht automatisch veröffentlicht).
+**Ausgangs-Testbranch:** `test/fsm-v34-details`, zuletzt bestätigter Cloudflare-Deploy vor diesem Update: `fac5320` (`20261108-qualitaet-plus-2`).
+Der aktuelle GitHub-`main` und der Stand auf einem konkreten Endgerät müssen vor einer Übernahme gesondert abgeglichen werden. Alte Austausch-TXT-Dateien, historische Backups und frühere Installationsanleitungen sind aus diesem bereinigten Importarchiv entfernt. Die originalen Sicherungen wurden nicht verändert.
 
-| Prüffeld | Stand |
+| Prüffeld | Teststand |
 | --- | --- |
-| Datensatz | 173 Spots |
-| Sprachen | DE, EN, DA; 232 Übersetzungsschlüssel je Sprache |
-| Strukturierte Besuchshinweise | 787 dreisprachige Informationseinträge |
-| Filter-Vertragsprüfungen | 2.458 automatisierte Aussagen bestanden |
-| Installationscache | 143 Ressourcen, einschließlich `./` |
-| Spotgalerien | 15 Spots mit zusammen 40 Bildern |
-| Quelle fehlt (geplanter Feinschliff) | 7 Spots; Ausgangsstand: 11 |
-| Datum der Quellenprüfung fehlt (geplanter Feinschliff) | 10 Spots; Ausgangsstand: 14 |
+| Spots | 173 unveränderte Spot-IDs |
+| Sprachen | DE, EN, DA; 232 Schlüssel je Sprache |
+| Filter | 2.458 automatisierte Vertragsprüfungen |
+| Offline-Cache | 144 Ressourcen nach Einbindung des Kalender-Sicherungsmoduls |
+| Galerien | 15 Spots, 40 vorhandene Bilder |
+| Fehlende allgemeine Quellenlinks | 4 Spots (zuvor 7) |
+| Fehlende Quellenprüfdaten | 5 Spots (zuvor 10) |
+| Plus-Testmodus | Nur bestehender Entwicklercode; öffentliche Klartext-Codeliste entfernt |
+| Persönliche ZIP-Sicherung | V3 mit Erinnerungen, Fotos, Favoriten **und privaten Kalenderplänen** |
 
-Die Datenzahlen sind Struktur- und Bestandskennzahlen. Die technische Projektprüfung **bestätigt nicht** die aktuelle Zugänglichkeit, Sicherheitslage oder Ausstattung sämtlicher Orte. Weitere Einzelprüfungen und echte Gerätetests bleiben notwendig.
+Die Quellenprüfungen bestätigen **nur den belegten Informationsumfang**, keine umfassende Vor-Ort-Freigabe. Alle bestehenden Daten, Bilder, Spot-IDs, Koordinaten, die Tilla-Oberfläche und die Gestaltung wurden ansonsten bewahrt.
+
+**Technischer Prüfbericht:** [`00_RELEASEBERICHT_TESTSTAND.md`](00_RELEASEBERICHT_TESTSTAND.md).  **Startanleitung:** [`00_START_HIER.md`](00_START_HIER.md).
+
+**Hosting-Korrektur:** PWA-Manifest und Service-Worker-Pfade werden nun auf Cloudflare (Root) **und** GitHub Pages (`/Family-Spots-Map/`) automatisch geprüft.
+**Ziel 2027:** Verfügbarkeit im Apple App Store und bei Google Play. Technischer Fahrplan: [`APP_STORE_ROADMAP_2027.md`](APP_STORE_ROADMAP_2027.md).
 
 ## Die Anwendung
 
 - **Karte:** geografische Leaflet-/OpenStreetMap-Karte mit Markern, Spot-Vorschauen, Vollbild und optionalem Standort. Externe Navigation wird in Apple Karten oder Google Maps geöffnet.
 - **Entdecken:** Suche, Stimmung, Themen, genauere Ortsarten, nachgewiesene Ausstattungsmerkmale, Radius, Favoriten und weitere Filter. Die Trefferzahl nutzt den tatsächlich gefilterten Bestand.
 - **Spot-Details:** kurze dreisprachige Informationen, Anreise und – wo verfügbar – Besuchsplanung, Fotos sowie Quellen und Aktualität.
-- **Spots Plus:** bestehende Freischaltcodes, Plus-Regeln und Add-ons. Sie werden durch die hier beschriebenen Änderungen nicht angefasst.
+- **Spots Plus:** im Teststand ausschließlich Entwicklerzugang. Texte in DE/EN/DA nennen keine nicht verfügbaren 90-Tage-Familientests mehr. Andere früher gespeicherte Probe-, Familien- und Partnercodes schalten keine Plus-Funktionen mehr frei. Der Code steht nicht als Klartext im Archiv; seine SHA-256-Prüfsumme ist öffentlich. Dieser Testmodus ist **keine** manipulationssichere Authentifizierung.
 - **Tilla:** Familienbegleiterin und Spielideen für unterwegs.
 - **Mein Tag:** private Erinnerungen mit Text und Fotos, Bearbeiten, Löschen und Datensicherung.
-- **Private Planung:** Ausflugskalender mit lokal gespeicherten Terminen und ICS-Export. **Private Kalendereinträge sind nicht Teil der allgemeinen Erinnerungssicherung.** Sie müssen bei Bedarf gesondert exportiert werden.
+- **Private Planung:** Ausflugskalender mit lokal gespeicherten Terminen und ICS-Export. **Gespeicherte private Ausflugspläne sind jetzt Teil der ZIP-Sicherung V3.** Unfertige Entwürfe und Plus-Zugangsrechte werden weiterhin nicht mitgesichert; alle persönlichen Daten bleiben lokal.
 - **Treffen & Spiele:** getrennt von der privaten Planung; öffentliche Termine erscheinen nur bei entsprechend bestätigtem Inhalt. Es gibt keine öffentlichen Kinderprofile oder direkten Nachrichten zwischen Minderjährigen.
 
 ### Verbindliche Gestaltung
 
-Die vorhandene warme, ruhige Tilla-/Landschaftsoberfläche ist die Referenz. **Das aktuell verwendete grüne Herz bei „Mein Tag“ bleibt exakt erhalten.** Der Feinschliff ändert es nicht. Keine eigenständige Neugestaltung des Headers, der Farbfamilie, der Navigation oder von Spots Plus.
+Die vorhandene warme, ruhige Tilla-/Landschaftsoberfläche ist die Referenz. **Das aktuell verwendete grüne Herz bei „Mein Tag“ bleibt exakt erhalten.** Das neue Testpaket ändert es nicht. Keine eigenständige Neugestaltung des Headers, der Farbfamilie, der Navigation oder von Spots Plus.
 
 ## Filter: Wasser eindeutig benennen
 
@@ -64,11 +73,17 @@ Laufzeitdaten: `data/spots.json`. Die unveränderlichen Spot-IDs und geografisch
 - `source_labels` erklärt Quellenlinks in DE/EN/DA.
 - `verified`, `verification_scope`, `visitor_information` und einzelne Visit-Details steuern, was wirklich als bestätigt gilt.
 
-Die vier im Feinschliff vorsichtig ergänzten Quellenbezüge betreffen **Bauer Lipp**, **Ritterspielplatz Dünnwald**, **Spielplatz am Naturzentrum/Urftstraße Nettersheim** sowie **Rathauspark Bergedorf**. Es wurden nur nachvollziehbare Quellen für Ort/grundsätzliche Existenz ergänzt, nicht für alle Besuchsdetails. Bei diesen vier Spots bleibt `verified: false`; Öffnungszeiten, Preise, aktuelle Spielgeräte und Barrierefreiheit werden nicht ohne Beleg bestätigt.
+Bereits im Ausgangsarchiv enthaltene ergänzte Quellenbezüge betreffen **Bauer Lipp**, **Ritterspielplatz Dünnwald**, **Spielplatz am Naturzentrum/Urftstraße Nettersheim** sowie **Rathauspark Bergedorf**. Es wurden nur nachvollziehbare Quellen für Ort/grundsätzliche Existenz ergänzt, nicht für alle Besuchsdetails. Bei diesen vier Spots bleibt `verified: false`; Öffnungszeiten, Preise, aktuelle Spielgeräte und Barrierefreiheit werden nicht ohne Beleg bestätigt.
 
-**Offene Fälle:** Die verbleibenden sieben Spots ohne Quellenlinks und zehn ohne Prüfdaten sind bewusst nicht automatisch aufgefüllt. Besonders der Parkplatz *Strandvejen/Vrist*, Schulhofzugänglichkeit in Rethen und einige ältere Spielplatzeinträge benötigen eine präzisere Orts- bzw. Zugangsprüfung. Ein Link auf eine nahegelegene Einrichtung belegt noch nicht den genauen Spot.
+**Ergänzungen in diesem Teststand:** Externe Quellen wurden für Barendsvej, den Bereich Windheimstraße und die Grundschule Rethen dokumentiert. Die Standorte Heidfeld und Harkenblecker Straße erhielten überprüfte Quellendatumsangaben. Ältere Quellen und Quellen zu benachbarten Orten wurden im jeweiligen `verification_scope` ausdrücklich als **begrenzte Hinweise** markiert. Insbesondere ist die öffentliche Schulhof-Nutzung nicht unabhängig bestätigt; der dreisprachige Hinweis ist jetzt vorsichtiger formuliert. Keiner dieser fünf Spots wurde pauschal auf `verified: true` gesetzt.
+
+**Offene Fälle:** Vier Spots ohne belastbare allgemeine Quellenlinks und fünf ohne Quellenprüfdatum bleiben bewusst offen. Ein Link auf eine nahegelegene Einrichtung belegt weder die genaue Lage noch die Öffnungsregeln eines Spots. Park- oder Übernachtungserlaubnis bei *Strandvejen/Vrist* bleibt unbestätigt.
 
 Die Angaben in der App können sich vor Ort ändern. Wetter, Badebedingungen, Beschilderung, Baustellen, Öffnungszeiten, Eintritt, Wege und Zugangsrechte sind vor dem Besuch zusätzlich zu prüfen.
+
+## Bereinigte Arbeitsdateien
+
+Dieses Archiv enthält den aktuellen App-Code und die benötigten Daten ohne alte TXT-Exporte, doppelte Sicherungsordner und überholte Installationsanleitungen. Die Dateien liegen **direkt im ZIP-Hauptverzeichnis**, nicht in einem zusätzlichen Ordner `Family-Spots-Map-main`. Alte Git-Branch-Dateien werden durch das Entpacken einer ZIP **nicht automatisch gelöscht**.
 
 ## Technik und Projektstruktur
 
@@ -83,6 +98,8 @@ Die Web-App läuft ohne Framework-Build als statische HTML-/CSS-/ES-Modul-Anwend
 | `js/features/gemeinsam-erleben-rc.js` | privater Kalender |
 | `js/features/community-play.js` | Treffen & Spiele |
 | `js/features/diary-view.js` | Mein Tag |
+| `js/features/personal-backup.js`, `js/features/calendar-backup.js` | ZIP-Sicherung V3 und validierte private Kalenderpläne |
+| `js/features/plus.js`, `data/partners.json` | Lokaler Entwickler-Testzugang, keine serverseitige Kontrolle |
 | `data/i18n/*.json`, `js/i18n.js` | DE/EN/DA und Fallback-Texte |
 | `service-worker.js`, `js/sw-register.js` | Offline-Cache und kontrollierte Updates |
 | `tools/check-project.mjs` | Integritäts- und Regressionstests |
@@ -97,7 +114,7 @@ Die App-Oberfläche, 173 Spotdaten, Übersetzungen und bestimmte lokale Bilder s
 
 ## Qualitätssicherung
 
-Im überprüften Ausgangsarchiv liefen `node tools/check-project.mjs` und die 2.458 Filter-Vertragsprüfungen erfolgreich. Der vorgeschlagene Feinschliff wird separat getestet; automatisierte Prüfungen allein bestätigen keine exakte iPhone-Safari-Darstellung, Screenreader-Nutzung oder Ortsangaben vor Ort.
+Im neuen Testarchiv wurden `node tools/check-project.mjs`, Backup- und Kalenderregressionen sowie gesonderte Plus-Zugangsprüfungen ausgeführt. Automatisierte Prüfungen allein bestätigen weder eine exakte iPhone-Safari-Darstellung noch Öffnungszeiten oder Zugangsbedingungen der Orte.
 
 ```bash
 node tools/check-project.mjs
@@ -107,9 +124,9 @@ Für einen Entwicklungsstart einen lokalen HTTP-Server verwenden, z. B. `python3
 
 ### Veröffentlichung
 
-GitHub Actions veröffentlicht die App per `.github/workflows/deploy.yml` bei Änderungen auf `main`. Ein Feinschliff gehört zuerst in einen **eigenen Testbranch** und wird erst nach erfolgreicher Prüfung per Pull Request übernommen. Der Service Worker enthält eine Versionskennung und Hashes für erforderliche Dateien. Bei einem zusammengehörigen Release müssen Cache-Kennung und Hashes aktualisiert werden.
+GitHub Actions veröffentlicht die App per `.github/workflows/deploy.yml` bei Änderungen auf `main`. Ein Feinschliff gehört zuerst in den **Testbranch `test/fsm-v34-details`** und wird erst nach erfolgreicher Prüfung per Pull Request übernommen. Der Service Worker enthält eine Versionskennung und Hashes für erforderliche Dateien. Bei einem zusammengehörigen Release müssen Cache-Kennung und Hashes aktualisiert werden.
 
-**Der Feinschliff wurde nicht automatisch in GitHub eingebaut oder live veröffentlicht.** Übernommene Source-Links begründen keinen automatisch geprüften oder geöffneten Spot.
+**Dieses Testpaket wurde nicht automatisch in GitHub eingebaut oder live veröffentlicht.** Der echte Test erfolgt zuerst in einer getrennten Testbranch. Öffentliche Spotdaten und clientseitiger UI-Zugangsschutz sind technisch kein manipulationssicherer Bezahlschutz.
 
 ## Offene nächste Schritte
 
@@ -117,6 +134,7 @@ GitHub Actions veröffentlicht die App per `.github/workflows/deploy.yml` bei Ä
 2. Öffentliche Zugänglichkeit und lokale Regeln von Schulhöfen, Bade- und Parkflächen ausdrücklich klären.
 3. Familien testen Karte, Orientierung, Suchverhalten, Textverständlichkeit und echte Ausflüge auf iPhone/Android.
 4. Bei jedem Spot vorhandene Besuchshinweise, Bildrechte und Fotoqualität gezielt weiterentwickeln.
-5. Vor einem kostenpflichtigen Plus-Regelbetrieb eine echte serverseitige Zugangsprüfung vorsehen.
+5. Vor einem kostenpflichtigen Plus-Regelbetrieb eine echte serverseitige Zugangsprüfung und ggf. nichtöffentliche Auslieferung kostenpflichtiger Datensätze vorsehen.
+6. Release-Update unter schlechter Verbindung und das ca. 25-MiB-Offline-Paket auf echten Smartphones vermessen. Die Cache-Pflichtdateien wurden bewusst **nicht** aus der Offline-Funktion entfernt, damit Fotos und Daten nicht ungeplant verloren gehen.
 
 **Grundsatz:** Orte entdecken. Menschen verbinden. Erinnerungen schaffen. Möglichst wenig Bildschirmzeit, dafür echte gemeinsame Erlebnisse.

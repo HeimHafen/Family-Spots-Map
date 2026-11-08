@@ -1,4 +1,4 @@
-@import url("./categories.css?v=20261108-wasserfilter-quellen-1");
+@import url("./categories.css?v=20261108-fusion-v4-ready");
 /* styles.css — Aggregator für modulare Styles
    ---------------------------------------------------------
    NOTE (Cache Busting):
@@ -9,7 +9,7 @@
    --------------------------------------------------------- */
 
 /* 1. Design-Variablen */
-@import url("./theme.css?v=20261108-wasserfilter-quellen-1");
+@import url("./theme.css?v=20261108-fusion-v4-ready");
 
 /* 2. Reset, Body, Typografie, Grundlayout */
 @import url("./base.css?v=20251223");
@@ -18,9 +18,9 @@
 @import url("./utilities.css?v=20251223");
 
 /* 4. Komponenten, Layout, Map, Sidebar, Bottom-Nav, Toast, Onboarding etc. */
-@import url("./components.css?v=20261108-wasserfilter-quellen-1");
+@import url("./components.css?v=20261108-fusion-v4-ready");
 
-@import url("./map-spots.css?v=20261108-wasserfilter-quellen-1");
+@import url("./map-spots.css?v=20261108-fusion-v4-ready");
 
 /* =========================================================
    GLOBAL OVERRIDES / FIXES
