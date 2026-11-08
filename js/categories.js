@@ -27,9 +27,9 @@ export const WORLDS = [
   {
     "id": "water",
     "label": {
-      "de": "Wasser & Baden",
-      "en": "Water & swimming",
-      "da": "Vand & badning"
+      "de": "Baden & Wasserspiel",
+      "en": "Swimming & water play",
+      "da": "Badning og vandleg"
     }
   },
   {

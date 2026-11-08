@@ -46,7 +46,7 @@ assert.ok(failed.recovery.some(x=>x.id==='shade'&&x.count===1));
 assert.equal(state.types.size,1,'Evaluation does not mutate selection');
 const shortcut={world:'travel',types:new Set(['camping']),facets:new Set(['toilet'])};
 selectShortcut(shortcut,'water');assert.ok(shortcutIsSelected(shortcut,'water'));
-assert.ok(shortcut.types.has('water-playground'));assert.ok(shortcut.facets.has('toilet'));
+assert.equal(shortcut.world,'water');assert.equal(shortcut.types.size,0);assert.ok(shortcut.facets.has('toilet'));
 selectShortcut(shortcut,'water');assert.equal(shortcut.types.size,0);assert.equal(shortcut.world,'');
 assert.equal(evaluateSelection(fixture,{types:['indoor-playground','forest-playground']}).spots.length,2);
 console.log('Shared selection: OR settings/types, AND requirements, predictive counts, recovery, shortcuts and immutability passed.');

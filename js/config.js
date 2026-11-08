@@ -1014,9 +1014,9 @@ export const FILTERS = [
     id: "water-fun",
     tags: ["water", "swimming", "lake", "beach"],
     label: {
-      de: "Wasser & Baden",
-      en: "Water & swimming",
-      da: "Vand & badning"
+      de: "Wasserbezug",
+      en: "Water-related",
+      da: "Med vand"
     }
   },
   {
