@@ -1,0 +1,69 @@
+FAMILY SPOTS MAP – KALENDERHERZ 1
+Basis: hochgeladener Projektstand Family-Spots-Map-main.zip vom 08.11.2026
+Release-/Cache-Version: 20261108-kalenderherz-1
+
+ZIEL
+Das Kalender-Ereignissymbol in „Gemeinsam erleben“ verwendet jetzt dieselbe
+gefüllte Herzform wie das Herz in der Family-Spots-Map-Hauptnavigation.
+Alle Inhalte in orangefarbenen Aktionsbuttons sind schwarz.
+
+UMGESETZTE ÄNDERUNGEN
+1. Kalender-Herz
+   - Das bisherige Kategorie-Emoji im Ereignis-Symbol wurde entfernt.
+   - Eingesetzt wurde exakt derselbe SVG-Pfad wie in createHeartIcon()
+     aus js/utils/dom.js.
+   - Füllfarbe: #7fa825; Kontur: #36551c.
+   - Ruhiger, blass-olivfarbener Hintergrund passend zur App.
+
+2. Orange Aktionsflächen
+   - „+ Ausflug planen“: Text schwarz.
+   - „Privat speichern“: Text schwarz.
+   - Orange Primär-Pills: Text und gegebenenfalls SVG-Symbole schwarz.
+   - Orange Flächen und ihre übrigen Abmessungen/Funktionen bleiben erhalten.
+
+3. Release-/Offline-Konsistenz
+   - Gemeinsame Cache-Version in DE/EN/DA und Service Worker aktualisiert.
+   - Service-Worker-Prüfsummen für die geänderten Dateien neu berechnet.
+   - Keine Spotdaten, Übersetzungsinhalte oder sonstigen App-Funktionen geändert.
+
+GEÄNDERTE DATEIEN
+  js/features/gemeinsam-erleben-rc.js
+  css/gemeinsam-erleben-rc.css
+  index.html
+  en/index.html
+  da/index.html
+  css/styles.css
+  js/app.js
+  js/map.js
+  service-worker.js
+
+TECHNISCHE PRÜFUNG
+Ausgeführt: node tools/check-project.mjs
+Ergebnis: 0 Fehler.
+- 173 Spots erkannt.
+- 232 Übersetzungsschlüssel je Sprache.
+- 143 Offline-Assets geprüft.
+- Backup-/Legacy-/ZIP-/Korruptionsprüfungen bestanden.
+- Inhaltsprüfung: 0 Fehler.
+- Kategorienprüfung bestanden.
+- Kalender-Datums-/Zeit-/Filterzustandsprüfungen bestanden.
+- Ergebnisaktionen und Filtervertrag bestanden (2.458 Assertions).
+- Service-Worker-Prüfsummen und Release-Verknüpfungen bestanden.
+
+NICHT BEHAUPTET
+Ein echter iPhone-Safari-Lauf und ein erfolgreicher Cloudflare-Preview-Deploy
+wurden in dieser Arbeitsumgebung nicht ausgeführt. Diese beiden Prüfungen
+müssen nach dem Push erfolgen.
+
+WORKING COPY – SICHERER TEST-PUSH
+1. Vorhandenen funktionierenden Stand sichern.
+2. Auf einem Testbranch arbeiten; Production/Main nicht direkt überschreiben.
+3. Die neun geänderten Dateien unter exakt denselben Pfaden übernehmen.
+4. Commit-Zusammenfassung:
+   Kalenderherz – App-Herz übernommen, orange Button-Inhalte schwarz
+5. Remote-Referenz (Push-Feld „Vorhandene oder neue Remote-Referenz“):
+   refs/heads/test/gemeinsam-v88-finish
+6. Source-Branch: unverändert lassen (aktuell ausgewählten Source-Branch).
+7. Force Push: AUS.
+8. Danach Cloudflare-Preview des Testbranches prüfen und anschließend auf
+iPhone/Safari testen. Erst nach erfolgreicher Prüfung über Production sprechen.
